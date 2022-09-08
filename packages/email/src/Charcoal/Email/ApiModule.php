@@ -22,7 +22,8 @@ class ApiModule extends AbstractModule
     /**
      * @return self
      */
-    protected function setUp(): void    {
+    public function setUp()
+    {
         $this->setupPublicRoutes();
 
         return $this;

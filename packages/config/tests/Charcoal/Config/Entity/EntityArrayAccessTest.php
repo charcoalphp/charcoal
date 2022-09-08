@@ -29,7 +29,8 @@ class EntityArrayAccessTest extends AbstractEntityTestCase
      *
      * @return void
      */
-    protected function setUp(): void    {
+    protected function setUp(): void
+    {
         $this->obj = $this->createEntity([
             'name' => 'Charcoal',
             'foo'  => 10,

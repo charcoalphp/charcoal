@@ -30,7 +30,8 @@ class DashboardServiceProviderTest extends AbstractTestCase
     /**
      * @return void
      */
-    protected function setUp(): void    {
+    protected function setUp(): void
+    {
         $this->obj = new DashboardServiceProvider();
         $this->container = new Container();
 

@@ -31,7 +31,8 @@ class ConfigArrayMergeTest extends AbstractConfigTestCase
      *
      * @return void
      */
-    protected function setUp(): void    {
+    protected function setUp(): void
+    {
         $this->cfg = $this->createConfig();
     }
 

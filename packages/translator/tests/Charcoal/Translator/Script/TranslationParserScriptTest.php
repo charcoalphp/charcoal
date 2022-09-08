@@ -47,7 +47,8 @@ class TranslationParserScriptTest extends AbstractTestCase
      *
      * @return void
      */
-    protected function setUp(): void    {
+    protected function setUp(): void
+    {
         $this->container = $this->getContainer();
 
         $this->output = $this->container['climate']->output;

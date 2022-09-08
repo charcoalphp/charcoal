@@ -33,7 +33,8 @@ class ConfigSeparatorAwareTest extends AbstractConfigTestCase
      *
      * @return void
      */
-    protected function setUp(): void    {
+    protected function setUp(): void
+    {
         $this->connections = [
             'default' => [
                 'driver'      => 'pdo_mysql',

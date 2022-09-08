@@ -14,7 +14,8 @@ class EmailConfigTest extends AbstractTestCase
      */
     public $obj;
 
-    protected function setUp(): void    {
+    protected function setUp(): void
+    {
         $this->obj = new EmailConfig();
     }
     public function testSetData()

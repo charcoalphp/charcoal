@@ -22,7 +22,8 @@ class AbstractFactoryTest extends AbstractTestCase
     /**
      * @return void
      */
-    protected function setUp(): void    {
+    protected function setUp(): void
+    {
         $this->obj = $this->getMockForAbstractClass(AbstractFactory::class);
     }
 

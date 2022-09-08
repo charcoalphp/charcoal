@@ -53,7 +53,8 @@ class AuthorizerTest extends AbstractTestCase
      *
      * @return void
      */
-    protected function setUp(): void    {
+    protected function setUp(): void
+    {
         $container = $this->container();
 
         $this->acl = new Acl();

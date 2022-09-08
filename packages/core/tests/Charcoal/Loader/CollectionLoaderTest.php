@@ -41,7 +41,8 @@ class CollectionLoaderTest extends AbstractTestCase
     /**
      * @return void
      */
-    protected function setUp(): void    {
+    protected function setUp(): void
+    {
         $this->model = $this->createModel();
         $this->model->source()->createTable();
 

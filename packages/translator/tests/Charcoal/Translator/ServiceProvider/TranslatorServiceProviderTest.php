@@ -37,7 +37,8 @@ class TranslatorServiceProviderTest extends AbstractTestCase
      *
      * @return void
      */
-    protected function setUp(): void    {
+    protected function setUp(): void
+    {
         $this->obj = new TranslatorServiceProvider();
         $this->container = new Container();
         $this->container['config'] = new AppConfig([

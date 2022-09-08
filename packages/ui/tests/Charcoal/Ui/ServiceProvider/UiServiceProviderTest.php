@@ -27,7 +27,8 @@ class UiServiceProviderTest extends AbstractTestCase
     /**
      * @return void
      */
-    protected function setUp(): void    {
+    protected function setUp(): void
+    {
         $this->obj = new UiServiceProvider();
         $this->container = new Container();
     }

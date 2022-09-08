@@ -27,7 +27,8 @@ class EntityTest extends AbstractEntityTestCase
      *
      * @return void
      */
-    protected function setUp(): void    {
+    protected function setUp(): void
+    {
         $this->obj = $this->createEntity();
     }
 

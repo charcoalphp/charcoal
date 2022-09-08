@@ -41,7 +41,8 @@ class StorableTraitTest extends AbstractTestCase
      *
      * @return void
      */
-    protected function setUp(): void    {
+    protected function setUp(): void
+    {
         $this->obj = new StorableMock();
     }
 

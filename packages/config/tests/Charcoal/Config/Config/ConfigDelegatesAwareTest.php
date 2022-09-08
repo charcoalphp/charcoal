@@ -30,7 +30,8 @@ class ConfigDelegatesAwareTest extends AbstractConfigTestCase
      *
      * @return void
      */
-    protected function setUp(): void    {
+    protected function setUp(): void
+    {
         $this->delegates = [
             $this->createConfig([
                 'uid' => '4d5e',

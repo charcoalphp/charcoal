@@ -24,7 +24,8 @@ class GenericFormGroupTest extends AbstractTestCase
     /**
      * @return void
      */
-    protected function setUp(): void    {
+    protected function setUp(): void
+    {
         $container = $this->getContainer();
         $container->register(new FormServiceProvider());
         $container->register(new LayoutServiceProvider());

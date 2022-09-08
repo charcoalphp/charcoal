@@ -6,7 +6,8 @@ class AbstractSepiaEffectTest extends \PHPUnit\Framework\TestCase
 {
     public $obj;
 
-    protected function setUp(): void    {
+    protected function setUp(): void
+    {
         $img = $this->getMockForAbstractClass('\Charcoal\Image\AbstractImage');
         $this->obj = $this->getMockForAbstractClass('\Charcoal\Image\Effect\AbstractSepiaEffect');
         $this->obj->setImage($img);

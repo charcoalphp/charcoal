@@ -19,7 +19,8 @@ class EmailQueueItemTest extends AbstractTestCase
      *
      * @return void
      */
-    protected function setUp(): void    {
+    protected function setUp(): void
+    {
         $this->obj = $this->createObj();
     }
 

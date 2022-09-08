@@ -29,7 +29,8 @@ class ValidatorTest extends AbstractTestCase
     /**
      * @return void
      */
-    protected function setUp(): void    {
+    protected function setUp(): void
+    {
         $this->model = new ValidatableClass();
         $this->obj   = new ValidatorClass($this->model);
     }

@@ -38,7 +38,8 @@ class ManagerTest extends AbstractTestCase
      *
      * @return void
      */
-    protected function setUp(): void    {
+    protected function setUp(): void
+    {
         $container = $this->container();
 
         $this->obj = new Manager([

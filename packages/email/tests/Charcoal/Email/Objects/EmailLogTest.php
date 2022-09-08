@@ -15,7 +15,8 @@ class EmailLogTest extends AbstractTestCase
      */
     public $obj;
 
-    protected function setUp(): void    {
+    protected function setUp(): void
+    {
         $this->obj = new EmailLog([
             'logger' => new NullLogger()
         ]);

@@ -30,7 +30,8 @@ class StringPropertyTest extends AbstractTestCase
      *
      * @return void
      */
-    protected function setUp(): void    {
+    protected function setUp(): void
+    {
         $container = $this->getContainer();
 
         $this->getContainerProvider()->registerMultilingualTranslator($container);

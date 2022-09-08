@@ -21,7 +21,8 @@ class PasswordPropertyTest extends AbstractTestCase
     /**
      * @return void
      */
-    protected function setUp(): void    {
+    protected function setUp(): void
+    {
         $container = $this->getContainer();
 
         $this->obj = new PasswordProperty([

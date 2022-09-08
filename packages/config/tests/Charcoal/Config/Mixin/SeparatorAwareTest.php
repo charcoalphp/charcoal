@@ -34,7 +34,8 @@ class SeparatorAwareTest extends AbstractTestCase
      *
      * @return void
      */
-    protected function setUp(): void    {
+    protected function setUp(): void
+    {
         $this->connections = [
             'default' => [
                 'driver'      => 'pdo_mysql',
