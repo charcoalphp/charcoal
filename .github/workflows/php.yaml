@@ -48,7 +48,7 @@ jobs:
 
     strategy:
       matrix:
-        php-versions: ['7.4', '8.1']
+        php-versions: ['7.4', '8.0']
         package: ${{fromJson(needs.provide_packages_json.outputs.matrix)}}
 
     steps:
