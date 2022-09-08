@@ -28,8 +28,7 @@ jobs:
       - name: Install Dependencies
         uses: ramsey/composer-install@v2
 
-      # get package json list
-      - name: Output list packages as JSON
+      - name: Output list of packages as JSON
         id: output_data
         run: echo "::set-output name=matrix::$(vendor/bin/monorepo-builder packages-json)"
 
