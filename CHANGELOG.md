@@ -7,9 +7,38 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 > ⚠️ This `CHANGELOG` file is automatically generated through Github actions from Github release notes.
 
-## [Unreleased](https://github.com/locomotive-charcoal/Charcoal/compare/v3.1.3...main)
+## [Unreleased](https://github.com/locomotive-charcoal/Charcoal/compare/v3.1.4...main)
 
 Please do not update the unreleased notes.
+
+## [v3.1.4](https://github.com/locomotive-charcoal/Charcoal/compare/v3.1.3...v3.1.4) - 2022-09-08
+
+### [3.1.4](https://github.com/charcoalphp/charcoal/compare/v3.1.3...v3.1.4) (2022-09-08)
+
+#### Bug Fixes
+
+- **app:** fix deleted method visibility ([7383b5f](https://github.com/charcoalphp/charcoal/commit/7383b5fb2f97886e887a2351faeec9b6db8afc15))
+- **cache:** fix composer dev requirement for slim ([a7a44fb](https://github.com/charcoalphp/charcoal/commit/a7a44fb3cd05196352c1481bdd3a7e6d1d882f3a))
+- **charcoal:** fix bad find and replace ([577e414](https://github.com/charcoalphp/charcoal/commit/577e414fc9a9c5f64ac06395a4cfc86b7b588c0a))
+- **charcoal:** fix bad find and replace ([2db7a17](https://github.com/charcoalphp/charcoal/commit/2db7a17de36fd51aa22279ea6efd8157c0accfbb))
+- **cms:** fix missing property type ([fc8d6bf](https://github.com/charcoalphp/charcoal/commit/fc8d6bfb99a5f20c15ee0288554daab4445b7086))
+- **cms:** fix TemplateableTrait.php templateIdent property to be defaulted to an empty string like in ViewableTrait.php ([01b8e5a](https://github.com/charcoalphp/charcoal/commit/01b8e5a2c3fc2f27436e42224d384c981c51d265))
+- **composer:** fix some composer conflicting packages ([3f94314](https://github.com/charcoalphp/charcoal/commit/3f9431459afc9378e30adee34e0f02ed119cdeac))
+- **composer:** move composer.json replace section for locomotivemtl packages to monorepo-builder.php to prevent overwriting ([0d48576](https://github.com/charcoalphp/charcoal/commit/0d485764b939daa9b1890527db77363c43558463))
+- **core:** add exception thrown when metadata file cannot be loaded ([6fadceb](https://github.com/charcoalphp/charcoal/commit/6fadceb30f704091452e15847543e60d4d8a8158))
+- **core:** add exception thrown when source ident is not defined ([5f76cec](https://github.com/charcoalphp/charcoal/commit/5f76cec96f2db0265ab0ab9734954753b34534e5))
+- **core:** revert loadfile() changes because it caused unexpected issues ([04a0391](https://github.com/charcoalphp/charcoal/commit/04a039175db89990d26dce3bed908cb1d6becbd5))
+- **image:** fix radial blur effect renamed to rotational blur ([8293e99](https://github.com/charcoalphp/charcoal/commit/8293e994afc3dbd06bf3789746a6867d5f53379b))
+- **php:** add redis extension to php github action ([49e755f](https://github.com/charcoalphp/charcoal/commit/49e755fd994b84e06bbb8e648625903f2b0ef223))
+- **phpcs:** exit execution after -l option ([e6ad662](https://github.com/charcoalphp/charcoal/commit/e6ad662d9f8a96067d7517af70d41d19ab03d493))
+- **phpunit.xml.dist:** add xsi:noNamespaceSchemaLocation ([e13e43e](https://github.com/charcoalphp/charcoal/commit/e13e43e94759095960a242464f50f414e28af722))
+- **template-ident:** uniformize template-ident return types ([819f5a0](https://github.com/charcoalphp/charcoal/commit/819f5a0835dbddd8dd2f58fba3f5cb0a018057ca))
+- **view:** the view prop and method should be allowed to be null ([c97c2e3](https://github.com/charcoalphp/charcoal/commit/c97c2e3222dccdbe3eaec71eeb236e6a40d296e7))
+
+#### Reverts
+
+- Revert "refactor(view): fix templateIdent return type" ([02ef2be](https://github.com/charcoalphp/charcoal/commit/02ef2be4400ec65125ca794fb91ccaea338370f9))
+- Revert "refactor(templateable-trait): remove default value for templateIdent" ([314e1c9](https://github.com/charcoalphp/charcoal/commit/314e1c954347fac3f6adc7d8edc6d47ffea5cc16))
 
 ## [v3.1.3](https://github.com/locomotive-charcoal/Charcoal/compare/v3.1.2...v3.1.3) - 2022-09-08
 
