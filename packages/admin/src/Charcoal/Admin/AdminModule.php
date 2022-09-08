@@ -32,7 +32,8 @@ class AdminModule extends AbstractModule
      *
      * @return AdminModule Chainable
      */
-    protected function setUp(): void    {
+    public function setUp()
+    {
         // Hack: skip if the request does not start with '/admin'
         $container = $this->app()->getContainer();
         if ($this->isPathAdmin($container['request']->getUri()->getPath()) !== true) {

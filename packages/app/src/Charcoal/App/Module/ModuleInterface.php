@@ -10,5 +10,5 @@ interface ModuleInterface
     /**
      * @return void
      */
-    protected function setUp(): void
+    function setUp();
 }
