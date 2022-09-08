@@ -68,6 +68,12 @@ jobs:
       - name: Install Composer dependencies
         uses: ramsey/composer-install@v2
 
+      - name: Start Redis
+        if: ${{ matrix.package == 'cache' }}
+        uses: supercharge/redis-github-action@1.4.0
+        with:
+          redis-version: 6
+
       - name: Run PHPCS for all packages
         run: tests/script/phpcs --ci ${{ matrix.package }}
 
