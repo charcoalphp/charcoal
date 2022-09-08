@@ -49,7 +49,6 @@ jobs:
     strategy:
       matrix:
         php-versions: ['7.4', '8.1']
-        # define package to repository map
         package: ${{fromJson(needs.provide_packages_json.outputs.matrix)}}
 
     steps:
