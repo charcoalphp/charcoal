@@ -11,8 +11,14 @@ permissions:
 
 jobs:
   provide_packages_json:
-    # see json juggling: https://docs.github.com/en/free-pro-team@latest/actions/reference/context-and-expression-syntax-for-github-actions#example-6
-    # see https://stackoverflow.com/a/62953566/1348344
+    # Provides package paths in JSON format for
+    # use in the matrix strategy of other jobs.
+    #
+    # The paths will be passed as arguments
+    # to linting and testing tools.
+    #
+    # * https://docs.github.com/en/actions/learn-github-actions/expressions#fromjson
+    # * https://stackoverflow.com/a/62953566/1348344
 
     runs-on: ubuntu-latest
 
