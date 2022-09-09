@@ -7,9 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 > ⚠️ This `CHANGELOG` file is automatically generated through Github actions from Github release notes.
 
-## [Unreleased](https://github.com/locomotive-charcoal/Charcoal/compare/v3.1.4...main)
+## [Unreleased](https://github.com/locomotive-charcoal/Charcoal/compare/v3.1.5...main)
 
 Please do not update the unreleased notes.
+
+## [v3.1.5](https://github.com/locomotive-charcoal/Charcoal/compare/v3.1.4...v3.1.5) - 2022-09-09
+
+### [3.1.5](https://github.com/charcoalphp/charcoal/compare/v3.1.4...v3.1.5) (2022-09-09)
+
+#### Bug Fixes
+
+- **monorepo:** implement a custom UpdateReplace release worker to prevent overwriting the whole composer.json 'replace' section ([1c8c66b](https://github.com/charcoalphp/charcoal/commit/1c8c66bd3c79dc388b6fa5f3751d6cbdfa03da17))
 
 ## [v3.1.4](https://github.com/locomotive-charcoal/Charcoal/compare/v3.1.3...v3.1.4) - 2022-09-08
 
