@@ -99,6 +99,9 @@
     },
     "autoload-dev": {
         "psr-4": {
+            "Charcoal\\MonorepoBuilder\\": [
+                "build/Charcoal/MonorepoBuilder/"
+            ],
             "Charcoal\\Tests\\": [
                 "packages/admin/tests/Charcoal/",
                 "packages/app/tests/Charcoal",
