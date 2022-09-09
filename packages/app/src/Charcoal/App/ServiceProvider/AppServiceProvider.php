@@ -4,14 +4,17 @@ namespace Charcoal\App\ServiceProvider;
 
 // From PSR-7
 use Charcoal\Factory\GenericResolver;
+use phpDocumentor\Reflection\Types\Void_;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Http\Message\UriInterface;
 // From Pimple
 use Pimple\ServiceProviderInterface;
 use Pimple\Container;
 // From Slim
 use Slim\Http\Uri;
-// From 'league/climate'
+// From 'league'
 use League\CLImate\CLImate;
+use League\Event\EventDispatcher;
 // From Mustache
 use Mustache_LambdaHelper as LambdaHelper;
 use Charcoal\Factory\GenericFactory as Factory;
@@ -35,7 +38,6 @@ use Charcoal\App\ServiceProvider\FilesystemServiceProvider;
 use Charcoal\App\ServiceProvider\ScriptServiceProvider;
 use Charcoal\App\ServiceProvider\LoggerServiceProvider;
 use Charcoal\App\Template\TemplateInterface;
-use Charcoal\App\Template\TemplateBuilder;
 use Charcoal\App\Template\WidgetInterface;
 use Charcoal\App\Template\WidgetBuilder;
 use Charcoal\View\Twig\DebugHelpers as TwigDebugHelpers;
@@ -85,6 +87,7 @@ class AppServiceProvider implements ServiceProviderInterface
         $this->registerRequestControllerServices($container);
         $this->registerModuleServices($container);
         $this->registerViewServices($container);
+        $this->registerEventServices($container);
     }
 
     /**
@@ -586,5 +589,19 @@ class AppServiceProvider implements ServiceProviderInterface
                 $container['view/twig/helpers/debug']->toArray(),
             );
         });
+    }
+
+    /**
+     * @param Container $container The DI container.
+     * @return void
+     */
+    protected function registerEventServices(Container $container): void
+    {
+        /**
+         * @return EventDispatcherInterface
+         */
+        $container['event/dispatcher'] = function (): EventDispatcherInterface {
+            return new EventDispatcher();
+        };
     }
 }
