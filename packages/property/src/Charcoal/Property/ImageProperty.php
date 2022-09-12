@@ -10,6 +10,7 @@ use Charcoal\Image\ImageInterface;
 // From 'charccoal-translator'
 use Charcoal\Translator\Translation;
 // From 'charcoal-property'
+use Charcoal\Property\Event\PropertyEvent;
 use Charcoal\Property\FileProperty;
 
 /**
@@ -314,11 +315,15 @@ class ImageProperty extends FileProperty
      */
     public function save($val)
     {
+        $this->getEventDispatcher()->dispatch(new PropertyEvent(PropertyEvent::EVENT_PRE_SAVE, $this, ['val' => $val]));
+
         $val = parent::save($val);
 
         if ($this->canApplyEffects('save')) {
             $val = $this->processEffects($val);
         }
+
+        $this->getEventDispatcher()->dispatch(new PropertyEvent(PropertyEvent::EVENT_SAVE, $this, ['val' => $val]));
 
         return $val;
     }
