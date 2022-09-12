@@ -4,7 +4,6 @@ namespace Charcoal\App\ServiceProvider;
 
 // From PSR-7
 use Charcoal\Factory\GenericResolver;
-use phpDocumentor\Reflection\Types\Void_;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Http\Message\UriInterface;
 // From Pimple
