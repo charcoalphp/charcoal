@@ -337,7 +337,11 @@ Please see [CONTRIBUTION.md](CONTRIBUTION.md) for guidelines on how to contribut
 ## ✍🏻 Authors
 
 * [Locomotive][locomotive] 🚂
+* [Mathieu Ducharme](mailto:mat@locomotive.ca) 👨🏻‍💻
+* [Chauncey McAskill](mailto:chauncey@locomotive.ca) 👨🏻‍💻
 * [Joel Alphonso](mailto:joel@locomotive.ca) 👨🏻‍💻
+* [Dominic Lord](mailto:dom@locomotive.ca) 👨🏻‍💻
+* [Benjamin Roch](mailto:ben@locomotive.ca) 👨🏻‍💻
 
 ## 🎉 Contributors
 

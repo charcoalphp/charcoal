@@ -11,15 +11,23 @@
             "homepage": "https://locomotive.ca"
         },
         {
-            "name": "Joel Alphonso",
-            "email": "joel@locomotive.ca"
-        },
-        {
             "name": "Mathieu Ducharme",
             "email": "mat@locomotive.ca"
         },
         {
-            "name": "Bene Roch",
+            "name": "Chauncey McAskill",
+            "email": "chauncey@locomotive.ca"
+        },
+        {
+            "name": "Joel Alphonso",
+            "email": "joel@locomotive.ca"
+        },
+        {
+            "name": "Dominic Lord",
+            "email": "dom@locomotive.ca"
+        },
+        {
+            "name": "Benjamin Roch",
             "email": "ben@locomotive.ca"
         }
     ],
