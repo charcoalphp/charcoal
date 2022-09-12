@@ -89,9 +89,9 @@ For a complete, ready-to-use project, start from the [official boilerplate][gh-c
 -   [**locomotivemtl/charcoal-factory**][charcoal-factory]: Factory interface for creating providers, processors, and controllers.
 -   [**locomotivemtl/charcoal-translator**][charcoal-translator]: Service provider for tools to internationalize your application, using [Symfony Translation][symfony/translation].
 -   [**locomotivemtl/charcoal-view**][charcoal-view]: Service provider for a view renderer and templating engine adapters for [Mustache][mustache] and [Twig][twig].
--   [**league/climate**][climate]: Command-line abstraction for designing console commands for your application.
--   [**league/event**][event]: Event dispatcher.
--   [**league/flysystem**][flysystem]: File system abstraction for working with local and remote storage spaces.
+-   [**league/climate**][league/climate]: Command-line abstraction for designing console commands for your application.
+-   [**league/event**][league/event]: Event dispatcher.
+-   [**league/flysystem**][league/flysystem]: File system abstraction for working with local and remote storage spaces.
 -   [**monolog/monolog**][monolog]: PSR-3 compliant client for logging your application's requests, errors, and information.
 -   [**pimple/pimple**][pimple]: PSR-11 compliant service container and provider library.
 -   [**slim/slim**][slim]: PSR-7 compliant HTTP client and router.
@@ -301,10 +301,9 @@ The sources of this package are contained in the Charcoal monorepo. We welcome c
 [badge-sensiolabs]:   https://img.shields.io/sensiolabs/i/533b5796-7e69-42a7-a046-71342146308a.svg?style=flat-square
 [badge-travis]:       https://img.shields.io/travis/locomotivemtl/charcoal-app.svg?style=flat-square
 
-[climate]:               https://packagist.org/packages/league/climate
-[fastroute]:             https://packagist.org/packages/nikic/fast-route
-[event]:                 https://packagist.org/packages/league/event
-[flysystem]:              https://packagist.org/packages/league/flysystem
+[league/climate]:        https://packagist.org/packages/league/climate
+[league/event]:          https://packagist.org/packages/league/event
+[league/flysystem]:       https://packagist.org/packages/league/flysystem
 [monolog]:               https://packagist.org/packages/monolog/monolog
 [mustache]:              https://packagist.org/packages/mustache/mustache
 [phpmailer]:             https://packagist.org/packages/phpmailer/phpmailer
