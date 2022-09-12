@@ -12,21 +12,24 @@ use League\Event\HasEventName;
  */
 class PropertyEvent implements HasEventName
 {
-    private const EVENT_PREFIX = 'property';
-    public const  EVENT_SAVE   = 'save';
-    public const  EVENT_UPDATE = 'update';
+    private const EVENT_PREFIX   = 'property';
+    public const  EVENT_SAVE     = 'save';
+    public const  EVENT_PRE_SAVE = 'pre-save';
 
     private string            $event;
     private PropertyInterface $property;
+    private array             $data;
 
     /**
      * @param string            $event    The event name.
      * @param PropertyInterface $property The property triggering the event.
+     * @param array             $data     Data to send with the event.
      */
-    public function __construct(string $event, PropertyInterface $property)
+    public function __construct(string $event, PropertyInterface $property, array $data = [])
     {
         $this->event    = $event;
         $this->property = $property;
+        $this->data = $data;
     }
 
     /**
@@ -63,5 +66,13 @@ class PropertyEvent implements HasEventName
     public function getProperty(): PropertyInterface
     {
         return $this->property;
+    }
+
+    /**
+     * @return array
+     */
+    public function getData(): array
+    {
+        return $this->data;
     }
 }
