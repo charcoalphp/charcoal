@@ -16,18 +16,18 @@ class PropertyEvent implements HasEventName
     public const  EVENT_SAVE     = 'save';
     public const  EVENT_PRE_SAVE = 'pre-save';
 
-    private string            $event;
+    private string            $type;
     private PropertyInterface $property;
     private array             $data;
 
     /**
-     * @param string            $event    The event name.
+     * @param string            $type     The event type.
      * @param PropertyInterface $property The property triggering the event.
      * @param array             $data     Data to send with the event.
      */
-    public function __construct(string $event, PropertyInterface $property, array $data = [])
+    public function __construct(string $type, PropertyInterface $property, array $data = [])
     {
-        $this->event    = $event;
+        $this->type     = $type;
         $this->property = $property;
         $this->data = $data;
     }
@@ -37,7 +37,7 @@ class PropertyEvent implements HasEventName
      */
     public function eventName(): string
     {
-        return $this->generateEventName($this->getEvent(), $this->getProperty()->type());
+        return $this->generateEventName($this->getType(), $this->getProperty()->type());
     }
 
     /**
@@ -53,9 +53,9 @@ class PropertyEvent implements HasEventName
     /**
      * @return string
      */
-    public function getEvent(): string
+    public function getType(): string
     {
-        return $this->event;
+        return $this->type;
     }
 
     /**
