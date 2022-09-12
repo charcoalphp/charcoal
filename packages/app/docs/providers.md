@@ -8,6 +8,7 @@ The Charcoal App comes with several providers out of the box. All of these are w
 
 -   [`AppServiceProvider`](#app-service-provider)
 -   [`DatabaseServicePovider`](#database-service-provider)
+-   [`EventServiceProvider`](#event-service-provider)
 -   [`FilesystemServiceProvider`](#filesystem-service-provider)
 -   [`LoggerServiceProvider`](#logger-service-provider)
 
@@ -29,31 +30,34 @@ Dependencies are handled with a `Pimple` dependency Container.
 
 Basic "App" services are:
 
--   `cache`
+- `cache`
     -   A cache storage service for the [Stash Cache Library][stash].
     -   Configured by `config['cache']`
     -   Provided by [`charcoal-cache`][charcoal-cache]
--   `config`
+- `config`
     -   A `\Charcoal\App\AppConfig` instance.
--   `database`
+- `database`
     -   The default _PDO_ database.
     -   From a pool of database, available through `databases`.
     -   Configured by `config['databases']` and `config['default_database']`.
--   `filesystems`
+- `event`
+    - A pimple container of `\League\Event\EventDispatcher`
+    - Psr 14 compatible EventDispatcherInterface
+- `filesystems`
     - A (pimple) container of `\League\Flysystem\Filesystem`
     - Configured by `config['filesystem]`
     - Also provide a `\League\Flysystem\MountManager` as `filesystem/manager`. 
--   `logger`
+- `logger`
     -   A `\Psr\Log\Logger` instance.
     -   Provided by _Monolog_.
     -   Configured by `config['logger']`
--   `translator`
+- `translator`
     -   A `Charcoal\Translator\Translation` object for multilingual strings.
     -   A `Charcoal\Translator\Translator` service based on [Symfony's Translator][symfony/translation].
     -   A `Charcoal\Translator\LocalesManager` for managing available languages.
     -   Configured by `config['translator']` and `config['locales']`
     -   Provided by [`charcoal-translator`][charcoal-translator]
--   `view`
+- `view`
     -   A `Charcoal\View\ViewInterface` instance
     -   Typically a `\Charcoal\View\GenericView` object.
     -   Configured by `config['view']`
@@ -188,6 +192,14 @@ Or, in JSON format:
 }
 ```
 
+
+## Event Service Provider
+
+The `EventServiceProvider` provides the following services:
+
+| Service              | Type                            | Description |
+|----------------------|---------------------------------| ----------- |
+| **event/dispatcher** | `\League\Event\EventDispatcher` | Event manager, allows subscribing to and dispatch events. 
 
 
 ## Filesystem Service Provider
