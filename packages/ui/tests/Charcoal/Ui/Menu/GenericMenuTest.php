@@ -1,6 +1,6 @@
 <?php
 
-namespace Charcoal\Tests\Ui;
+namespace Charcoal\Tests\Ui\Menu;
 
 // From 'charcoal-ui'
 use Charcoal\Ui\Menu\GenericMenu;

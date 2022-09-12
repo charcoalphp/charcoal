@@ -1,6 +1,6 @@
 <?php
 
-namespace Charcoal\Tests\Translation\Script;
+namespace Charcoal\Tests\Translator\Script;
 
 use ReflectionClass;
 

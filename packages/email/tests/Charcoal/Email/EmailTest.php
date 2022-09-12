@@ -1,6 +1,6 @@
 <?php
 
-namespace Charcoal\Tests\App\Email;
+namespace Charcoal\Tests\Email;
 
 use InvalidArgumentException;
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace Charcoal\Tests\Translation\ServiceProvider;
+namespace Charcoal\Tests\Translator\ServiceProvider;
 
 // From Pimple
 use Charcoal\App\AppConfig;

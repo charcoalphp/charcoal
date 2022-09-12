@@ -1,12 +1,13 @@
 <?php
 
-namespace Charcoal\Tests\Ui;
+namespace Charcoal\Tests\Ui\FormInput;
 
 // From 'charcoal-ui'
 use Charcoal\Ui\FormInput\GenericFormInput;
 use Charcoal\Ui\ServiceProvider\FormServiceProvider;
 use Charcoal\Ui\ServiceProvider\LayoutServiceProvider;
 use Charcoal\Tests\AbstractTestCase;
+use Charcoal\View\AbstractView;
 
 /**
  *
@@ -16,7 +17,7 @@ class GenericFormInputTest extends AbstractTestCase
     use \Charcoal\Tests\Ui\ContainerIntegrationTrait;
 
     /**
-     * @var AbstractViewClass $obj
+     * @var AbstractView $obj
      */
     public $obj;
 

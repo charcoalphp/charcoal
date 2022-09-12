@@ -1,6 +1,6 @@
 <?php
 
-namespace Charcoal\Tests\Translation;
+namespace Charcoal\Tests\Translator;
 
 use DomainException;
 use InvalidArgumentException;
