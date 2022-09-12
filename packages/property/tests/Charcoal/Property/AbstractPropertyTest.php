@@ -6,7 +6,6 @@ use Exception;
 use LogicException;
 use RuntimeException;
 use InvalidArgumentException;
-
 // From 'charcoal-property'
 use Charcoal\Property\AbstractProperty;
 use Charcoal\Tests\AbstractTestCase;
@@ -254,7 +253,7 @@ class AbstractPropertyTest extends AbstractTestCase
         $this->assertEquals(',', $this->obj->multipleSeparator());
 
         $this->obj->setMultipleOptions([
-            'separator'=>'/'
+            'separator' => '/'
         ]);
         $this->assertEquals('/', $this->obj->multipleSeparator());
     }

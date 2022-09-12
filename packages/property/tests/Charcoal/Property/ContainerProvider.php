@@ -3,40 +3,30 @@
 namespace Charcoal\Tests\Property;
 
 use PDO;
-
 // From PSR-3
 use Psr\Log\NullLogger;
-
 // From 'cache/void-adapter' (PSR-6)
 use Cache\Adapter\Void\VoidCachePool;
-
 // From 'tedivm/stash' (PSR-6)
 use Stash\Pool;
 use Stash\Driver\Ephemeral;
-
 // From Pimple
 use Pimple\Container;
-
 // From 'symfony/translator'
 use Symfony\Component\Translation\Loader\ArrayLoader;
-
 // From 'charcoal-factory'
 use Charcoal\Factory\GenericFactory as Factory;
-
 // From 'charcoal-core'
 use Charcoal\Model\Service\MetadataLoader;
 use Charcoal\Loader\CollectionLoader;
 use Charcoal\Source\DatabaseSource;
-
 // From 'charcoal-view'
 use Charcoal\View\GenericView;
 use Charcoal\View\Mustache\MustacheEngine;
 use Charcoal\View\Mustache\MustacheLoader;
-
 // From 'charcoal-translator'
 use Charcoal\Translator\LocalesManager;
 use Charcoal\Translator\Translator;
-
 use League\Event\EventDispatcher;
 
 /**
@@ -68,8 +58,8 @@ class ContainerProvider
     public function registerConfig(Container $container)
     {
         $container['config'] = [
-            'base_path'   => realpath(__DIR__.'/../../..'),
-            'public_path' => realpath(__DIR__.'/../../..'),
+            'base_path'   => realpath(__DIR__ . '/../../..'),
+            'public_path' => realpath(__DIR__ . '/../../..'),
         ];
     }
 

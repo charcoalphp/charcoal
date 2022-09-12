@@ -4,7 +4,6 @@ namespace Charcoal\Tests\Property;
 
 use PDO;
 use InvalidArgumentException;
-
 // From 'charcoal-property'
 use Charcoal\Property\PropertyField;
 use Charcoal\Tests\AbstractTestCase;

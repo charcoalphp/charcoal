@@ -3,7 +3,6 @@
 namespace Charcoal\Tests\Property;
 
 use InvalidArgumentException;
-
 // From 'charcoal-property'
 use Charcoal\Property\FileProperty;
 use Charcoal\Tests\AbstractTestCase;
@@ -59,7 +58,7 @@ abstract class AbstractFilePropertyTestCase extends AbstractTestCase
         if ($this->fileMapOfFixtures === null) {
             $this->fileMapOfFixtures = [];
             foreach (self::FIXTURES as $filename) {
-                $this->fileMapOfFixtures[$filename] = $this->getPathToFixture('files/'.$filename);
+                $this->fileMapOfFixtures[$filename] = $this->getPathToFixture('files/' . $filename);
             }
         }
 
@@ -222,7 +221,7 @@ abstract class AbstractFilePropertyTestCase extends AbstractTestCase
     {
         $obj = $this->obj;
 
-        $obj['uploadPath'] = $this->getPathToFixtures().'/files';
+        $obj['uploadPath'] = $this->getPathToFixtures() . '/files';
         $obj['val'] = $this->getPathToFixture('files/blank.txt');
 
         $this->assertEquals(0, $obj['filesize']);
@@ -261,7 +260,7 @@ abstract class AbstractFilePropertyTestCase extends AbstractTestCase
     {
         $obj = $this->obj;
 
-        $obj['uploadPath'] = $this->getPathToFixtures().'/files';
+        $obj['uploadPath'] = $this->getPathToFixtures() . '/files';
         $obj['val'] = $this->getPathToFixture('files/bad.txt');
 
         $this->assertNull($obj['mimetype']);
@@ -277,7 +276,7 @@ abstract class AbstractFilePropertyTestCase extends AbstractTestCase
     {
         $obj = $this->obj;
 
-        $obj['uploadPath'] = $this->getPathToFixtures().'/files';
+        $obj['uploadPath'] = $this->getPathToFixtures() . '/files';
         $obj['val'] = $this->getPathToFixture('files/blank.txt');
 
         $this->assertEquals('application/x-empty', $obj['mimetype']);

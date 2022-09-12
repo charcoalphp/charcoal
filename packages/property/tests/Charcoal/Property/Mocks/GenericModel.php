@@ -11,10 +11,8 @@ namespace Charcoal\Tests\Property\Mocks;
 
 // From Pimple
 use Pimple\Container;
-
 // From 'charcoal-core'
 use Charcoal\Model\AbstractModel;
-
 // From 'charcoal-translator'
 use Charcoal\Translator\Translation;
 use Charcoal\Translator\TranslatorAwareTrait;

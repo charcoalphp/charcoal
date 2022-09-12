@@ -16,9 +16,9 @@ class PropertyEvent implements HasEventName
     public const  EVENT_SAVE     = 'save';
     public const  EVENT_PRE_SAVE = 'pre-save';
 
-    private string            $type;
+    private string $type;
     private PropertyInterface $property;
-    private array             $data;
+    private array $data;
 
     /**
      * @param string            $type     The event type.
