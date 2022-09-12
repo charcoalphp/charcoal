@@ -185,5 +185,11 @@
         "phpstan": "vendor/bin/phpstan analyse packages/*/src packages/*/tests"
     },
     "minimum-stability": "dev",
-    "prefer-stable": true
+    "prefer-stable": true,
+    "config": {
+        "allow-plugins": {},
+        "optimize-autoloader": true,
+        "preferred-install": "dist",
+        "sort-packages": true
+    }
 }
