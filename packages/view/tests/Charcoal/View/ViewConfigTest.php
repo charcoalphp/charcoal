@@ -1,8 +1,9 @@
 <?php
 
-namespace Charcoal\Tests\View\Mustache;
+namespace Charcoal\Tests\View;
 
 // From 'charcoal-view'
+use Charcoal\View\Mustache\MustacheEngine;
 use Charcoal\View\ViewConfig;
 use Charcoal\Tests\AbstractTestCase;
 

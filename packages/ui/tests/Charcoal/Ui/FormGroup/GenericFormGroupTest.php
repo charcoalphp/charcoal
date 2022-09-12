@@ -1,6 +1,6 @@
 <?php
 
-namespace Charcoal\Tests\Ui;
+namespace Charcoal\Tests\Ui\FormGroup;
 
 // From 'charcoal-ui'
 use Charcoal\Ui\Form\GenericForm;
@@ -8,6 +8,7 @@ use Charcoal\Ui\FormGroup\GenericFormGroup;
 use Charcoal\Ui\ServiceProvider\FormServiceProvider;
 use Charcoal\Ui\ServiceProvider\LayoutServiceProvider;
 use Charcoal\Tests\AbstractTestCase;
+use Charcoal\View\AbstractView;
 
 /**
  *
@@ -17,7 +18,7 @@ class GenericFormGroupTest extends AbstractTestCase
     use \Charcoal\Tests\Ui\ContainerIntegrationTrait;
 
     /**
-     * @var AbstractViewClass $obj
+     * @var AbstractView $obj
      */
     public $obj;
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace Charcoal\Tests\Property;
+namespace Charcoal\Tests\Cms;
 
 use RuntimeException;
 
