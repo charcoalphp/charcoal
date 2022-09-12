@@ -3,10 +3,8 @@
 namespace Charcoal\Tests\Property;
 
 use PDO;
-
 // From 'charcoal-translator'
 use Charcoal\Translator\Translation;
-
 // From 'charcoal-property'
 use Charcoal\Property\StringProperty;
 use Charcoal\Tests\AbstractTestCase;

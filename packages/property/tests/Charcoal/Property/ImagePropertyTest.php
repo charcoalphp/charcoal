@@ -3,7 +3,6 @@
 namespace Charcoal\Tests\Property;
 
 use InvalidArgumentException;
-
 // From 'charcoal-property'
 use Charcoal\Property\ImageProperty;
 
@@ -92,7 +91,7 @@ class ImagePropertyTest extends AbstractFilePropertyTestCase
     {
         $obj = $this->obj;
 
-        $obj['uploadPath'] = $this->getPathToFixtures().'/files';
+        $obj['uploadPath'] = $this->getPathToFixtures() . '/files';
         $obj['val'] = $this->getPathToFixture('files/panda.png');
 
         $this->assertEquals(170276, $obj['filesize']);
@@ -107,7 +106,7 @@ class ImagePropertyTest extends AbstractFilePropertyTestCase
     {
         $obj = $this->obj;
 
-        $obj['uploadPath'] = $this->getPathToFixtures().'/files';
+        $obj['uploadPath'] = $this->getPathToFixtures() . '/files';
         $obj['val'] = $this->getPathToFixture('files/panda.png');
 
         $this->assertEquals('image/png', $obj['mimetype']);
@@ -119,13 +118,13 @@ class ImagePropertyTest extends AbstractFilePropertyTestCase
     public function testSetEffects()
     {
         $this->assertEquals([], $this->obj['effects']);
-        $ret = $this->obj->setEffects([['type'=>'blur', 'sigma'=>'1']]);
+        $ret = $this->obj->setEffects([['type' => 'blur', 'sigma' => '1']]);
         $this->assertSame($ret, $this->obj);
 
-        $this->obj['effects'] = [['type'=>'blur', 'sigma'=>'1'], ['type'=>'revert']];
+        $this->obj['effects'] = [['type' => 'blur', 'sigma' => '1'], ['type' => 'revert']];
         $this->assertEquals(2, count($this->obj['effects']));
 
-        $this->obj->set('effects', [['type'=>'blur', 'sigma'=>'1']]);
+        $this->obj->set('effects', [['type' => 'blur', 'sigma' => '1']]);
         $this->assertEquals(1, count($this->obj['effects']));
 
         $this->assertEquals(1, count($this->obj['effects']));
@@ -138,11 +137,11 @@ class ImagePropertyTest extends AbstractFilePropertyTestCase
     {
         $this->assertEquals(0, count($this->obj['effects']));
 
-        $ret = $this->obj->addEffect(['type'=>'grayscale']);
+        $ret = $this->obj->addEffect(['type' => 'grayscale']);
         $this->assertSame($ret, $this->obj);
         $this->assertEquals(1, count($this->obj['effects']));
 
-        $this->obj->addEffect(['type'=>'blur', 'sigma'=>1]);
+        $this->obj->addEffect(['type' => 'blur', 'sigma' => 1]);
         $this->assertEquals(2, count($this->obj['effects']));
     }
 

@@ -6,18 +6,14 @@ use PDO;
 use ReflectionClass;
 use RuntimeException;
 use InvalidArgumentException;
-
 // From PSR-6
 use Psr\Cache\CacheItemPoolInterface;
-
 // From 'charcoal-core'
 use Charcoal\Loader\CollectionLoader;
 use Charcoal\Model\Service\ModelLoader;
 use Charcoal\Source\StorableInterface;
-
 // From 'charcoal-factory'
 use Charcoal\Factory\FactoryInterface;
-
 // From 'charcoal-property'
 use Charcoal\Property\ObjectProperty;
 use Charcoal\Tests\AbstractTestCase;
@@ -314,7 +310,7 @@ class ObjectPropertyTest extends AbstractTestCase
         $this->obj->setL10n(false);
         $this->obj->setMultiple(true);
 
-        $expected = 'Foo, '.self::OBJ_2.', Baz, Qux, Xyz';
+        $expected = 'Foo, ' . self::OBJ_2 . ', Baz, Qux, Xyz';
         $actual   = $this->obj->displayVal(implode(',', array_keys($objs)));
         $this->assertEquals($expected, $actual);
 

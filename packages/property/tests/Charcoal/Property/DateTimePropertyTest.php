@@ -6,7 +6,6 @@ use PDO;
 use DateTime;
 use Exception;
 use InvalidArgumentException;
-
 // From 'charcoal-property'
 use Charcoal\Property\DateTimeProperty;
 use Charcoal\Tests\AbstractTestCase;
@@ -144,7 +143,7 @@ class DateTimePropertyTest extends AbstractTestCase
         $this->assertEquals('2015/09/01', $this->obj->displayVal(new DateTime('September 1st, 2015')));
 
         // Test with custom format passed as parameter
-        $this->assertEquals('2017/12/12', $this->obj->displayVal('December 12, 2017', ['format'=>'Y/m/d']));
+        $this->assertEquals('2017/12/12', $this->obj->displayVal('December 12, 2017', ['format' => 'Y/m/d']));
 
         // Test with null value
         $this->assertEquals('', $this->obj->displayVal(null));

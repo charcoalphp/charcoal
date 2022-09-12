@@ -6,7 +6,6 @@ use Exception;
 use InvalidArgumentException;
 use PDO;
 use ReflectionClass;
-
 // From 'charcoal-property'
 use Charcoal\Property\ColorProperty;
 use Charcoal\Tests\AbstractTestCase;
@@ -73,7 +72,7 @@ class ColorPropertyTest extends AbstractTestCase
 
     public function parseOneArray()
     {
-        $this->assertEquals(['r'=>255, 'g'=>255, 'b'=>255], $this->obj->parseOne([255,255,255]));
+        $this->assertEquals(['r' => 255, 'g' => 255, 'b' => 255], $this->obj->parseOne([255,255,255]));
         $this->expectException(InvalidArgumentException::class);
         $this->obj->parseOne([255]);
     }
@@ -162,8 +161,8 @@ class ColorPropertyTest extends AbstractTestCase
             ['Red', '#FF0000'],
             ['RED', '#FF0000'],
             [[255,0,255], '#FF00FF'],
-            [['r'=>255, 'g'=>0, 'b'=>255], '#FF00FF'],
-            [['r'=>255, 'g'=>0, 'b'=>255, 'a'=>0], '#FF00FF'],
+            [['r' => 255, 'g' => 0, 'b' => 255], '#FF00FF'],
+            [['r' => 255, 'g' => 0, 'b' => 255, 'a' => 0], '#FF00FF'],
             ['ABC', '#AABBCC']
         ];
     }
@@ -188,8 +187,8 @@ class ColorPropertyTest extends AbstractTestCase
             ['Red', 'rgba(255,0,0,0)'],
             ['RED', 'rgba(255,0,0,0)'],
             [[255,0,255], 'rgba(255,0,255,0)'],
-            [['r'=>255, 'g'=>0, 'b'=>255], 'rgba(255,0,255,0)'],
-            [['r'=>255, 'g'=>0, 'b'=>255, 'a'=>0], 'rgba(255,0,255,0)']
+            [['r' => 255, 'g' => 0, 'b' => 255], 'rgba(255,0,255,0)'],
+            [['r' => 255, 'g' => 0, 'b' => 255, 'a' => 0], 'rgba(255,0,255,0)']
         ];
     }
 

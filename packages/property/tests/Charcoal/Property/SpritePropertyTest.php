@@ -3,7 +3,6 @@
 namespace Charcoal\Tests\Property;
 
 use InvalidArgumentException;
-
 // From 'charcoal-property'
 use Charcoal\Property\SpriteProperty;
 use Charcoal\Tests\AbstractTestCase;
