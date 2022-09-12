@@ -75,6 +75,13 @@ class YamlFileLoaderTest extends AbstractFileLoaderTestCase
      */
     public function testLoadFileWithNoYamlParser()
     {
+        if (class_exists('Symfony\Component\Yaml\Parser', false)) {
+            $this->markTestSkipped(
+              'The Symfony YAML component was loaded before the test could run'
+            );
+            return;
+        }
+
         $this->expectExceptionMessage('YAML format requires the Symfony YAML component');
         $this->expectException(LogicException::class);
 
@@ -124,16 +131,24 @@ class YamlFileLoaderTest extends AbstractFileLoaderTestCase
         global $autoloader;
         // phpcs:enable
 
-        $prefixesPsr4 = $autoloader->getPrefixesPsr4();
-        if (!isset($prefixesPsr4['Symfony\\Component\\Yaml\\'])) {
-            return;
+        // If PSR-0/4 autoloading was optimized
+        $classMap = $autoloader->getClassMap();
+        if (isset($classMap['Symfony\\Component\\Yaml\\Parser'])) {
+            $refClassMap = new ReflectionProperty($autoloader, 'classMap');
+            $refClassMap->setAccessible(true);
+
+            unset($classMap['Symfony\\Component\\Yaml\\Parser']);
+            $refClassMap->setValue($autoloader, $classMap);
         }
 
-        $refPrefixesPsr4 = new ReflectionProperty($autoloader, 'prefixDirsPsr4');
-        $refPrefixesPsr4->setAccessible(true);
+        $prefixesPsr4 = $autoloader->getPrefixesPsr4();
+        if (isset($prefixesPsr4['Symfony\\Component\\Yaml\\'])) {
+            $refPrefixesPsr4 = new ReflectionProperty($autoloader, 'prefixDirsPsr4');
+            $refPrefixesPsr4->setAccessible(true);
 
-        unset($prefixesPsr4['Symfony\\Component\\Yaml\\']);
-        $refPrefixesPsr4->setValue($autoloader, $prefixesPsr4);
+            unset($prefixesPsr4['Symfony\\Component\\Yaml\\']);
+            $refPrefixesPsr4->setValue($autoloader, $prefixesPsr4);
+        }
     }
 
     /**
@@ -147,19 +162,31 @@ class YamlFileLoaderTest extends AbstractFileLoaderTestCase
         global $autoloader;
         // phpcs:enable
 
-        $prefixesPsr4 = $autoloader->getPrefixesPsr4();
-        if (isset($prefixesPsr4['Symfony\\Component\\Yaml\\'])) {
-            return;
+        // If PSR-0/4 autoloading was optimized
+        $classMap = $autoloader->getClassMap();
+        if (!isset($classMap['Symfony\\Component\\Yaml\\Parser'])) {
+            $refClassMap = new ReflectionProperty($autoloader, 'classMap');
+            $refClassMap->setAccessible(true);
+
+            $refClassLoader  = $refClassMap->getDeclaringClass();
+            $classLoaderPath = $refClassLoader->getFileName();
+
+            $vendorDir = dirname(dirname($classLoaderPath));
+            $prefixesPsr4['Symfony\\Component\\Yaml\\Parser'] = [ $vendorDir.'/symfony/yaml/Parser.php' ];
+            $refClassMap->setValue($autoloader, $prefixesPsr4);
         }
 
-        $refPrefixesPsr4 = new ReflectionProperty($autoloader, 'prefixDirsPsr4');
-        $refPrefixesPsr4->setAccessible(true);
+        $prefixesPsr4 = $autoloader->getPrefixesPsr4();
+        if (!isset($prefixesPsr4['Symfony\\Component\\Yaml\\'])) {
+            $refPrefixesPsr4 = new ReflectionProperty($autoloader, 'prefixDirsPsr4');
+            $refPrefixesPsr4->setAccessible(true);
 
-        $refClassLoader  = $refPrefixesPsr4->getDeclaringClass();
-        $classLoaderPath = $refClassLoader->getFileName();
+            $refClassLoader  = $refPrefixesPsr4->getDeclaringClass();
+            $classLoaderPath = $refClassLoader->getFileName();
 
-        $vendorDir = dirname(dirname($classLoaderPath));
-        $prefixesPsr4['Symfony\\Component\\Yaml\\'] = [ $vendorDir.'/symfony/yaml' ];
-        $refPrefixesPsr4->setValue($autoloader, $prefixesPsr4);
+            $vendorDir = dirname(dirname($classLoaderPath));
+            $prefixesPsr4['Symfony\\Component\\Yaml\\'] = [ $vendorDir.'/symfony/yaml' ];
+            $refPrefixesPsr4->setValue($autoloader, $prefixesPsr4);
+        }
     }
 }
