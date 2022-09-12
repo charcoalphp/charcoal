@@ -29,6 +29,7 @@
         "seld/jsonlint": "^1.9",
         "squizlabs/php_codesniffer": "^3.5",
         "tedivm/stash": "~0.16",
+        "charcoal/app": "^3.2",
         "ext-json": "*"
     },
     "autoload": {
