@@ -30,7 +30,8 @@
         "php-coveralls/php-coveralls": "^2.2",
         "cache/void-adapter": "^1.0",
         "tedivm/stash": "~0.16",
-        "seld/jsonlint": "^1.9"
+        "seld/jsonlint": "^1.9",
+        "charcoal/app":  "^3.2"
     },
     "autoload": {
         "psr-4": {

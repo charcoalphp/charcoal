@@ -2,6 +2,7 @@
 
 namespace Charcoal\Tests\User;
 
+use League\Event\EventDispatcher;
 use PDO;
 
 // From PSR-3
@@ -50,6 +51,7 @@ class ContainerProvider
         $this->registerLogger($container);
         $this->registerCache($container);
         $this->registerTranslator($container);
+        $this->registerEvent($container);
     }
 
     /**
@@ -235,5 +237,16 @@ class ContainerProvider
                 'manager'  => $container['locales/manager']
             ]);
         };
+    }
+
+    /**
+     * Setup event dispatcher.
+     *
+     * @param Container $container  A DI container.
+     * @return void
+     */
+    public function registerEvent(Container $container)
+    {
+        $container['event/dispatcher'] = new EventDispatcher();
     }
 }
