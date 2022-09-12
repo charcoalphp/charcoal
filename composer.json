@@ -31,11 +31,6 @@
             "email": "ben@locomotive.ca"
         }
     ],
-    "extra": {
-        "branch-alias": {
-            "dev-main": "2.x-dev"
-        }
-    },
     "require": {
         "barryvdh/elfinder-flysystem-driver": "^0.3",
         "erusev/parsedown": "^1.7",
@@ -166,6 +161,11 @@
         "locomotivemtl/charcoal-ui": "*",
         "locomotivemtl/charcoal-user": "*",
         "locomotivemtl/charcoal-view": "*"
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-main": "3.x-dev"
+        }
     },
     "bin": [
         "bin/charcoal"
