@@ -179,7 +179,7 @@ class ModelServiceProviderTest extends AbstractTestCase
     {
         $container = new Container([
             'config' => [
-                'base_path' => dirname(dirname(dirname(dirname(__DIR__)))),
+                'base_path' => dirname(__DIR__, 4),
             ],
             'module/classes' => [
                 'Charcoal\\Tests\\Mock\\MockModule',
