@@ -1,21 +1,23 @@
 #!/usr/bin/env php
 <?php
 
-use Slim\Http\Environment as SlimEnvironment;
+declare(strict_types=1);
 
 use Charcoal\App\App;
 use Charcoal\App\AppConfig;
 use Charcoal\App\AppContainer;
+use Slim\Http\Environment as SlimEnvironment;
 
-// Ensure CLI mode
+// Ensure this is being used via a CLI
 if (PHP_SAPI !== 'cli') {
-    die('This program can only be executed from a terminal / Command Line Interface'."\n");
+    die('This program can only be executed from a command line interface' . "\n");
 }
 
+// Find Composer autoloader
 $autoloaderPath = [
-    __DIR__.'/../../../../vendor/autoload.php',
-    __DIR__.'/../vendor/autoload.php',
-    __DIR__.'/../autoload.php'
+    __DIR__ . '/../../../../vendor/autoload.php',
+    __DIR__ . '/../vendor/autoload.php',
+    __DIR__ . '/../autoload.php',
 ];
 
 $autoloaderFound = false;
@@ -27,21 +29,31 @@ foreach ($autoloaderPath as $file) {
     }
 }
 if (!$autoloaderFound) {
-    die('Composer autoloader not found.'."\n");
+    die('Composer autoloader not found.' . "\n");
 }
 
+// Resolve the appllication's base path from the Composer autoloader path
 $baseDir = dirname(realpath($file), 2);
 
+// phpcs:disable Squiz.PHP.GlobalKeyword.NotAllowed
 global $argv;
-// Convert command line arguments into a URL (for Slim)
-$argv = $GLOBALS['argv'];
+// phpcs:enable Squiz.PHP.GlobalKeyword.NotAllowed
+
+// Extract first CLI argument to act as a URI path (for Slim)
 if (!isset($argv[1])) {
-    die('This script requires at least one parameter: the script action name / ident.'."\n");
+    die('This script requires at least one parameter: the script name.' . "\n");
 }
-$path = '/'.ltrim($argv[1], '/');
+
+$path = '/' . ltrim($argv[1], '/');
+
+// Default file path
+$confFile = $baseDir . '/config/config.php';
+if (!file_exists($confFile)) {
+    die('Charcoal configuration file not found.' . "\n");
+}
 
 $config = new AppConfig();
-$config->addFile($baseDir.'/config/config.php');
+$config->addFile($confFile);
 $config->set('base_path', $baseDir . '/');
 
 // Serve the application from the web directory.
@@ -49,38 +61,38 @@ chdir($config['public_path']);
 
 // Create container and configure it (with charcoal-config)
 $container = new AppContainer([
-    'config'   => $config
+    'config' => $config,
 ]);
 
-// Handle "404 Not Found"
-$container['notFoundHandler'] = function ($container)
-{
-    return function ($request, $response) use ($container)
-    {
+// Convert HTTP 404 Not Found to CLI-friendly error
+$container['notFoundHandler'] = function ($container) {
+    return function ($request, $response) use ($container) {
         return $container['response']
             ->withStatus(404)
-            ->write(sprintf('Script "%s" not found', $container['request']->getUri()->getPath())."\n");
+            ->write(sprintf(
+                'Script "%s" not found' . "\n",
+                $container['request']->getUri()->getPath()
+            ));
     };
 };
 
-// Handle "500 Server Error"
-$container['errorHandler'] = function ($container)
-{
-    return function ($request, $response, $exception) use ($container)
-    {
+// Convert HTTP 500 Server Error to CLI-friendly error
+$container['errorHandler'] = function ($container) {
+    return function ($request, $response, $exception) use ($container) {
         return $container['response']
             ->withStatus(500)
-            ->write(
-                sprintf('Something went wrong! [%s]'."\n", $exception->getMessage())
-            );
+            ->write(sprintf(
+                'Something went wrong! [%s]' . "\n",
+                $exception->getMessage()
+            ));
     };
 };
 
-// Fake environment (for CLI) with path
-$container['environment'] = function($container) use ($path) {
+// Create a fake HTTP environment from the first CLI argument
+$container['environment'] = function ($container) use ($path) {
     return SlimEnvironment::mock([
         'PATH_INFO'   => $path,
-        'REQUEST_URI' => $path
+        'REQUEST_URI' => $path,
     ]);
 };
 
