@@ -7,9 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 > ⚠️ This `CHANGELOG` file is automatically generated through Github actions from Github release notes.
 
-## [Unreleased](https://github.com/charcoalphp/charcoal/compare/v3.1.5...main)
+## [Unreleased](https://github.com/charcoalphp/charcoal/compare/v3.1.6...main)
 
 Please do not update the unreleased notes.
+
+## [v3.1.6](https://github.com/charcoalphp/charcoal/compare/v3.1.5...v3.1.6) - 2022-09-13
+
+### [3.1.6](https://github.com/charcoalphp/charcoal/compare/v3.1.5...v3.1.6) (2022-09-13)
+
+#### Bug Fixes
+
+- **bin:** Improve logic, comments, fix coding style ([894261a](https://github.com/charcoalphp/charcoal/commit/894261a3bc1119fd598f31415d389f1c1c9e8934))
 
 ## [v3.1.5](https://github.com/charcoalphp/charcoal/compare/v3.1.4...v3.1.5) - 2022-09-09
 
