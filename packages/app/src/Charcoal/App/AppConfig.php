@@ -171,8 +171,6 @@ class AppConfig extends AbstractConfig
 
         return [
             'project_name'     => '',
-            'base_path'        => $baseDir,
-            'public_path'      => null,
             'timezone'         => 'UTC',
             'routes'           => [],
             'routables'        => [],
@@ -290,7 +288,7 @@ class AppConfig extends AbstractConfig
     /**
      * Retrieve the application's absolute root path.
      *
-     * @return string The absolute path to the application's root directory.
+     * @return string|null The absolute path to the application's root directory.
      */
     public function basePath()
     {
