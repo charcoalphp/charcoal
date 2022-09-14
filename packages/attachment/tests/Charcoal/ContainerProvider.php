@@ -104,7 +104,7 @@ class ContainerProvider
     {
         $container['config'] = function () {
             return new AppConfig([
-                'base_path'  => realpath(__DIR__.'/../../..'),
+                'base_path'  => realpath(__DIR__ . '/../../..'),
                 'apis'       => [
                     'google' => [
                         'recaptcha' => [

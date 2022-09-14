@@ -55,7 +55,7 @@ class ContainerProvider
     public function registerConfig(Container $container)
     {
         $container['config'] = new AppConfig([
-            'base_path'  => realpath(__DIR__.'/../../..'),
+            'base_path'  => realpath(__DIR__ . '/../../..'),
             'locales'    => [
                 'en' => [
                     'locale' => 'en-US',

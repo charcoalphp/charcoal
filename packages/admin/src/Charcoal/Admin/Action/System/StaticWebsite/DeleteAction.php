@@ -30,7 +30,7 @@ class DeleteAction extends AdminAction
         $url = $request->getParam('url');
         $relativeUrl = str_replace($this->baseUrl(), '', $url);
 
-        $outputDir = $this->basePath . 'cache/static/' . $relativeUrl;
+        $outputDir = $this->basePath . DIRECTORY_SEPARATOR . 'cache/static/' . $relativeUrl;
         if (!file_exists($outputDir)) {
             $this->setSuccess(false);
             $this->addFeedback('error', 'Can not delete static page: did not exist on filesystem.');

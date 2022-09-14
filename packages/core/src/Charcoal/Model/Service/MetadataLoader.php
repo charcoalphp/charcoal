@@ -646,7 +646,7 @@ final class MetadataLoader implements LoggerAwareInterface
         $path = trim($path, '/\\');
 
         if ($basePath && strpos($path, $basePath) === false) {
-            $path = $basePath . $path;
+            $path = $basePath . DIRECTORY_SEPARATOR . $path;
         }
 
         return $path;

@@ -114,7 +114,7 @@ class CrawlScript extends AdminScript
         $this->startUrl = rtrim($climate->arguments->get('url'), '/') . '/';
         $this->parsedStartUrl = parse_url($this->startUrl);
 
-        $this->outputDir = rtrim($this->basePath . $climate->arguments->get('output-dir'), '/');
+        $this->outputDir = rtrim($this->basePath . DIRECTORY_SEPARATOR . $climate->arguments->get('output-dir'), '/');
 
         $this->maxLevel = $climate->arguments->get('max-level');
 

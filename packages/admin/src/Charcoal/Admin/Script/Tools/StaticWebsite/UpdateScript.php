@@ -73,16 +73,16 @@ class UpdateScript extends AdminScript
         if (!$all && $url) {
             $files = [str_replace($this->baseUrl(), '', $url)];
         } else {
-            $files = $this->globRecursive($this->basePath . 'cache/static', 'index.*');
+            $files = $this->globRecursive($this->basePath . DIRECTORY_SEPARATOR . 'cache/static', 'index.*');
         }
 
         foreach ($files as $file) {
-            $relativeUrl = dirname(str_replace($this->basePath . 'cache/static/', '', $file));
+            $relativeUrl = dirname(str_replace($this->basePath . DIRECTORY_SEPARATOR . 'cache/static/', '', $file));
             if ($relativeUrl === '.') {
                 $relativeUrl = '';
             }
             $url = $this->baseUrl() . $relativeUrl;
-            $outputDir = $this->basePath . 'cache/static/' . $relativeUrl;
+            $outputDir = $this->basePath . DIRECTORY_SEPARATOR . 'cache/static/' . $relativeUrl;
             if ($this->verbose()) {
                 $climate->out('Updating "' . $relativeUrl . '"...');
             }

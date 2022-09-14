@@ -31,7 +31,7 @@ class DeleteAllAction extends AdminAction
     {
         unset($request);
 
-        $outputDir = $this->basePath . 'cache/static/';
+        $outputDir = $this->basePath . DIRECTORY_SEPARATOR . 'cache/static/';
         if (!file_exists($outputDir)) {
             $this->setSuccess(false);
             $this->addFeedback('error', 'Can not delete all static pages: did not exist on filesystem.');

@@ -75,7 +75,7 @@ class ResizeImagesScript extends AdminScript
         $this->maxWidth = $climate->arguments->get('width');
         $this->maxHeight = $climate->arguments->get('height');
         $dir = $climate->arguments->get('dir');
-        $this->dir = realpath($this->basePath . $dir);
+        $this->dir = realpath($this->basePath . DIRECTORY_SEPARATOR . $dir);
         if (!$this->dir) {
             $climate->error('Invalid directory');
             return $response;

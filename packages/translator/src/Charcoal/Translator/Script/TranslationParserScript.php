@@ -162,7 +162,7 @@ class TranslationParserScript extends AdminScript
         // Warn the user
         $base = $this->appConfig->get('base_path');
         $output = $this->output();
-        $filePath = str_replace('/', DIRECTORY_SEPARATOR, $base . $output);
+        $filePath = str_replace('/', DIRECTORY_SEPARATOR, $base . DIRECTORY_SEPARATOR . $output);
 
         $this->climate()->backgroundGreen()->out(
             'Make sure to include <light_green>' . $filePath . '</light_green> in your <light_green>translator/paths</light_green> configurations.'
@@ -236,7 +236,7 @@ class TranslationParserScript extends AdminScript
 
         $base = $this->appConfig->get('base_path');
         $output = $this->output();
-        $this->filePath = str_replace('/', DIRECTORY_SEPARATOR, $base . $output);
+        $this->filePath = str_replace('/', DIRECTORY_SEPARATOR, $base . DIRECTORY_SEPARATOR . $output);
         return $this->filePath;
     }
 
@@ -359,7 +359,7 @@ class TranslationParserScript extends AdminScript
     {
         // remove vendor/locomotivemtl/charcoal-app
         $base  = $this->appConfig->get('base_path');
-        $glob  = $this->globRecursive($base . $path . '*.' . $fileType);
+        $glob  = $this->globRecursive($base . DIRECTORY_SEPARATOR . $path . '*.' . $fileType);
         $regex = $this->regEx($fileType);
 
         $translations = [];
@@ -489,7 +489,7 @@ class TranslationParserScript extends AdminScript
 
         foreach ($translations as $lang => $trans) {
             // Create / open the handle
-            $filePath = str_replace('/', DIRECTORY_SEPARATOR, $base . $output);
+            $filePath = str_replace('/', DIRECTORY_SEPARATOR, $base . DIRECTORY_SEPARATOR . $output);
             $dirname = dirname($filePath);
 
             if (!file_exists($filePath)) {

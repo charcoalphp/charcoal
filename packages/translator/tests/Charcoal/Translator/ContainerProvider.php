@@ -130,7 +130,7 @@ class ContainerProvider
     {
         $container['config'] = function () {
             return new AppConfig([
-                'base_path' => realpath(__DIR__.'/../../..'),
+                'base_path' => realpath(__DIR__ . '/../../..'),
                 'locales'   => [
                     'languages' => [
                         'en' => [ 'locale' => 'en-US', 'locales' => [ 'en_US.UTF-8', 'en_US.utf8', 'en_US' ] ],

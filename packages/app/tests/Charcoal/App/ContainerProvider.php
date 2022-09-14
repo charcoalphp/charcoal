@@ -93,7 +93,7 @@ class ContainerProvider
     {
         $container['config'] = function (Container $container) {
             return new AppConfig([
-                'base_path' => realpath(__DIR__.'/../../..'),
+                'base_path' => realpath(__DIR__ . '/../../..'),
             ]);
         };
     }

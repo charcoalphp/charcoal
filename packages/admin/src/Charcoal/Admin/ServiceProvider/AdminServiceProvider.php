@@ -125,9 +125,8 @@ class AdminServiceProvider implements ServiceProviderInterface
             }
 
             if (!empty($extraConfigs)) {
-                $basePath = rtrim($appConfig['base_path'], '/');
                 foreach ($extraConfigs as $path) {
-                    $configPath = $basePath . '/' . ltrim($path, '/');
+                    $configPath =  $appConfig['base_path'] . DIRECTORY_SEPARATOR . ltrim($path, '/');
 
                     $appConfig->addFile($configPath);
                 }
@@ -159,7 +158,7 @@ class AdminServiceProvider implements ServiceProviderInterface
                     if ($adminConfig['base_path']) {
                         $basePath  = rtrim($adminUrl->getBasePath(), '/');
                         $adminPath = ltrim($adminConfig['base_path'], '/');
-                        $adminUrl  = $adminUrl->withBasePath($basePath . '/' . $adminPath);
+                        $adminUrl  = $adminUrl->withBasePath($basePath . DIRECTORY_SEPARATOR . $adminPath);
                     }
                 }
 

@@ -182,7 +182,7 @@ abstract class AbstractLoader implements LoaderInterface
         $basePath = $this->basePath();
         $path = rtrim($path, '/\\') . DIRECTORY_SEPARATOR;
         if ($basePath && strpos($path, $basePath) === false) {
-            $path = $basePath . $path;
+            $path = $basePath . DIRECTORY_SEPARATOR . $path;
         }
 
         return $path;

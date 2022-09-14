@@ -178,7 +178,7 @@ class TranslateScript extends AdminScript
      */
     public function base()
     {
-        return realpath($this->app()->config()->get('base_path') . '../../../') . '/';
+        return realpath($this->app()->config()->get('base_path') . DIRECTORY_SEPARATOR . '../../../') . '/';
     }
 
     /**

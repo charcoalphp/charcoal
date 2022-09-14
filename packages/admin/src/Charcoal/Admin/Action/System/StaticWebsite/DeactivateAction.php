@@ -28,7 +28,7 @@ class DeactivateAction extends AdminAction
     {
         unset($request);
 
-        $staticLink = $this->basePath . 'www/static';
+        $staticLink = $this->basePath . DIRECTORY_SEPARATOR . 'www/static';
         if (!file_exists($staticLink)) {
             $this->setSuccess(false);
             return $response->withStatus(409);

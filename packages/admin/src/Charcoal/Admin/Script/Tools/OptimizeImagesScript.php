@@ -75,7 +75,7 @@ class OptimizeImagesScript extends AdminScript
         $this->jpgLevel = $climate->arguments->get('jpg');
         $this->pngLevel = $climate->arguments->get('png');
         $dir = $climate->arguments->get('dir');
-        $this->dir = realpath($this->basePath . $dir);
+        $this->dir = realpath($this->basePath . DIRECTORY_SEPARATOR . $dir);
         if (!$this->dir) {
             $climate->error('Invalid directory');
             return $response;

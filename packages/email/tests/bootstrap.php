@@ -11,7 +11,7 @@ if (($_ENV['TEST_MODE'] ?? '') === 'PACKAGE') {
 }
 
 $config = new AppConfig([
-    'base_path' => (dirname(__DIR__).'/'),
+    'base_path' => (dirname(__DIR__) . '/'),
     'databases' => [
         'phpunit' => [
             'type'     => 'sqlite',

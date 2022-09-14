@@ -50,7 +50,7 @@ class CopyAssetsScript extends AdminScript
         $climate->arguments->parse();
 
         $dirArg = $climate->arguments->get('dir');
-        $dirPath = $this->basePath . $dirArg;
+        $dirPath = $this->basePath . DIRECTORY_SEPARATOR . $dirArg;
         $this->dir = realpath($dirPath);
         if (!$this->dir) {
             $climate->orange('Directory does not exist. Creating it…');

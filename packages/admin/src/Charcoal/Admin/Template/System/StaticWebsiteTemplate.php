@@ -49,7 +49,7 @@ class StaticWebsiteTemplate extends AdminTemplate
      */
     public function isStaticWebsiteEnabled()
     {
-        return file_exists($this->basePath . '/www/static');
+        return file_exists($this->basePath . DIRECTORY_SEPARATOR . '/www/static');
     }
 
     /**
@@ -57,11 +57,11 @@ class StaticWebsiteTemplate extends AdminTemplate
      */
     public function staticWebsiteFiles()
     {
-        $files = $this->globRecursive($this->basePath . 'cache/static', 'index.*');
+        $files = $this->globRecursive($this->basePath . DIRECTORY_SEPARATOR . 'cache/static', 'index.*');
         foreach ($files as $file) {
             yield [
                 'file'      => $file,
-                'name'      => dirname(str_replace($this->basePath . 'cache/static/', '', $file)),
+                'name'      => dirname(str_replace($this->basePath . DIRECTORY_SEPARATOR . 'cache/static/', '', $file)),
                 'size'      => $this->formatBytes(filesize($file)),
                 'mtime'     => date(DATE_ATOM, filemtime($file)),
                 'generated' => date('Y-m-d H:i:s', filemtime($file)),

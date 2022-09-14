@@ -1337,9 +1337,8 @@ class FileProperty extends AbstractProperty
     protected function pathFor($path)
     {
         $path       = trim($path, '/');
-        $basePath   = rtrim($this->basePath(), '/');
 
-        return $basePath . '/' . $path;
+        return $this->basePath() . DIRECTORY_SEPARATOR . $path;
     }
 
     /**

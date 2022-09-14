@@ -465,8 +465,8 @@ class ElfinderConnectorAction extends AdminAction
             $acceptedMimetypes = $formProperty['acceptedMimetypes'];
             $basePath  = $isPublic ? $this->publicPath : $this->basePath;
 
-            if (!file_exists($basePath . $startPath)) {
-                mkdir($basePath . $startPath, 0755, true);
+            if (!file_exists($basePath . DIRECTORY_SEPARATOR . $startPath)) {
+                mkdir($basePath . DIRECTORY_SEPARATOR . $startPath, 0755, true);
             }
 
             if ($startPath) {
