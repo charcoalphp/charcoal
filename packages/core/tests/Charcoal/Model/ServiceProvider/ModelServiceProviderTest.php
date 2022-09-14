@@ -81,6 +81,7 @@ class ModelServiceProviderTest extends AbstractTestCase
         $container['database'] = new PDO('sqlite::memory:');
 
         $container['config'] = new AppConfig([
+            'base_path' => sys_get_temp_dir(),
             'metadata'  => [
                 'paths' => [],
             ],
