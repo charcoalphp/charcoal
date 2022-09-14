@@ -34,7 +34,7 @@ class MetadataConfig extends AbstractConfig
      * @return mixed An associative array if $key is NULL.
      *     If $key is specified, the value of that data key if it exists, NULL on failure.
      */
-    public function defaults($key = null)
+    public function defaults($key = null): array
     {
         $data = [
             'paths' => [],
@@ -55,7 +55,7 @@ class MetadataConfig extends AbstractConfig
      * @param  array|Traversable $data The data to merge.
      * @return self
      */
-    public function merge($data)
+    public function merge($data): self
     {
         foreach ($data as $key => $val) {
             if ($key === 'paths') {

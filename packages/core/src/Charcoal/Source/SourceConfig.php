@@ -19,7 +19,7 @@ class SourceConfig extends AbstractConfig
     /**
      * @return array
      */
-    public function defaults()
+    public function defaults(): array
     {
         return [
             'type' => ''

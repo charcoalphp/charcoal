@@ -16,7 +16,7 @@ class MacroConfig extends AbstractConfig
     /**
      * @return array
      */
-    public function defaults()
+    public function defaults(): array
     {
         return [
             'foo' => -3,

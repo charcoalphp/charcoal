@@ -82,7 +82,7 @@ abstract class AbstractConfig extends AbstractEntity implements
      *
      * @return array Key-value array of data
      */
-    public function defaults()
+    public function defaults(): array
     {
         return [];
     }
@@ -96,7 +96,7 @@ abstract class AbstractConfig extends AbstractEntity implements
      *     (such as {@see ConfigInterface}).
      * @return self
      */
-    public function merge($data)
+    public function merge($data): self
     {
         foreach ($data as $key => $value) {
             $this->offsetReplace($key, $value);
@@ -334,7 +334,7 @@ abstract class AbstractConfig extends AbstractEntity implements
      * @param  string $path The file to load and add.
      * @return self
      */
-    public function addFile($path)
+    public function addFile(string $path): self
     {
         $config = $this->loadFile($path);
         if (is_array($config)) {

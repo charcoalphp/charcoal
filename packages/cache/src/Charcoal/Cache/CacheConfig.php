@@ -66,7 +66,7 @@ class CacheConfig extends AbstractConfig
      *
      * @return array
      */
-    public function defaults()
+    public function defaults(): array
     {
         return [
             'active'      => true,

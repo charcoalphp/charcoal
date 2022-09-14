@@ -50,7 +50,7 @@ class Config extends AbstractConfig
      *
      * @return array
      */
-    public function defaults()
+    public function defaults(): array
     {
         $baseDir = rtrim(realpath(__DIR__ . '/../../../'), '/');
         $confDir = $baseDir . '/config';
