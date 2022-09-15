@@ -568,7 +568,7 @@ class AppServiceProvider implements ServiceProviderInterface
          */
         $container['view/twig/helpers/debug'] = function (Container $container): TwigHelpersInterface {
             return new TwigDebugHelpers([
-                'config'  => $container['config'],
+                'debug'  => $container['debug'],
             ]);
         };
 

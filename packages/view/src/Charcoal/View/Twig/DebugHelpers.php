@@ -19,8 +19,8 @@ class DebugHelpers extends AbstractExtension implements
      */
     public function __construct(array $data = null)
     {
-        if (isset($data['config'])) {
-            $this->config = $data['config'];
+        if (isset($data['debug'])) {
+            $this->debug = $data['debug'];
         }
     }
 
@@ -34,7 +34,7 @@ class DebugHelpers extends AbstractExtension implements
 
     public function isDebug(): bool
     {
-        return ($this->config['debug'] ?? false);
+        return ($this->debug ?? false);
     }
 
     /**
