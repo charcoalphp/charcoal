@@ -103,7 +103,7 @@ class LanguageMiddlewareTest extends AbstractTestCase
             $this->container = new Container();
 
             $this->container['config'] = new AppConfig([
-                'base_path' => realpath(__DIR__.'/../../..'),
+                'base_path' => realpath(__DIR__ . '/../../..'),
                 'locales'   => [
                     'languages' => [
                         'en' => [ 'locale' => 'en-US', 'locales' => [ 'en_US.UTF-8', 'en_US.utf8', 'en_US' ] ],

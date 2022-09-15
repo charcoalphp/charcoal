@@ -11,35 +11,22 @@ namespace Charcoal\View;
  */
 abstract class AbstractLoader implements LoaderInterface
 {
-    /**
-     * @var string
-     */
-    private $basePath = '';
-
-    /**
-     * @var string[]
-     */
-    private $paths = [];
-
-    /**
-     * @var array
-     */
-    private $dynamicTemplates = [];
+    private string $basePath = '';
+    private array $paths = [];
+    private array $dynamicTemplates = [];
 
     /**
      * The cache of searched template files.
-     *
-     * @var array
      */
-    private $fileCache = [];
+    private array $fileCache = [];
 
     /**
      * Default constructor, if none is provided by the concrete class implementations.
      *
      *
-     * @param array $data The class dependencies map.
+     * @param ?array $data The class dependencies map.
      */
-    public function __construct(array $data = null)
+    public function __construct(?array $data = null)
     {
         $this->setBasePath($data['base_path']);
         $this->setPaths($data['paths']);
@@ -182,7 +169,7 @@ abstract class AbstractLoader implements LoaderInterface
         $basePath = $this->basePath();
         $path = rtrim($path, '/\\') . DIRECTORY_SEPARATOR;
         if ($basePath && strpos($path, $basePath) === false) {
-            $path = $basePath . $path;
+            $path = $basePath . DIRECTORY_SEPARATOR . $path;
         }
 
         return $path;

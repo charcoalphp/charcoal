@@ -136,7 +136,7 @@ class UploadImageAction extends AdminAction
     {
         $basePath = $this->basePath();
 
-        $dir      = $basePath . $this->uploadPath();
+        $dir      = $basePath . DIRECTORY_SEPARATOR . $this->uploadPath();
         $filename = ($filename) ? $this->sanitizeFilename($filename) : 'unnamed_file';
 
         if (!file_exists($dir)) {
@@ -182,7 +182,7 @@ class UploadImageAction extends AdminAction
     public function fileExists($file, $caseInsensitive = true)
     {
         if (!$this->isAbsolutePath($file)) {
-            $file = $this->basePath() . $file;
+            $file = $this->basePath() . DIRECTORY_SEPARATOR . $file;
         }
 
         if (file_exists($file)) {

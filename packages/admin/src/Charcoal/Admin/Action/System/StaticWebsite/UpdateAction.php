@@ -36,7 +36,7 @@ class UpdateAction extends AdminAction
         $relativeUrl = str_replace($this->baseUrl(), '', $url);
         $url = $this->baseUrl() . $relativeUrl;
 
-        $outputDir = $this->basePath . 'cache/static/' . $relativeUrl;
+        $outputDir = $this->basePath . DIRECTORY_SEPARATOR . 'cache/static/' . $relativeUrl;
 
         $ret = $this->cacheUrl($url, $outputDir, $response);
 

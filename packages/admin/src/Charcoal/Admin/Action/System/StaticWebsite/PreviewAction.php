@@ -36,7 +36,7 @@ class PreviewAction extends AdminAction
         $relativeUrl = str_replace($this->baseUrl(), '', $url);
         $url = $this->baseUrl() . $relativeUrl;
 
-        $outputDir = $this->basePath . 'cache/static/' . $relativeUrl;
+        $outputDir = $this->basePath . DIRECTORY_SEPARATOR . 'cache/static/' . $relativeUrl;
         if (!file_exists($outputDir)) {
             $this->setSuccess(false);
             $this->addFeedback('error', 'Can not preview static page: does not exist on filesystem.');

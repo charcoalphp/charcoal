@@ -52,13 +52,10 @@ if (!file_exists($confFile)) {
     die('Charcoal configuration file not found.' . "\n");
 }
 
-$config = new AppConfig();
+$config = new AppConfig([
+    'base_path'   => $baseDir,
+]);
 $config->addFile($confFile);
-$config->set('base_path', $baseDir . '/');
-
-// Serve the application from the web directory.
-chdir($config['public_path']);
-
 // Create container and configure it (with charcoal-config)
 $container = new AppContainer([
     'config' => $config,

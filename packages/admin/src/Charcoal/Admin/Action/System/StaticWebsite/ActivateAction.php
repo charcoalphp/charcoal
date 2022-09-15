@@ -28,7 +28,7 @@ class ActivateAction extends AdminAction
     {
         unset($request);
 
-        $cachePath = $this->basePath . 'cache';
+        $cachePath = $this->basePath . DIRECTORY_SEPARATOR . 'cache';
         // Ensure 'cache' directory exists
         if (!file_exists($cachePath)) {
             $ret = mkdir($cachePath);
@@ -48,7 +48,7 @@ class ActivateAction extends AdminAction
             }
         }
 
-        $publicPath = $this->basePath . 'www';
+        $publicPath = $this->basePath . DIRECTORY_SEPARATOR . 'www';
         $staticLink = $publicPath . '/static';
         // Ensure 'www/static' directory does NOT exist
         if (file_exists($staticLink)) {
@@ -79,14 +79,12 @@ class ActivateAction extends AdminAction
     /**
      * @return array
      */
-    public function results()
+    public function results(): array
     {
-        $ret = [
+        return [
             'success'   => $this->success(),
-            'feedbacks' => $this->feedbacks()
+            'feedbacks' => $this->feedbacks(),
         ];
-
-        return $ret;
     }
 
     /**

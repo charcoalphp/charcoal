@@ -230,12 +230,12 @@ class ModelServiceProvider implements ServiceProviderInterface
 
                 if (isset($container['module/classes'])) {
                     $extraPaths = [];
-                    $basePath   = rtrim($appConfig['base_path'], '/');
+                    $basePath   = $appConfig['base_path'];
                     $modules    = $container['module/classes'];
                     foreach ($modules as $module) {
                         if (defined(sprintf('%s::APP_CONFIG', $module))) {
                             $configPath = ltrim($module::APP_CONFIG, '/');
-                            $configPath = $basePath . '/' . $configPath;
+                            $configPath = $basePath . DIRECTORY_SEPARATOR . $configPath;
 
                             $configData = $metaConfig->loadFile($configPath);
                             $extraPaths = array_merge(

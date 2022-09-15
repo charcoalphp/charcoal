@@ -99,7 +99,7 @@ class ContainerProvider
             return new MetadataLoader([
                 'cache'     => $container['cache'],
                 'logger'    => $container['logger'],
-                'base_path' => realpath(__DIR__.'/../../../'),
+                'base_path' => realpath(__DIR__ . '/../../../'),
                 'paths'     => [
                     'metadata',
                     // Standalone repo

@@ -232,7 +232,6 @@ class ImageProperty extends FileProperty
     public function processEffects($value, array $effects = null, ImageInterface $image = null)
     {
         $value = $this->parseVal($value);
-
         if ($value instanceof Translation) {
             $value = $value->data();
         }
@@ -245,7 +244,6 @@ class ImageProperty extends FileProperty
             if ($image === null) {
                 $image = $this->createImage();
             }
-
             if (is_array($value)) {
                 foreach ($value as &$val) {
                     $val = $this->processEffectsOne($val, $effects, $image);
@@ -483,7 +481,7 @@ class ImageProperty extends FileProperty
         }
 
         if ($effects) {
-            $basePath = $this->basePath();
+            $basePath = $this->basePath() . DIRECTORY_SEPARATOR;
 
             $isAbsolute = false;
             if (null !== parse_url($value, PHP_URL_HOST)) {

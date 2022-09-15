@@ -44,7 +44,7 @@ class ViewServiceProviderTest extends AbstractTestCase
     {
         $container = new Container([
             'config' => [
-                'base_path' => dirname(dirname(dirname(__DIR__))),
+                'base_path' => dirname(__DIR__, 3),
             ],
             'module/classes' => [
                 'Charcoal\\Tests\\View\\Mock\\MockModule',

@@ -35,7 +35,9 @@ class AppTest extends AbstractTestCase
      */
     public function setUp(): void
     {
-        $config    = new AppConfig();
+        $config = new AppConfig([
+            'base_path' => sys_get_temp_dir(),
+        ]);
         $container = new AppContainer([
             'config' => $config
         ]);

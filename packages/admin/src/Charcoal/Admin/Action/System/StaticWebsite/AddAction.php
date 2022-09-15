@@ -36,7 +36,7 @@ class AddAction extends AdminAction
         $relativeUrl = str_replace($this->baseUrl(), '', $url);
         $url = $this->baseUrl() . $relativeUrl;
 
-        $outputDir = $this->basePath . 'cache/static/' . $relativeUrl;
+        $outputDir = $this->basePath . DIRECTORY_SEPARATOR . 'cache/static/' . $relativeUrl;
         if (!file_exists($outputDir)) {
             $ret = mkdir($outputDir, null, true);
             if ($ret === false) {

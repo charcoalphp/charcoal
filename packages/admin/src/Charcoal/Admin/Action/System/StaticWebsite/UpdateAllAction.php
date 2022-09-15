@@ -24,11 +24,11 @@ class UpdateAllAction extends UpdateAction
     {
         unset($request);
 
-        $files = $this->globRecursive($this->basePath . 'cache/static', 'index.*');
+        $files = $this->globRecursive($this->basePath . DIRECTORY_SEPARATOR . 'cache/static', 'index.*');
         foreach ($files as $file) {
-            $relativeUrl = dirname(str_replace($this->basePath . 'cache/static/', '', $file));
+            $relativeUrl = dirname(str_replace($this->basePath . DIRECTORY_SEPARATOR . 'cache/static/', '', $file));
             $url = $this->baseUrl() . $relativeUrl;
-            $outputDir = $this->basePath . 'cache/static/' . $relativeUrl;
+            $outputDir = $this->basePath . DIRECTORY_SEPARATOR . 'cache/static/' . $relativeUrl;
             $this->cacheUrl($url, $outputDir, $response);
         }
         $this->setSuccess(true);

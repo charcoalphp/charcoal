@@ -207,7 +207,7 @@ class FilesystemServiceProviderTest extends AbstractTestCase
 
     private function createAppConfig($defaults = null)
     {
-        return new AppConfig($defaults);
+        return new AppConfig(array_replace(['base_path' => sys_get_temp_dir()], $defaults));
     }
 
     private function getContainer($defaults = null)
