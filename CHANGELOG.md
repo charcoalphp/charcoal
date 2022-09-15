@@ -7,9 +7,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 > ⚠️ This `CHANGELOG` file is automatically generated through Github actions from Github release notes.
 
-## [Unreleased](https://github.com/charcoalphp/charcoal/compare/v3.1.7...main)
+## [Unreleased](https://github.com/charcoalphp/charcoal/compare/v3.1.8...main)
 
 Please do not update the unreleased notes.
+
+## [v3.1.8](https://github.com/charcoalphp/charcoal/compare/v3.1.7...v3.1.8) - 2022-09-15
+
+### [3.1.8](https://github.com/charcoalphp/charcoal/compare/v3.1.7...v3.1.8) (2022-09-15)
+
+#### ⚠ BREAKING CHANGES
+
+- **elfinder:** removed default base_path and public_path. These config keys should be defined in the AppConfig initialization. `new AppConfig(['base_path' => '...']);`
+
+#### Bug Fixes
+
+- **base-path:** fix base_path concatenation issues since changes made to AppConfig see https://github.com/charcoalphp/charcoal/pull/28#issue-1267893850 ([84441a3](https://github.com/charcoalphp/charcoal/commit/84441a3832fff47ee780d15457778e9e3423bb3f)), closes [/github.com/charcoalphp/charcoal/pull/28#issue-1267893850](https://github.com/charcoalphp//github.com/charcoalphp/charcoal/pull/28/issues/issue-1267893850)
+- **bin:** fix charcoal binary appConfig's basePath ([95bd3a5](https://github.com/charcoalphp/charcoal/commit/95bd3a53fc1712762392376e3b744e3ac0a2b925))
+- **elfinder:** fix issues with elfinder paths ([a476327](https://github.com/charcoalphp/charcoal/commit/a476327234b563ba70b4b6fa92e2a10c6df2989e))
 
 ## [v3.1.7](https://github.com/charcoalphp/charcoal/compare/v3.1.6...v3.1.7) - 2022-09-15
 
