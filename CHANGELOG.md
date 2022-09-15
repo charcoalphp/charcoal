@@ -7,9 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 > ⚠️ This `CHANGELOG` file is automatically generated through Github actions from Github release notes.
 
-## [Unreleased](https://github.com/charcoalphp/charcoal/compare/v3.1.6...main)
+## [Unreleased](https://github.com/charcoalphp/charcoal/compare/v3.1.7...main)
 
 Please do not update the unreleased notes.
+
+## [v3.1.7](https://github.com/charcoalphp/charcoal/compare/v3.1.6...v3.1.7) - 2022-09-15
+
+### [3.1.7](https://github.com/charcoalphp/charcoal/compare/v3.1.6...v3.1.7) (2022-09-15)
+
+#### Bug Fixes
+
+- **view twig helper:** fix the debug and isDebug Twig functions helpers using the debug container ([8ccf37b](https://github.com/charcoalphp/charcoal/commit/8ccf37bd15c328a513ba26af9717e00e792a5fe2))
 
 ## [v3.1.6](https://github.com/charcoalphp/charcoal/compare/v3.1.5...v3.1.6) - 2022-09-13
 
