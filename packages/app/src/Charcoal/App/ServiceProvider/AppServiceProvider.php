@@ -4,7 +4,6 @@ namespace Charcoal\App\ServiceProvider;
 
 // From PSR-7
 use Charcoal\Factory\GenericResolver;
-use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Http\Message\UriInterface;
 // From Pimple
 use Pimple\ServiceProviderInterface;
@@ -13,7 +12,6 @@ use Pimple\Container;
 use Slim\Http\Uri;
 // From 'league'
 use League\CLImate\CLImate;
-use League\Event\EventDispatcher;
 // From Mustache
 use Mustache_LambdaHelper as LambdaHelper;
 use Charcoal\Factory\GenericFactory as Factory;
@@ -73,6 +71,7 @@ class AppServiceProvider implements ServiceProviderInterface
     {
         $container->register(new CacheServiceProvider());
         $container->register(new DatabaseServiceProvider());
+        $container->register(new EventServiceProvider());
         $container->register(new FilesystemServiceProvider());
         $container->register(new LoggerServiceProvider());
         $container->register(new ScriptServiceProvider());
@@ -86,7 +85,6 @@ class AppServiceProvider implements ServiceProviderInterface
         $this->registerRequestControllerServices($container);
         $this->registerModuleServices($container);
         $this->registerViewServices($container);
-        $this->registerEventServices($container);
     }
 
     /**
@@ -588,19 +586,5 @@ class AppServiceProvider implements ServiceProviderInterface
                 $container['view/twig/helpers/debug']->toArray(),
             );
         });
-    }
-
-    /**
-     * @param Container $container The DI container.
-     * @return void
-     */
-    protected function registerEventServices(Container $container): void
-    {
-        /**
-         * @return EventDispatcherInterface
-         */
-        $container['event/dispatcher'] = function (): EventDispatcherInterface {
-            return new EventDispatcher();
-        };
     }
 }
