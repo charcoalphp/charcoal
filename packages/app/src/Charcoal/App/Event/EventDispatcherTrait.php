@@ -1,12 +1,12 @@
 <?php
 
-namespace Charcoal\App;
+namespace Charcoal\App\Event;
 
 use Psr\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Trait: EventDispatcherTrait
- * @package Charcoal\App
+ * @package Charcoal\App\Event
  */
 trait EventDispatcherTrait
 {
