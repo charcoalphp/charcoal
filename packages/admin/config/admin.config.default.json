@@ -239,6 +239,9 @@
             },
             "tools/resize-images": {
                 "ident": "charcoal/admin/script/tools/resize-images"
+            },
+            "translation/parse": {
+                "ident": "charcoal/translator/script/translation-parser"
             }
         }
     },
