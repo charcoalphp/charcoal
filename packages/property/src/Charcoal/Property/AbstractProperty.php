@@ -32,7 +32,7 @@ use Charcoal\Property\PropertyValidator;
 use Charcoal\Property\StorablePropertyInterface;
 use Charcoal\Property\StorablePropertyTrait;
 // From 'charcoal-app'
-use Charcoal\App\EventDispatcherTrait;
+use Charcoal\App\Event\EventDispatcherTrait;
 
 /**
  * An abstract class that implements the full `PropertyInterface`.
