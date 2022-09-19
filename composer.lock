@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "604ff6da0b39eb152bc0a35f54757e8c",
+    "content-hash": "afd41cc24ded974941402c1cc5cd8a2b",
     "packages": [
         {
             "name": "barryvdh/elfinder-flysystem-driver",
@@ -803,6 +803,65 @@
             "time": "2022-06-18T14:42:08+00:00"
         },
         {
+            "name": "league/event",
+            "version": "3.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/thephpleague/event.git",
+                "reference": "6d6d88d3c398f4e32995fccd4ec50a5bdaef131b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/thephpleague/event/zipball/6d6d88d3c398f4e32995fccd4ec50a5bdaef131b",
+                "reference": "6d6d88d3c398f4e32995fccd4ec50a5bdaef131b",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.2.0",
+                "psr/event-dispatcher": "^1.0"
+            },
+            "provide": {
+                "psr/event-dispatcher-implementation": "1.0"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^2.16",
+                "phpstan/phpstan": "^0.12.45",
+                "phpunit/phpunit": "^8.5"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "3.0-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "League\\Event\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Frank de Jonge",
+                    "email": "info@frenky.net"
+                }
+            ],
+            "description": "Event package",
+            "keywords": [
+                "emitter",
+                "event",
+                "listener"
+            ],
+            "support": {
+                "issues": "https://github.com/thephpleague/event/issues",
+                "source": "https://github.com/thephpleague/event/tree/3.0.0"
+            },
+            "time": "2020-09-29T17:42:28+00:00"
+        },
+        {
             "name": "league/flysystem",
             "version": "1.1.9",
             "source": {
@@ -1493,6 +1552,56 @@
                 "source": "https://github.com/php-fig/container/tree/1.1.2"
             },
             "time": "2021-11-05T16:50:12+00:00"
+        },
+        {
+            "name": "psr/event-dispatcher",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/php-fig/event-dispatcher.git",
+                "reference": "dbefd12671e8a14ec7f180cab83036ed26714bb0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/php-fig/event-dispatcher/zipball/dbefd12671e8a14ec7f180cab83036ed26714bb0",
+                "reference": "dbefd12671e8a14ec7f180cab83036ed26714bb0",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.2.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Psr\\EventDispatcher\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "PHP-FIG",
+                    "homepage": "http://www.php-fig.org/"
+                }
+            ],
+            "description": "Standard interfaces for event handling.",
+            "keywords": [
+                "events",
+                "psr",
+                "psr-14"
+            ],
+            "support": {
+                "issues": "https://github.com/php-fig/event-dispatcher/issues",
+                "source": "https://github.com/php-fig/event-dispatcher/tree/1.0.0"
+            },
+            "time": "2019-01-08T18:20:26+00:00"
         },
         {
             "name": "psr/http-client",
@@ -2690,16 +2799,16 @@
         },
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.235.8",
+            "version": "3.235.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "cc33d53d735a3835adff212598f2a20ee9ac9531"
+                "reference": "943f96f50d19244584675c34fb3e4c8aa3eaddce"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/cc33d53d735a3835adff212598f2a20ee9ac9531",
-                "reference": "cc33d53d735a3835adff212598f2a20ee9ac9531",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/943f96f50d19244584675c34fb3e4c8aa3eaddce",
+                "reference": "943f96f50d19244584675c34fb3e4c8aa3eaddce",
                 "shasum": ""
             },
             "require": {
@@ -2778,9 +2887,9 @@
             "support": {
                 "forum": "https://forums.aws.amazon.com/forum.jspa?forumID=80",
                 "issues": "https://github.com/aws/aws-sdk-php/issues",
-                "source": "https://github.com/aws/aws-sdk-php/tree/3.235.8"
+                "source": "https://github.com/aws/aws-sdk-php/tree/3.235.10"
             },
-            "time": "2022-09-14T18:18:31+00:00"
+            "time": "2022-09-16T18:18:42+00:00"
         },
         {
             "name": "cache/adapter-common",
