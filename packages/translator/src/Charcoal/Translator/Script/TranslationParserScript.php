@@ -266,7 +266,7 @@ class TranslationParserScript extends AdminScript
             return $this->output;
         }
         $output = $this->argOrInput('output');
-        $this->output = (string)$output;
+        $this->output = rtrim((string)$output, '/') . DIRECTORY_SEPARATOR;
         return $this->output;
     }
 
@@ -357,7 +357,6 @@ class TranslationParserScript extends AdminScript
      */
     public function getTranslationsFromPath($path, $fileType)
     {
-        // remove vendor/locomotivemtl/charcoal-app
         $base  = $this->appConfig->get('base_path');
         $glob  = $this->globRecursive($base . DIRECTORY_SEPARATOR . $path . '*.' . $fileType);
         $regex = $this->regEx($fileType);
@@ -445,7 +444,7 @@ class TranslationParserScript extends AdminScript
     {
         if (!$this->paths) {
             $this->paths = $this->appConfig->get('translator.parser.view.paths') ?:
-                $this->appConfig->get('view.paths');
+                $this->appConfig->resolveValues($this->appConfig->get('view.paths'));
 
             /** @todo Hardcoded; Change this! */
             $this->paths[] = 'src/';
@@ -495,7 +494,7 @@ class TranslationParserScript extends AdminScript
             if (!file_exists($filePath)) {
                 mkdir($filePath, 0755, true);
             }
-            $file = fopen($base . $output . $domain . '.' . $lang . '.csv', 'w');
+            $file = fopen($base . DIRECTORY_SEPARATOR . $output . $domain . '.' . $lang . '.csv', 'w');
             if (!$file) {
                 continue;
             }
