@@ -7,6 +7,8 @@ use Psr\Log\LoggerAwareTrait;
 
 /**
  * Abstract Event Listener
+ *
+ * Starting point to create an eventListener.
  */
 abstract class AbstractEventListener implements EventListenerInterface
 {
