@@ -1,6 +1,8 @@
 <?php
 
-namespace Charcoal\App\Event;
+namespace Charcoal\Event\Events;
+
+use Charcoal\Event\Event;
 
 /**
  * Event: File Was Uploaded

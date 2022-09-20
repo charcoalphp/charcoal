@@ -1,8 +1,9 @@
 <?php
 
-namespace Charcoal\App\Event;
+namespace Charcoal\Event;
 
 use League\Event\EventDispatcher as LeagueEventDispatcher;
+use League\Event\HasEventName;
 use Psr\Log\LoggerAwareTrait;
 
 /**

@@ -1,9 +1,9 @@
 <?php
 
-namespace Charcoal\App\ServiceProvider;
+namespace Charcoal\Event\ServiceProvider;
 
-use Charcoal\App\Event\EventDispatcher;
-use Charcoal\App\Event\EventListenerInterface;
+use Charcoal\Event\EventDispatcher;
+use Charcoal\Event\EventListenerInterface;
 use Charcoal\Factory\FactoryInterface;
 use Charcoal\Factory\GenericFactory;
 use League\Event\ListenerSubscriber;
