@@ -10,7 +10,7 @@ class FileWasUploaded extends Event
     private string $file;
 
     /**
-     * @param string $file THe file path.
+     * @param string $file The file path.
      */
     public function __construct(string $file)
     {
