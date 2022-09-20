@@ -27,7 +27,6 @@ use Charcoal\View\Mustache\MustacheLoader;
 // From 'charcoal-translator'
 use Charcoal\Translator\LocalesManager;
 use Charcoal\Translator\Translator;
-use League\Event\EventDispatcher;
 
 /**
  * Service Container for Unit Tests
@@ -46,7 +45,6 @@ class ContainerProvider
         $this->registerSource($container);
         $this->registerLogger($container);
         $this->registerCache($container);
-        $this->registerEvent($container);
     }
 
     /**
@@ -328,16 +326,5 @@ class ContainerProvider
                 'factory' => $container['model/factory']
             ]);
         };
-    }
-
-    /**
-     * Setup event dispatcher.
-     *
-     * @param Container $container  A DI container.
-     * @return void
-     */
-    public function registerEvent(Container $container)
-    {
-        $container['event/dispatcher'] = new EventDispatcher();
     }
 }
