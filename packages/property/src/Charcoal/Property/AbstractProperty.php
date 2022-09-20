@@ -31,8 +31,6 @@ use Charcoal\Property\PropertyInterface;
 use Charcoal\Property\PropertyValidator;
 use Charcoal\Property\StorablePropertyInterface;
 use Charcoal\Property\StorablePropertyTrait;
-// From 'charcoal-app'
-use Charcoal\App\Event\EventDispatcherTrait;
 
 /**
  * An abstract class that implements the full `PropertyInterface`.
@@ -51,7 +49,6 @@ abstract class AbstractProperty extends AbstractEntity implements
     use StorablePropertyTrait;
     use TranslatorAwareTrait;
     use ValidatableTrait;
-    use EventDispatcherTrait;
 
     public const DEFAULT_L10N = false;
     public const DEFAULT_MULTIPLE = false;
@@ -1012,7 +1009,6 @@ abstract class AbstractProperty extends AbstractEntity implements
     {
         $this->setPropertyFactory($container['property/factory']);
         $this->setMetadataLoader($container['metadata/loader']);
-        $this->setEventDispatcher($container['event/dispatcher']);
     }
 
     /**
