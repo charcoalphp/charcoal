@@ -29,7 +29,7 @@ class EventServiceProvider implements ServiceProviderInterface
             $dispatcher = new EventDispatcher();
             $dispatcher->setLogger($container['logger']);
 
-            $this->registerEventListeners($dispatcher, $container['event/listeners']);
+            $this->registerEventListeners($dispatcher, $container);
 
             return $dispatcher;
         };
@@ -67,15 +67,18 @@ class EventServiceProvider implements ServiceProviderInterface
     private function registerEventListeners(EventDispatcherInterface $dispatcher, Container $container)
     {
         /**
-         * @var array<string, (class-string<EventListenerInterface>|array<class-string<EventListenerInterface>,
-         *                     array<string, mixed>>)> $container['event/listeners']
+         * @var array<string, array<class-string<EventListenerInterface, mixed>> $container['event/listeners']
          */
         foreach ($container['event/listeners'] as $event => $listeners) {
-            if (is_string($listeners)) {
-                $listeners = [$listeners];
+            if (!is_iterable($listeners)) {
+                throw new \InvalidArgumentException();
             }
 
             foreach ($listeners as $listener => $options) {
+                if (!is_string($listener)) {
+                    throw new \InvalidArgumentException();
+                }
+
                 $listener = $container['event/listener/factory']->create($listener);
 
                 $priority = ($options['priority'] ?? 0);
