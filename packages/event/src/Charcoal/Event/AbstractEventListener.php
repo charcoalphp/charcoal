@@ -1,6 +1,6 @@
 <?php
 
-namespace Charcoal\App\Event;
+namespace Charcoal\Event;
 
 use Pimple\Container;
 use Psr\Log\LoggerAwareTrait;

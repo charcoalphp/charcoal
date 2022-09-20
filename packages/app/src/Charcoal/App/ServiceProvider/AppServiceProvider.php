@@ -3,7 +3,6 @@
 namespace Charcoal\App\ServiceProvider;
 
 // From PSR-7
-use Charcoal\Factory\GenericResolver;
 use Psr\Http\Message\UriInterface;
 // From Pimple
 use Pimple\ServiceProviderInterface;
@@ -14,7 +13,9 @@ use Slim\Http\Uri;
 use League\CLImate\CLImate;
 // From Mustache
 use Mustache_LambdaHelper as LambdaHelper;
+use Charcoal\Event\ServiceProvider\EventServiceProvider;
 use Charcoal\Factory\GenericFactory as Factory;
+use Charcoal\Factory\GenericResolver;
 use Charcoal\Cache\ServiceProvider\CacheServiceProvider;
 use Charcoal\Translator\ServiceProvider\TranslatorServiceProvider;
 use Charcoal\App\AppConfig;

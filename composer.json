@@ -96,6 +96,7 @@
             ],
             "Charcoal\\Admin\\": "packages/admin/src/Charcoal/Admin/",
             "Charcoal\\Email\\": "packages/email/src/Charcoal/Email",
+            "Charcoal\\Event\\": "packages/event/src/Charcoal/Event/",
             "Charcoal\\Object\\": "packages/object/src/Charcoal/Object",
             "Charcoal\\User\\": "packages/user/src/Charcoal/User",
             "Charcoal\\View\\": "packages/view/src/Charcoal/View"
@@ -115,6 +116,7 @@
                 "packages/config/tests/Charcoal/",
                 "packages/core/tests/Charcoal",
                 "packages/email/tests/Charcoal",
+                "packages/event/tests/Charcoal",
                 "packages/factory/tests/Charcoal/",
                 "packages/image/tests/Charcoal",
                 "packages/object/tests/Charcoal/",
@@ -136,6 +138,7 @@
         "charcoal/config": "self.version",
         "charcoal/core": "self.version",
         "charcoal/email": "self.version",
+        "charcoal/event": "3.1.8",
         "charcoal/factory": "self.version",
         "charcoal/image": "self.version",
         "charcoal/object": "self.version",
