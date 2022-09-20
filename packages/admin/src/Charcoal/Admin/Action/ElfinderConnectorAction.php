@@ -2,8 +2,8 @@
 
 namespace Charcoal\Admin\Action;
 
-use Charcoal\App\Event\EventDispatcherTrait;
-use Charcoal\App\Event\FileWasUploaded;
+use Charcoal\Event\EventDispatcherTrait;
+use Charcoal\Event\Events\FileWasUploaded;
 use finfo;
 use InvalidArgumentException;
 use RuntimeException;

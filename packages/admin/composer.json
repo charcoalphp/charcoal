@@ -34,6 +34,7 @@
         "charcoal/cms": "^4.0.1",
         "charcoal/core": "^4.0.1",
         "charcoal/email": "^4.0.1",
+        "charcoal/event": "^3.2",
         "charcoal/object": "^4.0.1",
         "charcoal/translator": "^4.0.1",
         "charcoal/ui": "^4.0.1",
