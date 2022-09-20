@@ -66,6 +66,10 @@ class EventServiceProvider implements ServiceProviderInterface
      */
     private function registerEventListeners(EventDispatcherInterface $dispatcher, Container $container)
     {
+        /**
+         * @var array<string, (class-string<EventListenerInterface>|array<class-string<EventListenerInterface>,
+         *                     array<string, mixed>>)> $container['event/listeners']
+         */
         foreach ($container['event/listeners'] as $event => $listeners) {
             if (is_string($listeners)) {
                 $listeners = [$listeners];
