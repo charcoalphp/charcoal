@@ -35,8 +35,6 @@ use Charcoal\Translator\Translator;
 // From 'charcoal-app'
 use Charcoal\App\AppConfig;
 
-use League\Event\EventDispatcher;
-
 /**
  * Service Container for Unit Tests
  */
@@ -54,7 +52,6 @@ class CoreContainerProvider
         $this->registerSource($container);
         $this->registerLogger($container);
         $this->registerCache($container);
-        $this->registerEvent($container);
     }
 
     /**
@@ -113,17 +110,6 @@ class CoreContainerProvider
         $container['cache'] = function () {
             return new Pool();
         };
-    }
-
-    /**
-     * Setup event dispatcher.
-     *
-     * @param Container $container A DI container.
-     * @return void
-     */
-    public function registerEvent(Container $container)
-    {
-        $container['event/dispatcher'] = new EventDispatcher();
     }
 
     /**
