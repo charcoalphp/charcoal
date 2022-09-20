@@ -29,25 +29,7 @@ class EventServiceProvider implements ServiceProviderInterface
             $dispatcher = new EventDispatcher();
             $dispatcher->setLogger($container['logger']);
 
-            foreach ($container['event/listeners'] as $event => $listeners) {
-                if (is_string($listeners)) {
-                    $listeners = [$listeners];
-                }
-
-                foreach ($listeners as $listener => $options) {
-                    $listener = $container['event/listener/factory']->create($listener);
-
-                    $priority = ($options['priority'] ?? 0);
-                    $once     = ($options['once'] ?? false);
-
-                    if ($once) {
-                        $dispatcher->subscribeOnceTo($event, $listener, $priority);
-                        continue;
-                    }
-
-                    $dispatcher->subscribeTo($event, $listener, $priority);
-                }
-            }
+            $this->registerEventListeners($dispatcher, $container['event/listeners']);
 
             return $dispatcher;
         };
@@ -75,5 +57,33 @@ class EventServiceProvider implements ServiceProviderInterface
                 }
             ]);
         };
+    }
+
+    /**
+     * @param EventDispatcherInterface $dispatcher Psr-14 Event Dispatcher Interface
+     * @param Container                $container  Pimple DI container
+     * @return void
+     */
+    private function registerEventListeners(EventDispatcherInterface $dispatcher, Container $container)
+    {
+        foreach ($container['event/listeners'] as $event => $listeners) {
+            if (is_string($listeners)) {
+                $listeners = [$listeners];
+            }
+
+            foreach ($listeners as $listener => $options) {
+                $listener = $container['event/listener/factory']->create($listener);
+
+                $priority = ($options['priority'] ?? 0);
+                $once     = ($options['once'] ?? false);
+
+                if ($once) {
+                    $dispatcher->subscribeOnceTo($event, $listener, $priority);
+                    continue;
+                }
+
+                $dispatcher->subscribeTo($event, $listener, $priority);
+            }
+        }
     }
 }
