@@ -67,7 +67,9 @@ class EventServiceProvider implements ServiceProviderInterface
                     'suffix' => 'Listener'
                 ],
                 'callback'         => function ($listener) use ($container) {
-                    $listener->setDependencies($container);
+                    if (is_callable([$listener, 'setDependencies'])) {
+                        $listener->setDependencies($container);
+                    }
                 }
             ]);
         };
