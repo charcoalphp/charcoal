@@ -1,7 +1,7 @@
 {
     "type": "library",
     "name": "charcoal/event",
-    "description": "Charcoal service provider for Event system",
+    "description": "Charcoal service provider for events system",
     "keywords": ["module", "charcoal", "event"],
     "homepage": "https://charcoal.locomotive.ca",
     "license": "MIT",

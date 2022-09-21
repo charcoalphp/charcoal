@@ -19,7 +19,7 @@ class EventDispatcher extends LeagueEventDispatcher
     {
         if ($this->logger) {
             if ($event instanceof HasEventName) {
-                $this->logger->notice('Event [' . $event->eventName() . '] dispatched', [
+                $this->logger->notice('Event dispatched [' . $event->eventName() . ']', [
                     'event' => get_class($event),
                 ]);
             } else {

@@ -1,7 +1,7 @@
 Charcoal Event
 ==============
 
-The `Charcoal\Event` module (`charcoalphp/event`) provides a [`Psr-14`](https://www.php-fig.org/psr/psr-14/) compliant event system using [`League\Event`](https://event.thephpleague.com/3.0/).
+The `Charcoal\Event` module (`charcoal/event`) provides a [`Psr-14`](https://www.php-fig.org/psr/psr-14/) compliant event system using [`League\Event`](https://event.thephpleague.com/3.0/).
 
 
 # How to install
@@ -24,7 +24,7 @@ $ composer create-project charcoalphp/boilerplate:@dev --prefer-source
 
 ## Dependencies
 
-- `PHP 7.3+`
+- `PHP 7.4+`
 
 
 # Development

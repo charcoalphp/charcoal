@@ -6,6 +6,7 @@ use Charcoal\Event\EventDispatcher;
 use Charcoal\Event\EventListenerInterface;
 use Charcoal\Factory\FactoryInterface;
 use Charcoal\Factory\GenericFactory;
+use InvalidArgumentException;
 use League\Event\ListenerSubscriber;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
@@ -102,12 +103,17 @@ class EventServiceProvider implements ServiceProviderInterface
          */
         foreach ($container['event/listeners'] as $event => $listeners) {
             if (!is_iterable($listeners)) {
-                throw new \InvalidArgumentException();
+                throw new InvalidArgumentException(sprintf(
+                    'Expected iterable map of event listeners for [%s]',
+                    $event
+                ));
             }
 
             foreach ($listeners as $listener => $options) {
                 if (!is_string($listener)) {
-                    throw new \InvalidArgumentException();
+                    throw new InvalidArgumentException(sprintf(
+                        'Expected event listener class string as map key for [%s]'
+                    ));
                 }
 
                 $listener = $container['event/listener/factory']->create($listener);
@@ -117,10 +123,9 @@ class EventServiceProvider implements ServiceProviderInterface
 
                 if ($once) {
                     $dispatcher->subscribeOnceTo($event, $listener, $priority);
-                    continue;
+                } else {
+                    $dispatcher->subscribeTo($event, $listener, $priority);
                 }
-
-                $dispatcher->subscribeTo($event, $listener, $priority);
             }
         }
     }
@@ -134,7 +139,10 @@ class EventServiceProvider implements ServiceProviderInterface
     {
         foreach ($container['event/subscribers'] as $subscriber) {
             if (!is_string($subscriber) || !class_exists($subscriber)) {
-                throw new \InvalidArgumentException();
+                throw new InvalidArgumentException(sprintf(
+                    'Expected event subscriber as class string, received %s',
+                    (is_string($subscriber) ? $subscriber : gettype($subscriber))
+                ));
             }
 
             $subscriber = $container['event/listener-subscriber/factory']->create($subscriber);

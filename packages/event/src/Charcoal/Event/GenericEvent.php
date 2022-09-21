@@ -13,7 +13,7 @@ final class GenericEvent extends Event implements HasEventName
      * @var mixed
      */
     private $subject;
-    private array $arguments = [];
+    private array $arguments;
     private string $eventName;
 
     /**
