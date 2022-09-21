@@ -3,6 +3,7 @@
 namespace Charcoal\Admin\Action\Object;
 
 use Exception;
+use Pimple\Container;
 // From PSR-7
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -10,6 +11,12 @@ use Psr\Http\Message\ResponseInterface;
 use Charcoal\Model\ModelValidator;
 // From 'charcoal-object'
 use Charcoal\Object\AuthorableInterface;
+// From 'charcoal-event'
+use Charcoal\Event\EventDispatcherTrait;
+use Charcoal\Event\Events\Object\WasSavedOrUpdated;
+use Charcoal\Event\Events\Object\WasUpdated;
+use Charcoal\Event\Events\Object\WillSaveOrUpdate;
+use Charcoal\Event\Events\Object\WillUpdate;
 
 /**
  * Action: Save an object and update copy in storage.
@@ -31,6 +38,8 @@ use Charcoal\Object\AuthorableInterface;
  */
 class UpdateAction extends AbstractSaveAction
 {
+    use EventDispatcherTrait;
+
     /**
      * Data for the target model.
      *
@@ -183,7 +192,11 @@ class UpdateAction extends AbstractSaveAction
                 $obj->setLastModifiedBy($this->getAuthorIdent());
             }
 
+            $this->dispatchEvents([new WillUpdate($obj), new WillSaveOrUpdate($obj)]);
+
             $result = $obj->update();
+
+            $this->dispatchEvents([new WasUpdated($obj), new WasSavedOrUpdated($obj)]);
 
             if ($result) {
                 $this->addFeedback('success', $this->translator()->translate('Object has been successfully updated.'));
@@ -209,5 +222,12 @@ class UpdateAction extends AbstractSaveAction
 
             return $response->withStatus(500);
         }
+    }
+
+    protected function setDependencies(Container $container)
+    {
+        parent::setDependencies($container);
+
+        $this->setEventDispatcher($container['event/dispatcher']);
     }
 }
