@@ -13,16 +13,16 @@
     ],
     "extra": {
         "branch-alias": {
-            "dev-master": "3.2-dev"
+            "dev-master": "4.1-dev"
         }
     },
     "require": {
         "php": "^7.4 || ^8.0",
         "psr/log": "^1.0",
         "phpmailer/phpmailer": "~6.0",
-        "charcoal/config": "^3.2",
-        "charcoal/app": "^3.2",
-        "charcoal/queue": "^3.2",
+        "charcoal/config": "^4.1",
+        "charcoal/app": "^4.1",
+        "charcoal/queue": "^4.1",
         "seld/jsonlint": "^1.9",
         "ext-pdo": "*"
     },

@@ -11,12 +11,12 @@
     ],
     "extra": {
         "branch-alias": {
-            "dev-master": "3.2-dev"
+            "dev-master": "4.1-dev"
         }
     },
     "require": {
         "php": "^7.4 || ^8.0",
-        "charcoal/factory": "^3.2"
+        "charcoal/factory": "^4.1"
     },
     "require-dev": {
         "php-coveralls/php-coveralls": "^2.2",
