@@ -112,7 +112,8 @@ class EventServiceProvider implements ServiceProviderInterface
             foreach ($listeners as $listener => $options) {
                 if (!is_string($listener)) {
                     throw new InvalidArgumentException(sprintf(
-                        'Expected event listener class string as map key for [%s]'
+                        'Expected event listener class string as map key for [%s]',
+                        $event
                     ));
                 }
 
