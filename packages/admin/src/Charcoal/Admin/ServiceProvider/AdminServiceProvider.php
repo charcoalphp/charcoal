@@ -4,6 +4,8 @@ namespace Charcoal\Admin\ServiceProvider;
 
 // From Pimple
 use Charcoal\Admin\AssetsConfig;
+use Charcoal\Event\EventDispatcher;
+use Charcoal\Event\EventDispatcherBuilder;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 use Assetic\Asset\AssetReference;
@@ -83,6 +85,7 @@ class AdminServiceProvider implements ServiceProviderInterface
         $this->registerAuthExtensions($container);
         $this->registerViewExtensions($container);
         $this->registerAssetsManager($container);
+        $this->registerAdminEventDispatcher($container);
 
         // Register Access-Control-List (acl)
         $container->register(new AclServiceProvider());
@@ -546,6 +549,47 @@ class AdminServiceProvider implements ServiceProviderInterface
                     'suffix' => 'SecondaryMenuGroup'
                 ]
             ]);
+        };
+    }
+
+    /**
+     * @param Container $container Pimple DI container.
+     * @return void
+     */
+    protected function registerAdminEventDispatcher(Container $container)
+    {
+        /**
+         * @param Container $container
+         * @return array
+         */
+        $container['admin/event/listeners'] = function (Container $container): array {
+            return ($container['admin/config']->get('events.listeners') ?? []);
+        };
+
+        /**
+         * Subscribers are classes that implements `\League\Event\ListenerSubscriber`
+         * It allows to subscribe many grouped listeners at once.
+         *
+         * @param Container $container
+         * @return array
+         */
+        $container['admin/event/subscribers'] = function (Container $container): array {
+            return ($container['admin/config'] ->get('events.subscribers') ?? []);
+        };
+
+        /**
+         * Build an event dispatcher using admin config.
+         *
+         * @param Container $container
+         * @return EventDispatcher
+         */
+        $container['admin/event/dispatcher'] = function (Container $container): EventDispatcher {
+            /** @var EventDispatcherBuilder $eventDispatcherBuilder */
+            $eventDispatcherBuilder = $container['event/dispatcher/builder'];
+            return $eventDispatcherBuilder->build(
+                $container['admin/event/listeners'],
+                $container['admin/event/subscribers']
+            );
         };
     }
 }
