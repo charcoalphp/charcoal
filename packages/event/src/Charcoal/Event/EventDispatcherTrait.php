@@ -47,10 +47,10 @@ trait EventDispatcherTrait
 
     /**
      * @param array $events
-     * @return void
+     * @return array
      */
-    protected function dispatchEvents(array $events)
+    protected function dispatchEvents(array $events): array
     {
-        array_map([$this, 'dispatchEvent'], $events);
+        return array_map([$this, 'dispatchEvent'], $events);
     }
 }

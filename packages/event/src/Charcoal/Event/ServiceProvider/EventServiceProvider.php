@@ -2,15 +2,13 @@
 
 namespace Charcoal\Event\ServiceProvider;
 
-use Charcoal\Event\EventDispatcher;
+use Charcoal\Event\EventDispatcherBuilder;
 use Charcoal\Event\EventListenerInterface;
 use Charcoal\Factory\FactoryInterface;
 use Charcoal\Factory\GenericFactory;
-use InvalidArgumentException;
 use League\Event\ListenerSubscriber;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
-use Psr\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Event Service Provider. Configures and provides a PDO service to a container.
@@ -24,17 +22,11 @@ class EventServiceProvider implements ServiceProviderInterface
     public function register(Container $container)
     {
         /**
-         * @param Container $container Pimple DI container.
-         * @return EventDispatcherInterface
+         * @param  Container $container A service container.
+         * @return EventDispatcherBuilder
          */
-        $container['event/dispatcher'] = function (Container $container): EventDispatcherInterface {
-            $dispatcher = new EventDispatcher();
-            $dispatcher->setLogger($container['logger']);
-
-            $this->registerEventListeners($dispatcher, $container);
-            $this->registerListenerSubscribers($dispatcher, $container);
-
-            return $dispatcher;
+        $container['event/dispatcher/builder'] = function (Container $container) {
+            return new EventDispatcherBuilder($container);
         };
 
         /**
@@ -91,66 +83,5 @@ class EventServiceProvider implements ServiceProviderInterface
                 }
             ]);
         };
-    }
-
-    /**
-     * @param EventDispatcherInterface $dispatcher Psr-14 Event Dispatcher Interface
-     * @param Container                $container  Pimple DI container
-     * @return void
-     */
-    private function registerEventListeners(EventDispatcherInterface $dispatcher, Container $container)
-    {
-        /**
-         * @var array<string, array<class-string<EventListenerInterface, mixed>> $container['event/listeners']
-         */
-        foreach ($container['event/listeners'] as $event => $listeners) {
-            if (!is_iterable($listeners)) {
-                throw new InvalidArgumentException(sprintf(
-                    'Expected iterable map of event listeners for [%s]',
-                    $event
-                ));
-            }
-
-            foreach ($listeners as $listener => $options) {
-                if (!is_string($listener)) {
-                    throw new InvalidArgumentException(sprintf(
-                        'Expected event listener class string as map key for [%s]',
-                        $event
-                    ));
-                }
-
-                $listener = $container['event/listener/factory']->create($listener);
-
-                $priority = ($options['priority'] ?? 0);
-                $once     = ($options['once'] ?? false);
-
-                if ($once) {
-                    $dispatcher->subscribeOnceTo($event, $listener, $priority);
-                } else {
-                    $dispatcher->subscribeTo($event, $listener, $priority);
-                }
-            }
-        }
-    }
-
-    /**
-     * @param EventDispatcherInterface $dispatcher Psr-14 Event Dispatcher Interface
-     * @param Container                $container  Pimple DI container
-     * @return void
-     */
-    private function registerListenerSubscribers(EventDispatcherInterface $dispatcher, Container $container)
-    {
-        foreach ($container['event/subscribers'] as $subscriber) {
-            if (!is_string($subscriber) || !class_exists($subscriber)) {
-                throw new InvalidArgumentException(sprintf(
-                    'Expected event subscriber as class string, received %s',
-                    (is_string($subscriber) ? $subscriber : gettype($subscriber))
-                ));
-            }
-
-            $subscriber = $container['event/listener-subscriber/factory']->create($subscriber);
-
-            $dispatcher->subscribeListenersFrom($subscriber);
-        }
     }
 }

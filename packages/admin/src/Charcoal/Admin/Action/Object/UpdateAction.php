@@ -228,6 +228,6 @@ class UpdateAction extends AbstractSaveAction
     {
         parent::setDependencies($container);
 
-        $this->setEventDispatcher($container['event/dispatcher']);
+        $this->setEventDispatcher($container['admin/event/dispatcher']);
     }
 }
