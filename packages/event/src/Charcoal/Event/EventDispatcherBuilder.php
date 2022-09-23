@@ -8,21 +8,14 @@ use Pimple\Container;
 use Psr\EventDispatcher\EventDispatcherInterface;
 
 /**
- * Builder
+ * Event Dispatcher Builder
  *
- * Helps in the process of building an Event Dispatcher.
+ * Creates a new event dispatcher and registers the given listeners and subscribers.
  */
 class EventDispatcherBuilder
 {
-    /**
-     * A Pimple dependency-injection container to fulfill the required services.
-     * @var Container $container
-     */
     protected Container $container;
 
-    /**
-     * @param Container        $container The DI container.
-     */
     public function __construct(Container $container)
     {
         $this->container = $container;
