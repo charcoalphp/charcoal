@@ -197,11 +197,6 @@ class Content extends AbstractModel implements
     {
         parent::preUpdate($properties);
 
-        // Content is revisionable
-        if ($this['revisionEnabled']) {
-            $this->generateRevision();
-        }
-
         // Timestampable propertiees
         $this->setLastModified('now');
 
