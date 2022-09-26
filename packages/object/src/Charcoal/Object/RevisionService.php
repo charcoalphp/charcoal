@@ -32,8 +32,21 @@ class RevisionService
 
         $config = $this->findRevisionsConfig($model);
 
+        $revisionProperties = array_keys($model->data());
+
+        if (count($config['properties'])) {
+            $revisionProperties = array_intersect_key($revisionProperties, $config['properties']);
+        }
+
+        if (count($config['propertyBlacklist'])) {
+            $revisionProperties = array_filter(
+                $revisionProperties,
+                fn($n) => !in_array($n, $config['propertyBlacklist'])
+            );
+        }
+
         $revisionObject = $this->createRevisionObject($config->get('revisionClass'));
-        $revisionObject->createFromObject($model);
+        $revisionObject->createFromObject($model, $revisionProperties);
 
         if (!empty($revisionObject->getDataDiff())) {
             $revisionObject->save();

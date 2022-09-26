@@ -107,9 +107,10 @@ interface ObjectRevisionInterface
      * 3. Create diff from (1) and (2).
      *
      * @param ModelInterface $obj The object to create the revision from.
+     * @param array|null $properties List of properties to revision.
      * @return ObjectRevision Chainable
      */
-    public function createFromObject(ModelInterface $obj);
+    public function createFromObject(ModelInterface $obj, ?array $properties = null);
 
     /**
      * @param array $dataPrev Optional. The previous revision data.
