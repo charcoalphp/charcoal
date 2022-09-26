@@ -2,6 +2,7 @@
 
 namespace Charcoal\Object;
 
+use Charcoal\Model\ModelInterface;
 use InvalidArgumentException;
 use DateTime;
 use DateTimeInterface;
@@ -291,10 +292,10 @@ class ObjectRevision extends AbstractModel implements ObjectRevisionInterface
      * 2. Load the current item from DB
      * 3. Create diff from (1) and (2).
      *
-     * @param  RevisionableInterface $obj The object to create the revision from.
+     * @param  ModelInterface $obj The object to create the revision from.
      * @return ObjectRevision Chainable
      */
-    public function createFromObject(RevisionableInterface $obj)
+    public function createFromObject(ModelInterface $obj)
     {
         $prevRev = $this->lastObjectRevision($obj);
 
@@ -382,10 +383,10 @@ class ObjectRevision extends AbstractModel implements ObjectRevisionInterface
     /**
      * @todo Should return NULL if source does not exist.
      *
-     * @param RevisionableInterface $obj The object  to load the last revision of.
+     * @param ModelInterface $obj The object  to load the last revision of.
      * @return ObjectRevision The last revision for the give object.
      */
-    public function lastObjectRevision(RevisionableInterface $obj)
+    public function lastObjectRevision(ModelInterface $obj)
     {
         $rev = $this->modelFactory()->create(self::class);
 
@@ -410,11 +411,11 @@ class ObjectRevision extends AbstractModel implements ObjectRevisionInterface
      *
      * @todo Should return NULL if source does not exist.
      *
-     * @param  RevisionableInterface $obj    Target object.
+     * @param  ModelInterface $obj    Target object.
      * @param  integer               $revNum The revision number to load.
      * @return ObjectRevision
      */
-    public function objectRevisionNum(RevisionableInterface $obj, $revNum)
+    public function objectRevisionNum(ModelInterface $obj, $revNum)
     {
         $rev = $this->modelFactory()->create(self::class);
 
