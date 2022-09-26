@@ -2,6 +2,8 @@
 
 namespace Charcoal\Object;
 
+use Charcoal\Model\ModelInterface;
+
 /**
  * Defines a changeset of an object implementing {@see \Charcoal\Object\RevisionableInterface}.
  *
@@ -104,10 +106,10 @@ interface ObjectRevisionInterface
      * 2. Load the current item from DB
      * 3. Create diff from (1) and (2).
      *
-     * @param RevisionableInterface $obj The object to create the revision from.
+     * @param ModelInterface $obj The object to create the revision from.
      * @return ObjectRevision Chainable
      */
-    public function createFromObject(RevisionableInterface $obj);
+    public function createFromObject(ModelInterface $obj);
 
     /**
      * @param array $dataPrev Optional. The previous revision data.
@@ -126,17 +128,17 @@ interface ObjectRevisionInterface
     public function recursiveDiff(array $array1, array $array2);
 
     /**
-     * @param RevisionableInterface $obj The object  to load the last revision of.
+     * @param ModelInterface $obj The object  to load the last revision of.
      * @return ObjectRevision The last revision for the give object.
      */
-    public function lastObjectRevision(RevisionableInterface $obj);
+    public function lastObjectRevision(ModelInterface $obj);
 
     /**
      * Retrieve a specific object revision, by revision number.
      *
-     * @param RevisionableInterface $obj    Target object.
+     * @param ModelInterface $obj    Target object.
      * @param integer               $revNum The revision number to load.
      * @return ObjectRevision
      */
-    public function objectRevisionNum(RevisionableInterface $obj, $revNum);
+    public function objectRevisionNum(ModelInterface $obj, $revNum);
 }
