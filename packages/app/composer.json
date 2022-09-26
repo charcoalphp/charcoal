@@ -32,6 +32,7 @@
         "charcoal/config": "^4.0.1",
         "charcoal/event": "^3.2",
         "charcoal/factory": "^4.0.1",
+        "charcoal/object": "^4.1",
         "charcoal/translator": "^4.0.1",
         "charcoal/view": "^4.0.1",
         "monolog/monolog": "^1.17",
