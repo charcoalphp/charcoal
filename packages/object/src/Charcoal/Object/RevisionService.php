@@ -30,12 +30,9 @@ class RevisionService
             return null;
         }
 
-        // TODO config should be a config class.
         $config = $this->findRevisionsConfig($model);
 
-        $revisionObject = isset($config['revision_class'])
-            ? $this->createRevisionObject($config['revision_class'])
-            : $this->createRevisionObject();
+        $revisionObject = $this->createRevisionObject($config->get('revisionClass'));
         $revisionObject->createFromObject($model);
 
         if (!empty($revisionObject->getDataDiff())) {
@@ -58,32 +55,48 @@ class RevisionService
 
         $revisionConfig = $this->findRevisionsConfig($model);
 
+        // If we did not find a config of the value of the config is false, we don't want to revision.
+        if (!$revisionConfig) {
+            return false;
+        }
+
         return ($revisionConfig['enabled'] ?? true);
     }
 
-    public function findRevisionsConfig(ModelInterface $model): array
+    public function findRevisionsConfig(ModelInterface $model): ?RevisionConfig
     {
         $class = get_class($model);
         if (in_array($class, $this->getRevisionableClasses())) {
             return $this->getRevisionsConfig($class);
         }
 
-        foreach ($this->getRevisionableClasses() as $revisonable) {
-            if ($model instanceof $revisonable) {
-                $this->getRevisionsConfig($revisonable);
+        // Allows ancestor level configuration.
+        foreach ($this->getRevisionableClasses() as $class) {
+            if ($model instanceof $class) {
+                return $this->getRevisionsConfig($class);
             }
         }
+
+        return null;
     }
 
-    public function getRevisionsConfig(?string $class = null): array
+    private function getRevisionsConfig(string $class): RevisionConfig
     {
         $revisions = $this->config->get('revisions');
+        $revisionsData = $revisions[$class];
 
-        return $class ? $revisions[$class] : $revisions;
+        // If a config is a boolean instead of a data array, it means we only want to affect the enabled state.
+        if (is_bool($revisionsData)) {
+            $revisionsData = [
+                'enabled' => $revisionsData
+            ];
+        }
+
+        return new RevisionConfig($revisionsData);
     }
 
     public function getRevisionableClasses(): array
     {
-        return array_keys($this->getRevisionsConfig());
+        return array_keys($this->config->get('revisions'));
     }
 }
