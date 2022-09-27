@@ -2,7 +2,6 @@
 
 namespace Charcoal\Object;
 
-use Charcoal\Admin\Config;
 use Charcoal\Model\ModelFactoryTrait;
 use Charcoal\Model\ModelInterface;
 
@@ -16,36 +15,29 @@ class RevisionService
 {
     use ModelFactoryTrait;
 
-    private Config $config;
+    private RevisionConfig $revisionConfig;
+    private array $modelRevisionConfig;
 
     public function __construct(array $dependencies)
     {
-        $this->config = $dependencies['config'];
+        $this->revisionConfig = $dependencies['revision/config'];
         $this->setModelFactory($dependencies['model/factory']);
     }
 
     public function generateRevision(ModelInterface $model): ?ObjectRevisionInterface
     {
-        if (!$this->canCreateRevision($model)) {
+        // Bail early
+        if (
+            !$this->revisionConfig->isEnabled() ||
+            !$this->canCreateRevision($model)
+        ) {
             return null;
         }
 
-        $config = $this->findRevisionsConfig($model);
+        $modelConfig = $this->getModelRevisionConfig($model);
+        $revisionProperties = $this->parseRevisionProperties($model);
 
-        $revisionProperties = array_keys($model->data());
-
-        if (count($config['properties'])) {
-            $revisionProperties = array_intersect_key($revisionProperties, $config['properties']);
-        }
-
-        if (count($config['propertyBlacklist'])) {
-            $revisionProperties = array_filter(
-                $revisionProperties,
-                fn($n) => !in_array($n, $config['propertyBlacklist'])
-            );
-        }
-
-        $revisionObject = $this->createRevisionObject($config->get('revisionClass'));
+        $revisionObject = $this->createRevisionObject($modelConfig->getRevisionClass());
         $revisionObject->createFromObject($model, $revisionProperties);
 
         if (!empty($revisionObject->getDataDiff())) {
@@ -55,6 +47,32 @@ class RevisionService
         return $revisionObject;
     }
 
+    public function parseRevisionProperties(ModelInterface $model): array
+    {
+        $modelConfig = $this->getModelRevisionConfig($model);
+        $properties = array_keys($model->data());
+
+        if ($modelConfig->hasProperties()) {
+            return array_intersect_key($properties, $modelConfig->getProperties());
+        }
+
+        if ($modelConfig->hasExcludedProperties()) {
+            $excludedProperties = $modelConfig->getExcludedProperties();
+
+            if ($modelConfig->hasIncludedProperties()) {
+                $includedProperties = $modelConfig->getIncludedProperties();
+                $excludedProperties = array_filter($excludedProperties, fn($e) => in_array($e, $includedProperties));
+            }
+
+            return array_filter(
+                $properties,
+                fn($n) => !in_array($n, $excludedProperties)
+            );
+        }
+
+        return $properties;
+    }
+
     public function createRevisionObject(string $objectRevisionClass = ObjectRevision::class): ObjectRevisionInterface
     {
         return $this->modelFactory()->create($objectRevisionClass);
@@ -62,54 +80,22 @@ class RevisionService
 
     public function canCreateRevision(ModelInterface $model): bool
     {
-        if (!$this->config->get('revision_enabled')) {
-            return false;
-        }
-
-        $revisionConfig = $this->findRevisionsConfig($model);
+        $revisionConfig = $this->getModelRevisionConfig($model);
 
         // If we did not find a config of the value of the config is false, we don't want to revision.
         if (!$revisionConfig) {
             return false;
         }
 
-        return ($revisionConfig['enabled'] ?? true);
+        return $revisionConfig->isEnabled();
     }
 
-    public function findRevisionsConfig(ModelInterface $model): ?RevisionConfig
+    private function getModelRevisionConfig(ModelInterface $model): ?RevisionModelConfig
     {
-        $class = get_class($model);
-        if (in_array($class, $this->getRevisionableClasses())) {
-            return $this->getRevisionsConfig($class);
+        if (!isset($this->modelRevisionConfig[get_class($model)])) {
+            $this->modelRevisionConfig[get_class($model)] = $this->revisionConfig->buildModelConfig($model);
         }
 
-        // Allows ancestor level configuration.
-        foreach ($this->getRevisionableClasses() as $class) {
-            if ($model instanceof $class) {
-                return $this->getRevisionsConfig($class);
-            }
-        }
-
-        return null;
-    }
-
-    private function getRevisionsConfig(string $class): RevisionConfig
-    {
-        $revisions = $this->config->get('revisions');
-        $revisionsData = $revisions[$class];
-
-        // If a config is a boolean instead of a data array, it means we only want to affect the enabled state.
-        if (is_bool($revisionsData)) {
-            $revisionsData = [
-                'enabled' => $revisionsData
-            ];
-        }
-
-        return new RevisionConfig($revisionsData);
-    }
-
-    public function getRevisionableClasses(): array
-    {
-        return array_keys($this->config->get('revisions'));
+        return $this->modelRevisionConfig[get_class($model)];
     }
 }

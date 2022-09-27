@@ -17,10 +17,23 @@ class ObjectServiceProvider implements ServiceProviderInterface
 
     private function registerRevisionServices(Container $pimple)
     {
+        $pimple['revision/config'] = function (Container $pimple): RevisionConfig {
+            $configData = $pimple['config']->get('revisions');
+
+            // If the config data is a boolean, it means we only want to affect the enabled state.
+            if (is_bool($configData)) {
+                $configData = [
+                    'enabled' => $configData,
+                ];
+            }
+
+            return new RevisionConfig($configData);
+        };
+
         $pimple['revision/service'] = function (Container $pimple): RevisionService {
             return new RevisionService([
-                'config'        => $pimple['admin/config'],
-                'model/factory' => $pimple['model/factory'],
+                'revision/config' => $pimple['revision/config'],
+                'model/factory'   => $pimple['model/factory'],
             ]);
         };
     }
