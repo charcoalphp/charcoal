@@ -53,7 +53,7 @@ class RevisionService
         $properties = array_keys($model->data());
 
         if ($modelConfig->hasProperties()) {
-            return array_intersect_key($properties, $modelConfig->getProperties());
+            return array_intersect($properties, $modelConfig->getProperties());
         }
 
         if ($modelConfig->hasExcludedProperties()) {
@@ -61,7 +61,7 @@ class RevisionService
 
             if ($modelConfig->hasIncludedProperties()) {
                 $includedProperties = $modelConfig->getIncludedProperties();
-                $excludedProperties = array_filter($excludedProperties, fn($e) => in_array($e, $includedProperties));
+                $excludedProperties = array_filter($excludedProperties, fn($e) => !in_array($e, $includedProperties));
             }
 
             return array_filter(
