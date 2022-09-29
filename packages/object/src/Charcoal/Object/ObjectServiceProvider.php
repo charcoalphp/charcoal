@@ -3,6 +3,7 @@
 namespace Charcoal\Object;
 
 use Pimple\Container;
+use Pimple\Psr11\ServiceLocator;
 use Pimple\ServiceProviderInterface;
 
 /**
@@ -31,10 +32,9 @@ class ObjectServiceProvider implements ServiceProviderInterface
         };
 
         $pimple['revision/service'] = function (Container $pimple): RevisionService {
-            return new RevisionService([
-                'revision/config' => $pimple['revision/config'],
-                'model/factory'   => $pimple['model/factory'],
-            ]);
+            $services = new ServiceLocator($pimple, ['revision/config', 'model/factory', 'logger']);
+
+            return new RevisionService($services);
         };
     }
 }

@@ -39,7 +39,7 @@
                     "form": {
                         "type": "charcoal/admin/widget/object-form",
                         "form_ident": "default",
-                        "target_type": "charcoal/object/object-revision"
+                        "obj_type": "charcoal/object/object-revision"
                     }
                 },
                 "layout": {
@@ -57,7 +57,7 @@
                     "form": {
                         "type": "charcoal/admin/widget/table",
                         "collection_ident": "default",
-                        "target_type": "charcoal/object/object-revision"
+                        "obj_type": "charcoal/object/object-revision"
                     }
                 },
                 "layout": {

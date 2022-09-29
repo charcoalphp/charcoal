@@ -8,6 +8,8 @@ use Charcoal\Object\ObjectRevisionInterface;
 use Charcoal\Admin\AdminWidget;
 use Charcoal\Admin\Ui\ObjectRevisionsInterface;
 use Charcoal\Admin\Ui\ObjectRevisionsTrait;
+use Charcoal\Object\RevisionService;
+use Pimple\Container;
 
 /**
  * Class ObjectRevisionWidget
@@ -26,6 +28,20 @@ class ObjectRevisionsWidget extends AdminWidget implements
      * @var string|integer
      */
     protected $objId;
+
+    private RevisionService $revisionService;
+
+    protected function setDependencies(Container $container)
+    {
+        parent::setDependencies($container);
+
+        $this->revisionService = $container['revision/service'];
+    }
+
+    protected function revisionService(): RevisionService
+    {
+        return $this->revisionService;
+    }
 
     /**
      * @return boolean

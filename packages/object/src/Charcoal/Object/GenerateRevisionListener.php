@@ -18,7 +18,7 @@ class GenerateRevisionListener extends AbstractEventListener
         /** @var ModelInterface $model */
         $model = $event->getObject();
 
-        $this->revisionService->generateRevision($model);
+        $this->revisionService->setModel($model)->generateRevision();
     }
 
     public function setDependencies(Container $container)

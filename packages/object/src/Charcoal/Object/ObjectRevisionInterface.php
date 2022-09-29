@@ -5,7 +5,7 @@ namespace Charcoal\Object;
 use Charcoal\Model\ModelInterface;
 
 /**
- * Defines a changeset of an object implementing {@see \Charcoal\Object\RevisionableInterface}.
+ * Defines a changeset of an object implementing {@see \Charcoal\Object\ModelInterface}.
  *
  * {@see \Charcoal\Object\ObjectRevision} for a basic implementation.
  */

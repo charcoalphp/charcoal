@@ -2,7 +2,7 @@
 
 namespace Charcoal\Admin\Widget;
 
-use Charcoal\Object\RevisionableInterface;
+use Charcoal\Object\RevisionService;
 use Charcoal\User\AuthAwareInterface;
 use InvalidArgumentException;
 // From Pimple
@@ -162,6 +162,8 @@ class FormSidebarWidget extends AdminWidget implements
      * @var string[]
      */
     private $requiredGlobalAclPermissions = [];
+
+    private RevisionService $revisionService;
 
     /**
      * @param array|ArrayInterface $data Class data.
@@ -552,8 +554,10 @@ class FormSidebarWidget extends AdminWidget implements
                     return $this->isObjRevisionable;
                 }
 
-                if ($obj instanceof RevisionableInterface && $obj['revisionEnabled']) {
-                    $this->isObjRevisionable = !!count($obj->allRevisions());
+                $this->revisionService->setModel($obj);
+
+                if ($this->revisionService->revisionEnabled()) {
+                    $this->isObjRevisionable = !!count($this->revisionService->allRevisions());
                 }
             }
         }
@@ -893,5 +897,12 @@ class FormSidebarWidget extends AdminWidget implements
         }
 
         return !!array_filter($array, 'is_string', ARRAY_FILTER_USE_KEY);
+    }
+
+    protected function setDependencies(Container $container)
+    {
+        parent::setDependencies($container);
+
+        $this->revisionService = $container['revision/service'];
     }
 }

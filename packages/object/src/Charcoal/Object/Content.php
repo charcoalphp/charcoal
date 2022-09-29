@@ -15,8 +15,6 @@ use Charcoal\Translator\TranslatorAwareTrait;
 use Charcoal\Object\ContentInterface;
 use Charcoal\Object\AuthorableInterface;
 use Charcoal\Object\AuthorableTrait;
-use Charcoal\Object\RevisionableInterface;
-use Charcoal\Object\RevisionableTrait;
 use Charcoal\Object\TimestampableInterface;
 use Charcoal\Object\TimestampableTrait;
 
@@ -26,11 +24,9 @@ use Charcoal\Object\TimestampableTrait;
 class Content extends AbstractModel implements
     AuthorableInterface,
     ContentInterface,
-    RevisionableInterface,
     TimestampableInterface
 {
     use AuthorableTrait;
-    use RevisionableTrait;
     use TranslatorAwareTrait;
     use TimestampableTrait;
 
