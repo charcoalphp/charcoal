@@ -2,14 +2,15 @@
 
 namespace Charcoal\Admin\Action\Object;
 
+use Charcoal\Object\RevisionService;
 use Exception;
 use InvalidArgumentException;
 // From PSR-7
+use Pimple\Container;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 // From 'charcoal-object'
 use Charcoal\Object\ObjectRevisionInterface;
-use Charcoal\Object\RevisionableInterface;
 // From 'charcoal-admin'
 use Charcoal\Admin\AdminAction;
 use Charcoal\Admin\Ui\ObjectContainerInterface;
@@ -45,6 +46,15 @@ class RevertRevisionAction extends AdminAction implements ObjectContainerInterfa
      */
     protected $revNum;
 
+    private RevisionService $revisionService;
+
+    protected function setDependencies(Container $container)
+    {
+        parent::setDependencies($container);
+
+        $this->revisionService = $container->get('revision/service');
+    }
+
     /**
      * Retrieve the list of parameters to extract from the HTTP request.
      *
@@ -62,9 +72,9 @@ class RevertRevisionAction extends AdminAction implements ObjectContainerInterfa
     /**
      * Set the revision number to restore.
      *
-     * @param  integer $revNum The revision number to load.
-     * @throws InvalidArgumentException If the given revision is invalid.
+     * @param integer $revNum The revision number to load.
      * @return ObjectContainerInterface Chainable
+     * @throws InvalidArgumentException If the given revision is invalid.
      */
     protected function setRevNum($revNum)
     {
@@ -91,8 +101,8 @@ class RevertRevisionAction extends AdminAction implements ObjectContainerInterfa
     }
 
     /**
-     * @param  RequestInterface  $request  A PSR-7 compatible Request instance.
-     * @param  ResponseInterface $response A PSR-7 compatible Response instance.
+     * @param RequestInterface  $request  A PSR-7 compatible Request instance.
+     * @param ResponseInterface $response A PSR-7 compatible Response instance.
      * @return ResponseInterface
      */
     public function run(RequestInterface $request, ResponseInterface $response)
@@ -107,19 +117,11 @@ class RevertRevisionAction extends AdminAction implements ObjectContainerInterfa
                 '{{ errorMessage }}' => $failMessage
             ]);
 
-            $obj = $this->obj();
-            if (!($obj instanceof RevisionableInterface)) {
-                $this->setSuccess(false);
-
-                $this->addFeedback('error', strtr('{{ model }} does not support revisions', [
-                    '{{ model }}' => $this->getSingularLabelFromObj($obj),
-                ]));
-
-                return $response->withStatus(400);
-            }
-
+            $obj      = $this->obj();
             $revNum   = $this->revNum();
-            $revision = $obj->revisionNum($revNum);
+            $this->revisionService->setModel($obj);
+
+            $revision = $this->revisionService->revisionFromNumber($revNum);
             if (!$revision['id']) {
                 $this->setSuccess(false);
 
@@ -139,7 +141,7 @@ class RevertRevisionAction extends AdminAction implements ObjectContainerInterfa
                 return $response->withStatus(404);
             }
 
-            $result = $obj->revertToRevision($revNum);
+            $result = $this->revisionService->revertToRevision($revNum);
 
             if ($result) {
                 $doneMessage = $translator->translate(

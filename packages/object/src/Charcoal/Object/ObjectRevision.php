@@ -15,7 +15,6 @@ use Charcoal\Model\AbstractModel;
 use Charcoal\Model\ModelFactoryTrait;
 // From 'charcoal-object'
 use Charcoal\Object\ObjectRevisionInterface;
-use Charcoal\Object\RevisionableInterface;
 
 /**
  * Represents the changeset of an object.

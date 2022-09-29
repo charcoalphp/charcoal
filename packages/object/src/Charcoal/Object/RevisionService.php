@@ -2,42 +2,66 @@
 
 namespace Charcoal\Object;
 
+use Charcoal\Loader\CollectionLoader;
 use Charcoal\Model\ModelFactoryTrait;
 use Charcoal\Model\ModelInterface;
+use Pimple\Psr11\ServiceLocator;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
+use Psr\Log\LoggerAwareTrait;
 
 /**
  * Revision Service
  *
  * Service handling revision generation and retrieval.
  * Can be implemented in a listener
+ *
+ * Revisions need to act on a ModelInterface,
+ * So to use the revision service, one have to set a ModelInterface beforehand.
+ * Failure to do so will result in a
  */
 class RevisionService
 {
     use ModelFactoryTrait;
+    use LoggerAwareTrait;
 
     private RevisionConfig $revisionConfig;
     private array $modelRevisionConfig;
+    private ModelInterface $model;
 
-    public function __construct(array $dependencies)
+    /**
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
+    public function __construct(ServiceLocator $locator)
     {
-        $this->revisionConfig = $dependencies['revision/config'];
-        $this->setModelFactory($dependencies['model/factory']);
+        $this->revisionConfig = $locator->get('revision/config');
+        $this->setModelFactory($locator->get('model/factory'));
+        $this->setLogger($locator->get('logger'));
     }
 
-    public function generateRevision(ModelInterface $model): ?ObjectRevisionInterface
+    public function __invoke(ModelInterface $model): self
     {
+        $this->setModel($model);
+
+        return $this;
+    }
+
+    public function generateRevision(): ?ObjectRevisionInterface
+    {
+        $model = $this->getModel();
+
         // Bail early
         if (
             !$this->revisionConfig->isEnabled() ||
-            !$this->canCreateRevision($model)
+            !$this->revisionEnabled()
         ) {
             return null;
         }
 
-        $modelConfig = $this->getModelRevisionConfig($model);
-        $revisionProperties = $this->parseRevisionProperties($model);
+        $revisionProperties = $this->parseRevisionProperties();
+        $revisionObject     = $this->createRevisionObject();
 
-        $revisionObject = $this->createRevisionObject($modelConfig->getRevisionClass());
         $revisionObject->createFromObject($model, $revisionProperties);
 
         if (!empty($revisionObject->getDataDiff())) {
@@ -47,10 +71,67 @@ class RevisionService
         return $revisionObject;
     }
 
-    public function parseRevisionProperties(ModelInterface $model): array
+    public function latestRevision(): ObjectRevisionInterface
     {
+        $model    = $this->getModel();
+        $revision = $this->createRevisionObject();
+
+        return $revision->lastObjectRevision($model);
+    }
+
+    /**
+     * @return ObjectRevisionInterface[]
+     */
+    public function allRevisions(callable $callback = null): array
+    {
+        $model  = $this->getModel();
+        $loader = $this->createRevisionObjectCollectionLoader();
+
+        $loader
+            ->addOrder('revTs', 'desc')
+            ->addFilters([
+                [
+                    'property' => 'targetType',
+                    'value'    => $model->objType(),
+                ],
+                [
+                    'property' => 'targetId',
+                    'value'    => $model->id(),
+                ],
+            ]);
+
+        if ($callback !== null) {
+            $loader->setCallback($callback);
+        }
+
+        $revisions = $loader->load();
+
+        return $revisions->objects();
+    }
+
+    public function revertToRevision(int $number): bool
+    {
+        $model    = $this->getModel();
+        $revision = $this->revisionFromNumber($number);
+
+        if (!$revision->id()) {
+            return false;
+        }
+
+        if (isset($model['lastModifiedBy'])) {
+            $model['lastModifiedBy'] = $revision->getRevUser();
+        }
+
+        $model->setData($revision->getDataObj());
+
+        return $model->update();
+    }
+
+    public function parseRevisionProperties(): array
+    {
+        $model       = $this->getModel();
         $modelConfig = $this->getModelRevisionConfig($model);
-        $properties = array_keys($model->data());
+        $properties  = array_keys($model->data());
 
         if ($modelConfig->hasProperties()) {
             return array_intersect($properties, $modelConfig->getProperties());
@@ -73,13 +154,40 @@ class RevisionService
         return $properties;
     }
 
-    public function createRevisionObject(string $objectRevisionClass = ObjectRevision::class): ObjectRevisionInterface
+    public function getObjectRevisionClass(): string
     {
-        return $this->modelFactory()->create($objectRevisionClass);
+        $modelConfig = $this->getModelRevisionConfig();
+
+        return $modelConfig->getRevisionClass();
     }
 
-    public function canCreateRevision(ModelInterface $model): bool
+    public function createRevisionObjectCollectionLoader(): CollectionLoader
     {
+        return new CollectionLoader([
+            'logger'  => $this->logger,
+            'factory' => $this->modelFactory(),
+            'model'   => $this->getRevisionObjectPrototype($this->getObjectRevisionClass()),
+        ]);
+    }
+
+    public function getRevisionObjectPrototype(): ObjectRevisionInterface
+    {
+        return $this->modelFactory()->get($this->getObjectRevisionClass());
+    }
+
+    public function createRevisionObject(): ObjectRevisionInterface
+    {
+        return $this->modelFactory()->create($this->getObjectRevisionClass());
+    }
+
+    public function revisionFromNumber(int $number): ObjectRevisionInterface
+    {
+        return $this->createRevisionObject()->objectRevisionNum($this->getModel(), $number);
+    }
+
+    public function revisionEnabled(): bool
+    {
+        $model          = $this->getModel();
         $revisionConfig = $this->getModelRevisionConfig($model);
 
         // If we did not find a config of the value of the config is false, we don't want to revision.
@@ -90,12 +198,30 @@ class RevisionService
         return $revisionConfig->isEnabled();
     }
 
-    private function getModelRevisionConfig(ModelInterface $model): ?RevisionModelConfig
+    private function getModelRevisionConfig(): ?RevisionModelConfig
     {
+        $model = $this->getModel();
+
         if (!isset($this->modelRevisionConfig[get_class($model)])) {
             $this->modelRevisionConfig[get_class($model)] = $this->revisionConfig->buildModelConfig($model);
         }
 
         return $this->modelRevisionConfig[get_class($model)];
+    }
+
+    public function getModel(): ModelInterface
+    {
+        if (!isset($this->model)) {
+            throw new \InvalidArgumentException('Setting a `ModelInterface` is imperative to use the RevisionService');
+        }
+
+        return $this->model;
+    }
+
+    public function setModel(ModelInterface $model): self
+    {
+        $this->model = $model;
+
+        return $this;
     }
 }

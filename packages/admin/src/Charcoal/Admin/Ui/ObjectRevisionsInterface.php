@@ -12,5 +12,5 @@ interface ObjectRevisionsInterface
     /**
      * @return \Charcoal\Object\ObjectRevisionInterface[]
      */
-    public function objectRevisions();
+    public function objectRevisions(): array;
 }
