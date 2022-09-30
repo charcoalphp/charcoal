@@ -38,11 +38,11 @@ class ObjectRevisionsFormGroup extends AbstractFormGroup implements
      */
     public $widgetId;
 
-    private RevisionsManager $revisionService;
+    private RevisionsManager $revisionManager;
 
-    protected function revisionService(): RevisionsManager
+    protected function revisionManager(): RevisionsManager
     {
-        return $this->revisionService;
+        return $this->revisionManager;
     }
 
     /**
@@ -117,7 +117,7 @@ class ObjectRevisionsFormGroup extends AbstractFormGroup implements
         parent::setDependencies($container);
 
         $this->setModelFactory($container['model/factory']);
-        $this->revisionService = $container['revisions/manager'];
+        $this->revisionManager = $container['revisions/manager'];
 
         $this->objType = $container['request']->getParam('obj_type');
         $this->objId = $container['request']->getParam('obj_id');
