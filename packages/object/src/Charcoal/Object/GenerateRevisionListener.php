@@ -25,6 +25,6 @@ class GenerateRevisionListener extends AbstractEventListener
     {
         parent::setDependencies($container);
 
-        $this->revisionService = $container->get('revision/service');
+        $this->revisionService = $container->get('revisions/manager');
     }
 }

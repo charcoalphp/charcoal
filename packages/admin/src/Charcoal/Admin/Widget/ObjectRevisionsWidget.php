@@ -35,7 +35,7 @@ class ObjectRevisionsWidget extends AdminWidget implements
     {
         parent::setDependencies($container);
 
-        $this->revisionService = $container['revision/service'];
+        $this->revisionService = $container['revisions/manager'];
     }
 
     protected function revisionService(): RevisionsManager

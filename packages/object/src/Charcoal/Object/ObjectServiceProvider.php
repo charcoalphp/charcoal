@@ -18,7 +18,7 @@ class ObjectServiceProvider implements ServiceProviderInterface
 
     private function registerRevisionServices(Container $pimple)
     {
-        $pimple['revision/config'] = function (Container $pimple): RevisionConfig {
+        $pimple['revisions/config'] = function (Container $pimple): RevisionsConfig {
             $configData = $pimple['config']->get('revisions');
 
             // If the config data is a boolean, it means we only want to affect the enabled state.
@@ -28,11 +28,15 @@ class ObjectServiceProvider implements ServiceProviderInterface
                 ];
             }
 
-            return new RevisionConfig($configData);
+            return new RevisionsConfig($configData);
         };
 
-        $pimple['revision/service'] = function (Container $pimple): RevisionsManager {
-            $services = new ServiceLocator($pimple, ['revision/config', 'model/factory', 'logger']);
+        $pimple['revisions/manager'] = function (Container $pimple): RevisionsManager {
+            $services = new ServiceLocator($pimple, [
+                'revisions/config',
+                'model/factory',
+                'logger'
+            ]);
 
             return new RevisionsManager($services);
         };

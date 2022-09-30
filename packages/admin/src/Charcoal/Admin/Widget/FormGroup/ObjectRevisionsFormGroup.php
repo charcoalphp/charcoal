@@ -117,7 +117,7 @@ class ObjectRevisionsFormGroup extends AbstractFormGroup implements
         parent::setDependencies($container);
 
         $this->setModelFactory($container['model/factory']);
-        $this->revisionService = $container['revision/service'];
+        $this->revisionService = $container['revisions/manager'];
 
         $this->objType = $container['request']->getParam('obj_type');
         $this->objId = $container['request']->getParam('obj_id');

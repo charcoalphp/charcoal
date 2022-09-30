@@ -6,11 +6,11 @@ use Charcoal\Config\AbstractConfig;
 use Charcoal\Model\ModelInterface;
 
 /**
- * Revision Config
+ * Revisions Config
  *
- * Configuration for the project's revision system
+ * Configuration for the project's revisions system
  */
-class RevisionConfig extends AbstractConfig
+class RevisionsConfig extends AbstractConfig
 {
     protected bool $enabled = true;
     protected string $revisionClass = ObjectRevision::class;
