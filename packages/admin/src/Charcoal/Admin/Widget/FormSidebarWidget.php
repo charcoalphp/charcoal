@@ -903,6 +903,6 @@ class FormSidebarWidget extends AdminWidget implements
     {
         parent::setDependencies($container);
 
-        $this->revisionService = $container['revision/service'];
+        $this->revisionService = $container['revisions/manager'];
     }
 }

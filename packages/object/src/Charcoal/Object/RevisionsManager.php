@@ -25,7 +25,7 @@ class RevisionsManager
     use ModelFactoryTrait;
     use LoggerAwareTrait;
 
-    private RevisionConfig $revisionConfig;
+    private RevisionsConfig $revisionConfig;
     private array $modelRevisionConfig;
     private ModelInterface $model;
 
@@ -35,7 +35,7 @@ class RevisionsManager
      */
     public function __construct(ServiceLocator $locator)
     {
-        $this->revisionConfig = $locator->get('revision/config');
+        $this->revisionConfig = $locator->get('revisions/config');
         $this->setModelFactory($locator->get('model/factory'));
         $this->setLogger($locator->get('logger'));
     }
