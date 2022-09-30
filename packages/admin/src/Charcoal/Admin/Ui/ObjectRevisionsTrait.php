@@ -25,9 +25,9 @@ trait ObjectRevisionsTrait
         $obj = $this->modelFactory()->create($this->objType());
         $obj->setId($this->objId());
 
-        $this->revisionService()->setModel($obj);
+        $this->revisionManager()->setModel($obj);
 
-        $lastRevision = $this->revisionService()->getLatestRevision();
+        $lastRevision = $this->revisionManager()->getLatestRevision();
         $propLabel    = '<span title="%1$s">%2$s</code>';
 
         $callback = function (ObjectRevisionInterface &$revision) use ($lastRevision, $obj, $propLabel) {
@@ -70,7 +70,7 @@ trait ObjectRevisionsTrait
             $revision->allowRevert = ($lastRevision['revNum'] !== $revision['revNum']);
         };
 
-        return $this->revisionService()->getAllRevisions($callback);
+        return $this->revisionManager()->getAllRevisions($callback);
     }
 
     /**
@@ -92,5 +92,5 @@ trait ObjectRevisionsTrait
      */
     abstract protected function modelFactory();
 
-    abstract protected function revisionService(): RevisionsManager;
+    abstract protected function revisionManager(): RevisionsManager;
 }

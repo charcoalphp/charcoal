@@ -11,20 +11,20 @@ use Pimple\Container;
  */
 class GenerateRevisionListener extends AbstractEventListener
 {
-    protected RevisionsManager $revisionService;
+    protected RevisionsManager $revisionManager;
 
     public function __invoke(object $event)
     {
         /** @var ModelInterface $model */
         $model = $event->getObject();
 
-        $this->revisionService->setModel($model)->generateRevision();
+        $this->revisionManager->setModel($model)->generateRevision();
     }
 
     public function setDependencies(Container $container)
     {
         parent::setDependencies($container);
 
-        $this->revisionService = $container->get('revisions/manager');
+        $this->revisionManager = $container->get('revisions/manager');
     }
 }

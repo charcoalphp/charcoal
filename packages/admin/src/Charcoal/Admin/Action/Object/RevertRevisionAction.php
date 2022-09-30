@@ -46,13 +46,13 @@ class RevertRevisionAction extends AdminAction implements ObjectContainerInterfa
      */
     protected $revNum;
 
-    private RevisionsManager $revisionService;
+    private RevisionsManager $revisionManager;
 
     protected function setDependencies(Container $container)
     {
         parent::setDependencies($container);
 
-        $this->revisionService = $container->get('revisions/manager');
+        $this->revisionManager = $container->get('revisions/manager');
     }
 
     /**
@@ -119,9 +119,9 @@ class RevertRevisionAction extends AdminAction implements ObjectContainerInterfa
 
             $obj      = $this->obj();
             $revNum   = $this->revNum();
-            $this->revisionService->setModel($obj);
+            $this->revisionManager->setModel($obj);
 
-            $revision = $this->revisionService->getRevisionFromNumber($revNum);
+            $revision = $this->revisionManager->getRevisionFromNumber($revNum);
             if (!$revision['id']) {
                 $this->setSuccess(false);
 
@@ -141,7 +141,7 @@ class RevertRevisionAction extends AdminAction implements ObjectContainerInterfa
                 return $response->withStatus(404);
             }
 
-            $result = $this->revisionService->revertToRevision($revNum);
+            $result = $this->revisionManager->revertToRevision($revNum);
 
             if ($result) {
                 $doneMessage = $translator->translate(
