@@ -2,7 +2,7 @@
 
 namespace Charcoal\Admin\Action\Object;
 
-use Charcoal\Object\RevisionService;
+use Charcoal\Object\RevisionsManager;
 use Exception;
 use InvalidArgumentException;
 // From PSR-7
@@ -46,7 +46,7 @@ class RevertRevisionAction extends AdminAction implements ObjectContainerInterfa
      */
     protected $revNum;
 
-    private RevisionService $revisionService;
+    private RevisionsManager $revisionService;
 
     protected function setDependencies(Container $container)
     {

@@ -11,7 +11,7 @@ use Pimple\Container;
  */
 class GenerateRevisionListener extends AbstractEventListener
 {
-    protected RevisionService $revisionService;
+    protected RevisionsManager $revisionService;
 
     public function __invoke(object $event)
     {

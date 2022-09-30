@@ -31,10 +31,10 @@ class ObjectServiceProvider implements ServiceProviderInterface
             return new RevisionConfig($configData);
         };
 
-        $pimple['revision/service'] = function (Container $pimple): RevisionService {
+        $pimple['revision/service'] = function (Container $pimple): RevisionsManager {
             $services = new ServiceLocator($pimple, ['revision/config', 'model/factory', 'logger']);
 
-            return new RevisionService($services);
+            return new RevisionsManager($services);
         };
     }
 }

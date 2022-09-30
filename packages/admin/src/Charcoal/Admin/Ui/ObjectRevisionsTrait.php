@@ -6,7 +6,7 @@ namespace Charcoal\Admin\Ui;
 use Charcoal\Factory\FactoryInterface;
 // From 'charcoal-object'
 use Charcoal\Object\ObjectRevisionInterface;
-use Charcoal\Object\RevisionService;
+use Charcoal\Object\RevisionsManager;
 
 /**
  * An implementation, as Trait, of the {@see \Charcoal\Admin\Ui\ObjectRevisionsInterface}.
@@ -92,5 +92,5 @@ trait ObjectRevisionsTrait
      */
     abstract protected function modelFactory();
 
-    abstract protected function revisionService(): RevisionService;
+    abstract protected function revisionService(): RevisionsManager;
 }
