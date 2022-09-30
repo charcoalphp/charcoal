@@ -26,16 +26,13 @@ class RevisionModelConfig extends AbstractConfig
     // include a property that was excluded by a parent.
     protected array $includedProperties = [];
 
-    /**
-     * @return bool
-     */
     public function isEnabled(): bool
     {
         return $this->enabled;
     }
 
     /**
-     * @return array
+     * @return string[]
      */
     public function getProperties(): array
     {
@@ -48,7 +45,7 @@ class RevisionModelConfig extends AbstractConfig
     }
 
     /**
-     * @return array
+     * @return string[]
      */
     public function getExcludedProperties(): array
     {
@@ -61,7 +58,7 @@ class RevisionModelConfig extends AbstractConfig
     }
 
     /**
-     * @return array
+     * @return string[]
      */
     public function getIncludedProperties(): array
     {
@@ -70,11 +67,11 @@ class RevisionModelConfig extends AbstractConfig
 
     public function hasIncludedProperties(): bool
     {
-        return !!count($this->includedProperties);
+        return (bool)$this->includedProperties;
     }
 
     /**
-     * @return string
+     * @return class-string<ObjectRevisionInterface>
      */
     public function getRevisionClass(): string
     {
