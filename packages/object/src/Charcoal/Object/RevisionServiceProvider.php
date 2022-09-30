@@ -7,16 +7,11 @@ use Pimple\Psr11\ServiceLocator;
 use Pimple\ServiceProviderInterface;
 
 /**
- * Object Service Provider
+ * Revision Service Provider
  */
-class ObjectServiceProvider implements ServiceProviderInterface
+class RevisionServiceProvider implements ServiceProviderInterface
 {
     public function register(Container $pimple)
-    {
-        $this->registerRevisionServices($pimple);
-    }
-
-    private function registerRevisionServices(Container $pimple)
     {
         $pimple['revisions/config'] = function (Container $pimple): RevisionsConfig {
             $configData = $pimple['config']->get('revisions');

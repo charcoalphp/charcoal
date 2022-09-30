@@ -38,7 +38,7 @@ use Charcoal\App\ServiceProvider\LoggerServiceProvider;
 use Charcoal\App\Template\TemplateInterface;
 use Charcoal\App\Template\WidgetInterface;
 use Charcoal\App\Template\WidgetBuilder;
-use Charcoal\Object\ObjectServiceProvider;
+use Charcoal\Object\RevisionServiceProvider;
 use Charcoal\View\Twig\DebugHelpers as TwigDebugHelpers;
 use Charcoal\View\Twig\HelpersInterface as TwigHelpersInterface;
 use Charcoal\View\Twig\UrlHelpers as TwigUrlHelpers;
@@ -79,7 +79,7 @@ class AppServiceProvider implements ServiceProviderInterface
         $container->register(new ScriptServiceProvider());
         $container->register(new TranslatorServiceProvider());
         $container->register(new ViewServiceProvider());
-        $container->register(new ObjectServiceProvider());
+        $container->register(new RevisionServiceProvider());
 
         $this->registerKernelServices($container);
         $this->registerHandlerServices($container);
