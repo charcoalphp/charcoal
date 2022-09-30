@@ -2,7 +2,7 @@
 
 namespace Charcoal\Admin\Widget;
 
-use Charcoal\Object\RevisionService;
+use Charcoal\Object\RevisionsManager;
 use Charcoal\User\AuthAwareInterface;
 use InvalidArgumentException;
 // From Pimple
@@ -163,7 +163,7 @@ class FormSidebarWidget extends AdminWidget implements
      */
     private $requiredGlobalAclPermissions = [];
 
-    private RevisionService $revisionService;
+    private RevisionsManager $revisionService;
 
     /**
      * @param array|ArrayInterface $data Class data.

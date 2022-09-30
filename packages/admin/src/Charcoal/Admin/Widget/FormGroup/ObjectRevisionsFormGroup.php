@@ -3,7 +3,7 @@
 namespace Charcoal\Admin\Widget\FormGroup;
 
 // From 'pimple/pimple'
-use Charcoal\Object\RevisionService;
+use Charcoal\Object\RevisionsManager;
 use Pimple\Container;
 // From 'charcoal-core'
 use Charcoal\Model\ModelFactoryTrait;
@@ -38,9 +38,9 @@ class ObjectRevisionsFormGroup extends AbstractFormGroup implements
      */
     public $widgetId;
 
-    private RevisionService $revisionService;
+    private RevisionsManager $revisionService;
 
-    protected function revisionService(): RevisionService
+    protected function revisionService(): RevisionsManager
     {
         return $this->revisionService;
     }

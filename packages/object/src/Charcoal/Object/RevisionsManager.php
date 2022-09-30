@@ -11,16 +11,16 @@ use Psr\Container\NotFoundExceptionInterface;
 use Psr\Log\LoggerAwareTrait;
 
 /**
- * Revision Service
+ * Revisions Manager
  *
  * Service handling revision generation and retrieval.
- * Can be implemented in a listener
+ * Can be implemented in an event listener
  *
  * Revisions need to act on a ModelInterface,
  * So to use the revision service, one have to set a ModelInterface beforehand.
- * Failure to do so will result in a
+ * Failure to do so will result in an \InvalidArgumentException being thrown.
  */
-class RevisionService
+class RevisionsManager
 {
     use ModelFactoryTrait;
     use LoggerAwareTrait;
