@@ -40,6 +40,7 @@ use Charcoal\View\ViewConfig;
 use Charcoal\View\ViewInterface;
 // From 'charcoal-admin'
 use Charcoal\Admin\Config as AdminConfig;
+use Charcoal\Admin\Route\TemplateRoute as AdminTemplateRoute;
 use Charcoal\Admin\Property\PropertyInputInterface;
 use Charcoal\Admin\Property\PropertyDisplayInterface;
 use Charcoal\Admin\Service\SelectizeRenderer;
@@ -79,6 +80,8 @@ class AdminServiceProvider implements ServiceProviderInterface
         $this->registerFactoryServices($container);
         $this->registerElfinderServices($container);
         $this->registerSelectizeServices($container);
+        $this->registerModelDependencies($container);
+        $this->registerRouteServices($container);
         $this->registerMetadataExtensions($container);
         $this->registerAuthExtensions($container);
         $this->registerViewExtensions($container);
@@ -175,17 +178,17 @@ class AdminServiceProvider implements ServiceProviderInterface
         }
 
         /**
-         * Overwrite view instance.
+         * The admin view instance.
          *
          * @param GenericView $view The view instance.
          * @param Container $container A container instance.
          * @return ViewInterface
          */
-        $container->extend('view', function (GenericView $view, Container $container): ViewInterface {
+        $container['admin/view'] = function (Container $container): ViewInterface {
             return new GenericView([
                 'engine' => $container['view/engine/mustache']
             ]);
-        });
+        };
 
         /**
          * Extend view/config.
@@ -201,6 +204,31 @@ class AdminServiceProvider implements ServiceProviderInterface
             }
             return $viewConfig;
         });
+    }
+
+    /**
+     * @param Container $container A Pimple DI container.
+     * @return void
+     */
+    protected function registerModelDependencies(Container $container)
+    {
+        /**
+         * @param Container $container A Pimple DI container.
+         * @return array The model dependencies array.
+         */
+        $container->extend('model/dependencies', function (array $modelDependencies, Container $container) {
+            $modelDependencies['view'] = $container['admin/view'];
+            return $modelDependencies;
+        });
+    }
+
+    /**
+     * @param  Container $container A service container.
+     * @return void
+     */
+    protected function registerRouteServices(Container $container)
+    {
+        $container['route/controller/template/class'] = AdminTemplateRoute::class;
     }
 
     /**
@@ -468,7 +496,7 @@ class AdminServiceProvider implements ServiceProviderInterface
                 'logger'           => $container['logger'],
                 'translator'       => $container['translator'],
                 'template_factory' => $container['template/factory'],
-                'view'             => $container['view']
+                'view'             => $container['admin/view']
             ]);
         };
     }
@@ -539,7 +567,7 @@ class AdminServiceProvider implements ServiceProviderInterface
                 'arguments'        => [[
                     'container'      => $container,
                     'logger'         => $container['logger'],
-                    'view'           => $container['view'],
+                    'view'           => $container['admin/view'],
                     'layout_builder' => $container['layout/builder']
                 ]],
                 'resolver_options' => [

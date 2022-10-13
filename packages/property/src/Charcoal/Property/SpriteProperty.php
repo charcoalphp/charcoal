@@ -203,7 +203,6 @@ class SpriteProperty extends AbstractProperty implements SelectablePropertyInter
     public function displayVal($val, array $options = [])
     {
         $val = parent::displayVal($val, $options);
-
         if ($val !== '') {
             $label = $this->translator()->trans('Selected sprite icon "%icon%"', [
                 '%icon%' => $val,
@@ -248,7 +247,7 @@ class SpriteProperty extends AbstractProperty implements SelectablePropertyInter
     {
         parent::setDependencies($container);
 
-        $this->view = $container['view'];
+        $this->view = $container['admin/view'];
     }
 
     /**

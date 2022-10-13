@@ -161,7 +161,7 @@ class NestedWidgetFormGroup extends AbstractFormGroup implements
         $this->setWidgetFactory($container['widget/factory']);
 
         // Satisfies Charcoal\View\ViewableInterface dependencies
-        $this->setView($container['view']);
+        $this->setView($container['admin/view']);
     }
 
     /**

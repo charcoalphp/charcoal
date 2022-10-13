@@ -336,7 +336,7 @@ class FormGroupWidget extends AbstractUiItem implements
         $this->setFormInputBuilder($container['form/input/builder']);
 
         // Satisfies ViewableInterface dependencies
-        $this->setView($container['view']);
+        $this->setView($container['admin/view']);
 
         // Satisfies LayoutAwareInterface dependencies
         $this->setLayoutBuilder($container['layout/builder']);

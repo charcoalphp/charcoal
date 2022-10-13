@@ -130,7 +130,7 @@ class TableWidgetTest extends AbstractTestCase
             $containerProvider->registerWidgetFactory($container);
             $containerProvider->registerPropertyDisplayFactory($container);
 
-            $container['view'] = $this->createMock('\Charcoal\View\ViewInterface');
+            $container['admin/view'] = $this->createMock('\Charcoal\View\ViewInterface');
 
             $this->container = $container;
         }

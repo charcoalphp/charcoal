@@ -530,7 +530,7 @@ abstract class AbstractProperty implements
         $this->setTranslator($container['translator']);
 
         // Fulfills the ViewableTrait dependencies
-        $this->setView($container['view']);
+        $this->setView($container['admin/view']);
 
         // Fulfills the DebugAwareTrait dependencies
         $this->setDebug($container['debug']);

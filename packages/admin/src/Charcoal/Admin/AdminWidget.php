@@ -469,6 +469,7 @@ class AdminWidget extends AbstractWidget implements
 
         // Satisfies AdminWidget dependencies
         $this->setModelFactory($container['model/factory']);
+        $this->setView($container['admin/view']);
     }
 
     /**
