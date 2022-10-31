@@ -4,9 +4,6 @@ namespace Charcoal\Admin\Property\Display;
 
 // from 'charcoal-admin'
 use Charcoal\Admin\Property\AbstractPropertyDisplay;
-// from 'charcoal-view'
-use Charcoal\View\ViewableInterface;
-use Charcoal\View\ViewableTrait;
 // from 'pimple'
 use Pimple\Container;
 use UnexpectedValueException;
@@ -16,10 +13,8 @@ use UnexpectedValueException;
  *
  * The default display for most properties; only output {@see AbstractProperty::displayVal()}.
  */
-class StatusDisplay extends AbstractPropertyDisplay implements ViewableInterface
+class StatusDisplay extends AbstractPropertyDisplay
 {
-    use ViewableTrait;
-
     public const STATE_PRIMARY = 'primary';
     public const STATE_SUCCESS = 'success';
     public const STATE_INFO = 'info';
@@ -68,9 +63,6 @@ class StatusDisplay extends AbstractPropertyDisplay implements ViewableInterface
     protected function setDependencies(Container $container)
     {
         parent::setDependencies($container);
-
-        // Fulfills the ViewableTrait dependencies
-        $this->setView($container['admin/view']);
     }
 
     /**
