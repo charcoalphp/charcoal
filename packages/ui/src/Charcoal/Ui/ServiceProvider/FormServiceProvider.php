@@ -52,7 +52,7 @@ class FormServiceProvider implements ServiceProviderInterface
                     [
                         'container'          => $container,
                         'logger'             => $container['logger'],
-                        'view'               => $container['view'],
+                        'view'               => $container['admin/view'],
                         'layout_builder'     => $container['layout/builder'],
                         'form_group_factory' => $container['form/group/factory'],
                     ],
@@ -89,7 +89,7 @@ class FormServiceProvider implements ServiceProviderInterface
                     [
                         'container'          => $container,
                         'logger'             => $container['logger'],
-                        'view'               => $container['view'],
+                        'view'               => $container['admin/view'],
                         'layout_builder'     => $container['layout/builder'],
                         'form_input_builder' => $container['form/input/builder'],
                     ],
