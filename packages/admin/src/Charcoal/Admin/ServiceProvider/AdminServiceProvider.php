@@ -20,8 +20,12 @@ use Mustache_LambdaHelper as LambdaHelper;
 // From 'charcoal-config'
 use Charcoal\Config\ConfigInterface;
 use Charcoal\Config\GenericConfig as Config;
+// From email
+use Charcoal\Email\Email;
+use Charcoal\Email\EmailInterface;
 // From 'charcoal-factory'
 use Charcoal\Factory\FactoryInterface;
+use Charcoal\Factory\GenericFactory;
 // From 'charcoal-core'
 use Charcoal\Model\Service\MetadataConfig;
 // From 'charcoal-ui'
@@ -176,6 +180,29 @@ class AdminServiceProvider implements ServiceProviderInterface
                 return $adminUrl;
             };
         }
+
+        /**
+         * @param Container $container Pimple DI Container.
+         * @return FactoryInterface
+         */
+        $container['admin/email/factory'] = function (Container $container): FactoryInterface {
+            return new GenericFactory([
+                'map' => [
+                    'email' => Email::class
+                ],
+                'base_class' => EmailInterface::class,
+                'default_class' => Email::class,
+                'arguments' => [[
+                    'logger'             => $container['logger'],
+                    'config'             => $container['email/config'],
+                    'view'               => $container['admin/view'],
+                    'template_factory'   => $container['template/factory'],
+                    'queue_item_factory' => $container['model/factory'],
+                    'log_factory'        => $container['model/factory'],
+                    'tracker'            => $container['email/tracker']
+                ]]
+            ]);
+        };
 
         /**
          * The admin view instance.

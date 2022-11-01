@@ -106,7 +106,7 @@ abstract class AbstractNotificationScript extends AdminScript implements CronScr
         parent::setDependencies($container);
         $this->setNotificationFactory($container['model/factory']);
         $this->setRevisionFactory($container['model/factory']);
-        $this->emailFactory = $container['email/factory'];
+        $this->emailFactory = $container['admin/email/factory'];
         $this->userFactory = $container['model/factory'];
         $this->objectFactory = $container['model/factory'];
     }
