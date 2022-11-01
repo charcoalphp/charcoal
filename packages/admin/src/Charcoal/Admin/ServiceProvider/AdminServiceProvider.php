@@ -186,21 +186,16 @@ class AdminServiceProvider implements ServiceProviderInterface
          * @return FactoryInterface
          */
         $container['admin/email/factory'] = function (Container $container): FactoryInterface {
+            $dependencies = $container['email/dependencies'];
+            $dependencies['view'] = $container['admin/view'];
+
             return new GenericFactory([
                 'map' => [
                     'email' => Email::class
                 ],
                 'base_class' => EmailInterface::class,
                 'default_class' => Email::class,
-                'arguments' => [[
-                    'logger'             => $container['logger'],
-                    'config'             => $container['email/config'],
-                    'view'               => $container['admin/view'],
-                    'template_factory'   => $container['template/factory'],
-                    'queue_item_factory' => $container['model/factory'],
-                    'log_factory'        => $container['model/factory'],
-                    'tracker'            => $container['email/tracker']
-                ]]
+                'arguments' => [ $dependencies ],
             ]);
         };
 
