@@ -16,12 +16,6 @@ use Charcoal\Source\StorableInterface;
 use Charcoal\Property\DescribablePropertyInterface;
 // From 'charcoal-object'
 use Charcoal\Object\AuthorableInterface;
-// From 'charcoal-event'
-use Charcoal\Event\EventDispatcherTrait;
-use Charcoal\Event\Events\Object\WasSaved;
-use Charcoal\Event\Events\Object\WasSavedOrUpdated;
-use Charcoal\Event\Events\Object\WillSave;
-use Charcoal\Event\Events\Object\WillSaveOrUpdate;
 
 /**
  * Action: Create an object and insert into storage.
@@ -44,8 +38,6 @@ use Charcoal\Event\Events\Object\WillSaveOrUpdate;
  */
 class SaveAction extends AbstractSaveAction
 {
-    use EventDispatcherTrait;
-
     /**
      * Data for the target model.
      *
@@ -217,11 +209,7 @@ class SaveAction extends AbstractSaveAction
                 }
             }
 
-            $this->dispatchEvents([new WillSave($obj), new WillSaveOrUpdate($obj)]);
-
             $result = $obj->save();
-
-            $this->dispatchEvents([new WasSaved($obj), new WasSavedOrUpdated($obj)]);
 
             if ($result) {
                 $this->setObj($obj);
@@ -268,12 +256,5 @@ class SaveAction extends AbstractSaveAction
 
             return $response->withStatus(500);
         }
-    }
-
-    protected function setDependencies(Container $container)
-    {
-        parent::setDependencies($container);
-
-        $this->setEventDispatcher($container['admin/event/dispatcher']);
     }
 }

@@ -2,10 +2,14 @@
 
 namespace Charcoal\Source;
 
-use RuntimeException;
-use InvalidArgumentException;
-// From 'charcoal-factory'
+use Charcoal\App\Facade\Event;
 use Charcoal\Factory\FactoryInterface;
+use Charcoal\Model\Events\WasSaved;
+use Charcoal\Model\Events\WasUpdated;
+use Charcoal\Model\Events\WillSave;
+use Charcoal\Model\Events\WillUpdate;
+use InvalidArgumentException;
+use RuntimeException;
 
 /**
  * Provides an object with storage interaction.
@@ -223,8 +227,9 @@ trait StorableTrait
      */
     final public function save()
     {
+        $event = Event::dispatch(new WillSave($this));
         $pre = $this->preSave();
-        if ($pre === false) {
+        if ($pre === false || $event->isInterrupted()) {
             $this->logger->error(sprintf(
                 'Can not save object "%s:%s"; cancelled by %s::preSave()',
                 $this->objType(),
@@ -247,8 +252,9 @@ trait StorableTrait
             $this->setId($ret);
         }
 
+        $event = Event::dispatch(new WasSaved($this));
         $post = $this->postSave();
-        if ($post === false) {
+        if ($post === false || $event->isInterrupted()) {
             $this->logger->error(sprintf(
                 'Saved object "%s:%s" but %s::postSave() failed',
                 $this->objType(),
@@ -269,8 +275,12 @@ trait StorableTrait
      */
     final public function update(array $keys = null)
     {
+        /** @var WillUpdate $event */
+        $event = Event::dispatch(new WillUpdate($this));
+
+        // TODO: remove call to preUpdate
         $pre = $this->preUpdate($keys);
-        if ($pre === false) {
+        if ($pre === false || $event->isInterrupted()) {
             $this->logger->error(sprintf(
                 'Can not update object "%s:%s"; cancelled by %s::preUpdate()',
                 $this->objType(),
@@ -291,8 +301,12 @@ trait StorableTrait
             return false;
         }
 
+        /** @var WasUpdated $event */
+        $event = Event::dispatch(new WasUpdated($this));
+
+        // TODO: remove call to postUpdate
         $post = $this->postUpdate($keys);
-        if ($post === false) {
+        if ($post === false || $event->isInterrupted()) {
             $this->logger->warning(sprintf(
                 'Updated object "%s:%s" but %s::postUpdate() failed',
                 $this->objType(),
