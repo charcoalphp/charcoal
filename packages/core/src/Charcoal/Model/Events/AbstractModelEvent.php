@@ -1,15 +1,19 @@
 <?php
 
-namespace Charcoal\Event\Events\Object;
+namespace Charcoal\Model\Events;
 
 use Charcoal\Event\Event;
+use Charcoal\Event\InterruptableEventInterface;
+use Charcoal\Event\InterruptableEventTrait;
 use Charcoal\Model\ModelInterface;
 
 /**
  * Base event for Object related events.
  */
-abstract class AbstractObjectEvent extends Event
+abstract class AbstractModelEvent extends Event implements InterruptableEventInterface
 {
+    use InterruptableEventTrait;
+
     private ModelInterface $object;
 
     /**
