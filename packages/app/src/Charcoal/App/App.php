@@ -40,6 +40,15 @@ class App extends SlimApp implements
     private $routeManager;
 
     /**
+     * List of bootstrap classes.
+     *
+     * @var string[]
+     */
+    protected array $bootstrappers = [
+        \Charcoal\App\Bootstrap\RegisterFacades::class
+    ];
+
+    /**
      * Getter for creating/returning the unique instance of this class.
      *
      * @param \Pimple\Container|\Slim\Container|array $container The application's settings.
@@ -128,6 +137,8 @@ class App extends SlimApp implements
         $dotenv = Dotenv::createImmutable($config->basePath());
         $dotenv->safeLoad();
 
+        $this->bootstrap();
+
         // Setup routes
         $this->routeManager()->setupRoutes();
 
@@ -141,6 +152,13 @@ class App extends SlimApp implements
 
         // Setup middlewares
         $this->setupMiddlewares();
+    }
+
+    private function bootstrap()
+    {
+        foreach ($this->bootstrappers as $bootstrapper) {
+            (new $bootstrapper())->bootstrap($this);
+        }
     }
 
     /**
