@@ -22,7 +22,7 @@ class RevisionModelConfig extends AbstractConfig
     protected array $properties = [];
     // Exclude properties from the revision process.
     protected array $excludedProperties = [];
-    // Include properties from the revision process. By default, all properties are included, so this can be used to
+    // Include properties in the revision process. By default, all properties are included, so this can be used to
     // include a property that was excluded by a parent.
     protected array $includedProperties = [];
 
