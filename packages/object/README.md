@@ -16,7 +16,7 @@ Object definition (Content and UserData), behaviors and tools.
         -   [Category](#category)
         -   [Hierarchical](#hierarchical)
         -   [Publishable](#publishable)
-        -   [Revisionable](#revisionable)
+        -   [Revisionable](#revision-manager)
         -   [Routable](#routable)
     -   [Helpers](#helpers)
         -   [ObjectDraft](#objectdraft)
@@ -128,7 +128,6 @@ The **UserData** class should be used for all objects that are expected to be en
 -   [Category](#category)
 -   [Hierarchical](#hierarchical)
 -   [Publishable](#publishable)
--   [Revisionable](#revisionable)
 -   [Routable](#routable)
 
 ### Archivable
@@ -225,26 +224,78 @@ _The archivable behavior is not yet documented. It is still under heavy developm
 
 > Default metadata is defined in `metadata/charcoal/object/publishable-interface.json`.
 
-### Revisionable
+### Revision Manager
 
-Revisionable objects implement `\Charcoal\Object\Revision\RevisionableInterface`, which can be easily implemented by using `\Charcoal\Object\Revision\RevisionableTrait`.
+The Revision Manager is a service that handles every related tasks with keeping revisions of objects implementing `\Charcoal\Model\ModelInterface`.
 
-Revisionable objects create _revisions_ which logs the changes between an object's versions, as _diffs_.
+The manager creates _revisions_ which logs the changes between an object's versions, as _diffs_.
+
+The `\Charcoal\Object\Listener` is a listener available to map a Model to a revision generation.
 
 **API**
 
--   `setRevisionEnabled(bool$enabled)`
 -   `revisionEnabled()`
 -   `revisionObject()`
 -   `generateRevision()`
 -   `latestRevision()`
--   `revisionNum(integer $revNum)`
+-   `revisionForNumber(integer $revNum)`
 -   `allRevisions(callable $callback = null)`
 -   `revertToRevision(integer $revNum)`
 
-**Properties (metadata)**
+**USAGE**
 
-_The revisionable behavior does not implement any properties as all logic & data is self-contained in the revisions._
+```PHP
+$revisionMangager->setModel($model)->generateRevision();
+```
+
+The revision manager also looks for a configuration in the app config keyed `revisions`.
+This config gives projects control over the revision system like disabling the revisions or specifying what models to enable
+revisions for. The following example can be used to enable revisions for all content models in a project:
+
+```JSON
+{
+    "revisions": {
+        "enabled": true,
+        "excludedProperties": [
+            "created",
+            "lastModified",
+            "createdBy",
+            "lastModifiedBy",
+            "active",
+            "locked",
+            "requiredAclPermissions",
+            "position"
+        ],
+        "models": {
+            "Charcoal\\Object\\Content": {}
+        }
+    }
+}
+```
+
+**Config options**
+
+| Key                      | Description                                                                                 | Type                                    | Default Value                    |
+|--------------------------|---------------------------------------------------------------------------------------------|-----------------------------------------|----------------------------------|
+| **enabled**              | Enable or not the revisions.                                                                | `bool`                                  | `true`                           |
+| **revisionClass**        | Change the revision object class.                                                           | `string`                                | `Charcoal\Object\ObjectRevision` |
+| **limitPerModel** (TODO) | Define a limit of revisions per model.                                                      | `int&#124;null`                         | `null`                           |
+| **models**               | Specify which models to enable revisions for and and what options to apply. See next table. | `object<model: string, options: array>` | `[]`                             |
+| **excludedProperties**   | Exclude properties from the revision process.                                               | `string[]`                              | `[]`                             |
+
+
+**Models options**
+
+| Key                      | Description                                                                                                                                                                                       | Type            | Default Value                    |
+|--------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------------|----------------------------------|
+| **enabled**              | Enable or not the revisions for the model. Important to note that class inheritance is respected, meaning enabling revisions for a high order model will also enable revisions for it's children. | `bool`          | `true`                           |
+| **revisionClass**        | Change the revision object class for a specific model and it's children.                                                                                                                          | `string`        | `Charcoal\Object\ObjectRevision` |
+| **limitPerModel** (TODO) | Define a limit of revisions per model.                                                                                                                                                            | `int&#124;null` | `null`                           |
+| **properties**           | Limits the revision process to only these properties, disregarding property exclusions and inclusions.                                                                                            | `string[]`      | `[]`                             |
+| **excludedProperties**   | Exclude properties from the revision process.                                                                                                                                                     | `string[]`      | `[]`                             |
+| **includedProperties**   | Include properties in the revision process. By default, all properties are included, so this can be used to include a property that was excluded by a parent.                                     | `string[]`      | `[]`                             |
+
+
 
 ### Routable
 
@@ -262,16 +313,16 @@ Upon every `update` in _storage_, a revisionable object creates a new *revision*
 
 **Revision properties**
 
-| Property           | Type         | Default    | Description |
-| ------------------ | ------------ | ---------- | ----------- |
-| **target_type**    | `string`     | `null`     | The object type of the target object.
-| **target_id**      | `string`     | `null`     | The object idenfiier of the target object.
-| **rev_num**        | `integer`    | `null`     | Revision number, (auto-generated).
-| **ref_ts**         | `date-time`  |            |
-| **rev_user**       | `string`     | `null`     |
-| **data_prev**      | `structure`  |            |
-| **data_obj**       | `structure`  |            |
-| **data_diff**      | `structure`  |            |
+| Property        | Type        | Default | Description                                |
+|-----------------|-------------|---------|--------------------------------------------|
+| **target_type** | `string`    | `null`  | The object type of the target object.      |
+| **target_id**   | `string`    | `null`  | The object idenfiier of the target object. |
+| **rev_num**     | `integer`   | `null`  | Revision number, (auto-generated).         |
+| **ref_ts**      | `date-time` |         |                                            |
+| **rev_user**    | `string`    | `null`  |                                            |
+| **data_prev**   | `structure` |         |                                            |
+| **data_obj**    | `structure` |         |                                            |
+| **data_diff**   | `structure` |         |                                            |
 
 **Revision methods**
 
@@ -286,14 +337,14 @@ It is possible, (typically from the charcoal admin backend), to create *schedule
 
 **Schedule properties**
 
-| Property           | Type         | Default    | Description |
-| ------------------ | ------------ | ---------- | ----------- |
-| **target_type**    | `string`     | `null`     | The object type of the target object.
-| **target_id**      | `string`     | `null`     | The object idenfiier of the target object.
-| **scheduled_date** | `date-time`  | `null`     |
-| **data_diff**      | `structure`  | `[]`       |
-| **processed**      | `boolean`    | `false`    |
-| **processed_date** |
+| Property           | Type        | Default | Description                                |
+|--------------------|-------------|---------|--------------------------------------------|
+| **target_type**    | `string`    | `null`  | The object type of the target object.      |
+| **target_id**      | `string`    | `null`  | The object idenfiier of the target object. |
+| **scheduled_date** | `date-time` | `null`  |                                            |
+| **data_diff**      | `structure` | `[]`    |                                            |
+| **processed**      | `boolean`   | `false` |                                            |
+| **processed_date** |             |         |                                            |
 
 **Schedule methods (API)**
 
