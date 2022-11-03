@@ -23,7 +23,7 @@ use League\Event\ListenerSubscriber;
  */
 class Event extends Facade
 {
-    protected static function getContainerKey(): string
+    protected static function getFacadeName(): string
     {
         return 'admin/event/dispatcher';
     }
