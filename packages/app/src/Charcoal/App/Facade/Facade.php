@@ -16,9 +16,9 @@ class Facade
     /**
      * @var array<string, object>
      */
-    protected static array $resolvedServices = [];
+    protected static array $resolvedInstances = [];
 
-    public static function setApp(App $app)
+    public static function setFacadeApp(App $app)
     {
         static::$app = $app;
     }
@@ -26,37 +26,39 @@ class Facade
     /**
      * @return mixed
      */
-    public static function getRoot()
+    public static function getFacadeInstance()
     {
-        return static::resolveContainerService(static::getContainerKey());
+        return static::resolveFacadeInstance(static::getFacadeName());
     }
 
     /**
      * Get the container service key the facade is providing alias for.
      */
-    protected static function getContainerServiceKey(): string
+    protected static function getFacadeName(): string
     {
-        throw new RuntimeException(sprintf('The facade [%s] does not provide a container service key.', get_called_class()));
+        throw new RuntimeException(
+            sprintf('The facade [%s] does not provide a container service key.', get_called_class())
+        );
     }
 
-    protected static function resolveContainerService(string $key): object
+    protected static function resolveFacadeInstance(string $key): object
     {
-        if (isset(static::$resolvedServices[$key])) {
-            return static::$resolvedServices[$key];
+        if (isset(static::$resolvedInstances[$key])) {
+            return static::$resolvedInstances[$key];
         }
 
-        static::$resolvedServices[$key] = static::$app->getContainer()[$key];
-        return static::$resolvedServices[$key];
+        static::$resolvedInstances[$key] = static::$app->getContainer()[$key];
+        return static::$resolvedInstances[$key];
     }
 
-    public static function clearResolvedContainerService(string $key)
+    public static function clearResolvedFacadeInstance(string $key)
     {
-        unset(static::$resolvedServices[$key]);
+        unset(static::$resolvedInstances[$key]);
     }
 
-    public static function clearResolvedContainerServices()
+    public static function clearResolvedFacadeInstances()
     {
-        static::$resolvedServices = [];
+        static::$resolvedInstances = [];
     }
 
     /**
@@ -70,7 +72,7 @@ class Facade
      */
     public static function __callStatic(string $method, array $args = [])
     {
-        $instance = static::getRoot();
+        $instance = static::getFacadeInstance();
 
         if (!$instance) {
             throw new RuntimeException(

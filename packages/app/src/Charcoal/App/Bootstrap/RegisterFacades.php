@@ -18,7 +18,7 @@ class RegisterFacades
      */
     public function bootstrap(App $app)
     {
-        Facade::clearResolvedContainerServices();
-        Facade::setApp($app);
+        Facade::clearResolvedFacadeInstances();
+        Facade::setFacadeApp($app);
     }
 }
