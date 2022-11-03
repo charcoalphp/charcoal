@@ -7,10 +7,10 @@ use League\Event\ListenerPriority;
 use League\Event\ListenerSubscriber;
 
 /**
- * Event Facade
+ * Facade: Event Dispatcher
  *
- * Alias for the 'admin/event/dispatcher' container key.
- * Give access to the admin event dispatcher.
+ * Alias for the 'admin/event/dispatcher' container service.
+ * Provides access to the admin event dispatcher.
  *
  * @method static object dispatch(object $event)
  * @method static void dispatchGeneratedEvents(EventGenerator $generator)
@@ -18,7 +18,8 @@ use League\Event\ListenerSubscriber;
  * @method static void subscribeOnceTo(string $event, callable $listener, int $priority = ListenerPriority::NORMAL)
  * @method static void subscribeListenersFrom(ListenerSubscriber $subscriber)
  *
- * @see \Charcoal\Event\EventDispatcher, \League\Event\EventDispatcher
+ * @see \Charcoal\Event\EventDispatcher
+ * @see \League\Event\EventDispatcher
  */
 class Event extends Facade
 {
