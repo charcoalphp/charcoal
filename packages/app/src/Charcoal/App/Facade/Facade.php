@@ -13,6 +13,9 @@ use RuntimeException;
 class Facade
 {
     protected static App $app;
+    /**
+     * @var array<string, object>
+     */
     protected static array $resolvedServices = [];
 
     public static function setApp(App $app)
@@ -29,20 +32,14 @@ class Facade
     }
 
     /**
-     * Get the container key the facade is providing alias for.
-     *
-     * @return string
+     * Get the container service key the facade is providing alias for.
      */
-    protected static function getContainerKey(): string
+    protected static function getContainerServiceKey(): string
     {
-        throw new RuntimeException(sprintf('The facade [%s] is not providing a container key.', get_called_class()));
+        throw new RuntimeException(sprintf('The facade [%s] does not provide a container service key.', get_called_class()));
     }
 
-    /**
-     * @param $key
-     * @return mixed
-     */
-    protected static function resolveContainerService($key)
+    protected static function resolveContainerService(string $key): object
     {
         if (isset(static::$resolvedServices[$key])) {
             return static::$resolvedServices[$key];
@@ -75,8 +72,10 @@ class Facade
     {
         $instance = static::getRoot();
 
-        if (! $instance) {
-            throw new RuntimeException(sprintf('The facade [%s]\'s root is not set.', get_called_class()));
+        if (!$instance) {
+            throw new RuntimeException(
+                sprintf('The facade [%s] root is not defined', get_called_class())
+            );
         }
 
         return $instance->$method(...$args);
