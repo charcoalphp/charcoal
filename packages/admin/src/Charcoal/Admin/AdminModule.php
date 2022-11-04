@@ -10,6 +10,7 @@ use Charcoal\App\Handler\HandlerInterface;
 use Charcoal\App\Module\AbstractModule;
 // From 'charcoal-admin'
 use Charcoal\Admin\ServiceProvider\AdminServiceProvider;
+use Charcoal\View\ViewAggregator;
 
 /**
  * Charcoal Administration Module
@@ -45,6 +46,12 @@ class AdminModule extends AbstractModule
             session_start();
         }
         $container->register(new AdminServiceProvider());
+
+        /* Last resort solution
+        if ($container['view'] instanceof ViewAggregator) {
+            $container['view']->using('mustache');
+        }
+        */
 
         $module = $this;
         $container['charcoal/admin/module'] = function () use ($module) {
@@ -105,7 +112,7 @@ class AdminModule extends AbstractModule
         $container->extend('notFoundHandler', function ($handler, $container) {
             $appConfig = $container['config'];
             $adminConfig = $container['admin/config'];
-            $adminView = $container['admin/view'];
+            $adminView = $container['view'];
             if ($handler instanceof HandlerInterface) {
                 $config = $handler->createConfig($appConfig['handlers.defaults']);
                 $config->merge($adminConfig['handlers.defaults']);
@@ -129,7 +136,7 @@ class AdminModule extends AbstractModule
         $container->extend('notAllowedHandler', function ($handler, $container) {
             $appConfig = $container['config'];
             $adminConfig = $container['admin/config'];
-            $adminView = $container['admin/view'];
+            $adminView = $container['view'];
             if ($handler instanceof HandlerInterface) {
                 $config = $handler->createConfig($appConfig['handlers.defaults']);
                 $config->merge($adminConfig['handlers.defaults']);
@@ -153,7 +160,7 @@ class AdminModule extends AbstractModule
         $container->extend('phpErrorHandler', function ($handler, $container) {
             $appConfig = $container['config'];
             $adminConfig = $container['admin/config'];
-            $adminView = $container['admin/view'];
+            $adminView = $container['view'];
             if ($handler instanceof HandlerInterface) {
                 $config = $handler->createConfig($appConfig['handlers.defaults']);
                 $config->merge($adminConfig['handlers.defaults']);
@@ -177,7 +184,7 @@ class AdminModule extends AbstractModule
         $container->extend('errorHandler', function ($handler, $container) {
             $appConfig = $container['config'];
             $adminConfig = $container['admin/config'];
-            $adminView = $container['admin/view'];
+            $adminView = $container['view'];
             if ($handler instanceof HandlerInterface) {
                 $config = $handler->createConfig($appConfig['handlers.defaults']);
                 $config->merge($adminConfig['handlers.defaults']);
@@ -203,7 +210,7 @@ class AdminModule extends AbstractModule
         $container->extend('maintenanceHandler', function ($handler, $container) {
             $appConfig = $container['config'];
             $adminConfig = $container['admin/config'];
-            $adminView = $container['admin/view'];
+            $adminView = $container['view'];
             if ($handler instanceof HandlerInterface) {
                 $config = $handler->createConfig($appConfig['handlers.defaults']);
                 $config->merge($adminConfig['handlers.defaults']);

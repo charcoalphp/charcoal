@@ -151,7 +151,7 @@ class LoadAction extends AdminAction
                 $widget->setData($widgetOptions);
             }
 
-            $widgetHtml = $widget->renderTemplate($widget->template());
+            $widgetHtml = $widget->render($widget->template());
             $sharedJs   = $widget->renderTemplate('{{&jsRequirements}}');
             $uniqueJs   = $widget->renderTemplate('{{&js}}');
             $widgetId   = $widget->widgetId();
@@ -319,7 +319,7 @@ class LoadAction extends AdminAction
         parent::setdependencies($container);
 
         $this->setWidgetFactory($container['widget/factory']);
-        $this->setWidgetView($container['admin/view']);
+        $this->setWidgetView($container['view']);
     }
 
 

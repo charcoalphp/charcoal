@@ -116,17 +116,16 @@ class NestedWidgetFormGroup extends AbstractFormGroup implements
     /**
      * @return Translation|string|null
      */
-    public function description()
+    public function setDescription($description)
     {
-        return $this->renderTemplate((string)parent::description());
+        parent::setDescription($this->renderTemplate($description));
+        return $this;
     }
 
-    /**
-     * @return Translation|string|null
-     */
-    public function notes()
+    public function setNotes($notes)
     {
-        return $this->renderTemplate((string)parent::notes());
+        parent::setNotes($this->renderTemplate($notes));
+        return $this;
     }
 
     /**
@@ -161,7 +160,7 @@ class NestedWidgetFormGroup extends AbstractFormGroup implements
         $this->setWidgetFactory($container['widget/factory']);
 
         // Satisfies Charcoal\View\ViewableInterface dependencies
-        $this->setView($container['admin/view']);
+        $this->setView($container['view']);
     }
 
     /**

@@ -73,7 +73,7 @@ class ExporterTest extends AbstractTestCase
             $containerProvider->registerModelServiceProvider($container);
             $containerProvider->registerTranslatorServiceProvider($container);
 
-            $container['admin/view'] = $this->createMock('\Charcoal\View\ViewInterface');
+            $container['view'] = $this->createMock('\Charcoal\View\ViewInterface');
 
             $this->container = $container;
         }

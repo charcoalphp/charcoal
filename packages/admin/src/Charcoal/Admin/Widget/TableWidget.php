@@ -253,7 +253,7 @@ class TableWidget extends AdminWidget implements CollectionContainerInterface
         }
 
         if ($collectionIdent && $this->isObjRenderable($proto)) {
-            $collectionIdent = $proto->render($collectionIdent);
+            $collectionIdent = $proto->renderTemplate($collectionIdent);
         }
 
         if (!$collectionIdent) {
@@ -880,7 +880,7 @@ class TableWidget extends AdminWidget implements CollectionContainerInterface
         $url   = 'object/edit?main_menu={{ main_menu }}&obj_type=' . $this->objType();
 
         if ($this->isObjRenderable($model)) {
-            $url = $model->render((string)$url);
+            $url = $model->renderTemplate((string)$url);
         } else {
             $url = preg_replace('~{{\s*id\s*}}~', $this->currentObjId, $url);
         }
@@ -901,7 +901,7 @@ class TableWidget extends AdminWidget implements CollectionContainerInterface
                     if (isset($action['url'])) {
                         $model = $this->proto();
                         if ($this->isObjRenderable($model)) {
-                            $action['url'] = $model->render((string)$action['url']);
+                            $action['url'] = $model->renderTemplate((string)$action['url']);
                         } else {
                             $action['url'] = preg_replace('~{{\s*id\s*}}~', $this->currentObjId, $action['url']);
                         }

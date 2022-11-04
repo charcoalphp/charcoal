@@ -41,7 +41,7 @@ class DashboardServiceProvider implements ServiceProviderInterface
                     [
                         'container'      => $container,
                         'logger'         => $container['logger'],
-                        'view'           => $container['admin/view'],
+                        'view'           => $container['view'],
                         'widget_builder' => $container['widget/builder'],
                         'layout_builder' => $container['layout/builder'],
                     ],

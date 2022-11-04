@@ -27,7 +27,7 @@ class PhpEngine extends AbstractEngine
      */
     public function renderTemplate(string $templateString, $context): string
     {
-        $arrayContext = json_decode(json_encode($context), true);
+        $arrayContext = json_decode(json_encode($context, JSON_THROW_ON_ERROR), true);
         // Prevents leaking global variable by forcing anonymous scope
         $render = function ($templateString, array $context) {
             extract($context);

@@ -58,7 +58,7 @@ class LayoutBuilder
 
         $obj = $this->factory->create($objType, [
             'logger' => $container['logger'],
-            'view'   => $container['admin/view']
+            'view'   => $container['view']
         ]);
         $obj->setData($options);
 

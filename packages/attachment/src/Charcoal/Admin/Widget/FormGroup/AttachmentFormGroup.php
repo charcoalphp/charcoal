@@ -179,7 +179,7 @@ class AttachmentFormGroup extends AbstractFormGroup implements
         }
 
         // Satisfies Charcoal\View\ViewableInterface dependencies
-        $this->setView($container['admin/view']);
+        $this->setView($container['view']);
     }
 
     /**

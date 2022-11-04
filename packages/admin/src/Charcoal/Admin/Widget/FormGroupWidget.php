@@ -291,17 +291,16 @@ class FormGroupWidget extends AbstractUiItem implements
     /**
      * @return Translation|string|null
      */
-    public function description()
+    public function setDescription($description)
     {
-        return $this->renderTemplate((string)parent::description());
+        parent::setDescription($this->renderTemplate($description));
+        return $this;
     }
 
-    /**
-     * @return Translation|string|null
-     */
-    public function notes()
+    public function setNotes($notes)
     {
-        return $this->renderTemplate((string)parent::notes());
+        parent::setNotes($this->renderTemplate($notes));
+        return $this;
     }
 
     /**
@@ -336,7 +335,7 @@ class FormGroupWidget extends AbstractUiItem implements
         $this->setFormInputBuilder($container['form/input/builder']);
 
         // Satisfies ViewableInterface dependencies
-        $this->setView($container['admin/view']);
+        $this->setView($container['view']);
 
         // Satisfies LayoutAwareInterface dependencies
         $this->setLayoutBuilder($container['layout/builder']);

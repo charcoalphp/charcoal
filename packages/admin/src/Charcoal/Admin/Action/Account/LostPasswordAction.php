@@ -180,7 +180,7 @@ class LostPasswordAction extends AdminAction
     protected function setDependencies(Container $container)
     {
         parent::setDependencies($container);
-        $this->setEmailFactory($container['admin/email/factory']);
+        $this->setEmailFactory($container['email/factory']);
     }
 
     /**

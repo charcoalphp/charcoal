@@ -6,6 +6,8 @@ namespace Charcoal\View\Twig;
 
 use Charcoal\View\AbstractEngine;
 use InvalidArgumentException;
+use Exception;
+use JsonException;
 use RuntimeException;
 use Symfony\Bridge\Twig\Extension\TranslationExtension;
 use Twig\Environment as TwigEnvironment;
@@ -162,8 +164,16 @@ class TwigEngine extends AbstractEngine
      */
     public function render(string $templateIdent, $context): string
     {
-        $arrayContext = json_decode(json_encode($context), true);
-        return $this->twig()->render($templateIdent, $arrayContext);
+        try {
+            $arrayContext = json_decode(json_encode($context, JSON_THROW_ON_ERROR), true);
+            return $this->twig()->render($templateIdent, $arrayContext);
+        } catch (JsonException $e) {
+            throw new Exception(
+                sprintf("Twig cannot render \"%s\", Error : \"%s\".", $templateIdent, $e->getMessage()),
+                $e->getCode(),
+                $e
+            );
+        }
     }
 
     /**
@@ -173,9 +183,17 @@ class TwigEngine extends AbstractEngine
      */
     public function renderTemplate(string $templateString, $context): string
     {
-        $template = $this->twig()->createTemplate($templateString);
-        $arrayContext = json_decode(json_encode($context), true);
-        return $template->render($arrayContext);
+        try {
+            $template = $this->twig()->createTemplate($templateString);
+            $arrayContext = json_decode(json_encode($context, JSON_THROW_ON_ERROR), true);
+            return $template->render($arrayContext);
+        } catch (JsonException $e) {
+            throw new Exception(
+                sprintf("Twig cannot render template \"%s\", Error : \"%s\".", $templateString, $e->getMessage()),
+                $e->getCode(),
+                $e
+            );
+        }
     }
 
     /**

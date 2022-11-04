@@ -118,7 +118,7 @@ abstract class AbstractEngine implements EngineInterface
     /**
      * @return LoaderInterface
      */
-    protected function loader(): LoaderInterface
+    public function loader(): LoaderInterface
     {
         return $this->loader;
     }

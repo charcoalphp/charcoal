@@ -22,6 +22,7 @@ use Charcoal\View\Twig\HelpersInterface as TwigHelpersInterface;
 use Charcoal\View\Twig\TranslatorHelpers as TwigTranslatorHelpers;
 use Charcoal\View\Twig\TwigEngine;
 use Charcoal\View\Twig\TwigLoader;
+use Charcoal\View\ViewAggregator;
 
 /**
  * View Service Provider
@@ -195,6 +196,20 @@ class ViewServiceProvider implements ServiceProviderInterface
         };
 
         /**
+         * The view engines.
+         *
+         * @param Container $container A container instance.
+         * @return array
+         */
+        $container['view/engines'] = function (Container $container): array {
+            return [
+                'mustache'  => $container['view/engine/mustache'],
+                'php'       => $container['view/engine/php'],
+                'twig'      => $container['view/engine/twig'],
+            ];
+        };
+
+        /**
          * The default view engine.
          *
          * @param Container $container A container instance.
@@ -354,8 +369,11 @@ class ViewServiceProvider implements ServiceProviderInterface
          * @return ViewInterface
          */
         $container['view'] = function (Container $container): ViewInterface {
-            return new GenericView([
-                'engine' => $container['view/engine']
+            return new ViewAggregator([
+                'engines'           => $container['view/engines'],
+                'engine'            => $container['view/engine'],
+                'file_decider'      => $container['view/engine/decider/file'],
+                'string_decider'    => $container['view/engine/decider/string'],
             ]);
         };
 
@@ -381,5 +399,29 @@ class ViewServiceProvider implements ServiceProviderInterface
             $parsedown->setSafeMode(true);
             return $parsedown;
         };
+
+        $container['view/engine/decider/string'] = $container->protect(
+            function ($templateString, $context, $engines, $defaultEngine): EngineInterface {
+                foreach ($engines as $engine) {
+                    $string = $engine->loader()->resolveDynamicTemplate($templateString);
+                    if ($engine->loader()->isTemplateString($string)) {
+                        return $engine;
+                    }
+                }
+                return $defaultEngine;
+            }
+        );
+
+        $container['view/engine/decider/file'] = $container->protect(
+            function ($templateFile, $context, $engines, $defaultEngine): EngineInterface {
+                foreach ($engines as $engine) {
+                    $file = $engine->loader()->resolveDynamicTemplate($templateFile);
+                    if ($engine->loader()->findTemplateFile($file)) {
+                        return $engine;
+                    }
+                }
+                return $defaultEngine;
+            }
+        );
     }
 }
