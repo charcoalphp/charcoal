@@ -27,7 +27,7 @@ trait ObjectRevisionsTrait
 
         $this->revisionService()->setModel($obj);
 
-        $lastRevision = $this->revisionService()->latestRevision();
+        $lastRevision = $this->revisionService()->getLatestRevision();
         $propLabel    = '<span title="%1$s">%2$s</code>';
 
         $callback = function (ObjectRevisionInterface &$revision) use ($lastRevision, $obj, $propLabel) {
@@ -70,7 +70,7 @@ trait ObjectRevisionsTrait
             $revision->allowRevert = ($lastRevision['revNum'] !== $revision['revNum']);
         };
 
-        return $this->revisionService()->allRevisions($callback);
+        return $this->revisionService()->getAllRevisions($callback);
     }
 
     /**
