@@ -211,10 +211,6 @@ class RevisionsManager
 
     public function getModel(): ModelInterface
     {
-        if (!isset($this->model)) {
-            throw new \InvalidArgumentException('Setting a `ModelInterface` is imperative to use the RevisionService');
-        }
-
         return $this->model;
     }
 
