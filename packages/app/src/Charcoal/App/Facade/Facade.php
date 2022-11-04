@@ -10,7 +10,7 @@ use RuntimeException;
  *
  * The facade class acts as a shortcut to a container service.
  */
-class Facade
+abstract class Facade
 {
     protected static App $app;
     /**
