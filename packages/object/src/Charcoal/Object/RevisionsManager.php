@@ -127,6 +127,9 @@ class RevisionsManager
         return $model->update();
     }
 
+    /**
+     * @return string[]
+     */
     public function parseRevisionProperties(): array
     {
         $model       = $this->getModel();
@@ -154,6 +157,9 @@ class RevisionsManager
         return $properties;
     }
 
+    /**
+     * @return class-string<ObjectRevisionInterface>
+     */
     public function getObjectRevisionClass(): string
     {
         $modelConfig = $this->getModelRevisionConfig();

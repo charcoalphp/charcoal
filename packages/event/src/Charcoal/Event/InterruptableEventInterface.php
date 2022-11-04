@@ -15,5 +15,5 @@ interface InterruptableEventInterface
     /**
      * @return string|Stringable
      */
-    public function reason();
+    public function getReasonForInterruption();
 }

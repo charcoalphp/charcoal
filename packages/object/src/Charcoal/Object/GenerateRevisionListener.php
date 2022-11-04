@@ -7,7 +7,7 @@ use Charcoal\Model\ModelInterface;
 use Pimple\Container;
 
 /**
- * Listener
+ * Event Listener: Generates a revision for the event's related model.
  */
 class GenerateRevisionListener extends AbstractEventListener
 {
