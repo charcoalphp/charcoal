@@ -5,18 +5,12 @@ namespace Charcoal\App\Bootstrap;
 use Charcoal\App\App;
 use Charcoal\App\Facade\Facade;
 
-/**
- * Class RegisterFacades
- */
 class RegisterFacades
 {
     /**
-     * Bootstrap the charcoal application.
-     *
-     * @param App $app
-     * @return void
+     * Bootstrap the facades with the Charcoal application.
      */
-    public function bootstrap(App $app)
+    public function bootstrap(App $app): void
     {
         Facade::clearResolvedFacadeInstances();
         Facade::setFacadeApp($app);
