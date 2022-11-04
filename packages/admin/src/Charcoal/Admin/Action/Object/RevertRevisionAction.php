@@ -121,7 +121,7 @@ class RevertRevisionAction extends AdminAction implements ObjectContainerInterfa
             $revNum   = $this->revNum();
             $this->revisionService->setModel($obj);
 
-            $revision = $this->revisionService->revisionFromNumber($revNum);
+            $revision = $this->revisionService->getRevisionFromNumber($revNum);
             if (!$revision['id']) {
                 $this->setSuccess(false);
 

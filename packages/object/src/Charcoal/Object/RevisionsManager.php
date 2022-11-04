@@ -54,7 +54,7 @@ class RevisionsManager
         // Bail early
         if (
             !$this->revisionConfig->isEnabled() ||
-            !$this->revisionEnabled()
+            !$this->isRevisionEnabled()
         ) {
             return null;
         }
@@ -71,7 +71,7 @@ class RevisionsManager
         return $revisionObject;
     }
 
-    public function latestRevision(): ObjectRevisionInterface
+    public function getLatestRevision(): ObjectRevisionInterface
     {
         $model    = $this->getModel();
         $revision = $this->createRevisionObject();
@@ -82,7 +82,7 @@ class RevisionsManager
     /**
      * @return ObjectRevisionInterface[]
      */
-    public function allRevisions(callable $callback = null): array
+    public function getAllRevisions(callable $callback = null): array
     {
         $model  = $this->getModel();
         $loader = $this->createRevisionObjectCollectionLoader();
@@ -112,7 +112,7 @@ class RevisionsManager
     public function revertToRevision(int $number): bool
     {
         $model    = $this->getModel();
-        $revision = $this->revisionFromNumber($number);
+        $revision = $this->getRevisionFromNumber($number);
 
         if (!$revision->id()) {
             return false;
@@ -180,12 +180,12 @@ class RevisionsManager
         return $this->modelFactory()->create($this->getObjectRevisionClass());
     }
 
-    public function revisionFromNumber(int $number): ObjectRevisionInterface
+    public function getRevisionFromNumber(int $number): ObjectRevisionInterface
     {
         return $this->createRevisionObject()->objectRevisionNum($this->getModel(), $number);
     }
 
-    public function revisionEnabled(): bool
+    public function isRevisionEnabled(): bool
     {
         $model          = $this->getModel();
         $revisionConfig = $this->getModelRevisionConfig($model);

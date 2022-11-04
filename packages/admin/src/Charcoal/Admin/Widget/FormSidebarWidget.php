@@ -556,8 +556,8 @@ class FormSidebarWidget extends AdminWidget implements
 
                 $this->revisionService->setModel($obj);
 
-                if ($this->revisionService->revisionEnabled()) {
-                    $this->isObjRevisionable = !!count($this->revisionService->allRevisions());
+                if ($this->revisionService->isRevisionEnabled()) {
+                    $this->isObjRevisionable = !!count($this->revisionService->getAllRevisions());
                 }
             }
         }
