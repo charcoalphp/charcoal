@@ -2,7 +2,7 @@
 
 namespace Charcoal\App\Facade;
 
-use Charcoal\App\App;
+use Psr\Container\ContainerInterface;
 use RuntimeException;
 
 /**
@@ -12,15 +12,15 @@ use RuntimeException;
  */
 abstract class Facade
 {
-    protected static App $app;
+    protected static ContainerInterface $resolver;
     /**
      * @var array<string, object>
      */
     protected static array $resolvedInstances = [];
 
-    public static function setFacadeApp(App $app)
+    public static function setFacadeResolver(ContainerInterface $resolver)
     {
-        static::$app = $app;
+        static::$resolver = $resolver;
     }
 
     /**
@@ -47,7 +47,7 @@ abstract class Facade
             return static::$resolvedInstances[$key];
         }
 
-        static::$resolvedInstances[$key] = static::$app->getContainer()[$key];
+        static::$resolvedInstances[$key] = static::$resolver[$key];
         return static::$resolvedInstances[$key];
     }
 
