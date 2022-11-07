@@ -6,7 +6,7 @@ namespace Charcoal\View\Twig;
 
 use Charcoal\View\AbstractEngine;
 use InvalidArgumentException;
-use Exception;
+use UnexpectedValueException;
 use JsonException;
 use RuntimeException;
 use Symfony\Bridge\Twig\Extension\TranslationExtension;
@@ -168,8 +168,8 @@ class TwigEngine extends AbstractEngine
             $arrayContext = json_decode(json_encode($context, JSON_THROW_ON_ERROR), true);
             return $this->twig()->render($templateIdent, $arrayContext);
         } catch (JsonException $e) {
-            throw new Exception(
-                sprintf("Twig cannot render \"%s\", Error : \"%s\".", $templateIdent, $e->getMessage()),
+            throw new UnexpectedValueException(
+                sprintf('Twig cannot render template [%s]: %s', $templateIdent, $e->getMessage()),
                 $e->getCode(),
                 $e
             );
@@ -188,8 +188,13 @@ class TwigEngine extends AbstractEngine
             $arrayContext = json_decode(json_encode($context, JSON_THROW_ON_ERROR), true);
             return $template->render($arrayContext);
         } catch (JsonException $e) {
-            throw new Exception(
-                sprintf("Twig cannot render template \"%s\", Error : \"%s\".", $templateString, $e->getMessage()),
+            if (strlen($templateString) > 30) {
+                // Truncate the string to avoid polluting the logs with a long template.
+                $templateString = substr($templateString, 0, 29) . '…';
+            }
+
+            throw new UnexpectedValueException(
+                sprintf('Twig cannot render template [%s]: %s', $templateString, $e->getMessage()),
                 $e->getCode(),
                 $e
             );

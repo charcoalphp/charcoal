@@ -401,7 +401,7 @@ class ViewServiceProvider implements ServiceProviderInterface
         };
 
         $container['view/engine/decider/string'] = $container->protect(
-            function ($templateString, $context, $engines, $defaultEngine): EngineInterface {
+            function (string $templateString, $context, array $engines, EngineInterface $defaultEngine): EngineInterface {
                 foreach ($engines as $engine) {
                     $string = $engine->loader()->resolveDynamicTemplate($templateString);
                     if ($engine->loader()->isTemplateString($string)) {
@@ -413,7 +413,7 @@ class ViewServiceProvider implements ServiceProviderInterface
         );
 
         $container['view/engine/decider/file'] = $container->protect(
-            function ($templateFile, $context, $engines, $defaultEngine): EngineInterface {
+            function (string $templateFile, $context, array $engines, EngineInterface $defaultEngine): EngineInterface {
                 foreach ($engines as $engine) {
                     $file = $engine->loader()->resolveDynamicTemplate($templateFile);
                     if ($engine->loader()->findTemplateFile($file)) {

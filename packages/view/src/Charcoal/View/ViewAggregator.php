@@ -6,6 +6,13 @@ namespace Charcoal\View;
 
 use InvalidArgumentException;
 
+/**
+ * View Aggregator
+ *
+ * The aggregator is used to register several engines to dynamically resolve
+ * which engine to render any given template path or contents.
+ * Alternatively, you can manually decide which engine to use for a given scenario.
+ */
 class ViewAggregator extends AbstractView
 {
     /**
@@ -13,15 +20,14 @@ class ViewAggregator extends AbstractView
      */
     protected array $engines = [];
 
-    protected EngineInterface $engine;
 
     /**
-     *  @var callable
+     *  @var callable(string, mixed, array<string, EngineInterface>, EngineInterface): EngineInterface
      */
     protected $renderTemplateStringDecider;
 
     /**
-     *  @var callable
+     *  @var callable(string, mixed, array<string, EngineInterface>, EngineInterface): EngineInterface
      */
     protected $renderTemplateFileDecider;
 
@@ -38,13 +44,21 @@ class ViewAggregator extends AbstractView
     }
 
     /**
-     * @param array $data
+     * @param array<string, EngineInterface> $data
      * @return void
      */
     private function setEngines(array $engines): void
     {
         foreach ($engines as $ident => $engine) {
-            $this->engines[$ident] = $engine;
+            if ($engine instanceof EngineInterface) {
+                $this->engines[$ident] = $engine;
+            } else {
+                throw new InvalidArgumentException(sprintf(
+                    'Expected an instance of %s, received %s',
+                    EngineInterface::class,
+                    (is_object($engine) ? get_class($engine) : gettype($engine))
+                ));
+            }
         }
     }
 
@@ -83,26 +97,28 @@ class ViewAggregator extends AbstractView
     }
 
     /**
-     * @return bool
+     * Determine if the given engine is registered.
+     *
+     * @param string $ident The engine identifier.
      */
-    public function has($ident): bool
+    public function has(string $ident): bool
     {
         return isset($this->engines[$ident]);
     }
 
     /**
-     * @param string $ident The view identifier.
-     * @throws InvalidArgumentException If identifer is not recognized.
-     * @return GenericView
+     * Retrieve the given engine if registered.
+     *
+     * @param  string $ident The engine identifier.
+     * @throws InvalidArgumentException If the identifier is not registered.
+     * @return ViewInterface
      */
-    public function get(string $ident)
+    public function get(string $ident): ViewInterface
     {
         if (!$this->has($ident)) {
-            throw new InvalidArgumentException(sprintf(
-                "Engine identifer must be one of \"%s\", \"%s\" given.",
-                implode(', ', array_keys($this->engines)),
-                $ident
-            ));
+            throw new InvalidArgumentException(
+                sprintf('Engine [%s] not registered', $ident)
+            );
         }
 
         return new  GenericView([
@@ -111,17 +127,19 @@ class ViewAggregator extends AbstractView
     }
 
     /**
-     * @param string $ident The view identifier.
-     * @throws InvalidArgumentException If identifer is not recognized.
+     * Change the default engine.
+     *
+     * @param  string $ident The engine identifier.
+     * @throws InvalidArgumentException If the identifier is not registered.
      * @return self
      */
-    public function using($ident)
+    public function using(string $ident)
     {
         if (!$this->has($ident)) {
             throw new InvalidArgumentException(sprintf(
-                "Engine identifer must be one of \"%s\", \"%s\" given.",
-                implode(', ', array_keys($this->engines)),
-                $ident
+                'Engine [%s] not registered, must be one of %s',
+                $ident,
+                implode(', ', array_keys($this->engines))
             ));
         }
 
