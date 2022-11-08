@@ -74,23 +74,6 @@ composer require charcoal/app charcoal/api custom/admin
 The following will aide with converting a project from
 `locomotivemtl/charcoal-*` to `charcoal/*`.
 
-> ⚠️ Currently, `charcoal/*` packages have not been published to Packagist,
-> the main public Composer repository.
->
-> Add the following repository definition to your `composer.json` file
-> until the framework reaches a stable state:
->
-> ```JSON
-> {
->     "repositories": [
->         {
->             "type": "vcs",
->             "url":  "https://github.com/charcoalphp/charcoal"
->         }
->     ]
-> }
-> ```
-
 > ℹ️ Previously all core packages maintained their own version numbering independently.
 >
 > The monorepo framework uses a shared version number for all core packages
