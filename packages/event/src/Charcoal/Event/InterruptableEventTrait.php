@@ -36,7 +36,7 @@ trait InterruptableEventTrait
     /**
      * @return string|Stringable
      */
-    public function reason()
+    public function getReasonForInterruption()
     {
         return $this->reason;
     }
