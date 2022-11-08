@@ -9,6 +9,8 @@ use Pimple\Container;
 use Charcoal\Factory\FactoryInterface;
 // From 'charcoal-ui'
 use Charcoal\Ui\FormGroup\AbstractFormGroup;
+// From 'charcoal-translator'
+use Charcoal\Translator\Translation;
 // From 'charcoal-admin'
 use Charcoal\Admin\Ui\NestedWidgetContainerInterface;
 use Charcoal\Admin\Ui\NestedWidgetContainerTrait;
@@ -114,18 +116,26 @@ class NestedWidgetFormGroup extends AbstractFormGroup implements
     }
 
     /**
-     * @return Translation|string|null
+     * @param  mixed $description The description attribute.
+     * @return self
      */
     public function setDescription($description)
     {
-        parent::setDescription($this->renderTemplate($description));
-        return $this;
+        $description = $this->translator()->translate($description);
+        $description = $this->renderTemplate($description);
+        parent::setDescription($description);
     }
 
+
+    /**
+     * @param  mixed $notes The notes attribute.
+     * @return self
+     */
     public function setNotes($notes)
     {
-        parent::setNotes($this->renderTemplate($notes));
-        return $this;
+        $notes = $this->translator()->translate($notes);
+        $notes = $this->renderTemplate($notes);
+        parent::setNotes($notes);
     }
 
     /**
