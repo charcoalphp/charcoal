@@ -112,7 +112,6 @@ class AdminModule extends AbstractModule
         $container->extend('notFoundHandler', function ($handler, $container) {
             $appConfig = $container['config'];
             $adminConfig = $container['admin/config'];
-            $adminView = $container['view'];
             if ($handler instanceof HandlerInterface) {
                 $config = $handler->createConfig($appConfig['handlers.defaults']);
                 $config->merge($adminConfig['handlers.defaults']);
@@ -121,7 +120,7 @@ class AdminModule extends AbstractModule
                     $config->merge($adminConfig['handlers.notFound']);
                 }
 
-                $handler->setView($adminView)->setConfig($config)->init();
+                $handler->setConfig($config)->init();
             }
 
             return $handler;
@@ -136,7 +135,6 @@ class AdminModule extends AbstractModule
         $container->extend('notAllowedHandler', function ($handler, $container) {
             $appConfig = $container['config'];
             $adminConfig = $container['admin/config'];
-            $adminView = $container['view'];
             if ($handler instanceof HandlerInterface) {
                 $config = $handler->createConfig($appConfig['handlers.defaults']);
                 $config->merge($adminConfig['handlers.defaults']);
@@ -145,7 +143,7 @@ class AdminModule extends AbstractModule
                     $config->merge($adminConfig['handlers.notAllowed']);
                 }
 
-                $handler->setView($adminView)->setConfig($config)->init();
+                $handler->setConfig($config)->init();
             }
 
             return $handler;
@@ -160,7 +158,6 @@ class AdminModule extends AbstractModule
         $container->extend('phpErrorHandler', function ($handler, $container) {
             $appConfig = $container['config'];
             $adminConfig = $container['admin/config'];
-            $adminView = $container['view'];
             if ($handler instanceof HandlerInterface) {
                 $config = $handler->createConfig($appConfig['handlers.defaults']);
                 $config->merge($adminConfig['handlers.defaults']);
@@ -169,7 +166,7 @@ class AdminModule extends AbstractModule
                     $config->merge($adminConfig['handlers.phpError']);
                 }
 
-                $handler->setView($adminView)->setConfig($config)->init();
+                $handler->setConfig($config)->init();
             }
 
             return $handler;
@@ -184,7 +181,6 @@ class AdminModule extends AbstractModule
         $container->extend('errorHandler', function ($handler, $container) {
             $appConfig = $container['config'];
             $adminConfig = $container['admin/config'];
-            $adminView = $container['view'];
             if ($handler instanceof HandlerInterface) {
                 $config = $handler->createConfig($appConfig['handlers.defaults']);
                 $config->merge($adminConfig['handlers.defaults']);
@@ -193,7 +189,7 @@ class AdminModule extends AbstractModule
                     $config->merge($adminConfig['handlers.error']);
                 }
 
-                $handler->setView($adminView)->setConfig($config)->init();
+                $handler->setConfig($config)->init();
             }
 
             return $handler;
@@ -210,7 +206,6 @@ class AdminModule extends AbstractModule
         $container->extend('maintenanceHandler', function ($handler, $container) {
             $appConfig = $container['config'];
             $adminConfig = $container['admin/config'];
-            $adminView = $container['view'];
             if ($handler instanceof HandlerInterface) {
                 $config = $handler->createConfig($appConfig['handlers.defaults']);
                 $config->merge($adminConfig['handlers.defaults']);
@@ -219,7 +214,7 @@ class AdminModule extends AbstractModule
                     $config->merge($adminConfig['handlers.maintenance']);
                 }
 
-                $handler->setView($adminView)->setConfig($config)->init();
+                $handler->setConfig($config)->init();
             }
 
             return $handler;
