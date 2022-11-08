@@ -9,7 +9,7 @@ use League\Event\ListenerSubscriber;
 /**
  * Facade: Event Dispatcher
  *
- * Alias for the 'admin/event/dispatcher' container service.
+ * Alias for the 'app/event/dispatcher' container service.
  * Provides access to the admin event dispatcher.
  *
  * @method static object dispatch(object $event)
@@ -25,6 +25,6 @@ class Event extends Facade
 {
     protected static function getFacadeName(): string
     {
-        return 'admin/event/dispatcher';
+        return 'app/event/dispatcher';
     }
 }

@@ -2,6 +2,7 @@
 
 namespace Charcoal\Event\ServiceProvider;
 
+use Charcoal\Event\EventDispatcher;
 use Charcoal\Event\EventDispatcherBuilder;
 use Charcoal\Event\EventListenerInterface;
 use Charcoal\Factory\FactoryInterface;
@@ -82,6 +83,43 @@ class EventServiceProvider implements ServiceProviderInterface
                     }
                 }
             ]);
+        };
+
+        // The App event services
+        // ==========================================================================
+
+        /**
+         * @param Container $container
+         * @return array
+         */
+        $container['app/event/listeners'] = function (Container $container): array {
+            return ($container['admin/config']->get('events.listeners') ?? []);
+        };
+
+        /**
+         * Subscribers are classes that implements `\League\Event\ListenerSubscriber`
+         * It allows to subscribe many grouped listeners at once.
+         *
+         * @param Container $container
+         * @return array
+         */
+        $container['app/event/subscribers'] = function (Container $container): array {
+            return ($container['admin/config'] ->get('events.subscribers') ?? []);
+        };
+
+        /**
+         * Build an event dispatcher using admin config.
+         *
+         * @param Container $container
+         * @return EventDispatcher
+         */
+        $container['app/event/dispatcher'] = function (Container $container): EventDispatcher {
+            /** @var EventDispatcherBuilder $eventDispatcherBuilder */
+            $eventDispatcherBuilder = $container['event/dispatcher/builder'];
+            return $eventDispatcherBuilder->build(
+                $container['app/event/listeners'],
+                $container['app/event/subscribers']
+            );
         };
     }
 }

@@ -914,7 +914,7 @@ class ElfinderConnectorAction extends AdminAction
         $this->filesystemConfig = $container['filesystem/config'];
         $this->filesystems = $container['filesystems'];
 
-        $this->setEventDispatcher($container['admin/event/dispatcher']);
+        $this->setEventDispatcher($container['app/event/dispatcher']);
     }
 
     /**
