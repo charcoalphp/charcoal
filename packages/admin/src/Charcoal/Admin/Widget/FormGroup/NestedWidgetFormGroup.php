@@ -117,25 +117,25 @@ class NestedWidgetFormGroup extends AbstractFormGroup implements
 
     /**
      * @param  mixed $description The description attribute.
-     * @return self
+     * @return FormGroupWidget Chainable
      */
     public function setDescription($description)
     {
         $description = $this->translator()->translate($description);
         $description = $this->renderTemplate($description);
-        parent::setDescription($description);
+        return parent::setDescription($description);
     }
 
 
     /**
      * @param  mixed $notes The notes attribute.
-     * @return self
+     * @return FormGroupWidget Chainable
      */
     public function setNotes($notes)
     {
         $notes = $this->translator()->translate($notes);
         $notes = $this->renderTemplate($notes);
-        parent::setNotes($notes);
+        return parent::setNotes($notes);
     }
 
     /**

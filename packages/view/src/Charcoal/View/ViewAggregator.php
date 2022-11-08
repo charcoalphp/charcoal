@@ -120,7 +120,7 @@ class ViewAggregator extends AbstractView
             );
         }
 
-        return new  GenericView([
+        return new GenericView([
             'engine' => $this->engines[$ident],
         ]);
     }

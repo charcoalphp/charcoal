@@ -289,18 +289,26 @@ class FormGroupWidget extends AbstractUiItem implements
     }
 
     /**
-     * @return Translation|string|null
+     * @param  mixed $description The description attribute.
+     * @return FormGroupWidget Chainable
      */
     public function setDescription($description)
     {
-        parent::setDescription($this->renderTemplate($description));
-        return $this;
+        $description = $this->translator()->translate($description);
+        $description = $this->renderTemplate($description);
+        return parent::setDescription($description);
     }
 
+
+    /**
+     * @param  mixed $notes The notes attribute.
+     * @return FormGroupWidget Chainable
+     */
     public function setNotes($notes)
     {
-        parent::setNotes($this->renderTemplate($notes));
-        return $this;
+        $notes = $this->translator()->translate($notes);
+        $notes = $this->renderTemplate($notes);
+        return parent::setNotes($notes);
     }
 
     /**
