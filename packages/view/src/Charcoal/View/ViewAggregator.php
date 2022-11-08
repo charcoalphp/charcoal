@@ -20,16 +20,15 @@ class ViewAggregator extends AbstractView
      */
     protected array $engines = [];
 
+    /**
+     *  @var callable(string, mixed, array<string, EngineInterface>, EngineInterface): EngineInterface
+     */
+    protected $renderTemplateFileEngineDecider;
 
     /**
      *  @var callable(string, mixed, array<string, EngineInterface>, EngineInterface): EngineInterface
      */
-    protected $renderTemplateStringDecider;
-
-    /**
-     *  @var callable(string, mixed, array<string, EngineInterface>, EngineInterface): EngineInterface
-     */
-    protected $renderTemplateFileDecider;
+    protected $renderTemplateStringEngineDecider;
 
     /**
      * @param array $data
@@ -39,8 +38,8 @@ class ViewAggregator extends AbstractView
         parent::__construct($data);
 
         $this->setEngines($data['engines']);
-        $this->renderTemplateFileDecider = $data['file_decider'];
-        $this->renderTemplateStringDecider = $data['string_decider'];
+        $this->renderTemplateFileEngineDecider = $data['file_engine_decider'];
+        $this->renderTemplateStringEngineDecider = $data['string_engine_decider'];
     }
 
     /**
@@ -79,7 +78,7 @@ class ViewAggregator extends AbstractView
      */
     public function render(string $templateIdent, $context = null): string
     {
-        $engine = call_user_func($this->renderTemplateFileDecider, $templateIdent, $context, $this->engines, $this->engine());
+        $engine = call_user_func($this->renderTemplateFileEngineDecider, $templateIdent, $context, $this->engines, $this->engine());
         return $engine->render($templateIdent, $context);
     }
 
@@ -92,7 +91,7 @@ class ViewAggregator extends AbstractView
      */
     public function renderTemplate(string $templateString, $context = null): string
     {
-        $engine = call_user_func($this->renderTemplateStringDecider, $templateString, $context, $this->engines, $this->engine());
+        $engine = call_user_func($this->renderTemplateStringEngineDecider, $templateString, $context, $this->engines, $this->engine());
         return $engine->renderTemplate($templateString, $context);
     }
 

@@ -370,10 +370,10 @@ class ViewServiceProvider implements ServiceProviderInterface
          */
         $container['view'] = function (Container $container): ViewInterface {
             return new ViewAggregator([
-                'engines'           => $container['view/engines'],
-                'engine'            => $container['view/engine'],
-                'file_decider'      => $container['view/engine/decider/file'],
-                'string_decider'    => $container['view/engine/decider/string'],
+                'engines'               => $container['view/engines'],
+                'engine'                => $container['view/engine'],
+                'file_engine_decider'   => $container['view/engine/decider/file'],
+                'string_engine_decider' => $container['view/engine/decider/string'],
             ]);
         };
 
