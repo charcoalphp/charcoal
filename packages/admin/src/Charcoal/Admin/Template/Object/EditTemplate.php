@@ -212,7 +212,7 @@ class EditTemplate extends AdminTemplate implements
     {
         $obj = $this->obj();
         if ($this->isObjRenderable($obj)) {
-            return $obj->renderTemplate((string)$title, $obj);
+            return $obj->renderTemplate((string)$title);
         } else {
             return (string)$title;
         }
