@@ -1,5 +1,12 @@
 # Changelog
 
+## [5.0.0-beta.7](https://github.com/charcoalphp/charcoal/compare/v5.0.0-beta.6...v5.0.0-beta.7) (2022-11-10)
+
+
+### Bug Fixes
+
+* **release:** Clean-up monorepo-builder release workers ([5816380](https://github.com/charcoalphp/charcoal/commit/581638077fdfc4330b93475ae83292c7a0b450b8))
+
 ## [5.0.0-beta.6](https://github.com/charcoalphp/charcoal/compare/v5.0.0-beta.5...v5.0.0-beta.6) (2022-11-10)
 
 
