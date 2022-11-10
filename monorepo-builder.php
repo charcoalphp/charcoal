@@ -24,6 +24,7 @@ return static function (MBConfig $mbConfig): void {
     ]);
 
     $mbConfig->packageAliasFormat('<major>.x-dev');
+    $mbConfig->defaultBranch('main');
 
     # release workers - in order to execute
     $mbConfig->workers([

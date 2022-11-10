@@ -34,9 +34,9 @@ final class UpdateReplaceReleaseWorker implements ReleaseWorkerInterface
         $rootComposerJson = $this->composerJsonProvider->getRootComposerJson();
         $replace = $rootComposerJson->getReplace();
         $packageNames = $this->composerJsonProvider->getPackageNames();
-        $newReplace = [];
+        $newReplace = $replace;
         foreach (\array_keys($replace) as $package) {
-            if (!\in_array($package, $packageNames, \true) || \strpos($package, 'locomotivemtl/charcoal-') !== 0) {
+            if (!\in_array($package, $packageNames, \true)) {
                 continue;
             }
             $newReplace[$package] = $version->getVersionString();
@@ -53,6 +53,6 @@ final class UpdateReplaceReleaseWorker implements ReleaseWorkerInterface
     }
     public function getDescription(Version $version) : string
     {
-        return 'Update "replace" version in "composer.json" to new tag to avoid circular dependencies conflicts';
+        return 'Update "replace" version in "composer.json" to new tag to avoid circular dependencies conflicts for Charcoal.';
     }
 }

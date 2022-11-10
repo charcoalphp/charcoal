@@ -39,6 +39,6 @@ final class UpdateBranchAliasReleaseWorker implements ReleaseWorkerInterface
     public function getDescription(Version $version) : string
     {
         $nextAlias = $this->versionUtils->getNextAliasFormat($version);
-        return \sprintf('Set branch alias "%s" to all packages', $nextAlias);
+        return \sprintf('Set branch alias "%s" to all packages and root package for Charcoal', $nextAlias);
     }
 }
