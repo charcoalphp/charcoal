@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.0.1](https://github.com/charcoalphp/charcoal/compare/v4.0.0...v4.0.1) (2022-11-10)
+
+
+### Bug Fixes
+
+* **release:** Fix semantic-release and monorepo-builder ([240492a](https://github.com/charcoalphp/charcoal/commit/240492aeeddf3e80192c0c3cb7e0419139da3551))
+
 ## [v4.0.0](https://github.com/charcoalphp/charcoal/compare/v3.1.8...v4.0.0) - 2022-09-21
 
 #### ⚠ BREAKING CHANGES
