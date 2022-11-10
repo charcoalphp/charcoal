@@ -11,7 +11,8 @@ use Symplify\MonorepoBuilder\Release\Contract\ReleaseWorker\ReleaseWorkerInterfa
 use MonorepoBuilder202206\Symplify\SmartFileSystem\SmartFileInfo;
 
 /**
- * Class UpdateReplaceReleaseWorker
+ * Custom Release Worker to prevent overwriting the whole composer.json 'replace' section.
+ * Prevents the locomotivemtl packages from being removed from the root composer.json file.
  */
 final class UpdateReplaceReleaseWorker implements ReleaseWorkerInterface
 {
@@ -33,9 +34,9 @@ final class UpdateReplaceReleaseWorker implements ReleaseWorkerInterface
         $rootComposerJson = $this->composerJsonProvider->getRootComposerJson();
         $replace = $rootComposerJson->getReplace();
         $packageNames = $this->composerJsonProvider->getPackageNames();
-        $newReplace = $replace;
+        $newReplace = [];
         foreach (\array_keys($replace) as $package) {
-            if (!\in_array($package, $packageNames, \true)) {
+            if (!\in_array($package, $packageNames, \true) || \strpos($package, 'locomotivemtl/charcoal-') !== 0) {
                 continue;
             }
             $newReplace[$package] = $version->getVersionString();
