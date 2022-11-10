@@ -126,9 +126,45 @@
             ]
         }
     },
+    "replace": {
+        "charcoal/admin": "5.0.0-beta.5",
+        "charcoal/app": "5.0.0-beta.5",
+        "charcoal/attachment": "5.0.0-beta.5",
+        "charcoal/cache": "5.0.0-beta.5",
+        "charcoal/cms": "5.0.0-beta.5",
+        "charcoal/config": "5.0.0-beta.5",
+        "charcoal/core": "5.0.0-beta.5",
+        "charcoal/email": "5.0.0-beta.5",
+        "charcoal/factory": "5.0.0-beta.5",
+        "charcoal/image": "5.0.0-beta.5",
+        "charcoal/object": "5.0.0-beta.5",
+        "charcoal/property": "5.0.0-beta.5",
+        "charcoal/queue": "5.0.0-beta.5",
+        "charcoal/translator": "5.0.0-beta.5",
+        "charcoal/ui": "5.0.0-beta.5",
+        "charcoal/user": "5.0.0-beta.5",
+        "charcoal/view": "5.0.0-beta.5",
+        "locomotivemtl/charcoal-admin": "*",
+        "locomotivemtl/charcoal-app": "*",
+        "locomotivemtl/charcoal-attachment": "*",
+        "locomotivemtl/charcoal-cache": "*",
+        "locomotivemtl/charcoal-cms": "*",
+        "locomotivemtl/charcoal-config": "*",
+        "locomotivemtl/charcoal-core": "*",
+        "locomotivemtl/charcoal-email": "*",
+        "locomotivemtl/charcoal-factory": "*",
+        "locomotivemtl/charcoal-image": "*",
+        "locomotivemtl/charcoal-object": "*",
+        "locomotivemtl/charcoal-property": "*",
+        "locomotivemtl/charcoal-queue": "*",
+        "locomotivemtl/charcoal-translator": "*",
+        "locomotivemtl/charcoal-ui": "*",
+        "locomotivemtl/charcoal-user": "*",
+        "locomotivemtl/charcoal-view": "*"
+    },
     "extra": {
         "branch-alias": {
-            "dev-main": "4.x-dev"
+            "dev-main": "5.x-dev"
         }
     },
     "bin": [
