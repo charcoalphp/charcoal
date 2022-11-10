@@ -1,3 +1,12 @@
+## [5.0.0-beta.3](https://github.com/charcoalphp/charcoal/compare/v5.0.0-beta.2...v5.0.0-beta.3) (2022-11-10)
+
+
+### ⚠ BREAKING CHANGES
+
+* Semantic Release with git and github
+
+* Test semantic ([fbd0fdf](https://github.com/charcoalphp/charcoal/commit/fbd0fdf8c1af3cb5b161818a34766cd1c939113d))
+
 # Changelog
 
 All notable changes to this project will be documented in this file.
