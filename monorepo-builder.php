@@ -23,11 +23,17 @@ return static function (MBConfig $mbConfig): void {
         ],
     ]);
 
+    $mbConfig->packageAliasFormat('<major>.x-dev');
+
     # release workers - in order to execute
     $mbConfig->workers([
         UpdateReplaceReleaseWorker::class,
         SetCurrentMutualDependenciesReleaseWorker::class,
-        SetNextMutualDependenciesReleaseWorker::class,
+
+        // TagVersionReleaseWorker::class,
+        // PushTagReleaseWorker::class,
+
+        // SetNextMutualDependenciesReleaseWorker::class,
         UpdateBranchAliasReleaseWorker::class,
     ]);
 };
