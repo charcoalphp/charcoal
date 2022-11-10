@@ -49,7 +49,7 @@
         [
             "@semantic-release/exec",
             {
-                "prepareCmd": "./build/script/build-monorepo.sh ${nextRelease.version}"
+                "prepareCmd": "./vendor/bin/monorepo-builder release ${nextRelease.version}"
             }
         ]
     ]
