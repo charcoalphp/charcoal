@@ -2,12 +2,10 @@
 
 declare(strict_types=1);
 
-use Charcoal\MonorepoBuilder\Release\ReleaseWorker\UpdateReplaceReleaseWorker;
+use Charcoal\MonorepoBuilder\Release\ReleaseWorker\UpdateBranchAliasReleaseWorker;
 use Symplify\ComposerJsonManipulator\ValueObject\ComposerJsonSection;
 use Symplify\MonorepoBuilder\Config\MBConfig;
 use Symplify\MonorepoBuilder\Release\ReleaseWorker\SetCurrentMutualDependenciesReleaseWorker;
-use Symplify\MonorepoBuilder\Release\ReleaseWorker\SetNextMutualDependenciesReleaseWorker;
-use Symplify\MonorepoBuilder\Release\ReleaseWorker\UpdateBranchAliasReleaseWorker;
 
 return static function (MBConfig $mbConfig): void {
     // where are the packages located?
@@ -23,11 +21,12 @@ return static function (MBConfig $mbConfig): void {
         ],
     ]);
 
+    $mbConfig->packageAliasFormat('<major>.x-dev');
+    $mbConfig->defaultBranch('main');
+
     # release workers - in order to execute
     $mbConfig->workers([
-        UpdateReplaceReleaseWorker::class,
         SetCurrentMutualDependenciesReleaseWorker::class,
-        SetNextMutualDependenciesReleaseWorker::class,
         UpdateBranchAliasReleaseWorker::class,
     ]);
 };

@@ -23,13 +23,8 @@
                         "BREAKING CHANGES",
                         "BREAKING"
                     ]
-                }
-            }
-        ],
-        [
-            "@semantic-release/exec",
-            {
-                "prepareCmd": "./build/script/build-monorepo.sh ${nextRelease.version}"
+                },
+                "preset": "conventionalcommits"
             }
         ],
         [
@@ -41,7 +36,21 @@
                         "BREAKING CHANGES",
                         "BREAKING"
                     ]
-                }
+                },
+                "preset": "conventionalcommits"
+            }
+        ],
+        [
+            "@semantic-release/changelog",
+            {
+                "changelogFile": "CHANGELOG.md",
+                "changelogTitle": "# Changelog"
+            }
+        ],
+        [
+            "@semantic-release/exec",
+            {
+                "prepareCmd": "./build/script/build-monorepo.sh ${nextRelease.version}"
             }
         ],
         [
@@ -49,11 +58,11 @@
             {
                 "assets": [
                     "composer.json",
-                    "packages/**/composer.json"
+                    "packages/**/composer.json",
+                    "CHANGELOG.md"
                 ]
             }
         ],
         "@semantic-release/github"
-    ],
-    "preset": "conventionalcommits"
+    ]
 }

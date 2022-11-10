@@ -1,19 +1,6 @@
 # Changelog
 
-All notable changes to this project will be documented in this file.
-
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
-
-> ⚠️ This `CHANGELOG` file is automatically generated through Github actions from Github release notes.
-
-## [Unreleased](https://github.com/charcoalphp/charcoal/compare/v4.0.0...main)
-
-Please do not update the unreleased notes.
-
 ## [v4.0.0](https://github.com/charcoalphp/charcoal/compare/v3.1.8...v4.0.0) - 2022-09-21
-
-### [4.0.0](https://github.com/charcoalphp/charcoal/compare/v3.1.7...v4.0.0) (2022-09-21)
 
 #### ⚠ BREAKING CHANGES
 
@@ -28,8 +15,6 @@ Please do not update the unreleased notes.
 
 ## [v3.1.8](https://github.com/charcoalphp/charcoal/compare/v3.1.7...v3.1.8) - 2022-09-15
 
-### [3.1.8](https://github.com/charcoalphp/charcoal/compare/v3.1.7...v3.1.8) (2022-09-15)
-
 #### ⚠ BREAKING CHANGES
 
 - **elfinder:** removed default base_path and public_path. These config keys should be defined in the AppConfig initialization. `new AppConfig(['base_path' => '...']);`
@@ -42,15 +27,11 @@ Please do not update the unreleased notes.
 
 ## [v3.1.7](https://github.com/charcoalphp/charcoal/compare/v3.1.6...v3.1.7) - 2022-09-15
 
-### [3.1.7](https://github.com/charcoalphp/charcoal/compare/v3.1.6...v3.1.7) (2022-09-15)
-
 #### Bug Fixes
 
 - **view twig helper:** fix the debug and isDebug Twig functions helpers using the debug container ([8ccf37b](https://github.com/charcoalphp/charcoal/commit/8ccf37bd15c328a513ba26af9717e00e792a5fe2))
 
 ## [v3.1.6](https://github.com/charcoalphp/charcoal/compare/v3.1.5...v3.1.6) - 2022-09-13
-
-### [3.1.6](https://github.com/charcoalphp/charcoal/compare/v3.1.5...v3.1.6) (2022-09-13)
 
 #### Bug Fixes
 
