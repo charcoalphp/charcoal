@@ -1,5 +1,12 @@
 # Changelog
 
+## [5.0.0-beta.4](https://github.com/charcoalphp/charcoal/compare/v5.0.0-beta.3...v5.0.0-beta.4) (2022-11-10)
+
+
+### Bug Fixes
+
+* **semantic:** semantic fix ([3b3d4b5](https://github.com/charcoalphp/charcoal/commit/3b3d4b5121cd9034094812ad6b1fc13c7849712d))
+
 ## [5.0.0-beta.3](https://github.com/charcoalphp/charcoal/compare/v5.0.0-beta.2...v5.0.0-beta.3) (2022-11-10)
 
 
