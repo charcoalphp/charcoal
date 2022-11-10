@@ -1,3 +1,5 @@
+# Changelog
+
 ## [5.0.0-beta.3](https://github.com/charcoalphp/charcoal/compare/v5.0.0-beta.2...v5.0.0-beta.3) (2022-11-10)
 
 
@@ -6,19 +8,6 @@
 * Semantic Release with git and github
 
 * Test semantic ([fbd0fdf](https://github.com/charcoalphp/charcoal/commit/fbd0fdf8c1af3cb5b161818a34766cd1c939113d))
-
-# Changelog
-
-All notable changes to this project will be documented in this file.
-
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
-
-> ⚠️ This `CHANGELOG` file is automatically generated through Github actions from Github release notes.
-
-## [Unreleased](https://github.com/charcoalphp/charcoal/compare/v4.0.0...main)
-
-Please do not update the unreleased notes.
 
 ## [v4.0.0](https://github.com/charcoalphp/charcoal/compare/v3.1.8...v4.0.0) - 2022-09-21
 
