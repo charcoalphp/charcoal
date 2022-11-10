@@ -51,6 +51,17 @@
             {
                 "prepareCmd": "./vendor/bin/monorepo-builder release ${nextRelease.version}"
             }
-        ]
+        ],
+        [
+            "@semantic-release/git",
+            {
+                "assets": [
+                    "composer.json",
+                    "packages/**/composer.json",
+                    "CHANGELOG.md"
+                ]
+            }
+        ],
+        "@semantic-release/github"
     ]
 }
