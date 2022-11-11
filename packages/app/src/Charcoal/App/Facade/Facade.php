@@ -12,13 +12,13 @@ use RuntimeException;
  */
 abstract class Facade
 {
-    protected static ContainerInterface $resolver;
+    protected static \ArrayAccess $resolver;
     /**
      * @var array<string, object>
      */
     protected static array $resolvedInstances = [];
 
-    public static function setFacadeResolver(ContainerInterface $resolver)
+    public static function setFacadeResolver(\ArrayAccess $resolver)
     {
         static::$resolver = $resolver;
     }

@@ -23,7 +23,7 @@ class EventServiceProvider implements ServiceProviderInterface
     public function register(Container $container)
     {
         /**
-         * @param  Container $container A service container.
+         * @param Container $container A service container.
          * @return EventDispatcherBuilder
          */
         $container['event/dispatcher/builder'] = function (Container $container) {
@@ -93,6 +93,10 @@ class EventServiceProvider implements ServiceProviderInterface
          * @return array
          */
         $container['app/event/listeners'] = function (Container $container): array {
+            if (!$container->offsetExists('admin/config')) {
+                return [];
+            }
+
             return ($container['admin/config']->get('events.listeners') ?? []);
         };
 
@@ -104,7 +108,11 @@ class EventServiceProvider implements ServiceProviderInterface
          * @return array
          */
         $container['app/event/subscribers'] = function (Container $container): array {
-            return ($container['admin/config'] ->get('events.subscribers') ?? []);
+            if (!$container->offsetExists('admin/config')) {
+                return [];
+            }
+
+            return ($container['admin/config']->get('events.subscribers') ?? []);
         };
 
         /**
@@ -116,6 +124,7 @@ class EventServiceProvider implements ServiceProviderInterface
         $container['app/event/dispatcher'] = function (Container $container): EventDispatcher {
             /** @var EventDispatcherBuilder $eventDispatcherBuilder */
             $eventDispatcherBuilder = $container['event/dispatcher/builder'];
+
             return $eventDispatcherBuilder->build(
                 $container['app/event/listeners'],
                 $container['app/event/subscribers']

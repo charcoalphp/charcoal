@@ -2,6 +2,7 @@
 
 use Charcoal\App\AppConfig;
 use Charcoal\App\AppContainer;
+use Charcoal\App\Facade\Facade;
 use Charcoal\Config\GenericConfig;
 
 if (($_ENV['TEST_MODE'] ?? '') === 'PACKAGE') {
@@ -39,3 +40,6 @@ $config = new AppConfig([
 $GLOBALS['container'] = new AppContainer([
     'config' => $config
 ]);
+
+Facade::clearResolvedFacadeInstances();
+Facade::setFacadeResolver($GLOBALS['container']);

@@ -3,6 +3,7 @@
 namespace Charcoal\Tests;
 
 // From Pimple
+use Charcoal\App\Facade\Facade;
 use Pimple\Container;
 
 // From 'charcoal-core/tests'
@@ -68,5 +69,8 @@ trait CoreContainerIntegrationTrait
 
         $this->container = $container;
         $this->containerProvider = $provider;
+
+        Facade::clearResolvedFacadeInstances();
+        Facade::setFacadeResolver($container);
     }
 }

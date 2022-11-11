@@ -2,6 +2,7 @@
 
 namespace Charcoal\Tests\Admin\Action;
 
+use Charcoal\App\Facade\Facade;
 use PDO;
 use ReflectionClass;
 

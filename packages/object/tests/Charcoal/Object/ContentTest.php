@@ -59,9 +59,6 @@ class ContentTest extends AbstractTestCase
         // Authorable properties
         $this->assertNull($this->obj['createdBy']);
         $this->assertNull($this->obj['lastModifiedBy']);
-
-        // Revisionable properties
-        $this->assertTrue($this->obj['revisionEnabled']);
     }
 
     /**

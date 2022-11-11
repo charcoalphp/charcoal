@@ -2,6 +2,7 @@
 
 namespace Charcoal\Tests;
 
+use Charcoal\Event\ServiceProvider\EventServiceProvider;
 use PDO;
 
 // From PSR-3
@@ -52,6 +53,7 @@ class CoreContainerProvider
         $this->registerSource($container);
         $this->registerLogger($container);
         $this->registerCache($container);
+        $container->register(new EventServiceProvider());
     }
 
     /**

@@ -163,7 +163,7 @@ class FormSidebarWidget extends AdminWidget implements
      */
     private $requiredGlobalAclPermissions = [];
 
-    private RevisionsManager $revisionManager;
+    private ?RevisionsManager $revisionManager;
 
     /**
      * @param array|ArrayInterface $data Class data.
@@ -549,7 +549,7 @@ class FormSidebarWidget extends AdminWidget implements
                 $this->isObjRevisionable = false;
             } else {
                 $obj = $this->form()->obj();
-                if (!$obj->id()) {
+                if (!$obj->id() || $this->revisionManager === null) {
                     $this->isObjRevisionable = false;
                     return $this->isObjRevisionable;
                 }
@@ -903,6 +903,6 @@ class FormSidebarWidget extends AdminWidget implements
     {
         parent::setDependencies($container);
 
-        $this->revisionManager = $container['revisions/manager'];
+        $this->revisionManager = ($container['revisions/manager'] ?? null);
     }
 }

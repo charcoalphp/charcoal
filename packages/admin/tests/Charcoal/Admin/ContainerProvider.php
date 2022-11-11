@@ -2,6 +2,7 @@
 
 namespace Charcoal\Tests\Admin;
 
+use Charcoal\App\Facade\Facade;
 use PDO;
 
 // From Mockery
@@ -92,6 +93,9 @@ class ContainerProvider
      */
     public function registerBaseServices(Container $container)
     {
+        Facade::clearResolvedFacadeInstances();
+        Facade::setFacadeResolver($container);
+
         $this->registerDebug($container);
         $this->registerConfig($container);
         $this->registerDatabase($container);
@@ -390,6 +394,7 @@ class ContainerProvider
     public function registerEvent(Container $container)
     {
         $container['event/dispatcher'] = new EventDispatcher();
+        $container['app/event/dispatcher'] = $container['event/dispatcher'];
     }
 
     /**
@@ -554,6 +559,9 @@ class ContainerProvider
      */
     public function registerActionDependencies(Container $container)
     {
+        Facade::clearResolvedFacadeInstances();
+        Facade::setFacadeResolver($container);
+
         $this->registerDebug($container);
         $this->registerLogger($container);
         $this->registerDatabase($container);

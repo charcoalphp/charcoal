@@ -6,6 +6,7 @@ namespace Charcoal\Tests\Cms;
 use Charcoal\App\AppContainer as Container;
 
 // From 'charcoal-cms/tests'
+use Charcoal\App\Facade\Facade;
 use Charcoal\Tests\Cms\ContainerProvider;
 
 /**
@@ -109,5 +110,8 @@ trait ContainerIntegrationTrait
 
         $this->container = $container;
         $this->containerProvider = $provider;
+
+        Facade::clearResolvedFacadeInstances();
+        Facade::setFacadeResolver($container);
     }
 }
