@@ -97,7 +97,6 @@ $ composer test
 
 | Service | Badge | Description |
 | ------- | ----- | ----------- |
-| [Travis](https://travis-ci.org/locomotivemtl/charcoal-queue) | [![Build Status](https://travis-ci.org/locomotivemtl/charcoal-queue.svg?branch=master)](https://travis-ci.org/locomotivemtl/charcoal-queue) | Runs code sniff check and unit tests. Auto-generates API documentation. |
 | [Scrutinizer](https://scrutinizer-ci.com/g/locomotivemtl/charcoal-queue/) | [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/locomotivemtl/charcoal-queue/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/locomotivemtl/charcoal-queue/?branch=master) | Code quality checker. Also validates API documentation quality. |
 | [Coveralls](https://coveralls.io/github/locomotivemtl/charcoal-queue) | [![Coverage Status](https://coveralls.io/repos/github/locomotivemtl/charcoal-queue/badge.svg?branch=master)](https://coveralls.io/github/locomotivemtl/charcoal-queue?branch=master) | Unit Tests code coverage. |
 | [Sensiolabs](https://insight.sensiolabs.com/projects/54cd0da0-455a-479e-81e2-7e5be346b6fd) | [![SensioLabsInsight](https://insight.sensiolabs.com/projects/5c21a1cf-9b21-41c8-82a8-90fbad808a20/mini.png)](https://insight.sensiolabs.com/projects/54cd0da0-455a-479e-81e2-7e5be346b6fd) | Another code quality checker, focused on PHP. |

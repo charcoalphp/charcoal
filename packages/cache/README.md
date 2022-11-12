@@ -6,7 +6,6 @@ Charcoal Cache
 [![Code Quality][badge-scrutinizer]][dev-scrutinizer]
 [![Coverage Status][badge-coveralls]][dev-coveralls]
 [![SensioLabs Insight][badge-sensiolabs]][dev-sensiolabs]
-[![Build Status][badge-travis]][dev-travis]
 
 A [Charcoal][charcoal-app] service provider for the [Stash Cache Library][stash].
 
@@ -376,14 +375,12 @@ The sources of this package are contained in the Charcoal monorepo. We welcome c
 [dev-scrutinizer]:    https://scrutinizer-ci.com/g/locomotivemtl/charcoal-cache/
 [dev-coveralls]:      https://coveralls.io/r/locomotivemtl/charcoal-cache
 [dev-sensiolabs]:     https://insight.sensiolabs.com/projects/---
-[dev-travis]:         https://travis-ci.org/locomotivemtl/charcoal-cache
 
 [badge-license]:      https://img.shields.io/packagist/l/locomotivemtl/charcoal-cache.svg?style=flat-square
 [badge-version]:      https://img.shields.io/packagist/v/locomotivemtl/charcoal-cache.svg?style=flat-square
 [badge-scrutinizer]:  https://img.shields.io/scrutinizer/g/locomotivemtl/charcoal-cache.svg?style=flat-square
 [badge-coveralls]:    https://img.shields.io/coveralls/locomotivemtl/charcoal-cache.svg?style=flat-square
 [badge-sensiolabs]:   https://img.shields.io/sensiolabs/i/---.svg?style=flat-square
-[badge-travis]:       https://img.shields.io/travis/locomotivemtl/charcoal-cache.svg?style=flat-square
 
 [charcoal-admin]:  https://packagist.org/packages/locomotivemtl/charcoal-admin
 [charcoal-app]:    https://packagist.org/packages/locomotivemtl/charcoal-app

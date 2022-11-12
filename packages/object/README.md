@@ -43,7 +43,7 @@ The preferred (and only supported) way of installing _charcoal-object_ is with *
 
 - PHP 5.6+
     -   This is the last supported version of PHP.
-    -   `PHP 7` is also supported (meaning _green on travis_…).
+    -   `PHP 7` is also supported.
 
 # The Charcoal Object
 
@@ -335,7 +335,6 @@ To run the scripts (phplint, phpcs and phpunit):
 
 | Service | Badge | Description |
 | ------- | ----- | ----------- |
-| [Travis](https://travis-ci.org/locomotivemtl/charcoal-object) | [![Build Status](https://travis-ci.org/locomotivemtl/charcoal-object.svg?branch=master)](https://travis-ci.org/locomotivemtl/charcoal-object) | Runs code sniff check and unit tests. Auto-generates API documentation. |
 | [Scrutinizer](https://scrutinizer-ci.com/g/locomotivemtl/charcoal-object/) | [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/locomotivemtl/charcoal-object/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/locomotivemtl/charcoal-object/?branch=master) | Code quality checker. Also validates API documentation quality. |
 | [Coveralls](https://coveralls.io/github/locomotivemtl/charcoal-object) | [![Coverage Status](https://coveralls.io/repos/github/locomotivemtl/charcoal-object/badge.svg?branch=master)](https://coveralls.io/github/locomotivemtl/charcoal-object?branch=master) | Unit Tests code coverage. |
 | [Sensiolabs](https://insight.sensiolabs.com/projects/5ef771c49-8c05-448b-a112-069737b380dc) | [![SensioLabsInsight](https://insight.sensiolabs.com/projects/ef771c49-8c05-448b-a112-069737b380dc/mini.png)](https://insight.sensiolabs.com/projects/ef771c49-8c05-448b-a112-069737b380dc) | Another code quality checker, focused on PHP. |

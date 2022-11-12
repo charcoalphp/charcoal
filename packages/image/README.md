@@ -1,8 +1,6 @@
 Charcoal Image
 ==============
 
-[![Build Status](https://travis-ci.org/locomotivemtl/charcoal-image.svg?branch=master)](https://travis-ci.org/locomotivemtl/charcoal-image)
-
 Charcoal Image is a PHP image manipulation and processing library, providing a consistent API across different Image drivers. Currently supported drivers are `Imagick` (the PHP extension) and `Imagemagick` (using shell commands)
 
 -   [API Documentation](docs/api.md)
@@ -183,7 +181,6 @@ To ensure a clean code base, pre-commit git hooks should be installed on all dev
 
 ## Continuous Integration
 
--   [Travis](https://travis-ci.org/locomotivemtl/charcoal-image)
 -   [Sensio Labs](https://insight.sensiolabs.com/projects/87c9621d-3b2e-4e71-a42f-e69ebca4672e)
 -   [Scrutinizer](https://scrutinizer-ci.com/)
 

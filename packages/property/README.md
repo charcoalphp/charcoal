@@ -438,7 +438,6 @@ Run the code checkers and unit tests with:
 
 | Service | Badge | Description |
 | ------- | ----- | ----------- |
-| [Travis](https://travis-ci.org/locomotivemtl/charcoal-property) | [![Build Status](https://travis-ci.org/locomotivemtl/charcoal-property.svg?branch=master)](https://travis-ci.org/locomotivemtl/charcoal-property) | Runs code sniff check and unit tests. Auto-generates API documentaation. |
 | [Scrutinizer](https://scrutinizer-ci.com/g/locomotivemtl/charcoal-property/) | [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/locomotivemtl/charcoal-property/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/locomotivemtl/charcoal-property/?branch=master) | Code quality checker. Also validates API documentation quality. |
 | [Coveralls](https://coveralls.io/github/locomotivemtl/charcoal-property) | [![Coverage Status](https://coveralls.io/repos/github/locomotivemtl/charcoal-property/badge.svg?branch=master)](https://coveralls.io/github/locomotivemtl/charcoal-property?branch=master) | Unit Tests code coverage. |
 | [Sensiolabs](https://insight.sensiolabs.com/projects/f3bdff38-c300-4207-8342-da002e64a6e1) | [![SensioLabsInsight](https://insight.sensiolabs.com/projects/f3bdff38-c300-4207-8342-da002e64a6e1/mini.png)](https://insight.sensiolabs.com/projects/f3bdff38-c300-4207-8342-da002e64a6e1) | Another code quality checker, focused on PHP. |

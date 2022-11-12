@@ -283,7 +283,6 @@ Run the code checkers and unit tests with:
 
 | Service | Badge | Description |
 | ------- | ----- | ----------- |
-| [Travis](https://travis-ci.org/locomotivemtl/charcoal-attachment) | [![Build Status](https://travis-ci.org/locomotivemtl/charcoal-attachment.svg?branch=master)](https://travis-ci.org/locomotivemtl/charcoal-attachment) | Runs code sniff check and unit tests. Auto-generates API documentaation. |
 | [Scrutinizer](https://scrutinizer-ci.com/g/locomotivemtl/charcoal-attachment/) | [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/locomotivemtl/charcoal-attachment/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/locomotivemtl/charcoal-attachment/?branch=master) | Code quality checker. Also validates API documentation quality. |
 | [Coveralls](https://coveralls.io/github/locomotivemtl/charcoal-attachment) | [![Coverage Status](https://coveralls.io/repos/github/locomotivemtl/charcoal-attachment/badge.svg?branch=master)](https://coveralls.io/github/locomotivemtl/charcoal-attachment?branch=master) | Unit Tests code coverage. |
 | [Sensiolabs](https://insight.sensiolabs.com/projects/09876d95-da9d-4c23-896f-904be3368c99) | [![SensioLabsInsight](https://insight.sensiolabs.com/projects/09876d95-da9d-4c23-896f-904be3368c99/mini.png)](https://insight.sensiolabs.com/projects/09876d95-da9d-4c23-896f-904be3368c99) | Another code quality checker, focused on PHP. |
