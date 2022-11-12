@@ -190,17 +190,13 @@ class ElfinderConnectorAction extends AdminAction
             define('ELFINDER_IMG_PARENT_URL', (string)$this->baseUrl(ElfinderTemplate::ELFINDER_ASSETS_REL_PATH));
         }
 
-        $extraOptions = array_merge($extraOptions, ['bind' => [
-            'upload.presave' => [function (&$thash, &$name, $src) {
-                if (!$src || !file_exists($src)) {
-                    return false;
-                }
-
-                $this->getEventDispatcher()->dispatch(new FileWasUploaded($src));
-
-                return true;
-            }]
-        ]]);
+        $extraOptions = array_merge($extraOptions, [
+            'bind' => [
+                'upload.presave' => [
+                    ':dispatchEventOnUploadPreSave',
+                ],
+            ],
+        ]);
 
         $options = $this->buildConnectorOptions($extraOptions);
 
@@ -682,6 +678,27 @@ class ElfinderConnectorAction extends AdminAction
         }
 
         return null;
+    }
+
+    /**
+     * Dispatches an event on `upload.presave`.
+     *
+     * @param  string $path     The target path.
+     * @param  string $name     The target name.
+     * @param  string $src      The temporary file name.
+     * @param  object $elfinder The elFinder instance.
+     * @param  object $volume   The current volume instance.
+     * @return void|bool|array
+     */
+    public function dispatchEventOnUploadPreSave(&$path, &$name, $src, $elfinder, $volume)
+    {
+        if (!$src || !file_exists($src)) {
+            return false;
+        }
+
+        $this->getEventDispatcher()->dispatch(new FileWasUploaded($src));
+
+        return true;
     }
 
     /**
