@@ -2,7 +2,7 @@
 
 namespace Charcoal\App\Facade;
 
-use Psr\Container\ContainerInterface;
+use Pimple\Container;
 use RuntimeException;
 
 /**
@@ -12,21 +12,22 @@ use RuntimeException;
  */
 abstract class Facade
 {
-    protected static \ArrayAccess $resolver;
+    protected static Container $resolver;
+
     /**
      * @var array<string, object>
      */
     protected static array $resolvedInstances = [];
 
-    public static function setFacadeResolver(\ArrayAccess $resolver)
+    public static function setFacadeResolver(Container $resolver): void
     {
         static::$resolver = $resolver;
     }
 
     /**
-     * @return mixed
+     * @return object
      */
-    public static function getFacadeInstance()
+    public static function getFacadeInstance(): object
     {
         return static::resolveFacadeInstance(static::getFacadeName());
     }
@@ -36,9 +37,10 @@ abstract class Facade
      */
     protected static function getFacadeName(): string
     {
-        throw new RuntimeException(
-            sprintf('The facade [%s] does not provide a container service key.', get_called_class())
-        );
+        throw new RuntimeException(sprintf(
+            'The facade [%s] does not provide a container service key.',
+            get_called_class()
+        ));
     }
 
     protected static function resolveFacadeInstance(string $key): object
@@ -47,16 +49,25 @@ abstract class Facade
             return static::$resolvedInstances[$key];
         }
 
-        static::$resolvedInstances[$key] = static::$resolver[$key];
+        $instance = static::$resolver[$key];
+        if (!is_object($instance)) {
+            throw new RuntimeException(sprintf(
+                'The facade [%s] instance must be an object, received %s',
+                get_called_class(),
+                gettype($instance)
+            ));
+        }
+
+        static::$resolvedInstances[$key] = $instance;
         return static::$resolvedInstances[$key];
     }
 
-    public static function clearResolvedFacadeInstance(string $key)
+    public static function clearResolvedFacadeInstance(string $key): void
     {
         unset(static::$resolvedInstances[$key]);
     }
 
-    public static function clearResolvedFacadeInstances()
+    public static function clearResolvedFacadeInstances(): void
     {
         static::$resolvedInstances = [];
     }
@@ -64,22 +75,12 @@ abstract class Facade
     /**
      * Handle dynamic, static calls to the object.
      *
-     * @param string $method
-     * @param  array $args
+     * @param  string  $method
+     * @param  mixed[] $args
      * @return mixed
-     *
-     * @throws RuntimeException
      */
     public static function __callStatic(string $method, array $args = [])
     {
-        $instance = static::getFacadeInstance();
-
-        if (!$instance) {
-            throw new RuntimeException(
-                sprintf('The facade [%s] root is not defined', get_called_class())
-            );
-        }
-
-        return $instance->$method(...$args);
+        return static::getFacadeInstance()->$method(...$args);
     }
 }
