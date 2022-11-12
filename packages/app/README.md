@@ -6,7 +6,6 @@ Charcoal App
 [![Code Quality][badge-scrutinizer]][dev-scrutinizer]
 [![Coverage Status][badge-coveralls]][dev-coveralls]
 [![SensioLabs Insight][badge-sensiolabs]][dev-sensiolabs]
-[![Build Status][badge-travis]][dev-travis]
 
 Charcoal App is a PHP framework to create web applications and APIs using Charcoal components.
 
@@ -291,14 +290,12 @@ The sources of this package are contained in the Charcoal monorepo. We welcome c
 [dev-scrutinizer]:    https://scrutinizer-ci.com/g/locomotivemtl/charcoal-app/
 [dev-coveralls]:      https://coveralls.io/r/locomotivemtl/charcoal-app
 [dev-sensiolabs]:     https://insight.sensiolabs.com/projects/533b5796-7e69-42a7-a046-71342146308a
-[dev-travis]:         https://travis-ci.org/locomotivemtl/charcoal-app
 
 [badge-license]:      https://img.shields.io/packagist/l/locomotivemtl/charcoal-app.svg?style=flat-square
 [badge-version]:      https://img.shields.io/packagist/v/locomotivemtl/charcoal-app.svg?style=flat-square
 [badge-scrutinizer]:  https://img.shields.io/scrutinizer/g/locomotivemtl/charcoal-app.svg?style=flat-square
 [badge-coveralls]:    https://img.shields.io/coveralls/locomotivemtl/charcoal-app.svg?style=flat-square
 [badge-sensiolabs]:   https://img.shields.io/sensiolabs/i/533b5796-7e69-42a7-a046-71342146308a.svg?style=flat-square
-[badge-travis]:       https://img.shields.io/travis/locomotivemtl/charcoal-app.svg?style=flat-square
 
 [climate]:               https://packagist.org/packages/league/climate
 [fastroute]:             https://packagist.org/packages/nikic/fast-route

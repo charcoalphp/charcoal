@@ -6,7 +6,6 @@ Charcoal Translator
 [![Code Quality][badge-scrutinizer]][dev-scrutinizer]
 [![Coverage Status][badge-coveralls]][dev-coveralls]
 [![SensioLabs Insight][badge-sensiolabs]][dev-sensiolabs]
-[![Build Status][badge-travis]][dev-travis]
 
 A [Charcoal][charcoal-app] service provider for the [Symfony Translation component][symfony/translation].
 
@@ -408,14 +407,12 @@ The sources of this package are contained in the Charcoal monorepo. We welcome c
 [dev-scrutinizer]:    https://scrutinizer-ci.com/g/locomotivemtl/charcoal-translator/
 [dev-coveralls]:      https://coveralls.io/github/locomotivemtl/charcoal-translator
 [dev-sensiolabs]:     https://insight.sensiolabs.com/projects/2758c820-e73a-4d0e-b746-552a3e3a92fa
-[dev-travis]:         https://travis-ci.org/locomotivemtl/charcoal-translator
 
 [badge-license]:      https://img.shields.io/packagist/l/locomotivemtl/charcoal-translator.svg?style=flat-square
 [badge-version]:      https://img.shields.io/packagist/v/locomotivemtl/charcoal-translator.svg?style=flat-square
 [badge-scrutinizer]:  https://img.shields.io/scrutinizer/g/locomotivemtl/charcoal-translator.svg?style=flat-square
 [badge-coveralls]:    https://img.shields.io/coveralls/locomotivemtl/charcoal-translator.svg?style=flat-square
 [badge-sensiolabs]:   https://img.shields.io/sensiolabs/i/2758c820-e73a-4d0e-b746-552a3e3a92fa.svg?style=flat-square
-[badge-travis]:       https://img.shields.io/travis/locomotivemtl/charcoal-translator.svg?style=flat-square
 
 [charcoal-admin]:        https://packagist.org/packages/locomotivemtl/charcoal-admin
 [charcoal-app]:          https://packagist.org/packages/locomotivemtl/charcoal-app

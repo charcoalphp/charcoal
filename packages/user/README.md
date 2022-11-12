@@ -158,7 +158,6 @@ To run the scripts (phplint, phpcs and phpunit):
 
 | Service | Badge | Description |
 | ------- | ----- | ----------- |
-| [Travis](https://travis-ci.org/locomotivemtl/charcoal-user) | [![Build Status](https://travis-ci.org/locomotivemtl/charcoal-user.svg?branch=master)](https://travis-ci.org/locomotivemtl/charcoal-user) | Runs code sniff check and unit tests. Auto-generates API documentation. |
 | [Scrutinizer](https://scrutinizer-ci.com/g/locomotivemtl/charcoal-user/) | [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/locomotivemtl/charcoal-user/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/locomotivemtl/charcoal-user/?branch=master) | Code quality checker. Also validates API documentation quality. |
 | [Coveralls](https://coveralls.io/github/locomotivemtl/charcoal-user) | [![Coverage Status](https://coveralls.io/repos/github/locomotivemtl/charcoal-user/badge.svg?branch=master)](https://coveralls.io/github/locomotivemtl/charcoal-user?branch=master) | Unit Tests code coverage. |
 | [Sensiolabs](https://insight.sensiolabs.com/projects/533b5796-7e69-42a7-a046-71342146308a) | [![SensioLabsInsight](https://insight.sensiolabs.com/projects/5b05fad5-5e2d-41d3-acd3-12822b354892/mini.png)](https://insight.sensiolabs.com/projects/5b05fad5-5e2d-41d3-acd3-12822b354892) | Another code quality checker, focused on PHP. |

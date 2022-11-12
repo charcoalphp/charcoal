@@ -6,7 +6,6 @@ Charcoal Config
 [![Code Quality][badge-scrutinizer]][dev-scrutinizer]
 [![Coverage Status][badge-coveralls]][dev-coveralls]
 [![SensioLabs Insight][badge-sensiolabs]][dev-sensiolabs]
-[![Build Status][badge-travis]][dev-travis]
 
 A Charcoal component for organizing configuration data and designing object data models.
 
@@ -339,14 +338,12 @@ The sources of this package are contained in the Charcoal monorepo. We welcome c
 [dev-scrutinizer]:    https://scrutinizer-ci.com/g/locomotivemtl/charcoal-config/
 [dev-coveralls]:      https://coveralls.io/r/locomotivemtl/charcoal-config
 [dev-sensiolabs]:     https://insight.sensiolabs.com/projects/27ad205f-4208-4fa6-9dcf-534b3a1c0aaa
-[dev-travis]:         https://travis-ci.org/locomotivemtl/charcoal-config
 
 [badge-license]:      https://img.shields.io/packagist/l/charcoal/config.svg?style=flat-square
 [badge-version]:      https://img.shields.io/packagist/v/charcoal/config.svg?style=flat-square
 [badge-scrutinizer]:  https://img.shields.io/scrutinizer/g/locomotivemtl/charcoal-config.svg?style=flat-square
 [badge-coveralls]:    https://img.shields.io/coveralls/locomotivemtl/charcoal-config.svg?style=flat-square
 [badge-sensiolabs]:   https://img.shields.io/sensiolabs/i/27ad205f-4208-4fa6-9dcf-534b3a1c0aaa.svg?style=flat-square
-[badge-travis]:       https://img.shields.io/travis/locomotivemtl/charcoal-config.svg?style=flat-square
 
 [psr-1]:  https://www.php-fig.org/psr/psr-1/
 [psr-2]:  https://www.php-fig.org/psr/psr-2/
