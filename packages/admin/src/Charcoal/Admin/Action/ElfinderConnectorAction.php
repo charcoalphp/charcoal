@@ -2,6 +2,9 @@
 
 namespace Charcoal\Admin\Action;
 
+use Charcoal\Event\EventDispatcherTrait;
+use Charcoal\Event\Events\FileWasUploaded;
+use finfo;
 use InvalidArgumentException;
 use RuntimeException;
 use UnexpectedValueException;
@@ -33,6 +36,7 @@ use Charcoal\Admin\Template\ElfinderTemplate;
 class ElfinderConnectorAction extends AdminAction
 {
     use CallableResolverAwareTrait;
+    use EventDispatcherTrait;
 
     /**
      * The default relative path (from filesystem's root) to the storage directory.
@@ -185,6 +189,14 @@ class ElfinderConnectorAction extends AdminAction
             // Ensure images injected by elFinder are relative to its assets directory
             define('ELFINDER_IMG_PARENT_URL', (string)$this->baseUrl(ElfinderTemplate::ELFINDER_ASSETS_REL_PATH));
         }
+
+        $extraOptions = array_merge($extraOptions, [
+            'bind' => [
+                'upload.presave' => [
+                    ':dispatchEventOnUploadPreSave',
+                ],
+            ],
+        ]);
 
         $options = $this->buildConnectorOptions($extraOptions);
 
@@ -669,6 +681,27 @@ class ElfinderConnectorAction extends AdminAction
     }
 
     /**
+     * Dispatches an event on `upload.presave`.
+     *
+     * @param  string $path     The target path.
+     * @param  string $name     The target name.
+     * @param  string $src      The temporary file name.
+     * @param  object $elfinder The elFinder instance.
+     * @param  object $volume   The current volume instance.
+     * @return void|bool|array
+     */
+    public function dispatchEventOnUploadPreSave(&$path, &$name, $src, $elfinder, $volume)
+    {
+        if (!$src || !file_exists($src)) {
+            return false;
+        }
+
+        $this->getEventDispatcher()->dispatch(new FileWasUploaded($src));
+
+        return true;
+    }
+
+    /**
      * Sanitizes a file name on `upload.presave`.
      *
      * Based on {@see \elFinderPluginSanitizer::onUpLoadPreSave()}.
@@ -897,6 +930,8 @@ class ElfinderConnectorAction extends AdminAction
         /** @see \Charcoal\App\ServiceProvide\FilesystemServiceProvider */
         $this->filesystemConfig = $container['filesystem/config'];
         $this->filesystems = $container['filesystems'];
+
+        $this->setEventDispatcher($container['app/event/dispatcher']);
     }
 
     /**

@@ -50,10 +50,9 @@ class Config extends AbstractConfig
      *
      * @return array
      */
-    public function defaults()
+    public function defaults(): array
     {
-        $baseDir = rtrim(realpath(__DIR__ . '/../../../'), '/');
-        $confDir = $baseDir . '/config';
+        $confDir = dirname(__DIR__, 3) . DIRECTORY_SEPARATOR . 'config';
 
         return $this->loadFile($confDir . '/admin.config.default.json');
     }

@@ -1,6 +1,6 @@
 <?php
 
-namespace Charcoal\Tests\Service;
+namespace Charcoal\Test\Model\Service;
 
 // From 'charcoal-core'
 use Charcoal\Model\Service\MetadataLoader;

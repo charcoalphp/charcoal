@@ -3,6 +3,7 @@
 namespace Charcoal\Admin\Widget\FormGroup;
 
 // From 'pimple/pimple'
+use Charcoal\Object\RevisionsManager;
 use Pimple\Container;
 // From 'charcoal-core'
 use Charcoal\Model\ModelFactoryTrait;
@@ -37,6 +38,12 @@ class ObjectRevisionsFormGroup extends AbstractFormGroup implements
      */
     public $widgetId;
 
+    private RevisionsManager $revisionManager;
+
+    protected function revisionManager(): RevisionsManager
+    {
+        return $this->revisionManager;
+    }
 
     /**
      * @param string $widgetId The widget identifier.
@@ -110,6 +117,7 @@ class ObjectRevisionsFormGroup extends AbstractFormGroup implements
         parent::setDependencies($container);
 
         $this->setModelFactory($container['model/factory']);
+        $this->revisionManager = $container['revisions/manager'];
 
         $this->objType = $container['request']->getParam('obj_type');
         $this->objId = $container['request']->getParam('obj_id');

@@ -36,7 +36,7 @@ class AuthTokenMetadata extends ModelMetadata
      *
      * @return array
      */
-    public function defaults()
+    public function defaults(): array
     {
         $parentDefaults = parent::defaults();
 

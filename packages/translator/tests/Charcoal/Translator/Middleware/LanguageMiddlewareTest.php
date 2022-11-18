@@ -1,6 +1,6 @@
 <?php
 
-namespace Charcoal\Tests\Translation\ServiceProvider;
+namespace Charcoal\Tests\Translator\Middleware;
 
 use Charcoal\App\AppConfig;
 use ReflectionClass;

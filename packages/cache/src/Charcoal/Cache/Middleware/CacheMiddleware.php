@@ -145,7 +145,7 @@ class CacheMiddleware
      *
      * @return array
      */
-    public function defaults()
+    public function defaults(): array
     {
         return [
             'ttl'            => CacheConfig::DAY_IN_SECONDS,

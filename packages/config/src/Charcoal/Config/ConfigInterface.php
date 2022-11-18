@@ -18,7 +18,7 @@ interface ConfigInterface extends
      *
      * @return array Key-value array of data
      */
-    public function defaults();
+    public function defaults(): array;
 
     /**
      * Adds new data, replacing / merging existing data with the same key.
@@ -26,7 +26,7 @@ interface ConfigInterface extends
      * @param  array|\Traversable $data Key-value array of data to merge.
      * @return ConfigInterface Chainable
      */
-    public function merge($data);
+    public function merge(array $data): ConfigInterface;
 
     /**
      * Add a configuration file to the configset.
@@ -34,5 +34,5 @@ interface ConfigInterface extends
      * @param  string $path The file to load and add.
      * @return ConfigInterface Chainable
      */
-    public function addFile($path);
+    public function addFile(string $path): ConfigInterface;
 }

@@ -2,6 +2,8 @@
 
 namespace Charcoal\Tests\Object;
 
+use Charcoal\App\Facade\Facade;
+use Charcoal\Event\ServiceProvider\EventServiceProvider;
 use DateTime;
 
 // From Pimple
@@ -170,8 +172,11 @@ class ObjectRouteTest extends AbstractTestCase
             $containerProvider->registerBaseServices($container);
             $containerProvider->registerModelFactory($container);
             $containerProvider->registerModelCollectionLoader($container);
+            $container->register(new EventServiceProvider());
 
             $this->container = $container;
+            Facade::clearResolvedFacadeInstances();
+            Facade::setFacadeResolver($container);
         }
 
         return $this->container;

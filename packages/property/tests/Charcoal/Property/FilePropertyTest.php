@@ -5,10 +5,8 @@ namespace Charcoal\Tests\Property;
 use PDO;
 use InvalidArgumentException;
 use ReflectionClass;
-
 // From 'charcoal-core'
 use Charcoal\Validator\ValidatorInterface as Validator;
-
 // From 'charcoal-property'
 use Charcoal\Property\FileProperty;
 
@@ -91,7 +89,7 @@ class FilePropertyTest extends AbstractFilePropertyTestCase
     {
         $obj = $this->obj;
 
-        $obj['uploadPath'] = $this->getPathToFixtures().'/files';
+        $obj['uploadPath'] = $this->getPathToFixtures() . '/files';
         $obj['val'] = $this->getPathToFixture('files/document.txt');
 
         $this->assertEquals(743, $obj['filesize']);
@@ -106,7 +104,7 @@ class FilePropertyTest extends AbstractFilePropertyTestCase
     {
         $obj = $this->obj;
 
-        $obj['uploadPath'] = $this->getPathToFixtures().'/files';
+        $obj['uploadPath'] = $this->getPathToFixtures() . '/files';
         $obj['val'] = $this->getPathToFixture('files/document.txt');
 
         $this->assertEquals('text/plain', $obj['mimetype']);
@@ -183,7 +181,7 @@ class FilePropertyTest extends AbstractFilePropertyTestCase
     ) {
         $obj = $this->obj;
 
-        $obj['uploadPath'] = $this->getPathToFixtures().'/files';
+        $obj['uploadPath'] = $this->getPathToFixtures() . '/files';
         $obj['acceptedMimetypes'] = $acceptedMimetypes;
         $obj['l10n'] = $l10n;
         $obj['multiple'] = $multiple;
@@ -220,7 +218,7 @@ class FilePropertyTest extends AbstractFilePropertyTestCase
     ) {
         $obj = $this->obj;
 
-        $obj['uploadPath'] = $this->getPathToFixtures().'/files';
+        $obj['uploadPath'] = $this->getPathToFixtures() . '/files';
         $obj['maxFilesize'] = $maxFilesize;
         $obj['l10n'] = $l10n;
         $obj['multiple'] = $multiple;
@@ -423,7 +421,7 @@ class FilePropertyTest extends AbstractFilePropertyTestCase
                 'assertValidationReturn'  => false,
                 'assertValidationResults' => [
                     Validator::ERROR => [
-                        'File ['.$paths['panda.png'].'] has unacceptable MIME type [image/png]',
+                        'File [' . $paths['panda.png'] . '] has unacceptable MIME type [image/png]',
                     ],
                 ],
             ],
@@ -435,7 +433,7 @@ class FilePropertyTest extends AbstractFilePropertyTestCase
                 'assertValidationReturn'  => false,
                 'assertValidationResults' => [
                     Validator::ERROR => [
-                        'File ['.$paths['nonexistent.txt'].'] not found or MIME type unrecognizable',
+                        'File [' . $paths['nonexistent.txt'] . '] not found or MIME type unrecognizable',
                     ],
                 ],
             ],
@@ -458,7 +456,7 @@ class FilePropertyTest extends AbstractFilePropertyTestCase
                 'assertValidationReturn'  => false,
                 'assertValidationResults' => [
                     Validator::ERROR => [
-                        'File ['.$paths['panda.png'].'] has unacceptable MIME type [image/png]',
+                        'File [' . $paths['panda.png'] . '] has unacceptable MIME type [image/png]',
                     ],
                 ],
             ],
@@ -484,13 +482,13 @@ class FilePropertyTest extends AbstractFilePropertyTestCase
                 'assertValidationReturn'  => false,
                 'assertValidationResults' => [
                     Validator::ERROR => [
-                        'File ['.$paths['panda.png'].'] has unacceptable MIME type [image/png]',
+                        'File [' . $paths['panda.png'] . '] has unacceptable MIME type [image/png]',
                     ],
                 ],
             ],
             'text/plain, l10n + multiple #1' => [
                 'propertyValues'          => [
-                    'en' => $paths['document.txt'].','.$paths['todo.txt'],
+                    'en' => $paths['document.txt'] . ',' . $paths['todo.txt'],
                     'fr' => [ $paths['stuff.txt'], $paths['draft.txt'] ],
                 ],
                 'propertyL10n'            => false,
@@ -501,7 +499,7 @@ class FilePropertyTest extends AbstractFilePropertyTestCase
             ],
             'text/plain, l10n + multiple #2' => [
                 'propertyValues'          => [
-                    'en' => $paths['document.txt'].','.$paths['scream.wav'],
+                    'en' => $paths['document.txt'] . ',' . $paths['scream.wav'],
                     'fr' => [ $paths['stuff.txt'], $paths['cat.jpg'] ],
                 ],
                 'propertyL10n'            => false,
@@ -510,8 +508,8 @@ class FilePropertyTest extends AbstractFilePropertyTestCase
                 'assertValidationReturn'  => false,
                 'assertValidationResults' => [
                     Validator::ERROR => [
-                        'File ['.$paths['scream.wav'].'] has unacceptable MIME type [audio/%s]',
-                        'File ['.$paths['cat.jpg'].'] has unacceptable MIME type [image/%s]',
+                        'File [' . $paths['scream.wav'] . '] has unacceptable MIME type [audio/%s]',
+                        'File [' . $paths['cat.jpg'] . '] has unacceptable MIME type [image/%s]',
                     ],
                 ],
             ],
@@ -569,7 +567,7 @@ class FilePropertyTest extends AbstractFilePropertyTestCase
                 'assertValidationReturn'  => false,
                 'assertValidationResults' => [
                     Validator::ERROR => [
-                        'File ['.$paths['panda.png'].'] exceeds maximum file size [%s]',
+                        'File [' . $paths['panda.png'] . '] exceeds maximum file size [%s]',
                     ],
                 ],
             ],
@@ -581,7 +579,7 @@ class FilePropertyTest extends AbstractFilePropertyTestCase
                 'assertValidationReturn'  => false,
                 'assertValidationResults' => [
                     Validator::ERROR => [
-                        'File ['.$paths['nonexistent.txt'].'] not found or size unknown',
+                        'File [' . $paths['nonexistent.txt'] . '] not found or size unknown',
                     ],
                 ],
             ],
@@ -604,7 +602,7 @@ class FilePropertyTest extends AbstractFilePropertyTestCase
                 'assertValidationReturn'  => false,
                 'assertValidationResults' => [
                     Validator::ERROR => [
-                        'File ['.$paths['panda.png'].'] exceeds maximum file size [%s]',
+                        'File [' . $paths['panda.png'] . '] exceeds maximum file size [%s]',
                     ],
                 ],
             ],
@@ -630,13 +628,13 @@ class FilePropertyTest extends AbstractFilePropertyTestCase
                 'assertValidationReturn'  => false,
                 'assertValidationResults' => [
                     Validator::ERROR => [
-                        'File ['.$paths['panda.png'].'] exceeds maximum file size [%s]',
+                        'File [' . $paths['panda.png'] . '] exceeds maximum file size [%s]',
                     ],
                 ],
             ],
             'max 10kB, l10n + multiple #1' => [
                 'propertyValues'          => [
-                    'en' => $paths['document.txt'].','.$paths['todo.txt'],
+                    'en' => $paths['document.txt'] . ',' . $paths['todo.txt'],
                     'fr' => [ $paths['stuff.txt'], $paths['draft.txt'] ],
                 ],
                 'propertyL10n'            => false,
@@ -647,7 +645,7 @@ class FilePropertyTest extends AbstractFilePropertyTestCase
             ],
             'max 10kB, l10n + multiple #2' => [
                 'propertyValues'          => [
-                    'en' => $paths['document.txt'].','.$paths['scream.wav'],
+                    'en' => $paths['document.txt'] . ',' . $paths['scream.wav'],
                     'fr' => [ $paths['stuff.txt'], $paths['panda.png'] ],
                 ],
                 'propertyL10n'            => false,
@@ -656,8 +654,8 @@ class FilePropertyTest extends AbstractFilePropertyTestCase
                 'assertValidationReturn'  => false,
                 'assertValidationResults' => [
                     Validator::ERROR => [
-                        'File ['.$paths['scream.wav'].'] exceeds maximum file size [%s]',
-                        'File ['.$paths['panda.png'].'] exceeds maximum file size [%s]',
+                        'File [' . $paths['scream.wav'] . '] exceeds maximum file size [%s]',
+                        'File [' . $paths['panda.png'] . '] exceeds maximum file size [%s]',
                     ],
                 ],
             ],

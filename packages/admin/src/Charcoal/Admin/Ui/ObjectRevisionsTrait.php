@@ -6,6 +6,7 @@ namespace Charcoal\Admin\Ui;
 use Charcoal\Factory\FactoryInterface;
 // From 'charcoal-object'
 use Charcoal\Object\ObjectRevisionInterface;
+use Charcoal\Object\RevisionsManager;
 
 /**
  * An implementation, as Trait, of the {@see \Charcoal\Admin\Ui\ObjectRevisionsInterface}.
@@ -15,7 +16,7 @@ trait ObjectRevisionsTrait
     /**
      * @return ObjectRevisionInterface[]
      */
-    public function objectRevisions()
+    public function objectRevisions(): array
     {
         if (!$this->objType() || !$this->objId()) {
             return [];
@@ -24,7 +25,9 @@ trait ObjectRevisionsTrait
         $obj = $this->modelFactory()->create($this->objType());
         $obj->setId($this->objId());
 
-        $lastRevision = $obj->latestRevision();
+        $this->revisionManager()->setModel($obj);
+
+        $lastRevision = $this->revisionManager()->getLatestRevision();
         $propLabel    = '<span title="%1$s">%2$s</code>';
 
         $callback = function (ObjectRevisionInterface &$revision) use ($lastRevision, $obj, $propLabel) {
@@ -67,7 +70,7 @@ trait ObjectRevisionsTrait
             $revision->allowRevert = ($lastRevision['revNum'] !== $revision['revNum']);
         };
 
-        return $obj->allRevisions($callback);
+        return $this->revisionManager()->getAllRevisions($callback);
     }
 
     /**
@@ -88,4 +91,6 @@ trait ObjectRevisionsTrait
      * @return FactoryInterface
      */
     abstract protected function modelFactory();
+
+    abstract protected function revisionManager(): RevisionsManager;
 }

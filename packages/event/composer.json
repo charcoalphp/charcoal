@@ -1,0 +1,66 @@
+{
+    "type": "library",
+    "name": "charcoal/event",
+    "description": "Charcoal service provider for events system",
+    "keywords": ["module", "charcoal", "event"],
+    "homepage": "https://charcoal.locomotive.ca",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Locomotive",
+            "homepage": "https://locomotive.ca"
+        },
+        {
+            "name": "Joel Alphonso",
+            "email": "joel@locomotive.ca"
+        }
+    ],
+    "extra": {
+        "branch-alias": {
+            "dev-main": "3.2-dev"
+        }
+    },
+    "require": {
+        "charoal/factory": "^3.2",
+        "league/event": "^3.0",
+        "php": "^7.4 || ^8.0",
+        "pimple/pimple": "^3.0",
+        "psr/event-dispatcher": "^1.0"
+    },
+    "require-dev": {
+        "phpstan/phpstan": "^1.6",
+        "phpunit/phpunit": "^9.5",
+        "squizlabs/php_codesniffer": "^3.5"
+    },
+    "autoload": {
+        "psr-4": {
+            "Charcoal\\Event\\": "src/Charcoal/Event/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Charcoal\\Tests\\": "tests/Charcoal/"
+        }
+    },
+    "scripts": {
+        "test": [
+            "@tests"
+        ],
+        "tests": [
+            "@phplint",
+            "@phpcs",
+            "@phpstan",
+            "@phpunit"
+        ],
+        "phplint": "find src tests -type f -name '*.php' -print0 | xargs -0 -n1 -P8 php -l | grep -v '^No syntax errors detected'; test $? -eq 1",
+        "phpcs": "php vendor/bin/phpcs -ps --colors src/",
+        "phpcbf": "php vendor/bin/phpcbf -ps --colors src/",
+        "phpstan": "php vendor/bin/phpstan analyze -l1 src/",
+        "phpunit": "php vendor/bin/phpunit --coverage-text"
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}

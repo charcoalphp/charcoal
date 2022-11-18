@@ -3,8 +3,9 @@
 namespace Charcoal\Tests\Property;
 
 // From Pimple
+use Charcoal\App\Facade\Facade;
+use Charcoal\Event\ServiceProvider\EventServiceProvider;
 use Pimple\Container;
-
 // From 'charcoal-property/tests'
 use Charcoal\Tests\Property\ContainerProvider;
 
@@ -65,8 +66,12 @@ trait ContainerIntegrationTrait
         $provider->registerPropertyFactory($container);
         $provider->registerModelFactory($container);
         $provider->registerModelCollectionLoader($container);
+        $container->register(new EventServiceProvider());
 
         $this->container = $container;
         $this->containerProvider = $provider;
+
+        Facade::clearResolvedFacadeInstances();
+        Facade::setFacadeResolver($container);
     }
 }

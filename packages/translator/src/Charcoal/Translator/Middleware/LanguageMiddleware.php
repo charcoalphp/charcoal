@@ -119,7 +119,7 @@ class LanguageMiddleware
      *
      * @return array
      */
-    public function defaults()
+    public function defaults(): array
     {
         return [
             'default_language' => null,

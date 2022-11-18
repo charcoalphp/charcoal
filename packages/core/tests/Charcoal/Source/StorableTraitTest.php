@@ -2,6 +2,9 @@
 
 namespace Charcoal\Tests\Source;
 
+use Charcoal\Model\Service\MetadataLoader;
+use Charcoal\Model\Service\ModelLoaderBuilder;
+use Charcoal\Tests\Mock\GenericModel;
 use InvalidArgumentException;
 use RuntimeException;
 
@@ -27,12 +30,13 @@ use Charcoal\Tests\ReflectionsTrait;
  */
 class StorableTraitTest extends AbstractTestCase
 {
+    use \Charcoal\Tests\CoreContainerIntegrationTrait;
     use ReflectionsTrait;
 
     /**
      * The tested class.
      *
-     * @var StorableMock
+     * @var GenericModel
      */
     public $obj;
 
@@ -43,7 +47,17 @@ class StorableTraitTest extends AbstractTestCase
      */
     protected function setUp(): void
     {
-        $this->obj = new StorableMock();
+        $container = $this->getContainer();
+
+        $this->factory    = $container['model/factory'];
+        $this->obj        = $this->factory->get(GenericModel::class);
+
+        $source = $this->obj->source();
+        if (!$source->tableExists()) {
+            $source->createTable();
+        }
+
+        // $this->obj = new StorableMock();
     }
 
     /**
@@ -210,7 +224,8 @@ class StorableTraitTest extends AbstractTestCase
     public function testMissingSourceFactory()
     {
         $this->expectException(RuntimeException::class);
-        $this->callMethod($this->obj, 'sourceFactory');
+        $obj = new StorableMock();
+        $this->callMethod($obj, 'sourceFactory');
     }
 
     /**
@@ -233,24 +248,19 @@ class StorableTraitTest extends AbstractTestCase
     {
         $obj = $this->obj;
 
-        /** 1. Default state is NULL */
-        $this->assertNull($this->getPropertyValue($obj, 'source'));
-
-        /** 2. Create repository if state is NULL */
+        /** 1. Create repository if state is NULL */
         $src1 = $obj->source();
         $this->assertInstanceOf(SourceInterface::class, $src1);
-        $this->assertSame($src1, $this->getPropertyValue($obj, 'source'));
 
-        /** 3. Mutated state */
+        /** 2. Mutated state */
         $src2 = $this->createSource();
         $that = $obj->setSource($src2);
         $this->assertSame($src2, $obj->source());
-        $this->assertSame($src2, $this->getPropertyValue($obj, 'source'));
 
-        /** 4. Storable can create a repository */
+        /** 3. Storable can create a repository */
         $this->assertInstanceOf(SourceInterface::class, $this->callMethod($obj, 'createSource'));
 
-        /** 5. Chainable */
+        /** 4. Chainable */
         $this->assertSame($that, $obj);
     }
 
@@ -278,13 +288,13 @@ class StorableTraitTest extends AbstractTestCase
         $this->assertTrue($obj->save());
 
         /** 2. Fail Early */
-        $obj = BadStorableMock::createToFailBefore();
-        $obj->setSource($src);
+        $obj = $this->factory->create(BadStorableMock::class);
+        $obj->failBefore();
         $this->assertFalse($obj->save());
 
         /** 3. Fail Early */
-        $obj = BadStorableMock::createToFailAfter();
-        $obj->setSource($src);
+        $obj = $this->factory->create(BadStorableMock::class);
+        $obj->failAfter();
         $this->assertFalse($obj->save());
     }
 
@@ -312,13 +322,13 @@ class StorableTraitTest extends AbstractTestCase
         $this->assertTrue($obj->update());
 
         /** 2. Fail Early */
-        $obj = BadStorableMock::createToFailBefore();
-        $obj->setSource($src);
+        $obj = $this->factory->create(BadStorableMock::class);
+        $obj->failBefore();
         $this->assertFalse($obj->update());
 
         /** 3. Fail Early */
-        $obj = BadStorableMock::createToFailAfter();
-        $obj->setSource($src);
+        $obj = $this->factory->create(BadStorableMock::class);
+        $obj->failAfter();
         $this->assertFalse($obj->update());
     }
 
@@ -346,13 +356,15 @@ class StorableTraitTest extends AbstractTestCase
         $this->assertTrue($obj->delete());
 
         /** 2. Fail Early */
-        $obj = BadStorableMock::createToFailBefore();
-        $obj->setSource($src);
+        $obj = $this->factory->create(BadStorableMock::class);
+        $obj->setId('123');
+        $obj->failBefore();
         $this->assertFalse($obj->delete());
 
         /** 3. Fail Early */
-        $obj = BadStorableMock::createToFailAfter();
-        $obj->setSource($src);
+        $obj = $this->factory->create(BadStorableMock::class);
+        $obj->setId('123');
+        $obj->failAfter();
         $this->assertFalse($obj->delete());
     }
 }

@@ -3,7 +3,6 @@
 namespace Charcoal\Tests\Property;
 
 use ReflectionMethod;
-
 // From 'charcoal-property'
 use Charcoal\Property\GenericProperty;
 use Charcoal\Property\PropertyField;

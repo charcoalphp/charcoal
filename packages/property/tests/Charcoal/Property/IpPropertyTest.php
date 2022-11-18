@@ -3,7 +3,6 @@
 namespace Charcoal\Tests\Property;
 
 use PDO;
-
 // From 'charcoal-property'
 use Charcoal\Property\IpProperty;
 use Charcoal\Tests\AbstractTestCase;

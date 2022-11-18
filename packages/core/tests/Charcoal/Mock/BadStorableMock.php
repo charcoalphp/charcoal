@@ -9,48 +9,19 @@ use Charcoal\Tests\Mock\StorableMock;
 /**
  *
  */
-class BadStorableMock extends StorableMock
+class BadStorableMock extends GenericModel
 {
-    const FAIL_AFTER  = false;
-    const FAIL_BEFORE = true;
+    private bool $failAfter = false;
+    private bool $failBefore = false;
 
-    /**
-     * Whether to fail before or after an event.
-     *
-     * @var boolean
-     */
-    private $fail = self::FAIL_BEFORE;
-
-    /**
-     * Create new storable mock.
-     *
-     * @param boolean $fail TRUE to fail on pre-event, FALSE to fail on post-event.
-     */
-    public function __construct($fail = self::FAIL_BEFORE)
+    public function failBefore()
     {
-        $this->fail = (bool)$fail;
-
-        parent::__construct();
+        $this->failBefore = true;
     }
 
-    /**
-     * Create new storable mock to fail on before events.
-     *
-     * @return static
-     */
-    public static function createToFailBefore()
+    public function failAfter()
     {
-        return new self(self::FAIL_BEFORE);
-    }
-
-    /**
-     * Create new storable mock to fail on after events.
-     *
-     * @return static
-     */
-    public static function createToFailAfter()
-    {
-        return new self(self::FAIL_AFTER);
+        $this->failAfter = true;
     }
 
     /**
@@ -61,7 +32,7 @@ class BadStorableMock extends StorableMock
      */
     protected function preSave()
     {
-        return $this->fail;
+        return $this->failBefore;
     }
 
     /**
@@ -72,7 +43,7 @@ class BadStorableMock extends StorableMock
      */
     protected function postSave()
     {
-        return !$this->fail;
+        return $this->failAfter;
     }
 
     /**
@@ -84,7 +55,7 @@ class BadStorableMock extends StorableMock
      */
     protected function preUpdate(array $keys = null)
     {
-        return $this->fail;
+        return $this->failBefore;
     }
 
     /**
@@ -96,7 +67,7 @@ class BadStorableMock extends StorableMock
      */
     protected function postUpdate(array $keys = null)
     {
-        return !$this->fail;
+        return $this->failAfter;
     }
 
     /**
@@ -107,7 +78,7 @@ class BadStorableMock extends StorableMock
      */
     protected function preDelete()
     {
-        return $this->fail;
+        return $this->failBefore;
     }
 
     /**
@@ -118,6 +89,6 @@ class BadStorableMock extends StorableMock
      */
     protected function postDelete()
     {
-        return !$this->fail;
+        return $this->failAfter;
     }
 }

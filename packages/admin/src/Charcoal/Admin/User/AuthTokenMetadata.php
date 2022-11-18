@@ -13,7 +13,7 @@ class AuthTokenMetadata extends BaseAuthTokenMetadata
     /**
      * @return array
      */
-    public function defaults()
+    public function defaults(): array
     {
         $parentDefaults = parent::defaults();
 

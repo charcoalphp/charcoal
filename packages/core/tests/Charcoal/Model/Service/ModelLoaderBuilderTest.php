@@ -1,6 +1,6 @@
 <?php
 
-namespace Charcoal\Tests\Service;
+namespace Charcoal\Tests\Model\Service;
 
 // From 'charcoal-factory'
 use Charcoal\Factory\GenericFactory as Factory;

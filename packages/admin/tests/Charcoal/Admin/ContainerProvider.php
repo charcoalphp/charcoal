@@ -2,6 +2,7 @@
 
 namespace Charcoal\Tests\Admin;
 
+use Charcoal\App\Facade\Facade;
 use PDO;
 
 // From Mockery
@@ -28,6 +29,7 @@ use League\CLImate\Util\System\Linux;
 use League\CLImate\Util\Output;
 use League\CLImate\Util\Reader\Stdin;
 use League\CLImate\Util\UtilFactory;
+use League\Event\EventDispatcher;
 
 // From 'charcoal-factory'
 use Charcoal\Factory\GenericFactory as Factory;
@@ -91,11 +93,15 @@ class ContainerProvider
      */
     public function registerBaseServices(Container $container)
     {
+        Facade::clearResolvedFacadeInstances();
+        Facade::setFacadeResolver($container);
+
         $this->registerDebug($container);
         $this->registerConfig($container);
         $this->registerDatabase($container);
         $this->registerLogger($container);
         $this->registerCache($container);
+        $this->registerEvent($container);
     }
 
     /**
@@ -380,6 +386,18 @@ class ContainerProvider
     }
 
     /**
+     * Setup event dispatcher.
+     *
+     * @param Container $container  A DI container.
+     * @return void
+     */
+    public function registerEvent(Container $container)
+    {
+        $container['event/dispatcher'] = new EventDispatcher();
+        $container['app/event/dispatcher'] = $container['event/dispatcher'];
+    }
+
+    /**
      * @param  Container $container A DI container.
      * @return void
      */
@@ -541,10 +559,14 @@ class ContainerProvider
      */
     public function registerActionDependencies(Container $container)
     {
+        Facade::clearResolvedFacadeInstances();
+        Facade::setFacadeResolver($container);
+
         $this->registerDebug($container);
         $this->registerLogger($container);
         $this->registerDatabase($container);
         $this->registerCache($container);
+        $this->registerEvent($container);
 
         $this->registerAdminConfig($container);
         $this->registerBaseUrl($container);

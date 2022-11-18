@@ -4,7 +4,6 @@ namespace Charcoal\Tests\Property;
 
 use Exception;
 use InvalidArgumentException;
-
 // From 'charcoal-property'
 use Charcoal\Property\StructureProperty;
 use Charcoal\Tests\AbstractTestCase;
@@ -69,7 +68,7 @@ class StructurePropertyTest extends AbstractTestCase
         $this->assertEquals('', $this->obj->parseOne(''));
        // $this->assertEquals('foo', $this->obj->parseOne('foo'));
         $this->assertEquals(['foo'], $this->obj->parseOne('["foo"]'));
-        $this->assertEquals(['foo'=>'bar'], $this->obj->parseOne('{"foo":"bar"}'));
+        $this->assertEquals(['foo' => 'bar'], $this->obj->parseOne('{"foo":"bar"}'));
     }
 
     public function testSqlType()

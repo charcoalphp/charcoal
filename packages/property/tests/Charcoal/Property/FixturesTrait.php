@@ -15,7 +15,7 @@ trait FixturesTrait
      */
     public function getPathToFixture($file)
     {
-        return $this->getPathToFixtures().'/'.ltrim($file, '/');
+        return $this->getPathToFixtures() . '/' . ltrim($file, '/');
     }
 
     /**

@@ -5,7 +5,6 @@ namespace Charcoal\Tests\Property;
 use PDO;
 use DomainException;
 use InvalidArgumentException;
-
 // From 'charcoal-property'
 use Charcoal\Property\IdProperty;
 use Charcoal\Tests\AbstractTestCase;
@@ -52,7 +51,7 @@ class IdPropertyTest extends AbstractTestCase
     {
         $ret = $this->obj->setData(
             [
-            'mode'=>'uniqid'
+            'mode' => 'uniqid'
             ]
         );
         $this->assertSame($ret, $this->obj);

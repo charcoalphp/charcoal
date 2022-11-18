@@ -87,7 +87,7 @@ class AudioPropertyTest extends AbstractFilePropertyTestCase
     {
         $obj = $this->obj;
 
-        $obj['uploadPath'] = $this->getPathToFixtures().'/files';
+        $obj['uploadPath'] = $this->getPathToFixtures() . '/files';
         $obj['val'] = $this->getPathToFixture('files/buzzer.mp3');
 
         $this->assertEquals(16512, $obj['filesize']);
@@ -104,7 +104,7 @@ class AudioPropertyTest extends AbstractFilePropertyTestCase
     {
         $obj = $this->obj;
 
-        $obj['uploadPath'] = $this->getPathToFixtures().'/files';
+        $obj['uploadPath'] = $this->getPathToFixtures() . '/files';
         $obj['val'] = $this->getPathToFixture('files/buzzer.mp3');
 
         $mime = $obj['mimetype'];

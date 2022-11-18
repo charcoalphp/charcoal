@@ -1,12 +1,13 @@
 <?php
 
-namespace Charcoal\Tests\Ui\Form;
+namespace Charcoal\Tests\Ui\FormGroup;
 
 // From 'charcoal-ui'
 use Charcoal\Ui\FormGroup\AbstractFormGroup;
 use Charcoal\Ui\ServiceProvider\FormServiceProvider;
 use Charcoal\Ui\ServiceProvider\LayoutServiceProvider;
 use Charcoal\Tests\AbstractTestCase;
+use Charcoal\View\AbstractView;
 
 /**
  *
@@ -16,7 +17,7 @@ class AbstractFormGroupTest extends AbstractTestCase
     use \Charcoal\Tests\Ui\ContainerIntegrationTrait;
 
     /**
-     * @var AbstractViewClass
+     * @var AbstractView
      */
     public $obj;
 
@@ -50,7 +51,7 @@ class AbstractFormGroupTest extends AbstractTestCase
     public function testSetInputCallback()
     {
         $obj = $this->obj;
-        $cb = function($o) {
+        $cb = function() {
             return 'foo';
         };
         $ret = $obj->setInputCallback($cb);

@@ -3,7 +3,6 @@
 namespace Charcoal\Tests\Property;
 
 use PDO;
-
 // From 'charcoal-property'
 use Charcoal\Property\BooleanProperty;
 use Charcoal\Tests\AbstractTestCase;
@@ -63,8 +62,8 @@ class BooleanPropertyTest extends AbstractTestCase
         $this->assertEquals('Yes', $this->obj->displayVal(true));
         $this->assertEquals('No', $this->obj->displayVal(false));
 
-        $this->assertEquals('V', $this->obj->displayVal(true, ['true_label'=>'V']));
-        $this->assertEquals('F', $this->obj->displayVal(false, ['false_label'=>'F']));
+        $this->assertEquals('V', $this->obj->displayVal(true, ['true_label' => 'V']));
+        $this->assertEquals('F', $this->obj->displayVal(false, ['false_label' => 'F']));
     }
 
     /**
@@ -104,8 +103,8 @@ class BooleanPropertyTest extends AbstractTestCase
     {
         $obj = $this->obj;
         $data = [
-            'true_label'=>'foo',
-            'false_label'=>'bar'
+            'true_label' => 'foo',
+            'false_label' => 'bar'
         ];
         $ret = $obj->setData($data);
 

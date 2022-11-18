@@ -4,7 +4,6 @@ namespace Charcoal\Tests\Property;
 
 use PDO;
 use ReflectionClass;
-
 // From 'charcoal-property'
 use Charcoal\Property\LangProperty;
 use Charcoal\Tests\AbstractTestCase;

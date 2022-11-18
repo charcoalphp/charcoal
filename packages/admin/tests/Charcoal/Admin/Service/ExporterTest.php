@@ -1,6 +1,6 @@
 <?php
 
-namespace Charcoal\Tests\Admin;
+namespace Charcoal\Tests\Admin\Service;
 
 // From PSR-3
 use Psr\Log\NullLogger;

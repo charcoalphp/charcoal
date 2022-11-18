@@ -3,18 +3,19 @@
 namespace Charcoal\App\ServiceProvider;
 
 // From PSR-7
-use Charcoal\Factory\GenericResolver;
 use Psr\Http\Message\UriInterface;
 // From Pimple
 use Pimple\ServiceProviderInterface;
 use Pimple\Container;
 // From Slim
 use Slim\Http\Uri;
-// From 'league/climate'
+// From 'league'
 use League\CLImate\CLImate;
 // From Mustache
 use Mustache_LambdaHelper as LambdaHelper;
+use Charcoal\Event\ServiceProvider\EventServiceProvider;
 use Charcoal\Factory\GenericFactory as Factory;
+use Charcoal\Factory\GenericResolver;
 use Charcoal\Cache\ServiceProvider\CacheServiceProvider;
 use Charcoal\Translator\ServiceProvider\TranslatorServiceProvider;
 use Charcoal\App\AppConfig;
@@ -35,9 +36,9 @@ use Charcoal\App\ServiceProvider\FilesystemServiceProvider;
 use Charcoal\App\ServiceProvider\ScriptServiceProvider;
 use Charcoal\App\ServiceProvider\LoggerServiceProvider;
 use Charcoal\App\Template\TemplateInterface;
-use Charcoal\App\Template\TemplateBuilder;
 use Charcoal\App\Template\WidgetInterface;
 use Charcoal\App\Template\WidgetBuilder;
+use Charcoal\Object\RevisionServiceProvider;
 use Charcoal\View\Twig\DebugHelpers as TwigDebugHelpers;
 use Charcoal\View\Twig\HelpersInterface as TwigHelpersInterface;
 use Charcoal\View\Twig\UrlHelpers as TwigUrlHelpers;
@@ -72,11 +73,13 @@ class AppServiceProvider implements ServiceProviderInterface
     {
         $container->register(new CacheServiceProvider());
         $container->register(new DatabaseServiceProvider());
+        $container->register(new EventServiceProvider());
         $container->register(new FilesystemServiceProvider());
         $container->register(new LoggerServiceProvider());
         $container->register(new ScriptServiceProvider());
         $container->register(new TranslatorServiceProvider());
         $container->register(new ViewServiceProvider());
+        $container->register(new RevisionServiceProvider());
 
         $this->registerKernelServices($container);
         $this->registerHandlerServices($container);

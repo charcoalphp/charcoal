@@ -37,7 +37,7 @@ class LocalesConfig extends AbstractConfig
     /**
      * @return array
      */
-    public function defaults()
+    public function defaults(): array
     {
         return [
             'languages' => [
