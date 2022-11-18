@@ -4,7 +4,6 @@ namespace Charcoal\Admin\Action\Object;
 
 use Exception;
 use PDOException;
-use Pimple\Container;
 // From PSR-7
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;

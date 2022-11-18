@@ -10,7 +10,6 @@ use Charcoal\Image\ImageInterface;
 // From 'charccoal-translator'
 use Charcoal\Translator\Translation;
 // From 'charcoal-property'
-use Charcoal\Property\Event\PropertyEvent;
 use Charcoal\Property\FileProperty;
 
 /**
