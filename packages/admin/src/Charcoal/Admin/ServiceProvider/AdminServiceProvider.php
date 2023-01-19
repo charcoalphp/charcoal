@@ -158,7 +158,7 @@ class AdminServiceProvider implements ServiceProviderInterface
                     if ($adminConfig['base_path']) {
                         $basePath  = rtrim($adminUrl->getBasePath(), '/');
                         $adminPath = ltrim($adminConfig['base_path'], '/');
-                        $adminUrl  = $adminUrl->withBasePath($basePath . DIRECTORY_SEPARATOR . $adminPath);
+                        $adminUrl  = $adminUrl->withBasePath($basePath . '/' . $adminPath);
                     }
                 }
 
