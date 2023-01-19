@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.0.2](https://github.com/charcoalphp/charcoal/compare/v4.0.1...v4.0.2) (2023-01-19)
+
+
+### Bug Fixes
+
+* **admin:** Fix admin URL by replacing directory separator with forward slash ([9aa3a8f](https://github.com/charcoalphp/charcoal/commit/9aa3a8f5c089604951a74e48030dc815b53baad9))
+
 ## [4.0.1](https://github.com/charcoalphp/charcoal/compare/v4.0.0...v4.0.1) (2022-11-10)
 
 

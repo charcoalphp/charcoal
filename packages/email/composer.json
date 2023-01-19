@@ -20,9 +20,9 @@
         "php": "^7.4 || ^8.0",
         "psr/log": "^1.0",
         "phpmailer/phpmailer": "~6.0",
-        "charcoal/config": "^4.0.1",
-        "charcoal/app": "^4.0.1",
-        "charcoal/queue": "^4.0.1",
+        "charcoal/config": "^4.0.2",
+        "charcoal/app": "^4.0.2",
+        "charcoal/queue": "^4.0.2",
         "seld/jsonlint": "^1.9",
         "ext-pdo": "*"
     },
