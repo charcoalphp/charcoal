@@ -254,35 +254,36 @@ class ClearCacheTemplate extends AdminTemplate
     private function twigCacheInfo()
     {
         $cachePath = realpath($this->appConfig['publicPath'] . DIRECTORY_SEPARATOR . $this->twigEngine->cache());
-        if(!is_dir($cachePath)) {
+        if (!is_dir($cachePath)) {
             return [
-                'no_cache_folder'   => true,
+                'no_cache_folder' => true,
             ];
         }
         $filesCount = new FilesystemIterator($cachePath, FilesystemIterator::SKIP_DOTS);
         $folderSize = $this->dirSize($cachePath);
 
         return [
-            'num_entries'       => iterator_count($filesCount),
-            'total_size'        => $this->formatBytes($folderSize),
-            'no_cache_folder'   => false,
+            'num_entries'     => iterator_count($filesCount),
+            'total_size'      => $this->formatBytes($folderSize),
+            'no_cache_folder' => false,
         ];
     }
 
     private function mustacheCacheInfo()
     {
         $cachePath = realpath($this->appConfig['publicPath'] . DIRECTORY_SEPARATOR . $this->mustacheEngine->cache());
-        if(!is_dir($cachePath)) {
+        if (!is_dir($cachePath)) {
             return [
-                'no_cache_folder'   => true,
-            ];        }
+                'no_cache_folder' => true,
+            ];
+        }
         $filesCount = new FilesystemIterator($cachePath, FilesystemIterator::SKIP_DOTS);
         $folderSize = $this->dirSize($cachePath);
 
         return [
-            'num_entries'  => iterator_count($filesCount),
-            'total_size'   => $this->formatBytes($folderSize),
-            'no_cache_folder'   => false
+            'num_entries'     => iterator_count($filesCount),
+            'total_size'      => $this->formatBytes($folderSize),
+            'no_cache_folder' => false,
         ];
     }
 
@@ -293,8 +294,8 @@ class ClearCacheTemplate extends AdminTemplate
      */
     private function dirSize($directory) {
         $size = 0;
-        foreach(new RecursiveIteratorIterator(new RecursiveDirectoryIterator($directory)) as $file) {
-            $size+=$file->getSize();
+        foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($directory)) as $file) {
+            $size += $file->getSize();
         }
         return $size;
     }
