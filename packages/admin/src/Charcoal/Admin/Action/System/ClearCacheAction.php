@@ -155,17 +155,18 @@ class ClearCacheAction extends AbstractCacheAction
         if (is_dir($dir)) {
             $objects = scandir($dir);
             foreach ($objects as $object) {
-                if ($object === "." || $object === "..") {
+                if ($object === '.' || $object === '..') {
                     continue;
                 }
 
-                if (filetype($dir . DIRECTORY_SEPARATOR . $object) == "dir") {
+                if (filetype($dir . DIRECTORY_SEPARATOR . $object) === 'dir') {
                     $this->rrmdir($dir . DIRECTORY_SEPARATOR . $object, true);
                 } else {
                     unlink($dir . DIRECTORY_SEPARATOR . $object);
                 }
             }
             reset($objects);
+            
             if ($deleteCurrentFolder) {
                 rmdir($dir);
             }
