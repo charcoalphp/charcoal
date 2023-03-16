@@ -253,7 +253,8 @@ class ClearCacheTemplate extends AdminTemplate
 
     private function twigCacheInfo()
     {
-        $cachePath = realpath($this->appConfig['publicPath'] . DIRECTORY_SEPARATOR . $this->twigEngine->cache());
+        $defaultCachePath = realpath($this->twigEngine->cache());
+        $cachePath = $defaultCachePath ? $defaultCachePath : realpath($this->appConfig['publicPath'] . DIRECTORY_SEPARATOR . $this->twigEngine->cache());
         if (!is_dir($cachePath)) {
             return [
                 'no_cache_folder' => true,
@@ -271,7 +272,8 @@ class ClearCacheTemplate extends AdminTemplate
 
     private function mustacheCacheInfo()
     {
-        $cachePath = realpath($this->appConfig['publicPath'] . DIRECTORY_SEPARATOR . $this->mustacheEngine->cache());
+        $defaultCachePath = realpath($this->mustacheEngine->cache());
+        $cachePath = $defaultCachePath ? $defaultCachePath : realpath($this->appConfig['publicPath'] . DIRECTORY_SEPARATOR . $this->mustacheEngine->cache());
         if (!is_dir($cachePath)) {
             return [
                 'no_cache_folder' => true,
@@ -424,7 +426,7 @@ class ClearCacheTemplate extends AdminTemplate
 
     public function hasTwigCache()
     {
-        return $this->twigEngine->config->useCache;
+        return $this->twigEngine->config()->useCache;
     }
 
     public function hasMustacheCache()
