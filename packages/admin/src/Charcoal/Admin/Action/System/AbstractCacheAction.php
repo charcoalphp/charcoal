@@ -13,6 +13,7 @@ use Pimple\Container;
 use Charcoal\Cache\CachePoolAwareTrait;
 // From 'charcoal-admin'
 use Charcoal\Admin\AdminAction;
+use Charcoal\View\EngineInterface;
 
 /**
  * Base Cache Action
@@ -26,14 +27,14 @@ abstract class AbstractCacheAction extends AdminAction
      *
      * @var \Charcoal\View\Mustache\MustacheEngine
      */
-    protected $mustacheEngine;
+    protected EngineInterface $mustacheEngine;
 
     /**
      * Twig View Engine.
      *
      * @var \Charcoal\View\Twig\TwigEngine
      */
-    protected $twigEngine;
+    protected EngineInterface $twigEngine;
 
     /**
      * @return array

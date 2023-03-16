@@ -17,6 +17,7 @@ use Stash\Driver\Memcache;
 use Pimple\Container;
 // From 'charcoal-admin'
 use Charcoal\Admin\AdminTemplate;
+use Charcoal\View\EngineInterface;
 
 /**
  * Cache information.
@@ -63,14 +64,14 @@ class ClearCacheTemplate extends AdminTemplate
      *
      * @var \Charcoal\View\Mustache\MustacheEngine
      */
-    private $mustacheEngine;
+    private EngineInterface $mustacheEngine;
 
     /**
      * Twig View Engine.
      *
      * @var \Charcoal\View\Twig\TwigEngine
      */
-    private $twigEngine;
+    private EngineInterface $twigEngine;
 
     /**
      * Retrieve the title of the page.
