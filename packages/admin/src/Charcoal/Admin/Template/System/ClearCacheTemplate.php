@@ -296,11 +296,9 @@ class ClearCacheTemplate extends AdminTemplate
     }
 
     /**
-     * Get the directory size
-     * @param  string $directory
-     * @return integer
+     * Get the size in bytes of the directory.
      */
-    private function dirSize($directory) {
+    private function dirSize(string $directory) : int {
         $size = 0;
         foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($directory)) as $file) {
             $size += $file->getSize();

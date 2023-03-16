@@ -167,7 +167,6 @@ class ClearCacheAction extends AbstractCacheAction
                     unlink($dir . DIRECTORY_SEPARATOR . $object);
                 }
             }
-            reset($objects);
 
             if ($deleteCurrentFolder) {
                 rmdir($dir);
