@@ -25,19 +25,39 @@
                 <p>{{# _t }}The Ephemeral driver is a special backend that only stores data for the lifetime of the script, whether it be a longer running process or a web request.{{/ _t }}</p>
                 <p>{{# _t }}Items pushed to this driver are stored in the script's running memory.{{/ _t }}</p>
             </div>
-
+            {{# hasViewCache }}
+            <div class="c-cache-types row mb-4">
+                <div class="col-12">
+                    <div class="card-grid">
+                        {{# hasTwigCache }}
+                        {{> charcoal/admin/widget/cache/type/twig }}
+                        {{/ hasTwigCache }}
+                        {{# hasMustacheCache }}
+                        {{> charcoal/admin/widget/cache/type/mustache }}
+                        {{/ hasMustacheCache }}
+                    </div>
+                </div>
+            </div>
+            {{/ hasViewCache }}
             {{/ isMemory }}
+
             {{^ isApc }}
             <div class="alert alert-warning" role="alert">
                 <p>{{# _t }}Cache statistics are only available for the APC cache type.{{/ _t }}</p>
             </div>
-
             {{/ isApc }}
+
             {{^ isMemory }}
             <div class="c-cache-types row mb-4">
                 <div class="col-12">
                     <div class="card-grid">
                         {{> charcoal/admin/widget/cache/types }}
+                        {{# hasTwigCache }}
+                        {{> charcoal/admin/widget/cache/type/twig }}
+                        {{/ hasTwigCache }}
+                        {{# hasMustacheCache }}
+                        {{> charcoal/admin/widget/cache/type/mustache }}
+                        {{/ hasMustacheCache }}
                     </div>
                 </div>
             </div>
@@ -48,6 +68,7 @@
                 </div>
             </div>
             {{/ isMemory }}
+
         </div>
     </section>
 </main>

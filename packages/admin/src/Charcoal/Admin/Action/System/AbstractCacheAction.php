@@ -22,6 +22,20 @@ abstract class AbstractCacheAction extends AdminAction
     use CachePoolAwareTrait;
 
     /**
+     * Mustache View Engine.
+     *
+     * @var \Charcoal\View\Mustache\MustacheEngine
+     */
+    protected $mustacheEngine;
+
+    /**
+     * Twig View Engine.
+     *
+     * @var \Charcoal\View\Twig\TwigEngine
+     */
+    protected $twigEngine;
+
+    /**
      * @return array
      */
     public function results()
@@ -43,5 +57,7 @@ abstract class AbstractCacheAction extends AdminAction
         parent::setDependencies($container);
 
         $this->setCachePool($container['cache']);
+        $this->mustacheEngine   = $container['view/engine/mustache'];
+        $this->twigEngine       = $container['view/engine/twig'];
     }
 }

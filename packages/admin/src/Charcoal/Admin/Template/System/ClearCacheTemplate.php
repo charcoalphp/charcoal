@@ -7,6 +7,9 @@ use APCIterator;
 use DateInterval;
 use DateTimeInterface;
 use DateTime;
+use FilesystemIterator;
+use RecursiveDirectoryIterator;
+use RecursiveIteratorIterator;
 use RuntimeException;
 use Stash\Driver\Apc;
 use Stash\Driver\Ephemeral;
@@ -56,6 +59,20 @@ class ClearCacheTemplate extends AdminTemplate
     private $apcCacheKeyPattern;
 
     /**
+     * Mustache View Engine.
+     *
+     * @var \Charcoal\View\Mustache\MustacheEngine
+     */
+    private $mustacheEngine;
+
+    /**
+     * Twig View Engine.
+     *
+     * @var \Charcoal\View\Twig\TwigEngine
+     */
+    private $twigEngine;
+
+    /**
      * Retrieve the title of the page.
      *
      * @return \Charcoal\Translator\Translation|string|null
@@ -102,11 +119,12 @@ class ClearCacheTemplate extends AdminTemplate
                 'global'            => $this->globalCacheInfo(),
                 'pages'             => $this->pagesCacheInfo(),
                 'objects'           => $this->objectsCacheInfo(),
+                'twig'              => $this->twigCacheInfo(),
+                'mustache'          => $this->mustacheCacheInfo(),
                 'global_items'      => $globalItems,
                 'has_global_items'  => !empty($globalItems),
             ];
         }
-
         return $this->cacheInfo;
     }
 
@@ -233,6 +251,54 @@ class ClearCacheTemplate extends AdminTemplate
         }
     }
 
+    private function twigCacheInfo()
+    {
+        $cachePath = realpath($this->appConfig['publicPath'] . DIRECTORY_SEPARATOR . $this->twigEngine->cache());
+        if(!is_dir($cachePath)) {
+            return [
+                'no_cache_folder'   => true,
+            ];
+        }
+        $filesCount = new FilesystemIterator($cachePath, FilesystemIterator::SKIP_DOTS);
+        $folderSize = $this->dirSize($cachePath);
+
+        return [
+            'num_entries'       => iterator_count($filesCount),
+            'total_size'        => $this->formatBytes($folderSize),
+            'no_cache_folder'   => false,
+        ];
+    }
+
+    private function mustacheCacheInfo()
+    {
+        $cachePath = realpath($this->appConfig['publicPath'] . DIRECTORY_SEPARATOR . $this->mustacheEngine->cache());
+        if(!is_dir($cachePath)) {
+            return [
+                'no_cache_folder'   => true,
+            ];        }
+        $filesCount = new FilesystemIterator($cachePath, FilesystemIterator::SKIP_DOTS);
+        $folderSize = $this->dirSize($cachePath);
+
+        return [
+            'num_entries'  => iterator_count($filesCount),
+            'total_size'   => $this->formatBytes($folderSize),
+            'no_cache_folder'   => false
+        ];
+    }
+
+    /**
+     * Get the directory size
+     * @param  string $directory
+     * @return integer
+     */
+    private function dirSize($directory) {
+        $size = 0;
+        foreach(new RecursiveIteratorIterator(new RecursiveDirectoryIterator($directory)) as $file) {
+            $size+=$file->getSize();
+        }
+        return $size;
+    }
+
     /**
      * @return array
      */
@@ -353,6 +419,21 @@ class ClearCacheTemplate extends AdminTemplate
     public function isMemory()
     {
         return is_a($this->cache->getDriver(), Ephemeral::class);
+    }
+
+    public function hasTwigCache()
+    {
+        return $this->twigEngine->config->useCache;
+    }
+
+    public function hasMustacheCache()
+    {
+        return true;
+    }
+
+    public function hasViewCache()
+    {
+        return ($this->hasTwigCache() || $this->hasMustacheCache());
     }
 
     /**
@@ -493,5 +574,7 @@ class ClearCacheTemplate extends AdminTemplate
         $this->availableCacheDrivers = $container['cache/available-drivers'];
         $this->cache                 = $container['cache'];
         $this->cacheConfig           = $container['cache/config'];
+        $this->mustacheEngine        = $container['view/engine/mustache'];
+        $this->twigEngine            = $container['view/engine/twig'];
     }
 }

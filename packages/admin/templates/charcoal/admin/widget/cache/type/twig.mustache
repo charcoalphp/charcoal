@@ -1,0 +1,26 @@
+<section class="card">
+    <header class="card-header">
+        <h3 class="card-title mb-0">{{# _t }}Twig Cache{{/ _t }}</h3>
+    </header>
+    <div class="card-body">
+        {{# cacheInfo.twig.no_cache_folder }}
+        <p>{{# _t }}There is no Cache folder created for Twig.{{/ _t }}</p>
+        {{/ cacheInfo.twig.no_cache_folder }}
+        {{^ cacheInfo.twig.no_cache_folder }}
+        <dl>
+            <dt>{{# _t }}Num Entries{{/ _t }}</dt>
+            <dd>{{ cacheInfo.twig.num_entries }}</dd>
+            <dt>{{# _t }}Total Size{{/ _t }}</dt>
+            <dd>{{ cacheInfo.twig.total_size }}
+            <dd></dd>
+        </dl>
+        {{/ cacheInfo.twig.no_cache_folder }}
+    </div>
+    <footer class="card-footer bg-transparent">
+        {{^ cacheInfo.twig.no_cache_folder }}
+        <button class="btn btn-primary" data-clear="cache" data-cache-type="twig">
+            <span class="btn-label">{{# _t }}Clear Twig Cache{{/ _t }}</span>
+        </button>
+        {{/ cacheInfo.twig.no_cache_folder }}
+    </footer>
+</section>

@@ -26,7 +26,7 @@ class TwigEngine extends AbstractEngine
     /**
      * @var ViewConfig $config
      */
-    private $config;
+    public $config;
 
     /**
      * @var boolean $debug

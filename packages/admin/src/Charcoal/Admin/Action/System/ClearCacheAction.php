@@ -57,6 +57,24 @@ class ClearCacheAction extends AbstractCacheAction
             } else {
                 $message = $translator->translate('Failed to clear objects cache.');
             }
+        } elseif ($cacheType === 'twig') {
+            $result = $this->clearTwigCache();
+
+            if ($result) {
+                $message = $translator->translate('Twig cache cleared successfully.');
+            } else {
+                $message = $translator->translate('Failed to clear Twig cache.');
+            }
+
+        } elseif ($cacheType === 'mustache') {
+            $result = $this->clearMustacheCache();
+
+            if ($result) {
+                $message = $translator->translate('Mustache cache cleared successfully.');
+            } else {
+                $message = $translator->translate('Failed to clear Mustache cache.');
+            }
+
         } elseif ($cacheType === 'item') {
             $message = $translator->translate('Deleting cache items is unsupported, for now.');
         } else {
@@ -110,5 +128,47 @@ class ClearCacheAction extends AbstractCacheAction
         $cache  = $this->cachePool();
         $result = $cache->deleteItems([ 'object', 'metadata' ]);
         return $result;
+    }
+
+    private function clearTwigCache()
+    {
+        $cachePath = realpath($this->appConfig['publicPath'] . DIRECTORY_SEPARATOR . $this->twigEngine->cache());
+        if (!is_dir($cachePath)) {
+            return false;
+        }
+        $this->rrmdir($cachePath);
+        return true;
+    }
+
+    private function clearMustacheCache()
+    {
+        $cachePath = realpath($this->appConfig['publicPath'] . DIRECTORY_SEPARATOR . $this->mustacheEngine->cache());
+        if (!is_dir($cachePath)) {
+            return false;
+        }
+        $this->rrmdir($cachePath);
+        return true;
+    }
+
+    private function rrmdir($dir, $deleteCurrentFolder = false)
+    {
+        if (is_dir($dir)) {
+            $objects = scandir($dir);
+            foreach ($objects as $object) {
+                if ($object === "." || $object === "..") {
+                    continue;
+                }
+
+                if (filetype($dir . DIRECTORY_SEPARATOR . $object) == "dir") {
+                    $this->rrmdir($dir . DIRECTORY_SEPARATOR . $object, true);
+                } else {
+                    unlink($dir . DIRECTORY_SEPARATOR . $object);
+                }
+            }
+            reset($objects);
+            if ($deleteCurrentFolder) {
+                rmdir($dir);
+            }
+        }
     }
 }
