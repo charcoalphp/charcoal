@@ -130,7 +130,7 @@ class ClearCacheAction extends AbstractCacheAction
         return $result;
     }
 
-    private function clearTwigCache()
+    private function clearTwigCache() : bool
     {
         $defaultCachePath = realpath($this->twigEngine->cache());
         $cachePath = $defaultCachePath ? $defaultCachePath : realpath($this->appConfig['publicPath'] . DIRECTORY_SEPARATOR . $this->twigEngine->cache());
@@ -141,7 +141,7 @@ class ClearCacheAction extends AbstractCacheAction
         return true;
     }
 
-    private function clearMustacheCache()
+    private function clearMustacheCache() : bool
     {
         $defaultCachePath = realpath($this->mustacheEngine->cache());
         $cachePath = $defaultCachePath ? $defaultCachePath : realpath($this->appConfig['publicPath'] . DIRECTORY_SEPARATOR . $this->mustacheEngine->cache());
@@ -152,7 +152,7 @@ class ClearCacheAction extends AbstractCacheAction
         return true;
     }
 
-    private function rrmdir($dir, $deleteCurrentFolder = false)
+    private function rrmdir(string $dir, bool $deleteCurrentFolder = false) : void
     {
         if (is_dir($dir)) {
             $objects = scandir($dir);

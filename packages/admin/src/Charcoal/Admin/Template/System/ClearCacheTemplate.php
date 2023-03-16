@@ -251,7 +251,10 @@ class ClearCacheTemplate extends AdminTemplate
         }
     }
 
-    private function twigCacheInfo()
+    /**
+     * @return array<string, mixed>
+     */
+    private function twigCacheInfo() : array
     {
         $defaultCachePath = realpath($this->twigEngine->cache());
         $cachePath = $defaultCachePath ? $defaultCachePath : realpath($this->appConfig['publicPath'] . DIRECTORY_SEPARATOR . $this->twigEngine->cache());
@@ -270,7 +273,10 @@ class ClearCacheTemplate extends AdminTemplate
         ];
     }
 
-    private function mustacheCacheInfo()
+    /**
+     * @return array<string, mixed>
+     */
+    private function mustacheCacheInfo() : array
     {
         $defaultCachePath = realpath($this->mustacheEngine->cache());
         $cachePath = $defaultCachePath ? $defaultCachePath : realpath($this->appConfig['publicPath'] . DIRECTORY_SEPARATOR . $this->mustacheEngine->cache());
@@ -424,17 +430,17 @@ class ClearCacheTemplate extends AdminTemplate
         return is_a($this->cache->getDriver(), Ephemeral::class);
     }
 
-    public function hasTwigCache()
+    public function hasTwigCache() : bool
     {
         return $this->twigEngine->config()->useCache;
     }
 
-    public function hasMustacheCache()
+    public function hasMustacheCache() : bool
     {
         return true;
     }
 
-    public function hasViewCache()
+    public function hasViewCache() : bool
     {
         return ($this->hasTwigCache() || $this->hasMustacheCache());
     }
