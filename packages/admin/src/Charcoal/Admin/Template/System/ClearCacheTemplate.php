@@ -302,7 +302,7 @@ class ClearCacheTemplate extends AdminTemplate
     private function dirSize(string $directory) : int {
         $size = 0;
         foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($directory)) as $file) {
-            $size += $file->getSize();
+            $size += (int)$file->getSize();
         }
         return $size;
     }
