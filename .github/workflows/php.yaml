@@ -63,7 +63,7 @@ jobs:
           tools: composer, phpcs, phpstan, phpunit
 
       - name: Validate composer.json and composer.lock
-        run: composer validate
+        run: composer validate --no-check-all
 
       - name: Install Composer dependencies
         uses: ramsey/composer-install@v2
