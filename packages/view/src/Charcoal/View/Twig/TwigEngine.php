@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Charcoal\View\Twig;
 
 use Charcoal\View\AbstractEngine;
+use Charcoal\View\ViewConfig;
 use InvalidArgumentException;
 use RuntimeException;
 use Symfony\Bridge\Twig\Extension\TranslationExtension;
@@ -49,8 +50,7 @@ class TwigEngine extends AbstractEngine
     public function __construct(array $data)
     {
         parent::__construct($data);
-
-        $this->config = $data['config'];
+        $this->setConfig($data['config']);
         $this->debug = $data['debug'];
 
         if (isset($data['helpers'])) {
@@ -183,12 +183,12 @@ class TwigEngine extends AbstractEngine
      */
     protected function createTwig(): TwigEnvironment
     {
-        $useCache = ($this->config->useCache ?? true);
+        $useCache = ($this->config()->useCache ?? true);
         $twig = new TwigEnvironment($this->loader(), [
             'cache'             => ($useCache ? $this->cache() : false),
             'charset'           => 'utf-8',
             'auto_reload'       => false,
-            'strict_variables'  => ($this->config->strictVariables ?? true),
+            'strict_variables'  => ($this->config()->strictVariables ?? true),
             'debug'             => $this->debug,
         ]);
         $twig->setExtensions($this->helpers());
@@ -212,5 +212,15 @@ class TwigEngine extends AbstractEngine
         }
 
         parent::setCache($cache);
+    }
+
+    public function setConfig(ViewConfig $config): void
+    {
+        $this->config = $config;
+    }
+
+    public function config(): ViewConfig
+    {
+        return $this->config;
     }
 }

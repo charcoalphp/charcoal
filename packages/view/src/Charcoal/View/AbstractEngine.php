@@ -109,7 +109,7 @@ abstract class AbstractEngine implements EngineInterface
      *
      * @return mixed
      */
-    protected function cache()
+    public function cache()
     {
         return $this->cache;
     }

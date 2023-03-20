@@ -13,6 +13,7 @@ use Pimple\Container;
 use Charcoal\Cache\CachePoolAwareTrait;
 // From 'charcoal-admin'
 use Charcoal\Admin\AdminAction;
+use Charcoal\View\EngineInterface;
 
 /**
  * Base Cache Action
@@ -20,6 +21,20 @@ use Charcoal\Admin\AdminAction;
 abstract class AbstractCacheAction extends AdminAction
 {
     use CachePoolAwareTrait;
+
+    /**
+     * Mustache View Engine.
+     *
+     * @var \Charcoal\View\Mustache\MustacheEngine
+     */
+    protected EngineInterface $mustacheEngine;
+
+    /**
+     * Twig View Engine.
+     *
+     * @var \Charcoal\View\Twig\TwigEngine
+     */
+    protected EngineInterface $twigEngine;
 
     /**
      * @return array
@@ -43,5 +58,7 @@ abstract class AbstractCacheAction extends AdminAction
         parent::setDependencies($container);
 
         $this->setCachePool($container['cache']);
+        $this->mustacheEngine   = $container['view/engine/mustache'];
+        $this->twigEngine       = $container['view/engine/twig'];
     }
 }

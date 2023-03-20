@@ -7,6 +7,9 @@ use APCIterator;
 use DateInterval;
 use DateTimeInterface;
 use DateTime;
+use FilesystemIterator;
+use RecursiveDirectoryIterator;
+use RecursiveIteratorIterator;
 use RuntimeException;
 use Stash\Driver\Apc;
 use Stash\Driver\Ephemeral;
@@ -14,6 +17,7 @@ use Stash\Driver\Memcache;
 use Pimple\Container;
 // From 'charcoal-admin'
 use Charcoal\Admin\AdminTemplate;
+use Charcoal\View\EngineInterface;
 
 /**
  * Cache information.
@@ -54,6 +58,20 @@ class ClearCacheTemplate extends AdminTemplate
      * @var string
      */
     private $apcCacheKeyPattern;
+
+    /**
+     * Mustache View Engine.
+     *
+     * @var \Charcoal\View\Mustache\MustacheEngine
+     */
+    private EngineInterface $mustacheEngine;
+
+    /**
+     * Twig View Engine.
+     *
+     * @var \Charcoal\View\Twig\TwigEngine
+     */
+    private EngineInterface $twigEngine;
 
     /**
      * Retrieve the title of the page.
@@ -102,11 +120,12 @@ class ClearCacheTemplate extends AdminTemplate
                 'global'            => $this->globalCacheInfo(),
                 'pages'             => $this->pagesCacheInfo(),
                 'objects'           => $this->objectsCacheInfo(),
+                'twig'              => $this->twigCacheInfo(),
+                'mustache'          => $this->mustacheCacheInfo(),
                 'global_items'      => $globalItems,
                 'has_global_items'  => !empty($globalItems),
             ];
         }
-
         return $this->cacheInfo;
     }
 
@@ -234,6 +253,61 @@ class ClearCacheTemplate extends AdminTemplate
     }
 
     /**
+     * @return array<string, mixed>
+     */
+    private function twigCacheInfo() : array
+    {
+        $defaultCachePath = realpath($this->twigEngine->cache());
+        $cachePath = $defaultCachePath ? $defaultCachePath : realpath($this->appConfig['publicPath'] . DIRECTORY_SEPARATOR . $this->twigEngine->cache());
+        if (!is_dir($cachePath)) {
+            return [
+                'no_cache_folder' => true,
+            ];
+        }
+        $filesCount = new FilesystemIterator($cachePath, FilesystemIterator::SKIP_DOTS);
+        $folderSize = $this->dirSize($cachePath);
+
+        return [
+            'num_entries'     => iterator_count($filesCount),
+            'total_size'      => $this->formatBytes($folderSize),
+            'no_cache_folder' => false,
+        ];
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function mustacheCacheInfo() : array
+    {
+        $defaultCachePath = realpath($this->mustacheEngine->cache());
+        $cachePath = $defaultCachePath ? $defaultCachePath : realpath($this->appConfig['publicPath'] . DIRECTORY_SEPARATOR . $this->mustacheEngine->cache());
+        if (!is_dir($cachePath)) {
+            return [
+                'no_cache_folder' => true,
+            ];
+        }
+        $filesCount = new FilesystemIterator($cachePath, FilesystemIterator::SKIP_DOTS);
+        $folderSize = $this->dirSize($cachePath);
+
+        return [
+            'num_entries'     => iterator_count($filesCount),
+            'total_size'      => $this->formatBytes($folderSize),
+            'no_cache_folder' => false,
+        ];
+    }
+
+    /**
+     * Get the size in bytes of the directory.
+     */
+    private function dirSize(string $directory) : int {
+        $size = 0;
+        foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($directory)) as $file) {
+            $size += (int)$file->getSize();
+        }
+        return $size;
+    }
+
+    /**
      * @return array
      */
     private function objectsCacheItems()
@@ -353,6 +427,21 @@ class ClearCacheTemplate extends AdminTemplate
     public function isMemory()
     {
         return is_a($this->cache->getDriver(), Ephemeral::class);
+    }
+
+    public function hasTwigCache() : bool
+    {
+        return $this->twigEngine->config()->useCache;
+    }
+
+    public function hasMustacheCache() : bool
+    {
+        return true;
+    }
+
+    public function hasViewCache() : bool
+    {
+        return ($this->hasTwigCache() || $this->hasMustacheCache());
     }
 
     /**
@@ -493,5 +582,7 @@ class ClearCacheTemplate extends AdminTemplate
         $this->availableCacheDrivers = $container['cache/available-drivers'];
         $this->cache                 = $container['cache'];
         $this->cacheConfig           = $container['cache/config'];
+        $this->mustacheEngine        = $container['view/engine/mustache'];
+        $this->twigEngine            = $container['view/engine/twig'];
     }
 }
