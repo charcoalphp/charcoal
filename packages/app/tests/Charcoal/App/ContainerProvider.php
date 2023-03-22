@@ -11,6 +11,7 @@ use Mockery;
 use Psr\Log\NullLogger;
 
 // From 'tedivm/stash' (PSR-6)
+use Slim\Psr7\Factory\UriFactory;
 use Stash\Pool;
 
 // From Slim
@@ -79,7 +80,7 @@ class ContainerProvider
     public function registerBaseUrl(Container $container)
     {
         $container['base-url'] = function (Container $container) {
-            return Uri::createFromString('https://example.com:8080/foo/bar?abc=123');
+            return (new UriFactory())->createUri('https://example.com:8080/foo/bar?abc=123');
         };
     }
 

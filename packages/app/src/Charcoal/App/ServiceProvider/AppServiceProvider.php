@@ -42,6 +42,7 @@ use Charcoal\View\Twig\DebugHelpers as TwigDebugHelpers;
 use Charcoal\View\Twig\HelpersInterface as TwigHelpersInterface;
 use Charcoal\View\Twig\UrlHelpers as TwigUrlHelpers;
 use Charcoal\View\ViewServiceProvider;
+use Slim\Psr7\Factory\UriFactory;
 
 /**
  * Application Service Provider
@@ -132,7 +133,7 @@ class AppServiceProvider implements ServiceProviderInterface
                     $baseUrl = $container['request']->getUri()->getBaseUrl();
                 }
 
-                $baseUrl = Uri::createFromString($baseUrl)->withUserInfo('');
+                $baseUrl = (new UriFactory())->createUri($baseUrl)->withUserInfo('');
 
                 /** Fix the base path */
                 $path = $baseUrl->getPath();

@@ -47,6 +47,7 @@ use Charcoal\Admin\Ui\SecondaryMenu\GenericSecondaryMenuGroup;
 use Charcoal\Admin\Ui\SecondaryMenu\SecondaryMenuGroupInterface;
 use Charcoal\Admin\User;
 use Charcoal\Admin\User\AuthToken;
+use Slim\Psr7\Factory\UriFactory;
 
 /**
  * Charcoal Administration Service Provider
@@ -162,7 +163,7 @@ class AdminServiceProvider implements ServiceProviderInterface
                     }
                 }
 
-                $adminUrl = Uri::createFromString($adminUrl)->withUserInfo('');
+                $adminUrl =  (new UriFactory())->createUri($adminUrl)->withUserInfo('');
 
                 /** Fix the base path */
                 $path = $adminUrl->getPath();

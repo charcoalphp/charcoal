@@ -15,6 +15,7 @@ use Charcoal\Config\ConfigurableTrait;
 // From 'charcoal-app'
 use Charcoal\App\Route\RouteInterface;
 use Charcoal\App\Route\TemplateRouteConfig;
+use Slim\Psr7\Factory\UriFactory;
 
 /**
  * Template Route Handler.
@@ -182,7 +183,7 @@ class TemplateRoute implements
 
         if (!empty($parts)) {
             if (isset($parts['host'])) {
-                $uri = Uri::createFromString($redirection);
+                $uri = (new UriFactory())->createUri($redirection);
             } else {
                 if (isset($parts['path'])) {
                     $uri = $uri->withPath($parts['path']);

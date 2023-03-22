@@ -21,6 +21,7 @@ use Slim\Http\Uri;
 use Charcoal\Tests\AbstractTestCase;
 use Charcoal\Tests\Cache\CachePoolTrait;
 use Charcoal\Tests\Mocks\DefaultsAwareCacheMiddlewares as CacheMiddleware;
+use Slim\Psr7\Factory\UriFactory;
 
 /**
  * Test CacheMiddleware
@@ -89,7 +90,7 @@ abstract class AbstractCacheMiddlewareTest extends AbstractTestCase
      */
     protected function createUri($uri)
     {
-        return Uri::createFromString($uri);
+        return (new UriFactory())->createUri($uri);
     }
 
     /**

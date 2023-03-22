@@ -11,6 +11,7 @@ use Mockery;
 use Psr\Log\NullLogger;
 
 // From 'tedivm/stash'
+use Slim\Psr7\Factory\UriFactory;
 use Stash\Pool;
 use Stash\Driver\Ephemeral;
 
@@ -103,7 +104,7 @@ class ContainerProvider
     public function registerBaseUrl(Container $container)
     {
         $container['base-url'] = function () {
-            return Uri::createFromString('https://example.com:8080/foo/bar?abc=123');
+            return (new UriFactory())->createUri('https://example.com:8080/foo/bar?abc=123');
         };
     }
 
@@ -116,7 +117,7 @@ class ContainerProvider
     public function registerAdminBaseUrl(Container $container)
     {
         $container['admin/base-url'] = function () {
-            return Uri::createFromString('https://example.com:8080/admin/qux?abc=123');
+            return (new UriFactory())->createUri('https://example.com:8080/admin/qux?abc=123');
         };
     }
 

@@ -14,6 +14,7 @@ use Psr\Log\NullLogger;
 use Slim\Http\Uri;
 
 // From 'tedivm/stash' (PSR-6)
+use Slim\Psr7\Factory\UriFactory;
 use Stash\Pool;
 
 // From 'laminas/laminas-permissions-acl'
@@ -120,11 +121,11 @@ class ContainerProvider
     public function registerBaseUrl(Container $container)
     {
         $container['base-url'] = function () {
-            return Uri::createFromString('');
+            return (new UriFactory())->createUri('');
         };
 
         $container['admin/base-url'] = function () {
-            return Uri::createFromString('admin');
+            return (new UriFactory())->createUri('admin');
         };
     }
 

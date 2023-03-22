@@ -4,6 +4,7 @@ namespace Charcoal\App;
 
 use Exception;
 use InvalidArgumentException;
+use Slim\Psr7\Factory\UriFactory;
 use UnexpectedValueException;
 // From PSR-7
 use Psr\Http\Message\UriInterface;
@@ -418,7 +419,7 @@ class AppConfig extends AbstractConfig
     public function setBaseUrl($uri)
     {
         if (is_string($uri)) {
-            $this->baseUrl = Uri::createFromString($uri);
+            $this->baseUrl = (new UriFactory())->createUri($uri);
         } else {
             $this->baseUrl = $uri;
         }
