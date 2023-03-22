@@ -55,7 +55,7 @@
         "psr/http-message": "^1.0",
         "psr/log": "^1.0",
         "seld/jsonlint": "^1.9",
-        "slim/slim": "^3.7",
+        "slim/slim": "^4.11",
         "studio-42/elfinder": "2.1.61",
         "symfony/translation": "^3.4",
         "tedivm/stash": "~0.16",
