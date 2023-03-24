@@ -60,7 +60,8 @@
         "studio-42/elfinder": "2.1.61",
         "symfony/translation": "^3.4",
         "tedivm/stash": "~0.16",
-        "vlucas/phpdotenv": "^5.4"
+        "vlucas/phpdotenv": "^5.4",
+        "zeuxisoo/slim-whoops": "^0.7.3"
     },
     "require-dev": {
         "cache/void-adapter": "^1.0",
