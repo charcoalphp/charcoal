@@ -1,6 +1,6 @@
 <?php
 
-namespace Charcoal\App\ServiceProvider;
+namespace Charcoal\App\Services;
 
 // From Pimple
 use Pimple\ServiceProviderInterface;

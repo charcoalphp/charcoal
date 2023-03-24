@@ -1,6 +1,6 @@
 <?php
 
-namespace Charcoal\App\ServiceProvider;
+namespace Charcoal\App\Services;
 
 // From PSR-7
 use Charcoal\Factory\GenericResolver;
@@ -19,21 +19,10 @@ use Charcoal\Cache\ServiceProvider\CacheServiceProvider;
 use Charcoal\Translator\ServiceProvider\TranslatorServiceProvider;
 use Charcoal\App\AppConfig;
 use Charcoal\App\Action\ActionInterface;
-use Charcoal\App\Handler\Error;
-use Charcoal\App\Handler\Maintenance;
-use Charcoal\App\Handler\NotAllowed;
-use Charcoal\App\Handler\NotFound;
-use Charcoal\App\Handler\PhpError;
-use Charcoal\App\Middleware\IpMiddleware;
-use Charcoal\App\Module\ModuleInterface;
 use Charcoal\App\Route\ActionRoute;
 use Charcoal\App\Route\RouteInterface;
 use Charcoal\App\Route\TemplateRoute;
 use Charcoal\App\Script\ScriptInterface;
-use Charcoal\App\ServiceProvider\DatabaseServiceProvider;
-use Charcoal\App\ServiceProvider\FilesystemServiceProvider;
-use Charcoal\App\ServiceProvider\ScriptServiceProvider;
-use Charcoal\App\ServiceProvider\LoggerServiceProvider;
 use Charcoal\App\Template\TemplateInterface;
 use Charcoal\App\Template\TemplateBuilder;
 use Charcoal\App\Template\WidgetInterface;
@@ -71,6 +60,8 @@ class AppServiceProvider implements ServiceProviderInterface
      */
     public function register(Container $container)
     {
+        $container->register(new HandlersProvider());
+        $container->register(new ControllersProvider());
         $container->register(new CacheServiceProvider());
         $container->register(new DatabaseServiceProvider());
         $container->register(new FilesystemServiceProvider());
@@ -80,11 +71,8 @@ class AppServiceProvider implements ServiceProviderInterface
         $container->register(new ViewServiceProvider());
 
         $this->registerKernelServices($container);
-        $this->registerHandlerServices($container);
-        $this->registerRouteServices($container);
         $this->registerMiddlewareServices($container);
         $this->registerRequestControllerServices($container);
-        $this->registerModuleServices($container);
         $this->registerViewServices($container);
     }
 
@@ -108,10 +96,6 @@ class AppServiceProvider implements ServiceProviderInterface
             $container['debug'] = function (Container $container) {
                 if (isset($container['config']['debug'])) {
                     return !!$container['config']['debug'];
-                }
-
-                if (isset($container['config']['dev_mode'])) {
-                    return !!$container['config']['dev_mode'];
                 }
 
                 return false;
@@ -138,155 +122,12 @@ class AppServiceProvider implements ServiceProviderInterface
                 /** Fix the base path */
                 $path = $baseUrl->getPath();
                 if ($path) {
-                    $baseUrl = $baseUrl->withBasePath($path)->withPath('');
+                    //$baseUrl = $baseUrl->setBasePath($path)->withPath('');
                 }
 
                 return $baseUrl;
             };
         }
-    }
-
-    /**
-     * @param  Container $container A service container.
-     * @return void
-     */
-    protected function registerHandlerServices(Container $container)
-    {
-        $container['phpErrorHandler/class'] = PhpError::class;
-        $container['errorHandler/class'] = Error::class;
-        $container['notFoundHandler/class'] = NotFound::class;
-        $container['notAllowedHandler/class'] = NotAllowed::class;
-        $container['maintenanceHandler/class'] = Maintenance::class;
-
-        $handlersConfig = $container['config']['handlers'];
-
-        if (isset($container['notFoundHandler'])) {
-            /**
-             * HTTP 404 (Not Found) handler.
-             *
-             * @param  object|\Charcoal\App\Handler\HandlerInterface $handler   An error handler instance.
-             * @param  Container                                     $container A container instance.
-             * @return \Charcoal\App\Handler\HandlerInterface
-             */
-            $container->extend('notFoundHandler', function ($handler, Container $container) use ($handlersConfig) {
-                if ($handler instanceof \Slim\Handlers\NotFound) {
-                    $config  = ($handlersConfig['notFound'] ?? []);
-                    $class   = $container['notFoundHandler/class'];
-                    $handler = new $class($container, $config);
-                    $handler->init();
-                }
-
-                return $handler;
-            });
-        }
-
-        if (isset($container['notAllowedHandler'])) {
-            /**
-             * HTTP 405 (Not Allowed) handler.
-             *
-             * @param  object|\Charcoal\App\Handler\HandlerInterface $handler   An error handler instance.
-             * @param  Container                                     $container A container instance.
-             * @return \Charcoal\App\Handler\HandlerInterface
-             */
-            $container->extend('notAllowedHandler', function ($handler, Container $container) use ($handlersConfig) {
-                if ($handler instanceof \Slim\Handlers\NotAllowed) {
-                    $config  = ($handlersConfig['notAllowed'] ?? []);
-                    $class   = $container['notAllowedHandler/class'];
-                    $handler = new $class($container, $config);
-                    $handler->init();
-                }
-
-                return $handler;
-            });
-        }
-
-        if (isset($container['phpErrorHandler'])) {
-            /**
-             * HTTP 500 (Error) handler for PHP 7+ Throwables.
-             *
-             * @param  object|\Charcoal\App\Handler\HandlerInterface $handler   An error handler instance.
-             * @param  Container                                     $container A container instance.
-             * @return \Charcoal\App\Handler\HandlerInterface
-             */
-            $container->extend('phpErrorHandler', function ($handler, Container $container) use ($handlersConfig) {
-                if ($handler instanceof \Slim\Handlers\PhpError) {
-                    $config  = ($handlersConfig['phpError'] ?? []);
-                    $class   = $container['phpErrorHandler/class'];
-                    $handler = new $class($container, $config);
-                    $handler->init();
-                }
-
-                return $handler;
-            });
-        }
-
-        if (isset($container['errorHandler'])) {
-            /**
-             * HTTP 500 (Error) handler.
-             *
-             * @param  object|\Charcoal\App\Handler\HandlerInterface $handler   An error handler instance.
-             * @param  Container                                     $container A container instance.
-             * @return \Charcoal\App\Handler\HandlerInterface
-             */
-            $container->extend('errorHandler', function ($handler, Container $container) use ($handlersConfig) {
-                if ($handler instanceof \Slim\Handlers\Error) {
-                    $config  = ($handlersConfig['error'] ?? []);
-                    $class   = $container['errorHandler/class'];
-                    $handler = new $class($container, $config);
-                    $handler->init();
-                }
-
-                return $handler;
-            });
-        }
-
-        if (!isset($container['maintenanceHandler'])) {
-            /**
-             * HTTP 503 (Service Unavailable) handler.
-             *
-             * This handler is not part of Slim.
-             *
-             * @param  Container $container A service container.
-             * @return \Charcoal\App\Handler\HandlerInterface
-             */
-            $container['maintenanceHandler'] = function (Container $container) use ($handlersConfig) {
-                $config  = ($handlersConfig['maintenance'] ?? []);
-                $class   = $container['maintenanceHandler/class'];
-                $handler = new $class($container, $config);
-
-                return $handler->init();
-            };
-        }
-    }
-
-    /**
-     * @param  Container $container A service container.
-     * @return void
-     */
-    protected function registerRouteServices(Container $container)
-    {
-        $container['route/controller/action/class'] = ActionRoute::class;
-        $container['route/controller/template/class'] = TemplateRoute::class;
-
-        /**
-         * The Route Factory service is used to instanciate new routes.
-         *
-         * @param  Container $container A service container.
-         * @return \Charcoal\Factory\FactoryInterface
-         */
-        $container['route/factory'] = function (Container $container) {
-            return new Factory([
-                'base_class'       => RouteInterface::class,
-                'resolver_options' => [
-                    'suffix' => 'Route',
-                ],
-                'arguments'  => [
-                    [
-                        'logger' => $container['logger'],
-                    ],
-                ],
-            ]);
-        };
     }
 
     /**
@@ -391,63 +232,6 @@ class AppServiceProvider implements ServiceProviderInterface
             return new WidgetBuilder($container['widget/factory'], $container);
         };
     }
-
-    /**
-     * @param  Container $container A service container.
-     * @return void
-     */
-    protected function registerModuleServices(Container $container)
-    {
-        /**
-         * The Module Factory service is used to instanciate new modules.
-         *
-         * - Modules are `ModuleInterface` and must be suffixed with `Module`.
-         *
-         * @param  Container $container A service container.
-         * @return \Charcoal\Factory\FactoryInterface
-         */
-        $container['module/factory'] = function (Container $container) {
-            return new Factory([
-                'base_class'       => ModuleInterface::class,
-                'resolver_options' => [
-                    'suffix' => 'Module',
-                ],
-                'arguments'  => [
-                    [
-                        'logger' => $container['logger'],
-                    ],
-                ],
-            ]);
-        };
-
-        /**
-         * The modules as PHP classes.
-         *
-         * @param  Container $container A service container.
-         * @return array
-         */
-        $container['module/classes'] = function (Container $container) {
-            $appConfig = $container['config'];
-
-            $modules = $appConfig['modules'];
-            $modules = array_keys($modules);
-
-            $moduleResolver = new GenericResolver([
-                'suffix' => 'Module',
-            ]);
-
-            $modules = array_map(function ($module) use ($moduleResolver) {
-                return $moduleResolver->resolve($module);
-            }, $modules);
-
-            array_filter($modules, function ($class) {
-                return class_exists($class);
-            });
-
-            return $modules;
-        };
-    }
-
     /**
      * Add helpers to the view services.
      *
@@ -457,7 +241,6 @@ class AppServiceProvider implements ServiceProviderInterface
     protected function registerViewServices(Container $container)
     {
         $this->registerMustacheHelpersServices($container);
-
         $this->registerTwigHelpersServices($container);
     }
 
