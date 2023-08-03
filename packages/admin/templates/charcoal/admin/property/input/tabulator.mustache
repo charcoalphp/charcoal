@@ -1,0 +1,36 @@
+{{!--
+    Static Property Input
+    =====================
+
+    `app/admin/property/input/readonly`
+--}}
+<div id="{{inputId}}-tabulator" class="table-bordered"></div>
+
+<div class="{{inputId}}-tabulator-footer">
+  <div class="btn-group mt-3" role="group">
+    <button type='button' class='btn btn-primary js-{{inputId}}-add'>
+      {{# addLabel }}
+        {{.}}
+      {{/ addLabel }}
+      {{^ addLabel }}
+        +
+      {{/ addLabel }}
+    </button>
+  </div>
+</div>
+<input
+    type="hidden"
+    id="{{ inputId }}"
+    name="{{ inputName }}"
+    value="{{ inputVal }}"
+>
+
+{{# addJs }}
+  <script>
+    Charcoal.Admin.manager().add_property_input({
+      id:   '{{ inputId }}',
+      type: 'charcoal/admin/property/input/tabulator',
+      data: {{& controlDataForJsAsJson }}
+    });
+  </script>
+{{/ addJs }}

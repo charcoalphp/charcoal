@@ -20,6 +20,7 @@ module.exports = {
             '<%= paths.js.src %>/charcoal/admin/property/*.js',
             '<%= paths.js.src %>/charcoal/admin/property/input/file.js', // priority
             '<%= paths.js.src %>/charcoal/admin/property/input/**/*.js',
+            '<%= paths.js.src %>/charcoal/admin/tabulator.js',
             '<%= paths.js.src %>/charcoal/admin/template.js',
             '<%= paths.js.src %>/charcoal/admin/template/*.js',
             '<%= paths.js.src %>/charcoal/admin/template/**/*.js'
@@ -64,6 +65,8 @@ module.exports = {
             '<%= paths.npm %>/clipboard/dist/clipboard.min.js',
             // jQuery Timeago
             '<%= paths.npm %>/timeago/jquery.timeago.js',
+            // Tabulator
+            '<%= paths.npm %>/tabulator-tables/dist/js/tabulator.js',
         ],
         dest: '<%= paths.js.dist %>/charcoal.admin.vendors.js'
     }

@@ -1,0 +1,52 @@
+.tabulator {
+    .tabulator-header .tabulator-col {
+        background: white;
+    }
+
+    .tabulator-row {
+        border-bottom: 1px solid;
+    }
+
+    .tabulator-col,
+    .tabulator-row.tabulator-row-even {
+        height: auto !important;
+        background-color: white;
+    }
+
+    .tabulator-header .tabulator-col .tabulator-col-content {
+        padding: 0.75rem;
+        color: black;
+        font-size: 14px;
+    }
+
+    .tabulator-row .tabulator-cell {
+        padding: 0.75rem;
+        font-size: 16px;
+    }
+
+    .tabulator-row,
+    .tabulator .tabulator-header,
+    .tabulator .tabulator-header .tabulator-col,
+    .tabulator-row .tabulator-cell {
+        border-color: #ccc !important;
+        border-bottom-width: 1px !important;
+    }
+
+    .tabulator-row.tabulator-selectable:hover {
+        background-color: #f0f0f0;
+    }
+
+    .tabulator-row,
+    .tabulator-header  {
+        .tabulator-frozen {
+            &.tabulator-frozen-left {
+                border-right-width: 1px;
+            }
+
+            &.tabulator-frozen-right {
+                border-left-width: 0px;
+            }
+        }
+    }
+}
+
