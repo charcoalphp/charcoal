@@ -1,22 +1,32 @@
 {{!--
-    Static Property Input
-    =====================
+    Tabulator Property Input
+    ========================
 
-    `app/admin/property/input/readonly`
+    `charcoal/admin/property/input/tabulator`
 --}}
+
 <div id="{{inputId}}-tabulator" class="table-bordered"></div>
 
-<div class="{{inputId}}-tabulator-footer">
-  <div class="btn-group mt-3" role="group">
-    <button type='button' class='btn btn-primary js-{{inputId}}-add'>
-      {{# addLabel }}
-        {{.}}
-      {{/ addLabel }}
-      {{^ addLabel }}
-        +
-      {{/ addLabel }}
-    </button>
-  </div>
+<div class="{{inputId}}-tabulator-footer || mt-3">
+    <div class="row">
+        <div class="col-md-9">
+            <div id="{{inputId}}-tabulator-feedback" class="alert || d-inline p-1 pl-2 pr-2">
+
+            </div>
+        </div>
+        <div class="col-md-3 text-right">
+            <div class="btn-group" role="group">
+                <button type='button' class='btn btn-primary js-{{inputId}}-add'>
+                    {{# addLabel }}
+                        {{.}}
+                    {{/ addLabel }}
+                    {{^ addLabel }}
+                        +
+                    {{/ addLabel }}
+                </button>
+            </div>
+        </div>
+    </div>
 </div>
 <input
     type="hidden"
@@ -26,11 +36,11 @@
 >
 
 {{# addJs }}
-  <script>
+<script>
     Charcoal.Admin.manager().add_property_input({
-      id:   '{{ inputId }}',
-      type: 'charcoal/admin/property/input/tabulator',
-      data: {{& controlDataForJsAsJson }}
+        id: '{{ inputId }}',
+        type: 'charcoal/admin/property/input/tabulator',
+        data: {{& controlDataForJsAsJson }}
     });
-  </script>
+</script>
 {{/ addJs }}

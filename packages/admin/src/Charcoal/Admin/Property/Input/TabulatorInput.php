@@ -26,7 +26,7 @@ class TabulatorInput extends AbstractPropertyInput
     /**
      * @var array
      */
-    private $tabulatorProperties;
+    private $tabulatorColumns;
 
     /**
      * Set the color tabulator's options.
@@ -57,32 +57,6 @@ class TabulatorInput extends AbstractPropertyInput
     }
 
     /**
-     * Add (or replace) an color tabulator option.
-     *
-     * @param string $key The setting to add/replace.
-     * @param mixed  $val The setting's value to apply.
-     * @return self Chainable
-     * @throws InvalidArgumentException If the identifier is not a string.
-     */
-    public function addTabulatorOption($key, $val)
-    {
-        if (!is_string($key)) {
-            throw new InvalidArgumentException(
-                'Setting key must be a string.'
-            );
-        }
-
-        // Make sure default options are loaded.
-        if ($this->tabulatorOptions === null) {
-            $this->tabulatorOptions();
-        }
-
-        $this->tabulatorOptions[$key] = $val;
-
-        return $this;
-    }
-
-    /**
      * Retrieve the color tabulator's options.
      *
      * @return array
@@ -104,9 +78,16 @@ class TabulatorInput extends AbstractPropertyInput
     public function defaultTabulatorOptions(): array
     {
         return [
-            'layout'       => 'fitColumns',
-            'addRowPos'    => 'bottom',
-            'history'      => true,
+            'allow_reorder'    => false,
+            'allow_add'        => true,
+            'allow_remove'     => true,
+            'resizableRows'    => false,
+            'resizableColumns' => false,
+            'layout'           => 'fitColumns',
+            'addRowPos'        => 'bottom',
+            'history'          => true,
+            'validationMode'   => 'highlight',
+            'empty_table_message' => 'The table is empty',
         ];
     }
 
@@ -115,13 +96,13 @@ class TabulatorInput extends AbstractPropertyInput
      *
      * @return array
      */
-    public function tabulatorProperties(): array
+    public function tabulatorColumns(): array
     {
-        if ($this->tabulatorProperties === null) {
-            $this->tabulatorProperties = $this->defaultTabulatorProperties();
+        if ($this->tabulatorColumns === null) {
+            $this->tabulatorColumns = $this->defaultTabulatorColumns();
         }
 
-        return $this->tabulatorProperties;
+        return $this->tabulatorColumns;
     }
 
     /**
@@ -132,9 +113,9 @@ class TabulatorInput extends AbstractPropertyInput
      * @param array $settings The color tabulator options.
      * @return self Chainable
      */
-    public function setTabulatorProperties(array $settings)
+    public function setTabulatorColumns(array $settings)
     {
-        $this->tabulatorProperties = array_merge($this->defaultTabulatorProperties(), $settings);
+        $this->tabulatorColumns = array_merge($this->defaultTabulatorColumns(), $settings);
 
         return $this;
     }
@@ -142,21 +123,20 @@ class TabulatorInput extends AbstractPropertyInput
     /**
      * @return array
      */
-    public function defaultTabulatorProperties() : array
+    public function defaultTabulatorColumns() : array
     {
         return [];
     }
 
     /**
-     * Retrieve the control's data options for JavaScript components.
+     * Retrieve the data options for JavaScript components.
      *
      * @return array
      */
     public function controlDataForJs()
     {
-        $options  = $this->tabulatorOptions();
-        $properties  = $this->parsedTabulatorProperties();
         $selector = '#'.$this->inputId();
+        $options  = $this->tabulatorOptions();
 
         if (isset($options['wrap']) && $options['wrap']) {
             $selector .= '_wrap';
@@ -164,91 +144,113 @@ class TabulatorInput extends AbstractPropertyInput
 
         return [
             'tabulator_selector'   => $selector,
-            'tabulator_properties' => $properties,
-            'tabulator_options'    => $options,
+            'tabulator_columns'    => $this->formatColumnsForJs(),
+            'tabulator_options'    => $this->tabulatorOptions(),
+            'multiple_options'     => $this->property()['multipleOptions'] ?? [],
         ];
     }
 
     /**
      * @return array
      */
-    private function parsedTabulatorProperties() : array
+    private function formatColumnsForJs() : array
     {
-        $properties = $this->tabulatorProperties();
-        $parsed = [];
+        $columns = $this->tabulatorColumns();
+        $t = $this->translator();
+        $formattedColumns = [];
 
-        foreach ($properties as $propIdent => $propOptions) {
-            $fieldName = $propIdent;
-            $fieldTitle = (string)$this->translator()->translation(($propOptions['label'] ?? ''));
-            $fieldDescription = (string)$this->translator()->translation(($propOptions['description'] ?? ''));
-            $fieldEditor = ($propOptions['editor'] ?? 'input');
-            $editorParams = ($propOptions['editorParams'] ?? []);
-            $propSettings = [];
+        foreach ($columns as $colIdent => $colParams) {
+            $title = $colIdent;
 
-            if (isset($propOptions['autocompleteSource'])) {
-                $values = $this->fetchAutocompleteValues($propOptions['autocompleteSource']);
-                if (!empty($values)) {
-                    $editorParams['values'] = $values;
-                }
+            if (!empty($colParams['label'])) {
+                $title = (string)$t->translation(($colParams['label'] ?? ''));
             }
 
+            // Add asterisk to required params
+            if (!empty($colParams['required']) && $colParams['required'] === true) {
+                $title .= '*';
+            }
+
+            $formattedColumn = [
+                'field'         => $colIdent,
+                'title'         => $title,
+                'editor'        => ($colParams['editor'] ?? $this->cellEditorByType($colParams['type'])),
+                'editorParams'  => ($colParams['editorParams'] ?? []),
+                'headerTooltip' => (string)$t->translation(($colParams['description'] ?? '')) ?: false,
+                'validator'     => $this->columnValidators($colParams),
+                'options'       => [],
+            ];
+
+
+            // Remove options that are not supported by Tabulator
+            unset($colParams['label']);
+            unset($colParams['type']);
+            unset($colParams['required']);
+            unset($colParams['l10n']);
+            unset($colParams['unique']);
+            unset($colParams['placeholder']);
+            unset($colParams['validator']);
+
+            $formattedColumn = array_merge($this->defaultColumnOptions(), $formattedColumn, $colParams);
 
             // Translatable properties.
-            if (isset($propOptions['l10n']) && $propOptions['l10n'] === true) {
-                foreach (array_keys($this->translator()->locales()) as $locale) {
-                    $propSettings['language'] = $locale;
-                    $fieldName = sprintf('%s[%s]', $propIdent, $locale);
-                    $parsed[] = [
-                        'field'         => $fieldName,
-                        'title'         => $fieldTitle,
-                        'editor'        => $fieldEditor,
-                        'editorParams'  => $editorParams,
-                        'headerTooltip' => $fieldDescription ?: false,
-                        'resizable'     => false,
-                        'headerSort'    => false,
-                        'settings'      => $propSettings,
-                    ];
+            if (isset($colParams['l10n']) && $colParams['l10n'] === true) {
+                foreach (array_keys($t->locales()) as $locale) {
+                    $formattedColumn['field'] = sprintf('%s[%s]', $colIdent, $locale);
+                    $formattedColumn['options']['language'] = $locale;
+                    $formattedColumns[] = $formattedColumn;
                 }
-                // Untranslatable properties.
+            // Untranslatable properties.
             } else {
-                $parsed[] = [
-                    'field'        => $fieldName,
-                    'title'        => $fieldTitle,
-                    'editor'       => $fieldEditor,
-                    'editorParams' => $editorParams,
-                    'headerTooltip' => $fieldDescription ?: false,
-                    'resizable'    => false,
-                    'headerSort'    => false,
-                    'settings'     => $propSettings,
-                ];
+                $formattedColumns[] = $formattedColumn;
             }
         }
 
-        return $parsed;
+        return $formattedColumns;
     }
 
-    /**
-     * @param string $autocompleteSource Model class.
-     *
-     * @return array
-     */
-    private function fetchAutocompleteValues($autocompleteSource) : array
+    protected function defaultColumnOptions() : array
     {
-        $values = [];
-        try {
-            $loader = $this->collectionLoader()->setModel($autocompleteSource);
-            $results = $loader->reset()->addFilter('active', 1)->load();
+        return [
+            'headerSort' => false,
+        ];
+    }
 
-            $models = $results->values();
+    protected function columnValidators($colParams) : array
+    {
+        $validators = [];
 
-            if ($models) {
-                $values = array_map(fn(AbstractContent $model) => $model->name(), $models);
-            }
-        } catch (\Exception $exception) {
-            $this->logger->error(sprintf('[Tabulator] %s', $exception->getMessage()));
+        if (isset($colParams['validator'])) {
+            $validators = $colParams['validator'];
         }
 
-        return $values;
+        if (!is_array($validators)) {
+            $validators = [$validators];
+        }
+
+        if (!empty($colParams['required']) && $colParams['required'] === true) {
+            $validators[] = 'required';
+        }
+
+        if (!empty($colParams['unique']) && $colParams['unique'] === true) {
+            $validators[] = 'unique';
+        }
+
+        return $validators;
+    }
+
+    protected function cellEditorByType() : string
+    {
+        return 'input';
+    }
+
+    public function addLabel()
+    {
+        if (!empty($this->tabulatorOptions['add_label'])) {
+            return $this->translator()->translation($this->tabulatorOptions()['add_label'] ?? '');
+        }
+
+        return null;
     }
 
     /**
