@@ -66,6 +66,7 @@ module.exports = {
             // jQuery Timeago
             '<%= paths.npm %>/timeago/jquery.timeago.js',
             // Tabulator
+            '<%= paths.npm %>/luxon/build/global/luxon.js',
             '<%= paths.npm %>/tabulator-tables/dist/js/tabulator.js',
         ],
         dest: '<%= paths.js.dist %>/charcoal.admin.vendors.js'

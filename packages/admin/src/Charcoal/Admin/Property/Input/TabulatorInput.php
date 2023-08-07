@@ -6,6 +6,7 @@ use App\Model\Content\AbstractContent;
 use Charcoal\Admin\Property\AbstractPropertyInput;
 use Charcoal\Loader\CollectionLoaderAwareTrait;
 use Charcoal\Model\Model;
+use Charcoal\Translator\Translation;
 use InvalidArgumentException;
 use Pimple\Container;
 
@@ -160,37 +161,30 @@ class TabulatorInput extends AbstractPropertyInput
         $formattedColumns = [];
 
         foreach ($columns as $colIdent => $colParams) {
-            $title = $colIdent;
-
-            if (!empty($colParams['label'])) {
-                $title = (string)$t->translation(($colParams['label'] ?? ''));
-            }
-
-            // Add asterisk to required params
-            if (!empty($colParams['required']) && $colParams['required'] === true) {
-                $title .= '*';
-            }
-
             $formattedColumn = [
                 'field'         => $colIdent,
-                'title'         => $title,
-                'editor'        => ($colParams['editor'] ?? $this->cellEditorByType($colParams['type'])),
-                'editorParams'  => ($colParams['editorParams'] ?? []),
+                'title'         => $this->columnTitle($colIdent, $colParams),
                 'headerTooltip' => (string)$t->translation(($colParams['description'] ?? '')) ?: false,
-                'validator'     => $this->columnValidators($colParams),
                 'options'       => [],
             ];
 
+            $defaultValue = $colParams['default'] ?? null;
+            if (is_string($defaultValue) || is_array($defaultValue)) {
+                $defaultValue = $t->translation($defaultValue);
+            }
 
-            // Remove options that are not supported by Tabulator
-            unset($colParams['label']);
-            unset($colParams['type']);
-            unset($colParams['required']);
-            unset($colParams['l10n']);
-            unset($colParams['unique']);
-            unset($colParams['placeholder']);
-            unset($colParams['validator']);
+            // Auto set editor, formatter and there editorParams
+            if (isset($colParams['type'])) {
+                $formattedColumn = array_merge($formattedColumn, $this->defaultColumnOptionsByType($colParams['type'], $colParams));
+            }
 
+            // Auto add classes based on the params.
+            $formattedColumn['cssClass'] = $this->columnCssClasses($colParams);
+
+            // Auto add validators based on the params.
+            $formattedColumn['validator'] = $this->columnValidators($colParams);
+
+            // Merge everything together.
             $formattedColumn = array_merge($this->defaultColumnOptions(), $formattedColumn, $colParams);
 
             // Translatable properties.
@@ -198,10 +192,14 @@ class TabulatorInput extends AbstractPropertyInput
                 foreach (array_keys($t->locales()) as $locale) {
                     $formattedColumn['field'] = sprintf('%s[%s]', $colIdent, $locale);
                     $formattedColumn['options']['language'] = $locale;
+                    $formattedColumn['options']['default_value'] = ($defaultValue instanceof Translation) ? (string)$defaultValue[$locale] : $defaultValue;
+                    $this->cleanupColumnParams($formattedColumn);
                     $formattedColumns[] = $formattedColumn;
                 }
             // Untranslatable properties.
             } else {
+                $formattedColumn['options']['default_value'] = (string)$defaultValue;
+                $this->cleanupColumnParams($formattedColumn);
                 $formattedColumns[] = $formattedColumn;
             }
         }
@@ -209,11 +207,79 @@ class TabulatorInput extends AbstractPropertyInput
         return $formattedColumns;
     }
 
+    protected function columnTitle($colIdent, $colParams) : string
+    {
+        $title = $colIdent;
+
+        if (!empty($colParams['label'])) {
+            $title = (string)$this->translator()->translation(($colParams['label'] ?? ''));
+        } elseif (isset($colParams['label']) && $colParams['label'] === false) {
+            $title = '';
+        }
+
+        // Add asterisk to required params
+        if (!empty($colParams['required']) && $colParams['required'] === true) {
+            $title .= '*';
+        }
+
+        return $title;
+    }
+
+    protected function defaultColumnOptionsByType($type, $colParams = []) : array
+    {
+        $params = [
+            'editor'          => 'input',
+            'editorParams'    => [],
+        ];
+
+        switch ($type) {
+            case 'bool':
+            case 'boolean':
+                $params['editor'] = 'tickCross';
+                $params['editorParams'] = [
+                    'trueValue'          => 1,
+                    'falseValue'         => 0,
+                    'tristate'           => 0,
+                    'indeterminateValue' => null,
+                ];
+                $params['formatter'] = 'chip';
+                break;
+
+            case 'date': {
+                $params['editor'] = 'date';
+                $params['editorParams'] = [
+                    'format' => 'iso',
+                ];
+                $params['formatter'] = 'datetime';
+                $params['formatterParams'] = [
+                    'inputFormat' => 'iso',
+                    'outputFormat' => $colParams['format'] ?? null,
+                ];
+            }
+        }
+
+        return $params;
+    }
+
     protected function defaultColumnOptions() : array
     {
         return [
             'headerSort' => false,
+            'resizable' => false,
         ];
+    }
+
+    protected function cleanupColumnParams(&$colParams) : void
+    {
+        unset($colParams['default']);
+        unset($colParams['description']);
+        unset($colParams['format']);
+        unset($colParams['l10n']);
+        unset($colParams['label']);
+        unset($colParams['placeholder']);
+        unset($colParams['required']);
+        unset($colParams['type']);
+        unset($colParams['unique']);
     }
 
     protected function columnValidators($colParams) : array
@@ -228,20 +294,42 @@ class TabulatorInput extends AbstractPropertyInput
             $validators = [$validators];
         }
 
+        // Automatically add the "require" validator when the column is required
         if (!empty($colParams['required']) && $colParams['required'] === true) {
             $validators[] = 'required';
         }
 
+        // Automatically add the "unique" validator when the column is set to unique
         if (!empty($colParams['unique']) && $colParams['unique'] === true) {
             $validators[] = 'unique';
+        }
+
+        // Automatically add the "validUrl" validator when the column is set to be an URL
+        if (!empty($colParams['type']) && $colParams['type'] === 'url') {
+            $validators[] = 'validUrl';
         }
 
         return $validators;
     }
 
-    protected function cellEditorByType() : string
+    protected function columnCssClasses($colParams) : string
     {
-        return 'input';
+        $classes = [];
+
+        if (isset($colParams['cssClass'])) {
+            $classes = $colParams['cssClass'];
+        }
+
+        if (!is_array($classes)) {
+            $classes = [$classes];
+        }
+
+        // Automatically add the .has-tooltip class when a tooltip is set.
+        if (!empty($colParams['description'])) {
+            $classes[] = 'has-tooltip';
+        }
+
+        return implode(' ', $classes);
     }
 
     public function addLabel()

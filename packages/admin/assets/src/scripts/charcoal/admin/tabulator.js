@@ -75,58 +75,86 @@ var Tabulator = Tabulator || {};
             return cleanColumn
         });
 
-        // Add reorder handle
-        if (this.tabulator_options.allow_reorder) {
-            this.tabulator_options.movableRows = true;
-            columns.unshift(
-                {
-                    formatter: 'handle',
-                    headerSort: false,
-                    frozen: true,
-                    width: 40,
-                    minWidth: 30,
-                    rowHandle: true,
-                    resizable: false
-                }
-            )
+        // Add re-order handle
+        if (this.tabulator_options.allow_reorder || this.tabulator_options.show_row_number) {
+            var formatter = 'handle'
+            var cssClasses = []
+
+            if (this.tabulator_options.show_row_number) {
+                formatter = 'rownum'
+                cssClasses.push('row-num');
+            }
+
+            if (this.tabulator_options.allow_reorder) {
+                cssClasses.push('reorder');
+            }
+
+            this.tabulator_options.movableRows = this.tabulator_options.allow_reorder;
+            columns.unshift({
+                formatter: formatter,
+                headerSort: false,
+                frozen: true,
+                width: 40,
+                minWidth: 30,
+                rowHandle: true,
+                resizable: false,
+                hozAlign: 'center',
+                cssClass: cssClasses.join(' '),
+            })
         }
 
-        // Add row Button
+        // Row Actions
+        var actionsColumns = {
+            frozen: false,
+            visible: true,
+            width: 20,
+            minWidth: 20,
+            headerSort: false,
+            rowHandle: false,
+            resizable: false,
+            hozAlign: 'center',
+            cssClass: 'row-actions',
+            columns: [],
+        };
+
         if (this.tabulator_options.allow_add) {
             columns.push({
-                formatter: function () {
-                    return '<i class=\'fa fa-plus text-primary\'></i>';
-                },
-                hozAlign: 'center',
-                vertAlign: 'center',
+                cssClass: 'row-action add-row',
+                visible: true,
+                width: 10,
                 headerSort: false,
-                frozen: true,
-                width: 40,
-                minWidth: 30,
+                rowHandle: false,
                 resizable: false,
-                cellClick: function (e, cell) {
-                    that.add_row(cell.getRow());
-                }
-            });
-        }
-
-        // Remove Row Button
-        if (this.tabulator_options.allow_remove) {
-            columns.push({
-                formatter: function () {
-                    return '<i class=\'fa fa-minus text-danger\'></i>';
-                },
                 hozAlign: 'center',
-                vertAlign: 'center',
-                headerSort: false,
-                frozen: true,
-                width: 40,
-                minWidth: 30,
-                resizable: false,
+                formatter: function () {
+                    return '<div class="tabulator-action-button add-row"><i class="fa fa-plus-circle"></i></div>';
+                },
                 cellClick: function (e, cell) {
-                    that.remove_row(cell.getRow());
+                    that.add_row(true, cell.getRow())
                 }
             })
+        }
+
+        if (this.tabulator_options.allow_remove) {
+            columns.push({
+                cssClass: 'row-action remove-row',
+                visible: !this.tabulator_options.allow_add,
+                width: 10,
+                headerSort: false,
+                rowHandle: false,
+                resizable: false,
+                hozAlign: 'center',
+                formatter: function () {
+                    return '<div class="tabulator-action-button"><i class="fa fa-minus-circle"></i></div>';
+                },
+                cellClick: function (e, cell) {
+                    that.remove_row(cell.getRow())
+                }
+            })
+        }
+
+        if (actionsColumns.columns.length > 0) {
+            columns.push(actionsColumns)
         }
 
         var default_opts = {
@@ -142,19 +170,26 @@ var Tabulator = Tabulator || {};
         return this;
     };
 
+    // Events
+    // =========================================================================
+
     Charcoal.Admin.Property_Input_Tabulator.prototype.set_events = function () {
         var that = this;
 
         // Handle add row event.
         $('.js-' + this.input_id + '-add').on('click', function () {
             that.add_row();
-            that.save_data();
         });
 
         // After the table is built, redraw it instantly to hide the columns that are related to a specific language.
         this.tabulator_instance.on('tableBuilt', function () {
             that.switch_language();
             that.tabulator_instance.validate();
+
+            // Make sure that the table has the minimum amount of rows.
+            while (that.row_count() < that.min_rows) {
+                that.add_row()
+            }
         })
 
         // Prepare the data to be saved by Charcoal anytime a cell changes.
@@ -165,6 +200,13 @@ var Tabulator = Tabulator || {};
 
         // Resave the data after it has been sorted
         this.tabulator_instance.on('rowMoved', function (){
+            that.save_data();
+            that.clear_feedback();
+        });
+
+        // Handle moving rows between tables.
+        this.tabulator_instance.on('movableRowsSent', function (fromRow){
+            that.remove_row(fromRow)
             that.save_data();
             that.clear_feedback();
         });
@@ -186,6 +228,10 @@ var Tabulator = Tabulator || {};
                         that.show_warning('This field cannot contain more than ' + limit + ' characters');
                         break
 
+                    case 'validUrl':
+                        that.show_warning('This seems to be an invalid URL');
+                        break
+
                     default:
                         console.warn('Unknown validation error', value, validators, cell)
                         break;
@@ -200,6 +246,9 @@ var Tabulator = Tabulator || {};
 
         return this
     };
+
+    // Actions
+    // =========================================================================
 
     Charcoal.Admin.Property_Input_Tabulator.prototype.switch_language = function () {
         var that = this
@@ -225,9 +274,9 @@ var Tabulator = Tabulator || {};
         return this;
     };
 
-    Charcoal.Admin.Property_Input_Tabulator.prototype.add_row = function (index) {
+    Charcoal.Admin.Property_Input_Tabulator.prototype.add_row = function (top, index) {
         if (!this.max_rows || this.row_count() < this.max_rows) {
-            this.tabulator_instance.addRow(this.new_row_data(), false, index);
+            this.tabulator_instance.addRow(this.new_row_data(), top, index);
             this.save_data();
         } else {
             this.show_error('You cannot add another row')
@@ -243,14 +292,23 @@ var Tabulator = Tabulator || {};
         }
     };
 
+    // Utils
+    // =========================================================================
+
     Charcoal.Admin.Property_Input_Tabulator.prototype.row_count = function () {
         return JSON.parse(this.get_data()).length;
     }
 
     Charcoal.Admin.Property_Input_Tabulator.prototype.new_row_data = function () {
-        return {
-            'active': true,
-        }
+        var row = {}
+
+        this.tabulator_columns.forEach(function (column) {
+            if (column.field && column.options.default_value) {
+                row[column.field] = column.options.default_value
+            }
+        })
+
+        return row
     };
 
     Charcoal.Admin.Property_Input_Tabulator.prototype.save_data = function () {
@@ -262,6 +320,8 @@ var Tabulator = Tabulator || {};
         return $(this.tabulator_selector).val() || '[' + JSON.stringify(this.new_row_data()) + ']';
     }
 
+    // Feedback
+    // =========================================================================
 
     Charcoal.Admin.Property_Input_Tabulator.prototype.show_warning = function (message) {
         this.update_feedback(message, 'warning')
@@ -297,5 +357,65 @@ var Tabulator = Tabulator || {};
 
         $feedback.text(message);
     }
+
+    // Custom Formatter
+    // =========================================================================
+
+    Tabulator.extendModule('format', 'formatters', {
+        // Formatter : svg
+        svg: function (cell, formatterParams){
+            var values = cell.getValue();
+            var srcFile = formatterParams.source;
+
+            var _w = formatterParams.width || 25;
+            var _h = formatterParams.height || 25;
+
+            if (!values) {
+                return '';
+            }
+
+            if (!Array.isArray(values)) {
+                values = [ values ];
+            }
+
+            var result = '';
+            values.forEach(function (value) {
+                result += '<svg role="img" width="' + _w + '" height="' + _h + '"><use xlink:href="' + srcFile + '#' + value + '"></use></svg>'
+            })
+
+            return result
+        },
+
+        // Reorder handle
+        handle: function () {
+            return '<div class="tabulator-reorder-handle text-center"><i class="fa fa-arrows-v"></i></div>';
+        },
+
+        // Chip
+        chip: function (cell) {
+            var span = document.createElement('span');
+            span.classList.add('chip')
+            if (cell.getValue()) {
+                span.classList.add('chip-success')
+            }
+
+            return span.outerHTML;
+        }
+    });
+
+    // Custom Validators
+    // =========================================================================
+
+    // Validator : validUrl
+    Tabulator.extendModule('validate', 'validators', {
+        validUrl: function (cell, value) {
+            if (!value) {
+                return true
+            }
+
+            var pattern = /^(ftp|http|https):\/\/[^ "]+$/;
+            return pattern.test(value);
+        }
+    })
 
 }(Charcoal, jQuery, document, Tabulator));
