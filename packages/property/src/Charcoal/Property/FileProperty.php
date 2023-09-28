@@ -1353,8 +1353,7 @@ class FileProperty extends AbstractProperty
 
         if (!file_exists($uploadPath)) {
             $this->logger->debug(sprintf(
-                '[%s] Upload directory [%s] does not exist; attempting to create path',
-                [ get_called_class() . '::' . __FUNCTION__ ],
+                'Upload directory [%s] does not exist; attempting to create path',
                 $uploadPath
             ));
 
