@@ -101,7 +101,7 @@ class TranslateScript extends AdminScript
                 break;
         }
 
-        // remove vendor/locomotivemtl/charcoal-app
+        // Remove vendor/charcoal/app
         $base = $this->base();
         $glob = $this->globRecursive($base . $path . $file);
 

@@ -254,7 +254,7 @@ class AdminServiceProvider implements ServiceProviderInterface
          * ```json
          * "paths": [
          *     "my-app/metadata/",
-         *     "vendor/locomotivemtl/charcoal-cms/metadata/"
+         *     "vendor/charcoal/cms/metadata/"
          * ]
          * ```
          *
@@ -264,8 +264,8 @@ class AdminServiceProvider implements ServiceProviderInterface
          * "paths": [
          *     "my-app/metadata/admin/",
          *     "my-app/metadata/",
-         *     "vendor/locomotivemtl/charcoal-cms/metadata/admin/"
-         *     "vendor/locomotivemtl/charcoal-cms/metadata/"
+         *     "vendor/charcoal/cms/metadata/admin/"
+         *     "vendor/charcoal/cms/metadata/"
          * ]
          * ```
          *
