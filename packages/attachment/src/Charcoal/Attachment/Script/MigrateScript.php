@@ -36,7 +36,7 @@ class MigrateScript extends AlterPrimaryKeyScript
         $this->setArguments($this->defaultArguments());
 
         $this->setDescription(
-            'The <underline>locomotivemtl/attachment/migrate</underline> script ' .
+            'The <underline>attachment/migrate</underline> script ' .
             'upgrades the attachments SQL tables from 0.1 to 0.2; ' .
             'Auto-incremented IDs are replaced with generated unique IDs.'
         );

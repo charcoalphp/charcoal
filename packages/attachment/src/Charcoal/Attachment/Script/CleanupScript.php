@@ -112,7 +112,7 @@ class CleanupScript extends AbstractScript implements
         parent::init();
 
         $this->setDescription(
-            'The <underline>locomotivemtl/attachment/prune</underline> script ' .
+            'The <underline>attachment/prune</underline> script ' .
             'removes all unassociated attachments.'
         );
     }

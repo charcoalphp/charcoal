@@ -13,10 +13,10 @@
                 }
             },
             "scripts": {
-                "locomotivemtl/attachment/migrate": {
+                "attachment/migrate": {
                     "ident": "charcoal/attachment/script/migrate"
                 },
-                "locomotivemtl/attachment/cleanup": {
+                "attachment/cleanup": {
                     "ident": "charcoal/attachment/script/cleanup"
                 }
             }
