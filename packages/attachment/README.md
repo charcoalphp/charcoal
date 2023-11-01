@@ -1,29 +1,21 @@
 Charcoal Attachment
 ===================
 
-Attachments add support for working with relationships between models. Also provided are a usable set of basic attachments:
-Document, Embed, Image, Gallery, Link Video, amongst others.
+The Attachment package provides support for working with relationships between models.
 
-## How to install
-
-The preferred (and only supported) way of installing _charcoal-attachment is with **composer**:
+## Installation
 
 ```shell
-★ composer require charcoal/attachment
+composer require charcoal/attachment
 ```
 
-## Dependencies
+## Overview
 
--   [PHP 7.1+](http://php.net)
--   [`charcoal/core`](https://github.com/charcoalphp/core)
--   [`charcoal/base`](https://github.com/charcoalphp/base)
--   [`charcoal/admin`](https://github.com/charcoalphp/admin)
--   [`charcoal/ui`](https://github.com/charcoalphp/ui)
--   [`charcoal/translation`](https://github.com/charcoalphp/translation)
+The package also provides a collection of basic attachments: Document, Embed, Image, Gallery, Link Video, amongst others.
 
-## Objects
+### Objects
 
-Objects in the `charcoal-attachments` module extends `Content`, from `charcoal-object`, which is an `AbstractModel`, from `charcoal-core`.
+Objects in the Attachment package extend `Content`, from [charcoal/object], which is an `AbstractModel`, from [charcoal/core].
 
 In addition from the default metadata provided by `Content`, the following properties are default for all `Attachment` objects:
 
@@ -53,12 +45,11 @@ In addition from the default metadata provided by `Content`, the following prope
 
 All attachments are assumed to have a `title`, `subtitle`, `description` and `keywords`. Some attachments also 
 
-> Read the [`charcoal-object`](https://github.com/charcoalphp/object) documentation for the other default properties provided by the `Content` object (and `RevisionableInterface`).
+> Read the [charcoal/object] documentation for the other default properties provided by the `Content` object (and `RevisionableInterface`).
 
-> Read the [`charcoal-core`](https://github.com/charcoalphp/core) documention for the other default properties provided by `AbstractModel` (and `DescribableInterface` and `StorableInterface`). 
+> Read the [charcoal/core] documention for the other default properties provided by `AbstractModel` (and `DescribableInterface` and `StorableInterface`). 
 
-
-### Type of Attachment objects
+#### Type of Attachment objects
 
 -   **Accordion**
     - A `Container` (grouping) attachment, used for accordion type of display.
@@ -84,17 +75,27 @@ All attachments are assumed to have a `title`, `subtitle`, `description` and `ke
     - Text (HTML) content.
 -   **Video**
 
-## Widgets
+### Widgets
 
-The module provides his own admin widgets namespaced as Charcoal\Admin.
+The packages provides its own admin widgets namespaced as `Charcoal\Admin`.
 
-## BUT HOW
+The attachment widget can be use more than once in a form. In order for it to work properly, you need to define a group ident `group` different for each instanciated widgets.
 
-The setup is fairly easy, but you need to remember a few things in order for it to work.
+```json
+"attachment": {
+    "type": "charcoal/admin/widget/attachment",
+    "group": "main"
+}
+```
 
-### Configurations
+In this case, we set the group to "main". If none defined, the default group will be "generic". Without those ident, widgets won't be able to know which attachments are his.
+
+You can than access a perticular "group" attachments calling the object's method "attachments(group_ident)". In this case, `$object->attachments('main')` will return attachments associated with the widgets that has the group set to "main".
+
+## Configuration
 
 Add the views path and metadata path to the config file.
+
 ```json
 "metadata": {
     "paths": [
@@ -117,6 +118,7 @@ Add the views path and metadata path to the config file.
 ```
 
 Then, we need to add the necessary routes for the widgets in admin.json config file.
+
 ```json
 "routes": {
     "actions": {
@@ -136,15 +138,17 @@ Then, we need to add the necessary routes for the widgets in admin.json config f
 }
 ```
 
-### Usage
+## Usage
 
 You need to make your object(s) "Attachment Aware", so that it knows it can have attachments. To do that, use/implement attachmentAware:
+
 ```php
 use Charcoal\Attachment\Traits\AttachmentAwareTrait;
 use Charcoal\Attachment\Interfaces\AttachmentAwareInterface;
 ```
 
 Then, just add in the widget in the edit dashboard or the form like this:
+
 ```json
 "attachment": {
     "title": "Documents",
@@ -160,12 +164,12 @@ Then, just add in the widget in the edit dashboard or the form like this:
 
 Available attachable objects as provided by the current modile are:
 
--   `charcoal/attachment/object/image`
--   `charcoal/attachment/object/gallery`
--   `charcoal/attachment/object/file`
--   `charcoal/attachment/object/link`
--   `charcoal/attachment/object/text`
--   `charcoal/attachment/object/video`
+* `charcoal/attachment/object/image`
+* `charcoal/attachment/object/gallery`
+* `charcoal/attachment/object/file`
+* `charcoal/attachment/object/link`
+* `charcoal/attachment/object/text`
+* `charcoal/attachment/object/video`
 
 To create a new attachment, you need to extend the base Attachment object `charcoal/attachment/object/attachment` and provide a "quick" form.
 
@@ -180,28 +184,13 @@ public function preDelete()
 }
 ```
 
-## Documentation
-
-Attachment widget can be use more than once in a form. In order for it to work properly, you need to define a group ident `group` different for each instanciated widgets.
-
-```json
-"attachment": {
-    "type": "charcoal/admin/widget/attachment",
-    "group": "main"
-}
-```
-
-In this case, we set the group to "main". If none defined, the default group will be "generic". Without those ident, widgets won't be able to know which attachments are his.
-
-You can than access a perticular "group" attachments calling the object's method "attachments(group_ident)". In this case, `$object->attachments('main')` will return attachments associated with the widgets that has the group set to "main".
-
-## Attachment creation
+### Attachment creation
 
 The one thing you need to know about the attachment is that it is all in a single table. You can't associate custom objects with other objects if they are not `attachments`.
 
 Then, how could you create new attachments? It all depends on what you want.
 
-### Adding or modifying properties
+#### Adding or modifying properties
 
 IF you need to add properties to an existing attachment, you can always extend it. Let's say you want to change the editor options for the description field given with the attachments. The first step is to create a new object that will extend the existing one.
 
@@ -251,68 +240,12 @@ Custom templates for the attachment preview in the backend widget is on the to-d
 
 Other actions such quick view are on the to-do list as well.
 
-For a complete project example using `charcoal-attachment`, see the [charcoal-project-boilerplate](https://github.com/locomotivemtl/charcoal-project-boilerplate).
+## Resources
 
+* [Contributing](https://github.com/charcoalphp/charcoal/blob/main/CONTRIBUTING.md)
+* [Report issues](https://github.com/charcoalphp/charcoal/issues) and
+  [send pull requests](https://github.com/charcoalphp/charcoal/pulls)
+  in the [main Charcoal repository](https://github.com/charcoalphp/charcoal)
 
-## Development
-
-To install the development environment:
-
-```shell
-★ composer install --prefer-source
-```
-
-Run the code checkers and unit tests with:
-
-```shell
-★ composer test
-```
-
-### API documentation
-
--   The auto-generated `phpDocumentor` API documentation is available at [https://locomotivemtl.github.io/charcoal-attachment/docs/master/](https://locomotivemtl.github.io/charcoal-attachment/docs/master/)
--   The auto-generated `apigen` API documentation is available at [https://locomotivemtl.github.io/charcoal-attachment/apigen/master/](https://locomotivemtl.github.io/charcoal-attachment/apigen/master/)
-
-### Development dependencies
-
--   `phpunit/phpunit`
--   `squizlabs/php_codesniffer`
--   `php-coveralls/php-coveralls`
-
-### Continuous Integration
-
-| Service | Badge | Description |
-| ------- | ----- | ----------- |
-| [Scrutinizer](https://scrutinizer-ci.com/g/locomotivemtl/charcoal-attachment/) | [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/locomotivemtl/charcoal-attachment/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/locomotivemtl/charcoal-attachment/?branch=master) | Code quality checker. Also validates API documentation quality. |
-| [Coveralls](https://coveralls.io/github/locomotivemtl/charcoal-attachment) | [![Coverage Status](https://coveralls.io/repos/github/locomotivemtl/charcoal-attachment/badge.svg?branch=master)](https://coveralls.io/github/locomotivemtl/charcoal-attachment?branch=master) | Unit Tests code coverage. |
-| [Sensiolabs](https://insight.sensiolabs.com/projects/09876d95-da9d-4c23-896f-904be3368c99) | [![SensioLabsInsight](https://insight.sensiolabs.com/projects/09876d95-da9d-4c23-896f-904be3368c99/mini.png)](https://insight.sensiolabs.com/projects/09876d95-da9d-4c23-896f-904be3368c99) | Another code quality checker, focused on PHP. |
-
-### Coding Style
-
-The Charcoal-Attachment module follows the Charcoal coding-style:
-
--   [_PSR-1_](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-1-basic-coding-standard.md)
--   [_PSR-2_](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-2-coding-style-guide.md)
--   [_PSR-4_](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-4-autoloader.md), autoloading is therefore provided by _Composer_.
--   [_phpDocumentor_](http://phpdoc.org/) comments.
--   Read the [phpcs.xml.dist](phpcs.xml.dist) file for all the details on code style.
-
-> Coding style validation / enforcement can be performed with `composer phpcs`. An auto-fixer is also available with `composer phpcbf`.
-
-## Authors
-
--   Mathieu Ducharme <mat@locomotive.ca>
--   Chauncey McAskill <chauncey@locomotive.ca>
--   Benjamin Roch <benjamin@locomotive.ca>
-
-## License
-
-Charcoal is licensed under the MIT license. See [LICENSE](LICENSE) for details.
-
-## Report Issues
-
-In case you are experiencing a bug or want to request a new feature head over to the [Charcoal monorepo issue tracker](https://github.com/charcoalphp/charcoal/issues)
-
-## Contribute
-
-The sources of this package are contained in the Charcoal monorepo. We welcome contributions for this package on [charcoalphp/charcoal](https://github.com/charcoalphp/charcoal).
+[charcoal/core]:   https://github.com/charcoalphp/core
+[charcoal/object]: https://github.com/charcoalphp/object

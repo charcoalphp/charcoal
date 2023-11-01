@@ -1,78 +1,42 @@
 Charcoal Object
 ===============
 
-Object definition (Content and UserData), behaviors and tools.
+The Object package provides abstract objects, behaviours, and tools for building user-facing Web sites.
 
-# Table of content
-- [How to install](#how-to-install)
-    -   [Dependencies](#dependencies)
-- [The Charcoal Object](#the-charcoal-object)
-    -   [Basic classes](#basic-classes)
-        -   [Content](#content)
-        -   [UserData](#userdata)
-    -   [Object behaviors](#object-behaviors)
-        -   [Archivable](#archivable)
-        -   [Categorizable](#categorizable)
-        -   [Category](#category)
-        -   [Hierarchical](#hierarchical)
-        -   [Publishable](#publishable)
-        -   [Revisionable](#revisionable)
-        -   [Routable](#routable)
-    -   [Helpers](#helpers)
-        -   [ObjectDraft](#objectdraft)
-        -   [ObjectRevision](#objectrevision)
-        -   [ObjectSchedule](#objectschedule)
-- [Development](#development)
-    - [Development dependencies](#development-dependencies)
-    - [Continuous Integration](#continuous-integration)
-    - [Coding Style](#coding-style)
-    - [Authors](#authors)
-    - [Changelog](#changelog)
-- [Report Issues](#report-issues)
-- [Contribute](#contribute)
-
-# How to install
-
-The preferred (and only supported) way of installing _charcoal-object_ is with **composer**:
+## Installation
 
 ```shell
-★ composer require charcoal/object
+composer require charcoal/object
 ```
 
-## Dependencies
+## Overview
 
-- PHP 5.6+
-    -   This is the last supported version of PHP.
-    -   `PHP 7` is also supported.
+The package provides a bunch of basic classes, helpers as well as object behaviors (interfaces + traits).
 
-# The Charcoal Object
-
-The `\Charcoal\Object` namespace provides a bunch of basic classes, helpers as well as object behaviors (interfaces + traits).
-
-## Basic classes
+### Basic classes
 
 All charcoal project object classes should extend one of the 2 base classes, [`\Charcoal\Object\Content`](#content), for data created and managed by administrators or [`\Charcoal\Object\UserData`](#userdata), for data created from clients / users.
 
-### Content
+#### Content
 
-The **Content** base class should be used for all objects which can be "managed". Typically by an administrator, via the `charcoal-admin` module. It adds the "active" flag to objects as well as creation and modification informations.
+The **Content** base class should be used for all objects which can be "managed". Typically by an administrator, via the [charcoal/admin] package. It adds the "active" flag to objects as well as creation and modification informations.
 
 **API**
 
--   ` setActive($active)`
--   `active()`
--   `setPosition($position)`
--   `position()`
--   `setCreated($created)`
--   `created()`
--   `setCreatedBy($createdBy)`
--   `createdBy()`
--   `setLastModified($lastModified)`
--   `lastModified()`
--   `setLastModifiedBy($lastModifiedBy)`
--   `lastModifiedBy()`
+* ` setActive($active)`
+* `active()`
+* `setPosition($position)`
+* `position()`
+* `setCreated($created)`
+* `created()`
+* `setCreatedBy($createdBy)`
+* `createdBy()`
+* `setLastModified($lastModified)`
+* `lastModified()`
+* `setLastModifiedBy($lastModifiedBy)`
+* `lastModifiedBy()`
 
-> The `Content` class extends `\Charcoal\Model\AbstractModel` from the `charcoal-core` module, which means that it also inherits its API as well as the `DescribableInterface` (`metadata()`, `setMetadata()` and `loadMetadata()`, amongst others) and the `StorableInterface` (`id()`, `key()`, `save()`, `update()`,  `delete()`, `load()`, `loadFrom()`, `loadFromQuery()`, `source()` and `setSource()`, amongst others).
+> The `Content` class extends `\Charcoal\Model\AbstractModel` from the [charcoal/core] module, which means that it also inherits its API as well as the `DescribableInterface` (`metadata()`, `setMetadata()` and `loadMetadata()`, amongst others) and the `StorableInterface` (`id()`, `key()`, `save()`, `update()`,  `delete()`, `load()`, `loadFrom()`, `loadFromQuery()`, `source()` and `setSource()`, amongst others).
 >
 > The `AbstractModel` class extends `\Charcoal\Config\AbstractEntity` which also defines basic data-access methods (`setData()`, `data()`, `keys()`, `has()`, `get()`, `set()`, plus the `ArrayAccess`, `JsonSerializable` and `Serializable` interfaces).
 
@@ -92,20 +56,20 @@ The **Content** base class should be used for all objects which can be "managed"
 
 > Default metadata is defined in `metadata/charcoal/object/content.json`
 
-### UserData
+#### UserData
 
 The **UserData** class should be used for all objects that are expected to be entered from the project's "client" or "end user".
 
 **API**
 
--   `setIp($ip)`
--   `ip()`
--   `setTs($ts)`
--   `ts()`
--   `setLang($lang)`
--   `lang()`
+* `setIp($ip)`
+* `ip()`
+* `setTs($ts)`
+* `ts()`
+* `setLang($lang)`
+* `lang()`
 
-> The `Content` class extends `\Charcoal\Model\AbstractModel` from the `charcoal-core` module, which means that it also inherits its API as well as the `DescribableInterface` (`metadata()`, `setMetadata()` and `loadMetadata()`, amongst others) and the `StorableInterface` (`id()`, `key()`, `save()`, `update()`,  `delete()`, `load()`, `loadFrom()`, `loadFromQuery()`, `source()` and `setSource()`, amongst others).
+> The `Content` class extends `\Charcoal\Model\AbstractModel` from the [charcoal/core] module, which means that it also inherits its API as well as the `DescribableInterface` (`metadata()`, `setMetadata()` and `loadMetadata()`, amongst others) and the `StorableInterface` (`id()`, `key()`, `save()`, `update()`,  `delete()`, `load()`, `loadFrom()`, `loadFromQuery()`, `source()` and `setSource()`, amongst others).
 >
 > The `AbstractModel` class extends `\Charcoal\Config\AbstractEntity` which also defines basic data-access methods (`setData()`, `data()`, `keys()`, `has()`, `get()`, `set()`, plus the `ArrayAccess`, `JsonSerializable` and `Serializable` interfaces).
 
@@ -121,28 +85,28 @@ The **UserData** class should be used for all objects that are expected to be en
 
 > Default metadata is defined in `metadata/charcoal/object/user-data.json`
 
-## Object behaviors
+### Object behaviors
 
--   [Archivable](#archivable)
--   [Categorizable](#categorizable)
--   [Category](#category)
--   [Hierarchical](#hierarchical)
--   [Publishable](#publishable)
--   [Revisionable](#revisionable)
--   [Routable](#routable)
+* [Archivable](#archivable)
+* [Categorizable](#categorizable)
+* [Category](#category)
+* [Hierarchical](#hierarchical)
+* [Publishable](#publishable)
+* [Revisionable](#revisionable)
+* [Routable](#routable)
 
-### Archivable
+#### Archivable
 
 _The archivable behavior is not yet documented. It is still under heavy development._
 
-### Categorizable
+#### Categorizable
 
 **API**
 
--   `setCategory($category)`
--   `category()`
--   `setCategoryType($type)`
--   `categoryType()`
+* `setCategory($category)`
+* `category()`
+* `setCategoryType($type)`
+* `categoryType()`
 
 **Properties (metadata)**
 
@@ -154,15 +118,15 @@ _The archivable behavior is not yet documented. It is still under heavy developm
 
 > Default metadata is defined in `metadata/charcoal/object/catgorizable-interface.json`
 
-### Category
+#### Category
 
 **API**
 
--   `setCategoryItemType($type)`
--   `categoryItemType()`
--   `numCategoryItems()`
--   `hasCategoryItems()`
--   `categoryItems()`
+* `setCategoryItemType($type)`
+* `categoryItemType()`
+* `numCategoryItems()`
+* `hasCategoryItems()`
+* `categoryItems()`
 
 **Properties (metadata)**
 
@@ -172,30 +136,30 @@ _The archivable behavior is not yet documented. It is still under heavy developm
 
 > Default metadata is defined in `metadata/charcoal/object/catgory-interface.json`
 
-### Hierarchical
+#### Hierarchical
 
 **API**
 
--   `hasMaster()`
--   `isTopLevel()`
--   `isLastLevel()`
--   `hierarchyLevel()`
--   `master()`
--   `toplevelMaster()`
--   `hierarchy()`
--   `invertedHierarchy()`
--   `isMasterOf($child)`
--   `recursiveIsMasterOf($child)`
--   `hasChildren()`
--   `numChildren()`
--   `recursiveNumChildren()`
--   `children()`
--   `isChildOf($master)`
--   `recursiveIsChildOf($master)`
--   `hasSiblings()`
--   `numSiblings()`
--   `siblings()`
--   `isSiblingOf($sibling)`
+* `hasMaster()`
+* `isTopLevel()`
+* `isLastLevel()`
+* `hierarchyLevel()`
+* `master()`
+* `toplevelMaster()`
+* `hierarchy()`
+* `invertedHierarchy()`
+* `isMasterOf($child)`
+* `recursiveIsMasterOf($child)`
+* `hasChildren()`
+* `numChildren()`
+* `recursiveNumChildren()`
+* `children()`
+* `isChildOf($master)`
+* `recursiveIsChildOf($master)`
+* `hasSiblings()`
+* `numSiblings()`
+* `siblings()`
+* `isSiblingOf($sibling)`
 
 **Properties (metadata)**
 
@@ -205,27 +169,27 @@ _The archivable behavior is not yet documented. It is still under heavy developm
 
 > Default metadata is defined in `metadata/charcoal/object/hierarchical-interface.json`.
 
-### Publishable
+#### Publishable
 
--   `setPublishDate($publishDate)`
--   `publishDate()`
--   `setExpiryDate($expiryDate)`
--   `expiryDate()`
--   `setPublishStatus($status)`
--   `publishStatus()`
--   `isPublished()`
+* `setPublishDate($publishDate)`
+* `publishDate()`
+* `setExpiryDate($expiryDate)`
+* `expiryDate()`
+* `setPublishStatus($status)`
+* `publishStatus()`
+* `isPublished()`
 
 **Properties (metadata)**
 
 | Property           | Type         | Default    | Description |
 | ------------------ | ------------ | ---------- | ----------- |
-| **publishDate**   | `date-time`  | `null`     | …           |
-| **expiryDate**    | `date-time`  | `null`     | …           |
-| **publishStatus** | `string` [1] | `'draft'`  | …           |
+| **publishDate**    | `date-time`  | `null`     | …           |
+| **expiryDate**     | `date-time`  | `null`     | …           |
+| **publishStatus**  | `string` [1] | `'draft'`  | …           |
 
 > Default metadata is defined in `metadata/charcoal/object/publishable-interface.json`.
 
-### Revisionable
+#### Revisionable
 
 Revisionable objects implement `\Charcoal\Object\Revision\RevisionableInterface`, which can be easily implemented by using `\Charcoal\Object\Revision\RevisionableTrait`.
 
@@ -233,30 +197,30 @@ Revisionable objects create _revisions_ which logs the changes between an object
 
 **API**
 
--   `setRevisionEnabled(bool$enabled)`
--   `revisionEnabled()`
--   `revisionObject()`
--   `generateRevision()`
--   `latestRevision()`
--   `revisionNum(integer $revNum)`
--   `allRevisions(callable $callback = null)`
--   `revertToRevision(integer $revNum)`
+* `setRevisionEnabled(bool$enabled)`
+* `revisionEnabled()`
+* `revisionObject()`
+* `generateRevision()`
+* `latestRevision()`
+* `revisionNum(integer $revNum)`
+* `allRevisions(callable $callback = null)`
+* `revertToRevision(integer $revNum)`
 
 **Properties (metadata)**
 
 _The revisionable behavior does not implement any properties as all logic & data is self-contained in the revisions._
 
-### Routable
+#### Routable
 
 _The routable behavior is not yet documented. It is still under heavy development._
 
-## Helpers
+### Helpers
 
-### ObjectDraft
+#### ObjectDraft
 
 …
 
-### ObjectRevision
+#### ObjectRevision
 
 Upon every `update` in _storage_, a revisionable object creates a new *revision* (a `\Charcoal\Object\ObjectRevision` instance) which holds logs the changes (_diff_) between versions of an object:
 
@@ -275,12 +239,12 @@ Upon every `update` in _storage_, a revisionable object creates a new *revision*
 
 **Revision methods**
 
--   `createFromObject(RevisionableInterface $obj)`
--   `createDiff(array $dataPrev, array $dataObj)`
--   `lastObjectRevision(RevisionableInterface $obj)`
--   `objectRevisionNum(RevisionableInterface $obj, integer $revNum)`
+* `createFromObject(RevisionableInterface $obj)`
+* `createDiff(array $dataPrev, array $dataObj)`
+* `lastObjectRevision(RevisionableInterface $obj)`
+* `objectRevisionNum(RevisionableInterface $obj, integer $revNum)`
 
-### ObjetSchedule
+#### ObjetSchedule
 
 It is possible, (typically from the charcoal admin backend), to create *schedule* (a `\Charcaol\Object\ObjectSchedule` instance) which associate a set of changes to be applied automatically to an object:
 
@@ -293,82 +257,24 @@ It is possible, (typically from the charcoal admin backend), to create *schedule
 | **scheduled_date** | `date-time`  | `null`     |
 | **data_diff**      | `structure`  | `[]`       |
 | **processed**      | `boolean`    | `false`    |
-| **processed_date** |
+| **processed_date** |              |            |
 
 **Schedule methods (API)**
 
--   `process([callable $callback, callable $successCallback,callable $failureCallback])`
+* `process([callable $callback, callable $successCallback,callable $failureCallback])`
 
-> Scheduled actions should be run with a timely cron job. The [charcoal-admin](https://github.com/charcoalphp/admin) module contains a script to run schedules automatically:
+> Scheduled actions should be run with a timely cron job. The [charcoal/admin] module contains a script to run schedules automatically:
 >
 > ```shell
-> ★ ./vendor/bin/charcoal admin/object/process-schedules`
+> ./vendor/bin/charcoal admin/object/process-schedules`
 > ```
 
+## Resources
 
-# Development
+* [Contributing](https://github.com/charcoalphp/charcoal/blob/main/CONTRIBUTING.md)
+* [Report issues](https://github.com/charcoalphp/charcoal/issues) and
+  [send pull requests](https://github.com/charcoalphp/charcoal/pulls)
+  in the [main Charcoal repository](https://github.com/charcoalphp/charcoal)
 
-To install the development environment:
-
-```shell
-★ composer install --prefer-source
-```
-
-To run the scripts (phplint, phpcs and phpunit):
-
-```shell
-★ composer test
-```
-
-## API documentation
-
--   The auto-generated `phpDocumentor` API documentation is available at [https://locomotivemtl.github.io/charcoal-object/docs/master/](https://locomotivemtl.github.io/charcoal-object/docs/master/)
--   The auto-generated `apigen` API documentation is available at [https://codedoc.pub/locomotivemtl/charcoal-object/master/](https://codedoc.pub/locomotivemtl/charcoal-object/master/index.html)
-
-## Development dependencies
-
--   `phpunit/phpunit`
--   `squizlabs/php_codesniffer`
--   `php-coveralls/php-coveralls`
-
-## Continuous Integration
-
-| Service | Badge | Description |
-| ------- | ----- | ----------- |
-| [Scrutinizer](https://scrutinizer-ci.com/g/locomotivemtl/charcoal-object/) | [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/locomotivemtl/charcoal-object/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/locomotivemtl/charcoal-object/?branch=master) | Code quality checker. Also validates API documentation quality. |
-| [Coveralls](https://coveralls.io/github/locomotivemtl/charcoal-object) | [![Coverage Status](https://coveralls.io/repos/github/locomotivemtl/charcoal-object/badge.svg?branch=master)](https://coveralls.io/github/locomotivemtl/charcoal-object?branch=master) | Unit Tests code coverage. |
-| [Sensiolabs](https://insight.sensiolabs.com/projects/5ef771c49-8c05-448b-a112-069737b380dc) | [![SensioLabsInsight](https://insight.sensiolabs.com/projects/ef771c49-8c05-448b-a112-069737b380dc/mini.png)](https://insight.sensiolabs.com/projects/ef771c49-8c05-448b-a112-069737b380dc) | Another code quality checker, focused on PHP. |
-
-## Coding Style
-
-The charcoal-object module follows the Charcoal coding-style:
-
--   [_PSR-1_](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-1-basic-coding-standard.md)
--   [_PSR-2_](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-2-coding-style-guide.md)
--   [_PSR-4_](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-4-autoloader.md), autoloading is therefore provided by _Composer_.
--   [_phpDocumentor_](http://phpdoc.org/) comments.
--   Read the [phpcs.xml.dist](phpcs.xml.dist) file for all the details on code style.
-
-> Coding style validation / enforcement can be performed with `composer phpcs`. An auto-fixer is also available with `composer phpcbf`.
-
-# Authors
-
--   Mathieu Ducharme, mat@locomotive.ca
--   Chauncey McAskill
--   Locomotive Inc.
-
-# License
-
-Charcoal is licensed under the MIT license. See [LICENSE](LICENSE) for details.
-
-
-
-## Report Issues
-
-In case you are experiencing a bug or want to request a new feature head over to the [Charcoal monorepo issue tracker](https://github.com/charcoalphp/charcoal/issues)
-
-
-
-## Contribute
-
-The sources of this package are contained in the Charcoal monorepo. We welcome contributions for this package on [charcoalphp/charcoal](https://github.com/charcoalphp/charcoal).
+[charcoal/admin]: https://github.com/charcoalphp/admin
+[charcoal/core]:  https://github.com/charcoalphp/core

@@ -1,78 +1,27 @@
 Charcoal View
 =============
 
-The `Charcoal\View` module (`charcoalphp/view`) provides everything needed to render templates and add renderer to objects.
+The View package provides an integration with [Mustache] and [Twig] for templating.
+
+## Installation
+
+```shell
+composer require charcoal/view
+```
+
+For Charcoal projects, the service provider can be registered from your configuration file:
+
+```json
+{
+    "service_providers": {
+        "charcoal/view/service-provider/view": {}
+    }
+}
+```
+
+## Usage
 
 It is a thin layer on top of various _rendering engines_, such as **mustache** or **twig** that can be used either as a _View_ component with any frameworks, as PSR-7 renderer for such frameworks (such as Slim) 
-
-It is the default view layer for `charcoal-app` projects.
-
-[![SensioLabsInsight](https://insight.sensiolabs.com/projects/396d2f06-82ba-4c79-b8cc-762f1e8bda29/mini.png)](https://insight.sensiolabs.com/projects/396d2f06-82ba-4c79-b8cc-762f1e8bda29)
-
-# Table of content
-
--   [How to install](#how-to-install)
-    -   [Dependencies](#dependencies)
--   [Basic Usage](#basic-usage)
-    -   [Using the Renderer, with Slim](#using-the-renderer-with-slim)   
--   [Module components](#module-components)
-    -   [Views](#views)
-        -   [Generic View](#generic-view)
-    -   [View Engines](#view-engines)
-        - [Mustache Helpers](#mustache-helpers)
-        - [Twig Helpers](#twig-helpers)
-    -   [Loaders](#loaders)
-        -   [Templates](#templates)
-    -   [Viewable Interface and Trait](#viewable-interface-and-trait)
-    -   [View Service Provider](#view-service-provider)
--   [Development](#development)
-    -   [Development dependencies](#development-dependencies)
-    -   [Coding Style](#coding-style)
-    -   [Authors](#authors)
-- [Report Issues](#report-issues)
-- [Contribute](#contribute)
-
-# How to install
-
-The preferred (and only supported) way of installing charcoal-view is with **composer**:
-
-```shell
-$ composer require charcoalphp/view
-```
-To install a full Charcoal project, which includes `charcoal-view`:
-
-```shell
-$ composer create-project charcoalphp/boilerplate:@dev --prefer-source
-```
-
-
-## Dependencies
-
--   `PHP 7.1+`
-    -   Older versions of PHP are deprecated, therefore not supported.
--   [`psr/http-message`](http://www.php-fig.org/psr/psr-7/)
-    -   Charcoal View provides a PSR7 renderer.
--   [`charcoalphp/config`](https://github.com/charcoalphp/config)
-    -   The view objects are _configurable_ with `\Charcoal\View\ViewConfig`.
--    [`charcoalphp/translator`](https://github.com/charcoalphp/translator)
-    -   The translator service
--   [`erusev/parsedown`](https://github.com/erusev/parsedown)
-    -   A markdown parser, which is provided to engines or could be used as a service.
-
-### Optional dependencies
-
--   [`mustache/mustache`](https://github.com/bobthecow/mustache.php)
-    -   The default rendering engine is _mustache_, so it should be included in most cases.
-    -   All default charcoal modules use mustache templates.
--   [`twig/twig`](https://twig.symfony.com/doc/3.x/)
-    -   Twig can also be used as a rendering engine for the view.
--   [`pimple/pimple`](http://pimple.sensiolabs.org/)
-    -   Dependencies management can be done with a Pimple ServiceProvider(`\Charcoal\View\ViewServiceProvider`)
-    -   It is actually required by default in `charcoal-app`.
-
-> 👉 Development dependencies are described in the _Development_ section of this README file.
-
-# Basic Usage
 
 A `View` can be used to render any template (which can be loaded from the engine) with any object (or array, for twig) as context.
 
@@ -85,16 +34,16 @@ $loader = new MustacheLoader([
     'base_path' => __DIR__,
     'paths'     => [
         'templates',
-        'views
-    ]
+        'views',
+    ],
 ]);
 
 $engine = new MustacheEngine([
-    'loader' => $loader
+    'loader' => $loader,
 ]);
 
 $view = new GenericView([
-    'engine'  => $engine
+    'engine' => $engine,
 ]);
 
 echo $view->render('foo/bar/template', $context);
@@ -104,7 +53,7 @@ $str = 'My name is {{what}}';
 echo $view->renderTemplate($str, $context);
 ```
 
-## Basic Usage, with service provider
+### Basic Usage, with service provider
 
 All this bootstrapping code can be avoided by using the `ViewServiceProvider`. This provider expects a `config` object
 
@@ -114,13 +63,13 @@ use Charcoal\View\ViewServiceProvider;
 
 $container = new Container([
     'base_path' => __DIR__,
-    'view' = [
-        'default_engine' -> 'mustache',
-        'paths' => [
+    'view'      => [
+        'default_engine' => 'mustache',
+        'paths'          => [
             'views',
-            'templates'
-        ]
-    ]
+            'templates',
+        ],
+    ],
 ]);
 $container->register(new ViewServiceProvider());
 
@@ -129,18 +78,17 @@ echo $container['view']->render('foo/bar/template', $context);
 
 > 👉 The default view engine, used in those examples, would be _mustache_.
 
-## Using the Renderer, with Slim
+### Using the Renderer, with Slim
 
 A view can also be implicitely used as a rendering service. Using the provided `view/renderer`, with a PSR7 framework (in this example, Slim 3):
 
 ```php
 use Charcoal\View\ViewServiceProvider;
+use Slim\App;
 
-include 'vendor/autoload.php';
-
-$app = new \Slim\App();
+$app = new App();
 $container = $app->getContainer();
-$container->register(new ServiceProvider());
+$container->register(new ViewServiceProvider());
 
 $app->get('/hello/{name}', function ($request, $response, $args) {
     // This will render the "hello" template
@@ -152,40 +100,40 @@ $app->run();
 
 > Just like the view, it is possible to simply register all dependencies on a Pimple container (with the `ViewServiceProvider`) to avoid all this bootstrapping code. The renderer is available as `$container['view/renderer']`.
 
-# Module components
+## Module components
 
-The basic components in `charcoal-view` are:
+The basic components in the View package are:
 
--   [**View**](#views), which provide the basic interface to all components.
--   [**Engine**](#view-engines), to actually render the templates.
--   [**Loader**](#loader), to load _template files_.
--   [**Viewable**](#viewable-interface-and-trait), which allow any object to be rendered with a _View_.
--   **Renderer**, an extra helper to use a view to render into PSR-7 request/response objects.
+* [**View**](#views), which provide the basic interface to all components.
+* [**Engine**](#view-engines), to actually render the templates.
+* [**Loader**](#loader), to load _template files_.
+* [**Viewable**](#viewable-interface-and-trait), which allow any object to be rendered with a _View_.
+* **Renderer**, an extra helper to use a view to render into PSR-7 request/response objects.
 
-## Views
+### Views
 
 The `Charcoal\View\ViewInterface` defines all that is needed to render templates via a view engine:
 
--   `render($templateIdent = null, $context = null)`
--   `renderTemplate($templateString, $context = null)`
+* `render($templateIdent = null, $context = null)`
+* `renderTemplate($templateString, $context = null)`
 
 The abstract class `Charcoal\View\AbstractView` fully implements the `ViewInterface` and adds the methods:
 
-### Generic view
+#### Generic view
 
 As convenience, the `\Charcoal\View\GenericView` class implements the full interface by extending the `AbstractView` base class.
 
-## View Engines
+### View Engines
 
 Charcoal _views_ support different templating Engines_, which are responsible for loading the appropriate template (through a _loader_) and render a template with a given context according to its internal rules. Every view engines should implement `\Charcoal\View\EngineInterface`.
 
 There are 3 engines available by default:
 
--   `mustache` (**default**)
--   `php`
--   `twig`
+* `mustache` (**default**)
+* `php`
+* `twig`
 
-### Mustache Helpers
+#### Mustache Helpers
 
 Mustache can be extended with the help of `helpers`. Those helpers can be set by extending `view/mustache/helpers` in the container:
 
@@ -197,31 +145,31 @@ $container->extend('view/mustache/helpers', function(array $helpers, Container $
                 $text = $helper->render($text);
             }
             return customMethod($text);
-        }
+        },
     ]);
 });
 ```
 
-*Provided helpers:*
+**Provided helpers:**
 
-- **Assets** helpers:
-    - `purgeJs`
-    - `addJs`
-    - `js`
-    - `addJsRequirement`
-    - `jsRequirements`
-    - `addCss`
-    - `purgeCss`
-    - `css`
-    - `addCssRequirement`
-    - `cssRequirements`
-    - `purgeAssets`
-- **Translator** helpers:
-    - `_t` Translate a string with `{{#_t}}String to translate{{/_t}}`
-- **Markdown** helpers:
-    - `markdown` Parse markdown to HTML with `{{#markdown}}# this is a H1{{/markdown}}`
+* **Assets** helpers:
+  * `purgeJs`
+  * `addJs`
+  * `js`
+  * `addJsRequirement`
+  * `jsRequirements`
+  * `addCss`
+  * `purgeCss`
+  * `css`
+  * `addCssRequirement`
+  * `cssRequirements`
+  * `purgeAssets`
+* **Translator** helpers:
+  * `_t` Translate a string with `{{#_t}}String to translate{{/_t}}`
+* **Markdown** helpers:
+  * `markdown` Parse markdown to HTML with `{{#markdown}}# this is a H1{{/markdown}}`
  
-### Twig Helpers
+#### Twig Helpers
 
 Twig can be extended with the help of [TwigExtension](https://twig.symfony.com/doc/3.x/advanced.html#creating-an-extension). Those helpers can be set by extending `view/twig/helpers` in the container:
 
@@ -238,36 +186,36 @@ $container->extend('view/twig/helpers', function (array $helpers, Container $con
 });
 ```
 
-*Provided helpers:*
+**Provided helpers:**
 
-- **Debug** helpers
-    - `debug` function `{{ debug() }}`
-    - `isDebug` function alias of `debug`
-- **Translator** helpers:
-    - `trans` filter a string with `{{ "String to translate"|trans }}`
-    - `transChoice` filter:
+* **Debug** helpers
+  * `debug` function `{{ debug() }}`
+  * `isDebug` function alias of `debug`
+* **Translator** helpers:
+  * `trans` filter a string with `{{ "String to translate"|trans }}`
+  * `transChoice` filter:
     ```
         {{ '{0}First: %test%|{1}Second: %test%'|transChoice(0, {'%test%': 'this is a test'}) }}
         {# First: this is a test #}
         {{ '{0}First: %test%|{1}Second: %test%'|transChoice(1, {'%test%': 'this is a test'}) }}
         {# Second: this is a test #}
     ```
-- **Url** helpers: 
-    - `baseUrl` function `{{ baseUrl() }}`
-    - `siteUrl` function alias of `baseUrl`
-    - `withBaseUrl` function `{{ withBaseUrl('/example/path') }}`
-        
-## Loaders
+* **Url** helpers: 
+  * `baseUrl` function `{{ baseUrl() }}`
+  * `siteUrl` function alias of `baseUrl`
+  * `withBaseUrl` function `{{ withBaseUrl('/example/path') }}`
+
+### Loaders
 
 A `Loader` service is attached to every engine. Its function is to load a given template content
 
-### Templates
+#### Templates
 
 Templates are simply files, stored on the filesystem, containing the main view (typically, HTML code + templating tags, but can be kind of text data).
 
--   For the *mustache* engine, they are `.mustache` files.
--   For the *php* engine, they are `.php` files.
--   For the *twig* engine, they are `.twig` files.
+* For the *mustache* engine, they are `.mustache` files.
+* For the *php* engine, they are `.php` files.
+* For the *twig* engine, they are `.twig` files.
 
 Templates are loaded with template _loaders_. Loaders implement the `Charcoal\View\LoaderInterface` and simply tries to match an identifier (passed as argument to the `load()` method) to a file on the filesystem.
 
@@ -275,20 +223,20 @@ Calling `$view->render($templateIdent, $context)` will automatically use the eng
 
 Otherwise, calling `$view->renderTemplate($templateString, $context)` expects an already-loaded template string as parameter.
 
-## Viewable Interface and Trait
+### Viewable Interface and Trait
 
 Any objects can be made renderable (viewable) by implementing the `Charcoal\View\ViewableInterface` by using the `Charcoal\View\ViewableTrait`.
 
 The interface adds the following methods to their implementing objects:
 
--   `setTemplateIdent($ident)`
--   `templateIdent()`
--   `setView($view)`
--   `view()`
--   `render($templateIdent = null)`
--   `renderTemplate($templateString)`
+* `setTemplateIdent($ident)`
+* `templateIdent()`
+* `setView($view)`
+* `view()`
+* `render($templateIdent = null)`
+* `renderTemplate($templateString)`
 
-### Examples
+#### Examples
 
 Given the following classes:
 
@@ -305,7 +253,6 @@ class MyObject implements ViewableInterface
         return 'world!';
     }
 }
-
 ```
 
 The following code:
@@ -317,31 +264,32 @@ $obj->renderTemplate('Hello {{world}}');
 
 would output: `"Hello world!"`
 
-## View Service Provider
+### View Service Provider
 
 As seen in the various examples above, it is recommended to use the `ViewServiceProvider` to set up the various dependencies, according to a `config`, on a `Pimple` container.
 
 The Service Provider adds the following service to a container:
 
-- `view` The base view instance.
-- `view/renderer` A PSR-7 view renderer.
-- `view/parsedown` A parsedown service, to render markdown into HTML.
+* `view` The base view instance.
+* `view/renderer` A PSR-7 view renderer.
+* `view/parsedown` A parsedown service, to render markdown into HTML.
 
 Other services / options are:
 
-- `view/config` View configuration options.
-- `view/engine` Currently used view engine.
-- `view/loader` Currently used template loader.
+* `view/config` View configuration options.
+* `view/engine` Currently used view engine.
+* `view/loader` Currently used template loader.
 
 The `ViewServiceProvider` expects the following services / keys to be set on the container:
 
-- `config` Application configuration. Should contain a "view" key to build the _ViewConfig_ obejct.
+* `config` Application configuration. Should contain a "view" key to build the _ViewConfig_ obejct.
 
-### The View Config
+#### The View Config
 
 Most service options can be set dynamically from a configuration object (available in `$container['view/config']`).
 
-Example for mustache:
+**Example for Mustache:**
+
 ```json
 {
     "base_path":"/",
@@ -355,84 +303,28 @@ Example for mustache:
 }
 ```
 
-Example for twig:
+**Example for Twig:**
+
 ```json
+{
     "view": {
         "default_engine": "twig",
         "use_cache": false,
         "strict_variables": true,
         "paths": [
             "templates",
-            "views",
+            "views"
         ]
     }
+}
 ```
 
-# Development
+## Resources
 
-To install the development environment:
+* [Contributing](https://github.com/charcoalphp/charcoal/blob/main/CONTRIBUTING.md)
+* [Report issues](https://github.com/charcoalphp/charcoal/issues) and
+  [send pull requests](https://github.com/charcoalphp/charcoal/pulls)
+  in the [main Charcoal repository](https://github.com/charcoalphp/charcoal)
 
-```shell
-$ composer install --prefer-source
-```
-
-Run tests with
-
-```shell
-$ composer test
-```
-
-## API documentation
-
--   The auto-generated `phpDocumentor` API documentation is available at [https://locomotivemtl.github.io/charcoal-view/docs/master/](https://locomotivemtl.github.io/charcoal-view/docs/master/)
--   The auto-generated `apigen` API documentation is available at [https://codedoc.pub/locomotivemtl/charcoal-view/master/](https://codedoc.pub/locomotivemtl/charcoal-view/master/index.html)
-
-## Development dependencies
-
--   `phpunit/phpunit`
--   `squizlabs/php_codesniffer`
--   `php-coveralls/php-coveralls`
--   `pimple/pimple`
--   `mustache/mustache`
--   `twig/twig`
-
-## Continuous Integration
-
-| Service | Badge | Description |
-| ------- | ----- | ----------- |
-| [Scrutinizer](https://scrutinizer-ci.com/g/locomotivemtl/charcoal-view/) | [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/locomotivemtl/charcoal-view/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/locomotivemtl/charcoal-view/?branch=master) | Code quality checker. Also validates API documentation quality. |
-| [Coveralls](https://coveralls.io/github/locomotivemtl/charcoal-view) | [![Coverage Status](https://coveralls.io/repos/github/locomotivemtl/charcoal-view/badge.svg?branch=master)](https://coveralls.io/github/locomotivemtl/charcoal-view?branch=master) | Unit Tests code coverage. |
-| [Sensiolabs](https://insight.sensiolabs.com/projects/396d2f06-82ba-4c79-b8cc-762f1e8bda29) | [![SensioLabsInsight](https://insight.sensiolabs.com/projects/396d2f06-82ba-4c79-b8cc-762f1e8bda29/mini.png)](https://insight.sensiolabs.com/projects/396d2f06-82ba-4c79-b8cc-762f1e8bda29) | Another code quality checker, focused on PHP. |
-
-## Coding Style
-
-The Charcoal-View module follows the Charcoal coding-style:
-
--   [_PSR-1_](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-1-basic-coding-standard.md)
--   [_PSR-2_](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-2-coding-style-guide.md)
--   [_PSR-4_](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-4-autoloader.md), autoloading is therefore provided by _Composer_.
--   [_phpDocumentor_](http://phpdoc.org/) comments.
--   Read the [phpcs.xml.dist](phpcs.xml.dist) file for all the details on code style.
-
-> Coding style validation / enforcement can be performed with `composer phpcs`. An auto-fixer is also available with `composer phpcbf`.
-
-# Authors
-
--   Mathieu Ducharme <mat@locomotive.ca>
--   [Locomotive](https://locomotive.ca)
-
-# License
-
-Charcoal is licensed under the MIT license. See [LICENSE](LICENSE) for details.
-
-
-
-## Report Issues
-
-In case you are experiencing a bug or want to request a new feature head over to the [Charcoal monorepo issue tracker](https://github.com/charcoalphp/charcoal/issues)
-
-
-
-## Contribute
-
-The sources of this package are contained in the Charcoal monorepo. We welcome contributions for this package on [charcoalphp/charcoal](https://github.com/charcoalphp/charcoal).
+[Mustache]: https://github.com/bobthecow/mustache.php
+[Twig]:     https://github.com/twigphp/Twig
