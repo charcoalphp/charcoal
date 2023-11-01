@@ -10,7 +10,7 @@ use Charcoal\Model\ModelFactoryTrait;
 use Charcoal\Admin\Ui\ObjectContainerInterface;
 use Charcoal\Admin\Ui\ObjectRevisionsInterface;
 use Charcoal\Admin\Ui\ObjectRevisionsTrait;
-// From 'locomotivemtl/charcoal-ui'
+// From 'charcoal-ui'
 use Charcoal\Ui\FormGroup\AbstractFormGroup;
 
 /**

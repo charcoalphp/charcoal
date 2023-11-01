@@ -22,7 +22,7 @@ use Charcoal\Cache\Middleware\CacheMiddleware;
  *
  * ## Dependencies
  *
- * - `config`: An {@link https://packagist.org/packages/locomotivemtl/charcoal-app application configset}.
+ * - `config`: An {@link https://packagist.org/packages/charcoal/app application configset}.
  * - `logger` A {@link https://packagist.org/providers/psr/log-implementation PSR-3 logging client}.
  *
  * ## Services

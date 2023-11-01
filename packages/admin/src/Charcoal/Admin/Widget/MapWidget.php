@@ -153,7 +153,7 @@ class MapWidget extends AdminWidget implements FormGroupInterface
     {
         $this->logger->warning(
             'MapWidget "lon_property" is deprecated. Use "lng_property".',
-            [ 'package' => 'locomotivemtl/charcoal-admin' ]
+            [ 'package' => 'charcoal/admin' ]
         );
         $this->setLngProperty($key);
         return $this;
@@ -265,7 +265,7 @@ class MapWidget extends AdminWidget implements FormGroupInterface
     {
         $this->logger->warning(
             'MapWidget "lon" is deprecated. Use "lng".',
-            [ 'package' => 'locomotivemtl/charcoal-admin' ]
+            [ 'package' => 'charcoal/admin' ]
         );
         return $this->lng();
     }

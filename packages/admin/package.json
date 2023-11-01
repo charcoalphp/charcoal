@@ -1,6 +1,6 @@
 {
     "private": true,
-    "name": "@locomotivemtl/charcoal-admin",
+    "name": "@charcoal/admin",
     "title": "Charcoal Admin",
     "version": "1.0.0",
     "author": "Locomotive <info@locomotive.ca>",

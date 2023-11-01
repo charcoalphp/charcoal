@@ -357,7 +357,7 @@ class TranslationParserScript extends AdminScript
      */
     public function getTranslationsFromPath($path, $fileType)
     {
-        // remove vendor/locomotivemtl/charcoal-app
+        // Remove vendor/charcoal/app
         $base  = $this->appConfig->get('base_path');
         $glob  = $this->globRecursive($base . DIRECTORY_SEPARATOR . $path . '*.' . $fileType);
         $regex = $this->regEx($fileType);
