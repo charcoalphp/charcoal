@@ -1,24 +1,24 @@
 # Components
 
-The main components of charcoal-app are:
+The main components of the App package are:
 
--   [Config](#config-component)
--   [App](#app-compoment)
--   ~~[Module](#module-component)~~
--   [Routes & Request Controllers](#routes--request-controllers)
-    -   [Action](#action-request-controller)
-    -   [Script](#script-request-controller)
-    -   [Template](#template-request-controller)
-    -   [Route API](#route-api)
--   [Routable objects](#routable-objects)
--   [Charcoal Binary](#charcoal-binary)
--   [PHPUnit Tests](#phpunit-tests)
+* [Config](#config-component)
+* [App](#app-compoment)
+* ~~[Module](#module-component)~~
+* [Routes & Request Controllers](#routes--request-controllers)
+  * [Action](#action-request-controller)
+  * [Script](#script-request-controller)
+  * [Template](#template-request-controller)
+  * [Route API](#route-api)
+* [Routable objects](#routable-objects)
+* [Charcoal Binary](#charcoal-binary)
+* [PHPUnit Tests](#phpunit-tests)
 
 
 
 ## Config Component
 
-At the core of a _Charcoal application_ is a highy customizable configuration store: `Charcoal\App\AppConfig`, provided by [`locomotivemtl/charcoal-config`][charcoal-config].
+At the core of a _Charcoal application_ is a highy customizable configuration store: `Charcoal\App\AppConfig`, provided by [charcoal/config].
 
 Typically, the application's configuration should load a file located in `config/config.php`. This file might load other, specialized, config files (PHP, JSON, or INI).
 
@@ -32,7 +32,7 @@ $config->addFile(__DIR__.'/../config/config.php');
 > It is recommended to keep a separate _config_ file for all of your different app modules. 
 > Compartmentalized config sections are easier to maintain and understand.
 >
-> The [official boilerplate][gh-charcoal-boilerplate] provides a good example of a configuration setup.
+> The [official boilerplate][charcoal/boilerplate] provides a good example of a configuration setup.
 
 ### Base App Configuration
 
@@ -63,11 +63,11 @@ $config->addFile(__DIR__.'/../config/config.php');
 | **cache**            | `array`   | `null`  |             |
 | **databases**        | `array`   | `[]`    | An array of `DatabaseConfig`
 | **default_database** | `string`  | `""`    |             |
-| **email**            | `array`   | `[]`    | The email (default from and SMTP options) configuration. See [`EmailConfig`][gh-charcoal-email]
+| **email**            | `array`   | `[]`    | The email (default from and SMTP options) configuration. See [`EmailConfig`][charcoal/email]
 | **filesystem**       | `array`   | `null`  |             |
 | **logger**           | `array`   | `null`  | The logger service configuration
 | **translator**       | `array`   | `null`  |             |
-| **view**             | `array`   | `null`  | The default view configuration (default engine and path settings). See [`ViewConfig`][gh-charcoal-view].
+| **view**             | `array`   | `null`  | The default view configuration (default engine and path settings). See [`ViewConfig`][charcoal/view].
 
 ### Examples
 
@@ -114,7 +114,7 @@ The **App** is responsible for loading the _modules_, setting up the _routes_ an
 Initialize the app in the _Front Controller_:
 
 ```php
-// Create container and configure it (with charcoal-config)
+// Create container and configure it (with charcoal/config)
 $container = new \Charcoal\App\AppContainer([
     // Slim Configuration
     'settings' => [
@@ -129,7 +129,7 @@ $app = \Charcoal\App\App::instance($container);
 $app->run();
 ```
 
-> The [boilerplate][gh-charcoal-boilerplate] provides a good example of a front controller.
+> The [boilerplate][charcoal/boilerplate] provides a good example of a front controller.
 
 
 
@@ -143,21 +143,21 @@ $app->run();
 
 All routes are actually handled by the *Slim* app. Charcoal Routes are just *definition* of a route:
 
--   An identifier, which typically matches the controller.
--   A RouteConfig structure, which contains:
-    -   The `type` of  `RequestController`. This can be:
-        -   `Action`
-        -   `Script` (_Scripts_ can only be ran from the CLI.)
-        -   `Template`
-    -   The `route_controller` ident, which will identify the proper controller to create.
-        -   Controllers are created from a _resolver_ factory. Their identifier may look like `foo/bar/controller-name`.
+* An identifier, which typically matches the controller.
+* A RouteConfig structure, which contains:
+  * The `type` of  `RequestController`. This can be:
+    * `Action`
+    * `Script` (_Scripts_ can only be ran from the CLI.)
+    * `Template`
+  * The `route_controller` ident, which will identify the proper controller to create.
+    * Controllers are created from a _resolver_ factory. Their identifier may look like `foo/bar/controller-name`.
 
 Routes can also be (and most likely are in standard web scenario) defined by objects. For example: sections, news, events, etc. 
-See `charcoal-object` for the definition of routable objects, and `charcoal-cms` for examples of routable objects.
+See [charcoal/object] for the definition of routable objects, and [charcoal/cms] for examples of routable objects.
 
 ### Action Request Controller
 
-The default `charcoal-app` action route handler is `charcoal/app/route/action` (`\Charcoal\App\Route\ActionRoute`).
+The default action route handler is `charcoal/app/route/action` (`\Charcoal\App\Route\ActionRoute`).
 
 Actions are set on `POST` requests by default, but this can be overridden by setting the `methods` route option.
 
@@ -176,14 +176,14 @@ Actions are basic _Charcoal Entities_ (they extend the `\Charcoal\Config\Abstrac
 
 When writing an action, there are only 2 abstract methods that must be added to the _Action_ class:
 
--   `run(RequestInterface $request, ResponseInterface $response);`
--   `results();`
+* `run(RequestInterface $request, ResponseInterface $response);`
+* `results();`
 
 The run method is ran automatically when _invoking_ an action.
 
 #### Custom Actions
 
-There are 2 steps to creating a custom action for a charcoal-app.
+There are 2 steps to creating a custom action:
 
 1. Set up the action route
 2. Write the Action controller
@@ -251,9 +251,9 @@ When requesting `http://$URL/test` (with **POST**), the following should be retu
 
 ### Script Request Controller
 
-The default `charcoal-app` script route handler is `charcoal/app/route/script` (`\Charcoal\App\Route\ScriptRoute`).
+The default script route handler is `charcoal/app/route/script` (`\Charcoal\App\Route\ScriptRoute`).
 
-Scripts mock a _Slim_ HTTP environment for the _CLI_. Allowing to be route like regular web routes but for a script environment. `charcoal-app` comes with the `charcoal` binary which is meant to run those kind of scripts.
+Scripts mock a _Slim_ HTTP environment for the _CLI_. Allowing to be route like regular web routes but for a script environment. This package comes with the `charcoal` binary which is meant to run those kind of scripts.
 
 > Thanks to _composer_, the charcoal binary is installed automatically in your project and callable with `php vendor/bin/charcoal`.
 
@@ -321,11 +321,11 @@ Calling the script with `./vendor/bin/charcoal test` should output:
 
 ### Template Request Controller
 
-The default `charcoal-app` template route handler is `charcoal/app/route/template` (`\Charcoal\App\Route\TemplateRoute`).
+The default template route handler is `charcoal/app/route/template` (`\Charcoal\App\Route\TemplateRoute`).
 
 Templates are set on `GET` requests by default, but this can be overridden by setting the `methods` route option.
 
-> In a typical charcoal-app project, most "web pages" are served as a Template.
+> In a typical Charcoal project, most "Web pages" are served as a Template.
 
 By default, what this route handler does is instanciate a _Template_ object (the type of object is set with the `controller`, or `ident` option) and "render" it. The _Action_ must implement `\Charcoal\App\Action\ActionInterface`.
 
@@ -333,7 +333,7 @@ To render the template, it is important that a `view` has been set properly on t
 
 #### Custom Templates
 
-Creating custom templates is probably the most common thing to do for a `charcoal-app` project. There are 3 steps involved:
+Creating custom templates is probably the most common thing to do for a Charcoal project. There are 3 steps involved:
 
 1. Set up the template route
 2. Write the template controller
@@ -432,13 +432,13 @@ Finally, the _template view_ must also be created. The route config above specif
 
 Here is an example of route definitions. Some things to note:
 
--   To set the "default" template (GET) route, simply map a route to "/".
--   Most configuration options are optional.
--   The "full" routes in the example below tries to display all posible config options.
-    -   Custom route controller
-    -   A lot of those are unnecessary, as they are set by default.
-    -   The "redirect" option is not set, as it conflicts most other options or renders them unncessary.
--   The same definition could be pure PHP.
+* To set the "default" template (GET) route, simply map a route to "/".
+* Most configuration options are optional.
+* The "full" routes in the example below tries to display all posible config options.
+  * Custom route controller
+  * A lot of those are unnecessary, as they are set by default.
+  * The "redirect" option is not set, as it conflicts most other options or renders them unncessary.
+* The same definition could be pure PHP.
 
 
 ```json
@@ -493,18 +493,18 @@ The `RoutableInterface` / `RoutableTrait` classes have one abstract method: `han
 
 This method should:
 
--   Check the path to know if it should respond
-    -   Typically, this means checking the _path_ parameter against the database to load a matching object.
-    -   But really, it could be anything...
--   Return a `callable` object that will handle the route if it matches
--   Return `null` if no match
+* Check the path to know if it should respond
+  * Typically, this means checking the _path_ parameter against the database to load a matching object.
+  * But really, it could be anything...
+* Return a `callable` object that will handle the route if it matches
+* Return `null` if no match
 
 The returned callable signature should be:
 `function(RequestInterface $request, ResponseInterface $response)` and returns a `ResponseInterface`
 
 Routables are called last (only if no explicit routes match fisrt). If no routables return a callable, then a 404 will be sent. (Slim's `NotFoundHandler`).
 
-> The [`charcoal-cms`][charcoal-cms] module contains many good examples of _routable_ objects.
+> The [charcoal/cms] module contains many good examples of _routable_ objects.
 
 ## Middlewares
 
@@ -516,10 +516,10 @@ For example
 
 There are 2 middlewares provided by default in the `app` module:
 
-- `\Charcoal\App\Middleware\CacheMiddleware`
-- `\Charcoal\App\Middleware\Cache\IpMiddleware`
+* `\Charcoal\App\Middleware\CacheMiddleware`
+* `\Charcoal\App\Middleware\Cache\IpMiddleware`
 
-Other Charcoal modules may provide more middlewares (for example, language detection in `charcoal-translator`).
+Other Charcoal modules may provide more middlewares (for example, language detection in [charcoal/translator]).
 
 ## Charcoal Binary
 
@@ -564,37 +564,23 @@ class ExampleTest extends TestCase
 
 Available methods are:
 
--   `callRequest(array $request)` to get a ResponseInterface object.
--   `assertResponseMatchesExpected(array $expected, ResponseInterface $response)`
--   `assertResponseHasStatusCode($expectedStatusCode, ResponseInterface $response)`
--   `assertResponseBodyMatchesJson($json, ResponseInterface $response)`
--   `assertResponseBodyRegExp($pattern, ResponseInterface $response)`
+* `callRequest(array $request)` to get a ResponseInterface object.
+* `assertResponseMatchesExpected(array $expected, ResponseInterface $response)`
+* `assertResponseHasStatusCode($expectedStatusCode, ResponseInterface $response)`
+* `assertResponseBodyMatchesJson($json, ResponseInterface $response)`
+* `assertResponseBodyRegExp($pattern, ResponseInterface $response)`
 
 
 
-[charcoal-admin]:        https://packagist.org/packages/locomotivemtl/charcoal-admin
-[charcoal-app]:          https://packagist.org/packages/locomotivemtl/charcoal-app
-[charcoal-cache]:        https://packagist.org/packages/locomotivemtl/charcoal-cache
-[charcoal-cms]:          https://packagist.org/packages/locomotivemtl/charcoal-cms
-[charcoal-config]:       https://packagist.org/packages/locomotivemtl/charcoal-config
-[charcoal-translator]:   https://packagist.org/packages/locomotivemtl/charcoal-translator
-[charcoal-view]:         https://packagist.org/packages/locomotivemtl/charcoal-view
-
-[gh-charcoal-boilerplate]:  https://github.com/locomotivemtl/charcoal-project-boilerplate
-[gh-charcoal-email]:        https://github.com/locomotivemtl/charcoal-email
-[gh-charcoal-view]:         https://github.com/locomotivemtl/charcoal-view
-
+[charcoal/admin]:        https://github.com/charcoalphp/admin
+[charcoal/app]:          https://github.com/charcoalphp/app
+[charcoal/boilerplate]:  https://github.com/charcoalphp/boilerplate
+[charcoal/cache]:        https://github.com/charcoalphp/cache
+[charcoal/cms]:          https://github.com/charcoalphp/cms
+[charcoal/config]:       https://github.com/charcoalphp/config
+[charcoal/email]:        https://github.com/charcoalphp/email
+[charcoal/translator]:   https://github.com/charcoalphp/translator
+[charcoal/view]:         https://github.com/charcoalphp/view
 [climate]:               https://packagist.org/packages/league/climate
 [fastroute]:             https://packagist.org/packages/nikic/fast-route
-[pimple]:                https://packagist.org/packages/pimple/pimple
 [slim]:                  https://packagist.org/packages/slim/slim
-[stash]:                 https://packagist.org/packages/tedivm/stash
-[symfony/translation]:   https://packagist.org/packages/symfony/translation
-
-[psr-1]:  https://www.php-fig.org/psr/psr-1/
-[psr-2]:  https://www.php-fig.org/psr/psr-2/
-[psr-3]:  https://www.php-fig.org/psr/psr-3/
-[psr-4]:  https://www.php-fig.org/psr/psr-4/
-[psr-6]:  https://www.php-fig.org/psr/psr-6/
-[psr-7]:  https://www.php-fig.org/psr/psr-7/
-[psr-11]: https://www.php-fig.org/psr/psr-11/
