@@ -466,17 +466,18 @@ class StructureFormGroup extends FormGroupWidget implements
         if ($this->parsedFormProperties === null) {
             $this->finalizeStructure();
 
-            $groupProperties     = array_map([ $this, 'camelize' ], $this->groupProperties());
+            $groupProperties     = $this->groupProperties();
             $availableProperties = $this->structProperties();
 
             $structProperties = [];
             if (!empty($groupProperties)) {
                 foreach ($groupProperties as $propertyIdent => $propertyMetadata) {
-                    $propertyIdent = $this->camelize($propertyIdent);
                     if (is_string($propertyMetadata)) {
                         $propertyIdent    = $propertyMetadata;
                         $propertyMetadata = null;
                     }
+
+                    $propertyIdent = $this->camelize($propertyIdent);
 
                     if (!isset($availableProperties[$propertyIdent])) {
                         continue;
