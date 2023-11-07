@@ -1046,7 +1046,7 @@ class Attachment extends Content implements AttachableInterface
 
         if ($search === null) {
             $attr   = [ 'href', 'link', 'url', 'src' ];
-            $scheme = [ '../', './', '/', 'data', 'mailto', 'http' ];
+            $scheme = [ '../', './', '/', 'data', 'ftp', 'http', 'mailto', 'sftp', 'ssh', 'tel', 'urn' ];
 
             $search = sprintf(
                 '(?<=%1$s=")(?!%2$s)(\S+)(?=")',
@@ -1075,13 +1075,19 @@ class Attachment extends Content implements AttachableInterface
      */
     protected function isRelativeUri($uri)
     {
-        if ($uri && !parse_url($uri, PHP_URL_SCHEME)) {
-            if (!in_array($uri[0], [ '/', '#', '?' ])) {
-                return true;
-            }
+        if (!$uri) {
+            return false;
         }
 
-        return false;
+        if (\parse_url($uri, PHP_URL_SCHEME)) {
+            return false;
+        }
+
+        if (\preg_match('/^([\/\#\?]|[a-z][a-z0-9+.-]*:)/i', $uri)) {
+            return false;
+        }
+
+        return true;
     }
 
     /**
