@@ -306,17 +306,19 @@ abstract class AbstractModel extends AbstractEntity implements
         }
 
         foreach ($properties as $propertyIdent) {
-            $p = $this->p($propertyIdent);
+            $prop = $this->property($propertyIdent);
 
-            $v = $p->getStorable()
-                ? $p->save($this->propertyValue($propertyIdent))
-                : null;
-
-            if ($v === null) {
+            if (!$prop || !$prop['active'] || !$prop['storable']) {
                 continue;
             }
 
-            $this[$propertyIdent] = $v;
+            $val = $prop->save($this->propertyValue($propertyIdent));
+
+            if ($val === null) {
+                continue;
+            }
+
+            $this[$propertyIdent] = $val;
         }
 
         return true;
