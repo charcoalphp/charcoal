@@ -36,6 +36,7 @@ Help()
    echo -e "   ${GREEN}-h, --help${NC}          Print this help."
    echo -e "   ${GREEN}-p, --package${NC}       Package to test."
    echo -e "   ${GREEN}-l, --list${NC}          List all packages in the monorepo."
+   echo -e "   ${GREEN}-i, --interactive${NC}   Interactive mode. Will ask to continue after each package."
    echo -e "   ${GREEN}--ci${NC}                Format output for CI software."
    echo
 
@@ -59,6 +60,9 @@ while [[ "$1" =~ ^- && ! "$1" == "--" ]]; do case $1 in
     ;;
   -l | --list )
     get_packages; echo; exit 0
+    ;;
+  -i | --interactive )
+    interactive="true"
     ;;
   -c | --ci )
     ci="true"
@@ -100,6 +104,10 @@ if [[ -z "$package" ]]; then
 
     for i in "${packages[@]}"; do
       test_package $i
+      if [[ -n "$interactive" ]]; then
+          read -p 'Continue ?:[Y/n](Y) ' continue
+          if [[ "$continue" == 'n' ]]; then exit 0; fi
+      fi
     done
 else
     # Testing for a single package
