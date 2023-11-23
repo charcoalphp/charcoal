@@ -1,5 +1,13 @@
 # Changelog
 
+## [4.0.3](https://github.com/charcoalphp/charcoal/compare/v4.0.2...v4.0.3) (2023-11-23)
+
+
+### Bug Fixes
+
+* **composer:** Update composer.lock file ([9142dda](https://github.com/charcoalphp/charcoal/commit/9142dda7861acc73435074ed197718b9ab990016))
+* **composer:** Update composer.lock file ([3e69ce8](https://github.com/charcoalphp/charcoal/commit/3e69ce872178d242e5a8a0656a5df08d17a0357a))
+
 ## [4.0.2](https://github.com/charcoalphp/charcoal/compare/v4.0.1...v4.0.2) (2023-01-19)
 
 
