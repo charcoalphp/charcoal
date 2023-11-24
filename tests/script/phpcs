@@ -88,6 +88,12 @@ test_package() {
         php vendor/bin/phpcs -q -ps --report-full --report=checkstyle=tests/logs/phpcs.xml packages/"$1"/src/
         exit $?
     fi
+
+    if [[ -n "$interactive" ]]; then
+      read -p 'Continue ?:[Y/n/r](Y) ' continue
+      if [[ "$continue" == 'n' ]]; then exit 0; fi
+      if [[ "$continue" == 'r' ]]; then test_package $1; fi
+    fi
 }
 
 if [[ -z "$package" ]]; then
@@ -104,10 +110,6 @@ if [[ -z "$package" ]]; then
 
     for i in "${packages[@]}"; do
       test_package $i
-      if [[ -n "$interactive" ]]; then
-          read -p 'Continue ?:[Y/n](Y) ' continue
-          if [[ "$continue" == 'n' ]]; then exit 0; fi
-      fi
     done
 else
     # Testing for a single package

@@ -86,6 +86,11 @@ test_package() {
 
     if [[ -z "$ci" ]]; then
         php vendor/bin/phpunit packages/"$1"/tests/ --coverage-text $BOOTSTRAP
+        if [[ -n "$interactive" ]]; then
+            read -p 'Continue ?:[Y/n/r](Y) ' continue
+            if [[ "$continue" == 'n' ]]; then exit 0; fi
+            if [[ "$continue" == 'r' ]]; then test_package $1; fi
+        fi
     else
         php vendor/bin/phpunit packages/"$1"/tests/ --coverage-clover "build/logs/clover.xml" --coverage-text $BOOTSTRAP
         exit $?
@@ -106,10 +111,6 @@ if [[ -z "$package" ]]; then
 
     for i in "${packages[@]}"; do
       test_package $i
-      if [[ -n "$interactive" ]]; then
-        read -p 'Continue ?:[Y/n](Y) ' continue
-        if [[ "$continue" == 'n' ]]; then exit 0; fi
-      fi
     done
 else
     # Testing for a single package
