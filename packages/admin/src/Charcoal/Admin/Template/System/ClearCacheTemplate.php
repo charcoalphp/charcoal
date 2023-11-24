@@ -255,10 +255,13 @@ class ClearCacheTemplate extends AdminTemplate
     /**
      * @return array<string, mixed>
      */
-    private function twigCacheInfo() : array
+    private function twigCacheInfo(): array
     {
         $defaultCachePath = realpath($this->twigEngine->cache());
-        $cachePath = $defaultCachePath ? $defaultCachePath : realpath($this->appConfig['publicPath'] . DIRECTORY_SEPARATOR . $this->twigEngine->cache());
+        $cachePath = $defaultCachePath
+            ? $defaultCachePath
+            : realpath($this->appConfig['publicPath'] . DIRECTORY_SEPARATOR . $this->twigEngine->cache());
+
         if (!is_dir($cachePath)) {
             return [
                 'no_cache_folder' => true,
@@ -277,7 +280,7 @@ class ClearCacheTemplate extends AdminTemplate
     /**
      * @return array<string, mixed>
      */
-    private function mustacheCacheInfo() : array
+    private function mustacheCacheInfo(): array
     {
         $defaultCachePath = realpath($this->mustacheEngine->cache());
         $cachePath = $defaultCachePath ? $defaultCachePath : realpath($this->appConfig['publicPath'] . DIRECTORY_SEPARATOR . $this->mustacheEngine->cache());
@@ -299,7 +302,8 @@ class ClearCacheTemplate extends AdminTemplate
     /**
      * Get the size in bytes of the directory.
      */
-    private function dirSize(string $directory) : int {
+    private function dirSize(string $directory): int
+    {
         $size = 0;
         foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($directory)) as $file) {
             $size += (int)$file->getSize();
@@ -429,17 +433,17 @@ class ClearCacheTemplate extends AdminTemplate
         return is_a($this->cache->getDriver(), Ephemeral::class);
     }
 
-    public function hasTwigCache() : bool
+    public function hasTwigCache(): bool
     {
         return $this->twigEngine->config()->useCache;
     }
 
-    public function hasMustacheCache() : bool
+    public function hasMustacheCache(): bool
     {
         return true;
     }
 
-    public function hasViewCache() : bool
+    public function hasViewCache(): bool
     {
         return ($this->hasTwigCache() || $this->hasMustacheCache());
     }

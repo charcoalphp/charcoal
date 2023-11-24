@@ -9,6 +9,7 @@ use RuntimeException;
 use Charcoal\View\Twig\TwigEngine;
 use Charcoal\View\Twig\TwigLoader;
 use Charcoal\Tests\AbstractTestCase;
+use Charcoal\View\ViewConfig;
 use Charcoal\Tests\View\Twig\Mock\MockHelpers;
 
 /**
@@ -31,7 +32,7 @@ class TwigEngineTest extends AbstractTestCase
             'paths'     => [ 'templates' ],
         ]);
         $this->obj = new TwigEngine([
-                'config'    => false,
+                'config'    => new ViewConfig(),
                 'loader'    => $loader,
                 'helpers'   => [],
                 'cache'     => null,

@@ -65,7 +65,6 @@ class ClearCacheAction extends AbstractCacheAction
             } else {
                 $message = $translator->translate('Failed to clear Twig cache.');
             }
-
         } elseif ($cacheType === 'mustache') {
             $result = $this->clearMustacheCache();
 
@@ -74,7 +73,6 @@ class ClearCacheAction extends AbstractCacheAction
             } else {
                 $message = $translator->translate('Failed to clear Mustache cache.');
             }
-
         } elseif ($cacheType === 'item') {
             $message = $translator->translate('Deleting cache items is unsupported, for now.');
         } else {
@@ -130,7 +128,7 @@ class ClearCacheAction extends AbstractCacheAction
         return $result;
     }
 
-    private function clearTwigCache() : bool
+    private function clearTwigCache(): bool
     {
         $defaultCachePath = realpath($this->twigEngine->cache());
         $cachePath = $defaultCachePath ? $defaultCachePath : realpath($this->appConfig['publicPath'] . DIRECTORY_SEPARATOR . $this->twigEngine->cache());
@@ -141,7 +139,7 @@ class ClearCacheAction extends AbstractCacheAction
         return true;
     }
 
-    private function clearMustacheCache() : bool
+    private function clearMustacheCache(): bool
     {
         $defaultCachePath = realpath($this->mustacheEngine->cache());
         $cachePath = $defaultCachePath ? $defaultCachePath : realpath($this->appConfig['publicPath'] . DIRECTORY_SEPARATOR . $this->mustacheEngine->cache());
@@ -152,7 +150,7 @@ class ClearCacheAction extends AbstractCacheAction
         return true;
     }
 
-    private function rrmdir(string $dir, bool $deleteCurrentFolder = false) : void
+    private function rrmdir(string $dir, bool $deleteCurrentFolder = false): void
     {
         if (is_dir($dir)) {
             $objects = scandir($dir);
