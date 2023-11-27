@@ -15,6 +15,7 @@ use Charcoal\Translator\LocalesManager;
  * Available locales is provided with a locales manager.
  */
 class Translation implements
+    TranslatableInterface,
     ArrayAccess,
     JsonSerializable
 {
@@ -28,18 +29,28 @@ class Translation implements
     private $val = [];
 
     /**
-     * @var LocalesManager
+     * @var Translator
      */
-    private $manager;
+    private $translator;
+
+    /** @var array  */
+    private array $parameters;
+
+    /** @var string|null */
+    private ?string $domain;
 
     /**
-     * @param Translation|array|string $val     The translation values.
-     * @param LocalesManager           $manager A LocalesManager instance.
+     * @param Translation|array|string $val        The translation values.
+     * @param Translator               $translator Translator.
+     * @param array                    $parameters An array of parameters for the message.
+     * @param string|null              $domain     The domain for the message or NULL to use the default.
      */
-    public function __construct($val, LocalesManager $manager)
+    public function __construct($val, Translator $translator, array $parameters = [], string $domain = null)
     {
-        $this->manager = $manager;
+        $this->translator = $translator;
         $this->setVal($val);
+        $this->parameters = $parameters;
+        $this->domain = $domain;
     }
 
     /**
@@ -49,7 +60,7 @@ class Translation implements
      */
     public function __toString()
     {
-        $lang = $this->manager->currentLocale();
+        $lang = $this->translator->getLocale();
         if (isset($this->val[$lang])) {
             return $this->val[$lang];
         } else {
@@ -227,7 +238,7 @@ class Translation implements
                 $this->val[$lang] = (string)$l10n;
             }
         } elseif (is_string($val)) {
-            $lang = $this->manager->currentLocale();
+            $lang = $this->translator->getLocale();
 
             $this->val[$lang] = $val;
         } else {
@@ -237,5 +248,15 @@ class Translation implements
         }
 
         return $this;
+    }
+
+    /**
+     * @param Translator  $translator The translator.
+     * @param string|null $locale     The locale.
+     * @return string
+     */
+    public function trans(Translator $translator, ?string $locale = null): string
+    {
+        return $translator->translate($this->val, $this->parameters, $this->domain, $locale);
     }
 }

@@ -131,7 +131,7 @@ class Translator extends SymfonyTranslator
             return null;
         }
 
-        $translation = new Translation($val, $this->manager());
+        $translation = new Translation($val, $this);
         $localized   = (string)$translation;
         foreach ($this->availableLocales() as $lang) {
             if (!isset($translation[$lang]) || $translation[$lang] === $val) {
@@ -208,7 +208,7 @@ class Translator extends SymfonyTranslator
             '%count%' => $number,
         ], $parameters);
 
-        $translation = new Translation($val, $this->manager());
+        $translation = new Translation($val, $this);
         $localized   = (string)$translation;
         foreach ($this->availableLocales() as $lang) {
             if (!isset($translation[$lang]) || $translation[$lang] === $val) {

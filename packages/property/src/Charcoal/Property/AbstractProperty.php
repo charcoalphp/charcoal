@@ -22,6 +22,7 @@ use Charcoal\Validator\ValidatableInterface;
 use Charcoal\Validator\ValidatableTrait;
 use Charcoal\Validator\ValidatorInterface;
 // From 'charcoal-translator'
+use Charcoal\Translator\TranslatableInterface;
 use Charcoal\Translator\Translation;
 use Charcoal\Translator\TranslatorAwareTrait;
 // From 'charcoal-property'
@@ -522,9 +523,9 @@ abstract class AbstractProperty extends AbstractEntity implements
 
     /**
      * @param  mixed $val A L10N variable.
-     * @return Translation The translation value.
+     * @return TranslatableInterface|null The translation value.
      */
-    public function parseValAsL10n($val)
+    public function parseValAsL10n($val): ?TranslatableInterface
     {
         return $this->translator()->translation($val);
     }

@@ -6,6 +6,8 @@ use PDO;
 use InvalidArgumentException;
 use UnexpectedValueException;
 // From 'charcoal-translator'
+use Charcoal\Translator\TranslatableInterface;
+use Charcoal\Translator\TranslatableValue;
 use Charcoal\Translator\Translation;
 // From 'charcoal-property'
 use Charcoal\Property\AbstractProperty;
@@ -29,7 +31,7 @@ class StructureProperty extends AbstractProperty
      *
      * @var string
      */
-    private $sqlType;
+    private string $sqlType = 'TEXT';
 
     /**
      * Retrieve the property's type identifier.
@@ -42,35 +44,36 @@ class StructureProperty extends AbstractProperty
     }
 
     /**
-     * Ensure l10n can not be TRUE for structure property.
-     *
-     * @param  boolean $flag The l10n, or "translatable" flag.
-     * @throws InvalidArgumentException If the L10N argument is TRUE (must be FALSE).
-     * @see    AbstractProperty::setL10n()
-     * @return self
+     * @param  mixed $val     The value to convert for display.
+     * @param  array $options Optional display options.
+     * @return string
      */
-    public function setL10n($flag)
+    public function displayVal($val, array $options = [])
     {
-        $flag = !!$flag;
-
-        if ($flag === true) {
-            throw new InvalidArgumentException(
-                'The structure property can not be translatable.'
-            );
+        if ($val === null || $val === '') {
+            return '';
         }
 
-        return $this;
-    }
+        /** Parse multilingual values */
+        if ($this['l10n']) {
+            $propertyValue = $this->l10nVal($val, $options);
+            if ($propertyValue === null) {
+                return '';
+            }
+        } elseif ($val instanceof TranslatableValue) {
+            $propertyValue = $val->trans($this->translator());
+        } elseif ($val instanceof Translation) {
+            $propertyValue = (string)$val;
+        } else {
+            $propertyValue = $val;
+        }
 
-    /**
-     * L10N is always FALSE for structure property.
-     *
-     * @see    AbstractProperty::getL10n()
-     * @return boolean
-     */
-    public function getL10n()
-    {
-        return false;
+        if (!is_scalar($propertyValue)) {
+            $flags = ($options['json'] ?? JSON_PRETTY_PRINT);
+            return json_encode($propertyValue, $flags);
+        }
+
+        return (string)$propertyValue;
     }
 
     /**
@@ -78,7 +81,7 @@ class StructureProperty extends AbstractProperty
      * @param   array $options Optional input options.
      * @return  string
      */
-    public function inputVal($val, array $options = [])
+    public function inputVal($val, array $options = []): string
     {
         unset($options);
         if ($val === null) {
@@ -96,6 +99,59 @@ class StructureProperty extends AbstractProperty
         }
 
         return json_encode($propertyValue, JSON_PRETTY_PRINT);
+    }
+
+    /**
+     * Get the property's value in a format suitable for storage.
+     *
+     * @param  mixed $val Optional. The value to convert to storage value.
+     * @return mixed
+     */
+    public function storageVal($val)
+    {
+        if ($val === null || $val === '') {
+            // Do not serialize NULL values
+            return null;
+        }
+
+
+        if ($val instanceof TranslatableValue) {
+            $val = $val->trans($this->translator());
+        }
+
+        if ($val instanceof Translation) {
+            $val = (string)$val;
+        }
+
+        if (!is_scalar($val)) {
+            return json_encode($val, JSON_UNESCAPED_UNICODE);
+        }
+
+        return $val;
+    }
+
+    /**
+     * Attempt to get the multilingual value in the requested language.
+     *
+     * @param  mixed $val  The multilingual value to lookup.
+     * @param  mixed $lang The language to return the value in.
+     * @return string|null
+     */
+    protected function l10nVal($val, $lang = null): ?string
+    {
+        if (!is_string($lang)) {
+            if (is_array($lang) && isset($lang['lang'])) {
+                $lang = $lang['lang'];
+            } else {
+                $lang = $this->translator()->getLocale();
+            }
+        }
+
+        if ($val instanceof TranslatableValue) {
+            return $val->trans($this->translator(), $lang);
+        }
+
+        return ($val[$lang] ?? null);
     }
 
     /**
@@ -146,27 +202,15 @@ class StructureProperty extends AbstractProperty
     }
 
     /**
-     * Get the property's value in a format suitable for storage.
+     * Creates a custom data value object with a similar API to the
+     * {@see \Charcoal\Translator\Translation Translation class}.
      *
-     * @param  mixed $val Optional. The value to convert to storage value.
-     * @return mixed
+     * @param mixed $val A L10N variable.
+     * @return TranslatableInterface|null The translation value.
      */
-    public function storageVal($val)
+    public function parseValAsL10n($val): ?TranslatableInterface
     {
-        if ($val === null || $val === '') {
-            // Do not serialize NULL values
-            return null;
-        }
-
-        if ($val instanceof Translation) {
-            $val = (string)$val;
-        }
-
-        if (!is_scalar($val)) {
-            return json_encode($val, JSON_UNESCAPED_UNICODE);
-        }
-
-        return $val;
+        return new TranslatableValue($val);
     }
 
     /**
@@ -223,12 +267,8 @@ class StructureProperty extends AbstractProperty
      * @see StorableProperyTrait::sqlType()
      * @return string
      */
-    public function sqlType()
+    public function sqlType(): string
     {
-        if ($this->sqlType === null) {
-            $this->sqlType = 'TEXT';
-        }
-
         return $this->sqlType;
     }
 
