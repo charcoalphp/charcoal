@@ -4,6 +4,7 @@ namespace Charcoal\Translator;
 
 use InvalidArgumentException;
 use JsonSerializable;
+use Stringable;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
@@ -19,29 +20,19 @@ use Symfony\Component\Translation\TranslatorInterface;
 class TranslatableValue implements
     TranslatableInterface,
     JsonSerializable,
-    \Stringable
+    Stringable
 {
     /**
      * @var array<string, mixed>
      */
     private array $translations;
 
-    /** @var array  */
-    private array $parameters;
-
-    /** @var string|null */
-    private ?string $domain;
-
     /**
      * @param array<string, mixed>|Translation|self $translations Values keyed by locale.
-     * @param array                                 $parameters   An array of parameters for the message.
-     * @param string|null                           $domain       The domain for the message or NULL to use the default.
      */
-    public function __construct($translations, array $parameters = [], string $domain = null)
+    final public function __construct($translations)
     {
         $this->translations = $this->sanitizeTranslations($translations);
-        $this->parameters = $parameters;
-        $this->domain = $domain;
     }
 
     /**
@@ -116,12 +107,27 @@ class TranslatableValue implements
     }
 
     /**
+     * @param callable $callback The callback function.
+     * @return static
+     */
+    public function map(callable $callback): self
+    {
+        $keys = array_keys($this->translations);
+
+        $translations = array_map($callback, $this->translations, $keys);
+
+        return new static(array_combine($keys, $translations));
+    }
+
+    /**
      * Transform each translation value.
      *
      * This method is to maintain compatibility with {@see Translation}.
      *
      * @param (callable(mixed, string): mixed) $callback Function to apply to each value.
      * @return self
+     *
+     * @deprecated Will be removed in future version in favor of keeping this class Immutable.
      */
     public function each(callable $callback): self
     {
@@ -138,6 +144,8 @@ class TranslatableValue implements
      *
      * @param (callable(mixed): mixed) $callback Function to apply to each value.
      * @return self
+     *
+     * @deprecated Will be removed in future version in favor of keeping this class Immutable.
      */
     public function sanitize(callable $callback): self
     {
@@ -148,12 +156,20 @@ class TranslatableValue implements
     }
 
     /**
-     * @param Translator  $translator The translator.
-     * @param string|null $locale     The locale.
-     * @return string
+     * @param string $locale The requested locale.
+     * @return mixed
      */
-    public function trans(Translator $translator, ?string $locale = null): string
+    public function toLocale(string $locale)
     {
-        return $translator->translate($this->translations, $this->parameters, $this->domain, $locale);
+        return ($this->translations[$locale] ?? null);
+    }
+
+    /**
+     * @param TranslatorInterface $translator The translator to use.
+     * @return mixed
+     */
+    public function trans(TranslatorInterface $translator)
+    {
+        return $this->toLocale($translator->getLocale());
     }
 }

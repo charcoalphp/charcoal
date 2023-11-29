@@ -2,12 +2,13 @@
 
 namespace Charcoal\Translator;
 
+use Symfony\Component\Translation\TranslatorInterface;
+
 interface TranslatableInterface
 {
     /**
-     * @param Translator  $translator The translator.
-     * @param string|null $locale     The locale.
-     * @return string
+     * @param TranslatorInterface $translator The $translator to use.
+     * @return mixed
      */
-    public function trans(Translator $translator, ?string $locale = null): string;
+    public function trans(TranslatorInterface $translator);
 }
