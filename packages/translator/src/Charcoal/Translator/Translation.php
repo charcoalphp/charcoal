@@ -8,6 +8,7 @@ use InvalidArgumentException;
 use JsonSerializable;
 // From 'charcoal-translator'
 use Charcoal\Translator\LocalesManager;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * A translation object holds a localized message in all available locales.
@@ -29,30 +30,19 @@ class Translation implements
     private $val = [];
 
     /**
-     * @var Translator
+     * @var LocalesManager
      */
-    private $translator;
-
-    /** @var array  */
-    private array $parameters;
-
-    /** @var string|null */
-    private ?string $domain;
+    private $manager;
 
     /**
-     * @param Translation|array|string $val        The translation values.
-     * @param Translator               $translator Translator.
-     * @param array                    $parameters An array of parameters for the message.
-     * @param string|null              $domain     The domain for the message or NULL to use the default.
+     * @param Translation|array|string $val     The translation values.
+     * @param LocalesManager           $manager A LocalesManager instance.
      */
-    public function __construct($val, Translator $translator, array $parameters = [], string $domain = null)
+    public function __construct($val, LocalesManager $manager)
     {
-        $this->translator = $translator;
+        $this->manager = $manager;
         $this->setVal($val);
-        $this->parameters = $parameters;
-        $this->domain = $domain;
     }
-
     /**
      * Output the current language's value, when cast to string.
      *
@@ -60,7 +50,7 @@ class Translation implements
      */
     public function __toString()
     {
-        $lang = $this->translator->getLocale();
+        $lang = $this->manager->currentLocale();
         if (isset($this->val[$lang])) {
             return $this->val[$lang];
         } else {
@@ -238,7 +228,7 @@ class Translation implements
                 $this->val[$lang] = (string)$l10n;
             }
         } elseif (is_string($val)) {
-            $lang = $this->translator->getLocale();
+            $lang = $this->manager->currentLocale();
 
             $this->val[$lang] = $val;
         } else {
@@ -251,12 +241,11 @@ class Translation implements
     }
 
     /**
-     * @param Translator  $translator The translator.
-     * @param string|null $locale     The locale.
-     * @return string
+     * @param TranslatorInterface $translator The translator to use.
+     * @return mixed
      */
-    public function trans(Translator $translator, ?string $locale = null): string
+    public function trans(TranslatorInterface $translator)
     {
-        return $translator->translate($this->val, $this->parameters, $this->domain, $locale);
+        return ($this->val[$translator->getLocale()] ?? null);
     }
 }
