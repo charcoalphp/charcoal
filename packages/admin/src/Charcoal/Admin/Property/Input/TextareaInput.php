@@ -122,7 +122,7 @@ class TextareaInput extends AbstractPropertyInput
     /**
     * @return array
     */
-    public function getInputValOptions() : array
+    public function getInputValOptions(): array
     {
         return [
             'pretty' => true,

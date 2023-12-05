@@ -106,7 +106,7 @@ class JsonEditorInput extends TextareaInput
     /**
      * @return array
      */
-    public function getInputValOptions() : array
+    public function getInputValOptions(): array
     {
         return [
             'pretty' => false,

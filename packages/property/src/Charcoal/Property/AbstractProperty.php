@@ -417,7 +417,7 @@ abstract class AbstractProperty extends AbstractEntity implements
                 return '';
             }
         } elseif ($val instanceof TranslatableValue) {
-            $val = $val->trans($this->translator());
+            $propertyValue = $val->trans($this->translator());
         } elseif ($val instanceof Translation) {
             $propertyValue = (string)$val;
         } else {
@@ -434,10 +434,10 @@ abstract class AbstractProperty extends AbstractEntity implements
         if (!is_scalar($propertyValue)) {
             if (isset($options['json'])) {
                 $flags = $options['json'];
-            } elseif ($options['pretty'] ?? false) {
+            } elseif (($options['pretty'] ?? false)) {
                 $flags = JSON_PRETTY_PRINT;
             }
-            $propertyValue = json_encode($propertyValue, $flags);
+            $propertyValue = json_encode($propertyValue, ($flags ?? 0));
             return $propertyValue;
         }
 

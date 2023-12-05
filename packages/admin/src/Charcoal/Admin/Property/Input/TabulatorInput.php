@@ -45,7 +45,8 @@ class TabulatorInput extends AbstractPropertyInput
      */
     protected function finalizeInputOptions()
     {
-        if ((isset($this->inputOptions['addRow']) && $this->inputOptions['addRow']) ||
+        if (
+            (isset($this->inputOptions['addRow']) && $this->inputOptions['addRow']) ||
             (isset($this->inputOptions['addColumn']) && $this->inputOptions['addColumn'])
         ) {
             $this->inputOptions['addColumnOrRow'] = true;
@@ -213,7 +214,7 @@ class TabulatorInput extends AbstractPropertyInput
     {
         $inputOptions = $this->getInputOptions();
         $tabulatorOptions = $this->getTabulatorOptions();
-        $tabulatorSelector = '#'.$this->inputId();
+        $tabulatorSelector = '#' . $this->inputId();
 
         if (isset($tabulatorOptions['history']) && !$tabulatorOptions['history']) {
             $inputOptions['undo'] = false;
