@@ -12,14 +12,6 @@
     <script src="/assets/admin/jsoneditor/jsoneditor.min.js"></script>
 {{/ addJsRequirement }}
 
-{{=<% %>=}}
-    <%# jsonVal %>
-    <script>
-        const jsonVal_<% inputId %> = <%& . %>;
-    </script>
-    <%/ jsonVal %>
-<%={{ }}=%>
-
 {{# addJs }}
     <script>
         var container = document.getElementById("{{ inputId }}");
@@ -31,9 +23,8 @@
         };
         var editor = new JSONEditor(container, options);
 
-        {{# jsonVal }}
-            editor.set(jsonVal_{{ inputId }});
-            document.getElementById('hidden_{{ inputId }}').value = editor.getText();
-        {{/ jsonVal }}
+            {{# inputVal }}
+            editor.set({{& inputVal }});
+            {{/ inputVal }}
     </script>
 {{/ addJs }}
