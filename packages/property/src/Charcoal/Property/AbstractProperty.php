@@ -23,6 +23,7 @@ use Charcoal\Validator\ValidatableTrait;
 use Charcoal\Validator\ValidatorInterface;
 // From 'charcoal-translator'
 use Charcoal\Translator\TranslatableInterface;
+use Charcoal\Translator\TranslatableValue;
 use Charcoal\Translator\Translation;
 use Charcoal\Translator\TranslatorAwareTrait;
 // From 'charcoal-property'
@@ -415,6 +416,8 @@ abstract class AbstractProperty extends AbstractEntity implements
             if ($propertyValue === null) {
                 return '';
             }
+        } elseif ($val instanceof TranslatableValue) {
+            $val = $val->trans($this->translator());
         } elseif ($val instanceof Translation) {
             $propertyValue = (string)$val;
         } else {
@@ -429,7 +432,13 @@ abstract class AbstractProperty extends AbstractEntity implements
         }
 
         if (!is_scalar($propertyValue)) {
-            $propertyValue = json_encode($propertyValue, JSON_PRETTY_PRINT);
+            if (isset($options['json'])) {
+                $flags = $options['json'];
+            } elseif ($options['pretty'] ?? false) {
+                $flags = JSON_PRETTY_PRINT;
+            }
+            $propertyValue = json_encode($propertyValue, $flags);
+            return $propertyValue;
         }
 
         return (string)$propertyValue;

@@ -77,31 +77,6 @@ class StructureProperty extends AbstractProperty
     }
 
     /**
-     * @param   mixed $val     Optional. The value to to convert for input.
-     * @param   array $options Optional input options.
-     * @return  string
-     */
-    public function inputVal($val, array $options = []): string
-    {
-        unset($options);
-        if ($val === null) {
-            return '';
-        }
-
-        if (is_string($val)) {
-            return $val;
-        }
-
-        if ($val instanceof Translation) {
-            $propertyValue = (string)$val;
-        } else {
-            $propertyValue = $val;
-        }
-
-        return json_encode($propertyValue, JSON_PRETTY_PRINT);
-    }
-
-    /**
      * Get the property's value in a format suitable for storage.
      *
      * @param  mixed $val Optional. The value to convert to storage value.
@@ -113,7 +88,6 @@ class StructureProperty extends AbstractProperty
             // Do not serialize NULL values
             return null;
         }
-
 
         if ($val instanceof TranslatableValue) {
             $val = $val->trans($this->translator());
