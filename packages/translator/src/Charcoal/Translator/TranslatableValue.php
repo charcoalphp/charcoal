@@ -2,6 +2,8 @@
 
 namespace Charcoal\Translator;
 
+use ArrayAccess;
+use DomainException;
 use InvalidArgumentException;
 use JsonSerializable;
 use Stringable;
@@ -19,6 +21,7 @@ use Symfony\Component\Translation\TranslatorInterface;
  */
 class TranslatableValue implements
     TranslatableInterface,
+    ArrayAccess,
     JsonSerializable,
     Stringable
 {
@@ -156,6 +159,15 @@ class TranslatableValue implements
     }
 
     /**
+     * @param TranslatorInterface $translator The translator to use.
+     * @return mixed
+     */
+    public function trans(TranslatorInterface $translator)
+    {
+        return $this->toLocale($translator->getLocale());
+    }
+
+    /**
      * @param string $locale The requested locale.
      * @return mixed
      */
@@ -165,11 +177,89 @@ class TranslatableValue implements
     }
 
     /**
-     * @param TranslatorInterface $translator The translator to use.
-     * @return mixed
+     * @param string $offset The requested offset to test.
+     * @return boolean
+     * @throws InvalidArgumentException If array key isn't a string.
+     * @see    ArrayAccess::offsetExists()
      */
-    public function trans(TranslatorInterface $translator)
+    public function offsetExists($offset): bool
     {
-        return $this->toLocale($translator->getLocale());
+        if (!is_string($offset)) {
+            throw new InvalidArgumentException(sprintf(
+                'Invalid language; must be a string, received %s',
+                (is_object($offset) ? get_class($offset) : gettype($offset))
+            ));
+        }
+
+        return isset($this->translations[$offset]);
+    }
+
+    /**
+     * @param string $offset The requested offset.
+     * @return mixed
+     * @throws InvalidArgumentException If array key isn't a string.
+     * @throws DomainException If the array key is not found.
+     * @see    ArrayAccess::offsetGet()
+     */
+    public function offsetGet($offset)
+    {
+        if (!is_string($offset)) {
+            throw new InvalidArgumentException(sprintf(
+                'Invalid language; must be a string, received %s',
+                (is_object($offset) ? get_class($offset) : gettype($offset))
+            ));
+        }
+
+        if (!isset($this->translations[$offset])) {
+            throw new DomainException(sprintf(
+                'Translation for "%s" is not defined.',
+                $offset
+            ));
+        }
+
+        return $this->translations[$offset];
+    }
+
+    /**
+     * @param strin`g $offset The lang offset to set.
+     * @param mixed  $value  The value to store.
+     * @return void
+     * @throws InvalidArgumentException If array key isn't a string.
+     * @see    ArrayAccess::offsetSet()
+     */
+    public function offsetSet($offset, $value)
+    {
+        if (!is_string($offset)) {
+            throw new InvalidArgumentException(sprintf(
+                'Invalid language; must be a string, received %s',
+                (is_object($offset) ? get_class($offset) : gettype($offset))
+            ));
+        }
+
+        if (!is_string($value)) {
+            throw new InvalidArgumentException(sprintf(
+                'Translation must be a string, received %s',
+                (is_object($value) ? get_class($value) : gettype($value))
+            ));
+        }
+
+        $this->translations[$offset] = $value;
+    }
+
+    /**
+     * @param string $offset The language offset to unset.
+     * @return void
+     * @throws InvalidArgumentException If array key isn't a string.
+     */
+    public function offsetUnset($offset)
+    {
+        if (!is_string($offset)) {
+            throw new InvalidArgumentException(sprintf(
+                'Invalid language; must be a string, received %s',
+                (is_object($offset) ? get_class($offset) : gettype($offset))
+            ));
+        }
+
+        unset($this->translations[$offset]);
     }
 }
