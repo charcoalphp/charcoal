@@ -21,6 +21,8 @@ use Charcoal\Factory\FactoryInterface;
 use Charcoal\Property\StructureProperty;
 use Charcoal\Property\Structure\StructureMetadata;
 use Charcoal\Property\Structure\StructureModel;
+// From 'charcoal-translator'
+use Charcoal\Translator\Translation;
 
 /**
  * Model Structure Data Property
@@ -186,8 +188,7 @@ class ModelStructureProperty extends StructureProperty
         $result = true;
 
         $model = $this->structureProto();
-        if (
-            !($model instanceof ModelInterface) ||
+        if (!($model instanceof ModelInterface) ||
             !($model instanceof ValidatableInterface)
         ) {
             return $result;
@@ -374,7 +375,7 @@ class ModelStructureProperty extends StructureProperty
 
                 $structureKey = $structureInterfaces;
                 array_unshift($structureKey, $this->ident());
-                $structureKey = 'property/structure=' . $metadataLoader->serializeMetaKey($structureKey);
+                $structureKey = 'property/structure='.$metadataLoader->serializeMetaKey($structureKey);
 
                 $structureMetadata = $metadataLoader->load(
                     $structureKey,
@@ -453,7 +454,7 @@ class ModelStructureProperty extends StructureProperty
                 $this->structureModelType = $className;
                 $prototype = $this->structureModelFactory()->get($className);
                 $className = get_class($prototype);
-            } catch (Exception $e) {
+            } catch (\Exception $e) {
                 throw new InvalidArgumentException(sprintf(
                     'Invalid structure class name: %s',
                     $className

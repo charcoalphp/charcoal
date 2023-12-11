@@ -232,7 +232,7 @@ class StructureFormGroup extends FormGroupWidget implements
     {
         $display = $this->display();
 
-        return 'charcoal/admin/widget/form-group/structure/container-' . $display;
+        return 'charcoal/admin/widget/form-group/structure/container-'.$display;
     }
 
     /**
@@ -460,8 +460,7 @@ class StructureFormGroup extends FormGroupWidget implements
 
         if (isset($struct['admin']['default_form_group'])) {
             $groupName = $struct['admin']['default_form_group'];
-            if (
-                \is_string($groupName) &&
+            if (\is_string($groupName) &&
                 isset($struct['admin']['form_groups'][$groupName])
             ) {
                 return $struct['admin']['form_groups'][$groupName];
