@@ -14,6 +14,7 @@ use Charcoal\Model\DescribableInterface;
 use Charcoal\Model\MetadataInterface;
 use Charcoal\Model\ModelInterface;
 use Charcoal\Model\Model;
+use Charcoal\Validator\ValidatableInterface;
 // From 'charcoal-factory'
 use Charcoal\Factory\FactoryInterface;
 // From 'charcoal-property'
@@ -165,6 +166,60 @@ class ModelStructureProperty extends StructureProperty
     public function type()
     {
         return 'model-structure';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function validationMethods()
+    {
+        return array_merge(parent::validationMethods(), [
+            'modelStructure',
+        ]);
+    }
+
+    /**
+     * @return boolean
+     */
+    public function validateModelStructure(): bool
+    {
+        $result = true;
+
+        $model = $this->structureProto();
+        if (
+            !($model instanceof ModelInterface) ||
+            !($model instanceof ValidatableInterface)
+        ) {
+            return $result;
+        }
+
+        $val = $this->val();
+
+        if ($this['multiple']) {
+            $objs = (array)$this->structureVal($val);
+            $val  = [];
+            if (!empty($objs)) {
+                $val  = [];
+                foreach ($objs as $obj) {
+                    if ($obj->validate() === false) {
+                        $validator = $obj->validator();
+                        $this->validator()->merge($validator/*, $ident*/);
+                        $result = false;
+                    }
+                }
+            }
+
+            return $result;
+        }
+
+        $obj = $this->structureVal($val);
+        if ($obj && $obj->validate() === false) {
+            $validator = $obj->validator();
+            $this->validator()->merge($validator/*, $ident*/);
+            $result = false;
+        }
+
+        return $result;
     }
 
     /**
