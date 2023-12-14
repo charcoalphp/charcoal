@@ -209,7 +209,7 @@ Both methods are protected; this trait has no public interface.
 
 ## Resources
 
-* [Contributing](https://github.com/charcoalphp/charcoal/blob/main/CONTRIBUTING.md)
+* [Contributing](https://github.com/charcoalphp/.github/blob/main/CONTRIBUTING.md)
 * [Report issues](https://github.com/charcoalphp/charcoal/issues) and
   [send pull requests](https://github.com/charcoalphp/charcoal/pulls)
   in the [main Charcoal repository](https://github.com/charcoalphp/charcoal)

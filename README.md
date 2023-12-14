@@ -315,7 +315,14 @@ Output:
 
 ## Contributing
 
-Please see [CONTRIBUTION.md](CONTRIBUTION.md) for guidelines on how to contribute to the **Charcoal** framework.
+Everyone interacting with Charcoal is expected to follow
+the [code of conduct](https://github.com/charcoalphp/.github/blob/main/CODE_OF_CONDUCT.md).
+
+Please see our [contribution guide](https://github.com/charcoalphp/.github/blob/main/CONTRIBUTING.md)
+on how to contribute to Charcoal.
+
+If you are tying to report a possible security vulnerability in Charcoal,
+please see our [security policy](https://github.com/charcoalphp/charcoal/security/policy) for more information.
 
 ## ✍🏻 Authors
 
@@ -332,7 +339,7 @@ Please see [CONTRIBUTION.md](CONTRIBUTION.md) for guidelines on how to contribut
 
 Made with [contrib.rocks](https://contrib.rocks).
 
-##  Changelog
+## Changelog
 
 View [CHANGELOG](CHANGELOG.md).
 
