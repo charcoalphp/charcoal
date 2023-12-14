@@ -36,7 +36,7 @@ jobs:
 
       - name: Output list of packages as JSON
         id: output_data
-        run: echo "::set-output name=matrix::$(vendor/bin/monorepo-builder packages-json)"
+        run: echo "matrix=$(vendor/bin/monorepo-builder packages-json)" >> $GITHUB_OUTPUT
 
     outputs:
       matrix: ${{ steps.output_data.outputs.matrix }}
