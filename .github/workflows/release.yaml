@@ -16,13 +16,13 @@ jobs:
     steps:
       - name: Get Token
         id: get_workflow_token
-        uses: peter-murray/workflow-application-token-action@v1
+        uses: peter-murray/workflow-application-token-action@v2
         with:
           application_id: ${{ secrets.APPLICATION_ID }}
           application_private_key: ${{ secrets.APPLICATION_PRIVATE_KEY }}
 
       - name: Checkout project
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           persist-credentials: false
 
@@ -39,7 +39,7 @@ jobs:
         uses: ramsey/composer-install@v2
 
       - name: Semantic Release
-        uses: cycjimmy/semantic-release-action@v3
+        uses: cycjimmy/semantic-release-action@v4
         env:
           GITHUB_TOKEN: ${{ steps.get_workflow_token.outputs.token }}
         with:

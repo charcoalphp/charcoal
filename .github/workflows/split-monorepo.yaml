@@ -18,7 +18,7 @@ jobs:
     if: "github.event.release.target_commitish == 'main'"
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
@@ -51,12 +51,12 @@ jobs:
         package: ${{fromJson(needs.provide_packages_json.outputs.matrix)}}
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           persist-credentials: false
 
       # with tag
-      - uses: "symplify/monorepo-split-github-action@2.1"
+      - uses: danharrin/monorepo-split-github-action@v2.3.0
         name: Monorepo Tagged Split of ${{ matrix.package }}
         with:
           tag: ${{ github.event.release.tag_name }}
