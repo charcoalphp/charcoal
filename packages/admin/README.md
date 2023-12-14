@@ -99,10 +99,10 @@ The following base widgets are available to build the various _admin_ templates:
 * `Graph/Bar`
 * `Graph/Line`
 * `Graph/Pie`
-* Layout
-* MapWidget
-* Table
-* TableProperty
+* `Layout`
+* `MapWidget`
+* `Table`
+* `TableProperty`
 
 ### Property Inputs
 
@@ -353,7 +353,7 @@ _CLI Actions_ are specialized action meant to be run, interactively, from the Co
 
 ## Resources
 
-* [Contributing](https://github.com/charcoalphp/charcoal/blob/main/CONTRIBUTING.md)
+* [Contributing](https://github.com/charcoalphp/.github/blob/main/CONTRIBUTING.md)
 * [Report issues](https://github.com/charcoalphp/charcoal/issues) and
   [send pull requests](https://github.com/charcoalphp/charcoal/pulls)
   in the [main Charcoal repository](https://github.com/charcoalphp/charcoal)
