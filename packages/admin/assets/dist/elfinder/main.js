@@ -9,7 +9,7 @@
 
 (function () {
     'use strict';
-    var jqver = '3.4.1',    // jQuery
+    var jqver = '3.6.0',    // jQuery
         uiver = '1.12.1',   // jQuery UI version
         cdnjs = 'https://cdnjs.cloudflare.com/ajax/libs',
 
@@ -189,17 +189,13 @@
                     window.alert(error.message);
                 }
             );
-        },
-
-        // is IE8? for determine the jQuery version to use (optional)
-        ie8 = (typeof window.addEventListener === 'undefined' &&
-               typeof document.getElementsByClassName === 'undefined');
+        };
 
     // Configure RequireJS (REQUIRED)
     require.config({
         // baseUrl: './js',
         paths: {
-            'jquery':                cdnjs + '/jquery/' + (ie8 ? '1.12.4' : jqver) + '/jquery.min',
+            'jquery':                cdnjs + '/jquery/' + jqver + '/jquery.min',
             'jquery-ui':             cdnjs + '/jqueryui/' + uiver + '/jquery-ui.min',
             'elfinder':              'js/elfinder.min',
             'editors.default':       'js/extras/editors.default.min',
