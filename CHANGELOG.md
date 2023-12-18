@@ -5,14 +5,16 @@
 
 ### Bug Fixes
 
-* **admin:** Update elFinder in root composer.json ([cdc6a13](https://github.com/charcoalphp/charcoal/commit/cdc6a134d4e5aba87be9ec4741f9873652385748))
+* **composer:** Update elFinder in root composer.json ([cdc6a13](https://github.com/charcoalphp/charcoal/commit/cdc6a134d4e5aba87be9ec4741f9873652385748))
+* **composer:** Update PHPMailer ([43049e4](https://github.com/charcoalphp/charcoal/commit/43049e4c60fcd994a817b902c2ed0a1c54dbe370))
 
 ## [4.0.4](https://github.com/charcoalphp/charcoal/compare/v4.0.3...v4.0.4) (2023-12-18)
 
 
 ### Bug Fixes
 
-* **admin:** Update elFinder + TinyMCE ([#82](https://github.com/charcoalphp/charcoal/issues/82)) ([e64cc47](https://github.com/charcoalphp/charcoal/commit/e64cc47f31616d984e34c6a6d7ff0714868d6ec2))
+* **admin:** Update elFinder ([e64cc47](https://github.com/charcoalphp/charcoal/commit/a941f159bd8fd8216ab42b68f286e47bf957c706))
+* **admin:** Update TinyMCE ([e64cc47](https://github.com/charcoalphp/charcoal/commit/510fc062038ccbfd3f556873e4b9304f85765a88))
 
 ## [4.0.3](https://github.com/charcoalphp/charcoal/compare/v4.0.2...v4.0.3) (2023-11-23)
 
