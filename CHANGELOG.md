@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.0.5](https://github.com/charcoalphp/charcoal/compare/v4.0.4...v4.0.5) (2023-12-18)
+
+
+### Bug Fixes
+
+* **admin:** Update elFinder in root composer.json ([cdc6a13](https://github.com/charcoalphp/charcoal/commit/cdc6a134d4e5aba87be9ec4741f9873652385748))
+
 ## [4.0.4](https://github.com/charcoalphp/charcoal/compare/v4.0.3...v4.0.4) (2023-12-18)
 
 

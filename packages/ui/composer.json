@@ -23,11 +23,11 @@
     "require": {
         "php": "^7.4 || ^8.0",
         "psr/log": "^1.0",
-        "charcoal/config": "^4.0.4",
-        "charcoal/factory": "^4.0.4",
-        "charcoal/translator": "^4.0.4",
-        "charcoal/view": "^4.0.4",
-        "charcoal/user": "^4.0.4"
+        "charcoal/config": "^4.0.5",
+        "charcoal/factory": "^4.0.5",
+        "charcoal/translator": "^4.0.5",
+        "charcoal/view": "^4.0.5",
+        "charcoal/user": "^4.0.5"
     },
     "require-dev": {
         "phpunit/phpunit": "^9.5",
@@ -36,7 +36,7 @@
         "mustache/mustache": "^2.11",
         "tedivm/stash": "~0.16",
         "pimple/pimple": "^3.0",
-        "charcoal/app": "^4.0.4"
+        "charcoal/app": "^4.0.5"
     },
     "suggest": {
         "pimple/pimple": "DI Container to register the various Service Providers."
