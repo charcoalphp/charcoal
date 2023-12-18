@@ -6,7 +6,7 @@
     "author": "Locomotive <info@locomotive.ca>",
     "engines": {
         "node": "^14.17",
-        "npm": "^7 || ^8"
+        "npm": "^8"
     },
     "dependencies": {
         "@claviska/jquery-minicolors": "^2.3.6",
