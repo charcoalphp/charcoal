@@ -21,13 +21,13 @@
     },
     "require": {
         "php": "^7.4 || ^8.0",
-        "charcoal/config": "^4.0.3",
-        "charcoal/core": "^4.0.3",
-        "charcoal/object": "^4.0.3",
-        "charcoal/translator": "^4.0.3"
+        "charcoal/config": "^4.0.4",
+        "charcoal/core": "^4.0.4",
+        "charcoal/object": "^4.0.4",
+        "charcoal/translator": "^4.0.4"
     },
     "require-dev": {
-        "charcoal/admin": "^4.0.3",
+        "charcoal/admin": "^4.0.4",
         "mockery/mockery": "^1.0",
         "php-coveralls/php-coveralls": "^2.2",
         "phpunit/phpunit": "^9.5",

@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.0.4](https://github.com/charcoalphp/charcoal/compare/v4.0.3...v4.0.4) (2023-12-18)
+
+
+### Bug Fixes
+
+* **admin:** Update elFinder + TinyMCE ([#82](https://github.com/charcoalphp/charcoal/issues/82)) ([e64cc47](https://github.com/charcoalphp/charcoal/commit/e64cc47f31616d984e34c6a6d7ff0714868d6ec2))
+
 ## [4.0.3](https://github.com/charcoalphp/charcoal/compare/v4.0.2...v4.0.3) (2023-11-23)
 
 
