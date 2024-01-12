@@ -42,7 +42,7 @@
         "psr/cache": "^1.0",
         "psr/http-message": "^1.0",
         "psr/log": "^1.0",
-        "studio-42/elfinder": "2.1.62"
+        "studio-42/elfinder": "2.1.64"
     },
     "require-dev": {
         "league/csv": "^9.5",
