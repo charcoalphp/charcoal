@@ -1,17 +1,16 @@
 name: Release
 
 on:
-  push:
-    branches:
-      - main
-      - beta
-      - alpha
-      - next
-      - next-major
+  workflow_run:
+    workflows: [ PHP Testing ]
+    types: [ completed ]
+    branches: [ main ]
 
 jobs:
   release:
     runs-on: ubuntu-latest
+
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
 
     steps:
       - name: Get Token
