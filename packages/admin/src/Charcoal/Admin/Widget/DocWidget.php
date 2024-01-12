@@ -275,7 +275,7 @@ class DocWidget extends FormWidget implements
 
         $obj = $this->obj();
         if ($obj && $this->isObjRenderable($obj)) {
-            $url = $obj->render($url);
+            $url = $obj->renderTemplate($url);
         }
 
         $this->nextUrl = $url;
@@ -572,7 +572,7 @@ class DocWidget extends FormWidget implements
         }
 
         if ($formIdent && $this->isObjRenderable($obj)) {
-            $formIdent = $obj->render($formIdent);
+            $formIdent = $obj->renderTemplate($formIdent);
         }
 
         if (isset($adminMetadata['forms'][$formIdent])) {

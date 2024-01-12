@@ -13,7 +13,7 @@ abstract class AbstractLoader implements LoaderInterface
 {
     private string $basePath = '';
     private array $paths = [];
-    private array $dynamicTemplates = [];
+    private static array $dynamicTemplates = [];
 
     /**
      * The cache of searched template files.
@@ -41,9 +41,7 @@ abstract class AbstractLoader implements LoaderInterface
     public function load($ident)
     {
         // Handle dynamic template
-        if (substr($ident, 0, 1) === '$') {
-            $ident = $this->dynamicTemplate(substr($ident, 1));
-        }
+        $ident = $this->resolveDynamicTemplate($ident);
 
         /**
          * Prevents the loader from passing a proper template through further
@@ -62,16 +60,28 @@ abstract class AbstractLoader implements LoaderInterface
     }
 
     /**
+     * @param  string $ident The template ident to load and render.
+     * @return string
+     */
+    public function resolveDynamicTemplate($ident): string
+    {
+        if (substr($ident, 0, 1) === '$') {
+            return $this->dynamicTemplate(substr($ident, 1));
+        }
+        return $ident;
+    }
+
+    /**
      * @param  string $varName The name of the variable to get template ident from.
      * @return string
      */
     public function dynamicTemplate(string $varName): string
     {
-        if (!isset($this->dynamicTemplates[$varName])) {
+        if (!isset(static::$dynamicTemplates[$varName])) {
             return '';
         }
 
-        return $this->dynamicTemplates[$varName];
+        return static::$dynamicTemplates[$varName];
     }
 
     /**
@@ -87,7 +97,7 @@ abstract class AbstractLoader implements LoaderInterface
             return;
         }
 
-        $this->dynamicTemplates[$varName] = $templateIdent;
+        static::$dynamicTemplates[$varName] = $templateIdent;
     }
 
     /**
@@ -96,7 +106,7 @@ abstract class AbstractLoader implements LoaderInterface
      */
     public function removeDynamicTemplate(string $varName): void
     {
-        unset($this->dynamicTemplates[$varName]);
+        unset(static::$dynamicTemplates[$varName]);
     }
 
     /**
@@ -104,7 +114,7 @@ abstract class AbstractLoader implements LoaderInterface
      */
     public function clearDynamicTemplates(): void
     {
-        $this->dynamicTemplates = [];
+        static::$dynamicTemplates = [];
     }
 
     /**
@@ -185,7 +195,7 @@ abstract class AbstractLoader implements LoaderInterface
      * @return boolean Returns TRUE if the given value is most likely the template contents
      *     as opposed to a template identifier (file path).
      */
-    protected function isTemplateString(string $ident): bool
+    public function isTemplateString(string $ident): bool
     {
         return strpos($ident, PHP_EOL) !== false;
     }
@@ -198,7 +208,7 @@ abstract class AbstractLoader implements LoaderInterface
      * @param  string $ident The template identifier to load..
      * @return string|null The full path + filename of the found template. NULL if nothing was found.
      */
-    protected function findTemplateFile(string $ident): ?string
+    public function findTemplateFile(string $ident): ?string
     {
         $key = hash('md5', $ident);
 

@@ -120,10 +120,10 @@ trait ConfigurableAttachmentsTrait
 
         if ($this instanceof ObjectContainerInterface) {
             if ($this->hasObj()) {
-                $widgetIdent = $this->obj()->render($widgetIdent);
+                $widgetIdent = $this->obj()->renderTemplate($widgetIdent);
             }
         } elseif ($this instanceof ModelInterface) {
-            $widgetIdent = $this->render($widgetIdent);
+            $widgetIdent = $this->renderTemplate($widgetIdent);
         }
 
         $presetWidgets = $this->config('widgets');
@@ -160,10 +160,10 @@ trait ConfigurableAttachmentsTrait
             $groupIdent = $data;
             if ($this instanceof ObjectContainerInterface) {
                 if ($this->hasObj()) {
-                    $groupIdent = $this->obj()->render($groupIdent);
+                    $groupIdent = $this->obj()->renderTemplate($groupIdent);
                 }
             } elseif ($this instanceof ModelInterface) {
-                $groupIdent = $this->render($groupIdent);
+                $groupIdent = $this->renderTemplate($groupIdent);
             }
 
             $presetGroups = $this->config('groups');

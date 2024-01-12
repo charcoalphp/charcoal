@@ -123,6 +123,6 @@ class SelectizeRenderer
             $template = $context;
         }
 
-        return $this->view->render($templateIdent, $template);
+        return $this->view->renderTemplate($templateIdent, $template);
     }
 }

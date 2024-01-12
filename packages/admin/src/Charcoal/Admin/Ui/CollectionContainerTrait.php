@@ -830,7 +830,7 @@ trait CollectionContainerTrait
                 $displayType = $this->display->displayType();
                 $this->display->setPropertyVal($object->propertyValue($propertyIdent));
 
-                $propertyValue = $this->view()->renderTemplate($displayType, $this->display);
+                $propertyValue = $this->view()->render($displayType, $this->display);
 
                 $cell = $this->parsePropertyCell($object, $property, $propertyValue);
                 $objectProperties[] = $cell;
