@@ -1,5 +1,13 @@
 # Changelog
 
+## [4.0.6](https://github.com/charcoalphp/charcoal/compare/v4.0.5...v4.0.6) (2024-01-12)
+
+
+### Performance Improvements
+
+* **admin:** Update elFinder v2.1.62 → v2.1.64 ([b55a916](https://github.com/charcoalphp/charcoal/commit/b55a91661aa329ebff26755cc2ccb0d071ee7efe))
+* **admin:** Upgrade jQuery + jQuery UI ([5baa78d](https://github.com/charcoalphp/charcoal/commit/5baa78dc9b805af93ef79179d3bcfc075f5cdbe0))
+
 ## [4.0.5](https://github.com/charcoalphp/charcoal/compare/v4.0.4...v4.0.5) (2023-12-18)
 
 
