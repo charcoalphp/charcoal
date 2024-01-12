@@ -6077,13 +6077,6 @@ Charcoal.Admin.Widget_Relation.prototype.parent = Charcoal.Admin.Widget.prototyp
  * @return {thisArg} Chainable
  */
 Charcoal.Admin.Widget_Relation.prototype.init = function () {
-    // Necessary assets.
-    if (typeof $.fn.sortable !== 'function') {
-        var url = 'https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js';
-        Charcoal.Admin.loadScript(url, this.init.bind(this));
-
-        return this;
-    }
     // var config = this.opts();
     var $container = this.element().find('.js-relation-sortable .js-grid-container');
 
@@ -11892,8 +11885,10 @@ Charcoal.Admin.Property_Input_Selectize_Tags.prototype.constructor = Charcoal.Ad
 Charcoal.Admin.Property_Input_Selectize_Tags.prototype.parent      = Charcoal.Admin.Property.prototype;
 
 Charcoal.Admin.Property_Input_Selectize_Tags.prototype.init = function () {
+    // jQuery UI is supposed to be fulfilled by charcoal.admin.vendors.js
+    // I do not know why this is needed.
     if (typeof $.fn.sortable !== 'function') {
-        var url = 'https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js';
+        var url = 'https://ajax.googleapis.com/ajax/libs/jqueryui/1.13.2/jquery-ui.min.js';
         Charcoal.Admin.loadScript(url, this.init.bind(this));
 
         return this;

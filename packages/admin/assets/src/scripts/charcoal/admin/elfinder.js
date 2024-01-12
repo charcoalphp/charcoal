@@ -9,8 +9,8 @@
 
 (function () {
     'use strict';
-    var jqver = '3.6.0',    // jQuery
-        uiver = '1.12.1',   // jQuery UI version
+    var jqver = '3.7.1',    // jQuery
+        uiver = '1.13.2',   // jQuery UI version
         cdnjs = 'https://cdnjs.cloudflare.com/ajax/libs',
 
         // Detect language (optional)

@@ -29,13 +29,6 @@ Charcoal.Admin.Widget_Relation.prototype.parent = Charcoal.Admin.Widget.prototyp
  * @return {thisArg} Chainable
  */
 Charcoal.Admin.Widget_Relation.prototype.init = function () {
-    // Necessary assets.
-    if (typeof $.fn.sortable !== 'function') {
-        var url = 'https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js';
-        Charcoal.Admin.loadScript(url, this.init.bind(this));
-
-        return this;
-    }
     // var config = this.opts();
     var $container = this.element().find('.js-relation-sortable .js-grid-container');
 

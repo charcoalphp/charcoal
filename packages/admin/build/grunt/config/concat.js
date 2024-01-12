@@ -37,7 +37,7 @@ module.exports = {
             // jQuery
             '<%= paths.npm %>/jquery/dist/jquery.js',
             // jQuery UI
-            '<%= paths.npm %>/jquery-ui-bundle/jquery-ui.js',
+            '<%= paths.npm %>/jquery-ui/dist/jquery-ui.js',
             // Bootstrap
             '<%= paths.npm %>/bootstrap/dist/js/bootstrap.bundle.js',
             // Bootstrap Dialog
