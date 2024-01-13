@@ -488,7 +488,7 @@ class ClearCacheTemplate extends AdminTemplate
     {
         $engine = $this->getTwigEngine();
         if ($engine) {
-            return (bool) $engine->config()['useCache'];
+            return (bool)$engine->config()['useCache'];
         }
 
         return false;
