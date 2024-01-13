@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.0.7](https://github.com/charcoalphp/charcoal/compare/v4.0.6...v4.0.7) (2024-01-13)
+
+
+### Bug Fixes
+
+* **admin:** Fix Clear Cache template when view engine unavailable ([8f794e2](https://github.com/charcoalphp/charcoal/commit/8f794e2f3b994647f068b1a33708bd2306524ed0))
+
 ## [4.0.6](https://github.com/charcoalphp/charcoal/compare/v4.0.5...v4.0.6) (2024-01-12)
 
 

@@ -23,16 +23,16 @@
     "require": {
         "php": "^7.4 || ^8.0",
         "psr/http-message": "^1.0",
-        "charcoal/app": "^4.0.6",
-        "charcoal/attachment": "^4.0.6",
-        "charcoal/core": "^4.0.6",
-        "charcoal/factory": "^4.0.6",
-        "charcoal/object": "^4.0.6",
-        "charcoal/property": "^4.0.6",
-        "charcoal/translator": "^4.0.6"
+        "charcoal/app": "^4.0.7",
+        "charcoal/attachment": "^4.0.7",
+        "charcoal/core": "^4.0.7",
+        "charcoal/factory": "^4.0.7",
+        "charcoal/object": "^4.0.7",
+        "charcoal/property": "^4.0.7",
+        "charcoal/translator": "^4.0.7"
     },
     "require-dev": {
-        "charcoal/admin": "^4.0.6",
+        "charcoal/admin": "^4.0.7",
         "mustache/mustache": "^2.11",
         "php-coveralls/php-coveralls": "^2.2",
         "phpunit/phpunit": "^9.5",
