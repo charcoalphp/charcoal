@@ -16,7 +16,7 @@
     },
     "require": {
         "php": "^7.4 || ^8.0",
-        "charcoal/factory": "^4.0.7"
+        "charcoal/factory": "^4.0.8"
     },
     "require-dev": {
         "php-coveralls/php-coveralls": "^2.2",
