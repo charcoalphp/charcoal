@@ -14,6 +14,8 @@ use Charcoal\Cache\CachePoolAwareTrait;
 // From 'charcoal-admin'
 use Charcoal\Admin\AdminAction;
 use Charcoal\View\EngineInterface;
+use Charcoal\View\Mustache\MustacheEngine;
+use Charcoal\View\Twig\TwigEngine;
 
 /**
  * Base Cache Action
@@ -25,16 +27,42 @@ abstract class AbstractCacheAction extends AdminAction
     /**
      * Mustache View Engine.
      *
-     * @var \Charcoal\View\Mustache\MustacheEngine
+     * @var MustacheEngine|(callable():?MustacheEngine)
      */
-    protected EngineInterface $mustacheEngine;
+    private $mustacheEngine;
 
     /**
      * Twig View Engine.
      *
-     * @var \Charcoal\View\Twig\TwigEngine
+     * @var TwigEngine|(callable():?TwigEngine)
      */
-    protected EngineInterface $twigEngine;
+    private $twigEngine;
+
+    public function getMustacheEngine(): ?MustacheEngine
+    {
+        if (is_callable($this->mustacheEngine)) {
+            $this->mustacheEngine = ($this->mustacheEngine)();
+        }
+
+        if ($this->mustacheEngine instanceof MustacheEngine) {
+            return $this->mustacheEngine;
+        }
+
+        return null;
+    }
+
+    public function getTwigEngine(): ?TwigEngine
+    {
+        if (is_callable($this->twigEngine)) {
+            $this->twigEngine = ($this->twigEngine)();
+        }
+
+        if ($this->twigEngine instanceof TwigEngine) {
+            return $this->twigEngine;
+        }
+
+        return null;
+    }
 
     /**
      * @return array
@@ -58,7 +86,20 @@ abstract class AbstractCacheAction extends AdminAction
         parent::setDependencies($container);
 
         $this->setCachePool($container['cache']);
-        $this->mustacheEngine   = $container['view/engine/mustache'];
-        $this->twigEngine       = $container['view/engine/twig'];
+
+        $this->mustacheEngine = function () use ($container) {
+            if (class_exists('\Mustache_Engine')) {
+                return $container['view/engine/mustache'];
+            }
+
+            return null;
+        };
+        $this->twigEngine = function () use ($container) {
+            if (class_exists('\Twig\Environment')) {
+                return $container['view/engine/twig'];
+            }
+
+            return null;
+        };
     }
 }

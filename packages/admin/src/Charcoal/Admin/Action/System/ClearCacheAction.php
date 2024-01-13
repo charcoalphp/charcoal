@@ -130,8 +130,15 @@ class ClearCacheAction extends AbstractCacheAction
 
     private function clearTwigCache(): bool
     {
-        $defaultCachePath = realpath($this->twigEngine->cache());
-        $cachePath = $defaultCachePath ? $defaultCachePath : realpath($this->appConfig['publicPath'] . DIRECTORY_SEPARATOR . $this->twigEngine->cache());
+        $engine = $this->getTwigEngine();
+        if (!$engine) {
+            return true;
+        }
+
+        $defaultCachePath = realpath($engine->cache());
+        $cachePath = $defaultCachePath
+            ? $defaultCachePath
+            : realpath($this->appConfig['publicPath'] . DIRECTORY_SEPARATOR . $engine->cache());
         if (!is_dir($cachePath)) {
             return false;
         }
@@ -141,8 +148,15 @@ class ClearCacheAction extends AbstractCacheAction
 
     private function clearMustacheCache(): bool
     {
-        $defaultCachePath = realpath($this->mustacheEngine->cache());
-        $cachePath = $defaultCachePath ? $defaultCachePath : realpath($this->appConfig['publicPath'] . DIRECTORY_SEPARATOR . $this->mustacheEngine->cache());
+        $engine = $this->getMustacheEngine();
+        if (!$engine) {
+            return true;
+        }
+
+        $defaultCachePath = realpath($engine->cache());
+        $cachePath = $defaultCachePath
+            ? $defaultCachePath
+            : realpath($this->appConfig['publicPath'] . DIRECTORY_SEPARATOR . $engine->cache());
         if (!is_dir($cachePath)) {
             return false;
         }
