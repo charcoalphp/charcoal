@@ -18,9 +18,14 @@ use Pimple\Container;
 // From 'charcoal-admin'
 use Charcoal\Admin\AdminTemplate;
 use Charcoal\View\EngineInterface;
+use Charcoal\View\Mustache\MustacheEngine;
+use Charcoal\View\Twig\TwigEngine;
 
 /**
  * Cache information.
+ *
+ * For the Mustache and Twig engines, this class defers their retrieval from
+ * the service container to avoid fetching an unused or unavailable engine.
  */
 class ClearCacheTemplate extends AdminTemplate
 {
@@ -62,16 +67,16 @@ class ClearCacheTemplate extends AdminTemplate
     /**
      * Mustache View Engine.
      *
-     * @var \Charcoal\View\Mustache\MustacheEngine
+     * @var MustacheEngine|(callable():?MustacheEngine)
      */
-    private EngineInterface $mustacheEngine;
+    private $mustacheEngine;
 
     /**
      * Twig View Engine.
      *
-     * @var \Charcoal\View\Twig\TwigEngine
+     * @var TwigEngine|(callable():?TwigEngine)
      */
-    private EngineInterface $twigEngine;
+    private $twigEngine;
 
     /**
      * Retrieve the title of the page.
@@ -193,6 +198,32 @@ class ClearCacheTemplate extends AdminTemplate
         return '/::' . $this->getCacheNamespace() . '::request::|::' . $this->getCacheNamespace() . '::template::/';
     }
 
+    public function getMustacheEngine(): ?MustacheEngine
+    {
+        if (is_callable($this->mustacheEngine)) {
+            $this->mustacheEngine = ($this->mustacheEngine)();
+        }
+
+        if ($this->mustacheEngine instanceof MustacheEngine) {
+            return $this->mustacheEngine;
+        }
+
+        return null;
+    }
+
+    public function getTwigEngine(): ?TwigEngine
+    {
+        if (is_callable($this->twigEngine)) {
+            $this->twigEngine = ($this->twigEngine)();
+        }
+
+        if ($this->twigEngine instanceof TwigEngine) {
+            return $this->twigEngine;
+        }
+
+        return null;
+    }
+
     /**
      * @return array
      */
@@ -257,10 +288,19 @@ class ClearCacheTemplate extends AdminTemplate
      */
     private function twigCacheInfo(): array
     {
-        $defaultCachePath = realpath($this->twigEngine->cache());
+        $engine = $this->getTwigEngine();
+        if (!$engine) {
+            return [
+                'num_entries'     => 0,
+                'total_size'      => 0,
+                'no_cache_folder' => true,
+            ];
+        }
+
+        $defaultCachePath = realpath($engine->cache());
         $cachePath = $defaultCachePath
             ? $defaultCachePath
-            : realpath($this->appConfig['publicPath'] . DIRECTORY_SEPARATOR . $this->twigEngine->cache());
+            : realpath($this->appConfig['publicPath'] . DIRECTORY_SEPARATOR . $engine->cache());
 
         if (!is_dir($cachePath)) {
             return [
@@ -282,8 +322,19 @@ class ClearCacheTemplate extends AdminTemplate
      */
     private function mustacheCacheInfo(): array
     {
-        $defaultCachePath = realpath($this->mustacheEngine->cache());
-        $cachePath = $defaultCachePath ? $defaultCachePath : realpath($this->appConfig['publicPath'] . DIRECTORY_SEPARATOR . $this->mustacheEngine->cache());
+        $engine = $this->getMustacheEngine();
+        if (!$engine) {
+            return [
+                'num_entries'     => 0,
+                'total_size'      => 0,
+                'no_cache_folder' => true,
+            ];
+        }
+
+        $defaultCachePath = realpath($engine->cache());
+        $cachePath = $defaultCachePath
+            ? $defaultCachePath
+            : realpath($this->appConfig['publicPath'] . DIRECTORY_SEPARATOR . $engine->cache());
         if (!is_dir($cachePath)) {
             return [
                 'no_cache_folder' => true,
@@ -435,7 +486,12 @@ class ClearCacheTemplate extends AdminTemplate
 
     public function hasTwigCache(): bool
     {
-        return $this->twigEngine->config()->useCache;
+        $engine = $this->getTwigEngine();
+        if ($engine) {
+            return (bool) $engine->config()['useCache'];
+        }
+
+        return false;
     }
 
     public function hasMustacheCache(): bool
@@ -586,7 +642,20 @@ class ClearCacheTemplate extends AdminTemplate
         $this->availableCacheDrivers = $container['cache/available-drivers'];
         $this->cache                 = $container['cache'];
         $this->cacheConfig           = $container['cache/config'];
-        $this->mustacheEngine        = $container['view/engine/mustache'];
-        $this->twigEngine            = $container['view/engine/twig'];
+
+        $this->mustacheEngine = function () use ($container) {
+            if (class_exists('\Mustache_Engine')) {
+                return $container['view/engine/mustache'];
+            }
+
+            return null;
+        };
+        $this->twigEngine = function () use ($container) {
+            if (class_exists('\Twig\Environment')) {
+                return $container['view/engine/twig'];
+            }
+
+            return null;
+        };
     }
 }
