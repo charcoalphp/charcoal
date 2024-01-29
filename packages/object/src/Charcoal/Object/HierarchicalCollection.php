@@ -70,7 +70,7 @@ class HierarchicalCollection extends CharcoalCollection
         foreach ($this->objects as $object) {
             // Repair bad hierarchy.
             if ($object->hasMaster() && $object->getMaster() === $object->id()) {
-                $object->setMaster(0);
+                $object->setMaster(null);
                 $object->update([ 'master' ]);
             }
 
