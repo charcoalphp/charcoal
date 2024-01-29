@@ -17,7 +17,7 @@ trait HierarchicalTrait
      *
      * @var string|integer|null
      */
-    protected $master;
+    protected $master = null;
 
     /**
      * Store a copy of the object's ancestry.
@@ -31,21 +31,21 @@ trait HierarchicalTrait
      *
      * @var HierarchicalInterface[]|null
      */
-    private $children;
+    private $children = null;
 
     /**
      * Store a copy of the object's siblings.
      *
      * @var HierarchicalInterface[]|null
      */
-    private $siblings;
+    private $siblings = null;
 
     /**
      * The object's parent object, if any, in the hierarchy.
      *
      * @var HierarchicalInterface|null
      */
-    private $masterObject;
+    private $masterObject = null;
 
     /**
      * A store of cached objects.
@@ -128,13 +128,23 @@ trait HierarchicalTrait
     }
 
     /**
+     * Determine if this object's immediate parent exists.
+     *
+     * @return boolean
+     */
+    public function hasMasterObject()
+    {
+        return (bool)$this->getMasterObject();
+    }
+
+    /**
      * Determine if this object has a direct parent.
      *
      * @return boolean
      */
     public function hasMaster()
     {
-        return ($this->getMaster() !== null);
+        return (bool)$this->getMaster();
     }
 
     /**
@@ -146,7 +156,7 @@ trait HierarchicalTrait
      */
     public function isTopLevel()
     {
-        return ($this->getMaster() === null);
+        return !$this->getMaster();
     }
 
     /**
@@ -200,34 +210,44 @@ trait HierarchicalTrait
      */
     public function hasParents()
     {
-        return !!count($this->hierarchy());
+        return count($this->hierarchy()) > 0;
     }
 
     /**
      * Retrieve this object's ancestors (from immediate parent to top-level).
      *
-     * @return array
+     * @return HierarchicalInterface[]
      */
     public function hierarchy()
     {
-        if (!isset($this->hierarchy)) {
-            $hierarchy = [];
-            $master    = $this->getMasterObject();
-            while ($master) {
-                $hierarchy[] = $master;
-                $master      = $master->getMasterObject();
-            }
-
-            $this->hierarchy = $hierarchy;
+        if ($this->hierarchy === null) {
+            $this->hierarchy = $this->loadHierarchy();
         }
 
         return $this->hierarchy;
     }
 
     /**
+     * Build this object's ancestors (from immediate parent to top-level).
+     *
+     * @return HierarchicalInterface[]
+     */
+    public function loadHierarchy()
+    {
+        $hierarchy = [];
+        $master    = $this->getMasterObject();
+        while ($master) {
+            $hierarchy[] = $master;
+            $master      = $master->getMasterObject();
+        }
+
+        return $hierarchy;
+    }
+
+    /**
      * Retrieve this object's ancestors, inverted from top-level to immediate.
      *
-     * @return array
+     * @return HierarchicalInterface[]
      */
     public function invertedHierarchy()
     {
@@ -289,15 +309,15 @@ trait HierarchicalTrait
      * Get the total number of children in the entire hierarchy.
      * This method counts all children and sub-children, unlike `numChildren()` which only count 1 level.
      * @return integer
+     * @todo Implementation needed.
      */
     public function recursiveNumChildren()
     {
-        // TODO
         return 0;
     }
 
     /**
-     * @param array $children The children to set.
+     * @param mixed[] $children The children to set.
      * @return HierarchicalInterface Chainable
      */
     public function setChildren(array $children)
@@ -335,7 +355,7 @@ trait HierarchicalTrait
 
     /**
      * Get the children directly under this object.
-     * @return array
+     * @return ModelInterface[]
      */
     public function children()
     {
@@ -360,11 +380,8 @@ trait HierarchicalTrait
     public function isChildOf($master)
     {
         $master = $this->objFromIdent($master);
-        if ($master === null) {
-            return false;
-        }
 
-        return ($master->id() === $this->getMaster());
+        return ($master && $master->id() === $this->getMaster());
     }
 
     /**
@@ -377,8 +394,8 @@ trait HierarchicalTrait
             return true;
         }
 
-        if ($this->hasParents() && $this->getMasterObject()->recursiveIsChildOf($master)) {
-            return true;
+        if ($this->hasParents() && $this->hasMasterObject()) {
+            return $this->getMasterObject()->recursiveIsChildOf($master);
         }
 
         return false;
@@ -406,24 +423,32 @@ trait HierarchicalTrait
 
     /**
      * Get all the objects on the same level as this one.
-     * @return array
+     * @return ModelInterface[]
      */
     public function siblings()
     {
-        if ($this->siblings !== null) {
-            return $this->siblings;
+        if ($this->siblings === null) {
+            $this->siblings = $this->loadSiblings();
         }
-        $master = $this->getMasterObject();
-        if ($master === null) {
-            // Todo: return all top-level objects.
-            $siblings = [];
-        } else {
-            // Todo: Remove "current" object from siblings
-            $siblings = $master->children();
-        }
-        $this->siblings = $siblings;
 
         return $this->siblings;
+    }
+
+    /**
+     * Get all the objects on the same level as this one.
+     * @return ModelInterface[]
+     * @todo Implementation needed.
+     */
+    public function loadSiblings()
+    {
+        $master = $this->getMasterObject();
+        if ($master) {
+            // Todo: Remove "current" object from siblings
+            return $master->children();
+        }
+
+        // TODO: return all top-level objects.
+        return [];
     }
 
     /**
@@ -439,7 +464,7 @@ trait HierarchicalTrait
 
     /**
      * @param mixed $ident The ident.
-     * @return HierarchicalInterface|null
+     * @return (HierarchicalInterface&ModelInterface)|null
      * @throws InvalidArgumentException If the identifier is not a scalar value.
      */
     private function objFromIdent($ident)
@@ -471,7 +496,6 @@ trait HierarchicalTrait
         }
 
         $obj = $this->loadObjectFromSource($ident);
-
         if ($obj !== null) {
             $this->addObjectToCache($obj);
         }
@@ -483,7 +507,7 @@ trait HierarchicalTrait
      * Retrieve an object from the storage source by its ID.
      *
      * @param mixed $id The object id.
-     * @return null|HierarchicalInterface
+     * @return (HierarchicalInterface&ModelInterface)|null
      */
     private function loadObjectFromSource($id)
     {
@@ -492,25 +516,25 @@ trait HierarchicalTrait
 
         if ($obj->id()) {
             return $obj;
-        } else {
-            return null;
         }
+
+        return null;
     }
 
     /**
      * Retrieve an object from the cache store by its ID.
      *
      * @param mixed $id The object id.
-     * @return null|HierarchicalInterface
+     * @return (HierarchicalInterface&ModelInterface)|null
      */
     private function loadObjectFromCache($id)
     {
         $objType = $this->objType();
         if (isset(static::$objectCache[$objType][$id])) {
             return static::$objectCache[$objType][$id];
-        } else {
-            return null;
         }
+
+        return null;
     }
 
     /**
