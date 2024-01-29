@@ -76,7 +76,16 @@ trait HierarchicalTrait
      */
     public function setMaster($master)
     {
+        $master = is_numeric($master)
+            ? (int)$master
+            : $master;
+
+        if (!$master) {
+            $master = null;
+        }
+
         $this->master = $master;
+        $this->masterObject = null;
 
         $this->resetHierarchy();
 
