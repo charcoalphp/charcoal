@@ -109,6 +109,18 @@ class HierarchicalCollection extends CharcoalCollection
                     );
                 }
             }
+
+            // Display orphaned descendants.
+            if ($childObjects) {
+                foreach ($childObjects as $orphans) {
+                    foreach ($orphans as $descendants) {
+                        $descendants->level = 0;
+                        $sortedObjects[$descendants->id()] = $descendants;
+
+                        $count++;
+                    }
+                }
+            }
         } else {
             $start = (( $pageNum - 1 ) * $perPage);
             $end   = ($start + $perPage);
