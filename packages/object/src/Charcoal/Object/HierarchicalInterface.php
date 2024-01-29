@@ -15,6 +15,13 @@ interface HierarchicalInterface
     public function hasMaster();
 
     /**
+     * Determine if this object's immediate parent exists.
+     *
+     * @return boolean
+     */
+    public function hasMasterObject();
+
+    /**
      * Determine if this object is the head (top-level) of its hierarchy.
      *
      * Top-level objects do not have a parent (master).
