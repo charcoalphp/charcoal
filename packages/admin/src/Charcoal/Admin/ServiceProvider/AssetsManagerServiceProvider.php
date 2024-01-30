@@ -2,7 +2,6 @@
 
 namespace Charcoal\Admin\ServiceProvider;
 
-// from pimple
 use Charcoal\Admin\AssetsConfig;
 use Charcoal\Admin\Mustache\AssetsHelpers;
 use Charcoal\Admin\Service\AssetsBuilder;
@@ -83,8 +82,10 @@ class AssetsManagerServiceProvider implements ServiceProviderInterface
             return new AssetsConfig($config);
         };
 
-        $container['assets/builder'] = function () {
-            return new AssetsBuilder();
+        $container['assets/builder'] = function (Container $container) {
+            $appConfig = $container['config'];
+
+            return new AssetsBuilder($appConfig['base_path']);
         };
 
         /**
