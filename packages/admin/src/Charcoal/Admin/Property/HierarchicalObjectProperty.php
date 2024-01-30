@@ -2,8 +2,6 @@
 
 namespace Charcoal\Admin\Property;
 
-// From Pimple
-use Pimple\Container;
 // From 'charcoal-core'
 use Charcoal\Model\ModelInterface;
 // From 'charcoal-object'
@@ -61,7 +59,7 @@ class HierarchicalObjectProperty extends ObjectProperty
 
         if (property_exists($obj, 'auxiliary') && $obj->auxiliary) {
             $choice['parent'] = true;
-        } elseif ($obj instanceof HierarchicalInterface && $obj->hasMaster()) {
+        } elseif (($obj instanceof HierarchicalInterface) && $obj['masterObject']) {
             $choice['group'] = parent::parseChoice($obj['masterObject']);
         } else {
             $choice['group'] = null;
