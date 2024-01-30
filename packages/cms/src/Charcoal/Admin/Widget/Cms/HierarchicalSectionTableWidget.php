@@ -10,6 +10,7 @@ use Charcoal\Model\ModelInterface;
 use Charcoal\Property\PropertyInterface;
 // From 'charcoal-object'
 use Charcoal\Object\HierarchicalCollection;
+use Charcoal\Object\HierarchicalInterface;
 // From 'charcoal-admin'
 use Charcoal\Admin\Property\Display\HierarchicalDisplay;
 use Charcoal\Admin\Widget\TableWidget;
@@ -76,7 +77,10 @@ class HierarchicalSectionTableWidget extends TableWidget
     ) {
         parent::setupDisplayPropertyValue($object, $property);
 
-        if ($this->display instanceof HierarchicalDisplay) {
+        if (
+            ($object instanceof HierarchicalInterface) &&
+            ($this->display instanceof HierarchicalDisplay)
+        ) {
             $this->display->setCurrentLevel($object->hierarchyLevel());
         }
     }
