@@ -49,7 +49,14 @@ class ImagemagickResizeEffect extends AbstractResizeEffect
 
             $size = $width . 'x' . $height;
             if ($bestFit) {
-                $params[] = $option . ' "' . $size . '^"';
+                if ($width && $height) {
+                    // Minimum values of width and height given, aspect ratio preserved.
+                    $operator = '^';
+                } else {
+                    $operator = '';
+                }
+
+                $params[] = $option . ' "' . $size . $operator . '"';
                 $params[] = '-extent ' . $size;
             } else {
                 $params[] = $option . ' ' . $size;
