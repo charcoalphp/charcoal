@@ -188,7 +188,8 @@ class ModelStructureProperty extends StructureProperty
         $result = true;
 
         $model = $this->structureProto();
-        if (!($model instanceof ModelInterface) ||
+        if (
+            !($model instanceof ModelInterface) ||
             !($model instanceof ValidatableInterface)
         ) {
             return $result;
@@ -375,7 +376,7 @@ class ModelStructureProperty extends StructureProperty
 
                 $structureKey = $structureInterfaces;
                 array_unshift($structureKey, $this->ident());
-                $structureKey = 'property/structure='.$metadataLoader->serializeMetaKey($structureKey);
+                $structureKey = 'property/structure=' . $metadataLoader->serializeMetaKey($structureKey);
 
                 $structureMetadata = $metadataLoader->load(
                     $structureKey,
