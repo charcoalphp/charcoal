@@ -909,6 +909,8 @@ class AdminTemplate extends AbstractTemplate implements
             }
         }
 
+        usort($menuItems, [ 'Charcoal\Admin\Support\Sorter', 'sortByPriority' ]);
+
         return $menuItems;
     }
 
@@ -961,6 +963,8 @@ class AdminTemplate extends AbstractTemplate implements
 
             $menuItems[$menuIdent] = $menuItem;
         }
+
+        usort($menuItems, [ 'Charcoal\Admin\Support\Sorter', 'sortByPriority' ]);
 
         return $menuItems;
     }
