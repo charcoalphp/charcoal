@@ -23,8 +23,8 @@
     "require": {
         "php": "^7.4 || ^8.0",
         "psr/log": "^1.0",
-        "charcoal/core": "^4.0.8",
-        "charcoal/factory": "^4.0.8"
+        "charcoal/core": "^4.1",
+        "charcoal/factory": "^4.1"
     },
     "require-dev": {
         "phpunit/phpunit": "^9.5",

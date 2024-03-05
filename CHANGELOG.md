@@ -1,5 +1,25 @@
 # Changelog
 
+## [4.1.0](https://github.com/charcoalphp/charcoal/compare/v4.0.8...v4.1.0) (2024-03-05)
+
+
+### Features
+
+* **admin:** Fix and improve base path in AssetsBuilder ([116a9ce](https://github.com/charcoalphp/charcoal/commit/116a9cea6473c93d34bf36a205a3a05f9f0d6c66))
+* **object:** Fix missing orphaned descendants in `HierarchicalCollection` ([798901f](https://github.com/charcoalphp/charcoal/commit/798901f5c14cea9738556211d781f40e020d786f))
+* **object:** Improve Hierarchical mixin ([71a96e4](https://github.com/charcoalphp/charcoal/commit/71a96e460d146b7290f75b65f066a5de8763e3f2))
+
+
+### Bug Fixes
+
+* **admin:** Ensure master object exists in HierarchicalOjectProperty ([f153dba](https://github.com/charcoalphp/charcoal/commit/f153dba5b0152a3653010ef3e9095109ca7ab5a5))
+* **cms:** Clean-up SectionInterface admin metadata ([86cfb74](https://github.com/charcoalphp/charcoal/commit/86cfb74fa36ec403ca8ed3b38b6c05b97e27856e))
+* **cms:** Ensure object is hierarchical in HierarchicalSectionTableWidget ([f4d1ebe](https://github.com/charcoalphp/charcoal/commit/f4d1ebebd602fca74f3d6468c0ea1f2f0551cfcc))
+* **cms:** Fix missing filter for menu items in SectionInterface admin metadata ([d4a523d](https://github.com/charcoalphp/charcoal/commit/d4a523d93fdd18a4a2d445fe8a8d994daefb5b30))
+* **image:** Fix Imagemagick resize effect ([afbbff5](https://github.com/charcoalphp/charcoal/commit/afbbff51cb3a7d927086c0508a2c7c78daac1ce8))
+* **object:** Filter argument of `HierarchicalTrait::setMaster()` ([fa7a7b3](https://github.com/charcoalphp/charcoal/commit/fa7a7b37899465c0a976c32ae793361a052e9381))
+* **object:** Fix bad hierarchy repair in `HierarchicalCollection` ([7d13a08](https://github.com/charcoalphp/charcoal/commit/7d13a08cc9e9255fb3086302aa09a50ec2cb7858))
+
 ## [4.0.8](https://github.com/charcoalphp/charcoal/compare/v4.0.7...v4.0.8) (2024-01-13)
 
 
