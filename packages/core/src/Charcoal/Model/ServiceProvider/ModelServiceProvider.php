@@ -238,10 +238,12 @@ class ModelServiceProvider implements ServiceProviderInterface
                             $configPath = $basePath . DIRECTORY_SEPARATOR . $configPath;
 
                             $configData = $metaConfig->loadFile($configPath);
-                            $extraPaths = array_merge(
-                                $extraPaths,
-                                $configData['metadata']['paths']
-                            );
+                            if (isset($configData['metadata']['paths'])) {
+                                $extraPaths = array_merge(
+                                    $extraPaths,
+                                    $configData['metadata']['paths']
+                                );
+                            }
                         };
                     }
 
