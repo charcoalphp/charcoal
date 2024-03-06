@@ -6,30 +6,26 @@ use Charcoal\Admin\Property\AbstractPropertyInput;
 use InvalidArgumentException;
 
 /**
- * Base Tabulator Input Property
- * Tabulator is a JS Framework that allows to create interactive tables from diverse sources of data.
- * See {@link https://github.com/olifolkerd/tabulator}
+ * Tabulator Input Property
+ *
+ * {@link https://github.com/olifolkerd/tabulator Tabulator} is a JS framework
+ * that allows to create interactive tables from diverse sources of data.
  */
 class TabulatorInput extends AbstractPropertyInput
 {
     /**
-     * Settings for {@link https://github.com/olifolkerd/tabulator Bootstrap Datetabulator}.
+     * Settings for {@link https://github.com/olifolkerd/tabulator Tabulator}.
      *
-     * @var array
+     * @var ?array<string, mixed>
      */
-    private array $tabulatorOptions = [
-        'layout'    => 'fitColumns',
-        'addRowPos' => 'bottom',
-        'history'   => true,
-    ];
+    private ?array $tabulatorOptions = null;
 
     /**
      * Set the color input's options.
      *
      * This method always merges default options.
      *
-     * @param array $options The color input options.
-     * @return self
+     * @param array<string, mixed> $options The color input options.
      */
     public function setInputOptions(array $options): self
     {
@@ -41,36 +37,16 @@ class TabulatorInput extends AbstractPropertyInput
     }
 
     /**
-     * @return void
-     */
-    protected function finalizeInputOptions()
-    {
-        if (
-            (isset($this->inputOptions['addRow']) && $this->inputOptions['addRow']) ||
-            (isset($this->inputOptions['addColumn']) && $this->inputOptions['addColumn'])
-        ) {
-            $this->inputOptions['addColumnOrRow'] = true;
-        }
-
-        if (isset($this->inputOptions['addColumnLabel'])) {
-            $this->inputOptions['addColumnLabel'] =
-                $this->translator()->translate($this->inputOptions['addColumnLabel']);
-        }
-
-        if (isset($this->inputOptions['addRowLabel'])) {
-            $this->inputOptions['addRowLabel'] = $this->translator()->translate($this->inputOptions['addRowLabel']);
-        }
-    }
-
-    /**
      * Merge (replacing or adding) color input options.
      *
-     * @param array $options The color input options.
-     * @return self
+     * @param array<string, mixed> $options The color input options.
      */
     public function mergeInputOptions(array $options): self
     {
-        $this->inputOptions = array_merge($this->inputOptions, $options);
+        $this->inputOptions = array_merge(
+            (array)$this->inputOptions,
+            $options
+        );
 
         $this->finalizeInputOptions();
 
@@ -80,9 +56,8 @@ class TabulatorInput extends AbstractPropertyInput
     /**
      * Add (or replace) a tabulator input option.
      *
-     * @param string $key The setting to add/replace.
-     * @param mixed  $val The setting's value to apply.
-     * @return self
+     * @param  string $key The setting to add/replace.
+     * @param  mixed  $val The setting's value to apply.
      * @throws InvalidArgumentException If the identifier is not a string.
      */
     public function addInputOption(string $key, $val): self
@@ -102,7 +77,7 @@ class TabulatorInput extends AbstractPropertyInput
     /**
      * Retrieve the default color input options.
      *
-     * @return array
+     * @return array<string, mixed>
      */
     public function getDefaultInputOptions(): array
     {
@@ -124,15 +99,28 @@ class TabulatorInput extends AbstractPropertyInput
     }
 
     /**
+     * Set the color tabulator's options.
+     *
+     * This method always merges default options.
+     *
+     * @param array<string, mixed> $options The color tabulator options.
+     */
+    public function setTabulatorOptions(array $options): self
+    {
+        $this->mergeTabulatorOptions($options);
+
+        return $this;
+    }
+
+    /**
      * Merge (replacing or adding) color tabulator options.
      *
-     * @param array $options The color tabulator options.
-     * @return self
+     * @param array<string, mixed> $options The color tabulator options.
      */
     public function mergeTabulatorOptions(array $options): self
     {
         $this->tabulatorOptions = array_merge(
-            $this->tabulatorOptions,
+            (array)$this->tabulatorOptions,
             $options
         );
 
@@ -142,33 +130,10 @@ class TabulatorInput extends AbstractPropertyInput
     }
 
     /**
-     * @return void
-     */
-    protected function finalizeTabulatorOptions()
-    {
-        if (isset($this->tabulatorOptions['autoColumnTemplates'])) {
-            foreach ($this->tabulatorOptions['autoColumnTemplates'] as &$column) {
-                if (isset($column['title'])) {
-                    $column['title'] = $this->translator()->translate($column['title']);
-                }
-            }
-        }
-
-        if (isset($this->tabulatorOptions['columns'])) {
-            foreach ($this->tabulatorOptions['columns'] as &$column) {
-                if (isset($column['title'])) {
-                    $column['title'] = $this->translator()->translate($column['title']);
-                }
-            }
-        }
-    }
-
-    /**
      * Add (or replace) a tabulator option.
      *
-     * @param string $key The setting to add/replace.
-     * @param mixed  $val The setting's value to apply.
-     * @return self
+     * @param  string $key The setting to add/replace.
+     * @param  mixed  $val The setting's value to apply.
      * @throws InvalidArgumentException If the identifier is not a string.
      */
     public function addTabulatorOption(string $key, $val): self
@@ -183,26 +148,29 @@ class TabulatorInput extends AbstractPropertyInput
     /**
      * Retrieve the color tabulator's options.
      *
-     * @return array
+     * @return array<string, mixed>
      */
     public function getTabulatorOptions(): array
     {
+        if ($this->tabulatorOptions === null) {
+            $this->tabulatorOptions = $this->getDefaultTabulatorOptions();
+        }
+
         return $this->tabulatorOptions;
     }
 
     /**
-     * Set the color tabulator's options.
+     * Retrieve the default color tabulator options.
      *
-     * This method always merges default options.
-     *
-     * @param array $options The color tabulator options.
-     * @return self
+     * @return array<string, mixed>
      */
-    public function setTabulatorOptions(array $options): self
+    public function getDefaultTabulatorOptions(): array
     {
-        $this->mergeTabulatorOptions($options);
-
-        return $this;
+        return [
+            'layout'    => 'fitColumns',
+            'addRowPos' => 'bottom',
+            'history'   => true,
+        ];
     }
 
     /**
@@ -230,5 +198,60 @@ class TabulatorInput extends AbstractPropertyInput
             'tabulator_selector' => $tabulatorSelector,
             'tabulator_options'  => $tabulatorOptions,
         ];
+    }
+
+    protected function finalizeInputOptions(): void
+    {
+        if (
+            (isset($this->inputOptions['addRow']) && $this->inputOptions['addRow']) ||
+            (isset($this->inputOptions['addColumn']) && $this->inputOptions['addColumn'])
+        ) {
+            $this->inputOptions['addColumnOrRow'] = true;
+        }
+
+        if (isset($this->inputOptions['addColumnLabel'])) {
+            $this->inputOptions['addColumnLabel'] = $this->translator()->translate(
+                $this->inputOptions['addColumnLabel']
+            );
+        }
+
+        if (isset($this->inputOptions['addRowLabel'])) {
+            $this->inputOptions['addRowLabel'] = $this->translator()->translate(
+                $this->inputOptions['addRowLabel']
+            );
+        }
+    }
+
+    protected function finalizeTabulatorOptions(): void
+    {
+        if (isset($this->tabulatorOptions['placeholder'])) {
+            $this->tabulatorOptions['placeholder'] = $this->translator()->translate(
+                $this->tabulatorOptions['placeholder']
+            );
+        }
+
+        if (isset($this->tabulatorOptions['autoColumnTemplates'])) {
+            foreach ($this->tabulatorOptions['autoColumnTemplates'] as &$column) {
+                if (isset($column['title'])) {
+                    $column['title'] = $this->translator()->translate($column['title']);
+                }
+
+                if (isset($column['tooltip'])) {
+                    $column['tooltip'] = $this->translator()->translate($column['tooltip']);
+                }
+            }
+        }
+
+        if (isset($this->tabulatorOptions['columns'])) {
+            foreach ($this->tabulatorOptions['columns'] as &$column) {
+                if (isset($column['title'])) {
+                    $column['title'] = $this->translator()->translate($column['title']);
+                }
+
+                if (isset($column['tooltip'])) {
+                    $column['tooltip'] = $this->translator()->translate($column['tooltip']);
+                }
+            }
+        }
     }
 }
