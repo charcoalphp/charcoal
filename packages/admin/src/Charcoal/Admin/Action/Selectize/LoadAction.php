@@ -54,40 +54,59 @@ class LoadAction extends BaseLoadAction
     {
         unset($request);
 
-        $failMessage = $this->translator()->translation('Failed to load object(s)');
-        $errorThrown = strtr($this->translator()->translation('{{ errorMessage }}: {{ errorThrown }}'), [
+        $failMessage = $this->translator()->trans('Failed to load object(s)');
+        $errorThrown = strtr($this->translator()->trans('{{ errorMessage }}: {{ errorThrown }}'), [
             '{{ errorMessage }}' => $failMessage
         ]);
-        $reqMessage  = $this->translator()->translation(
-            '{{ parameter }} required, must be a {{ expectedType }}, received {{ actualType }}'
-        );
 
         try {
-            $selectizeInput = $this->selectizeInput();
-            $sp = $selectizeInput->p();
+            /** @var Charcoal\Admin\Property\Input\SelectizeInput */
+            $input = $this->selectizeInput();
 
-            $searchField = isset($selectizeInput->selectizeOptions()['searchField'])
-                ? $selectizeInput->selectizeOptions()['searchField']
-                : $selectizeInput->choiceObjMap()['label'];
+            /** @var Charcoal\Property\ObjectProperty */
+            $property = $input->property();
 
             if ($this->query()) {
-                $query = [
-                    'property' => $searchField,
-                    'operator' => 'LIKE',
-                    'value'    => '%' . $this->query() . '%',
-                ];
+                /** @var array<string, mixed> */
+                $options   = $input->selectizeOptions();
+                $choiceMap = $input->choiceObjMap();
 
-                $filters = $sp->filters();
-                if (is_array($filters)) {
-                    array_push($filters, $query);
+                if (!empty($options['searchProperties'])) {
+                    $searchProperties = (array)$options['searchProperties'];
+                } elseif (
+                    !empty($choiceMap['label']) &&
+                    strpos($choiceMap['label'], '{{') === false
+                ) {
+                    $searchProperties = [ $choiceMap['label'] ];
                 } else {
-                    $filters = [ $query ];
+                    $searchProperties = [];
                 }
 
-                $sp->setFilters($filters);
+                if ($searchProperties) {
+                    $search = [
+                        'conjunction' => 'OR',
+                        'conditions'  => [],
+                    ];
+                    foreach ($searchProperties as $searchProperties) {
+                        $search['conditions'][] = [
+                            'property' => $searchProperties,
+                            'operator' => 'LIKE',
+                            'value'    => '%' . $this->query() . '%',
+                        ];
+                    }
+
+                    $filters = $property->filters();
+                    if (is_array($filters)) {
+                        array_push($filters, $search);
+                    } else {
+                        $filters = [ $search ];
+                    }
+
+                    $property->setFilters($filters);
+                }
             }
 
-            $choices = $sp->choices();
+            $choices = $property->choices();
 
             $this->setSelectizeCollection($this->selectizeVal($choices));
 
