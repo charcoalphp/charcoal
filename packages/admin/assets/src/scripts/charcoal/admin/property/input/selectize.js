@@ -82,6 +82,8 @@
         this.allow_update = opts.data.allow_update || this.allow_update;
         this.allow_create = opts.data.allow_create || this.allow_create;
         this.title = opts.data.title || this.title;
+        this.dialog_title_update = opts.data.dialog_title_update || this.dialog_title_update;
+        this.dialog_title_create = opts.data.dialog_title_create || this.dialog_title_create;
         this.translations = opts.data.translations || this.translations;
         this.pattern = opts.data.pattern || this.pattern;
         this.multiple = opts.data.multiple || this.multiple;
@@ -234,6 +236,16 @@
         var selectize_property = this.selectize_property;
         var selectize_property_ident = this.selectize_property_ident;
         var selectize_obj_type = this.selectize_obj_type;
+
+        if (id) {
+            if (this.dialog_title_update) {
+                title = this.dialog_title_update;
+            }
+        } else {
+            if (this.dialog_title_create) {
+                title = this.dialog_title_create;
+            }
+        }
 
         // Get the form ident
         if (form_ident && typeof form_ident === 'object') {

@@ -2,11 +2,10 @@
 
 namespace Charcoal\Property\Structure;
 
-// From 'charcoal-core'
 use Charcoal\Model\AbstractModel;
 
 /**
- *
+ * An abstract model designed for structure properties.
  */
 class StructureModel extends AbstractModel
 {

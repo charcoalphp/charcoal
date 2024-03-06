@@ -110,6 +110,20 @@ class SelectizeInput extends SelectInput
     private $formData;
 
     /**
+     * Label for the create item dialog.
+     *
+     * @var \Charcoal\Translator\Translation|string|null
+     */
+    private $dialogTitleCreate;
+
+    /**
+     * Label for the update item dialog.
+     *
+     * @var \Charcoal\Translator\Translation|string|null
+     */
+    private $dialogTitleUpdate;
+
+    /**
      * Check used to parse multi Choice map against the obj properties.
      *
      * @var boolean
@@ -431,6 +445,52 @@ class SelectizeInput extends SelectInput
     public function formIdentAsJson()
     {
         return json_encode($this->formIdent());
+    }
+
+    /**
+     * Set the title for the create item dialog.
+     *
+     * @param  string|string[] $title The dialog title.
+     * @return self
+     */
+    public function setDialogTitleCreate($title)
+    {
+        $this->dialogTitleCreate = $this->translator()->translation($title);
+
+        return $this;
+    }
+
+    /**
+     * Retrieve the title for the create item dialog.
+     *
+     * @return \Charcoal\Translator\Translation|string|null
+     */
+    public function getDialogTitleCreate()
+    {
+        return $this->dialogTitleCreate;
+    }
+
+    /**
+     * Set the title for the update item dialog.
+     *
+     * @param  string|string[] $title The dialog title.
+     * @return self
+     */
+    public function setDialogTitleUpdate($title)
+    {
+        $this->dialogTitleUpdate = $this->translator()->translation($title);
+
+        return $this;
+    }
+
+    /**
+     * Retrieve the title for the update item dialog.
+     *
+     * @return \Charcoal\Translator\Translation|string|null
+     */
+    public function getDialogTitleUpdate()
+    {
+        return $this->dialogTitleUpdate;
     }
 
     /**
@@ -1043,6 +1103,9 @@ class SelectizeInput extends SelectInput
             'copy_items'               => $this->allowClipboardCopy(),
             'allow_update'             => $this->allowUpdate(),
             'allow_create'             => $this->allowCreate(),
+
+            'dialog_title_create'      => (string)$this->getDialogTitleCreate(),
+            'dialog_title_update'      => (string)$this->getDialogTitleUpdate(),
 
             'form_data'                => $this->getFormData(),
             'form_ident'               => $this->formIdent(),
