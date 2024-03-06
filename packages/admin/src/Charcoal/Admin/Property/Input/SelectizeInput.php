@@ -30,6 +30,8 @@ use Charcoal\Admin\Property\HierarchicalObjectProperty;
  */
 class SelectizeInput extends SelectInput
 {
+    public const DEFAULT_FORM_WIDGET = 'charcoal/admin/widget/quick-form';
+
     /**
      * Settings for {@link http://selectize.github.io/selectize.js/ Selectize.js}
      *
@@ -78,6 +80,13 @@ class SelectizeInput extends SelectInput
      * @var boolean
      */
     protected $allowCreate;
+
+    /**
+     * The quick form widget to use while creating/updating objects through Selectize.
+     *
+     * @var string
+     */
+    private $formWidget = self::DEFAULT_FORM_WIDGET;
 
     /**
      * The form idents to use while creating objects through Selectize.
@@ -355,6 +364,25 @@ class SelectizeInput extends SelectInput
     public function setDeferred($deferred)
     {
         $this->deferred = ($this->property() instanceof ObjectProperty || $this->remoteSource()) ? $deferred : false;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function formWidget()
+    {
+        return $this->formWidget;
+    }
+
+    /**
+     * @param string $formWidget The form widget for object creation and modification.
+     * @return self
+     */
+    public function setFormWidget($formWidget)
+    {
+        $this->formWidget = $formWidget;
 
         return $this;
     }
@@ -1018,6 +1046,7 @@ class SelectizeInput extends SelectInput
 
             'form_data'                => $this->getFormData(),
             'form_ident'               => $this->formIdent(),
+            'form_widget'              => $this->formWidget(),
             'selectize_selector'       => '#' . $this->inputId(),
             'selectize_options'        => $this->selectizeOptions(),
             'choice_obj_map'           => $this->choiceObjMap(),

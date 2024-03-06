@@ -31,6 +31,7 @@
         this.selectize_selector = null;
         this.form_data = {};
         this.form_ident = null;
+        this.form_widget = null;
         this.selectize_options = {};
         this.choice_obj_map = {};
         this.selectize_property_ident = null;
@@ -87,6 +88,7 @@
         this.separator = opts.data.multiple_separator || this.multiple_separator || ',';
         this.form_data = opts.data.form_data || this.form_data;
         this.form_ident = opts.data.form_ident || this.form_ident;
+        this.form_widget = opts.data.form_widget || this.form_widget;
 
         this.selectize_selector = opts.data.selectize_selector || this.selectize_selector;
         this.selectize_options = opts.data.selectize_options || this.selectize_options;
@@ -226,6 +228,7 @@
         var settings = this.selectize_options;
         var step = opts.step || 0;
         var form_ident = this.form_ident;
+        var form_widget = this.form_widget || 'charcoal/admin/widget/quick-form';
         var submit_label = null;
         var id = opts.id || null;
         var selectize_property = this.selectize_property;
@@ -288,7 +291,7 @@
                     });
                 }
             },
-            widget_type: 'charcoal/admin/widget/quick-form',
+            widget_type: form_widget,
             with_data: true,
             widget_options: {
                 obj_type: type,
@@ -313,7 +316,7 @@
 
                 Charcoal.Admin.manager().add_widget({
                     id: response.widget_id,
-                    type: 'charcoal/admin/widget/quick-form',
+                    type: form_widget,
                     data: response.widget_data,
                     obj_id: id,
                     extra_form_data: {

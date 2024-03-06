@@ -24,6 +24,13 @@ use Charcoal\Admin\Property\AbstractSelectableInput;
 class TagsInput extends AbstractSelectableInput
 {
     /**
+     * The quick form widget to use while creating/updating objects through Selectize.
+     *
+     * @var string
+     */
+    private $formWidget = SelectizeInput::DEFAULT_FORM_WIDGET;
+
+    /**
      * Settings for {@link http://selectize.github.io/selectize.js/ Selectize.js}
      *
      * @var array
@@ -93,6 +100,25 @@ class TagsInput extends AbstractSelectableInput
         foreach ($choices as $choice) {
             yield $choice;
         }
+    }
+
+    /**
+     * @return string
+     */
+    public function formWidget()
+    {
+        return $this->formWidget;
+    }
+
+    /**
+     * @param string $formWidget The form widget for object creation and modification.
+     * @return self
+     */
+    public function setFormWidget($formWidget)
+    {
+        $this->formWidget = $formWidget;
+
+        return $this;
     }
 
     /**
@@ -260,6 +286,7 @@ class TagsInput extends AbstractSelectableInput
             'title'                    => (string)$prop['label'],
             'copy_items'               => $this->allowClipboardCopy(),
 
+            'form_widget'              => $this->formWidget(),
             'selectize_selector'       => '#' . $this->inputId(),
             'selectize_options'        => $this->selectizeOptions(),
 

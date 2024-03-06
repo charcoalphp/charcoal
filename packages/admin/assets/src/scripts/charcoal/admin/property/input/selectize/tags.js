@@ -19,6 +19,8 @@ Charcoal.Admin.Property_Input_Selectize_Tags = function (opts) {
     this.separator  = ',';
     this._tags      = null;
 
+    this.form_widget = null;
+
     this.selectize          = null;
     this.selectize_selector = null;
     this.selectize_options  = {};
@@ -53,6 +55,8 @@ Charcoal.Admin.Property_Input_Selectize_Tags.prototype.set_properties = function
 
     this.multiple  = opts.data.multiple || this.multiple;
     this.separator = opts.data.multiple_separator || this.multiple_separator || ',';
+
+    this.form_widget = opts.data.form_widget || this.form_widget;
 
     this.selectize_selector = opts.data.selectize_selector || this.selectize_selector;
     this.selectize_options  = opts.data.selectize_options || this.selectize_options;
@@ -149,11 +153,12 @@ Charcoal.Admin.Property_Input_Selectize_Tags.prototype.set_properties = function
 };
 
 Charcoal.Admin.Property_Input_Selectize_Tags.prototype.create_tag = function (input, callback) {
-    var type      = this.obj_type;
-    var id        = this.id;
-    var title     = this.title;
-    var settings  = this.selectize_options;
-    var form_data = {};
+    var type        = this.obj_type;
+    var id          = this.id;
+    var title       = this.title;
+    var settings    = this.selectize_options;
+    var form_widget = this.form_widget || 'charcoal/admin/widget/quick-form';
+    var form_data   = {};
 
     if ($.isEmptyObject(settings.formData)) {
         form_data = {
@@ -179,7 +184,7 @@ Charcoal.Admin.Property_Input_Selectize_Tags.prototype.create_tag = function (in
                 });
             }
         },
-        widget_type: 'charcoal/admin/widget/quick-form',
+        widget_type: form_widget,
         widget_options: {
             obj_type: type,
             obj_id: id,
@@ -197,7 +202,7 @@ Charcoal.Admin.Property_Input_Selectize_Tags.prototype.create_tag = function (in
 
             Charcoal.Admin.manager().add_widget({
                 id: response.widget_id,
-                type: 'charcoal/admin/widget/quick-form',
+                type: form_widget,
                 data: {
                     obj_type: type
                 },
