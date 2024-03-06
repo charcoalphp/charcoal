@@ -1,0 +1,11 @@
+// ==========================================================================
+// Tabulator
+// ==========================================================================
+
+.tabulator-row .tabulator-cell.tabulator-validation-fail {
+    border: 1px solid #dd0000 !important;
+}
+
+.tabulator-row .tabulator-cell.tabulator-cell-empty {
+    color: #888;
+}
