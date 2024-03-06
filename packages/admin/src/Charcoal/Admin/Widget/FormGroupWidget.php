@@ -162,7 +162,6 @@ class FormGroupWidget extends AbstractUiItem implements
         return $this->propertiesOptions;
     }
 
-
     /**
      * Determine if the form group has properties.
      *
@@ -186,6 +185,16 @@ class FormGroupWidget extends AbstractUiItem implements
         $groupProperties = array_map([ $this, 'camelize' ], $this->groupProperties());
         $formProperties  = $this->parsedFormProperties();
         $propOptions     = $this->propertiesOptions();
+
+        if (!$this->layout()) {
+            // Ensure a layout is present and matches the number
+            // of properties to be rendered.
+            $this->setLayout([
+                'structure' => [
+                    [ 'columns' => [ 1 ], 'loop' => count($groupProperties) ],
+                ],
+            ]);
+        }
 
         foreach ($formProperties as $propertyIdent => $formProperty) {
             $propertyIdent = $this->camelize($propertyIdent);

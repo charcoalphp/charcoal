@@ -555,6 +555,16 @@ class StructureFormGroup extends FormGroupWidget implements
         $propPreferences  = $this->propertiesOptions();
         $structProperties = $this->parsedFormProperties();
 
+        if (!$this->layout()) {
+            // Ensure a layout is present and matches the number
+            // of properties to be rendered.
+            $this->setLayout([
+                'structure' => [
+                    [ 'columns' => [ 1 ], 'loop' => count($structProperties) ],
+                ],
+            ]);
+        }
+
         foreach ($structProperties as $propertyIdent => $propertyMetadata) {
             if (is_array($propertyMetadata)) {
                 $propertyMetadata['ident'] = $propertyIdent;
