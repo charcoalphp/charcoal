@@ -26,12 +26,12 @@
     }
 
     &.-small {
-        height: $unit;
+        height: auto;
     }
 
     &.-small\@to-large {
         @media (max-width: $to-large) {
-            height: $unit;
+            height: auto;
         }
     }
 }

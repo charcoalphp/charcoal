@@ -1,5 +1,11 @@
+{{!--
+    Togglable Language Tabs
+    =======================
+
+    @used-by charcoal/admin/template/quick-form
+--}}
 {{# showLanguageSwitch }}
-<ul class="c-form-widget_nav nav nav-tabs available-languages" role="tablist">
+<ul class="c-form-widget_nav nav nav-tabs available-languages{{# tabCssClasses }} {{.}}{{/ tabCssClasses }}" role="tablist">
     {{# languages }}
     <li class="nav-item">
         <a class="nav-link nav-lang{{# isSelected }} active{{/ isSelected }} js-group-tabs"

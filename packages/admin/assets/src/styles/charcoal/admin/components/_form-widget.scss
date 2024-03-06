@@ -15,14 +15,36 @@
 
 .c-form-widget_nav {
     .c-form-widget.-object-form & {
-        @media (min-width: $from-small) {
-            justify-content: flex-end;
-            transform: translateY(-100%);
+        @media (max-width: $to-small) {
+            &.nav-tabs {
+                margin-left: -10px;
+                margin-right: -10px;
+                padding-left: 10px;
+                padding-right: 10px;
+            }
+        }
+
+        @media (min-width: $from-small) and (max-width: $to-large) {
+            &.nav-tabs {
+                margin-left: -1.25rem;
+                padding-left: 1.25rem;
+                padding-right: 1.25rem;
+            }
         }
 
         @media (min-width: $from-large) {
             position: absolute;
             width: 100%;
+            justify-content: flex-end;
+            transform: translateY(-100%);
+
+            &.nav-tabs {
+                border-color: transparent;
+
+                .nav-link.active {
+                    border-color: $charcoal-white-1;
+                }
+            }
         }
     }
 }
@@ -38,16 +60,28 @@
 }
 
 .c-form-widget_groups {
+    margin-top: rem($unit / 2);
+
+    .c-form-widget.-quick-form &:first-child {
+        margin-top: 0;
+    }
+
+    .c-form-widget.-quick-form & {
+        margin-bottom: rem($unit / 2);
+    }
 
     .c-form-widget_group {
         > header {
-            margin-top: rem($unit / 2);
-            padding: rem($unit / 2) rem($unit / 2) 0 rem($unit / 2);
+            margin-top: rem($unit);
+            margin-bottom: 0.25rem;
 
             .c-form-widget.-quick-form & {
                 margin-top: 0;
-                margin-bottom: rem($unit / 2);
             }
+        }
+
+        &:first-child > header {
+            margin-top: rem($unit / 2);
         }
 
         .c-form-widget_group_content {
@@ -59,8 +93,8 @@
             .c-form-widget.-object-form &,
             .c-form-widget.-tabbed & {
                 padding: rem($unit / 2);
-                margin-top: rem($unit / 2);
             }
+
             .c-form-widget.-quick-form & {
                 background: none;
             }
@@ -71,11 +105,16 @@
                 //border-top-right-radius: 0;
 
                 @media (min-width: $from-large) {
-                    margin-top: 0;
                     margin-bottom: rem($unit / 2);
                     padding: rem($unit / 2) rem($unit / 2) 0;
                 }
             }
+        }
+    }
+
+    .c-form-widget.-stacked & {
+        .c-form-widget_group + .c-form-widget_group {
+            margin-top: rem($unit / 2);
         }
     }
 }
@@ -108,18 +147,20 @@
     .modal-footer {
         background-color: $charcoal-gray-5;
     }
-}
 
-.bootstrap-dialog.-quick-form .modal-body {
-    background-color: #e1e1e1;
-}
+    .c-form-widget_nav.nav-tabs {
+        margin-left: -1rem;
+        margin-right: -1rem;
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
 
-.bootstrap-dialog.-quick-form .modal-body .c-form-widget.-tabbed-by-lang .form-field.-l10n[data-lang]::before {
-    font-size:      10px;
-    content:        attr(data-custom-modal-lang);
-    position:       absolute;
-    left:           -50px;
-    display:        contents;
-    width:          30px;
-    text-transform: uppercase;
+    .c-form-widget.-tabbed-by-lang .form-field.-l10n[data-lang] {
+        margin-top: 0;
+        margin-left: 0;
+    }
+
+    .c-form-widget.-tabbed-by-lang .form-field.-l10n[data-lang]::before {
+        display:  none;
+    }
 }

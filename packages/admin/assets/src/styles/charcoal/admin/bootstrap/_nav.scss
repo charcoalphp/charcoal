@@ -8,10 +8,6 @@
         margin-bottom: $unit / 2;
     }
 
-    @media (min-width: $from-large) {
-        border-color: transparent;
-    }
-
     .nav-item {
         position: relative;
 
@@ -48,10 +44,6 @@
 
         &.active {
             color: $black;
-
-            @media (min-width: $from-large) {
-                border-color: $charcoal-white-1;
-            }
 
             &.hide-title {
                 .nav-title {

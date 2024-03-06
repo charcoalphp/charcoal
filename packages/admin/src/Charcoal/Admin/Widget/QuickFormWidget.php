@@ -2,11 +2,7 @@
 
 namespace Charcoal\Admin\Widget;
 
-// From 'charcoal-admin'
 use Charcoal\Admin\Widget\ObjectFormWidget;
-// From 'charcoal-property'
-use Charcoal\Property\ModelStructureProperty;
-// From 'charcoal-ui'
 use Charcoal\Admin\Ui\HasLanguageSwitcherInterface;
 use Charcoal\Admin\Ui\HasLanguageSwitcherTrait;
 
@@ -162,6 +158,6 @@ class QuickFormWidget extends ObjectFormWidget implements
      */
     public function defaultFormTabsTemplate()
     {
-        return 'charcoal/admin/template/form/nav-pills';
+        return 'charcoal/admin/template/form/nav-tabs';
     }
 }
