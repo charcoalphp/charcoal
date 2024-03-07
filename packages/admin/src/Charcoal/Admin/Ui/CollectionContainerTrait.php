@@ -865,13 +865,13 @@ trait CollectionContainerTrait
         $this->display->setDisplayType($displayType);
         $this->display->setProperty($property);
 
-        $metadata = $property->metadata();
-        $objMetadata = $object->metadata()->property($property->ident());
-        if ($objMetadata) {
-            $metadata->setData($objMetadata);
+        $propTypeMetadata  = clone $property->metadata();
+        $modelPropMetadata = $object->metadata()->property($property->ident());
+        if ($modelPropMetadata) {
+            $propTypeMetadata->setData($modelPropMetadata);
         }
 
-        $this->display->setData($metadata->data());
+        $this->display->setData($propTypeMetadata->data());
 
         $viewOptions = $property->viewOptions($displayType);
         $this->display->setData($viewOptions);
