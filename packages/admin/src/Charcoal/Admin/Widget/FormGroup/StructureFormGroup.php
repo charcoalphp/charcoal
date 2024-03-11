@@ -570,8 +570,18 @@ class StructureFormGroup extends FormGroupWidget implements
                 $propertyMetadata['ident'] = $propertyIdent;
             }
 
+            if (method_exists($entry, 'filterPropertyMetadata')) {
+                $propertyMetadata = $entry->filterPropertyMetadata(
+                    $propertyMetadata,
+                    $propertyIdent
+                );
+            }
+
             if (method_exists($obj, 'filterPropertyMetadata')) {
-                $propertyMetadata = $obj->filterPropertyMetadata($propertyMetadata, $propertyIdent);
+                $propertyMetadata = $obj->filterPropertyMetadata(
+                    $propertyMetadata,
+                    $store->ident() . '.' . $propertyIdent
+                );
             }
 
             if (is_bool($propertyMetadata) && $propertyMetadata === false) {

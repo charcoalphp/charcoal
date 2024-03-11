@@ -2,7 +2,6 @@
 
 namespace Charcoal\Property;
 
-use PDO;
 use ArrayAccess;
 use RuntimeException;
 use InvalidArgumentException;
@@ -13,7 +12,6 @@ use Pimple\Container;
 use Charcoal\Model\DescribableInterface;
 use Charcoal\Model\MetadataInterface;
 use Charcoal\Model\ModelInterface;
-use Charcoal\Model\Model;
 use Charcoal\Validator\ValidatableInterface;
 // From 'charcoal-factory'
 use Charcoal\Factory\FactoryInterface;
