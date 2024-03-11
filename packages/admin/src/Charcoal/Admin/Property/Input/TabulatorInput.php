@@ -21,11 +21,11 @@ class TabulatorInput extends AbstractPropertyInput
     private ?array $tabulatorOptions = null;
 
     /**
-     * Set the color input's options.
+     * Set the input's options.
      *
      * This method always merges default options.
      *
-     * @param array<string, mixed> $options The color input options.
+     * @param array<string, mixed> $options The input options.
      */
     public function setInputOptions(array $options): self
     {
@@ -37,9 +37,9 @@ class TabulatorInput extends AbstractPropertyInput
     }
 
     /**
-     * Merge (replacing or adding) color input options.
+     * Merge (replacing or adding) input options.
      *
-     * @param array<string, mixed> $options The color input options.
+     * @param array<string, mixed> $options The input options.
      */
     public function mergeInputOptions(array $options): self
     {
@@ -54,7 +54,7 @@ class TabulatorInput extends AbstractPropertyInput
     }
 
     /**
-     * Add (or replace) a tabulator input option.
+     * Add (or replace) an input option.
      *
      * @param  string $key The setting to add/replace.
      * @param  mixed  $val The setting's value to apply.
@@ -75,7 +75,7 @@ class TabulatorInput extends AbstractPropertyInput
     }
 
     /**
-     * Retrieve the default color input options.
+     * Retrieve the default input options.
      *
      * @return array<string, mixed>
      */
@@ -99,11 +99,11 @@ class TabulatorInput extends AbstractPropertyInput
     }
 
     /**
-     * Set the color tabulator's options.
+     * Set the Tabulator's options.
      *
      * This method always merges default options.
      *
-     * @param array<string, mixed> $options The color tabulator options.
+     * @param array<string, mixed> $options The Tabulator options.
      */
     public function setTabulatorOptions(array $options): self
     {
@@ -113,9 +113,9 @@ class TabulatorInput extends AbstractPropertyInput
     }
 
     /**
-     * Merge (replacing or adding) color tabulator options.
+     * Merge (replacing or adding) Tabulator options.
      *
-     * @param array<string, mixed> $options The color tabulator options.
+     * @param array<string, mixed> $options The Tabulator options.
      */
     public function mergeTabulatorOptions(array $options): self
     {
@@ -130,7 +130,7 @@ class TabulatorInput extends AbstractPropertyInput
     }
 
     /**
-     * Add (or replace) a tabulator option.
+     * Add (or replace) a Tabulator option.
      *
      * @param  string $key The setting to add/replace.
      * @param  mixed  $val The setting's value to apply.
@@ -146,7 +146,7 @@ class TabulatorInput extends AbstractPropertyInput
     }
 
     /**
-     * Retrieve the color tabulator's options.
+     * Retrieve the Tabulator's options.
      *
      * @return array<string, mixed>
      */
@@ -160,7 +160,7 @@ class TabulatorInput extends AbstractPropertyInput
     }
 
     /**
-     * Retrieve the default color tabulator options.
+     * Retrieve the default Tabulator options.
      *
      * @return array<string, mixed>
      */
