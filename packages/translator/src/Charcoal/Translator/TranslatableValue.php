@@ -159,21 +159,24 @@ class TranslatableValue implements
     }
 
     /**
-     * @param TranslatorInterface $translator The translator to use.
-     * @return mixed
-     */
-    public function trans(TranslatorInterface $translator)
-    {
-        return $this->toLocale($translator->getLocale());
-    }
-
-    /**
      * @param string $locale The requested locale.
      * @return mixed
      */
     public function toLocale(string $locale)
     {
         return ($this->translations[$locale] ?? null);
+    }
+
+    /**
+     * @param  TranslatorInterface $translator  The translator.
+     * @param  ?string             $locale      The locale.
+     * @return mixed
+     */
+    public function trans(TranslatorInterface $translator, ?string $locale = null)
+    {
+        $locale ??= $translator->getLocale();
+
+        return $this->toLocale($locale);
     }
 
     /**
@@ -221,7 +224,7 @@ class TranslatableValue implements
     }
 
     /**
-     * @param strin`g $offset The lang offset to set.
+     * @param string $offset The lang offset to set.
      * @param mixed  $value  The value to store.
      * @return void
      * @throws InvalidArgumentException If array key isn't a string.
@@ -247,7 +250,7 @@ class TranslatableValue implements
     }
 
     /**
-     * @param string $offset The language offset to unset.
+     * @param  string $offset The language offset to unset.
      * @return void
      * @throws InvalidArgumentException If array key isn't a string.
      */
