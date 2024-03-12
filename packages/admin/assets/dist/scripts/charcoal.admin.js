@@ -887,6 +887,48 @@ Charcoal.Admin = (function () {
         return jqxhr;
     };
 
+    /**
+     * Creates a debounced function.
+     *
+     * A debounced function delays invoking `callback` until after
+     * `delay` milliseconds have elapsed since the last time the
+     * debounced function was invoked.
+     *
+     * Useful for behaviour that should only happen _before_ or
+     * _after_ an event has stopped occurring.
+     *
+     * @template {function} T
+     *
+     * @param  {T}       callback    - The function to debounce.
+     * @param  {number}  delay       - The number of milliseconds to wait.
+     * @param  {boolean} [immediate] -
+     *     If `true`, `callback` is invoked before `delay`.
+     *     If `false`, `callback` is invoked after `delay`.
+     * @return {function<T>} The new debounced function.
+     */
+    Admin.debounce = function (callback, delay, immediate = false) {
+        var timeout = null
+
+        return function () {
+            var args = arguments;
+
+            clearTimeout(timeout);
+
+            const later = function () {
+                timeout = null;
+                if (!immediate) {
+                    callback.apply(null, args);
+                }
+            }
+
+            if (immediate && !timeout) {
+                callback.apply(null, args);
+            }
+
+            timeout = setTimeout(later, delay);
+        }
+    };
+
     return Admin;
 
 }());
@@ -12696,9 +12738,7 @@ Charcoal.Admin.Property_Input_Selectize_Tags.prototype.init_clipboard = function
                 return [];
             }
 
-            const data = JSON.parse(json);
-            console.log(data);
-            return data;
+            return JSON.parse(json);
         } catch (err) {
             console.warn('[Charcoal.Property.Tabulator]', 'Could not retrieve input value:', err);
 
@@ -13455,6 +13495,7 @@ Charcoal.Admin.Property_Input_Text.prototype.set_split_on = function (splitOn) {
 Charcoal.Admin.Property_Input_Text.prototype.destroy = function () {
 }
 
+/* global formWidgetL10n */
 /* eslint-disable consistent-this */
 /**
  * TinyMCE implementation for WYSIWYG inputs
@@ -13504,6 +13545,53 @@ Charcoal.Admin.Property_Input_Tinymce.prototype.parent = Charcoal.Admin.Property
  */
 Charcoal.Admin.Property_Input_Tinymce.prototype.init = function () {
     this.create_tinymce();
+    this.bind_events();
+};
+
+Charcoal.Admin.Property_Input_Tinymce.prototype.bind_events = function () {
+    var that = this;
+
+    var element = this.element();
+
+    element.on('invalid', function (event) {
+        var editor  = that.editor();
+        var control = event.target;
+
+        if (editor && control) {
+            var validity = control.validity;
+            for (var key in validity) {
+                if (key === 'valid') {
+                    continue;
+                }
+
+                if (!validity[key]) {
+                    continue;
+                }
+
+                if (formWidgetL10n.validation[key]) {
+                    editor.notificationManager.open({
+                        text: formWidgetL10n.validation[key],
+                        type: 'error'
+                    });
+                    return;
+                }
+            }
+        }
+    });
+
+    var container = element.closest('.modal-open .modal');
+    if (!container.length) {
+        container = $(document);
+    }
+
+    container.on('scroll', Charcoal.Admin.debounce(function () {
+        var editor = that.editor();
+        if (editor) {
+            editor.notificationManager.getNotifications().forEach(function (notification) {
+                notification.moveRel()
+            });
+        }
+    }, 50));
 };
 
 /**
