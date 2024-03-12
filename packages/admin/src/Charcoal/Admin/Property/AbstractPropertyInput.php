@@ -397,7 +397,7 @@ abstract class AbstractPropertyInput extends AbstractProperty implements
         $prop = $this->p();
         $val  = $prop->inputVal($this->propertyVal(), array_replace(
             [
-            'lang' => $this->lang(),
+                'lang' => $this->lang(),
             ],
             $this->getInputValOptions()
         ));

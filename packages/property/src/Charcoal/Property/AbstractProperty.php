@@ -1038,11 +1038,7 @@ abstract class AbstractProperty extends AbstractEntity implements
             }
         }
 
-        if (isset($val[$lang])) {
-            return $val[$lang];
-        } else {
-            return null;
-        }
+        return ($val[$lang] ?? null);
     }
 
     /**

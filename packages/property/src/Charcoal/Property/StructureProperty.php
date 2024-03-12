@@ -109,9 +109,9 @@ class StructureProperty extends AbstractProperty
      *
      * @param  mixed $val  The multilingual value to lookup.
      * @param  mixed $lang The language to return the value in.
-     * @return string|null
+     * @return mixed|null
      */
-    protected function l10nVal($val, $lang = null): ?string
+    protected function l10nVal($val, $lang = null)
     {
         if (!is_string($lang)) {
             if (is_array($lang) && isset($lang['lang'])) {
