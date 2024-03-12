@@ -582,6 +582,48 @@ Charcoal.Admin = (function () {
         return jqxhr;
     };
 
+    /**
+     * Creates a debounced function.
+     *
+     * A debounced function delays invoking `callback` until after
+     * `delay` milliseconds have elapsed since the last time the
+     * debounced function was invoked.
+     *
+     * Useful for behaviour that should only happen _before_ or
+     * _after_ an event has stopped occurring.
+     *
+     * @template {function} T
+     *
+     * @param  {T}       callback    - The function to debounce.
+     * @param  {number}  delay       - The number of milliseconds to wait.
+     * @param  {boolean} [immediate] -
+     *     If `true`, `callback` is invoked before `delay`.
+     *     If `false`, `callback` is invoked after `delay`.
+     * @return {function<T>} The new debounced function.
+     */
+    Admin.debounce = function (callback, delay, immediate = false) {
+        var timeout = null
+
+        return function () {
+            var args = arguments;
+
+            clearTimeout(timeout);
+
+            const later = function () {
+                timeout = null;
+                if (!immediate) {
+                    callback.apply(null, args);
+                }
+            }
+
+            if (immediate && !timeout) {
+                callback.apply(null, args);
+            }
+
+            timeout = setTimeout(later, delay);
+        }
+    };
+
     return Admin;
 
 }());
