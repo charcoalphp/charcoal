@@ -489,9 +489,7 @@
                 return [];
             }
 
-            const data = JSON.parse(json);
-            console.log(data);
-            return data;
+            return JSON.parse(json);
         } catch (err) {
             console.warn('[Charcoal.Property.Tabulator]', 'Could not retrieve input value:', err);
 
