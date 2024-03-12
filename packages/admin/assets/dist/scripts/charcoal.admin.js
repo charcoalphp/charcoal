@@ -12523,6 +12523,13 @@ Charcoal.Admin.Property_Input_Selectize_Tags.prototype.init_clipboard = function
             };
         }
 
+        if (
+            column?.validator === 'required' ||
+            (Array.isArray(column?.validator) && column.validator.includes('required'))
+        ) {
+            column.title += ' <span class="text-danger">*</span>';
+        }
+
         return column;
     };
 
@@ -12835,19 +12842,32 @@ Charcoal.Admin.Property_Input_Selectize_Tags.prototype.init_clipboard = function
 
         const propLabel = document.querySelector('label[for="' + this.input_id.replace(/_[a-z]{2}$/, '') + '"]').textContent;
 
+        const uniqueMessagesPerRow = {};
+
         validity.forEach((cellComponent) => {
             const rowComponent = cellComponent.getRow();
-            const rowIndex     = (rowComponent.getIndex() ?? (rowComponent.getPosition(true) + 1));
+            const colComponent = cellComponent.getColumn();
 
-            const fieldLabel  = `${propLabel || this.tabulator_input.name} #${rowIndex}`;
+            const colTitle = colComponent.getElement().textContent.replace(/\s+\*$/, '').trim();
+            const rowIndex = (rowComponent.getIndex() ?? (rowComponent.getPosition(true) + 1));
+
+            const fieldLabel  = `${propLabel || this.tabulator_input.name} ${colTitle} #${rowIndex}`;
             const constraints = cellComponent._getSelf().modules.validate.invalid ?? [];
 
+            uniqueMessagesPerRow[rowIndex] ??= {};
+
             constraints.forEach((constraint) => {
-                let message = (
+                const message = (
                     constraint.parameters?.validationMessage ??
                     resolveTabulatorValidatorMessage(constraint) ??
                     formWidgetL10n.validation.badInput
                 );
+
+                if (uniqueMessagesPerRow?.[rowIndex]?.[message]) {
+                    return;
+                }
+
+                uniqueMessagesPerRow[rowIndex][message] = true;
 
                 Charcoal.Admin.feedback([ {
                     level:   'error',
