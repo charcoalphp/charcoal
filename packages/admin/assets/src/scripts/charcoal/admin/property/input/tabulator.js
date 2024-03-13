@@ -133,7 +133,6 @@
                 !this.tabulator_options?.autoColumnsDefinitions &&
                 (
                     this.tabulator_options?.columns ||
-                    this.input_options?.defaultColumnTemplate ||
                     this.input_options?.autoColumnTemplates
                 )
             ) {
@@ -155,10 +154,9 @@
                         definitions = this.tabulator_options.columns.concat(definitions);
                     }
 
-                    const defaultTemplate   = this.input_options?.defaultColumnTemplate || {};
                     const distinctTemplates = this.input_options?.autoColumnTemplates;
 
-                    if (!defaultTemplate && !distinctTemplates) {
+                    if (!distinctTemplates) {
                         return definitions;
                     }
 
@@ -186,7 +184,7 @@
 
                                 if (query instanceof RegExp) {
                                     if (query.test(field)) {
-                                        column = Object.assign({}, column, defaultTemplate, template);
+                                        column = Object.assign({}, column, template);
 
                                         column.title = field.replace(query, template.title);
                                         column.field = field.replace(query, template.field);
@@ -201,15 +199,13 @@
                                     }
                                 } else {
                                     if (query === field) {
-                                        column = Object.assign({}, column, defaultTemplate, template);
+                                        column = Object.assign({}, column, template);
 
                                         column.title = template.title;
                                         column.field = template.field;
                                     }
                                 }
                             }
-                        } else if (defaultTemplate) {
-                            column = Object.assign({}, column, defaultTemplate);
                         }
 
                         column = this.parse_tabulator_column_definition(column);
@@ -219,20 +215,9 @@
                 };
             }
         } else if (this.tabulator_options?.columns) {
-            if (this.input_options?.defaultColumnTemplate) {
-                const defaultTemplate = this.input_options.defaultColumnTemplate;
-
-                this.tabulator_options.columns = this.tabulator_options.columns.map((column) => {
-                    column = Object.assign({}, defaultTemplate, column);
-                    column = this.parse_tabulator_column_definition(column);
-
-                    return column;
-                });
-            } else {
-                this.tabulator_options.columns = this.tabulator_options.columns.map(
-                    (column) => this.parse_tabulator_column_definition(column)
-                );
-            }
+            this.tabulator_options.columns = this.tabulator_options.columns.map(
+                (column) => this.parse_tabulator_column_definition(column)
+            );
         }
 
         if (Array.isArray(this.tabulator_options?.groupContextMenu)) {
@@ -364,8 +349,6 @@
     Charcoal.Admin.Property_Input_Tabulator.prototype.new_col_data = function () {
         let column = this.input_options.newColumnData;
 
-        const defaultTemplate = this.input_options?.defaultColumnTemplate || {};
-
         if (typeof column === 'string') {
             // let query;
 
@@ -379,7 +362,7 @@
             if (this.input_options?.autoColumnTemplates[column]) {
                 const template = this.input_options.autoColumnTemplates[column];
 
-                column = Object.assign({}, defaultTemplate, template);
+                column = Object.assign({}, template);
 
                 if (typeof this.input_options?.autoColumnStartIndex === 'number') {
                     const index = ++(this.input_options.autoColumnStartIndex);
@@ -394,7 +377,7 @@
                 }
             }
         } else {
-            column = Object.assign({}, defaultTemplate, column);
+            column = Object.assign({}, column);
         }
 
         column = this.parse_tabulator_column_definition(column);
