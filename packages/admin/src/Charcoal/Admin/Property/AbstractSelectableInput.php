@@ -109,7 +109,7 @@ abstract class AbstractSelectableInput extends AbstractPropertyInput implements
             $value = $value->format('Y-m-d-H:i');
         }
 
-        if (method_exists($value, '__toString')) {
+        if (is_object($value) && method_exists($value, '__toString')) {
             $value = strval($value);
         }
 
