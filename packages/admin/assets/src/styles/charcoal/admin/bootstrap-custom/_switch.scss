@@ -43,6 +43,7 @@ $switch-transition: .2s all !default;
         + label {
             position: relative;
             min-width: calc(#{$switch-height} * 2);
+            margin-bottom: 0;
             border-radius: $switch-border-radius;
             height: $switch-height;
             line-height: $switch-height;

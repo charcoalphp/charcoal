@@ -1,8 +1,12 @@
 {
     "root": true,
+    "parserOptions": {
+        "ecmaVersion": "latest"
+    },
     "env": {
         "amd": true,
-        "browser": true
+        "browser": true,
+        "es6": true
     },
     "globals": {
         "$": true,

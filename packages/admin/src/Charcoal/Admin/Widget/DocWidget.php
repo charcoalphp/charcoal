@@ -324,6 +324,16 @@ class DocWidget extends FormWidget implements
             $props = array_merge($group, $props);
         }
 
+        if (!$this->layout()) {
+            // Ensure a layout is present and matches the number
+            // of properties to be rendered.
+            $this->setLayout([
+                'structure' => [
+                    [ 'columns' => [ 1 ], 'loop' => count($props) ],
+                ],
+            ]);
+        }
+
         foreach ($props as $propertyIdent => $propertyMetadata) {
             $propertyIdent = $this->camelize($propertyIdent);
             if (method_exists($obj, 'filterPropertyMetadata')) {

@@ -9,6 +9,10 @@
     }
 }
 
+.card-heading:last-child {
+    margin-bottom: 0;
+}
+
 .card-body {
     // Switch up the borders between `.card-header` & `.card-body` when using collapsing cards using a header toggle.
     .card-collapsible .collapse &,

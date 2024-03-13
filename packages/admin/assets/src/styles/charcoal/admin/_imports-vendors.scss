@@ -46,8 +46,15 @@
 // jQuery MiniColors
 @import "../../../../../node_modules/@claviska/jquery-minicolors/jquery.minicolors";
 
+// Tabulator
+// @import "../../../../../node_modules/tabulator-tables/dist/css/tabulator";
+@import "../../../../../node_modules/tabulator-tables/dist/css/tabulator_bootstrap4";
+
 // Dependency overrides
 // ==========================================================================
+
+// Overrides for Tabulator
+@import "vendors/tabulator";
 
 // Awesome Bootstrap Checkbox
 @import "vendors/awesome-bootstrap-checkbox";

@@ -377,6 +377,17 @@ abstract class AbstractPropertyInput extends AbstractProperty implements
     }
 
     /**
+     * Overridable.
+     * Makes it easier to pass InputVal options from children input types.
+     *
+     * @return array
+     **/
+    public function getInputValOptions(): array
+    {
+        return [];
+    }
+
+    /**
      * @uses   AbstractProperty::inputVal() Must handle string sanitization of value.
      * @throws UnexpectedValueException If the value is invalid.
      * @return string
@@ -384,9 +395,12 @@ abstract class AbstractPropertyInput extends AbstractProperty implements
     public function inputVal()
     {
         $prop = $this->p();
-        $val  = $prop->inputVal($this->propertyVal(), [
-            'lang' => $this->lang(),
-        ]);
+        $val  = $prop->inputVal($this->propertyVal(), array_replace(
+            [
+                'lang' => $this->lang(),
+            ],
+            $this->getInputValOptions()
+        ));
 
         if ($val === null) {
             return '';

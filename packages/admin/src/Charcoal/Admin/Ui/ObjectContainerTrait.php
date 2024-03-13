@@ -2,17 +2,14 @@
 
 namespace Charcoal\Admin\Ui;
 
-use Exception;
-use RuntimeException;
-use InvalidArgumentException;
-use ReflectionClass;
-// From 'charcoal-core'
 use Charcoal\Model\ModelInterface;
-// From 'charcoal-factory'
 use Charcoal\Factory\FactoryInterface;
-// From 'charcoal-view'
 use Charcoal\View\ViewableInterface;
 use Charcoal\View\ViewInterface;
+use Exception;
+use InvalidArgumentException;
+use RuntimeException;
+use ReflectionClass;
 
 /**
  * An implementation, as Trait, of the {@see \Charcoal\Admin\Ui\ObjectContainerInterface}.
@@ -315,34 +312,54 @@ trait ObjectContainerTrait
      */
     protected function createObj()
     {
+        $objType = $this->objType();
+
         if (!$this->validateObjType()) {
-            throw new Exception(sprintf(
-                '%1$s cannot create object. Invalid object type: "%2$s"',
-                get_class($this),
-                $this->objType()
-            ));
+            if ($objType) {
+                $objBaseClass = $this->objBaseClass();
+                if ($objBaseClass) {
+                    $message = sprintf(
+                        '[%1$s] can not create object: Object type [%2$s] does not match [%3$s]',
+                        get_class($this),
+                        $objType,
+                        $objBaseClass
+                    );
+                } else {
+                    $message = sprintf(
+                        '[%1$s] can not create object: Invalid object type [%2$s]',
+                        get_class($this),
+                        $objType
+                    );
+                }
+            } else {
+                $message = sprintf(
+                    '[%1$s] can not create object: Missing object type',
+                    get_class($this)
+                );
+            }
+
+            throw new Exception($message);
         }
 
-        $objType = $this->objType();
         $obj = $this->modelFactory()->create($objType);
 
         return $obj;
     }
 
     /**
+     * Loads the container's related object.
+     *
      * @return ModelInterface The loaded object
      */
     protected function loadObj()
     {
-        if ($this->obj === null) {
-            $this->obj = $this->createObj();
-        }
-        $obj = $this->obj;
+        $obj = $this->createObj();
 
         $objId = $this->objId();
         if (!$objId) {
             return $obj;
         }
+
         $obj->load($objId);
         return $obj;
     }
@@ -359,15 +376,7 @@ trait ObjectContainerTrait
                 return false;
             }
 
-            // Catch exception to know if the objType is valid
-            $obj = $this->proto();
-            if (!$this->validateObjBaseClass($obj)) {
-                throw new RuntimeException(sprintf(
-                    'Can not create object, type is not an instance of %s',
-                    $this->objBaseClass()
-                ));
-            }
-            return true;
+            return $this->validateObjBaseClass($this->proto());
         } catch (Exception $e) {
             return false;
         }

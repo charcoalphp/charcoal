@@ -1,0 +1,9 @@
+{{# addJs }}
+<script>
+    Charcoal.Admin.manager().add_property_input({
+        id:   '{{ inputId }}',
+        type: 'charcoal/admin/property/input/tabulator',
+        data: {{& controlDataForJsAsJson }}
+    });
+</script>
+{{/ addJs }}

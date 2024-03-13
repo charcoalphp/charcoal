@@ -66,6 +66,13 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
     private $collectionLoader;
 
     /**
+     * The field which defines the data's model.
+     *
+     * @var string|null
+     */
+    protected $dynamicTypeField;
+
+    /**
      * The rules for pagination the collection of objects.
      *
      * @var array|null
@@ -432,6 +439,34 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
     }
 
     /**
+     * Retrieve the field to use for dynamic object type.
+     *
+     * @return string|null
+     */
+    public function dynamicTypeField()
+    {
+        return $this->dynamicTypeField;
+    }
+
+    /**
+     * @param  string|null $field The field to use for dynamic object type.
+     * @throws InvalidArgumentException If the field is not a string.
+     * @return self
+     */
+    public function setDynamicTypeField($field)
+    {
+        if (!is_string($field) && !is_null($field)) {
+            throw new InvalidArgumentException(
+                'Dynamic type field must be a string or null'
+            );
+        }
+
+        $this->dynamicTypeField = $field;
+
+        return $this;
+    }
+
+    /**
      * Set the rules for pagination the collection of objects.
      *
      * @param  array $pagination Pagination settings.
@@ -715,18 +750,23 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
         if (!$loader->hasModel()) {
             $loader->setModel($this->proto());
 
+            $dynamicTypeField = $this->dynamicTypeField();
+            if ($dynamicTypeField) {
+                $loader->setDynamicTypeField($dynamicTypeField);
+            }
+
             $pagination = $this->pagination();
-            if (!empty($pagination)) {
+            if ($pagination) {
                 $loader->setPagination($pagination);
             }
 
             $orders = $this->orders();
-            if (!empty($orders)) {
+            if ($orders) {
                 $loader->setOrders($orders);
             }
 
             $filters = $this->filters();
-            if (!empty($filters)) {
+            if ($filters) {
                 $loader->setFilters($filters);
             }
         }

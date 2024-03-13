@@ -4,6 +4,7 @@ namespace Charcoal\Admin\Property\Input;
 
 use InvalidArgumentException;
 use Charcoal\Admin\Property\AbstractPropertyInput;
+use UnexpectedValueException;
 
 /**
  * Multi-Line Text Input Property
@@ -116,6 +117,16 @@ class TextareaInput extends AbstractPropertyInput
         }
         $this->maxLength = (int)$maxLength;
         return $this;
+    }
+
+    /**
+    * @return array
+    */
+    public function getInputValOptions(): array
+    {
+        return [
+            'pretty' => true,
+        ];
     }
 
     /**

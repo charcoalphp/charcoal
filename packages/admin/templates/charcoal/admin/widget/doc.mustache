@@ -8,7 +8,7 @@
 --}}
 <div id="{{ widgetId }}">
     {{! Using object form classes for style only }}
-    <div class="o-flex c-form-widget -object-form{{# isTabbable }} -tabbed{{/ isTabbable }}">
+    <div class="o-flex c-form-widget -object-form{{# isTabbable }} -tabbed{{/ isTabbable }}{{^ isTabbable }} -stacked{{/ isTabbable }}">
         <div class="o-flex_main c-form-widget_form">
             {{# isTabbable }}
                 {{> $form_tabs_template }}

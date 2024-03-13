@@ -22,6 +22,8 @@ use Charcoal\Validator\ValidatableInterface;
 use Charcoal\Validator\ValidatableTrait;
 use Charcoal\Validator\ValidatorInterface;
 // From 'charcoal-translator'
+use Charcoal\Translator\TranslatableInterface;
+use Charcoal\Translator\TranslatableValue;
 use Charcoal\Translator\Translation;
 use Charcoal\Translator\TranslatorAwareTrait;
 // From 'charcoal-property'
@@ -414,6 +416,8 @@ abstract class AbstractProperty extends AbstractEntity implements
             if ($propertyValue === null) {
                 return '';
             }
+        } elseif ($val instanceof TranslatableValue) {
+            $propertyValue = $val->trans($this->translator());
         } elseif ($val instanceof Translation) {
             $propertyValue = (string)$val;
         } else {
@@ -428,7 +432,13 @@ abstract class AbstractProperty extends AbstractEntity implements
         }
 
         if (!is_scalar($propertyValue)) {
-            $propertyValue = json_encode($propertyValue, JSON_PRETTY_PRINT);
+            if (isset($options['json'])) {
+                $flags = $options['json'];
+            } elseif (($options['pretty'] ?? false)) {
+                $flags = JSON_PRETTY_PRINT;
+            }
+            $propertyValue = json_encode($propertyValue, ($flags ?? 0));
+            return $propertyValue;
         }
 
         return (string)$propertyValue;
@@ -522,9 +532,9 @@ abstract class AbstractProperty extends AbstractEntity implements
 
     /**
      * @param  mixed $val A L10N variable.
-     * @return Translation The translation value.
+     * @return TranslatableInterface|null The translation value.
      */
-    public function parseValAsL10n($val)
+    public function parseValAsL10n($val): ?TranslatableInterface
     {
         return $this->translator()->translation($val);
     }
@@ -1028,11 +1038,7 @@ abstract class AbstractProperty extends AbstractEntity implements
             }
         }
 
-        if (isset($val[$lang])) {
-            return $val[$lang];
-        } else {
-            return null;
-        }
+        return ($val[$lang] ?? null);
     }
 
     /**

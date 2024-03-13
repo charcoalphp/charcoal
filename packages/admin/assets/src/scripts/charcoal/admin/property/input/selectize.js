@@ -31,6 +31,7 @@
         this.selectize_selector = null;
         this.form_data = {};
         this.form_ident = null;
+        this.form_widget = null;
         this.selectize_options = {};
         this.choice_obj_map = {};
         this.selectize_property_ident = null;
@@ -81,12 +82,15 @@
         this.allow_update = opts.data.allow_update || this.allow_update;
         this.allow_create = opts.data.allow_create || this.allow_create;
         this.title = opts.data.title || this.title;
+        this.dialog_title_update = opts.data.dialog_title_update || this.dialog_title_update;
+        this.dialog_title_create = opts.data.dialog_title_create || this.dialog_title_create;
         this.translations = opts.data.translations || this.translations;
         this.pattern = opts.data.pattern || this.pattern;
         this.multiple = opts.data.multiple || this.multiple;
         this.separator = opts.data.multiple_separator || this.multiple_separator || ',';
         this.form_data = opts.data.form_data || this.form_data;
         this.form_ident = opts.data.form_ident || this.form_ident;
+        this.form_widget = opts.data.form_widget || this.form_widget;
 
         this.selectize_selector = opts.data.selectize_selector || this.selectize_selector;
         this.selectize_options = opts.data.selectize_options || this.selectize_options;
@@ -226,11 +230,22 @@
         var settings = this.selectize_options;
         var step = opts.step || 0;
         var form_ident = this.form_ident;
+        var form_widget = this.form_widget || 'charcoal/admin/widget/quick-form';
         var submit_label = null;
         var id = opts.id || null;
         var selectize_property = this.selectize_property;
         var selectize_property_ident = this.selectize_property_ident;
         var selectize_obj_type = this.selectize_obj_type;
+
+        if (id) {
+            if (this.dialog_title_update) {
+                title = this.dialog_title_update;
+            }
+        } else {
+            if (this.dialog_title_create) {
+                title = this.dialog_title_create;
+            }
+        }
 
         // Get the form ident
         if (form_ident && typeof form_ident === 'object') {
@@ -288,7 +303,7 @@
                     });
                 }
             },
-            widget_type: 'charcoal/admin/widget/quick-form',
+            widget_type: form_widget,
             with_data: true,
             widget_options: {
                 obj_type: type,
@@ -313,7 +328,7 @@
 
                 Charcoal.Admin.manager().add_widget({
                     id: response.widget_id,
-                    type: 'charcoal/admin/widget/quick-form',
+                    type: form_widget,
                     data: response.widget_data,
                     obj_id: id,
                     extra_form_data: {

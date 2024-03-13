@@ -185,10 +185,38 @@ class TranslatorServiceProvider implements ServiceProviderInterface
         $container['translator/config'] = function (Container $container) {
             $appConfig   = isset($container['config']) ? $container['config'] : [];
             $transConfig = isset($appConfig['translator']) ? $appConfig['translator'] : null;
+
             if (isset($transConfig['paths'])) {
-                $transConfig['paths'] = $container['config']->resolveValues($transConfig['paths']);
+                $transConfig['paths'] = $appConfig->resolveValues($transConfig['paths']);
             }
-            return new TranslatorConfig($transConfig);
+
+            $transConfig = new TranslatorConfig($transConfig);
+
+            if (isset($container['module/classes'])) {
+                $extraPaths = [];
+                $basePath   = $appConfig['base_path'];
+                $modules    = $container['module/classes'];
+                foreach ($modules as $module) {
+                    if (defined(sprintf('%s::APP_CONFIG', $module))) {
+                        $configPath = ltrim($module::APP_CONFIG, '/');
+                        $configPath = $basePath . DIRECTORY_SEPARATOR . $configPath;
+
+                        $configData = $appConfig->loadFile($configPath);
+                        if (isset($configData['translator']['paths'])) {
+                            $extraPaths = array_merge(
+                                $extraPaths,
+                                $appConfig->resolveValues($configData['translator']['paths'])
+                            );
+                        }
+                    };
+                }
+
+                if ($extraPaths) {
+                    $transConfig->addPaths($extraPaths);
+                }
+            }
+
+            return $transConfig;
         };
 
         /**

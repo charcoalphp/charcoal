@@ -94,10 +94,12 @@ class ViewServiceProvider implements ServiceProviderInterface
                         $configPath = $basePath . DIRECTORY_SEPARATOR . $configPath;
 
                         $configData = $viewConfig->loadFile($configPath);
-                        $extraPaths = array_merge(
-                            $extraPaths,
-                            $configData['view']['paths']
-                        );
+                        if (isset($configData['view']['paths'])) {
+                            $extraPaths = array_merge(
+                                $extraPaths,
+                                $configData['view']['paths']
+                            );
+                        }
                     };
                 }
 

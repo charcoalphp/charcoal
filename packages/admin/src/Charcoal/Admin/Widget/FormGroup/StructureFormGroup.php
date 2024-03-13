@@ -427,26 +427,7 @@ class StructureFormGroup extends FormGroupWidget implements
         if ($reload || !$this->isStructureFinalized) {
             $this->isStructureFinalized = true;
 
-            $property = $this->storageProperty();
-
-            $struct = $property->getStructureMetadata();
-            $formGroup = null;
-            if (isset($struct['admin']['default_form_group'])) {
-                $groupName = $struct['admin']['default_form_group'];
-                if (isset($struct['admin']['form_groups'][$groupName])) {
-                    $formGroup = $struct['admin']['form_groups'][$groupName];
-                }
-            } elseif (isset($struct['admin']['form_group'])) {
-                if (is_string($struct['admin']['form_group'])) {
-                    $groupName = $struct['admin']['form_group'];
-                    if (isset($struct['admin']['form_groups'][$groupName])) {
-                        $formGroup = $struct['admin']['form_groups'][$groupName];
-                    }
-                } else {
-                    $formGroup = $struct['admin']['form_group'];
-                }
-            }
-
+            $formGroup = $this->findStructureFormGroup();
             if ($formGroup) {
                 if (is_array($this->rawData)) {
                     $widgetData = array_replace($formGroup, $this->rawData);
@@ -456,6 +437,38 @@ class StructureFormGroup extends FormGroupWidget implements
                 }
             }
         }
+    }
+
+    /**
+     * @return ?array<string, mixed>
+     */
+    protected function findStructureFormGroup(): ?array
+    {
+        $struct = $this->storageProperty()->getStructureMetadata();
+
+        $formGroup = null;
+        if (isset($struct['admin']['form_group'])) {
+            if (\is_string($struct['admin']['form_group'])) {
+                $groupName = $struct['admin']['form_group'];
+                if (isset($struct['admin']['form_groups'][$groupName])) {
+                    return $struct['admin']['form_groups'][$groupName];
+                }
+            } else {
+                return $struct['admin']['form_group'];
+            }
+        }
+
+        if (isset($struct['admin']['default_form_group'])) {
+            $groupName = $struct['admin']['default_form_group'];
+            if (
+                \is_string($groupName) &&
+                isset($struct['admin']['form_groups'][$groupName])
+            ) {
+                return $struct['admin']['form_groups'][$groupName];
+            }
+        }
+
+        return null;
     }
 
     /**
@@ -532,18 +545,43 @@ class StructureFormGroup extends FormGroupWidget implements
             $entry = $store->parseVal($entry);
         }
 
+        $entry = $store->structureVal($entry, [ 'default_data' => true ]);
+        if (!$entry) {
+            $entry = clone $store->structureProto();
+        }
+
         $propertyIdentPattern = '%1$s[%2$s]';
 
         $propPreferences  = $this->propertiesOptions();
         $structProperties = $this->parsedFormProperties();
+
+        if (!$this->layout()) {
+            // Ensure a layout is present and matches the number
+            // of properties to be rendered.
+            $this->setLayout([
+                'structure' => [
+                    [ 'columns' => [ 1 ], 'loop' => count($structProperties) ],
+                ],
+            ]);
+        }
 
         foreach ($structProperties as $propertyIdent => $propertyMetadata) {
             if (is_array($propertyMetadata)) {
                 $propertyMetadata['ident'] = $propertyIdent;
             }
 
+            if (method_exists($entry, 'filterPropertyMetadata')) {
+                $propertyMetadata = $entry->filterPropertyMetadata(
+                    $propertyMetadata,
+                    $propertyIdent
+                );
+            }
+
             if (method_exists($obj, 'filterPropertyMetadata')) {
-                $propertyMetadata = $obj->filterPropertyMetadata($propertyMetadata, $propertyIdent);
+                $propertyMetadata = $obj->filterPropertyMetadata(
+                    $propertyMetadata,
+                    $store->ident() . '.' . $propertyIdent
+                );
             }
 
             if (is_bool($propertyMetadata) && $propertyMetadata === false) {
@@ -582,7 +620,7 @@ class StructureFormGroup extends FormGroupWidget implements
                 }
             }
 
-            if (!empty($entry) && isset($entry[$propertyIdent])) {
+            if ($entry && isset($entry[$propertyIdent])) {
                 $val = $entry[$propertyIdent];
                 $formProperty->setPropertyVal($val);
             }

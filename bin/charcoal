@@ -14,14 +14,20 @@ if (PHP_SAPI !== 'cli') {
 }
 
 // Find Composer autoloader
-$autoloaderPath = [
+$autoloaderPaths = [
     __DIR__ . '/../../../../vendor/autoload.php',
     __DIR__ . '/../vendor/autoload.php',
     __DIR__ . '/../autoload.php',
 ];
 
+$cwd = getcwd();
+if (is_string($cwd)) {
+    // Check the current working directory.
+    array_unshift($autoloaderPaths, $cwd . '/vendor/autoload.php');
+}
+
 $autoloaderFound = false;
-foreach ($autoloaderPath as $file) {
+foreach ($autoloaderPaths as $file) {
     if (file_exists($file)) {
         $autoloaderFound = true;
         include $file;
@@ -53,7 +59,7 @@ if (!file_exists($confFile)) {
 }
 
 $config = new AppConfig([
-    'base_path'   => $baseDir,
+    'base_path' => $baseDir,
 ]);
 $config->addFile($confFile);
 // Create container and configure it (with charcoal-config)

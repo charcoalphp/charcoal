@@ -104,19 +104,12 @@ class JsonEditorInput extends TextareaInput
     }
 
     /**
-     * Retrieve the property's value as a json encoded string.
-     *
-     * @return string
+     * @return array
      */
-    public function jsonVal()
+    public function getInputValOptions(): array
     {
-        $json = $this->propertyVal();
-        if (!is_string($json)) {
-            $json = json_encode($json);
-        }
-        if (!$json || $json == 'null') {
-            $json = '';
-        }
-        return $json;
+        return [
+            'pretty' => false,
+        ];
     }
 }

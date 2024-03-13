@@ -3,11 +3,11 @@
 namespace Charcoal\Translator;
 
 use ArrayAccess;
+use Charcoal\Translator\LocalesManager;
 use DomainException;
 use InvalidArgumentException;
 use JsonSerializable;
-// From 'charcoal-translator'
-use Charcoal\Translator\LocalesManager;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * A translation object holds a localized message in all available locales.
@@ -15,6 +15,7 @@ use Charcoal\Translator\LocalesManager;
  * Available locales is provided with a locales manager.
  */
 class Translation implements
+    TranslatableInterface,
     ArrayAccess,
     JsonSerializable
 {
@@ -41,7 +42,6 @@ class Translation implements
         $this->manager = $manager;
         $this->setVal($val);
     }
-
     /**
      * Output the current language's value, when cast to string.
      *
@@ -194,6 +194,18 @@ class Translation implements
             $this->val[$lang] = call_user_func($callback, $val, $lang);
         }
         return $this;
+    }
+
+    /**
+     * @param  TranslatorInterface $translator  The translator.
+     * @param  ?string             $locale      The locale.
+     * @return string
+     */
+    public function trans(TranslatorInterface $translator, ?string $locale = null)
+    {
+        $locale ??= $translator->getLocale();
+
+        return $this->val[$locale];
     }
 
     /**

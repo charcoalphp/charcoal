@@ -1,0 +1,101 @@
+// ==========================================================================
+// Tabulator
+// ==========================================================================
+
+/**
+ * Reduce font size, font weight, and padding to match other components.
+ */
+.tabulator {
+    font-size: 14px;
+}
+
+.tabulator .tabulator-alert .tabulator-alert-msg,
+.tabulator-row .tabulator-responsive-collapse table,
+.tabulator-popup-container,
+.tabulator-edit-list {
+    font-size: inherit;
+}
+
+.tabulator .fa {
+    font-size: 16px;
+}
+
+.tabulator .tabulator-header .tabulator-col .tabulator-col-content,
+.tabulator-row .tabulator-cell {
+    padding: 8px 12px;
+}
+
+/**
+ * Improve appearance of bordered table to avoid
+ * thick (double) lines on the right and bottom.
+ */
+.tabulator .tabulator-header {
+    font-weight: 500;
+
+    &:first-child {
+        border-top: 0;
+    }
+}
+
+.tabulator-row {
+    min-height: 36px;
+    border-bottom: 0;
+
+    & + & {
+        border-top: 1px solid #dee2e6;
+    }
+}
+
+.tabulator.table-bordered {
+    .tabulator-header .tabulator-col,
+    .tabulator-tableholder .tabulator-table .tabulator-row .tabulator-cell {
+        border-right: 0;
+    }
+
+    .tabulator-tableholder .tabulator-table .tabulator-row .tabulator-cell ~ .tabulator-cell,
+    .tabulator-header .tabulator-col ~ .tabulator-col {
+        border-left: 1px solid #dee2e6;
+    }
+}
+
+/**
+ * Add support for L10N indicator.
+ */
+.tabulator .tabulator-header .tabulator-col.tabulator-l10n {
+    .tabulator-col-title {
+        padding-right: 25px;
+    }
+
+    .tabulator-col-content .tabulator-col-l10n {
+        display: flex;
+        align-items: center;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        right: 0;
+    }
+
+    &.tabulator-sortable {
+        .tabulator-col-title {
+            padding-right: 35px;
+        }
+
+        .tabulator-col-content .tabulator-col-l10n {
+            right: 16px;
+        }
+    }
+}
+
+/**
+ * Improve appearance of invalid cells.
+ */
+.tabulator-row .tabulator-cell.tabulator-validation-fail {
+    border: 1px solid #dd0000 !important;
+}
+
+/**
+ * Improve appearance of empty cells.
+ */
+.tabulator-row .tabulator-cell.tabulator-cell-empty {
+    color: #888;
+}

@@ -62,6 +62,8 @@ module.exports = {
             '<%= paths.npm %>/selectize/dist/js/standalone/selectize.min.js',
             // Selectize
             '<%= paths.npm %>/clipboard/dist/clipboard.min.js',
+            // Tabulator
+            '<%= paths.npm %>/tabulator-tables/dist/js/tabulator.js',
             // jQuery Timeago
             '<%= paths.npm %>/timeago/jquery.timeago.js',
         ],

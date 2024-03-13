@@ -161,8 +161,7 @@ class UpdateAction extends AbstractSaveAction
                 return $response->withStatus(400);
             }
 
-            // Load or reload object (From `ObjectContainerTrait`)
-            $obj = $this->loadObj();
+            $obj = $this->obj();
             $obj->mergeData($this->getUpdateData());
 
             $valid = $this->validate($obj);

@@ -1,0 +1,22 @@
+{{# controlDataForJs }}
+<div id="{{ inputId }}-tabulator-footer" class="tabulator-footer mt-3">
+    <div class="btn-toolbar" role="toolbar" aria-label="{{# _t }}Table editor toolbar{{/ _t }}">
+        {{# tabulator_options.history }}
+            <div class="btn-group" role="group" aria-label="{{# _t }}History{{/ _t }}">
+                <button type="button" class="btn btn-warning js-{{ inputId }}-history-undo">{{# _t }}Undo{{/ _t }}</button>
+                <button type="button" class="btn btn-warning js-{{ inputId }}-history-redo">{{# _t }}Redo{{/ _t }}</button>
+            </div>
+        {{/ tabulator_options.history }}
+        {{# input_options.addColumnOrRow }}
+            <div class="btn-group" role="group" aria-label="{{# _t }}Columns/Rows{{/ _t }}">
+                {{# input_options.addColumn }}
+                    <button type="button" class="btn btn-primary js-{{ inputId }}-add-col">{{ input_options.addColumnLabel }}</button>
+                {{/ input_options.addColumn }}
+                {{# input_options.addRow }}
+                    <button type="button" class="btn btn-primary js-{{ inputId }}-add-row">{{ input_options.addRowLabel }}</button>
+                {{/ input_options.addRow }}
+            </div>
+        {{/ input_options.addColumnOrRow }}
+    </div>
+</div>
+{{/ controlDataForJs }}

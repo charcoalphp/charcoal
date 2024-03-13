@@ -124,6 +124,16 @@ class AdminTemplate extends AbstractTemplate implements
     private $adminDataForJs;
 
     /**
+     * @var \Charcoal\Ui\Menu\MenuBuilder $menuBuilder
+     */
+    private $menuBuilder;
+
+    /**
+     * @var \Charcoal\Ui\MenuItem\MenuItemBuilder $menuItemBuilder
+     */
+    private $menuItemBuilder;
+
+    /**
      * @var FactoryInterface $modelFactory
      */
     private $modelFactory;
@@ -764,9 +774,12 @@ class AdminTemplate extends AbstractTemplate implements
         $menuItems = [];
         foreach ($mainMenuConfig['items'] as $menuIdent => $menuItem) {
             $menuItem['menu'] = $menu;
-            $test = $this->menuItemBuilder->build($menuItem);
 
-            if ($test->isAuthorized() === false) {
+            $test = $this->menuItemBuilder->build($menuItem);
+            if (
+                ($test instanceof AuthAwareInterface) &&
+                ($test->isAuthorized() === false)
+            ) {
                 continue;
             }
             unset($menuItem['menu']);
@@ -868,12 +881,12 @@ class AdminTemplate extends AbstractTemplate implements
      */
     protected function createSecondaryMenu()
     {
-        $secondaryMenu = [];
         $secondaryMenuItems = $this->adminConfig('secondary_menu');
 
         // Get the ident of the active main menu item
         $mainMenuIdent = $this->mainMenuIdent();
 
+        $menuItems = [];
         foreach ($secondaryMenuItems as $ident => $options) {
             $options['ident'] = $ident;
 
@@ -892,11 +905,13 @@ class AdminTemplate extends AbstractTemplate implements
                                 ->create('charcoal/admin/widget/secondary-menu')
                                 ->setData($options);
 
-                $secondaryMenu[] = $widget;
+                $menuItems[] = $widget;
             }
         }
 
-        return $secondaryMenu;
+        usort($menuItems, [ 'Charcoal\Admin\Support\Sorter', 'sortByPriority' ]);
+
+        return $menuItems;
     }
 
     /**
@@ -929,8 +944,12 @@ class AdminTemplate extends AbstractTemplate implements
         $menuItems  = [];
         foreach ($menuConfig['items'] as $menuIdent => $menuItem) {
             $menuItem['menu'] = $systemMenu;
+
             $test = $this->menuItemBuilder->build($menuItem);
-            if ($test->isAuthorized() === false) {
+            if (
+                ($test instanceof AuthAwareInterface) &&
+                ($test->isAuthorized() === false)
+            ) {
                 continue;
             }
             unset($menuItem['menu']);
@@ -944,6 +963,9 @@ class AdminTemplate extends AbstractTemplate implements
 
             $menuItems[$menuIdent] = $menuItem;
         }
+
+        usort($menuItems, [ 'Charcoal\Admin\Support\Sorter', 'sortByPriority' ]);
+
         return $menuItems;
     }
 

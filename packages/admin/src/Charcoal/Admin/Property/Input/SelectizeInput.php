@@ -30,6 +30,8 @@ use Charcoal\Admin\Property\HierarchicalObjectProperty;
  */
 class SelectizeInput extends SelectInput
 {
+    public const DEFAULT_FORM_WIDGET = 'charcoal/admin/widget/quick-form';
+
     /**
      * Settings for {@link http://selectize.github.io/selectize.js/ Selectize.js}
      *
@@ -80,6 +82,13 @@ class SelectizeInput extends SelectInput
     protected $allowCreate;
 
     /**
+     * The quick form widget to use while creating/updating objects through Selectize.
+     *
+     * @var string
+     */
+    private $formWidget = self::DEFAULT_FORM_WIDGET;
+
+    /**
      * The form idents to use while creating objects through Selectize.
      *
      * Can either be a single value,
@@ -99,6 +108,20 @@ class SelectizeInput extends SelectInput
      * @var array|null
      */
     private $formData;
+
+    /**
+     * Label for the create item dialog.
+     *
+     * @var \Charcoal\Translator\Translation|string|null
+     */
+    private $dialogTitleCreate;
+
+    /**
+     * Label for the update item dialog.
+     *
+     * @var \Charcoal\Translator\Translation|string|null
+     */
+    private $dialogTitleUpdate;
 
     /**
      * Check used to parse multi Choice map against the obj properties.
@@ -360,6 +383,25 @@ class SelectizeInput extends SelectInput
     }
 
     /**
+     * @return string
+     */
+    public function formWidget()
+    {
+        return $this->formWidget;
+    }
+
+    /**
+     * @param string $formWidget The form widget for object creation and modification.
+     * @return self
+     */
+    public function setFormWidget($formWidget)
+    {
+        $this->formWidget = $formWidget;
+
+        return $this;
+    }
+
+    /**
      * @return mixed
      */
     public function formIdent()
@@ -403,6 +445,52 @@ class SelectizeInput extends SelectInput
     public function formIdentAsJson()
     {
         return json_encode($this->formIdent());
+    }
+
+    /**
+     * Set the title for the create item dialog.
+     *
+     * @param  string|string[] $title The dialog title.
+     * @return self
+     */
+    public function setDialogTitleCreate($title)
+    {
+        $this->dialogTitleCreate = $this->translator()->translation($title);
+
+        return $this;
+    }
+
+    /**
+     * Retrieve the title for the create item dialog.
+     *
+     * @return \Charcoal\Translator\Translation|string|null
+     */
+    public function getDialogTitleCreate()
+    {
+        return $this->dialogTitleCreate;
+    }
+
+    /**
+     * Set the title for the update item dialog.
+     *
+     * @param  string|string[] $title The dialog title.
+     * @return self
+     */
+    public function setDialogTitleUpdate($title)
+    {
+        $this->dialogTitleUpdate = $this->translator()->translation($title);
+
+        return $this;
+    }
+
+    /**
+     * Retrieve the title for the update item dialog.
+     *
+     * @return \Charcoal\Translator\Translation|string|null
+     */
+    public function getDialogTitleUpdate()
+    {
+        return $this->dialogTitleUpdate;
     }
 
     /**
@@ -1016,8 +1104,12 @@ class SelectizeInput extends SelectInput
             'allow_update'             => $this->allowUpdate(),
             'allow_create'             => $this->allowCreate(),
 
+            'dialog_title_create'      => (string)$this->getDialogTitleCreate(),
+            'dialog_title_update'      => (string)$this->getDialogTitleUpdate(),
+
             'form_data'                => $this->getFormData(),
             'form_ident'               => $this->formIdent(),
+            'form_widget'              => $this->formWidget(),
             'selectize_selector'       => '#' . $this->inputId(),
             'selectize_options'        => $this->selectizeOptions(),
             'choice_obj_map'           => $this->choiceObjMap(),
