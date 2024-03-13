@@ -1,5 +1,62 @@
 # Changelog
 
+## [5.0.0](https://github.com/charcoalphp/charcoal/compare/v4.1.0...v5.0.0) (2024-03-13)
+
+
+### ⚠ BREAKING CHANGES
+
+* **admin:** The parent model property now receives both its structure/storage property and the structure's sub-property as a dot-delimited key path: `<storageProperty>.<childProperty>`. This fixes the risk of conflicting property identifiers where a structure's child property inherits the parent model's property mutations and fixes the missing context for the structure's property.
+
+### Features
+
+* **admin:** Add custom dialog titles for Selectize input ([ffc3382](https://github.com/charcoalphp/charcoal/commit/ffc338225c86a5788d61bc1c675ec18678e3d14e))
+* **admin:** Add JS debounce factory ([7a25409](https://github.com/charcoalphp/charcoal/commit/7a25409e7bf318734cc2ccd497ec3a576b5e9e83))
+* **admin:** Add support to customize form widget used by Selectize input ([b407dfb](https://github.com/charcoalphp/charcoal/commit/b407dfb9e9bfc45d8e4c7498498316075f60e796)), closes [#88](https://github.com/charcoalphp/charcoal/issues/88)
+* **admin:** Add validation message to TinyMCE on save ([46af62b](https://github.com/charcoalphp/charcoal/commit/46af62baec68713c13c837a8123ce3294bcf4254))
+* **admin:** Change default options of TinyMCE Basic Input ([26018e9](https://github.com/charcoalphp/charcoal/commit/26018e9082681a00be706a04f43da0db0852dcca))
+* **admin:** Improve Selectize LoadAction controller ([21057b7](https://github.com/charcoalphp/charcoal/commit/21057b773731b51b0f661d2fe23e7b830430a0d2)), closes [#85](https://github.com/charcoalphp/charcoal/issues/85)
+* **admin:** Improve structure property metadata filtering ([8eb96cb](https://github.com/charcoalphp/charcoal/commit/8eb96cb69a4b71ae9ce1b3b98fda54d40e3728d6))
+* **admin:** Improve Tabulator Input ([fc33ab0](https://github.com/charcoalphp/charcoal/commit/fc33ab00aaeb8a4a9ed135630d06aff7345d6f8e))
+* **admin:** Improve validation/requirements in Tabulator Input ([13b33d4](https://github.com/charcoalphp/charcoal/commit/13b33d4532ab5bd877ef09cea99cbb0c57235b9c))
+* **admin:** Sort admin secondary and system menu items ([e6c3493](https://github.com/charcoalphp/charcoal/commit/e6c34935177fe3b4327fadb67112c811b462c6fe))
+* **admin:** Use Bootstrap 4 theme for Tabulator Input ([b93cd5d](https://github.com/charcoalphp/charcoal/commit/b93cd5dbb2b5975699eab753a7b5ce0e6b89e0da))
+* **input:** add getInputValOptions to allow input classes to define their own set of options. ([8d3ce52](https://github.com/charcoalphp/charcoal/commit/8d3ce52828b9526b88172a1a2ca088d92936b759))
+* **model-structure-property:** improve ModelStructureProperty.php ([47c1ae0](https://github.com/charcoalphp/charcoal/commit/47c1ae095dee4ba97e7f851cac260a4d0e8c393e))
+* **module:** Improve module app config loader ([8871115](https://github.com/charcoalphp/charcoal/commit/88711151b82ff26ebc73744a25162adb7070da2f))
+* **property:** Add support for dynamic type field to Object Property ([d153868](https://github.com/charcoalphp/charcoal/commit/d15386855dab40c56296a756a5c46fb9a5b9c7b9)), closes [#86](https://github.com/charcoalphp/charcoal/issues/86)
+* **structure-form-group:** improve StructureFormGroup.php ([c2f385e](https://github.com/charcoalphp/charcoal/commit/c2f385ef70e40d84defd3124bcbe3ce545b4a5a2))
+* **structure:** add TranslatableValue.php awareness to AbstractProperty.php ([ca67612](https://github.com/charcoalphp/charcoal/commit/ca6761247cc32fc7dcb5274d818e4b9ec8a8e289))
+* **tabulator:** add tabulator front-end lib and templates ([b2cda4a](https://github.com/charcoalphp/charcoal/commit/b2cda4af3c60a34f42e0053e37bc639b94ef40f8))
+* **tabulator:** add TabulatorInput.php ([bbccfc6](https://github.com/charcoalphp/charcoal/commit/bbccfc650ce5b2456d6900cf6ffa9bd11723116f))
+* **tabulator:** implement tabulator.js as Charcoal js module ([0626c61](https://github.com/charcoalphp/charcoal/commit/0626c6116a42da7bfd96025c6f5320b6252d0279))
+* **translator:** rework the translator and translation systems to standardize translatables with TranslatableInterface.php and add a new TranslatableValue.php enabling dissociating translation from the core translator ([a29d0f3](https://github.com/charcoalphp/charcoal/commit/a29d0f3ffbbef5a0703cc76dda12360cdcff4ca3))
+
+
+### Bug Fixes
+
+* **abstract-selectable:** add check for `is_object` before calling `method_exists` on potential integer value ([42876e3](https://github.com/charcoalphp/charcoal/commit/42876e325ac07dab5a0ca2b0ae50aa1e5de88675))
+* **admin:** Add fallback layout for form group properties ([04169c8](https://github.com/charcoalphp/charcoal/commit/04169c861a30d8b2510e06700393df4c11ed4eb8))
+* **admin:** Change Object UpdateAction ([d2aba67](https://github.com/charcoalphp/charcoal/commit/d2aba6722fd9eb37b558786be0068be1f18e141d))
+* **admin:** Fix admin template menu building ([1221167](https://github.com/charcoalphp/charcoal/commit/1221167df9cc43daf7bb240422f4964c3845c9d6))
+* **admin:** Fix appearance of Selectize List ([6ec39df](https://github.com/charcoalphp/charcoal/commit/6ec39dfff1133e8125e3e13aaa0a57edfce61f0f))
+* **admin:** Fix block comments of Tabulator input ([d86a2b7](https://github.com/charcoalphp/charcoal/commit/d86a2b79a6a4a2596015a44c255184c8ee833ffe))
+* **admin:** Fix handling of property type metadata in CollectionContainerTrait ([aa465e7](https://github.com/charcoalphp/charcoal/commit/aa465e70b737149401828527bbc69969bb067acb))
+* **admin:** Fix margins for switch and file inputs ([e582431](https://github.com/charcoalphp/charcoal/commit/e5824318fb695baec5eecbb4b5d24b8bea3ac991))
+* **admin:** Fix quick forms, form tabs, and L10N inputs ([cd65f2c](https://github.com/charcoalphp/charcoal/commit/cd65f2cc2ecd3a3c846f63c4ce1c0b2c084bbffe))
+* **admin:** Fix referenced version of Tabulator in NPM manifest ([cf506d4](https://github.com/charcoalphp/charcoal/commit/cf506d4deb980e7ee630b737ba41c9c245da3632))
+* **admin:** Improve error handling in ObjectContainerTrait ([5e00185](https://github.com/charcoalphp/charcoal/commit/5e0018509d704f7b17cd614177c6e261c468d3e1))
+* **admin:** Improve structure card header ([2e0c6a7](https://github.com/charcoalphp/charcoal/commit/2e0c6a752a9f619b679db646bdc42673c4ac9878))
+* **admin:** Improve styles and logic of Tabulator Input ([b3971c0](https://github.com/charcoalphp/charcoal/commit/b3971c0cf1b3e59497b0b5616e23a518b9d69bee))
+* **admin:** Localize Tabulator Input ([f7e1666](https://github.com/charcoalphp/charcoal/commit/f7e16666cba01201df0d4617cb910606090630f6))
+* **bin:** Search working directory for Composer autoloader ([4226199](https://github.com/charcoalphp/charcoal/commit/4226199cf63f947522468692b0663ed42b662d49))
+* **cache:** Ignore broken cache drivers in tests ([1316be1](https://github.com/charcoalphp/charcoal/commit/1316be1e9d329f69e1a6d26602ab3003c9471704))
+* **json-editor:** use inputVal instead of jsonVal for json-editor.mustache since it's no longer needed following changes to TranslatableValue and AbstractProperty/Input ([013573b](https://github.com/charcoalphp/charcoal/commit/013573b4b1789cd3c78f901694463e8439897eee))
+* **property:** Fix handling of `l10nVal()` on Structure Property ([d3c71b9](https://github.com/charcoalphp/charcoal/commit/d3c71b9d0e56dece57bd5823f5f0db6367b97448))
+* **translatable:** make TranslatableValue.php ArrayAccess compliant ([4c40ea0](https://github.com/charcoalphp/charcoal/commit/4c40ea092a21d68b4d5acc7b5cb6f87e700d72df))
+* **translatable:** update the `TranslatableInterface` to change the `trans` method signature and update `TranslatableValue` with said method and deprecate `each` and `sanitize` for future version of charcoal ([a728e07](https://github.com/charcoalphp/charcoal/commit/a728e0788e8b83d3e5a54ae8e2320e294fafa76e))
+* **translation:** revert construct to use manager and trans method no longer relay to `translator->translate()` ([6723433](https://github.com/charcoalphp/charcoal/commit/672343302f6511bbe8687832e14409a48da6dd87))
+* **translator:** Revert `trans()` method of `TranslatableInterface` ([81393f6](https://github.com/charcoalphp/charcoal/commit/81393f60ca603cc4a68296e46a90996fd0c562f6))
+
 ## [4.1.0](https://github.com/charcoalphp/charcoal/compare/v4.0.8...v4.1.0) (2024-03-05)
 
 

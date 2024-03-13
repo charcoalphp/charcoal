@@ -11,16 +11,16 @@
     ],
     "extra": {
         "branch-alias": {
-            "dev-main": "4.x-dev"
+            "dev-main": "5.x-dev"
         }
     },
     "require": {
         "php": "^7.4 || ^8.0",
         "psr/log": "^1.0",
-        "charcoal/config": "^4.1",
-        "charcoal/core": "^4.1",
-        "charcoal/factory": "^4.1",
-        "charcoal/translator": "^4.1"
+        "charcoal/config": "^5.0",
+        "charcoal/core": "^5.0",
+        "charcoal/factory": "^5.0",
+        "charcoal/translator": "^5.0"
     },
     "require-dev": {
         "php-coveralls/php-coveralls": "^2.2",
