@@ -78,9 +78,12 @@
         }
 
         if (!this.property_label && this.tabulator_input.id) {
-            this.property_label =
-                document.querySelector('[for="' + this.tabulator_input.id.replace(/_[a-z]{2}$/, '') + '"]')
-                    .textContent ?? this.tabulator_input.name;
+            var tabulator_input_id = this.tabulator_input.id.replace(/_[a-z]{2}$/, '');
+            var property_label_selector = '[for="' + tabulator_input_id + '"]';
+            this.property_label = (
+                document.querySelector(property_label_selector).textContent ??
+                this.tabulator_input.name
+            );
         }
 
         var default_tabulator_options = {
@@ -272,22 +275,20 @@
     Charcoal.Admin.Property_Input_Tabulator.prototype.parse_tabulator_cell_click_action = function (action) {
         switch (action) {
             case 'addRow':
-                return (event, cell) => {
+                return (_event, cell) => {
                     this.add_row(cell.getRow());
                     this.update_input_data();
                 };
 
             case 'removeRow':
-                return (event, cell) => {
+                return (_event, cell) => {
                     this.tabulator_instance.deleteRow(cell.getRow());
                     this.update_input_data();
                 };
 
-            case 'toggleCell':
-                return (event, cell) => {
-                    // event.preventDefault();
+            case 'toggleValue':
+                return (_event, cell) => {
                     cell.setValue(!cell.getValue());
-                    // cell.cancelEdit();
                 };
         }
 

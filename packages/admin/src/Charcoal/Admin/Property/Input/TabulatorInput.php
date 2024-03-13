@@ -232,26 +232,31 @@ class TabulatorInput extends AbstractPropertyInput
 
         if (isset($this->tabulatorOptions['autoColumnTemplates'])) {
             foreach ($this->tabulatorOptions['autoColumnTemplates'] as &$column) {
-                if (isset($column['title'])) {
-                    $column['title'] = $this->translator()->translate($column['title']);
-                }
-
-                if (isset($column['tooltip'])) {
-                    $column['tooltip'] = $this->translator()->translate($column['tooltip']);
-                }
+                $column = $this->resolveTabulatorColumnDefinition($column);
             }
         }
 
         if (isset($this->tabulatorOptions['columns'])) {
             foreach ($this->tabulatorOptions['columns'] as &$column) {
-                if (isset($column['title'])) {
-                    $column['title'] = $this->translator()->translate($column['title']);
-                }
-
-                if (isset($column['tooltip'])) {
-                    $column['tooltip'] = $this->translator()->translate($column['tooltip']);
-                }
+                $column = $this->resolveTabulatorColumnDefinition($column);
             }
         }
+    }
+
+    /**
+     * @param  array<string, mixed> $column The column to resolve.
+     * @return array<string, mixed> The resolved column.
+     */
+    protected function resolveTabulatorColumnDefinition(array $column): array
+    {
+        if (isset($column['title'])) {
+            $column['title'] = $this->translator()->translate($column['title']);
+        }
+
+        if (isset($column['tooltip'])) {
+            $column['tooltip'] = $this->translator()->translate($column['tooltip']);
+        }
+
+        return $column;
     }
 }

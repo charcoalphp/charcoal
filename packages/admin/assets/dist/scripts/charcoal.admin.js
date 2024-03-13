@@ -12327,9 +12327,12 @@ Charcoal.Admin.Property_Input_Selectize_Tags.prototype.init_clipboard = function
         }
 
         if (!this.property_label && this.tabulator_input.id) {
-            this.property_label =
-                document.querySelector('[for="' + this.tabulator_input.id.replace(/_[a-z]{2}$/, '') + '"]')
-                    .textContent ?? this.tabulator_input.name;
+            var tabulator_input_id = this.tabulator_input.id.replace(/_[a-z]{2}$/, '');
+            var property_label_selector = '[for="' + tabulator_input_id + '"]';
+            this.property_label = (
+                document.querySelector(property_label_selector).textContent ??
+                this.tabulator_input.name
+            );
         }
 
         var default_tabulator_options = {
@@ -12382,7 +12385,6 @@ Charcoal.Admin.Property_Input_Selectize_Tags.prototype.init_clipboard = function
                 !this.tabulator_options?.autoColumnsDefinitions &&
                 (
                     this.tabulator_options?.columns ||
-                    this.input_options?.defaultColumnTemplate ||
                     this.input_options?.autoColumnTemplates
                 )
             ) {
@@ -12404,10 +12406,9 @@ Charcoal.Admin.Property_Input_Selectize_Tags.prototype.init_clipboard = function
                         definitions = this.tabulator_options.columns.concat(definitions);
                     }
 
-                    const defaultTemplate   = this.input_options?.defaultColumnTemplate || {};
                     const distinctTemplates = this.input_options?.autoColumnTemplates;
 
-                    if (!defaultTemplate && !distinctTemplates) {
+                    if (!distinctTemplates) {
                         return definitions;
                     }
 
@@ -12435,7 +12436,7 @@ Charcoal.Admin.Property_Input_Selectize_Tags.prototype.init_clipboard = function
 
                                 if (query instanceof RegExp) {
                                     if (query.test(field)) {
-                                        column = Object.assign({}, column, defaultTemplate, template);
+                                        column = Object.assign({}, column, template);
 
                                         column.title = field.replace(query, template.title);
                                         column.field = field.replace(query, template.field);
@@ -12450,15 +12451,13 @@ Charcoal.Admin.Property_Input_Selectize_Tags.prototype.init_clipboard = function
                                     }
                                 } else {
                                     if (query === field) {
-                                        column = Object.assign({}, column, defaultTemplate, template);
+                                        column = Object.assign({}, column, template);
 
                                         column.title = template.title;
                                         column.field = template.field;
                                     }
                                 }
                             }
-                        } else if (defaultTemplate) {
-                            column = Object.assign({}, column, defaultTemplate);
                         }
 
                         column = this.parse_tabulator_column_definition(column);
@@ -12468,20 +12467,9 @@ Charcoal.Admin.Property_Input_Selectize_Tags.prototype.init_clipboard = function
                 };
             }
         } else if (this.tabulator_options?.columns) {
-            if (this.input_options?.defaultColumnTemplate) {
-                const defaultTemplate = this.input_options.defaultColumnTemplate;
-
-                this.tabulator_options.columns = this.tabulator_options.columns.map((column) => {
-                    column = Object.assign({}, defaultTemplate, column);
-                    column = this.parse_tabulator_column_definition(column);
-
-                    return column;
-                });
-            } else {
-                this.tabulator_options.columns = this.tabulator_options.columns.map(
-                    (column) => this.parse_tabulator_column_definition(column)
-                );
-            }
+            this.tabulator_options.columns = this.tabulator_options.columns.map(
+                (column) => this.parse_tabulator_column_definition(column)
+            );
         }
 
         if (Array.isArray(this.tabulator_options?.groupContextMenu)) {
@@ -12536,22 +12524,20 @@ Charcoal.Admin.Property_Input_Selectize_Tags.prototype.init_clipboard = function
     Charcoal.Admin.Property_Input_Tabulator.prototype.parse_tabulator_cell_click_action = function (action) {
         switch (action) {
             case 'addRow':
-                return (event, cell) => {
+                return (_event, cell) => {
                     this.add_row(cell.getRow());
                     this.update_input_data();
                 };
 
             case 'removeRow':
-                return (event, cell) => {
+                return (_event, cell) => {
                     this.tabulator_instance.deleteRow(cell.getRow());
                     this.update_input_data();
                 };
 
-            case 'toggleCell':
-                return (event, cell) => {
-                    // event.preventDefault();
+            case 'toggleValue':
+                return (_event, cell) => {
                     cell.setValue(!cell.getValue());
-                    // cell.cancelEdit();
                 };
         }
 
@@ -12613,8 +12599,6 @@ Charcoal.Admin.Property_Input_Selectize_Tags.prototype.init_clipboard = function
     Charcoal.Admin.Property_Input_Tabulator.prototype.new_col_data = function () {
         let column = this.input_options.newColumnData;
 
-        const defaultTemplate = this.input_options?.defaultColumnTemplate || {};
-
         if (typeof column === 'string') {
             // let query;
 
@@ -12628,7 +12612,7 @@ Charcoal.Admin.Property_Input_Selectize_Tags.prototype.init_clipboard = function
             if (this.input_options?.autoColumnTemplates[column]) {
                 const template = this.input_options.autoColumnTemplates[column];
 
-                column = Object.assign({}, defaultTemplate, template);
+                column = Object.assign({}, template);
 
                 if (typeof this.input_options?.autoColumnStartIndex === 'number') {
                     const index = ++(this.input_options.autoColumnStartIndex);
@@ -12643,7 +12627,7 @@ Charcoal.Admin.Property_Input_Selectize_Tags.prototype.init_clipboard = function
                 }
             }
         } else {
-            column = Object.assign({}, defaultTemplate, column);
+            column = Object.assign({}, column);
         }
 
         column = this.parse_tabulator_column_definition(column);
