@@ -97,7 +97,7 @@ abstract class AbstractView implements ViewInterface
      * @param EngineInterface $engine The rendering engine.
      * @return void
      */
-    private function setEngine(EngineInterface $engine): void
+    protected function setEngine(EngineInterface $engine): void
     {
         $this->engine = $engine;
     }

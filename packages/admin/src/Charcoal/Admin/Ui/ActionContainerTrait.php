@@ -228,7 +228,7 @@ trait ActionContainerTrait
             }
 
             if (isset($action['extraTemplate'])) {
-                $action['extraTemplate'] = $this->render($action['extraTemplate']);
+                $action['extraTemplate'] = $this->renderTemplate($action['extraTemplate']);
             }
 
             if (isset($action['dataAttributes']) && is_array($action['dataAttributes'])) {

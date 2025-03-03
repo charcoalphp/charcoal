@@ -117,7 +117,6 @@ trait AttachmentContainerTrait
             if (!is_string($group)) {
                 throw new UnexpectedValueException('The attachment grouping must be a string.');
             }
-
             $this->group = $group;
         }
 

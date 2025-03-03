@@ -10,6 +10,7 @@ use Charcoal\App\Handler\HandlerInterface;
 use Charcoal\App\Module\AbstractModule;
 // From 'charcoal-admin'
 use Charcoal\Admin\ServiceProvider\AdminServiceProvider;
+use Charcoal\View\ViewAggregator;
 
 /**
  * Charcoal Administration Module
@@ -45,6 +46,12 @@ class AdminModule extends AbstractModule
             session_start();
         }
         $container->register(new AdminServiceProvider());
+
+        /* Last resort solution
+        if ($container['view'] instanceof ViewAggregator) {
+            $container['view']->using('mustache');
+        }
+        */
 
         $module = $this;
         $container['charcoal/admin/module'] = function () use ($module) {

@@ -284,7 +284,7 @@ trait NestedWidgetContainerTrait
 
         // Make sure there's an "out"
         if ($obj instanceof ViewableInterface && ($obj->view() instanceof ViewInterface)) {
-            $data = $obj->view()->render($data, $obj->viewController());
+            $data = $obj->view()->renderTemplate($data, $obj->viewController());
         } else {
             $data = preg_replace_callback('~\{\{\s*(.*?)\s*\}\}~i', [ $this, 'parseDataToken' ], $data);
         }
