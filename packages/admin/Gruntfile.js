@@ -19,7 +19,7 @@ module.exports = function (grunt)
                 npm:      'node_modules',
                 composer: 'vendor',
                 dist:     'assets/dist',
-                prod:     '../../../www/assets/admin',
+                prod:     '../../../../../www/assets/admin',
                 fonts:    'assets/dist/fonts',
                 elfinder: {
                     src:  'vendor/studio-42/elfinder',
