@@ -1,5 +1,18 @@
 # Changelog
 
+## [5.1.0](https://github.com/charcoalphp/charcoal/compare/v5.0.0...v5.1.0) (2025-04-11)
+
+
+### Features
+
+* **image:** Add compression and format effects for images ([7c49cab](https://github.com/charcoalphp/charcoal/commit/7c49cab8deff4d299c023b3b77e8ab45f7443e41))
+
+
+### Bug Fixes
+
+* **admin:** Sort Selectize values in order filtered for loading ([69ed8ea](https://github.com/charcoalphp/charcoal/commit/69ed8eaa3efc95c987482a2fe10df234092d7d7e))
+* **image:** Fix php units tests for image package ([1f41413](https://github.com/charcoalphp/charcoal/commit/1f414135928e94bb583b8dde36e3595c903ad61b))
+
 ## [5.0.0](https://github.com/charcoalphp/charcoal/compare/v4.1.0...v5.0.0) (2024-03-13)
 
 
