@@ -12,7 +12,7 @@ abstract class AbstractFormatEffect extends AbstractEffect
 {
     protected $format;
 
-    const ACCEPTED_FORMAT = [ 'webp', 'jpg', 'jpeg' ];
+    public const ACCEPTED_FORMAT = [ 'webp', 'jpg', 'jpeg' ];
 
     /**
      * Must be one of the accepted format
@@ -24,7 +24,11 @@ abstract class AbstractFormatEffect extends AbstractEffect
     {
         if (!in_array($format, static::ACCEPTED_FORMAT)) {
             throw new InvalidArgumentException(
-                sprintf('Invalid image format provided. Must be one of %s. %s provided.', implode(',', static::ACCEPTED_FORMAT), $format)
+                sprintf(
+                    'Invalid image format provided. Must be one of %s. %s provided.',
+                    implode(',', static::ACCEPTED_FORMAT),
+                    $format
+                )
             );
         }
         $this->format = $format;

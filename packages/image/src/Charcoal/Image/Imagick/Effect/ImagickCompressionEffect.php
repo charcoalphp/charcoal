@@ -36,9 +36,9 @@ class ImagickCompressionEffect extends AbstractCompressionEffect
         // If quality = 100, changes to 0
         // Quality is rounded (ceil) to avoid any compression problems
         if ($extension === 'png') {
-            $reverse = 100 - $this->quality();
+            $reverse = (100 - $this->quality());
             if ($reverse > 0) {
-                $reverse = min(ceil(($reverse/100)*9), 9); // Make sure it doesn't get further than 9
+                $reverse = min(ceil(($reverse / 100) * 9), 9); // Make sure it doesn't get further than 9
             }
 
             if ($reverse <= 9) {
