@@ -489,13 +489,6 @@ abstract class AbstractResizeEffect extends AbstractEffect
                 }
 
                 $this->doResize($newWidth, $newHeight);
-
-                // $imgClass = get_class($this->image());
-                // $canvas = new $imgClass;
-                // $canvas->create($this->width(), $this->width(), $this->backgroundColor());
-                // throw new Exception(
-                //     'Crop resize mode is not (yet) supported'
-                // );
         }
 
         return $this;
