@@ -2,51 +2,34 @@
 
 namespace Charcoal\Admin\ServiceProvider;
 
-// From Pimple
-use Charcoal\Admin\AssetsConfig;
-use Pimple\Container;
-use Pimple\ServiceProviderInterface;
 use Assetic\Asset\AssetReference;
-use Charcoal\Attachment\Object\File;
-use Charcoal\Factory\GenericResolver;
-// from 'kriswallsmith/assetic'
 use Assetic\AssetManager;
-// From PSR-7
-use Psr\Http\Message\UriInterface;
-// From Slim
-use Slim\Http\Uri;
-// From Mustache
-use Mustache_LambdaHelper as LambdaHelper;
-// From 'charcoal-config'
-use Charcoal\Config\ConfigInterface;
-use Charcoal\Config\GenericConfig as Config;
-// From 'charcoal-factory'
-use Charcoal\Factory\FactoryInterface;
-// From 'charcoal-core'
-use Charcoal\Model\Service\MetadataConfig;
-// From 'charcoal-ui'
-use Charcoal\Ui\ServiceProvider\UiServiceProvider;
-// From 'charcoal-email'
-use Charcoal\Email\ServiceProvider\EmailServiceProvider;
-// From 'charcoal-factory'
-use Charcoal\Factory\GenericFactory as Factory;
-// From 'charcoal-user'
-use Charcoal\User\Authenticator;
-use Charcoal\User\Authorizer;
-// From 'charcoal-view'
-use Charcoal\View\EngineInterface;
-use Charcoal\View\GenericView;
-use Charcoal\View\ViewConfig;
-use Charcoal\View\ViewInterface;
-// From 'charcoal-admin'
+use Charcoal\Admin\AssetsConfig;
 use Charcoal\Admin\Config as AdminConfig;
-use Charcoal\Admin\Property\PropertyInputInterface;
 use Charcoal\Admin\Property\PropertyDisplayInterface;
+use Charcoal\Admin\Property\PropertyInputInterface;
 use Charcoal\Admin\Service\SelectizeRenderer;
 use Charcoal\Admin\Ui\SecondaryMenu\GenericSecondaryMenuGroup;
 use Charcoal\Admin\Ui\SecondaryMenu\SecondaryMenuGroupInterface;
 use Charcoal\Admin\User;
 use Charcoal\Admin\User\AuthToken;
+use Charcoal\Attachment\Object\File;
+use Charcoal\Config\ConfigInterface;
+use Charcoal\Config\GenericConfig as Config;
+use Charcoal\Email\ServiceProvider\EmailServiceProvider;
+use Charcoal\Factory\FactoryInterface;
+use Charcoal\Factory\GenericFactory as Factory;
+use Charcoal\Factory\GenericResolver;
+use Charcoal\Model\Service\MetadataConfig;
+use Charcoal\Ui\ServiceProvider\UiServiceProvider;
+use Charcoal\User\Authenticator;
+use Charcoal\User\Authorizer;
+use Charcoal\View\ViewConfig;
+use Mustache_LambdaHelper as LambdaHelper;
+use Pimple\Container;
+use Pimple\ServiceProviderInterface;
+use Psr\Http\Message\UriInterface;
+use Slim\Http\Uri;
 
 /**
  * Charcoal Administration Service Provider
@@ -175,24 +158,11 @@ class AdminServiceProvider implements ServiceProviderInterface
         }
 
         /**
-         * Overwrite view instance.
-         *
-         * @param GenericView $view The view instance.
-         * @param Container $container A container instance.
-         * @return ViewInterface
-         */
-        $container->extend('view', function (GenericView $view, Container $container): ViewInterface {
-            return new GenericView([
-                'engine' => $container['view/engine/mustache']
-            ]);
-        });
-
-        /**
          * Extend view/config.
          *
          * @param ConfigInterface $viewConfig The view config instance.
          * @param Container $container A container instance.
-         * @return ViewInterface
+         * @return ViewConfig
          */
         $container->extend('view/config', function (ViewConfig $viewConfig, Container $container): ViewConfig {
             $adminConfig = $container['admin/config'];
