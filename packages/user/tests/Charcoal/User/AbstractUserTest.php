@@ -5,8 +5,8 @@ namespace Charcoal\Tests\User;
 use DateTime;
 use InvalidArgumentException;
 
-// From Pimple
-use Pimple\Container;
+
+use DI\Container;
 
 // From 'charcoal-user'
 use Charcoal\User\AbstractUser;

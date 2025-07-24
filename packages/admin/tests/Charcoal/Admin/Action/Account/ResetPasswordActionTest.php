@@ -7,8 +7,8 @@ use ReflectionClass;
 // From Mockery
 use Mockery as m;
 
-// From Pimple
-use Pimple\Container;
+
+use DI\Container;
 
 // From Slim
 use Slim\Http\Environment;

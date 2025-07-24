@@ -3,8 +3,8 @@
 namespace Charcoal\Admin\Property\Display;
 
 use InvalidArgumentException;
-// From Pimple
-use Pimple\Container;
+
+use DI\Container;
 // From 'charcoal-property'
 use Charcoal\Property\FileProperty;
 use Charcoal\Property\ImageProperty;

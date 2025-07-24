@@ -6,8 +6,8 @@ use ArrayAccess;
 use RuntimeException;
 use InvalidArgumentException;
 use UnexpectedValueException;
-// From Pimple
-use Pimple\Container;
+
+use DI\Container;
 // From 'charcoal-core'
 use Charcoal\Model\DescribableInterface;
 use Charcoal\Model\MetadataInterface;

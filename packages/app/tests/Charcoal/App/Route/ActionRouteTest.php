@@ -2,8 +2,8 @@
 
 namespace Charcoal\Tests\App\Route;
 
-// From Pimple
-use Pimple\Container;
+
+use DI\Container;
 
 // From 'charcoal-app'
 use Charcoal\App\Route\ActionRoute;

@@ -6,8 +6,8 @@ use ArrayIterator;
 use RuntimeException;
 // From 'psr/http-message'
 use Psr\Http\Message\UriInterface;
-// From 'pimple/pimple'
-use Pimple\Container;
+
+use DI\Container;
 // From 'charcoal-core'
 use Charcoal\Model\ModelInterface;
 // From 'charcoal-translator'
@@ -76,11 +76,11 @@ abstract class AbstractWebTemplate extends AbstractTemplate
     {
         parent::setDependencies($container);
 
-        $this->setAppConfig($container['config']);
-        $this->setBaseUrl($container['base-url']);
-        $this->setDebug($container['debug']);
-        $this->setModelFactory($container['model/factory']);
-        $this->setTranslator($container['translator']);
+        $this->setAppConfig($container->get('config'));
+        $this->setBaseUrl($container->get('base-url'));
+        $this->setDebug($container->get('debug'));
+        $this->setModelFactory($container->get('model/factory'));
+        $this->setTranslator($container->get('translator'));
         $this->setLocales($this->translator()->locales());
 
         $metatags = $this->appConfig('cms.metatags');

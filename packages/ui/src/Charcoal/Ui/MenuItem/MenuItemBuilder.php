@@ -2,8 +2,8 @@
 
 namespace Charcoal\Ui\MenuItem;
 
-// From Pimple
-use Pimple\Container;
+
+use DI\Container;
 // From 'charcoal-factory'
 use Charcoal\Factory\FactoryInterface;
 

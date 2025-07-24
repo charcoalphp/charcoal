@@ -5,8 +5,8 @@ namespace Charcoal\Admin\Widget;
 use ArrayIterator;
 use RuntimeException;
 use InvalidArgumentException;
-// From Pimple
-use Pimple\Container;
+
+use DI\Container;
 // From PSR-7
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\UriInterface;

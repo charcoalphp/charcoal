@@ -2,8 +2,8 @@
 
 namespace Charcoal\Tests\User\Acl;
 
-// From Pimple
-use Pimple\Container;
+
+use DI\Container;
 
 // From 'charcoal-user'
 use Charcoal\User\Acl\PermissionCategory;

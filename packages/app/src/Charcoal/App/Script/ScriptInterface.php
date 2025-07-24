@@ -5,8 +5,8 @@ namespace Charcoal\App\Script;
 // From PSR-7
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
-// From Pimple
-use Pimple\Container;
+
+use DI\Container;
 
 /**
  * Script are actions called from the CLI.

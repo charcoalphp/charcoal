@@ -25,7 +25,7 @@ class GenericLayoutTest extends AbstractTestCase
     protected function setUp(): void
     {
         $container = $this->getContainer();
-        $container->register(new LayoutServiceProvider());
+        (new LayoutServiceProvider())->register($container);
 
         $container['view'] = null;
 

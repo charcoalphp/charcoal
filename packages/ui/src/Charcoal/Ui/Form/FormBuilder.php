@@ -2,8 +2,8 @@
 
 namespace Charcoal\Ui\Form;
 
-// From Pimple
-use Pimple\Container;
+
+use DI\Container;
 // From 'charcoal-factory'
 use Charcoal\Factory\FactoryInterface;
 

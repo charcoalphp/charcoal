@@ -10,11 +10,18 @@ use Slim\App as SlimApp;
 // From PSR-7
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
+// From PSR-11
+use Psr\Container\ContainerInterface;
 // From 'charcoal-config'
 use Charcoal\Config\ConfigurableInterface;
 use Charcoal\Config\ConfigurableTrait;
 // From 'charcoal-app'
 use Charcoal\App\Route\RouteManager;
+use Error;
+use Psr\Http\Message\ServerRequestInterface;
+use Slim\Factory\AppFactory;
+use Nyholm\Psr7\Factory\Psr17Factory;
+use Slim\Factory\ServerRequestCreatorFactory;
 
 /**
  * Charcoal App
@@ -42,60 +49,40 @@ class App extends SlimApp implements
     /**
      * Getter for creating/returning the unique instance of this class.
      *
-     * @param \Pimple\Container|\Slim\Container|array $container The application's settings.
+     * @param ContainerInterface $container The application's container.
      * @return self
      */
-    public static function instance($container = [])
+    public static function instance(?ContainerInterface $container = null)
     {
         if (!isset(static::$instance)) {
-            $called_class = get_called_class();
+            if (empty($container)) {
+                throw new Error('Missing container when calling for App::instance()');
+            }
+            AppFactory::setContainer($container);
 
-            static::$instance = new $called_class($container);
+            //static::$instance = AppFactory::create();
+            static::$instance = new static($container);
+            //$called_class = get_called_class();
+            //static::$instance = new $called_class($container);
         }
-
         return static::$instance;
     }
 
     /**
      * Create new Charcoal application (and SlimApp).
      *
-     * ### Dependencies
-     *
-     * **Required**
-     *
-     * - `config` — AppConfig
-     *
-     * **Optional**
-     *
-     * - `logger` — PSR-3 Logger
-     *
-     * @uses  SlimApp::__construct()
-     * @param  \Pimple\Container|\Slim\Container|array $container The application's settings.
+     * @param ContainerInterface $container The application's container.
      * @throws LogicException If trying to create a new instance of a singleton.
      */
-    public function __construct($container = [])
+    public function __construct(ContainerInterface $container)
     {
         if (isset(static::$instance)) {
             throw new LogicException(
-                sprintf(
-                    '"%s" is a singleton. Use static instance() method.',
-                    get_called_class()
-                )
+                sprintf('Cannot create a new instance of singleton %s', static::class)
             );
         }
-
-        // Ensure the DI container a proper Slim container.
-        // AppContainer is already pre-registered with many usefel services.
-        if (is_array($container)) {
-            $container = new AppContainer($container);
-        }
-
-        // SlimApp constructor
-        parent::__construct($container);
-
-        if (isset($container['config'])) {
-            $this->setConfig($container['config']);
-        }
+        $responseFactory = new Psr17Factory();
+        parent::__construct($responseFactory, $container);
     }
 
     /**
@@ -104,14 +91,25 @@ class App extends SlimApp implements
      * Initialize the Charcoal application before running (with SlimApp).
      *
      * @uses   self::setup()
-     * @param  boolean $silent If true, will run in silent mode (no response).
-     * @return ResponseInterface The PSR7 HTTP response.
+     * @param  ServerRequestInterface|null $request
+     * @param  ResponseInterface|null $response
+     * @return void
      */
-    public function run($silent = false)
+    public function run(?ServerRequestInterface $request = null, ?ResponseInterface $response = null): void
     {
+        if (!$request) {
+            $serverRequestCreator = ServerRequestCreatorFactory::create();
+            $request = $serverRequestCreator->createServerRequestFromGlobals();
+        }
+
+        // Add request to container for legacy compatibility
+        /** @var Container $container */
+        $container = $this->getContainer();
+        $container->set('request', $request);
+
         $this->setup();
 
-        return parent::run($silent);
+        parent::run($request, $response);
     }
 
     /**
@@ -122,10 +120,16 @@ class App extends SlimApp implements
     private function setup()
     {
         $config = $this->config();
-        date_default_timezone_set($config['timezone']);
+
+        if (!empty($config['timezone'])) {
+            date_default_timezone_set($config['timezone']);
+        }
+
+        //var_dump($config);
+        //exit;
 
         // Setup env
-        $dotenv = Dotenv::createImmutable($config->basePath());
+        $dotenv = Dotenv::createImmutable($config['basePath']);
         $dotenv->safeLoad();
 
         // Setup routes
@@ -169,9 +173,9 @@ class App extends SlimApp implements
     private function setupModules()
     {
         $container = $this->getContainer();
-        $modules = $container['config']['modules'];
+        $modules = $container->get('config')['modules'];
         foreach ($modules as $moduleIdent => $moduleConfig) {
-            $module = $container['module/factory']->create($moduleIdent);
+            $module = $container->get('module/factory')->create($moduleIdent);
             $module->setup();
         }
     }
@@ -191,7 +195,7 @@ class App extends SlimApp implements
         $this->get(
             '{catchall:.*}',
             function (
-                RequestInterface $request,
+                ServerRequestInterface $request,
                 ResponseInterface $response,
                 array $args
             ) use ($app) {
@@ -209,13 +213,16 @@ class App extends SlimApp implements
                             $this['logger']->debug(
                                 sprintf('Loaded routable "%s" for path %s', $routableType, $args['catchall'])
                             );
-                            return $route($this, $request, $response);
+                            $routeResponse = $route($this, $request);
+                            if ($routeResponse instanceof \Psr\Http\Message\ResponseInterface) {
+                                return $routeResponse;
+                            }
                         }
                     }
                 }
 
                 // If this point is reached, no routable has provided a callback. 404.
-                return $this['notFoundHandler']($request, $response);
+                throw new \Slim\Exception\HttpNotFoundException($request);
             }
         );
     }
@@ -227,7 +234,7 @@ class App extends SlimApp implements
     private function setupMiddlewares()
     {
         $container = $this->getContainer();
-        $middlewaresConfig = $container['config']['middlewares'];
+        $middlewaresConfig = $container->get('config')['middlewares'];
         if (!$middlewaresConfig) {
             return;
         }
@@ -237,7 +244,7 @@ class App extends SlimApp implements
                 if ($id === 'charcoal/app/middleware/cache') {
                     $id = 'charcoal/cache/middleware/cache';
 
-                    $container['logger']->warning(sprintf(
+                    $container->get('logger')->warning(sprintf(
                         'Middleware "%1$s" is deprecated since %3$s. Use "%2$s" instead.',
                         'charcoal/app/middleware/cache',
                         'charcoal/cache/middleware/cache',
@@ -245,13 +252,13 @@ class App extends SlimApp implements
                     ));
                 }
 
-                if (!isset($container['middlewares/' . $id])) {
+                if (!($container->has('middlewares/' . $id))) {
                     throw new RuntimeException(
                         sprintf('Middleware "%s" is not set on container.', $id)
                     );
                 }
 
-                $this->add($container['middlewares/' . $id]);
+                $this->add($container->get('middlewares/' . $id));
             }
         }
     }

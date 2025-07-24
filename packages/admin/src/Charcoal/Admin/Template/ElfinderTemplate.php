@@ -7,8 +7,8 @@ use RuntimeException;
 use InvalidArgumentException;
 // From PSR-7
 use Psr\Http\Message\RequestInterface;
-// From Pimple
-use Pimple\Container;
+
+use DI\Container;
 // From Mustache
 use Mustache_LambdaHelper as LambdaHelper;
 // From 'charcoal-factory'

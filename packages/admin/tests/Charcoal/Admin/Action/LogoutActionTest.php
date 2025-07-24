@@ -4,8 +4,8 @@ namespace Charcoal\Tests\Admin\Action;
 
 use ReflectionClass;
 
-// From Pimple
-use Pimple\Container;
+
+use DI\Container;
 
 // From Slim
 use Slim\Http\Environment;

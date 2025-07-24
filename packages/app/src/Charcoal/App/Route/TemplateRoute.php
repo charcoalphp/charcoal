@@ -5,10 +5,9 @@ namespace Charcoal\App\Route;
 // From PSR-7
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
-// From Pimple
-use Pimple\Container;
+use DI\Container;
 // From Slim
-use Slim\Http\Uri;
+use Nyholm\Psr7\Uri;
 // From 'charcoal-config'
 use Charcoal\Config\ConfigurableInterface;
 use Charcoal\Config\ConfigurableTrait;
@@ -68,7 +67,7 @@ class TemplateRoute implements
     }
 
     /**
-     * @param  Container         $container A DI (Pimple) container.
+     * @param \DI\Container $container A DI container.
      * @param  RequestInterface  $request   A PSR-7 compatible Request instance.
      * @param  ResponseInterface $response  A PSR-7 compatible Response instance.
      * @return ResponseInterface
@@ -107,7 +106,7 @@ class TemplateRoute implements
     }
 
     /**
-     * @param  Container        $container A DI (Pimple) container.
+     * @param  Container        $container A DI (DI) container.
      * @param  RequestInterface $request   The request to intialize the template with.
      * @return string
      */
@@ -135,7 +134,7 @@ class TemplateRoute implements
     }
 
     /**
-     * @param  Container        $container A DI (Pimple) container.
+     * @param  \DI\Container $container A DI container.
      * @param  RequestInterface $request   The request to intialize the template with.
      * @return string
      */
@@ -148,7 +147,7 @@ class TemplateRoute implements
     }
 
     /**
-     * @param  Container        $container A DI (Pimple) container.
+     * @param  \DI\Container $container A DI container.
      * @param  RequestInterface $request   The request to intialize the template with.
      * @return string
      */
@@ -182,7 +181,7 @@ class TemplateRoute implements
 
         if (!empty($parts)) {
             if (isset($parts['host'])) {
-                $uri = Uri::createFromString($redirection);
+                $uri = new Uri($redirection);
             } else {
                 if (isset($parts['path'])) {
                     $uri = $uri->withPath($parts['path']);

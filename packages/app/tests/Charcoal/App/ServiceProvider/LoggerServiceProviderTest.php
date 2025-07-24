@@ -2,7 +2,7 @@
 
 namespace Charcoal\Tests\App\ServiceProvider;
 
-use Pimple\Container;
+use DI\Container;
 
 use Charcoal\App\ServiceProvider\LoggerServiceProvider;
 use Charcoal\Tests\AbstractTestCase;

@@ -2,9 +2,7 @@
 
 namespace Charcoal\User\ServiceProvider;
 
-// From Pimple
-use Pimple\Container;
-use Pimple\ServiceProviderInterface;
+use DI\Container;
 // From 'laminas/laminas-permissions-acl'
 use Laminas\Permissions\Acl\Acl;
 // From 'charcoal-user'
@@ -12,55 +10,56 @@ use Charcoal\User\Authenticator;
 use Charcoal\User\Authorizer;
 use Charcoal\User\AuthToken;
 use Charcoal\User\GenericUser as User;
+use Psr\Container\ContainerInterface;
 
 /**
  *
  */
-class AuthServiceProvider implements ServiceProviderInterface
+class AuthServiceProvider
 {
     /**
-     * @param  Container $container A Pimple DI container.
+     * @param  Container $container A DI Container.
      * @return void
      */
-    public function register(Container $container)
+    public function register(ContainerInterface $container)
     {
-        if (!isset($container['authenticator'])) {
+        if (!($container->has('authenticator'))) {
             /**
-             * @param  Container $container The Pimple DI Container.
+             * @param  Container $container The DI Container.
              * @return Authenticator
              */
-            $container['authenticator'] = function (Container $container) {
+            $container->set('authenticator', function (Container $container) {
                 return new Authenticator([
-                    'logger'        => $container['logger'],
+                    'logger'        => $container->get('logger'),
                     'user_type'     => User::class,
-                    'user_factory'  => $container['model/factory'],
+                    'user_factory'  => $container->get('model/factory'),
                     'token_type'    => AuthToken::class,
-                    'token_factory' => $container['model/factory'],
+                    'token_factory' => $container->get('model/factory'),
                 ]);
-            };
+            });
         }
 
-        if (!isset($container['authorizer'])) {
+        if (!($container->has('authorizer'))) {
             /**
-             * @param  Container $container The Pimple DI container.
+             * @param  Container $container The DI Container.
              * @return Authorizer
              */
-            $container['authorizer'] = function (Container $container) {
+            $container->set('authorizer', function (Container $container) {
                 return new Authorizer([
-                    'logger'    => $container['logger'],
-                    'acl'       => $container['authorizer/acl'],
+                    'logger'    => $container->get('logger'),
+                    'acl'       => $container->get('authorizer/acl'),
                     'resource'  => 'charcoal',
                 ]);
-            };
+            });
         }
 
-        if (!isset($container['authorizer/acl'])) {
+        if (!($container->has('authorizer/acl'))) {
             /**
              * @return Acl
              */
-            $container['authorizer/acl'] = function () {
+            $container->set('authorizer/acl', function () {
                 return new Acl();
-            };
+            });
         }
     }
 }

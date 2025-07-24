@@ -3,8 +3,7 @@
 namespace Charcoal\Admin;
 
 use InvalidArgumentException;
-// From 'pimple/pimple'
-use Pimple\Container;
+use DI\Container;
 // From 'charcoal-factory'
 use Charcoal\Factory\FactoryInterface;
 // From 'charcoal-translator'
@@ -452,23 +451,23 @@ class AdminWidget extends AbstractWidget implements
         parent::setDependencies($container);
 
         // Satisfies TranslatorAwareTrait dependencies
-        $this->setTranslator($container['translator']);
+        $this->setTranslator($container->get('translator'));
 
         // Satisfies AuthAwareInterface dependencies
-        $this->setAuthenticator($container['admin/authenticator']);
-        $this->setAuthorizer($container['admin/authorizer']);
+        $this->setAuthenticator($container->get('admin/authenticator'));
+        $this->setAuthorizer($container->get('admin/authorizer'));
 
         // Satisfies AdminTrait dependencies
-        $this->setDebug($container['debug']);
-        $this->setAppConfig($container['config']);
-        $this->setAdminConfig($container['admin/config']);
+        $this->setDebug($container->get('debug'));
+        $this->setAppConfig($container->get('config'));
+        $this->setAdminConfig($container->get('admin/config'));
 
         // Satisfies BaseUrlTrait dependencies
-        $this->setBaseUrl($container['base-url']);
-        $this->setAdminUrl($container['admin/base-url']);
+        $this->setBaseUrl($container->get('base-url'));
+        $this->setAdminUrl($container->get('admin/base-url'));
 
         // Satisfies AdminWidget dependencies
-        $this->setModelFactory($container['model/factory']);
+        $this->setModelFactory($container->get('model/factory'));
     }
 
     /**

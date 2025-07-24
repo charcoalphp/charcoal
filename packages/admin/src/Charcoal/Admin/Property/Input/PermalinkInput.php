@@ -3,8 +3,8 @@
 namespace Charcoal\Admin\Property\Input;
 
 use RuntimeException;
-// From Pimple
-use Pimple\Container;
+
+use DI\Container;
 // From PSR-7
 use Psr\Http\Message\UriInterface;
 // From 'charcoal-admin'

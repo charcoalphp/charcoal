@@ -5,8 +5,8 @@ namespace Charcoal\Admin\Widget;
 use Exception;
 use InvalidArgumentException;
 use RuntimeException;
-// From Pimple
-use Pimple\Container;
+
+use DI\Container;
 // From PSR-7
 use Psr\Http\Message\RequestInterface;
 // From 'charcoal-factory'

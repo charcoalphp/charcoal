@@ -2,7 +2,7 @@
 
 namespace Charcoal\Admin\Template\System;
 
-use Pimple\Container;
+use DI\Container;
 // From 'charcoal-admin'
 use Charcoal\Admin\AdminTemplate;
 
@@ -71,7 +71,7 @@ class StaticWebsiteTemplate extends AdminTemplate
     }
 
     /**
-     * @param Container $container Pimple DI Container.
+     * @param Container $container DI Container.
      * @return void
      */
     protected function setDependencies(Container $container)

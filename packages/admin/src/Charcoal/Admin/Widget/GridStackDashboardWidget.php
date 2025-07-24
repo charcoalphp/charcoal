@@ -2,10 +2,10 @@
 
 namespace Charcoal\Admin\Widget;
 
-// From Pimple
+
 use Charcoal\Ui\Layout\LayoutBuilder;
 use Charcoal\Ui\Layout\LayoutInterface;
-use Pimple\Container;
+use DI\Container;
 // form 'charcoal-user'
 use Charcoal\User\AuthAwareInterface;
 use Charcoal\User\UserInterface;

@@ -2,8 +2,7 @@
 
 namespace Charcoal\Admin\Script\Tools;
 
-// From 'pimple/pimple'
-use Pimple\Container;
+use DI\Container;
 // From 'psr/http-message'
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\RequestInterface;
@@ -88,7 +87,7 @@ class CopyAssetsScript extends AdminScript
     }
 
     /**
-     * @param Container $container Pimple DI Container.
+     * @param Container $container DI Container.
      * @return void
      */
     protected function setDependencies(Container $container)

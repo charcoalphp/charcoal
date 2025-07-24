@@ -6,7 +6,7 @@ use DateTime;
 use DateTimeInterface;
 use Exception;
 use InvalidArgumentException;
-use Pimple\Container;
+use DI\Container;
 // From 'charcoal-core'
 use Charcoal\Model\AbstractModel;
 
@@ -119,13 +119,13 @@ class LostPasswordToken extends AbstractModel
     }
 
     /**
-     * @param Container $container Pimple DI Container.
+     * @param Container $container DI Container.
      * @return void
      */
     protected function setDependencies(Container $container)
     {
         parent::setDependencies($container);
-        $this->defaultExpiry = ($container['admin/config']['login']['token_expiry'] ?? '2 hours');
+        $this->defaultExpiry = ($container->get('admin/config')['login']['token_expiry'] ?? '2 hours');
     }
 
     /**

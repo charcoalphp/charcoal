@@ -6,8 +6,8 @@ namespace Charcoal\Tests\App\Script;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
-// From Pimple
-use Pimple\Container;
+
+use DI\Container;
 
 // From 'charcoal-app'
 use Charcoal\App\Script\AbstractScript;

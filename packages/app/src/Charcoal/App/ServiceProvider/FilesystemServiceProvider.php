@@ -5,9 +5,7 @@ namespace Charcoal\App\ServiceProvider;
 use Exception;
 use InvalidArgumentException;
 use UnexpectedValueException;
-// From Pimple
-use Pimple\ServiceProviderInterface;
-use Pimple\Container;
+use DI\Container;
 // From 'aws/aws-sdk-php'
 use Aws\S3\S3Client;
 // From 'league/flysystem'
@@ -29,7 +27,7 @@ use Charcoal\App\Config\FilesystemConfig;
 /**
  *
  */
-class FilesystemServiceProvider implements ServiceProviderInterface
+class FilesystemServiceProvider
 {
     /**
      * @param  Container $container A service container.
@@ -41,35 +39,35 @@ class FilesystemServiceProvider implements ServiceProviderInterface
          * @param  Container $container A service container.
          * @return FilesystemConfig
          */
-        $container['filesystem/config'] = function (Container $container) {
-            $fsConfig = ($container['config']['filesystem'] ?? null);
+        $container->set('filesystem/config', function (Container $container) {
+            $fsConfig = ($container->get('config')['filesystem'] ?? null);
             return new FilesystemConfig($fsConfig);
-        };
+        });
 
         /**
          * @param  Container $container A service container.
          * @return MountManager
          */
-        $container['filesystem/manager'] = function () {
+        $container->set('filesystem/manager', function () {
             return new MountManager();
-        };
+        });
 
         /**
          * @param  Container $container A service container.
          * @return array<string, Filesystem>
          */
-        $container['filesystems'] = function (Container $container) {
-            $filesystemConfig = $container['filesystem/config'];
+        $container->set('filesystems', function (Container $container) {
+            $filesystemConfig = $container->get('filesystem/config');
             $filesystems = new Container();
 
             foreach ($filesystemConfig['connections'] as $ident => $connection) {
                 $fs = $this->createConnection($connection, $container);
                 $filesystems[$ident] = $fs;
-                $container['filesystem/manager']->mountFilesystem($ident, $fs);
+                $container->get('filesystem/manager')->mountFilesystem($ident, $fs);
             }
 
             return $filesystems;
-        };
+        });
     }
 
     /**
@@ -139,8 +137,8 @@ class FilesystemServiceProvider implements ServiceProviderInterface
 
         $path = $config['path'];
         if (is_string($path)) {
-            if (isset($container['config']) && ($container['config'] instanceof AppConfig)) {
-                $path = $container['config']->resolveValue($path);
+            if ($container->has('config') && ($container->get('config') instanceof AppConfig)) {
+                $path = $container->get('config')->resolveValue($path);
             }
         }
 

@@ -2,38 +2,58 @@
 
 namespace Charcoal\App;
 
-// From Slim
-use Slim\Container;
-// From Pimple
-use Pimple\ServiceProviderInterface;
-// From 'charcoal-factory'
+use DI\Container;
+use DI\ContainerBuilder;
+use Psr\Container\ContainerInterface;
 use Charcoal\Factory\GenericFactory as Factory;
-// From 'charcoal-app'
-use Charcoal\App\AppConfig;
 use Charcoal\App\ServiceProvider\AppServiceProvider;
 
 /**
  * Charcoal App Container
  */
-class AppContainer extends Container
+class AppContainer implements ContainerInterface
 {
+    /**
+     * @var Container
+     */
+    private Container $container;
+
     /**
      * Create new container
      *
-     * @param array $values The parameters or objects.
+     * @param array $definitions The DI definitions (services, parameters, etc).
      */
-    public function __construct(array $values = [])
+    public function __construct(array $definitions = [])
     {
-        // Initialize container for Slim and Pimple
-        parent::__construct($values);
+        $builder = new ContainerBuilder();
+        if (!empty($definitions)) {
+            $builder->addDefinitions($definitions);
+        }
+        $this->container = $builder->build();
+        // Ensure config is set
+        if (!$this->container->has('config')) {
+            $this->container->set('config', new AppConfig());
+        }
 
-        // Ensure "config" is set
-        $this['config'] = (isset($values['config']) ? $values['config'] : new AppConfig());
-
-        $this->register(new AppServiceProvider());
+        (new AppServiceProvider())->register($this->container);
 
         $this->registerProviderFactory();
         $this->registerConfigProviders();
+    }
+
+    public function get($id)
+    {
+        return $this->container->get($id);
+    }
+
+    public function set(string $id, $value)
+    {
+        return $this->container->set($id, $value);
+    }
+
+    public function has($id)
+    {
+        return $this->container->has($id);
     }
 
     /**
@@ -44,15 +64,14 @@ class AppContainer extends Container
         /**
         * @return Factory
         */
-        if (!isset($this['provider/factory'])) {
-            $this['provider/factory'] = function () {
+        if (!$this->has('provider/factory')) {
+            $this->set('provider/factory', function () {
                 return new Factory([
-                    'base_class'       => ServiceProviderInterface::class,
                     'resolver_options' => [
                         'suffix' => 'ServiceProvider'
                     ]
                 ]);
-            };
+            });
         }
     }
 
@@ -61,11 +80,11 @@ class AppContainer extends Container
      */
     private function registerConfigProviders()
     {
-        if (empty($this['config']['service_providers'])) {
+        if (empty($this->get('config')['service_providers'])) {
             return;
         }
 
-        $providers = $this['config']['service_providers'];
+        $providers = $this->get('config')['service_providers'];
 
         foreach ($providers as $provider => $values) {
             if (false === $values) {
@@ -76,9 +95,10 @@ class AppContainer extends Container
                 $values = [];
             }
 
-            $provider = $this['provider/factory']->create($provider);
+            $provider = $this->get('provider/factory')->create($provider);
 
-            $this->register($provider, $values);
+            $provider->register($this->container);
+            //$this->register($provider, $values);
         }
     }
 }

@@ -4,8 +4,8 @@ namespace Charcoal\User;
 
 use InvalidArgumentException;
 use RuntimeException;
-// From Pimple
-use Pimple\Container;
+
+use DI\Container;
 
 /**
  * An implementation, as Trait, of the {@see \Charcoal\User\AuthAwareInterface}.

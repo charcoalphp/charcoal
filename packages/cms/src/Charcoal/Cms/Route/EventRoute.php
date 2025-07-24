@@ -3,8 +3,8 @@
 namespace Charcoal\Cms\Route;
 
 use Exception;
-// From Pimple
-use Pimple\Container;
+
+use DI\Container;
 // From PSR-7
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -57,7 +57,7 @@ class EventRoute extends TemplateRoute
     /**
      * Determine if the URI path resolves to an object.
      *
-     * @param  Container $container A DI (Pimple) container.
+     * @param  Container $container A DI (DI) container.
      * @return boolean
      */
     public function pathResolvable(Container $container)
@@ -67,7 +67,7 @@ class EventRoute extends TemplateRoute
     }
 
     /**
-     * @param  Container         $container A DI (Pimple) container.
+     * @param  Container         $container A DI (DI) container.
      * @param  RequestInterface  $request   A PSR-7 compatible Request instance.
      * @param  ResponseInterface $response  A PSR-7 compatible Response instance.
      * @return ResponseInterface
@@ -124,7 +124,7 @@ class EventRoute extends TemplateRoute
 
     /**
      * @todo   Add support for `@see setlocale()`; {@see GenericRoute::setLocale()}
-     * @param  Container $container Pimple DI container.
+     * @param  Container $container DI Container.
      * @return EventInterface|null
      */
     protected function loadEventFromPath(Container $container)

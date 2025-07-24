@@ -6,8 +6,7 @@ use Exception;
 use LogicException;
 use RuntimeException;
 use InvalidArgumentException;
-// From Pimple
-use Pimple\Container as ServiceContainer;
+use DI\Container as ServiceContainer;
 // From 'charcoal-factory'
 use Charcoal\Factory\FactoryInterface;
 // From 'charcoal-core'

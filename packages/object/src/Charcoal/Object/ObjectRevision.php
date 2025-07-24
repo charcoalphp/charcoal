@@ -5,8 +5,8 @@ namespace Charcoal\Object;
 use InvalidArgumentException;
 use DateTime;
 use DateTimeInterface;
-// From Pimple
-use Pimple\Container;
+
+use DI\Container;
 // From 'charcoal-factory'
 use Charcoal\Factory\FactoryInterface;
 // From 'charcoal-core'
@@ -84,7 +84,7 @@ class ObjectRevision extends AbstractModel implements ObjectRevisionInterface
     {
         parent::setDependencies($container);
 
-        $this->setModelFactory($container['model/factory']);
+        $this->setModelFactory($container->get('model/factory'));
     }
 
     /**

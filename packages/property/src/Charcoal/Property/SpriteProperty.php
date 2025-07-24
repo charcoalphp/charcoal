@@ -10,7 +10,7 @@ use SimpleXMLElement;
 // from 'charcoal-view'
 use Charcoal\View\ViewInterface;
 // from 'pimple'
-use Pimple\Container;
+use DI\Container;
 
 /**
  * Sprite Property holds a reference to an external sprite svg.
@@ -241,7 +241,7 @@ class SpriteProperty extends AbstractProperty implements SelectablePropertyInter
     }
 
     /**
-     * @param Container $container A Pimple DI container.
+     * @param Container $container A DI Container.
      * @return void
      */
     protected function setDependencies(Container $container)

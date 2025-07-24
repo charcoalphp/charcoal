@@ -2,8 +2,8 @@
 
 namespace Charcoal\Tests\Admin\ServiceProvider;
 
-// From Pimple
-use Pimple\Container;
+
+use DI\Container;
 
 // From 'charcoal-admin'
 use Charcoal\Admin\ServiceProvider\AclServiceProvider;

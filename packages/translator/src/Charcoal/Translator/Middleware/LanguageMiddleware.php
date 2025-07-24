@@ -6,11 +6,9 @@ namespace Charcoal\Translator\Middleware;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
-// From Pimple
-use Pimple\Container;
 // From 'charcoal-translator'
-use Charcoal\Translator\LocalesManager;
 use Charcoal\Translator\TranslatorAwareTrait;
+use Psr\Http\Server\RequestHandlerInterface;
 
 /**
  * Class LanguageMiddleware
@@ -145,26 +143,28 @@ class LanguageMiddleware
     }
 
     /**
-     * @param  RequestInterface  $request  The PSR-7 HTTP request.
-     * @param  ResponseInterface $response The PSR-7 HTTP response.
-     * @param  callable          $next     The next middleware callable in the stack.
-     * @return ResponseInterface
+     * PSR-15 compatible __invoke for Slim 4 middleware stack.
+     *
+     * @param \Psr\Http\Message\ServerRequestInterface $request
+     * @param \Psr\Http\Server\RequestHandlerInterface $handler
+     * @return \Psr\Http\Message\ResponseInterface
      */
-    public function __invoke(RequestInterface $request, ResponseInterface $response, callable $next)
+    public function __invoke(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         // Test if path is excluded from middleware.
         $uri  = $request->getUri();
         $path = $uri->getPath();
         foreach ($this->excludedPath as $excluded) {
             if (preg_match('@' . $excluded . '@', $path)) {
-                return $next($request, $response);
+                exit;
+                return $handler->handle($request);
             }
         }
 
         $language = $this->getLanguage($request);
         $this->setLanguage($language);
 
-        return $next($request, $response);
+        return $handler->handle($request);
     }
 
     /**

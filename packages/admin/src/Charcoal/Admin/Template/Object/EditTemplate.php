@@ -3,8 +3,8 @@
 namespace Charcoal\Admin\Template\Object;
 
 use Exception;
-// From Pimple
-use Pimple\Container;
+
+use DI\Container;
 use Psr\Http\Message\RequestInterface;
 // From 'charcoal-admin'
 use Charcoal\Admin\AdminTemplate;

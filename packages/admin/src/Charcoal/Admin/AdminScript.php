@@ -2,8 +2,8 @@
 
 namespace Charcoal\Admin;
 
-// From Pimple
-use Pimple\Container;
+
+use DI\Container;
 // From 'league/climate'
 use League\CLImate\TerminalObject\Dynamic\Input as LeagueInput;
 // From 'charcoal-factory'
@@ -33,7 +33,7 @@ abstract class AdminScript extends AbstractScript
     private $modelFactory;
 
     /**
-     * @param  Container $container Pimple DI container.
+     * @param  Container $container DI Container.
      * @return void
      */
     protected function setDependencies(Container $container)

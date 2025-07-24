@@ -7,7 +7,6 @@ use Psr\Http\Message\UriInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\StreamInterface;
-
 // From Slim
 use Slim\Http\Body;
 use Slim\Http\Environment;
@@ -15,8 +14,7 @@ use Slim\Http\Headers;
 use Slim\Http\Request;
 use Slim\Http\RequestBody;
 use Slim\Http\Response;
-use Slim\Http\Uri;
-
+use Nyholm\Psr7\Uri;
 // From 'charcoal-cache'
 use Charcoal\Tests\AbstractTestCase;
 use Charcoal\Tests\Cache\CachePoolTrait;
@@ -89,7 +87,7 @@ abstract class AbstractCacheMiddlewareTest extends AbstractTestCase
      */
     protected function createUri($uri)
     {
-        return Uri::createFromString($uri);
+        return (new Uri($uri));
     }
 
     /**

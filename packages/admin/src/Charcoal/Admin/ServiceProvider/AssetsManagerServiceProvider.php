@@ -5,14 +5,14 @@ namespace Charcoal\Admin\ServiceProvider;
 use Charcoal\Admin\AssetsConfig;
 use Charcoal\Admin\Mustache\AssetsHelpers;
 use Charcoal\Admin\Service\AssetsBuilder;
-use Pimple\Container;
-use Pimple\ServiceProviderInterface;
+use DI\Container;
 use Assetic\AssetManager;
+use Psr\Container\ContainerInterface;
 
 /**
  * Class AssetsManagerServiceProvider
  */
-class AssetsManagerServiceProvider implements ServiceProviderInterface
+class AssetsManagerServiceProvider
 {
     /**
      * Registers services on the given container.
@@ -23,7 +23,7 @@ class AssetsManagerServiceProvider implements ServiceProviderInterface
      * @param Container $container A container instance.
      * @return void
      */
-    public function register(Container $container)
+    public function register(ContainerInterface $container)
     {
         $this->registerAssetsManager($container);
         $this->registerMustacheHelpersServices($container);
@@ -33,25 +33,25 @@ class AssetsManagerServiceProvider implements ServiceProviderInterface
      * @param Container $container The DI container.
      * @return void
      */
-    protected function registerMustacheHelpersServices(Container $container)
+    protected function registerMustacheHelpersServices(ContainerInterface $container)
     {
-        if (!isset($container['view/mustache/helpers'])) {
-            $container['view/mustache/helpers'] = function () {
+        if (!($container->has('view/mustache/helpers'))) {
+            $container->set('view/mustache/helpers', function () {
                 return [];
-            };
+            });
         }
 
         /**
          * Translation helpers for Mustache.
          *
-         * @param Container $container Pimple DI container.
+         * @param Container $container DI Container.
          * @return AssetsHelpers
          */
-        $container['view/mustache/helpers/assets-manager'] = function (Container $container) {
+        $container->set('view/mustache/helpers/assets-manager', function (Container $container) {
             return new AssetsHelpers([
-                'assets' => $container['assets']
+                'assets' => $container->get('assets')
             ]);
-        };
+        });
 
         /**
          * Extend global helpers for the Mustache Engine.
@@ -60,10 +60,16 @@ class AssetsManagerServiceProvider implements ServiceProviderInterface
          * @param  Container $container A container instance.
          * @return array
          */
-        $container->extend('view/mustache/helpers', function (array $helpers, Container $container) {
+        $container->set('view/mustache/helpers', function (Container $container): array {
+            $helpers = [];
+
+            if ($container->has('view/mustache/helpers')) {
+                $helpers = $container->get('view/mustache/helpers');
+            }
+
             return array_merge(
                 $helpers,
-                $container['view/mustache/helpers/assets-manager']->toArray()
+                $container->get('view/mustache/helpers/assets-manager')->toArray()
             );
         });
     }
@@ -71,32 +77,32 @@ class AssetsManagerServiceProvider implements ServiceProviderInterface
     /**
      * Registers services for {@link https://selectize.github.io/selectize.js/ Selectize}.
      *
-     * @param  Container $container The Pimple DI Container.
+     * @param  Container $container The DI Container.
      * @return void
      */
-    protected function registerAssetsManager(Container $container)
+    protected function registerAssetsManager(ContainerInterface $container)
     {
-        $container['assets/config'] = function (Container $container) {
-            $config = $container['view/config']->get('assets');
+        $container->set('assets/config', function (Container $container) {
+            $config = $container->get('view/config')->get('assets');
 
             return new AssetsConfig($config);
-        };
+        });
 
-        $container['assets/builder'] = function (Container $container) {
-            $appConfig = $container['config'];
+        $container->set('assets/builder', function (Container $container) {
+            $appConfig = $container->get('config');
 
             return new AssetsBuilder($appConfig['base_path']);
-        };
+        });
 
         /**
-         * @param Container $container Pimple DI container.
+         * @param Container $container DI Container.
          * @return AssetManager
          */
-        $container['assets'] = function (Container $container) {
-            $assetsBuilder = $container['assets/builder'];
-            $assetsConfig = $container['assets/config'];
+        $container->set('assets', function (Container $container) {
+            $assetsBuilder = $container->get('assets/builder');
+            $assetsConfig = $container->get('assets/config');
 
             return $assetsBuilder($assetsConfig);
-        };
+        });
     }
 }

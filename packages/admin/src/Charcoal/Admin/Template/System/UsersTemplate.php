@@ -2,8 +2,8 @@
 
 namespace Charcoal\Admin\Template\System;
 
-// From Pimple
-use Pimple\Container;
+
+use DI\Container;
 // From 'charcoal-admin'
 use Charcoal\Admin\AdminTemplate;
 use Charcoal\Admin\Ui\CollectionContainerInterface;
@@ -65,7 +65,7 @@ class UsersTemplate extends AdminTemplate implements
     }
 
     /**
-     * @param Container $container Pimple DI Container.
+     * @param Container $container DI Container.
      * @return void
      */
     protected function setDependencies(Container $container)

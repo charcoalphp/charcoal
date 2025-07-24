@@ -7,8 +7,8 @@ use PDO;
 use Exception;
 use InvalidArgumentException;
 use UnexpectedValueException;
-// From Pimple
-use Pimple\Container;
+
+use DI\Container;
 // From 'charcoal-translator'
 use Charcoal\Translator\Translation;
 // From 'charcoal-property'

@@ -58,7 +58,7 @@ echo $view->renderTemplate($str, $context);
 All this bootstrapping code can be avoided by using the `ViewServiceProvider`. This provider expects a `config` object
 
 ```php
-use Pimple\Container;
+use DI\Container;
 use Charcoal\View\ViewServiceProvider;
 
 $container = new Container([
@@ -71,7 +71,7 @@ $container = new Container([
         ],
     ],
 ]);
-$container->register(new ViewServiceProvider());
+(new ViewServiceProvider())->register($container);
 
 echo $container['view']->render('foo/bar/template', $context);
 ```
@@ -88,7 +88,7 @@ use Slim\App;
 
 $app = new App();
 $container = $app->getContainer();
-$container->register(new ViewServiceProvider());
+(new ViewServiceProvider())->register($container);
 
 $app->get('/hello/{name}', function ($request, $response, $args) {
     // This will render the "hello" template
@@ -98,7 +98,7 @@ $app->get('/hello/{name}', function ($request, $response, $args) {
 $app->run();
 ```
 
-> Just like the view, it is possible to simply register all dependencies on a Pimple container (with the `ViewServiceProvider`) to avoid all this bootstrapping code. The renderer is available as `$container['view/renderer']`.
+> Just like the view, it is possible to simply register all dependencies on a DI container (with the `ViewServiceProvider`) to avoid all this bootstrapping code. The renderer is available as `$container['view/renderer']`.
 
 ## Module components
 
@@ -266,7 +266,7 @@ would output: `"Hello world!"`
 
 ### View Service Provider
 
-As seen in the various examples above, it is recommended to use the `ViewServiceProvider` to set up the various dependencies, according to a `config`, on a `Pimple` container.
+As seen in the various examples above, it is recommended to use the `ViewServiceProvider` to set up the various dependencies, according to a `config`, on a `DI` container.
 
 The Service Provider adds the following service to a container:
 

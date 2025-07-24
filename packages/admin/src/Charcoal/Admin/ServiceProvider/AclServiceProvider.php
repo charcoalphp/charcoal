@@ -2,19 +2,18 @@
 
 namespace Charcoal\Admin\ServiceProvider;
 
-// From Pimple
-use Pimple\Container;
-use Pimple\ServiceProviderInterface;
+use DI\Container;
 // From 'laminas/laminas-permissions-acl'
 use Laminas\Permissions\Acl\Acl;
 use Laminas\Permissions\Acl\Resource\GenericResource as AclResource;
 // From 'charcoal-user'
 use Charcoal\User\Acl\Manager as AclManager;
+use Psr\Container\ContainerInterface;
 
 /**
  * Admin ACL (Access-Control-List) provider.
  *
- * Like all service providers, this class is intended to be registered on a (Pimple) container.
+ * Like all service providers, this class is intended to be registered on a (DI) container.
  *
  * ## Services
  *
@@ -27,29 +26,28 @@ use Charcoal\User\Acl\Manager as AclManager;
  * - `database`, a PDO instance
  * - `admin/config`, a configset of the admin
  */
-class AclServiceProvider implements ServiceProviderInterface
+class AclServiceProvider
 {
     /**
-     * @param Container $container Pimple DI Container.
+     * @param Container $container DI Container.
      * @return void
      */
-    public function register(Container $container)
+    public function register(ContainerInterface $container)
     {
         /**
          * Use an AclManager to load default permissions from config and database.
          *
-         * @param Container $container Pimple DI container
+         * @param Container $container DI container
          * @return Acl
          */
-        $container['admin/acl'] = function (Container $container) {
-
-            $adminConfig = $container['admin/config'];
+        $container->set('admin/acl', function (Container $container) {
+            $adminConfig = $container->get('admin/config');
 
             $resourceName = 'admin';
             $tableName = 'charcoal_admin_acl_roles';
 
             $aclManager = new AclManager([
-                'logger' => $container['logger']
+                'logger' => $container->get('logger')
             ]);
 
             $acl = new Acl();
@@ -64,10 +62,10 @@ class AclServiceProvider implements ServiceProviderInterface
             }
 
             // Setup roles and permissions from database
-            $aclManager->loadDatabasePermissions($acl, $container['database'], $tableName, $resourceName);
+            $aclManager->loadDatabasePermissions($acl, $container->get('database'), $tableName, $resourceName);
 
             return $acl;
-        };
+        });
 
         /**
          * Replace default ACL ('charcoal-user') with the Admin ACL.
@@ -75,8 +73,8 @@ class AclServiceProvider implements ServiceProviderInterface
          * @todo   Do this right!
          * @return Acl
          */
-        $container['authorizer/acl'] = function () {
-            return $container['admin/acl'];
-        };
+        $container->set('authorizer/acl', function () use ($container) {
+            return $container->get('admin/acl');
+        });
     }
 }

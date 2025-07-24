@@ -2,8 +2,8 @@
 
 namespace Charcoal\Translator\Script;
 
-// From Pimple
-use Pimple\Container;
+
+use DI\Container;
 // From PSR-7
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -65,7 +65,7 @@ class TranslationParserScript extends AdminScript
     protected $locales;
 
     /**
-     * @param Container $container Pimple DI container.
+     * @param Container $container DI Container.
      * @return void
      */
     public function setDependencies(Container $container)

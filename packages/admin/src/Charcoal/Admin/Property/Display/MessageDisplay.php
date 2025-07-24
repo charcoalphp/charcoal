@@ -2,8 +2,8 @@
 
 namespace Charcoal\Admin\Property\Display;
 
-// From Pimple
-use Pimple\Container;
+
+use DI\Container;
 // From 'charcoal-view'
 use Charcoal\View\ViewableInterface;
 use Charcoal\View\ViewableTrait;

@@ -5,8 +5,8 @@ namespace Charcoal\Admin\Widget;
 use ArrayIterator;
 use RuntimeException;
 use InvalidArgumentException;
-// From Pimple
-use Pimple\Container;
+
+use DI\Container;
 // From Mustache
 use Mustache_LambdaHelper as LambdaHelper;
 // From 'charcoal-config'

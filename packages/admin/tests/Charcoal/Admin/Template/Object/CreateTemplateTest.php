@@ -3,8 +3,8 @@ namespace Charcoal\Tests\Admin\Template\Object;
 
 use ReflectionClass;
 
-// From Pimple
-use Pimple\Container;
+
+use DI\Container;
 
 // From 'charcoal-admin'
 use Charcoal\Admin\Template\Object\CreateTemplate;

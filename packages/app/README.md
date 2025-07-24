@@ -1,7 +1,7 @@
 Charcoal App
 ============
 
-The App package provides integration with [Slim] and [Pimple] for building user-facing Web applications and APIs.
+The App package provides integration with [Slim] and [DI] for building user-facing Web applications and APIs.
 
 ## Installation
 
@@ -48,7 +48,7 @@ Learn more about [components](docs/components.md).
 
 ### Service Providers
 
-Dependencies and extensions are handled by a dependency container, using [Pimple][pimple], which can be defined via _service providers_ (`Pimple\ServiceProviderInterface`).
+Dependencies and extensions are handled by a dependency container, using [DI][pimple], which can be defined via _service providers_.
 
 ##### Included Providers
 
@@ -106,5 +106,5 @@ For a complete project example using `charcoal/app`, see the [charcoal/boilerpla
   [send pull requests](https://github.com/charcoalphp/charcoal/pulls)
   in the [main Charcoal repository](https://github.com/charcoalphp/charcoal)
 
-[Pimple]: https://github.com/silexphp/Pimple
+[DI]: https://github.com/PHP-DI/PHP-DI
 [Slim]:   https://github.com/slimphp/Slim

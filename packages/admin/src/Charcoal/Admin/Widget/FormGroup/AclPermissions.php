@@ -4,8 +4,8 @@ namespace Charcoal\Admin\Widget\FormGroup;
 
 use PDO;
 use RuntimeException;
-// From Pimple
-use Pimple\Container;
+
+use DI\Container;
 // From 'laminas/laminas-permissions-acl'
 use Laminas\Permissions\Acl\Acl;
 use Laminas\Permissions\Acl\Role\GenericRole as Role;

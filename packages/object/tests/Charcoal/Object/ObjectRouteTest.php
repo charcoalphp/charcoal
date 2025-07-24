@@ -4,8 +4,8 @@ namespace Charcoal\Tests\Object;
 
 use DateTime;
 
-// From Pimple
-use Pimple\Container;
+
+use DI\Container;
 
 // From 'charcoal-object'
 use Charcoal\Object\ObjectRoute;

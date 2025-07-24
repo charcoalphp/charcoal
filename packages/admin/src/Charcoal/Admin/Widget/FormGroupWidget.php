@@ -3,8 +3,8 @@
 namespace Charcoal\Admin\Widget;
 
 use InvalidArgumentException;
-// From Pimple
-use Pimple\Container;
+
+use DI\Container;
 // From 'charcoal-ui'
 use Charcoal\Ui\AbstractUiItem;
 use Charcoal\Ui\FormGroup\FormGroupTrait;

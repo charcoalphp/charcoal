@@ -4,8 +4,8 @@ namespace Charcoal\Cms\Route;
 
 use RuntimeException;
 use InvalidArgumentException;
-// From Pimple
-use Pimple\Container;
+
+use DI\Container;
 // From PSR-7
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -109,7 +109,7 @@ class GenericRoute extends TemplateRoute
     /**
      * Determine if the URI path resolves to an object.
      *
-     * @param  Container $container A DI (Pimple) container.
+     * @param  Container $container A DI (DI) container.
      * @return boolean
      */
     public function pathResolvable(Container $container)
@@ -134,7 +134,7 @@ class GenericRoute extends TemplateRoute
     /**
      * Resolve the dynamic route.
      *
-     * @param  Container         $container A DI (Pimple) container.
+     * @param  Container         $container A DI (DI) container.
      * @param  RequestInterface  $request   A PSR-7 compatible Request instance.
      * @param  ResponseInterface $response  A PSR-7 compatible Response instance.
      * @return ResponseInterface
@@ -343,7 +343,7 @@ class GenericRoute extends TemplateRoute
     }
 
     /**
-     * @param  Container        $container A DI (Pimple) container.
+     * @param  Container        $container A DI (DI) container.
      * @param  RequestInterface $request   The request to intialize the template with.
      * @return string
      */

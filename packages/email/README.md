@@ -23,10 +23,10 @@ For Charcoal projects, the service provider can be registered from your configur
 
 ```php
 use Charcoal\Email\ServiceProvider\EmailServiceProvider;
-use Pimple\Container;
+use DI\Container;
 
 $container = new Container();
-$container->register(new EmailServiceProvider());
+(new EmailServiceProvider())->register($container);
 
 $email = $container['email'];
 $email->setData([

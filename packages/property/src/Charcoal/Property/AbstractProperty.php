@@ -11,8 +11,8 @@ use InvalidArgumentException;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 use Psr\Log\NullLogger;
-// From Pimple
-use Pimple\Container;
+
+use DI\Container;
 // From 'charcoal-config'
 use Charcoal\Config\AbstractEntity;
 // From 'charcoal-core'
@@ -1012,7 +1012,7 @@ abstract class AbstractProperty extends AbstractEntity implements
     }
 
     /**
-     * @param Container $container A Pimple DI container.
+     * @param Container $container A DI Container.
      * @return void
      */
     protected function setDependencies(Container $container)

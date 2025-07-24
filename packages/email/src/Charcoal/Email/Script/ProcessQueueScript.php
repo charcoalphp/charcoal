@@ -7,8 +7,8 @@ namespace Charcoal\Email\Script;
 // From PSR-7
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
-// From Pimple
-use Pimple\Container;
+
+use DI\Container;
 // From 'charcoal-app'
 use Charcoal\App\Script\AbstractScript;
 use Charcoal\App\Script\CronScriptInterface;
@@ -180,7 +180,7 @@ class ProcessQueueScript extends AbstractScript implements CronScriptInterface
     }
 
     /**
-     * @param  Container $container Pimple DI container.
+     * @param  Container $container DI Container.
      * @return void
      */
     protected function setDependencies(Container $container): void

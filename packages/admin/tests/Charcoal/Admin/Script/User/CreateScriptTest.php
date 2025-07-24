@@ -11,8 +11,8 @@ use Psr\Log\NullLogger;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
-// From Pimple
-use Pimple\Container;
+
+use DI\Container;
 
 // From 'charcoal-factory'
 use Charcoal\Factory\GenericFactory as Factory;

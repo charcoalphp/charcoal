@@ -7,11 +7,8 @@ use InvalidArgumentException;
 // From PSR-7
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\StreamInterface;
-// From Pimple
-use Pimple\Container;
-// From Pimple
-use Slim\Http\Stream;
+use DI\Container;
+use Nyholm\Psr7\Stream;
 // From 'league/flysystem'
 use League\Flysystem\FileNotFoundException;
 // From 'charcoal-admin'

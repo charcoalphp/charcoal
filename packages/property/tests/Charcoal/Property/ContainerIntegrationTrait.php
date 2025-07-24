@@ -2,8 +2,8 @@
 
 namespace Charcoal\Tests\Property;
 
-// From Pimple
-use Pimple\Container;
+
+use DI\Container;
 
 // From 'charcoal-property/tests'
 use Charcoal\Tests\Property\ContainerProvider;

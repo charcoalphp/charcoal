@@ -2,9 +2,7 @@
 
 namespace Charcoal\Translator\ServiceProvider;
 
-// From Pimple
-use Pimple\Container;
-use Pimple\ServiceProviderInterface;
+use DI\Container;
 // From 'symfony/translation'
 use Symfony\Component\Translation\Loader\ArrayLoader;
 use Symfony\Component\Translation\Loader\CsvFileLoader;
@@ -33,10 +31,10 @@ use Charcoal\Translator\Middleware\LanguageMiddleware;
  * Provides a service for translating your application into different languages,
  * and manage the target locale of a Charcoal application.
  */
-class TranslatorServiceProvider implements ServiceProviderInterface
+class TranslatorServiceProvider
 {
     /**
-     * @param  Container $container Pimple DI container.
+     * @param  Container $container DI Container.
      * @return void
      */
     public function register(Container $container)
@@ -47,7 +45,7 @@ class TranslatorServiceProvider implements ServiceProviderInterface
     }
 
     /**
-     * @param  Container $container Pimple DI container.
+     * @param  Container $container DI Container.
      * @return void
      */
     private function registerLocales(Container $container)
@@ -55,30 +53,30 @@ class TranslatorServiceProvider implements ServiceProviderInterface
         /**
          * Instance of the Locales Configset.
          *
-         * @param  Container $container Pimple DI container.
+         * @param  Container $container DI Container.
          * @return LocalesConfig
          */
-        $container['locales/config'] = function (Container $container) {
-            $appConfig     = isset($container['config']) ? $container['config'] : [];
+        $container->set('locales/config', function (Container $container) {
+            $appConfig     = $container->has('config') ? $container->get('config') : [];
             $localesConfig = isset($appConfig['locales']) ? $appConfig['locales'] : null;
             return new LocalesConfig($localesConfig);
-        };
+        });
 
         /**
          * Default language of the application, optionally the navigator's preferred language.
          *
-         * @param  Container $container Pimple DI container.
+         * @param  Container $container DI Container.
          * @return string|null
          */
-        $container['locales/default-language'] = function (Container $container) {
-            $localesConfig = $container['locales/config'];
+        $container->set('locales/default-language', function (Container $container) {
+            $localesConfig = $container->get('locales/config');
             if (isset($localesConfig['auto_detect']) && $localesConfig['auto_detect']) {
-                if ($container['locales/browser-language'] !== null) {
-                    return $container['locales/browser-language'];
+                if ($container->get('locales/browser-language') !== null) {
+                    return $container->get('locales/browser-language');
                 }
             }
             return $localesConfig['default_language'];
-        };
+        });
 
         /**
          * Accepted language from the navigator.
@@ -90,10 +88,10 @@ class TranslatorServiceProvider implements ServiceProviderInterface
          * 3. fr
          * 4. en
          *
-         * @param  Container $container Pimple DI container.
+         * @param  Container $container DI Container.
          * @return string|null
          */
-        $container['locales/browser-language'] = function (Container $container) {
+        $container->set('locales/browser-language', function (Container $container) {
             if (!isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
                 return null;
             }
@@ -103,7 +101,7 @@ class TranslatorServiceProvider implements ServiceProviderInterface
              * since the latter might need the browser language
              * as the default language.
              */
-            $localesConfig    = $container['locales/config'];
+            $localesConfig    = $container->get('locales/config');
             $supportedLocales = array_filter($localesConfig['languages'], function ($locale) {
                 return !(isset($locale['active']) && !$locale['active']);
             });
@@ -118,60 +116,60 @@ class TranslatorServiceProvider implements ServiceProviderInterface
             }
 
             return null;
-        };
+        });
 
         /**
          * List of fallback language codes for the translator.
          *
          * @todo   Use filtered "fallback_languages" from LocalesManager
-         * @param  Container $container Pimple DI container.
+         * @param  Container $container DI Container.
          * @return string[]
          */
-        $container['locales/fallback-languages'] = function (Container $container) {
-            $localesConfig = $container['locales/config'];
+        $container->set('locales/fallback-languages', function (Container $container) {
+            $localesConfig = $container->get('locales/config');
             return $localesConfig['fallback_languages'];
-        };
+        });
 
         /**
          * List of language codes (locale ident) from the available locales.
          *
-         * @param  Container $container Pimple DI container.
+         * @param  Container $container DI Container.
          * @return string[]
          */
-        $container['locales/available-languages'] = function (Container $container) {
-            $manager = $container['locales/manager'];
+        $container->set('locales/available-languages', function (Container $container) {
+            $manager = $container->get('locales/manager');
             return $manager->availableLocales();
-        };
+        });
 
         /**
          * List of available locales (as configuration structures) of the application.
          *
-         * @param  Container $container Pimple DI container.
+         * @param  Container $container DI Container.
          * @return array
          */
-        $container['locales/languages'] = function (Container $container) {
-            $manager = $container['locales/manager'];
+        $container->set('locales/languages', function (Container $container) {
+            $manager = $container->get('locales/manager');
             return $manager->locales();
-        };
+        });
 
         /**
          * Instance of the Locales Manager.
          *
          * @todo   Filter "fallback_languages"
-         * @param  Container $container Pimple DI container.
+         * @param  Container $container DI Container.
          * @return LocalesManager
          */
-        $container['locales/manager'] = function (Container $container) {
-            $localesConfig = $container['locales/config'];
+        $container->set('locales/manager', function (Container $container) {
+            $localesConfig = $container->get('locales/config');
             return new LocalesManager([
                 'locales'          => $localesConfig['languages'],
-                'default_language' => $container['locales/default-language'],
+                'default_language' => $container->get('locales/default-language'),
             ]);
-        };
+        });
     }
 
     /**
-     * @param  Container $container Pimple DI container.
+     * @param  Container $container DI Container.
      * @return void
      */
     private function registerTranslator(Container $container)
@@ -179,11 +177,11 @@ class TranslatorServiceProvider implements ServiceProviderInterface
         /**
          * Instance of the Translator Configset.
          *
-         * @param  Container $container Pimple DI container.
+         * @param  Container $container DI Container.
          * @return TranslatorConfig
          */
-        $container['translator/config'] = function (Container $container) {
-            $appConfig   = isset($container['config']) ? $container['config'] : [];
+        $container->set('translator/config', function (Container $container) {
+            $appConfig   = $container->has('config') ? $container->get('config') : [];
             $transConfig = isset($appConfig['translator']) ? $appConfig['translator'] : null;
 
             if (isset($transConfig['paths'])) {
@@ -192,10 +190,10 @@ class TranslatorServiceProvider implements ServiceProviderInterface
 
             $transConfig = new TranslatorConfig($transConfig);
 
-            if (isset($container['module/classes'])) {
+            if ($container->has('module/classes')) {
                 $extraPaths = [];
                 $basePath   = $appConfig['base_path'];
-                $modules    = $container['module/classes'];
+                $modules    = $container->get('module/classes');
                 foreach ($modules as $module) {
                     if (defined(sprintf('%s::APP_CONFIG', $module))) {
                         $configPath = ltrim($module::APP_CONFIG, '/');
@@ -217,65 +215,65 @@ class TranslatorServiceProvider implements ServiceProviderInterface
             }
 
             return $transConfig;
-        };
+        });
 
         /**
          * Dictionary of translations grouped by domain and locale, from translator config.
          *
-         * @param  Container $container Pimple DI container.
+         * @param  Container $container DI Container.
          * @return array
          */
-        $container['translator/translations'] = function (Container $container) {
-            $transConfig = $container['translator/config'];
+        $container->set('translator/translations', function (Container $container) {
+            $transConfig = $container->get('translator/config');
             return $transConfig['translations'];
-        };
+        });
 
         /**
          * Instance of the Message Selector, that is used to resolve a translation.
          *
          * @return MessageSelector
          */
-        $container['translator/message-selector'] = function () {
+        $container->set('translator/message-selector', function () {
             return new MessageSelector();
-        };
+        });
 
         /**
          * Instance of the Message Formatter, that is used to format a localized message.
          *
-         * @param  Container $container Pimple DI container.
+         * @param  Container $container DI Container.
          * @return MessageFormatter
          */
-        $container['translator/message-formatter'] = function (Container $container) {
-            return new MessageFormatter($container['translator/message-selector']);
-        };
+        $container->set('translator/message-formatter', function (Container $container) {
+            return new MessageFormatter($container->get('translator/message-selector'));
+        });
 
         /**
          * Instance of the Translator, that is used for translation.
          *
          * @todo   Improve file loader with a map of file formats.
-         * @param  Container $container Pimple DI container.
+         * @param  Container $container DI Container.
          * @return Translator
          */
-        $container['translator'] = function (Container $container) {
-            $transConfig = $container['translator/config'];
+        $container->set('translator', function (Container $container) {
+            $transConfig = $container->get('translator/config');
             $translator  = new Translator([
-                'manager'           => $container['locales/manager'],
-                'message_selector'  => $container['translator/message-selector'],
-                'message_formatter' => $container['translator/message-formatter'],
+                'manager'           => $container->get('locales/manager'),
+                'message_selector'  => $container->get('translator/message-selector'),
+                'message_formatter' => $container->get('translator/message-formatter'),
                 'cache_dir'         => $transConfig['cache_dir'],
                 'debug'             => $transConfig['debug'],
             ]);
 
-            $translator->setFallbackLocales($container['locales/fallback-languages']);
+            $translator->setFallbackLocales($container->get('locales/fallback-languages'));
 
-            $translator->addLoader('array', $container['translator/loader/array']);
+            $translator->addLoader('array', $container->get('translator/loader/array'));
 
             foreach ($transConfig['loaders'] as $loader) {
-                $translator->addLoader($loader, $container['translator/loader/file/' . $loader]);
+                $translator->addLoader($loader, $container->get('translator/loader/file/' . $loader));
 
                 $paths = array_reverse($transConfig['paths']);
                 foreach ($paths as $path) {
-                    $path = realpath($container['config']['base_path'] . DIRECTORY_SEPARATOR . $path);
+                    $path = realpath($container->get('config')['base_path'] . DIRECTORY_SEPARATOR . $path);
 
                     if ($path === false) {
                         continue;
@@ -296,20 +294,20 @@ class TranslatorServiceProvider implements ServiceProviderInterface
                 }
             }
 
-            foreach ($container['translator/translations'] as $domain => $data) {
+            foreach ($container->get('translator/translations') as $domain => $data) {
                 foreach ($data as $locale => $messages) {
                     $translator->addResource('array', $messages, $locale, $domain);
                 }
             }
 
             return $translator;
-        };
+        });
 
         $this->registerTranslatorLoaders($container);
     }
 
     /**
-     * @param  Container $container Pimple DI container.
+     * @param  Container $container DI Container.
      * @return void
      */
     private function registerTranslatorLoaders(Container $container)
@@ -317,90 +315,90 @@ class TranslatorServiceProvider implements ServiceProviderInterface
         /**
          * @return ArrayLoader
          */
-        $container['translator/loader/array'] = function () {
+        $container->set('translator/loader/array', function () {
             return new ArrayLoader();
-        };
+        });
 
         /**
          * @return CsvFileLoader
          */
-        $container['translator/loader/file/csv'] = function () {
+        $container->set('translator/loader/file/csv', function () {
             return new CsvFileLoader();
-        };
+        });
 
         /**
          * @return IcuDatFileLoader
          */
-        $container['translator/loader/file/dat'] = function () {
+        $container->set('translator/loader/file/dat', function () {
             return new IcuDatFileLoader();
-        };
+        });
 
         /**
          * @return IcuResFileLoader
          */
-        $container['translator/loader/file/res'] = function () {
+        $container->set('translator/loader/file/res', function () {
             return new IcuResFileLoader();
-        };
+        });
 
         /**
          * @return IniFileLoader
          */
-        $container['translator/loader/file/ini'] = function () {
+        $container->set('translator/loader/file/ini', function () {
             return new IniFileLoader();
-        };
+        });
 
         /**
          * @return JsonFileLoader
          */
-        $container['translator/loader/file/json'] = function () {
+        $container->set('translator/loader/file/json', function () {
             return new JsonFileLoader();
-        };
+        });
 
         /**
          * @return MoFileLoader
          */
-        $container['translator/loader/file/mo'] = function () {
+        $container->set('translator/loader/file/mo', function () {
             return new MoFileLoader();
-        };
+        });
 
         /**
          * @return PhpFileLoader
          */
-        $container['translator/loader/file/php'] = function () {
+        $container->set('translator/loader/file/php', function () {
             return new PhpFileLoader();
-        };
+        });
 
         /**
          * @return PoFileLoader
          */
-        $container['translator/loader/file/po'] = function () {
+        $container->set('translator/loader/file/po', function () {
             return new PoFileLoader();
-        };
+        });
 
         /**
          * @return QtFileLoader
          */
-        $container['translator/loader/file/qt'] = function () {
+        $container->set('translator/loader/file/qt', function () {
             return new QtFileLoader();
-        };
+        });
 
         /**
          * @return XliffFileLoader
          */
-        $container['translator/loader/file/xliff'] = function () {
+        $container->set('translator/loader/file/xliff', function () {
             return new XliffFileLoader();
-        };
+        });
 
         /**
          * @return YamlFileLoader
          */
-        $container['translator/loader/file/yaml'] = function () {
+        $container->set('translator/loader/file/yaml', function () {
             return new YamlFileLoader();
-        };
+        });
     }
 
     /**
-     * @param  Container $container Pimple DI container.
+     * @param  Container $container DI Container.
      * @return void
      */
     private function registerMiddleware(Container $container)
@@ -409,19 +407,19 @@ class TranslatorServiceProvider implements ServiceProviderInterface
          * @param  Container $container
          * @return LanguageMiddleware
          */
-        $container['middlewares/charcoal/translator/middleware/language'] = function (Container $container) {
-            $middlewareConfig = $container['config']['middlewares']['charcoal/translator/middleware/language'];
+        $container->set('middlewares/charcoal/translator/middleware/language', function (Container $container) {
+            $middlewareConfig = $container->get('config')['middlewares']['charcoal/translator/middleware/language'];
             $middlewareConfig = array_replace(
                 [
-                    'default_language'  => $container['translator']->getLocale(),
+                    'default_language'  => $container->get('translator')->getLocale(),
                 ],
                 $middlewareConfig,
                 [
-                    'translator'        => $container['translator'],
-                    'browser_language'  => $container['locales/browser-language'],
+                    'translator'        => $container->get('translator'),
+                    'browser_language'  => $container->get('locales/browser-language'),
                 ]
             );
             return new LanguageMiddleware($middlewareConfig);
-        };
+        });
     }
 }

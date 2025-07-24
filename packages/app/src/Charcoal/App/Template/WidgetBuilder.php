@@ -3,8 +3,8 @@
 namespace Charcoal\App\Template;
 
 use InvalidArgumentException;
-// From Pimple
-use Pimple\Container;
+
+use DI\Container;
 // From 'charcoal-factory'
 use Charcoal\Factory\FactoryInterface;
 
@@ -19,7 +19,7 @@ class WidgetBuilder
     protected $factory;
 
     /**
-     * A Pimple dependency-injection container to fulfill the required services.
+     * A DI dependency-injection container to fulfill the required services.
      * @var Container $container
      */
     protected $container;

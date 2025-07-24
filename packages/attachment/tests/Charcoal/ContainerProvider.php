@@ -3,45 +3,32 @@
 namespace Charcoal\Tests;
 
 use PDO;
-
 // From Mockery
 use Mockery;
-
-// From Pimple
-use Pimple\Container;
-
+use DI\Container;
 // From PSR-3
 use Psr\Log\NullLogger;
-
 // From 'tedivm/stash' (PSR-6)
 use Stash\Pool;
-
 // From Slim
-use Slim\Http\Uri;
-
+use Nyholm\Psr7\Uri;
 // From 'league/climate'
 use League\CLImate\CLImate;
 use League\CLImate\Util\System\Linux;
 use League\CLImate\Util\Output;
 use League\CLImate\Util\Reader\Stdin;
 use League\CLImate\Util\UtilFactory;
-
 // From 'charcoal-core'
 use Charcoal\Source\DatabaseSource;
 use Charcoal\Model\ServiceProvider\ModelServiceProvider;
-
 // From 'charcoal-user'
 use Charcoal\User\ServiceProvider\AuthServiceProvider;
-
 // From 'charcoal-translator'
 use Charcoal\Translator\ServiceProvider\TranslatorServiceProvider;
-
 // From 'charcoal-view'
 use Charcoal\View\ViewServiceProvider;
-
 // From 'charcoal-app'
 use Charcoal\App\AppConfig;
-
 // From 'charcoal-admin'
 use Charcoal\Admin\ServiceProvider\AdminServiceProvider;
 use Charcoal\Admin\Config as AdminConfig;
@@ -85,13 +72,13 @@ class ContainerProvider
      */
     public function registerBaseUrl(Container $container)
     {
-        $container['base-url'] = function () {
-            return Uri::createFromString('');
-        };
+        $container->set('base-url', function () {
+            return (new Uri(''));
+        });
 
-        $container['admin/base-url'] = function () {
-            return Uri::createFromString('admin');
-        };
+        $container->set('admin/base-url', function () {
+            return (new Uri('admin'));
+        });
     }
 
     /**
@@ -102,7 +89,7 @@ class ContainerProvider
      */
     public function registerConfig(Container $container)
     {
-        $container['config'] = function () {
+        $container->set('config', function () {
             return new AppConfig([
                 'base_path'  => realpath(__DIR__ . '/../../..'),
                 'apis'       => [
@@ -133,7 +120,7 @@ class ContainerProvider
                     ],
                 ],
             ]);
-        };
+        });
 
         /**
          * List of Charcoal module classes.
@@ -143,7 +130,7 @@ class ContainerProvider
          *
          * @var array
          */
-        $container['module/classes'] = [];
+        $container->set('module/classes', []);
     }
 
     /**
@@ -156,9 +143,9 @@ class ContainerProvider
     {
         $this->registerConfig($container);
 
-        $container['admin/config'] = function () {
+        $container->set('admin/config', function () {
             return new AdminConfig();
-        };
+        });
     }
 
     /**
@@ -167,44 +154,44 @@ class ContainerProvider
      */
     public function registerClimate(Container $container)
     {
-        $container['climate/system'] = function () {
+        $container->set('climate/system', function () {
             $system = Mockery::mock(Linux::class);
             $system->shouldReceive('hasAnsiSupport')->andReturn(true);
             $system->shouldReceive('width')->andReturn(80);
 
             return $system;
-        };
+        });
 
-        $container['climate/output'] = function () {
+        $container->set('climate/output', function () {
             $output = Mockery::mock(Output::class);
             $output->shouldReceive('persist')->andReturn($output);
             $output->shouldReceive('sameLine')->andReturn($output);
             $output->shouldReceive('write');
 
             return $output;
-        };
+        });
 
-        $container['climate/reader'] = function () {
+        $container->set('climate/reader', function () {
             $reader = Mockery::mock(Stdin::class);
             $reader->shouldReceive('line')->andReturn('line');
             $reader->shouldReceive('char')->andReturn('char');
             $reader->shouldReceive('multiLine')->andReturn('multiLine');
             return $reader;
-        };
+        });
 
-        $container['climate/util'] = function (Container $container) {
-            return new UtilFactory($container['climate/system']);
-        };
+        $container->set('climate/util', function (Container $container) {
+            return new UtilFactory($container->get('climate/system'));
+        });
 
-        $container['climate'] = function (Container $container) {
+        $container->set('climate', function (Container $container) {
             $climate = new CLImate();
 
-            $climate->setOutput($container['climate/output']);
-            $climate->setUtil($container['climate/util']);
-            $climate->setReader($container['climate/reader']);
+            $climate->setOutput($container->get('climate/output'));
+            $climate->setUtil($container->get('climate/util'));
+            $climate->setReader($container->get('climate/reader'));
 
             return $climate;
-        };
+        });
     }
 
     /**
@@ -213,11 +200,11 @@ class ContainerProvider
      */
     public function registerDatabase(Container $container)
     {
-        $container['database'] = function () {
+        $container->set('database', function () {
             $pdo = new PDO('sqlite::memory:');
             $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             return $pdo;
-        };
+        });
     }
 
     /**
@@ -301,9 +288,9 @@ class ContainerProvider
      */
     public function registerLogger(Container $container)
     {
-        $container['logger'] = function () {
+        $container->set('logger', function () {
             return new NullLogger();
-        };
+        });
     }
 
     /**
@@ -312,8 +299,8 @@ class ContainerProvider
      */
     public function registerCache(Container $container)
     {
-        $container['cache'] = function () {
+        $container->set('cache', function () {
             return new Pool();
-        };
+        });
     }
 }

@@ -14,8 +14,8 @@ use Cache\Adapter\Void\VoidCachePool;
 use Stash\Pool;
 use Stash\Driver\Ephemeral;
 
-// From Pimple
-use Pimple\Container;
+
+use DI\Container;
 
 // From 'charcoal-factory'
 use Charcoal\Factory\FactoryInterface;

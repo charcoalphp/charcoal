@@ -3,8 +3,8 @@
 namespace Charcoal\User\Acl;
 
 use InvalidArgumentException;
-// From Pimple
-use Pimple\Container;
+
+use DI\Container;
 // From 'charcoal-translator'
 use Charcoal\Translator\TranslatorAwareTrait;
 // From 'charcoal-core'
@@ -208,7 +208,7 @@ class Role extends AbstractModel
     }
 
     /**
-     * @param  Container $container Pimple DI container.
+     * @param  Container $container DI Container.
      * @return void
      */
     protected function setDependencies(Container $container)

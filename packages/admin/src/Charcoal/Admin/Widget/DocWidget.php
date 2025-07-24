@@ -5,8 +5,8 @@ namespace Charcoal\Admin\Widget;
 use ReflectionClass;
 use InvalidArgumentException;
 use UnexpectedValueException;
-// From Pimple
-use Pimple\Container;
+
+use DI\Container;
 // From 'charcoal-ui'
 use Charcoal\Ui\FormGroup\FormGroupInterface;
 // From 'charcoal-admin'

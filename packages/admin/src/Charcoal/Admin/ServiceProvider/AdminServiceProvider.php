@@ -2,19 +2,10 @@
 
 namespace Charcoal\Admin\ServiceProvider;
 
-// From Pimple
 use Charcoal\Admin\AssetsConfig;
-use Pimple\Container;
-use Pimple\ServiceProviderInterface;
-use Assetic\Asset\AssetReference;
-use Charcoal\Attachment\Object\File;
-use Charcoal\Factory\GenericResolver;
-// from 'kriswallsmith/assetic'
-use Assetic\AssetManager;
-// From PSR-7
-use Psr\Http\Message\UriInterface;
+use DI\Container;
 // From Slim
-use Slim\Http\Uri;
+use Nyholm\Psr7\Uri;
 // From Mustache
 use Mustache_LambdaHelper as LambdaHelper;
 // From 'charcoal-config'
@@ -34,7 +25,6 @@ use Charcoal\Factory\GenericFactory as Factory;
 use Charcoal\User\Authenticator;
 use Charcoal\User\Authorizer;
 // From 'charcoal-view'
-use Charcoal\View\EngineInterface;
 use Charcoal\View\GenericView;
 use Charcoal\View\ViewConfig;
 use Charcoal\View\ViewInterface;
@@ -47,6 +37,7 @@ use Charcoal\Admin\Ui\SecondaryMenu\GenericSecondaryMenuGroup;
 use Charcoal\Admin\Ui\SecondaryMenu\SecondaryMenuGroupInterface;
 use Charcoal\Admin\User;
 use Charcoal\Admin\User\AuthToken;
+use Psr\Container\ContainerInterface;
 
 /**
  * Charcoal Administration Service Provider
@@ -57,7 +48,7 @@ use Charcoal\Admin\User\AuthToken;
  * - Config
  * - Widget Factory
  */
-class AdminServiceProvider implements ServiceProviderInterface
+class AdminServiceProvider
 {
     /**
      * Registers services on the given container.
@@ -65,15 +56,15 @@ class AdminServiceProvider implements ServiceProviderInterface
      * This method should only be used to configure services and parameters.
      * It should not get services.
      *
-     * @param  Container $container The Pimple DI container.
+     * @param Container $container The DI container.
      * @return void
      */
-    public function register(Container $container)
+    public function register(ContainerInterface $container)
     {
         // Ensure dependencies are set
-        $container->register(new EmailServiceProvider());
-        $container->register(new UiServiceProvider());
-        $container->register(new AssetsManagerServiceProvider());
+        (new EmailServiceProvider())->register($container);
+        (new UiServiceProvider())->register($container);
+        (new AssetsManagerServiceProvider())->register($container);
 
         $this->registerAdminServices($container);
         $this->registerFactoryServices($container);
@@ -85,30 +76,30 @@ class AdminServiceProvider implements ServiceProviderInterface
         $this->registerAssetsManager($container);
 
         // Register Access-Control-List (acl)
-        $container->register(new AclServiceProvider());
+        (new AclServiceProvider())->register($container);
     }
 
     /**
      * Registers admin services.
      *
-     * @param  Container $container The Pimple DI container.
+     * @param  Container $container The DI Container.
      * @return void
      */
-    protected function registerAdminServices(Container $container)
+    protected function registerAdminServices(ContainerInterface $container)
     {
         /**
          * The admin configset.
          *
-         * @param  Container $container The Pimple DI Container.
+         * @param  Container $container The DI Container.
          * @return AdminConfig
          */
-        $container['admin/config'] = function (Container $container) {
-            $appConfig = $container['config'];
+        $container->set('admin/config', function (Container $container) {
+            $appConfig = $container->get('config');
 
             $extraConfigs = [];
 
-            if (isset($container['module/classes'])) {
-                $modules = $container['module/classes'];
+            if (($container->has('module/classes'))) {
+                $modules = $container->get('module/classes');
                 foreach ($modules as $module) {
                     if (defined(sprintf('%s::ADMIN_CONFIG', $module))) {
                         $moduleAdminConfigs = (array)$module::ADMIN_CONFIG;
@@ -120,7 +111,7 @@ class AdminServiceProvider implements ServiceProviderInterface
             // The `admin.json` file is not part of regular config
             if (!empty($appConfig['admin_config'])) {
                 $appAdminConfigs = (array)$appConfig['admin_config'];
-                $appAdminConfigs = $container['config']->resolveValues($appAdminConfigs);
+                $appAdminConfigs = $container->get('config')->resolveValues($appAdminConfigs);
                 array_push($extraConfigs, ...$appAdminConfigs);
             }
 
@@ -138,23 +129,23 @@ class AdminServiceProvider implements ServiceProviderInterface
             }
 
             return $adminConfig;
-        };
+        });
 
-        if (!isset($container['admin/base-url'])) {
+        if (!($container->has('admin/base-url'))) {
             /**
              * Base Admin URL as a PSR-7 UriInterface object for the current request
              * or the Charcoal application.
              *
-             * @param  Container $container The Pimple DI Container.
+             * @param  Container $container The DI Container.
              * @return \Psr\Http\Message\UriInterface
              */
-            $container['admin/base-url'] = function (Container $container) {
-                $adminConfig = $container['admin/config'];
+            $container->set('admin/base-url', function (Container $container) {
+                $adminConfig = $container->get('admin/config');
 
                 if (isset($adminConfig['base_url'])) {
                     $adminUrl = $adminConfig['base_url'];
                 } else {
-                    $adminUrl = clone $container['base-url'];
+                    $adminUrl = clone $container->get('base-url');
                     if ($adminConfig['base_path']) {
                         $basePath  = rtrim($adminUrl->getBasePath(), '/');
                         $adminPath = ltrim($adminConfig['base_path'], '/');
@@ -162,7 +153,7 @@ class AdminServiceProvider implements ServiceProviderInterface
                     }
                 }
 
-                $adminUrl = Uri::createFromString($adminUrl)->withUserInfo('');
+                $adminUrl = (new Uri($adminUrl))->withUserInfo('');
 
                 /** Fix the base path */
                 $path = $adminUrl->getPath();
@@ -171,7 +162,7 @@ class AdminServiceProvider implements ServiceProviderInterface
                 }
 
                 return $adminUrl;
-            };
+            });
         }
 
         /**
@@ -181,9 +172,9 @@ class AdminServiceProvider implements ServiceProviderInterface
          * @param Container $container A container instance.
          * @return ViewInterface
          */
-        $container->extend('view', function (GenericView $view, Container $container): ViewInterface {
+        $container->set('view', function (Container $container): ViewInterface {
             return new GenericView([
-                'engine' => $container['view/engine/mustache']
+                'engine' => $container->get('view/engine/mustache')
             ]);
         });
 
@@ -194,8 +185,14 @@ class AdminServiceProvider implements ServiceProviderInterface
          * @param Container $container A container instance.
          * @return ViewInterface
          */
-        $container->extend('view/config', function (ViewConfig $viewConfig, Container $container): ViewConfig {
-            $adminConfig = $container['admin/config'];
+        $container->set('view/config', function (Container $container): ViewConfig {
+            $viewConfig = [];
+            $adminConfig = $container->get('admin/config');
+
+            if ($container->has('view/config')) {
+                $viewConfig = $container->get('view/config');
+            }
+
             if (isset($adminConfig['view']['paths'])) {
                 $viewConfig->addPaths($adminConfig['view']['paths']);
             }
@@ -207,21 +204,21 @@ class AdminServiceProvider implements ServiceProviderInterface
      * Registers metadata extensions.
      *
      * @see    \Charcoal\Model\ServiceProvider\ModelServiceProvider
-     * @param  Container $container The Pimple DI container.
+     * @param  Container $container The DI Container.
      * @return void
      */
-    protected function registerMetadataExtensions(Container $container)
+    protected function registerMetadataExtensions(ContainerInterface $container)
     {
-        if (!isset($container['metadata/config'])) {
+        if (!($container->has('metadata/config'))) {
             /**
              * @return MetadataConfig
              */
-            $container['metadata/config'] = function (Container $container) {
-                $settings   = $container['admin/config']['metadata'];
+            $container->set('metadata/config', function (Container $container) {
+                $settings   = $container->get('admin/config')['metadata'];
                 $metaConfig = new MetadataConfig($settings);
 
                 return $metaConfig;
-            };
+            });
         } else {
             /**
              * Alters the application's metadata configset.
@@ -229,13 +226,18 @@ class AdminServiceProvider implements ServiceProviderInterface
              * This extension will merge any Admin-only metadata settings.
              *
              * @param  MetadataConfig $metaConfig The metadata configset.
-             * @param  Container      $container  The Pimple DI container.
+             * @param  Container      $container  The DI Container.
              * @return MetadataConfig
              */
-            $container->extend('metadata/config', function (MetadataConfig $metaConfig, Container $container) {
-                $settings = $container['admin/config']['metadata'];
-                if (is_array($settings) && !empty($settings)) {
-                    $metaConfig->merge($settings);
+            $container->set('metadata/config', function (Container $container): array {
+                $settings = $container->get('admin/config')['metadata'];
+                $metaConfig = [];
+
+                if ($container->has('metadata/config')) {
+                    $metaConfig = $container->get('metadata/config');
+                    if (is_array($settings) && !empty($settings)) {
+                        $metaConfig->merge($settings);
+                    }
                 }
 
                 return $metaConfig;
@@ -273,11 +275,17 @@ class AdminServiceProvider implements ServiceProviderInterface
          * any "base" data that's been imported.
          *
          * @param  MetadataConfig $metaConfig The metadata configset.
-         * @param  Container      $container  The Pimple DI container.
+         * @param  Container      $container  The DI Container.
          * @return MetadataConfig
          */
-        $container->extend('metadata/config', function (MetadataConfig $metaConfig, Container $container) {
-            $adminConfig = $container['admin/config'];
+        $container->set('metadata/config', function (Container $container): array {
+            $metaConfig = [];
+
+            if ($container->has('metadata/config')) {
+                $metaConfig = $container->get('metadata/config');
+            }
+
+            $adminConfig = $container->get('admin/config');
             $adminDir    = '/' . trim($adminConfig['base_path'], '/');
 
             $metaPaths   = $metaConfig->paths();
@@ -297,72 +305,72 @@ class AdminServiceProvider implements ServiceProviderInterface
     /**
      * Registers user-authentication extensions.
      *
-     * @param  Container $container The Pimple DI container.
+     * @param  Container $container The DI Container.
      * @return void
      */
-    protected function registerAuthExtensions(Container $container)
+    protected function registerAuthExtensions(ContainerInterface $container)
     {
         /**
-         * @param  Container $container The Pimple DI Container.
+         * @param  Container $container The DI Container.
          * @return Authenticator
          */
-        $container['admin/authenticator'] = function (Container $container) {
+        $container->set('admin/authenticator', function (Container $container) {
             return new Authenticator([
-                'logger'        => $container['logger'],
+                'logger'        => $container->get('logger'),
                 'user_type'     => User::class,
-                'user_factory'  => $container['model/factory'],
+                'user_factory'  => $container->get('model/factory'),
                 'token_type'    => AuthToken::class,
-                'token_factory' => $container['model/factory']
+                'token_factory' => $container->get('model/factory')
             ]);
-        };
+        });
 
         /**
          * Replace default Authenticator ('charcoal-ui') with the Admin Authenticator.
          *
          * @todo   Do this right!
-         * @param  Container $container The Pimple DI Container.
+         * @param  Container $container The DI Container.
          * @return Authenticator
          */
-        $container['authenticator'] = function (Container $container) {
-            return $container['admin/authenticator'];
-        };
+        $container->set('authenticator', function (Container $container) {
+            return $container->get('admin/authenticator');
+        });
 
         /**
-         * @param  Container $container The Pimple DI container.
+         * @param  Container $container The DI Container.
          * @return Authorizer
          */
-        $container['admin/authorizer'] = function (Container $container) {
+        $container->set('admin/authorizer', function (Container $container) {
             return new Authorizer([
-                'logger'   => $container['logger'],
-                'acl'      => $container['admin/acl'],
+                'logger'   => $container->get('logger'),
+                'acl'      => $container->get('admin/acl'),
                 'resource' => 'admin'
             ]);
-        };
+        });
 
         /**
          * Replace default Authorizer ('charcoal-ui') with the Admin Authorizer.
          *
          * @todo   Do this right!
-         * @param  Container $container The Pimple DI Container.
+         * @param  Container $container The DI Container.
          * @return Authorizer
          */
-        $container['authorizer'] = function (Container $container) {
-            return $container['admin/authorizer'];
-        };
+        $container->set('authorizer', function (Container $container) {
+            return $container->get('admin/authorizer');
+        });
     }
 
     /**
      * Registers view extensions.
      *
-     * @param  Container $container The Pimple DI container.
+     * @param  Container $container The DI Container.
      * @return void
      */
-    protected function registerViewExtensions(Container $container)
+    protected function registerViewExtensions(ContainerInterface $container)
     {
-        if (!isset($container['view/mustache/helpers'])) {
-            $container['view/mustache/helpers'] = function () {
+        if (!($container->has('view/mustache/helpers'))) {
+            $container->set('view/mustache/helpers', function () {
                 return [];
-            };
+            });
         }
 
         /**
@@ -370,8 +378,9 @@ class AdminServiceProvider implements ServiceProviderInterface
          *
          * @return array
          */
-        $container->extend('view/mustache/helpers', function (array $helpers, Container $container) {
-            $adminUrl = $container['admin/base-url'];
+        $container->set('view/mustache/helpers', function (Container $container): array {
+            $adminUrl = $container->get('admin/base-url');
+            $helpers = [];
 
             $urls = [
                 /**
@@ -414,6 +423,10 @@ class AdminServiceProvider implements ServiceProviderInterface
                 }
             ];
 
+            if ($container->has('view/mustache/helpers')) {
+                $helpers = $container->get('view/mustache/helpers');
+            }
+
             return array_merge($helpers, $urls);
         });
     }
@@ -421,10 +434,10 @@ class AdminServiceProvider implements ServiceProviderInterface
     /**
      * Registers services for {@link https://studio-42.github.io/elFinder/ elFinder}.
      *
-     * @param  Container $container The Pimple DI Container.
+     * @param  Container $container The DI Container.
      * @return void
      */
-    protected function registerElfinderServices(Container $container)
+    protected function registerElfinderServices(ContainerInterface $container)
     {
         /**
          * Configure the "config.admin.elfinder" dataset.
@@ -432,120 +445,124 @@ class AdminServiceProvider implements ServiceProviderInterface
          * @param  AdminConfig $adminConfig The admin configset.
          * @return AdminConfig
          */
-        $container->extend('admin/config', function (AdminConfig $adminConfig) {
-            $adminConfig['elfinder'] = new Config($adminConfig['elfinder']);
-
+        $container->set('admin/config', function (Container $container): array {
+            $adminConfig = [];
+            $config = $container->get('config');
+            if (isset($config['admin']) && isset($config['admin']['elfinder'])) {
+                $adminConfig = $config['admin'];
+                $adminConfig['elfinder'] = new Config($adminConfig['elfinder']);
+            }
             return $adminConfig;
         });
 
         /**
          * The elFinder configset.
          *
-         * @param  Container $container The Pimple DI Container.
+         * @param  Container $container The DI Container.
          * @return ConfigInterface
          */
-        $container['elfinder/config'] = function (Container $container) {
-            return $container['admin/config']['elfinder'];
-        };
+        $container->set('elfinder/config', function (Container $container) {
+            return $container->get('admin/config')['elfinder'];
+        });
     }
 
     /**
      * Registers services for {@link https://selectize.github.io/selectize.js/ Selectize}.
      *
-     * @param  Container $container The Pimple DI Container.
+     * @param  Container $container The DI Container.
      * @return void
      */
-    protected function registerSelectizeServices(Container $container)
+    protected function registerSelectizeServices(ContainerInterface $container)
     {
         /**
          * The Selectize Renderer.
          *
-         * @param  Container $container The Pimple DI container.
+         * @param  Container $container The DI Container.
          * @return SelectizeRenderer
          */
-        $container['selectize/renderer'] = function (Container $container) {
+        $container->set('selectize/renderer', function (Container $container) {
             return new SelectizeRenderer([
-                'logger'           => $container['logger'],
-                'translator'       => $container['translator'],
-                'template_factory' => $container['template/factory'],
-                'view'             => $container['view']
+                'logger'           => $container->get('logger'),
+                'translator'       => $container->get('translator'),
+                'template_factory' => $container->get('template/factory'),
+                'view'             => $container->get('view')
             ]);
-        };
+        });
     }
 
     /**
-     * @param Container $container Pimple DI container.
+     * @param Container $container DI Container.
      * @return void
      */
-    protected function registerAssetsManager(Container $container)
+    protected function registerAssetsManager(ContainerInterface $container)
     {
-        $container['assets/config'] = function (Container $container) {
-            $config = $container['admin/config']->get('assets');
+        $container->set('assets/config', function (Container $container) {
+            $config = $container->get('admin/config')->get('assets');
 
             return new AssetsConfig($config);
-        };
+        });
     }
 
     /**
      * Registers the admin factories.
      *
-     * @param  Container $container The Pimple DI container.
+     * @param  Container $container The DI Container.
      * @return void
      */
-    protected function registerFactoryServices(Container $container)
+    protected function registerFactoryServices(ContainerInterface $container)
     {
         /**
-         * @param  Container $container The Pimple DI container.
+         * @param  Container $container The DI Container.
          * @return FactoryInterface
          */
-        $container['property/input/factory'] = function (Container $container) {
+        $container->set('property/input/factory', function (Container $container) {
             return new Factory([
                 'base_class'       => PropertyInputInterface::class,
                 'arguments'        => [[
                     'container' => $container,
-                    'logger'    => $container['logger']
+                    'logger'    => $container->get('logger')
                 ]],
                 'resolver_options' => [
                     'suffix' => 'Input'
                 ]
             ]);
-        };
+        });
 
         /**
-         * @param  Container $container The Pimple DI container.
+         * @param  Container $container The DI Container.
          * @return FactoryInterface
          */
-        $container['property/display/factory'] = function (Container $container) {
+        $container->set('property/display/factory', function (Container $container) {
             return new Factory([
                 'base_class'       => PropertyDisplayInterface::class,
                 'arguments'        => [[
                     'container' => $container,
-                    'logger'    => $container['logger']
+                    'logger'    => $container->get('logger')
                 ]],
                 'resolver_options' => [
                     'suffix' => 'Display'
                 ]
             ]);
-        };
+        });
 
         /**
-         * @param  Container $container A Pimple DI container.
+         * @param  Container $container A DI Container.
          * @return FactoryInterface
          */
-        $container['secondary-menu/group/factory'] = function (Container $container) {
+        $container->set('secondary-menu/group/factory', function (Container $container) {
             return new Factory([
                 'base_class'       => SecondaryMenuGroupInterface::class,
                 'default_class'    => GenericSecondaryMenuGroup::class,
                 'arguments'        => [[
                     'container'      => $container,
-                    'logger'         => $container['logger'],
-                    'view'           => $container['view'],
-                    'layout_builder' => $container['layout/builder']
+                    'logger'         => $container->get('logger'),
+                    'view'           => $container->get('view'),
+                    'layout_builder' => $container->get('layout/builder')
                 ]],
                 'resolver_options' => [
                     'suffix' => 'SecondaryMenuGroup'
                 ]
             ]);
-        };
+        });
     }
 }

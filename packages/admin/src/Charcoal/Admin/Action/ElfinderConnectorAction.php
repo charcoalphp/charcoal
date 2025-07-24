@@ -9,8 +9,8 @@ use UnexpectedValueException;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\UriInterface;
-// From Pimple
-use Pimple\Container;
+
+use DI\Container;
 // From elFinder
 use elFinder;
 use elFinderConnector;

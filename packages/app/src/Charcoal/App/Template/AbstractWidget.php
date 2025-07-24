@@ -5,8 +5,8 @@ namespace Charcoal\App\Template;
 // From PSR-3
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
-// From Pimple
-use Pimple\Container;
+
+use DI\Container;
 // From 'charcoal-config'
 use Charcoal\Config\AbstractEntity;
 // From 'charcoal-view'
@@ -62,11 +62,11 @@ abstract class AbstractWidget extends AbstractEntity implements
     }
 
     /**
-     * Give an opportunity to children classes to inject dependencies from a Pimple Container.
+     * Give an opportunity to children classes to inject dependencies from a DI Container.
      *
      * Does nothing by default, reimplement in children classes.
      *
-     * The `$container` DI-container (from `Pimple`) should not be saved or passed around, only to be used to
+     * The `$container` DI-container (from `DI`) should not be saved or passed around, only to be used to
      * inject dependencies (typically via setters).
      *
      * @param Container $container A dependencies container instance.

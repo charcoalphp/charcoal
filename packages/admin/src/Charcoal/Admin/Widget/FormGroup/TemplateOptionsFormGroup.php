@@ -5,8 +5,8 @@ namespace Charcoal\Admin\Widget\FormGroup;
 use RuntimeException;
 use UnexpectedValueException;
 use InvalidArgumentException;
-// From Pimple
-use Pimple\Container;
+
+use DI\Container;
 // From 'charcoal-core'
 use Charcoal\Model\Service\MetadataLoader;
 use Charcoal\Model\MetadataInterface;

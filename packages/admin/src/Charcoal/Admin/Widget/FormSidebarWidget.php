@@ -5,8 +5,8 @@ namespace Charcoal\Admin\Widget;
 use Charcoal\Object\RevisionableInterface;
 use Charcoal\User\AuthAwareInterface;
 use InvalidArgumentException;
-// From Pimple
-use Pimple\Container;
+
+use DI\Container;
 // From 'charcoal-ui'
 use Charcoal\Ui\Form\FormInterface;
 // From 'charcoal-translator'

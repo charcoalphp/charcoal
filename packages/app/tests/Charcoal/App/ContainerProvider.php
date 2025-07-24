@@ -16,8 +16,8 @@ use Stash\Pool;
 // From Slim
 use Slim\Http\Uri;
 
-// From Pimple
-use Pimple\Container;
+
+use DI\Container;
 
 // From 'league/climate'
 use League\CLImate\CLImate;
@@ -79,7 +79,7 @@ class ContainerProvider
     public function registerBaseUrl(Container $container)
     {
         $container['base-url'] = function (Container $container) {
-            return Uri::createFromString('https://example.com:8080/foo/bar?abc=123');
+            return (new Uri('https://example.com:8080/foo/bar?abc=123'));
         };
     }
 

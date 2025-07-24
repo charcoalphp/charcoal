@@ -29,9 +29,9 @@ class AbstractDashboardTest extends AbstractTestCase
     protected function setUp(): void
     {
         $container = $this->getContainer();
-        $container->register(new DashboardServiceProvider());
-        $container->register(new LayoutServiceProvider());
-        $container->register(new FormServiceProvider());
+        (new DashboardServiceProvider())->register($container);
+        (new LayoutServiceProvider())->register($container);
+        (new FormServiceProvider())->register($container);
 
         $this->obj = $this->getMockForAbstractClass(AbstractDashboard::class, [
             [

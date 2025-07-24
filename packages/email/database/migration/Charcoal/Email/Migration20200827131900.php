@@ -5,7 +5,7 @@ namespace Charcoal\Email;
 use Charcoal\DatabaseMigrator\AbstractMigration;
 use Charcoal\Model\ModelFactoryTrait;
 use PDOException;
-use Pimple\Container;
+use DI\Container;
 
 /**
  * Migration 2020-08-27 13:19:00
@@ -25,7 +25,7 @@ class Migration20200827131900 extends AbstractMigration
     /**
      * Inject dependencies from a DI Container.
      *
-     * @param Container $container A Pimple DI service container.
+     * @param Container $container A DI service container.
      * @return void
      */
     protected function setDependencies(Container $container): void

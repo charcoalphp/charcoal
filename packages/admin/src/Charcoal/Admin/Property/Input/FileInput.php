@@ -2,8 +2,8 @@
 
 namespace Charcoal\Admin\Property\Input;
 
-// From Pimple
-use Pimple\Container;
+
+use DI\Container;
 // From Mustache
 use Mustache_LambdaHelper as LambdaHelper;
 // // From 'charcoal-admin'

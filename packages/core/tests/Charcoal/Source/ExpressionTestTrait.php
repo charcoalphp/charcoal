@@ -15,7 +15,7 @@ use Charcoal\Source\ExpressionInterface;
 trait ExpressionTestTrait
 {
     /**
-     * @return \Pimple\Container
+     * @return Container
      */
     abstract protected function getContainer();
 

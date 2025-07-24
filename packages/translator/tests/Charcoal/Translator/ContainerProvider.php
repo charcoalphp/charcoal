@@ -3,43 +3,31 @@
 namespace Charcoal\Tests\Translator;
 
 use PDO;
-
 // From Mockery
 use Mockery;
-
 // From PSR-3
 use Psr\Log\NullLogger;
-
 // From 'tedivm/stash'
 use Stash\Pool;
 use Stash\Driver\Ephemeral;
-
 // From Slim
-use Slim\Http\Uri;
-
-// From Pimple
-use Pimple\Container;
-
+use Nyholm\Psr7\Uri;
+use DI\Container;
 // From 'symfony/translation'
 use Symfony\Component\Translation\MessageSelector;
-
 // From 'league/climate'
 use League\CLImate\CLImate;
 use League\CLImate\Util\System\Linux;
 use League\CLImate\Util\Output;
 use League\CLImate\Util\Reader\Stdin;
 use League\CLImate\Util\UtilFactory;
-
 // From 'charcoal-factory'
 use Charcoal\Factory\GenericFactory as Factory;
-
 // From 'charcoal-app'
 use Charcoal\App\AppConfig;
-
 // From 'charcoal-core'
 use Charcoal\Model\Service\MetadataLoader;
 use Charcoal\Source\DatabaseSource;
-
 // From 'charcoal-translator'
 use Charcoal\Translator\LocalesConfig;
 use Charcoal\Translator\LocalesManager;
@@ -103,7 +91,7 @@ class ContainerProvider
     public function registerBaseUrl(Container $container)
     {
         $container['base-url'] = function () {
-            return Uri::createFromString('https://example.com:8080/foo/bar?abc=123');
+            return (new Uri('https://example.com:8080/foo/bar?abc=123'));
         };
     }
 
@@ -116,7 +104,7 @@ class ContainerProvider
     public function registerAdminBaseUrl(Container $container)
     {
         $container['admin/base-url'] = function () {
-            return Uri::createFromString('https://example.com:8080/admin/qux?abc=123');
+            return (new Uri('https://example.com:8080/admin/qux?abc=123'));
         };
     }
 

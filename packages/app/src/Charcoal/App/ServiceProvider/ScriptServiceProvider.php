@@ -2,9 +2,7 @@
 
 namespace Charcoal\App\ServiceProvider;
 
-// From Pimple
-use Pimple\ServiceProviderInterface;
-use Pimple\Container;
+use DI\Container;
 // From 'league/climate'
 use League\CLImate\CLImate;
 // From 'charcoal-factory'
@@ -15,7 +13,7 @@ use Charcoal\App\Script\ScriptInterface;
 /**
  * Script Service Provider
  */
-class ScriptServiceProvider implements ServiceProviderInterface
+class ScriptServiceProvider
 {
     /**
      * Registers services on the given container.
@@ -28,7 +26,7 @@ class ScriptServiceProvider implements ServiceProviderInterface
      */
     public function register(Container $container)
     {
-        $container['route/controller/script/class'] = ScriptRoute::class;
+        $container->set('route/controller/script/class', ScriptRoute::class);
 
         $this->registerScriptFactory($container);
         $this->registerClimate($container);
@@ -49,7 +47,7 @@ class ScriptServiceProvider implements ServiceProviderInterface
          * @param  Container $container A service container.
          * @return \Charcoal\Factory\FactoryInterface
          */
-        $container['script/factory'] = function (Container $container) {
+        $container->set('script/factory', function (Container $container) {
             return new Factory([
                 'base_class'       => ScriptInterface::class,
                 'resolver_options' => [
@@ -58,13 +56,13 @@ class ScriptServiceProvider implements ServiceProviderInterface
                 'arguments' => [
                     [
                         'container'      => $container,
-                        'logger'         => $container['logger'],
-                        'climate'        => $container['script/climate'],
-                        'climate_reader' => $container['script/climate/reader'],
+                        'logger'         => $container->get('logger'),
+                        'climate'        => $container->get('script/climate'),
+                        'climate_reader' => $container->get('script/climate/reader'),
                     ],
                 ],
             ]);
-        };
+        });
     }
 
     /**
@@ -77,17 +75,17 @@ class ScriptServiceProvider implements ServiceProviderInterface
          * @param  Container $container A service container.
          * @return \League\CLImate\Util\Reader\ReaderInterface|null
          */
-        $container['script/climate/reader'] = function () {
+        $container->set('script/climate/reader', function () {
             return null;
-        };
+        });
 
         /**
          * @param  Container $container A service container.
          * @return CLImate
          */
-        $container['script/climate'] = function () {
+        $container->set('script/climate', function () {
             $climate = new CLImate();
             return $climate;
-        };
+        });
     }
 }

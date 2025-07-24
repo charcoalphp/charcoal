@@ -7,8 +7,8 @@ use Charcoal\Model\Service\MetadataLoader;
 use Exception;
 use ReflectionClass;
 use ReflectionObject;
-// From Pimple
-use Pimple\Container;
+
+use DI\Container;
 // From 'charcoal-admin'
 use Charcoal\Admin\AdminTemplate;
 use Charcoal\Admin\Ui\DashboardContainerInterface;

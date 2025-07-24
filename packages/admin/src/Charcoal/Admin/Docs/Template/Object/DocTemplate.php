@@ -3,8 +3,8 @@
 namespace Charcoal\Admin\Docs\Template\Object;
 
 use Exception;
-// From Pimple
-use Pimple\Container;
+
+use DI\Container;
 // From 'charcoal-admin'
 use Charcoal\Admin\AdminTemplate;
 use Charcoal\Admin\Ui\DashboardContainerInterface;

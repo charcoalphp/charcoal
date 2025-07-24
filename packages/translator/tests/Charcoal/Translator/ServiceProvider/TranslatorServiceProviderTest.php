@@ -2,9 +2,9 @@
 
 namespace Charcoal\Tests\Translation\ServiceProvider;
 
-// From Pimple
+
 use Charcoal\App\AppConfig;
-use Pimple\Container;
+use DI\Container;
 
 // From 'charcoal-translator'
 use Charcoal\Translator\Middleware\LanguageMiddleware;

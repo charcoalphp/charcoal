@@ -9,8 +9,8 @@
 
 namespace Charcoal\Tests\Property\Mocks;
 
-// From Pimple
-use Pimple\Container;
+
+use DI\Container;
 
 // From 'charcoal-core'
 use Charcoal\Model\AbstractModel;

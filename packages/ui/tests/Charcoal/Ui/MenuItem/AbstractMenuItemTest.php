@@ -25,7 +25,7 @@ class AbstractMenuItemTest extends AbstractTestCase
     protected function setUp(): void
     {
         $container = $this->getContainer();
-        $container->register(new MenuServiceProvider());
+        (new MenuServiceProvider())->register($container);
 
         $menu = $container['menu/builder']->build([]);
 

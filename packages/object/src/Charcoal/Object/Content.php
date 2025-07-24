@@ -3,8 +3,8 @@
 namespace Charcoal\Object;
 
 use InvalidArgumentException;
-// From Pimple
-use Pimple\Container;
+
+use DI\Container;
 // From 'charcoal-factory'
 use Charcoal\Factory\FactoryInterface;
 // From 'charcoal-core'
@@ -66,8 +66,8 @@ class Content extends AbstractModel implements
     {
         parent::setDependencies($container);
 
-        $this->setTranslator($container['translator']);
-        $this->setModelFactory($container['model/factory']);
+        $this->setTranslator($container->get('translator'));
+        $this->setModelFactory($container->get('model/factory'));
     }
 
     /**

@@ -8,6 +8,7 @@ use Psr\Http\Message\ResponseInterface;
 // From 'charcoal-config'
 use Charcoal\Config\ConfigurableInterface;
 use Charcoal\Config\ConfigurableTrait;
+use Psr\Http\Message\ServerRequestInterface;
 
 /**
  * The route manager takes care of dispatching each route from an app or a module config
@@ -47,6 +48,10 @@ final class RouteManager implements
     public function setupRoutes()
     {
         $routes = $this->config();
+        /*echo '<pre>';
+        print_r($routes);
+        echo '</pre>';
+        exit;*/
 
         if (PHP_SAPI == 'cli') {
             $scripts = ( isset($routes['scripts']) ? $routes['scripts'] : [] );
@@ -91,8 +96,7 @@ final class RouteManager implements
             $methods,
             $routePattern,
             function (
-                RequestInterface $request,
-                ResponseInterface $response,
+                ServerRequestInterface $request,
                 array $args = []
             ) use (
                 $routeIdent,
@@ -131,7 +135,11 @@ final class RouteManager implements
                     'logger' => $this['logger']
                 ]);
 
-                return $route($this, $request, $response);
+                $response = $route($this, $request);
+                if ($response instanceof ResponseInterface) {
+                    return $response;
+                }
+                throw new \RuntimeException('Route handler did not return a valid ResponseInterface');
             }
         );
 
@@ -167,8 +175,7 @@ final class RouteManager implements
             $methods,
             $routePattern,
             function (
-                RequestInterface $request,
-                ResponseInterface $response,
+                ServerRequestInterface $request,
                 array $args = []
             ) use (
                 $routeIdent,
@@ -207,7 +214,11 @@ final class RouteManager implements
                     'logger' => $this['logger']
                 ]);
 
-                return $route($this, $request, $response);
+                $response = $route($this, $request);
+                if ($response instanceof ResponseInterface) {
+                    return $response;
+                }
+                throw new \RuntimeException('Route handler did not return a valid ResponseInterface');
             }
         );
 
@@ -243,8 +254,7 @@ final class RouteManager implements
             $methods,
             $routePattern,
             function (
-                RequestInterface $request,
-                ResponseInterface $response,
+                ServerRequestInterface $request,
                 array $args = []
             ) use (
                 $routeIdent,
@@ -283,7 +293,11 @@ final class RouteManager implements
                     'logger' => $this['logger']
                 ]);
 
-                return $route($this, $request, $response);
+                $response = $route($this, $request);
+                if ($response instanceof ResponseInterface) {
+                    return $response;
+                }
+                throw new \RuntimeException('Route handler did not return a valid ResponseInterface');
             }
         );
 

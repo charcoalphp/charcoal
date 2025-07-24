@@ -3,8 +3,8 @@
 namespace Charcoal\User\Acl;
 
 use InvalidArgumentException;
-// From Pimple
-use Pimple\Container;
+
+use DI\Container;
 // From 'charcoal-core'
 use Charcoal\Model\AbstractModel;
 // From 'charcoal-translator'
@@ -95,7 +95,7 @@ class Permission extends AbstractModel implements CategorizableInterface
     }
 
     /**
-     * @param Container $container Pimple DI container.
+     * @param Container $container DI Container.
      * @return void
      */
     protected function setDependencies(Container $container)

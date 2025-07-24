@@ -8,8 +8,8 @@ use InvalidArgumentException;
 use PDO;
 // From PSR-6
 use Psr\Cache\CacheItemPoolInterface;
-// From Pimple
-use Pimple\Container;
+
+use DI\Container;
 // From 'charcoal-core'
 use Charcoal\Loader\CollectionLoader;
 use Charcoal\Model\ModelInterface;

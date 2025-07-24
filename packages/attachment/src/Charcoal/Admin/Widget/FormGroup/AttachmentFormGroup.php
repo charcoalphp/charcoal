@@ -17,7 +17,7 @@ use Charcoal\Factory\FactoryInterface;
 // from 'charcoal-translator'
 use Charcoal\Translator\Translation;
 // From 'pimple'
-use Pimple\Container;
+use DI\Container;
 // from 'charcoal-attachment'
 use Charcoal\Attachment\Traits\ConfigurableAttachmentsTrait;
 

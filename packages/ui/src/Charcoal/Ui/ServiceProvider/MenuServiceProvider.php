@@ -2,60 +2,59 @@
 
 namespace Charcoal\Ui\ServiceProvider;
 
-// From Pimple
-use Pimple\Container;
-use Pimple\ServiceProviderInterface;
+use DI\Container;
 // From 'charcoal-ui'
 use Charcoal\Ui\Menu\MenuBuilder;
 use Charcoal\Ui\Menu\MenuFactory;
 use Charcoal\Ui\MenuItem\MenuItemBuilder;
 use Charcoal\Ui\MenuItem\MenuItemFactory;
+use Psr\Container\ContainerInterface;
 
 /**
  *
  */
-class MenuServiceProvider implements ServiceProviderInterface
+class MenuServiceProvider
 {
     /**
-     * @param Container $container A Pimple DI container.
+     * @param Container $container A DI Container.
      * @return void
      */
-    public function register(Container $container)
+    public function register(ContainerInterface $container)
     {
         $this->registerMenuServices($container);
         $this->registerMenuItemServices($container);
     }
 
     /**
-     * @param Container $container A Pimple DI container.
+     * @param Container $container A DI Container.
      * @return void
      */
-    public function registerMenuServices(Container $container)
+    public function registerMenuServices(ContainerInterface $container)
     {
         /**
-         * @param Container $container A Pimple DI container.
+         * @param Container $container A DI Container.
          * @return MenuFactory
          */
-        $container['menu/factory'] = function (Container $container) {
+        $container->set('menu/factory', function (Container $container) {
             $menuFactory = new MenuFactory();
             $menuFactory->setArguments([
                 'container'         => $container,
-                'logger'            => $container['logger'],
-                'view'              => $container['view'],
-                'menu_item_builder' => $container['menu/item/builder'],
+                'logger'            => $container->get('logger'),
+                'view'              => $container->get('view'),
+                'menu_item_builder' => $container->get('menu/item/builder'),
             ]);
             return $menuFactory;
-        };
+        });
 
         /**
-         * @param Container $container A Pimple DI container.
+         * @param Container $container A DI Container.
          * @return MenuBuilder
          */
-        $container['menu/builder'] = function (Container $container) {
-            $menuFactory = $container['menu/factory'];
+        $container->set('menu/builder', function (Container $container) {
+            $menuFactory = $container->get('menu/factory');
             $menuBuilder = new MenuBuilder($menuFactory, $container);
             return $menuBuilder;
-        };
+        });
     }
 
     /**
@@ -67,10 +66,10 @@ class MenuServiceProvider implements ServiceProviderInterface
      * To avert the infinity loop, the `MenuItemFactory` and `MenuItemBuilder` must be
      * instantiated at the same time.
      *
-     * @param Container $container A Pimple DI container.
+     * @param Container $container A DI Container.
      * @return void
      */
-    public function registerMenuItemServices(Container $container)
+    public function registerMenuItemServices(ContainerInterface $container)
     {
         /**
          * @var callable
@@ -78,8 +77,8 @@ class MenuServiceProvider implements ServiceProviderInterface
         $delegate = function (Container $container) {
             $args = [
                 'container' => $container,
-                'logger'    => $container['logger'],
-                'view'      => $container['view'],
+                'logger'    => $container->get('logger'),
+                'view'      => $container->get('view'),
             ];
 
             $factory = new MenuItemFactory();
@@ -95,25 +94,25 @@ class MenuServiceProvider implements ServiceProviderInterface
         };
 
         /**
-         * @param  Container $container A Pimple DI container.
+         * @param  Container $container A DI Container.
          * @return MenuFactory
          */
-        $container['menu/item/factory'] = function (Container $container) use ($delegate) {
+        $container->set('menu/item/factory', function (Container $container) use ($delegate) {
             $services = $delegate($container);
 
-            $container['menu/item/builder'] = $services['builder'];
+            $container->set('menu/item/builder', $services['builder']);
             return $services['factory'];
-        };
+        });
 
         /**
-         * @param  Container $container A Pimple DI container.
+         * @param  Container $container A DI Container.
          * @return MenuBuilder
          */
-        $container['menu/item/builder'] = function (Container $container) use ($delegate) {
+        $container->set('menu/item/builder', function (Container $container) use ($delegate) {
             $services = $delegate($container);
 
-            $container['menu/item/factory'] = $services['factory'];
+            $container->set('menu/item/factory', $services['factory']);
             return $services['builder'];
-        };
+        });
     }
 }

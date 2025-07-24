@@ -5,8 +5,8 @@ namespace Charcoal\Admin\Script\Notification;
 // From PSR-7
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
-// From Pimple
-use Pimple\Container;
+
+use DI\Container;
 // From 'charcoal-core'
 use Charcoal\Loader\CollectionLoader;
 use Charcoal\Model\CollectionInterface;
@@ -98,7 +98,7 @@ abstract class AbstractNotificationScript extends AdminScript implements CronScr
     }
 
     /**
-     * @param Container $container Pimple DI container.
+     * @param Container $container DI Container.
      * @return void
      */
     protected function setDependencies(Container $container)

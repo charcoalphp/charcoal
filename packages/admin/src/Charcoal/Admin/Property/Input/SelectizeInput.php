@@ -4,8 +4,8 @@ namespace Charcoal\Admin\Property\Input;
 
 use RuntimeException;
 use InvalidArgumentException;
-// From Pimple
-use Pimple\Container;
+
+use DI\Container;
 // From 'charcoal-core'
 use Charcoal\Model\ModelInterface;
 use Charcoal\Model\Collection;

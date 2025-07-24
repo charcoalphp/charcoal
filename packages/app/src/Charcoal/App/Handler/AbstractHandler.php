@@ -9,10 +9,10 @@ use Psr\Log\LoggerAwareTrait;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\UriInterface;
-// From Slim
-use Slim\Http\Body;
-// From Pimple
-use Pimple\Container;
+// From Nyholm
+use Nyholm\Psr7\Stream;
+
+use DI\Container;
 // From 'charcoal-config'
 use Charcoal\Config\ConfigurableTrait;
 // From 'charcoal-factory'
@@ -265,7 +265,7 @@ abstract class AbstractHandler implements
      */
     protected function respondWith(ResponseInterface $response, $contentType, $output)
     {
-        $body = new Body(fopen('php://temp', 'r+'));
+        $body = new Stream(fopen('php://temp', 'r+'));
         $body->write($output);
 
         return $response->withHeader('Content-Type', $contentType)

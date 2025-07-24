@@ -4,8 +4,8 @@ namespace Charcoal\Admin\Widget;
 
 use InvalidArgumentException;
 use RuntimeException;
-// From Pimple
-use Pimple\Container;
+
+use DI\Container;
 // From 'charcoal-core'
 use Charcoal\Model\MetadataInterface;
 use Charcoal\Model\Service\MetadataLoader;

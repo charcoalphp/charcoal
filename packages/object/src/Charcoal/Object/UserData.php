@@ -6,8 +6,8 @@ use DateTime;
 use DateTimeInterface;
 use Exception;
 use InvalidArgumentException;
-// From Pimple
-use Pimple\Container;
+
+use DI\Container;
 // From 'charcoal-core'
 use Charcoal\Model\AbstractModel;
 // From 'charcoal-translator'
@@ -62,7 +62,7 @@ class UserData extends AbstractModel implements
     {
         parent::setDependencies($container);
 
-        $this->setTranslator($container['translator']);
+        $this->setTranslator($container->get('translator'));
     }
 
     /**

@@ -3,7 +3,7 @@
 namespace Charcoal\Admin\Action\Tinymce;
 
 use Charcoal\Admin\AdminAction;
-use Pimple\Container;
+use DI\Container;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 

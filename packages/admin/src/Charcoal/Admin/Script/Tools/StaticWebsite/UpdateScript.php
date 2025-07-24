@@ -6,8 +6,8 @@ use InvalidArgumentException;
 // From PSR-7
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
-// From Pimple
-use Pimple\Container;
+
+use DI\Container;
 // From 'guzzlehttp/guzzle'
 use GuzzleHttp\Client as GuzzleClient;
 // From 'charcoal-admin'
@@ -93,7 +93,7 @@ class UpdateScript extends AdminScript
     }
 
     /**
-     * @param Container $container Pimple DI Container.
+     * @param Container $container DI Container.
      * @return void
      */
     protected function setDependencies(Container $container)

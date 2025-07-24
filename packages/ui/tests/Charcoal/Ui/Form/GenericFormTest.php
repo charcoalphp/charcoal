@@ -26,8 +26,8 @@ class GenericFormTest extends AbstractTestCase
     protected function setUp(): void
     {
         $container = $this->getContainer();
-        $container->register(new FormServiceProvider());
-        $container->register(new LayoutServiceProvider());
+        (new FormServiceProvider())->register($container);
+        (new LayoutServiceProvider())->register($container);
 
         $this->obj = new GenericForm([
             'logger'             => $container['logger'],

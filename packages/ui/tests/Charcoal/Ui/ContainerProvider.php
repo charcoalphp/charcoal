@@ -11,8 +11,8 @@ use Psr\Log\NullLogger;
 // From 'tedivm/stash' (PSR-6)
 use Stash\Pool;
 
-// From Pimple
-use Pimple\Container;
+
+use DI\Container;
 
 // From 'charcoal-core'
 use Charcoal\Source\DatabaseSource;

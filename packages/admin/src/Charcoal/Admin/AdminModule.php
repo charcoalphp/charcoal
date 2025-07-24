@@ -10,6 +10,7 @@ use Charcoal\App\Handler\HandlerInterface;
 use Charcoal\App\Module\AbstractModule;
 // From 'charcoal-admin'
 use Charcoal\Admin\ServiceProvider\AdminServiceProvider;
+use DI\Container;
 
 /**
  * Charcoal Administration Module
@@ -35,8 +36,9 @@ class AdminModule extends AbstractModule
     public function setUp()
     {
         // Hack: skip if the request does not start with '/admin'
+        /** @var Container $container */
         $container = $this->app()->getContainer();
-        if ($this->isPathAdmin($container['request']->getUri()->getPath()) !== true) {
+        if ($this->isPathAdmin($container->get('request')->getUri()->getPath()) !== true) {
             return $this;
         }
 
@@ -44,16 +46,19 @@ class AdminModule extends AbstractModule
         if (session_id() === '') {
             session_start();
         }
-        $container->register(new AdminServiceProvider());
+        (new AdminServiceProvider())->register($container);
 
         $module = $this;
-        $container['charcoal/admin/module'] = function () use ($module) {
+        $container->set('charcoal/admin/module', function () use ($module) {
             return $module;
-        };
+        });
 
-        $adminConfig = $container['admin/config'];
+        $adminConfig = $container->get('admin/config');
 
         $this->setConfig($adminConfig);
+
+        //var_dump($adminConfig);
+        //exit;
 
         $groupIdent = '/' . trim($adminConfig['base_path'], '/');
 
@@ -103,8 +108,8 @@ class AdminModule extends AbstractModule
          * @return HandlerInterface
          */
         $container->extend('notFoundHandler', function ($handler, $container) {
-            $appConfig = $container['config'];
-            $adminConfig = $container['admin/config'];
+            $appConfig = $container->get('config');
+            $adminConfig = $container->get('admin/config');
             if ($handler instanceof HandlerInterface) {
                 $config = $handler->createConfig($appConfig['handlers.defaults']);
                 $config->merge($adminConfig['handlers.defaults']);
@@ -126,8 +131,8 @@ class AdminModule extends AbstractModule
          * @return HandlerInterface
          */
         $container->extend('notAllowedHandler', function ($handler, $container) {
-            $appConfig = $container['config'];
-            $adminConfig = $container['admin/config'];
+            $appConfig = $container->get('config');
+            $adminConfig = $container->get('admin/config');
             if ($handler instanceof HandlerInterface) {
                 $config = $handler->createConfig($appConfig['handlers.defaults']);
                 $config->merge($adminConfig['handlers.defaults']);
@@ -149,8 +154,8 @@ class AdminModule extends AbstractModule
          * @return HandlerInterface
          */
         $container->extend('phpErrorHandler', function ($handler, $container) {
-            $appConfig = $container['config'];
-            $adminConfig = $container['admin/config'];
+            $appConfig = $container->get('config');
+            $adminConfig = $container->get('admin/config');
             if ($handler instanceof HandlerInterface) {
                 $config = $handler->createConfig($appConfig['handlers.defaults']);
                 $config->merge($adminConfig['handlers.defaults']);
@@ -172,8 +177,8 @@ class AdminModule extends AbstractModule
          * @return HandlerInterface
          */
         $container->extend('errorHandler', function ($handler, $container) {
-            $appConfig = $container['config'];
-            $adminConfig = $container['admin/config'];
+            $appConfig = $container->get('config');
+            $adminConfig = $container->get('admin/config');
             if ($handler instanceof HandlerInterface) {
                 $config = $handler->createConfig($appConfig['handlers.defaults']);
                 $config->merge($adminConfig['handlers.defaults']);
@@ -197,8 +202,8 @@ class AdminModule extends AbstractModule
          * @return HandlerInterface
          */
         $container->extend('maintenanceHandler', function ($handler, $container) {
-            $appConfig = $container['config'];
-            $adminConfig = $container['admin/config'];
+            $appConfig = $container->get('config');
+            $adminConfig = $container->get('admin/config');
             if ($handler instanceof HandlerInterface) {
                 $config = $handler->createConfig($appConfig['handlers.defaults']);
                 $config->merge($adminConfig['handlers.defaults']);

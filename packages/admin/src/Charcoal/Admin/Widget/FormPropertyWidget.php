@@ -6,8 +6,8 @@ use LogicException;
 use RuntimeException;
 use InvalidArgumentException;
 use UnexpectedValueException;
-// From Pimple
-use Pimple\Container;
+
+use DI\Container;
 // From 'charcoal-factory'
 use Charcoal\Factory\FactoryInterface;
 // From 'charcoal-property'

@@ -2,9 +2,7 @@
 
 namespace Charcoal\Ui\ServiceProvider;
 
-// From Pimple
-use Pimple\Container;
-use Pimple\ServiceProviderInterface;
+use DI\Container;
 // From 'charcoal-user'
 use Charcoal\User\ServiceProvider\AuthServiceProvider;
 // From 'charcoal-ui'
@@ -12,22 +10,23 @@ use Charcoal\Ui\ServiceProvider\DashboardServiceProvider;
 use Charcoal\Ui\ServiceProvider\FormServiceProvider;
 use Charcoal\Ui\ServiceProvider\LayoutServiceProvider;
 use Charcoal\Ui\ServiceProvider\MenuServiceProvider;
+use Psr\Container\ContainerInterface;
 
 /**
  *
  */
-class UiServiceProvider implements ServiceProviderInterface
+class UiServiceProvider
 {
     /**
-     * @param Container $container A Pimple DI container.
+     * @param Container $container A DI Container.
      * @return void
      */
-    public function register(Container $container)
+    public function register(ContainerInterface $container)
     {
-        $container->register(new AuthServiceProvider());
-        $container->register(new DashboardServiceProvider());
-        $container->register(new FormServiceProvider());
-        $container->register(new LayoutServiceProvider());
-        $container->register(new MenuServiceProvider());
+        (new AuthServiceProvider())->register($container);
+        (new DashboardServiceProvider())->register($container);
+        (new FormServiceProvider())->register($container);
+        (new LayoutServiceProvider())->register($container);
+        (new MenuServiceProvider())->register($container);
     }
 }

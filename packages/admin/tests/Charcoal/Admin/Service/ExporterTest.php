@@ -5,8 +5,8 @@ namespace Charcoal\Tests\Admin;
 // From PSR-3
 use Psr\Log\NullLogger;
 
-// From Pimple
-use Pimple\Container;
+
+use DI\Container;
 
 // From 'charcoal-factory'
 use Charcoal\Factory\GenericFactory;

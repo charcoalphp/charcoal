@@ -2,8 +2,8 @@
 
 namespace Charcoal\Tests\Admin\Widget;
 
-// From Pimple
-use Pimple\Container;
+
+use DI\Container;
 
 // From Slim
 use Slim\Http\Environment;

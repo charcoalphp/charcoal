@@ -7,8 +7,8 @@ use DateTimeInterface;
 use InvalidArgumentException;
 use RuntimeException;
 use Exception;
-// From Pimple
-use Pimple\Container;
+
+use DI\Container;
 // From 'charcoal-core'
 use Charcoal\Model\AbstractModel;
 use Charcoal\Loader\CollectionLoader;
@@ -133,8 +133,8 @@ class ObjectRoute extends AbstractModel implements
     {
         parent::setDependencies($container);
 
-        $this->setModelFactory($container['model/factory']);
-        $this->setCollectionLoader($container['model/collection/loader']);
+        $this->setModelFactory($container->get('model/factory'));
+        $this->setCollectionLoader($container->get('model/collection/loader'));
     }
 
     /**

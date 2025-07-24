@@ -5,8 +5,8 @@ namespace Charcoal\Tests\Admin;
 // From PSR-7
 use Psr\Http\Message\RequestInterface;
 
-// From Pimple
-use Pimple\Container;
+
+use DI\Container;
 
 // From 'charcoal-admin'
 use Charcoal\Admin\AdminTemplate;

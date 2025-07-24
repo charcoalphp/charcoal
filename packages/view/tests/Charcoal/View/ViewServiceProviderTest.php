@@ -7,8 +7,8 @@ use Charcoal\App\AppConfig;
 use Charcoal\Translator\ServiceProvider\TranslatorServiceProvider;
 use Slim\Http\Response;
 
-// From Pimple
-use Pimple\Container;
+
+use DI\Container;
 
 // From 'charcoal-view'
 use Charcoal\View\ViewServiceProvider;

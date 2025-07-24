@@ -6,8 +6,8 @@ use Exception;
 // From PSR-7
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
-// From Pimple
-use Pimple\Container;
+
+use DI\Container;
 use GuzzleHttp\Client as GuzzleClient;
 use Charcoal\Admin\AdminAction;
 
@@ -58,7 +58,7 @@ class UpdateAction extends AdminAction
     }
 
     /**
-     * @param Container $container Pimple DI Container.
+     * @param Container $container DI Container.
      * @return void
      */
     protected function setDependencies(Container $container)

@@ -22,6 +22,7 @@ use Psr\Container\ContainerInterface;
  * - Provides the ability for a store to fetch data in another store.
  * - Provides this store with a way to register one or more delegate stores.
  */
+#[\AllowDynamicProperties]
 abstract class AbstractConfig extends AbstractEntity implements
     ConfigInterface,
     ContainerInterface,
@@ -110,7 +111,7 @@ abstract class AbstractConfig extends AbstractEntity implements
      * @see    IteratorAggregate
      * @return ArrayIterator
      */
-    public function getIterator()
+    public function getIterator(): ArrayIterator
     {
         return new ArrayIterator($this->data());
     }
@@ -131,7 +132,7 @@ abstract class AbstractConfig extends AbstractEntity implements
      * @throws InvalidArgumentException If the $key is not a string or is a numeric value.
      * @return boolean TRUE if $key exists and has a value other than NULL, FALSE otherwise.
      */
-    public function offsetExists($key)
+    public function offsetExists(mixed $key): bool
     {
         if (is_numeric($key)) {
             throw new InvalidArgumentException(
@@ -192,7 +193,7 @@ abstract class AbstractConfig extends AbstractEntity implements
      * @throws InvalidArgumentException If the $key is not a string or is a numeric value.
      * @return mixed Value of the requested $key on success, NULL if the $key is not set.
      */
-    public function offsetGet($key)
+    public function offsetGet(mixed $key): mixed
     {
         if (is_numeric($key)) {
             throw new InvalidArgumentException(
@@ -251,7 +252,7 @@ abstract class AbstractConfig extends AbstractEntity implements
      * @throws InvalidArgumentException If the $key is not a string or is a numeric value.
      * @return void
      */
-    public function offsetSet($key, $value)
+    public function offsetSet(mixed $key, mixed $value): void
     {
         if (is_numeric($key)) {
             throw new InvalidArgumentException(
@@ -286,6 +287,61 @@ abstract class AbstractConfig extends AbstractEntity implements
     }
 
     /**
+     * Unsets the value from the specified key on this entity.
+     *
+     * Routine:
+     * - If the data key is {@see SeparatorAwareTrait::$separator nested},
+     *   the data-tree is traversed until the endpoint to unset its value;
+     *
+     * @see    \ArrayAccess
+     * @uses   SeparatorAwareTrait::setWithSeparator()
+     * @param  string $key The data key to unset.
+     * @throws InvalidArgumentException If the $key is not a string or is a numeric value.
+     * @return void
+     */
+    public function offsetUnset(mixed $key): void
+    {
+        if (is_numeric($key)) {
+            throw new InvalidArgumentException(
+                'Entity array access only supports non-numeric keys'
+            );
+        }
+
+        if ($this->separator && strstr($key, $this->separator)) {
+            $this->setWithSeparator($key, null);
+            return;
+        }
+
+        $key = $this->camelize($key);
+
+        /** @internal Edge Case: "_" → "" */
+        if ($key === '') {
+            return;
+        }
+
+        $this[$key] = null;
+        unset($this->keyCache[$key]);
+    }
+
+    /**
+     * Adds a configuration file to the configset.
+     *
+     * Natively supported file formats: INI, JSON, PHP.
+     *
+     * @uses   FileAwareTrait::loadFile()
+     * @param  string $path The file to load and add.
+     * @return self
+     */
+    public function addFile($path)
+    {
+        $config = $this->loadFile($path);
+        if (is_array($config)) {
+            $this->merge($config);
+        }
+        return $this;
+    }
+
+    /**
      * Replaces the value from the specified key.
      *
      * Routine:
@@ -300,7 +356,7 @@ abstract class AbstractConfig extends AbstractEntity implements
      * @throws InvalidArgumentException If the $key is not a string or is a numeric value.
      * @return void
      */
-    public function offsetReplace($key, $value)
+    public function offsetReplace($key, $value): void
     {
         if (is_numeric($key)) {
             throw new InvalidArgumentException(
@@ -323,23 +379,5 @@ abstract class AbstractConfig extends AbstractEntity implements
         }
 
         $this[$key] = $value;
-    }
-
-    /**
-     * Adds a configuration file to the configset.
-     *
-     * Natively supported file formats: INI, JSON, PHP.
-     *
-     * @uses   FileAwareTrait::loadFile()
-     * @param  string $path The file to load and add.
-     * @return self
-     */
-    public function addFile($path)
-    {
-        $config = $this->loadFile($path);
-        if (is_array($config)) {
-            $this->merge($config);
-        }
-        return $this;
     }
 }

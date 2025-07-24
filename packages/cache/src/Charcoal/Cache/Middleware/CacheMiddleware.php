@@ -184,15 +184,22 @@ class CacheMiddleware
      * @param  callable          $next     The next middleware callable in the stack.
      * @return ResponseInterface
      */
-    public function __invoke(RequestInterface $request, ResponseInterface $response, callable $next)
+    /**
+     * PSR-15 compatible __invoke for Slim 4 middleware stack.
+     *
+     * @param \Psr\Http\Message\ServerRequestInterface $request
+     * @param \Psr\Http\Server\RequestHandlerInterface $handler
+     * @return \Psr\Http\Message\ResponseInterface
+     */
+    public function __invoke(\Psr\Http\Message\ServerRequestInterface $request, \Psr\Http\Server\RequestHandlerInterface $handler): \Psr\Http\Message\ResponseInterface
     {
         // Bail early
         if (!$this->isRequestMethodValid($request)) {
-            return $next($request, $response);
+            return $handler->handle($request);
         }
 
         if ($this->isSkipCache($request)) {
-            return $next($request, $response);
+            return $handler->handle($request);
         }
 
         $cacheKey  = $this->cacheKeyFromRequest($request);
@@ -200,41 +207,37 @@ class CacheMiddleware
 
         if ($cacheItem->isHit()) {
             $cached = $cacheItem->get();
+            $responseFactory = new \Nyholm\Psr7\Factory\Psr17Factory();
+            $response = $responseFactory->createResponse(200);
             $response->getBody()->write($cached['body']);
             foreach ($cached['headers'] as $name => $header) {
                 $response = $response->withHeader($name, $header);
             }
-
             return $response;
         }
 
         $uri   = $request->getUri();
         $path  = $uri->getPath();
         $query = [];
-
         parse_str($uri->getQuery(), $query);
 
-        $response = $next($request, $response);
+        $response = $handler->handle($request);
 
         if (!$this->isResponseStatusValid($response)) {
             return $this->disableCacheHeadersOnResponse($response);
         }
-
         if (!$this->isPathIncluded($path)) {
             return $this->disableCacheHeadersOnResponse($response);
         }
-
         if ($this->isPathExcluded($path)) {
             return $this->disableCacheHeadersOnResponse($response);
         }
-
         if (!$this->isQueryIncluded($query)) {
             $queryArr = $this->parseIgnoredParams($query);
             if (!empty($queryArr)) {
                 return $this->disableCacheHeadersOnResponse($response);
             }
         }
-
         if ($this->isQueryExcluded($query)) {
             return $this->disableCacheHeadersOnResponse($response);
         }

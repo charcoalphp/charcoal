@@ -2,8 +2,8 @@
 
 namespace Charcoal\Admin\Property\Input\Selectize\Template;
 
-// from Pimple
-use Pimple\Container;
+
+use DI\Container;
 // From 'charcoal-app'
 use Charcoal\App\Template\AbstractTemplate;
 // From 'charcoal-admin'
@@ -27,7 +27,7 @@ class SpriteTemplate extends AbstractTemplate
     protected $showSpriteId = true;
 
     /**
-     * @param Container $container A Pimple DI container.
+     * @param Container $container A DI Container.
      * @return void
      */
     protected function setDependencies(Container $container)

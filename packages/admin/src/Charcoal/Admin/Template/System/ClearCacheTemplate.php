@@ -14,7 +14,7 @@ use RuntimeException;
 use Stash\Driver\Apc;
 use Stash\Driver\Ephemeral;
 use Stash\Driver\Memcache;
-use Pimple\Container;
+use DI\Container;
 // From 'charcoal-admin'
 use Charcoal\Admin\AdminTemplate;
 use Charcoal\View\EngineInterface;
@@ -632,7 +632,7 @@ class ClearCacheTemplate extends AdminTemplate
     }
 
     /**
-     * @param Container $container Pimple DI Container.
+     * @param Container $container DI Container.
      * @return void
      */
     protected function setDependencies(Container $container)

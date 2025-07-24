@@ -301,7 +301,7 @@ Menu items define a menu level (ident, label and url) and its children (array of
 
 Most UI elements are very dynamic. The types of object to create is often read from a string in a configuration object. Therefore, factories are the preferred way of instanciating new UI items.
 
-Ui items have also many inter-connected dependencies. Builders should therefore be used for object creation / instanciation. They use a factory internally, and have a `build($opts)` methods that allow to retrieve class name from a dynamic source, do initialization, dpendencies management and more. Builders require `Pimple` for a DI container.
+Ui items have also many inter-connected dependencies. Builders should therefore be used for object creation / instanciation. They use a factory internally, and have a `build($opts)` methods that allow to retrieve class name from a dynamic source, do initialization, dpendencies management and more. Builders require `DI` for a DI container.
 
 #### Factories
 

@@ -2,9 +2,7 @@
 
 namespace Charcoal\Cms\ServiceProvider;
 
-// From Pimple
-use Pimple\Container;
-use Pimple\ServiceProviderInterface;
+use DI\Container;
 // From 'charcoal-core'
 use Charcoal\Model\AbstractModel;
 // From 'charcoal-factory'
@@ -27,7 +25,7 @@ use Charcoal\Cms\Support\Helpers\DateHelper;
  *
  * - `cms/section/factory`
  */
-class CmsServiceProvider implements ServiceProviderInterface
+class CmsServiceProvider
 {
     /**
      * Registers services on the given container.
@@ -35,7 +33,7 @@ class CmsServiceProvider implements ServiceProviderInterface
      * This method should only be used to configure services and parameters.
      * It should not get services.
      *
-     * @param \Pimple\Container $container Pimple DI Container.
+     * @param Container $container DI Container.
      * @return void
      */
     public function register(Container $container)
@@ -48,13 +46,13 @@ class CmsServiceProvider implements ServiceProviderInterface
     }
 
     /**
-     * @param Container $container Pimple DI Container.
+     * @param Container $container DI Container.
      * @return void
      */
     private function registerConfig(Container $container)
     {
         /**
-         * @param Container $container Pimple DI Container.
+         * @param Container $container DI Container.
          * @return CmsConfig Website configurations (from cms.json).
          */
         $container['cms/config'] = function (Container $container) {
@@ -83,13 +81,13 @@ class CmsServiceProvider implements ServiceProviderInterface
     }
 
     /**
-     * @param Container $container Pimple DI Container.
+     * @param Container $container DI Container.
      * @return void
      */
     private function reggisterDateHelper(Container $container)
     {
         /**
-         * @param Container $container Pimple DI Container.
+         * @param Container $container DI Container.
          * @return DateHelper
          */
         $container['cms/date/helper'] = function (Container $container) {
@@ -101,7 +99,7 @@ class CmsServiceProvider implements ServiceProviderInterface
         };
 
         /**
-         * @param Container $container Pimple DI Container.
+         * @param Container $container DI Container.
          * @return DateHelper
          */
         $container['date/helper'] = function (Container $container) {
@@ -116,13 +114,13 @@ class CmsServiceProvider implements ServiceProviderInterface
     }
 
     /**
-     * @param Container $container Pimple DI Container.
+     * @param Container $container DI Container.
      * @return void
      */
     private function registerSectionServices(Container $container)
     {
         /**
-         * @param Container $container Pimple DI Container.
+         * @param Container $container DI Container.
          * @return Factory
          */
         $container['cms/section/factory'] = function (Container $container) {
@@ -136,7 +134,7 @@ class CmsServiceProvider implements ServiceProviderInterface
         };
 
         /**
-         * @param Container $container Pimple DI Container.
+         * @param Container $container DI Container.
          * @return SectionLoader
          */
         $container['cms/section/loader'] = function (Container $container) {
@@ -159,13 +157,13 @@ class CmsServiceProvider implements ServiceProviderInterface
     }
 
     /**
-     * @param Container $container Pimple DI Container.
+     * @param Container $container DI Container.
      * @return void
      */
     private function registerNewsServices(Container $container)
     {
         /**
-         * @param Container $container Pimple DI Container.
+         * @param Container $container DI Container.
          * @return NewsLoader
          */
         $container['cms/news/loader'] = function (Container $container) {
@@ -205,13 +203,13 @@ class CmsServiceProvider implements ServiceProviderInterface
     }
 
     /**
-     * @param Container $container Pimple DI Container.
+     * @param Container $container DI Container.
      * @return void
      */
     private function registerEventServices(Container $container)
     {
         /**
-         * @param Container $container Pimple DI Container.
+         * @param Container $container DI Container.
          * @return EventLoader
          */
         $container['cms/event/loader'] = function (Container $container) {

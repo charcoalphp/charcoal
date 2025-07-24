@@ -5,8 +5,8 @@ namespace Charcoal\Admin\Property\Input;
 use Charcoal\Ui\Form\FormInterface;
 use RuntimeException;
 use InvalidArgumentException;
-// From Pimple
-use Pimple\Container;
+
+use DI\Container;
 // From 'charcoal-factory'
 use Charcoal\Factory\FactoryInterface;
 // From 'charcoal-ui'

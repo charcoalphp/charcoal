@@ -3,7 +3,7 @@
 namespace Charcoal\Tests\App\ServiceProvider;
 
 use Charcoal\App\AppConfig;
-use Pimple\Container;
+use DI\Container;
 
 // Dependencies from `league/flysystem`
 use League\Flysystem\MountManager;

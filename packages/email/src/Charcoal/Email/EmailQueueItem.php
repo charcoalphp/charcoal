@@ -6,8 +6,8 @@ namespace Charcoal\Email;
 
 use Charcoal\Email\Exception\EmailNotSentException;
 use Exception;
-// From 'pimple/pimple'
-use Pimple\Container;
+
+use DI\Container;
 // From 'charcoal/factory'
 use Charcoal\Factory\FactoryInterface;
 // From 'charcoal/core'
@@ -293,7 +293,7 @@ class EmailQueueItem extends AbstractModel implements QueueItemInterface
     }
 
     /**
-     * @param Container $container Pimple DI container.
+     * @param Container $container DI Container.
      * @return void
      */
     protected function setDependencies(Container $container): void

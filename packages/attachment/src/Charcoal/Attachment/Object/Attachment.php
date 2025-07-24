@@ -9,8 +9,8 @@ use RuntimeException;
 use InvalidArgumentException;
 // From PSR-7
 use Psr\Http\Message\UriInterface;
-// From Pimple
-use Pimple\Container;
+
+use DI\Container;
 // From 'charcoal-core'
 use Charcoal\Loader\CollectionLoader;
 // From 'charcoal-object'

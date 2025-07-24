@@ -2,9 +2,7 @@
 
 namespace Charcoal\Ui\ServiceProvider;
 
-// From Pimple
-use Pimple\Container;
-use Pimple\ServiceProviderInterface;
+use DI\Container;
 // From 'charcoal-factory'
 use Charcoal\Factory\GenericFactory as Factory;
 // From 'charcoal-ui'
@@ -17,17 +15,18 @@ use Charcoal\Ui\FormGroup\GenericFormGroup;
 use Charcoal\Ui\FormInput\FormInputBuilder;
 use Charcoal\Ui\FormInput\FormInputInterface;
 use Charcoal\Ui\FormInput\GenericFormInput;
+use Psr\Container\ContainerInterface;
 
 /**
  *
  */
-class FormServiceProvider implements ServiceProviderInterface
+class FormServiceProvider
 {
     /**
-     * @param Container $container A Pimple DI container.
+     * @param Container $container A DI Container.
      * @return void
      */
-    public function register(Container $container)
+    public function register(ContainerInterface $container)
     {
         $this->registerFormServices($container);
         $this->registerFormGroupServices($container);
@@ -35,83 +34,83 @@ class FormServiceProvider implements ServiceProviderInterface
     }
 
     /**
-     * @param Container $container A Pimple DI container.
+     * @param Container $container A DI Container.
      * @return void
      */
-    public function registerFormServices(Container $container)
+    public function registerFormServices(ContainerInterface $container)
     {
         /**
-         * @param Container $container A Pimple DI container.
+         * @param Container $container A DI Container.
          * @return \Charcoal\Factory\FactoryInterface
          */
-        $container['form/factory'] = function (Container $container) {
+        $container->set('form/factory', function (Container $container) {
             return new Factory([
                 'base_class'    => FormInterface::class,
                 'default_class' => GenericForm::class,
                 'arguments'     => [
                     [
                         'container'          => $container,
-                        'logger'             => $container['logger'],
-                        'view'               => $container['view'],
-                        'layout_builder'     => $container['layout/builder'],
-                        'form_group_factory' => $container['form/group/factory'],
+                        'logger'             => $container->get('logger'),
+                        'view'               => $container->get('view'),
+                        'layout_builder'     => $container->get('layout/builder'),
+                        'form_group_factory' => $container->get('form/group/factory'),
                     ],
                 ],
             ]);
-        };
+        });
 
         /**
-         * @param Container $container A Pimple DI container.
+         * @param Container $container A DI Container.
          * @return FormBuilder
          */
-        $container['form/builder'] = function (Container $container) {
-            $formFactory = $container['form/factory'];
+        $container->set('form/builder', function (Container $container) {
+            $formFactory = $container->get('form/factory');
             $formBuilder = new FormBuilder($formFactory);
             return $formBuilder;
-        };
+        });
     }
 
     /**
-     * @param Container $container A Pimple DI container.
+     * @param Container $container A DI Container.
      * @return void
      */
-    public function registerFormGroupServices(Container $container)
+    public function registerFormGroupServices(ContainerInterface $container)
     {
         /**
-         * @param Container $container A Pimple DI container.
+         * @param Container $container A DI Container.
          * @return \Charcoal\Factory\FactoryInterface
          */
-        $container['form/group/factory'] = function (Container $container) {
+        $container->set('form/group/factory', function (Container $container) {
             return new Factory([
                 'base_class'    => FormGroupInterface::class,
                 'default_class' => GenericFormGroup::class,
                 'arguments'     => [
                     [
                         'container'          => $container,
-                        'logger'             => $container['logger'],
-                        'view'               => $container['view'],
-                        'layout_builder'     => $container['layout/builder'],
-                        'form_input_builder' => $container['form/input/builder'],
+                        'logger'             => $container->get('logger'),
+                        'view'               => $container->get('view'),
+                        'layout_builder'     => $container->get('layout/builder'),
+                        'form_input_builder' => $container->get('form/input/builder'),
                     ],
                 ],
                 'resolver_options' => [
                     'suffix' => 'FormGroup',
                 ],
             ]);
-        };
+        });
     }
 
     /**
-     * @param Container $container A Pimple DI container.
+     * @param Container $container A DI Container.
      * @return void
      */
-    public function registerFormInputServices(Container $container)
+    public function registerFormInputServices(ContainerInterface $container)
     {
         /**
-         * @param Container $container A Pimple DI container.
+         * @param Container $container A DI Container.
          * @return \Charcoal\Factory\FactoryInterface
          */
-        $container['form/input/factory'] = function () {
+        $container->set('form/input/factory', function () {
             return new Factory([
                 'base_class'       => FormInputInterface::class,
                 'default_class'    => GenericFormInput::class,
@@ -119,16 +118,16 @@ class FormServiceProvider implements ServiceProviderInterface
                     'suffix' => 'FormInput',
                 ],
             ]);
-        };
+        });
 
         /**
-         * @param Container $container A Pimple DI container.
+         * @param Container $container A DI Container.
          * @return FormInputBuilder
          */
-        $container['form/input/builder'] = function (Container $container) {
-            $formInputFactory = $container['form/input/factory'];
+        $container->set('form/input/builder', function (Container $container) {
+            $formInputFactory = $container->get('form/input/factory');
             $formInputBuilder = new FormInputBuilder($formInputFactory, $container);
             return $formInputBuilder;
-        };
+        });
     }
 }

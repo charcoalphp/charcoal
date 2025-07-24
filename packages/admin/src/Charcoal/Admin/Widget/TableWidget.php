@@ -3,8 +3,8 @@
 namespace Charcoal\Admin\Widget;
 
 use RuntimeException;
-// From Pimple
-use Pimple\Container;
+
+use DI\Container;
 // From 'charcoal-core'
 use Charcoal\Loader\CollectionLoader;
 use Charcoal\Model\ModelInterface;
@@ -1036,7 +1036,7 @@ class TableWidget extends AdminWidget implements CollectionContainerInterface
     }
 
     /**
-     * @param Container $container Pimple DI container.
+     * @param Container $container DI Container.
      * @return void
      */
     protected function setDependencies(Container $container)

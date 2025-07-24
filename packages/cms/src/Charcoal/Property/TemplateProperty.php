@@ -5,8 +5,8 @@ namespace Charcoal\Property;
 use PDO;
 use RuntimeException;
 use InvalidArgumentException;
-// From Pimple
-use Pimple\Container;
+
+use DI\Container;
 // From 'charcoal-translator'
 use Charcoal\Translator\Translation;
 // From 'charcoal-property'

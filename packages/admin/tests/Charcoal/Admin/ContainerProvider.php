@@ -3,67 +3,46 @@
 namespace Charcoal\Tests\Admin;
 
 use PDO;
-
 // From Mockery
 use Mockery;
-
 // From PSR-3
 use Psr\Log\NullLogger;
-
-// From Slim
-use Slim\Http\Uri;
-
 // From 'tedivm/stash' (PSR-6)
 use Stash\Pool;
-
 // From 'laminas/laminas-permissions-acl'
 use Laminas\Permissions\Acl\Acl;
-
-// From Pimple
-use Pimple\Container;
-
+use DI\Container;
 // From 'league/climate'
 use League\CLImate\CLImate;
 use League\CLImate\Util\System\Linux;
 use League\CLImate\Util\Output;
 use League\CLImate\Util\Reader\Stdin;
 use League\CLImate\Util\UtilFactory;
-
 // From 'charcoal-factory'
 use Charcoal\Factory\GenericFactory as Factory;
-
 // From 'charcoal-app'
 use Charcoal\App\AppConfig;
 use Charcoal\App\Template\WidgetBuilder;
-
 // From 'charcoal-core'
-use Charcoal\Source\DatabaseSource;
 use Charcoal\Model\ServiceProvider\ModelServiceProvider;
-
 // From 'charcoal-user'
 use Charcoal\User\Authenticator;
 use Charcoal\User\Authorizer;
-
 // From 'charcoal-ui'
 use Charcoal\Ui\Dashboard\DashboardBuilder;
-use Charcoal\Ui\Dashboard\DashboardInterface;
 use Charcoal\Ui\Layout\LayoutBuilder;
 use Charcoal\Ui\Layout\LayoutFactory;
-
 // From 'charcoal-email'
 use Charcoal\Email\Email;
-use Charcoal\Email\EmailConfig;
-
 // From 'charcoal-view'
 use Charcoal\View\ViewServiceProvider;
-
 // From 'charcoal-translator'
 use Charcoal\Translator\ServiceProvider\TranslatorServiceProvider;
-
 // From 'charcoal-admin'
 use Charcoal\Admin\Config as AdminConfig;
 use Charcoal\Admin\User as AdminUser;
 use Charcoal\Tests\Admin\Mock\AuthToken as AdminAuthToken;
+use Nyholm\Psr7\Uri;
 
 /**
  *
@@ -78,8 +57,8 @@ class ContainerProvider
      */
     public function registerDebug(Container $container)
     {
-        if (!isset($container['debug'])) {
-            $container['debug'] = false;
+        if (!($container->has('debug'))) {
+            $container->set('debug', false);
         }
     }
 
@@ -119,13 +98,13 @@ class ContainerProvider
      */
     public function registerBaseUrl(Container $container)
     {
-        $container['base-url'] = function () {
-            return Uri::createFromString('');
-        };
+        $container->set('base-url', function () {
+            return (new Uri(''));
+        });
 
-        $container['admin/base-url'] = function () {
-            return Uri::createFromString('admin');
-        };
+        $container->set('admin/base-url', function () {
+            return (new Uri('admin'));
+        });
     }
 
     /**
@@ -136,9 +115,9 @@ class ContainerProvider
      */
     public function registerConfig(Container $container)
     {
-        $container['config'] = function () {
+        $container->set('config', function () {
             return new AppConfig([
-                'base_path'  => realpath(__DIR__.'/../../..'),
+                'base_path'  => realpath(__DIR__ . '/../../..'),
                 'apis'       => [
                     'google' => [
                         'recaptcha' => [
@@ -167,7 +146,7 @@ class ContainerProvider
                     ],
                 ],
             ]);
-        };
+        });
 
         /**
          * List of Charcoal module classes.
@@ -177,7 +156,7 @@ class ContainerProvider
          *
          * @var array
          */
-        $container['module/classes'] = [];
+        $container->set('module/classes', []);
     }
 
     /**
@@ -190,9 +169,9 @@ class ContainerProvider
     {
         $this->registerConfig($container);
 
-        $container['admin/config'] = function () {
+        $container->set('admin/config', function () {
             return new AdminConfig();
-        };
+        });
     }
 
     /**
@@ -201,9 +180,9 @@ class ContainerProvider
      */
     public function registerElfinderConfig(Container $container)
     {
-        $container['elfinder/config'] = function () {
+        $container->set('elfinder/config', function () {
             return [];
-        };
+        });
     }
 
     /**
@@ -212,10 +191,10 @@ class ContainerProvider
      */
     public function registerLayoutFactory(Container $container)
     {
-        $container['layout/factory'] = function () {
+        $container->set('layout/factory', function () {
             $layoutFactory = new LayoutFactory();
             return $layoutFactory;
-        };
+        });
     }
 
     /**
@@ -226,11 +205,11 @@ class ContainerProvider
     {
         $this->registerLayoutFactory($container);
 
-        $container['layout/builder'] = function (Container $container) {
-            $layoutFactory = $container['layout/factory'];
+        $container->set('layout/builder', function (Container $container) {
+            $layoutFactory = $container->get('layout/factory');
             $layoutBuilder = new LayoutBuilder($layoutFactory, $container);
             return $layoutBuilder;
-        };
+        });
     }
 
     /**
@@ -243,19 +222,19 @@ class ContainerProvider
         $this->registerWidgetBuilder($container);
         $this->registerLayoutBuilder($container);
 
-        $container['dashboard/factory'] = function (Container $container) {
+        $container->set('dashboard/factory', function (Container $container) {
             return new Factory([
                 'arguments'          => [[
                     'container'      => $container,
-                    'logger'         => $container['logger'],
-                    'widget_builder' => $container['widget/builder'],
-                    'layout_builder' => $container['layout/builder']
+                    'logger'         => $container->get('logger'),
+                    'widget_builder' => $container->get('widget/builder'),
+                    'layout_builder' => $container->get('layout/builder')
                 ]],
                 'resolver_options' => [
                     'suffix' => 'Dashboard'
                 ]
             ]);
-        };
+        });
     }
 
     /**
@@ -266,11 +245,11 @@ class ContainerProvider
     {
         $this->registerDashboardFactory($container);
 
-        $container['dashboard/builder'] = function (Container $container) {
-            $dashboardFactory = $container['dashboard/factory'];
+        $container->set('dashboard/builder', function (Container $container) {
+            $dashboardFactory = $container->get('dashboard/factory');
             $dashboardBuilder = new DashboardBuilder($dashboardFactory, $container);
             return $dashboardBuilder;
-        };
+        });
     }
 
     /**
@@ -281,17 +260,17 @@ class ContainerProvider
     {
         $this->registerLogger($container);
 
-        $container['widget/factory'] = function (Container $container) {
+        $container->set('widget/factory', function (Container $container) {
             return new Factory([
                 'resolver_options' => [
                     'suffix' => 'Widget'
                 ],
                 'arguments' => [[
                     'container' => $container,
-                    'logger'    => $container['logger']
+                    'logger'    => $container->get('logger')
                 ]]
             ]);
-        };
+        });
     }
 
     /**
@@ -302,9 +281,9 @@ class ContainerProvider
     {
         $this->registerWidgetFactory($container);
 
-        $container['widget/builder'] = function (Container $container) {
-            return new WidgetBuilder($container['widget/factory'], $container);
-        };
+        $container->set('widget/builder', function (Container $container) {
+            return new WidgetBuilder($container->get('widget/factory'), $container);
+        });
     }
 
     /**
@@ -313,44 +292,44 @@ class ContainerProvider
      */
     public function registerClimate(Container $container)
     {
-        $container['climate/system'] = function () {
+        $container->set('climate/system', function () {
             $system = Mockery::mock(Linux::class);
             $system->shouldReceive('hasAnsiSupport')->andReturn(true);
             $system->shouldReceive('width')->andReturn(80);
 
             return $system;
-        };
+        });
 
-        $container['climate/output'] = function () {
+        $container->set('climate/output', function () {
             $output = Mockery::mock(Output::class);
             $output->shouldReceive('persist')->andReturn($output);
             $output->shouldReceive('sameLine')->andReturn($output);
             $output->shouldReceive('write');
 
             return $output;
-        };
+        });
 
-        $container['climate/reader'] = function () {
+        $container->set('climate/reader', function () {
             $reader = Mockery::mock(Stdin::class);
             $reader->shouldReceive('line')->andReturn('line');
             $reader->shouldReceive('char')->andReturn('char');
             $reader->shouldReceive('multiLine')->andReturn('multiLine');
             return $reader;
-        };
+        });
 
-        $container['climate/util'] = function (Container $container) {
-            return new UtilFactory($container['climate/system']);
-        };
+        $container->set('climate/util', function (Container $container) {
+            return new UtilFactory($container->get('climate/system'));
+        });
 
-        $container['climate'] = function (Container $container) {
+        $container->set('climate', function (Container $container) {
             $climate = new CLImate();
 
-            $climate->setOutput($container['climate/output']);
-            $climate->setUtil($container['climate/util']);
-            $climate->setReader($container['climate/reader']);
+            $climate->setOutput($container->get('climate/output'));
+            $climate->setUtil($container->get('climate/util'));
+            $climate->setReader($container->get('climate/reader'));
 
             return $climate;
-        };
+        });
     }
 
     /**
@@ -361,9 +340,9 @@ class ContainerProvider
      */
     public function registerLogger(Container $container)
     {
-        $container['logger'] = function () {
+        $container->set('logger', function () {
             return new NullLogger();
-        };
+        });
     }
 
     /**
@@ -374,9 +353,9 @@ class ContainerProvider
      */
     public function registerCache(Container $container)
     {
-        $container['cache'] = function () {
+        $container->set('cache', function () {
             return new Pool();
-        };
+        });
     }
 
     /**
@@ -385,11 +364,11 @@ class ContainerProvider
      */
     public function registerDatabase(Container $container)
     {
-        $container['database'] = function () {
+        $container->set('database', function () {
             $pdo = new PDO('sqlite::memory:');
             $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             return $pdo;
-        };
+        });
     }
 
     /**
@@ -443,13 +422,13 @@ class ContainerProvider
      */
     public function registerAcl(Container $container)
     {
-        $container['admin/acl'] = function () {
+        $container->set('admin/acl', function () {
             return new Acl();
-        };
+        });
 
-        $container['authorizer/acl'] = function ($container) {
-            return $container['admin/acl'];
-        };
+        $container->set('authorizer/acl', function ($container) {
+            return $container->get('admin/acl');
+        });
     }
 
     /**
@@ -461,19 +440,19 @@ class ContainerProvider
         $this->registerLogger($container);
         $this->registerModelServiceProvider($container);
 
-        $container['admin/authenticator'] = function (Container $container) {
+        $container->set('admin/authenticator', function (Container $container) {
             return new Authenticator([
-                'logger'        => $container['logger'],
+                'logger'        => $container->get('logger'),
                 'user_type'     => AdminUser::class,
-                'user_factory'  => $container['model/factory'],
+                'user_factory'  => $container->get('model/factory'),
                 'token_type'    => AdminAuthToken::class,
-                'token_factory' => $container['model/factory'],
+                'token_factory' => $container->get('model/factory'),
             ]);
-        };
+        });
 
-        $container['authenticator'] = function (Container $container) {
-            return $container['admin/authenticator'];
-        };
+        $container->set('authenticator', function (Container $container) {
+            return $container->get('admin/authenticator');
+        });
     }
 
     /**
@@ -485,17 +464,17 @@ class ContainerProvider
         $this->registerLogger($container);
         $this->registerAcl($container);
 
-        $container['admin/authorizer'] = function (Container $container) {
+        $container->set('admin/authorizer', function (Container $container) {
             return new Authorizer([
-                'logger'    => $container['logger'],
-                'acl'       => $container['admin/acl'],
+                'logger'    => $container->get('logger'),
+                'acl'       => $container->get('admin/acl'),
                 'resource'  => 'admin',
             ]);
-        };
+        });
 
-        $container['authorizer'] = function (Container $container) {
-            return $container['admin/authorizer'];
-        };
+        $container->set('authorizer', function (Container $container) {
+            return $container->get('admin/authorizer');
+        });
     }
 
     /**
@@ -507,17 +486,17 @@ class ContainerProvider
         $this->registerDatabase($container);
         $this->registerLogger($container);
 
-        $container['property/display/factory'] = function (Container $container) {
+        $container->set('property/display/factory', function (Container $container) {
             return new Factory([
                 'resolver_options' => [
                     'suffix' => 'Display'
                 ],
                 'arguments' => [[
                     'container' => $container,
-                    'logger'    => $container['logger']
+                    'logger'    => $container->get('logger')
                 ]]
             ]);
-        };
+        });
     }
 
     /**
@@ -526,13 +505,13 @@ class ContainerProvider
      */
     public function registerEmailFactory(Container $container)
     {
-        $container['email/factory'] = function () {
+        $container->set('email/factory', function () {
             return new Factory([
                 'map' => [
                     'email' => Email::class,
                 ],
             ]);
-        };
+        });
     }
 
     /**
@@ -578,8 +557,8 @@ class ContainerProvider
         $this->registerModelServiceProvider($container);
         $this->registerTranslatorServiceProvider($container);
 
-        $container['menu/builder'] = null;
-        $container['menu/item/builder'] = null;
+        $container->set('menu/builder', null);
+        $container->set('menu/item/builder', null);
     }
 
     /**

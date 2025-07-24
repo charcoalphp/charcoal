@@ -4,9 +4,7 @@ namespace Charcoal\App\ServiceProvider;
 
 use Exception;
 use PDO;
-// From Pimple
-use Pimple\ServiceProviderInterface;
-use Pimple\Container;
+use DI\Container;
 // From 'charcoal-app'
 use Charcoal\App\Config\DatabaseConfig;
 
@@ -23,7 +21,7 @@ use Charcoal\App\Config\DatabaseConfig;
  * - `database/config` A `DatabaseConfig` object containing the DB settings.
  * - `databases/config A container of `DatabaseConfig`
  */
-class DatabaseServiceProvider implements ServiceProviderInterface
+class DatabaseServiceProvider
 {
     /**
      * Registers services on the given container.
@@ -40,8 +38,8 @@ class DatabaseServiceProvider implements ServiceProviderInterface
          * @param  Container $container A service container.
          * @return Container<string, DatabaseConfig> A map of database configsets.
          */
-        $container['databases/config'] = function (Container $container) {
-            $databases = ($container['config']['databases'] ?? []);
+        $container->set('databases/config', function (Container $container) {
+            $databases = ($container->get('config')['databases'] ?? []);
 
             $configs = new Container();
             foreach ($databases as $dbIdent => $dbOptions) {
@@ -54,14 +52,14 @@ class DatabaseServiceProvider implements ServiceProviderInterface
             }
 
             return $configs;
-        };
+        });
 
         /**
          * @param  Container $container A service container.
          * @return Container<string, PDO> A map of database handlers.
          */
-        $container['databases'] = function (Container $container) {
-            $databases = ($container['config']['databases'] ?? []);
+        $container->set('databases', function (Container $container) {
+            $databases = ($container->get('config')['databases'] ?? []);
 
             $dbs = new Container();
             foreach (array_keys($databases) as $dbIdent) {
@@ -69,7 +67,7 @@ class DatabaseServiceProvider implements ServiceProviderInterface
                  * @return PDO
                  */
                 $dbs[$dbIdent] = function () use ($dbIdent, $container) {
-                    $dbConfig = $container['databases/config'][$dbIdent];
+                    $dbConfig = $container->get('databases/config')[$dbIdent];
 
                     $type = $dbConfig['type'];
                     $host = $dbConfig['hostname'];
@@ -104,7 +102,7 @@ class DatabaseServiceProvider implements ServiceProviderInterface
             }
 
             return $dbs;
-        };
+        });
 
         /**
          * The default database configuration.
@@ -113,9 +111,9 @@ class DatabaseServiceProvider implements ServiceProviderInterface
          * @throws Exception If the database configset is invalid.
          * @return DatabaseConfig
          */
-        $container['database/config'] = function (Container $container) {
-            $dbIdent   = ($container['config']['default_database'] ?? 'default');
-            $dbConfigs = $container['databases/config'];
+        $container->set('database/config', function (Container $container) {
+            $dbIdent   = ($container->get('config')['default_database'] ?? 'default');
+            $dbConfigs = $container->get('databases/config');
 
             if (!isset($dbConfigs[$dbIdent])) {
                 throw new Exception(
@@ -124,7 +122,7 @@ class DatabaseServiceProvider implements ServiceProviderInterface
             }
 
             return $dbConfigs[$dbIdent];
-        };
+        });
 
         /**
          * The default database handler.
@@ -133,9 +131,9 @@ class DatabaseServiceProvider implements ServiceProviderInterface
          * @throws Exception If the database configuration is invalid.
          * @return PDO
          */
-        $container['database'] = function (Container $container) {
-            $dbIdent   = ($container['config']['default_database'] ?? 'default');
-            $databases = $container['databases'];
+        $container->set('database', function (Container $container) {
+            $dbIdent   = ($container->get('config')['default_database'] ?? 'default');
+            $databases = $container->get('databases');
 
             if (!isset($databases[$dbIdent])) {
                 throw new Exception(
@@ -144,6 +142,6 @@ class DatabaseServiceProvider implements ServiceProviderInterface
             }
 
             return $databases[$dbIdent];
-        };
+        });
     }
 }

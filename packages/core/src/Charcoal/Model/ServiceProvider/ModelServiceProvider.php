@@ -2,11 +2,7 @@
 
 namespace Charcoal\Model\ServiceProvider;
 
-// From Pimple
-use Charcoal\Cms\ConfigInterface;
-use Charcoal\Factory\GenericResolver;
-use Pimple\Container;
-use Pimple\ServiceProviderInterface;
+use DI\Container;
 // From 'charcoal-factory'
 use Charcoal\Factory\GenericFactory as Factory;
 // From 'charcoal-property'
@@ -44,10 +40,10 @@ use Charcoal\Source\DatabaseSource;
  * - `model/factory` A \Charcoal\Factory\FactoryInterface factory to create models.
  * - `model/collection/loader` A collection loader (should not be used).
  */
-class ModelServiceProvider implements ServiceProviderInterface
+class ModelServiceProvider
 {
     /**
-     * @param Container $container A Pimple DI container.
+     * @param Container $container A DI Container.
      * @return void
      */
     public function register(Container $container)
@@ -59,119 +55,119 @@ class ModelServiceProvider implements ServiceProviderInterface
     }
 
     /**
-     * @param Container $container A Pimple DI container.
+     * @param Container $container A DI Container.
      * @return void
      */
     protected function registerBuilderDependencies(Container $container)
     {
         /**
-         * @param Container $container A Pimple DI container.
+         * @param Container $container A DI Container.
          * @return \Charcoal\Factory\FactoryInterface
          */
-        $container['model/factory'] = function (Container $container) {
+        $container->set('model/factory', function (Container $container) {
             return new Factory([
                 'base_class' => ModelInterface::class,
-                'arguments'  => [ $container['model/dependencies'] ]
+                'arguments'  => [ $container->get('model/dependencies') ]
             ]);
-        };
+        });
 
         /**
-         * @param Container $container A Pimple DI container.
+         * @param Container $container A DI Container.
          * @return ModelBuilder
          */
-        $container['model/builder'] = function (Container $container) {
+        $container->set('model/builder', function (Container $container) {
             return new ModelBuilder([
-                'factory'           => $container['model/factory'],
-                'metadata_loader'   => $container['metadata/loader'],
-                'source_factory'    => $container['source/factory']
+                'factory'           => $container->get('model/factory'),
+                'metadata_loader'   => $container->get('metadata/loader'),
+                'source_factory'    => $container->get('source/factory')
             ]);
-        };
+        });
 
         /**
-         * @param Container $container A Pimple DI container.
+         * @param Container $container A DI Container.
          * @return ModelLoaderBuilder
          */
-        $container['model/loader/builder'] = function (Container $container) {
+        $container->set('model/loader/builder', function (Container $container) {
             return new ModelLoaderBuilder([
-                'factory' => $container['model/factory'],
-                'cache'   => $container['cache']
+                'factory' => $container->get('model/factory'),
+                'cache'   => $container->get('cache')
             ]);
-        };
+        });
     }
 
     /**
-     * @param Container $container A Pimple DI container.
+     * @param Container $container A DI Container.
      * @return void
      */
     protected function registerCollectionDependencies(Container $container)
     {
         /** The default collection class name. */
-        $container['model/collection/class'] = Collection::class;
+        $container->set('model/collection/class', Collection::class);
 
         /**
-         * @param Container $container A Pimple DI container.
+         * @param Container $container A DI Container.
          * @return \ArrayAccess|\Traversable
          */
-        $container['model/collection'] = $container->factory(function (Container $container) {
-            return new $container['model/collection/class']();
+        $container->set('model/collection', function (Container $container) {
+            return (new ($container->get('model/collection/class')))();
         });
 
         /**
-         * @param Container $container A Pimple DI container.
+         * @param Container $container A DI Container.
          * @return CollectionLoader
          */
-        $container['model/collection/loader'] = $container->factory(function (Container $container) {
-            $factory = $container['model/collection/loader/factory'];
+        $container->set('model/collection/loader', function (Container $container) {
+            $factory = $container->get('model/collection/loader/factory');
             return $factory->create($factory->defaultClass());
         });
 
         /**
-         * @param Container $container A Pimple DI container.
+         * @param Container $container A DI Container.
          * @return \Charcoal\Factory\FactoryInterface
          */
-        $container['model/collection/loader/factory'] = function (Container $container) {
+        $container->set('model/collection/loader/factory', function (Container $container) {
             return new Factory([
                 'default_class' => CollectionLoader::class,
                 'arguments'     => [[
-                    'logger'        => $container['logger'],
-                    'factory'       => $container['model/factory'],
-                    'collection'    => $container['model/collection/class']
+                    'logger'        => $container->get('logger'),
+                    'factory'       => $container->get('model/factory'),
+                    'collection'    => $container->get('model/collection/class')
                 ]]
             ]);
-        };
+        });
     }
 
     /**
-     * @param Container $container A Pimple DI container.
+     * @param Container $container A DI Container.
      * @return void
      */
     protected function registerModelDependencies(Container $container)
     {
         // The model dependencies might be already set from elsewhere; defines it if not.
-        if (!isset($container['model/dependencies'])) {
+        if (!($container->has('model/dependencies'))) {
             /**
-             * @param Container $container A Pimple DI container.
+             * @param Container $container A DI Container.
              * @return array The model dependencies array.
              */
-            $container['model/dependencies'] = function (Container $container) {
+            $container->set('model/dependencies', function (Container $container) {
                 return [
                     'container'        => $container,
-                    'logger'           => $container['logger'],
-                    'view'             => $container['view'],
-                    'property_factory' => $container['property/factory'],
-                    'metadata_loader'  => $container['metadata/loader'],
-                    'source_factory'   => $container['source/factory']
+                    'logger'           => $container->get('logger'),
+                    'view'             => $container->get('view'),
+                    'property_factory' => $container->get('property/factory'),
+                    'metadata_loader'  => $container->get('metadata/loader'),
+                    'source_factory'   => $container->get('source/factory')
                 ];
-            };
+            });
         }
 
         // The property factory might be already set from elsewhere; defines it if not.
-        if (!isset($container['property/factory'])) {
+        if (!($container->has('property/factory'))) {
             /**
-             * @param Container $container A Pimple DI container.
+             * @param Container $container A DI Container.
              * @return \Charcoal\Factory\FactoryInterface
              */
-            $container['property/factory'] = function (Container $container) {
+            $container->set('property/factory', function (Container $container) {
                 return new Factory([
                     'base_class'       => PropertyInterface::class,
                     'default_class'    => GenericProperty::class,
@@ -181,57 +177,57 @@ class ModelServiceProvider implements ServiceProviderInterface
                     ],
                     'arguments' => [[
                         'container'  => $container,
-                        'database'   => $container['database'],
-                        'logger'     => $container['logger'],
-                        'translator' => $container['translator']
+                        'database'   => $container->get('database'),
+                        'logger'     => $container->get('logger'),
+                        'translator' => $container->get('translator')
                     ]]
                 ]);
-            };
+            });
         }
 
-        if (!isset($container['source/factory'])) {
+        if (!($container->has('source/factory'))) {
             /**
-             * @param Container $container A Pimple DI container.
+             * @param Container $container A DI Container.
              * @return \Charcoal\Factory\FactoryInterface
              */
-            $container['source/factory'] = function (Container $container) {
+            $container->set('source/factory', function (Container $container) {
                 return new Factory([
                     'map' => [
                         'database' => DatabaseSource::class
                     ],
                     'base_class' => SourceInterface::class,
                     'arguments'  => [[
-                        'logger' => $container['logger'],
-                        'cache'  => $container['cache'],
-                        'pdo'    => $container['database']
+                        'logger' => $container->get('logger'),
+                        'cache'  => $container->get('cache'),
+                        'pdo'    => $container->get('database')
                     ]]
                 ]);
-            };
+            });
         }
     }
 
     /**
-     * @param Container $container A Pimple DI container.
+     * @param Container $container A DI Container.
      * @return void
      */
     protected function registerMetadataDependencies(Container $container)
     {
-        if (!isset($container['metadata/config'])) {
+        if (!($container->has('metadata/config'))) {
             /**
              * The application's configset for "config.metadata".
              *
-             * @param  Container $container Pimple DI container.
+             * @param  Container $container DI Container.
              * @return MetadataConfig
              */
-            $container['metadata/config'] = function (Container $container) {
-                $appConfig  = isset($container['config']) ? $container['config'] : [];
+            $container->set('metadata/config', function (Container $container) {
+                $appConfig  = ($container->has('config')) ? $container->get('config') : [];
                 $metaConfig = isset($appConfig['metadata']) ? $appConfig['metadata'] : null;
                 $metaConfig = new MetadataConfig($metaConfig);
 
-                if (isset($container['module/classes'])) {
+                if (($container->has('module/classes'))) {
                     $extraPaths = [];
                     $basePath   = $appConfig['base_path'];
-                    $modules    = $container['module/classes'];
+                    $modules    = $container->get('module/classes');
                     foreach ($modules as $module) {
                         if (defined(sprintf('%s::APP_CONFIG', $module))) {
                             $configPath = ltrim($module::APP_CONFIG, '/');
@@ -253,52 +249,52 @@ class ModelServiceProvider implements ServiceProviderInterface
                 }
 
                 return $metaConfig;
-            };
+            });
         }
 
-        if (!isset($container['metadata/cache'])) {
+        if (!($container->has('metadata/cache'))) {
             /**
              * The application's metadata source cache.
              *
              * @param  Container $container A container instance.
              * @return \Psr\Cache\CacheItemPoolInterface|null
              */
-            $container['metadata/cache'] = function (Container $container) {
-                $cache = $container['metadata/config']['cache'];
+            $container->set('metadata/cache', function (Container $container) {
+                $cache = $container->get('metadata/config')['cache'];
                 if (!is_object($cache)) {
                     if (is_bool($cache)) {
                         return $cache
-                               ? $container['cache']
-                               : $container['cache/builder']->build('memory');
+                               ? $container->get('cache')
+                               : $container->get('cache/builder')->build('memory');
                     }
 
                     if (is_array($cache)) {
-                        return $container['cache/builder']->build($cache);
+                        return $container->get('cache/builder')->build($cache);
                     }
                 }
 
                 return $cache;
-            };
+            });
         }
 
-        if (!isset($container['metadata/loader'])) {
+        if (!($container->has('metadata/loader'))) {
             /**
              * The application's metadata source loader and factory.
              *
-             * @param  Container $container A Pimple DI container.
+             * @param  Container $container A DI Container.
              * @return MetadataLoader
              */
-            $container['metadata/loader'] = function (Container $container) {
-                $appConfig  = $container['config'];
-                $metaConfig = $container['metadata/config'];
+            $container->set('metadata/loader', function (Container $container) {
+                $appConfig  = $container->get('config');
+                $metaConfig = $container->get('metadata/config');
 
                 return new MetadataLoader([
-                    'logger'    => $container['logger'],
-                    'cache'     => $container['metadata/cache'],
-                    'paths'     => $container['config']->resolveValues($metaConfig['paths']),
+                    'logger'    => $container->get('logger'),
+                    'cache'     => $container->get('metadata/cache'),
+                    'paths'     => $container->get('config')->resolveValues($metaConfig['paths']),
                     'base_path' => $appConfig['base_path'],
                 ]);
-            };
+            });
         }
     }
 }

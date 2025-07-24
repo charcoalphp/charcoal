@@ -7,8 +7,7 @@ use Charcoal\Admin\Property\AbstractPropertyDisplay;
 // from 'charcoal-view'
 use Charcoal\View\ViewableInterface;
 use Charcoal\View\ViewableTrait;
-// from 'pimple'
-use Pimple\Container;
+use DI\Container;
 use UnexpectedValueException;
 
 /**

@@ -4,8 +4,8 @@ namespace Charcoal\Admin\Widget;
 
 use UnexpectedValueException;
 use InvalidArgumentException;
-// From Pimple
-use Pimple\Container;
+
+use DI\Container;
 // From 'charcoal-core'
 use Charcoal\Model\ModelInterface;
 // From 'charcoal-property'

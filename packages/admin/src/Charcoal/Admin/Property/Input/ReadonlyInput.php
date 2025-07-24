@@ -5,8 +5,8 @@ namespace Charcoal\Admin\Property\Input;
 use JsonException;
 use RuntimeException;
 use UnexpectedValueException;
-// From Pimple
-use Pimple\Container;
+
+use DI\Container;
 // From 'charcoal-factory'
 use Charcoal\Factory\FactoryInterface;
 // From 'charcoal-translator'
@@ -276,7 +276,7 @@ class ReadonlyInput extends AbstractPropertyInput
     }
 
     /**
-     * @param Container $container Pimple DI container.
+     * @param Container $container DI Container.
      * @return void
      */
     protected function setDependencies(Container $container)

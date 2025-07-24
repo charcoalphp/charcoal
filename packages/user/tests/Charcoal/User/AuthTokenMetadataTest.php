@@ -2,8 +2,8 @@
 
 namespace Charcoal\Tests\User;
 
-// From Pimple
-use Pimple\Container;
+
+use DI\Container;
 
 // From 'charcoal-user'
 use Charcoal\User\AuthTokenMetadata;

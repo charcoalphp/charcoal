@@ -2,8 +2,8 @@
 
 namespace Charcoal\Tests\User;
 
-// From Pimple
-use Pimple\Container;
+
+use DI\Container;
 
 // From 'laminas/laminas-permissions-acl'
 use Laminas\Permissions\Acl\Acl;

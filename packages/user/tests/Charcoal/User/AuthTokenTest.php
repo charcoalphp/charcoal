@@ -4,8 +4,8 @@ namespace Charcoal\Tests\User;
 
 use DateTime;
 
-// From Pimple
-use Pimple\Container;
+
+use DI\Container;
 
 // From 'charcoal-user'
 use Charcoal\User\AuthToken;

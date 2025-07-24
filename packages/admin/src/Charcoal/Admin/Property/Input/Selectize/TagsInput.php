@@ -4,8 +4,8 @@ namespace Charcoal\Admin\Property\Input\Selectize;
 
 use RuntimeException;
 use InvalidArgumentException;
-// From Pimple
-use Pimple\Container;
+
+use DI\Container;
 // From 'charcoal-core'
 use Charcoal\Loader\CollectionLoader;
 // From 'charcoal-factory'

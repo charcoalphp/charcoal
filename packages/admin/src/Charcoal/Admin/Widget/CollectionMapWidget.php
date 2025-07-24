@@ -6,8 +6,8 @@ use ArrayAccess;
 use RuntimeException;
 use InvalidArgumentException;
 use UnexpectedValueException;
-// From Pimple
-use Pimple\Container;
+
+use DI\Container;
 // From 'charcoal-core'
 use Charcoal\Model\ModelInterface;
 // From 'charcoal-admin'
@@ -386,14 +386,14 @@ class CollectionMapWidget extends AdminWidget implements CollectionContainerInte
         parent::setDependencies($container);
 
         // Satisfies HttpAwareTrait dependencies
-        $this->setHttpRequest($container['request']);
+        $this->setHttpRequest($container->get('request'));
 
-        $this->setCollectionLoader($container['model/collection/loader']);
+        $this->setCollectionLoader($container->get('model/collection/loader'));
 
-        if (isset($container['admin/config']['apis.google.map.key'])) {
-            $this->setApiKey($container['admin/config']['apis.google.map.key']);
-        } elseif (isset($container['config']['apis.google.map.key'])) {
-            $this->setApiKey($container['config']['apis.google.map.key']);
+        if (isset($container->get('admin/config')['apis.google.map.key'])) {
+            $this->setApiKey($container->get('admin/config')['apis.google.map.key']);
+        } elseif (isset($container->get('config')['apis.google.map.key'])) {
+            $this->setApiKey($container->get('config')['apis.google.map.key']);
         }
     }
 

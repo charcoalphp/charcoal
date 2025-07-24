@@ -2,7 +2,7 @@
 
 namespace Charcoal\Ui\FormInput;
 
-use Pimple\Container;
+use DI\Container;
 // From 'charcoal-factory'
 use Charcoal\Factory\FactoryInterface;
 

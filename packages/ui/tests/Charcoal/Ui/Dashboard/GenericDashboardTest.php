@@ -26,8 +26,8 @@ class GenericDashboardTest extends AbstractTestCase
     protected function setUp(): void
     {
         $container = $this->getContainer();
-        $container->register(new LayoutServiceProvider());
-        $container->register(new FormServiceProvider());
+        (new LayoutServiceProvider())->register($container);
+        (new FormServiceProvider())->register($container);
 
         $this->obj = new GenericDashboard([
             'logger'         => $container['logger'],

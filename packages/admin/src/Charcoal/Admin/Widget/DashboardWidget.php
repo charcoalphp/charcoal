@@ -2,8 +2,8 @@
 
 namespace Charcoal\Admin\Widget;
 
-// From Pimple
-use Pimple\Container;
+
+use DI\Container;
 // From 'charcoal-ui'
 use Charcoal\Ui\Dashboard\DashboardInterface;
 use Charcoal\Ui\Dashboard\DashboardTrait;

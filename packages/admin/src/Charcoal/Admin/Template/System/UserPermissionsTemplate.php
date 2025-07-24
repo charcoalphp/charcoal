@@ -4,8 +4,8 @@ namespace Charcoal\Admin\Template\System;
 
 // From PSR-7
 use Psr\Http\Message\RequestInterface;
-// From Pimple
-use Pimple\Container;
+
+use DI\Container;
 // From 'charcoal-admin'
 use Charcoal\Admin\AdminTemplate;
 use Charcoal\Admin\Ui\CollectionContainerInterface;
@@ -96,7 +96,7 @@ class UserPermissionsTemplate extends AdminTemplate implements
     }
 
     /**
-     * @param Container $container Pimple DI Container.
+     * @param Container $container DI Container.
      * @return void
      */
     protected function setDependencies(Container $container)

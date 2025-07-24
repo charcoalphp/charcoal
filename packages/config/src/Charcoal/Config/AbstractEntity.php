@@ -150,44 +150,36 @@ abstract class AbstractEntity implements EntityInterface
      * @throws InvalidArgumentException If the $key is not a string or is a numeric value.
      * @return boolean TRUE if $key exists and has a value other than NULL, FALSE otherwise.
      */
-    public function offsetExists($key)
+    public function offsetExists(mixed $key): bool
     {
         if (is_numeric($key)) {
             throw new InvalidArgumentException(
                 'Entity array access only supports non-numeric keys'
             );
         }
-
         $key = $this->camelize($key);
-
         /** @internal Edge Case: "_" → "" */
         if ($key === '') {
             return false;
         }
-
         $getter = 'get' . ucfirst($key);
         if (!isset($this->mutatorCache[$getter])) {
             $this->mutatorCache[$getter] = is_callable([ $this, $getter ]);
         }
-
         if ($this->mutatorCache[$getter]) {
             return ($this->{$getter}() !== null);
         }
-
         // -- START DEPRECATED
         if (!isset($this->mutatorCache[$key])) {
             $this->mutatorCache[$key] = is_callable([ $this, $key ]);
         }
-
         if ($this->mutatorCache[$key]) {
             return ($this->{$key}() !== null);
         }
         // -- END DEPRECATED
-
         if (isset($this->{$key})) {
-            return true;
+            return ($this->{$key} !== null);
         }
-
         return false;
     }
 
@@ -205,44 +197,36 @@ abstract class AbstractEntity implements EntityInterface
      * @throws InvalidArgumentException If the $key is not a string or is a numeric value.
      * @return mixed Value of the requested $key on success, NULL if the $key is not set.
      */
-    public function offsetGet($key)
+    public function offsetGet(mixed $key): mixed
     {
         if (is_numeric($key)) {
             throw new InvalidArgumentException(
                 'Entity array access only supports non-numeric keys'
             );
         }
-
         $key = $this->camelize($key);
-
         /** @internal Edge Case: "_" → "" */
         if ($key === '') {
             return null;
         }
-
         $getter = 'get' . ucfirst($key);
         if (!isset($this->mutatorCache[$getter])) {
             $this->mutatorCache[$getter] = is_callable([ $this, $getter ]);
         }
-
         if ($this->mutatorCache[$getter]) {
             return $this->{$getter}();
         }
-
         // -- START DEPRECATED
         if (!isset($this->mutatorCache[$key])) {
             $this->mutatorCache[$key] = is_callable([ $this, $key ]);
         }
-
         if ($this->mutatorCache[$key]) {
             return $this->{$key}();
         }
         // -- END DEPRECATED
-
         if (isset($this->{$key})) {
             return $this->{$key};
         }
-
         return null;
     }
 
@@ -261,32 +245,27 @@ abstract class AbstractEntity implements EntityInterface
      * @throws InvalidArgumentException If the $key is not a string or is a numeric value.
      * @return void
      */
-    public function offsetSet($key, $value)
+    public function offsetSet(mixed $key, mixed $value): void
     {
         if (is_numeric($key)) {
             throw new InvalidArgumentException(
                 'Entity array access only supports non-numeric keys'
             );
         }
-
         $key = $this->camelize($key);
-
         /** @internal Edge Case: "_" → "" */
         if ($key === '') {
             return;
         }
-
         $setter = 'set' . ucfirst($key);
         if (!isset($this->mutatorCache[$setter])) {
             $this->mutatorCache[$setter] = is_callable([ $this, $setter ]);
         }
-
         if ($this->mutatorCache[$setter]) {
             $this->{$setter}($value);
         } else {
             $this->{$key} = $value;
         }
-
         $this->keyCache[$key] = true;
     }
 
@@ -303,21 +282,18 @@ abstract class AbstractEntity implements EntityInterface
      * @throws InvalidArgumentException If the $key is not a string or is a numeric value.
      * @return void
      */
-    public function offsetUnset($key)
+    public function offsetUnset(mixed $key): void
     {
         if (is_numeric($key)) {
             throw new InvalidArgumentException(
                 'Entity array access only supports non-numeric keys'
             );
         }
-
         $key = $this->camelize($key);
-
         /** @internal Edge Case: "_" → "" */
         if ($key === '') {
             return;
         }
-
         $this[$key] = null;
         unset($this->keyCache[$key]);
     }
@@ -328,7 +304,7 @@ abstract class AbstractEntity implements EntityInterface
      * @see    \JsonSerializable
      * @return array Key-value array of data.
      */
-    public function jsonSerialize()
+    public function jsonSerialize(): mixed
     {
         return $this->data();
     }
@@ -336,10 +312,11 @@ abstract class AbstractEntity implements EntityInterface
     /**
      * Serializes the data on this entity.
      *
+     * @deprecated The Serializable interface is deprecated as of PHP 8.1. Use __serialize() and __unserialize() instead.
      * @see    \Serializable
      * @return string Returns a string containing a byte-stream representation of the object.
      */
-    public function serialize()
+    public function serialize(): string
     {
         return serialize($this->data());
     }
@@ -347,13 +324,35 @@ abstract class AbstractEntity implements EntityInterface
     /**
      * Applies the serialized data to this entity.
      *
+     * @deprecated The Serializable interface is deprecated as of PHP 8.1. Use __serialize() and __unserialize() instead.
      * @see    \Serializable
      * @param  string $data The serialized data to extract.
      * @return void
      */
-    public function unserialize($data)
+    public function unserialize($data): void
     {
         $data = unserialize($data);
+        $this->setData($data);
+    }
+
+    /**
+     * Returns an array representation for serialization.
+     *
+     * @return array
+     */
+    public function __serialize(): array
+    {
+        return $this->data();
+    }
+
+    /**
+     * Restores the object from an array representation.
+     *
+     * @param array $data
+     * @return void
+     */
+    public function __unserialize(array $data): void
+    {
         $this->setData($data);
     }
 

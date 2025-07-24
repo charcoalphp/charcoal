@@ -4,7 +4,7 @@ namespace Charcoal\Admin\Script\Tools;
 
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
-use Pimple\Container;
+use DI\Container;
 use Charcoal\Admin\AdminScript;
 
 /**
@@ -114,7 +114,7 @@ class OptimizeImagesScript extends AdminScript
     }
 
     /**
-     * @param Container $container Pimple DI Container.
+     * @param Container $container DI Container.
      * @return void
      */
     protected function setDependencies(Container $container)

@@ -10,8 +10,8 @@ use UnexpectedValueException;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 use Psr\Log\NullLogger;
-// From Pimple
-use Pimple\Container;
+
+use DI\Container;
 // From 'charcoal-config'
 use Charcoal\Config\AbstractEntity;
 // From 'charcoal-view'
@@ -94,7 +94,7 @@ abstract class AbstractModel extends AbstractEntity implements
             $this->setView($data['view']);
         }
 
-        // Optional dependencies injection via Pimple Container
+        // Optional dependencies injection via DI Container
         if (isset($data['container'])) {
             $this->setDependencies($data['container']);
         }
@@ -515,13 +515,13 @@ abstract class AbstractModel extends AbstractEntity implements
     /**
      * Inject dependencies from a DI Container.
      *
-     * @param  Container $container A Pimple DI service container.
+     * @param  Container $container A DI service container.
      * @return void
      */
     protected function setDependencies(Container $container)
     {
         // This method is a stub.
-        // Reimplement in children method to inject dependencies in your class from a Pimple container.
+        // Reimplement in children method to inject dependencies in your class from a DI container.
     }
 
     /**

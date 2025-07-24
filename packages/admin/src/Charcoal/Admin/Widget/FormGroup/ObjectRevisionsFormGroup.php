@@ -2,8 +2,7 @@
 
 namespace Charcoal\Admin\Widget\FormGroup;
 
-// From 'pimple/pimple'
-use Pimple\Container;
+use DI\Container;
 // From 'charcoal-core'
 use Charcoal\Model\ModelFactoryTrait;
 // From 'charcoal-admin'

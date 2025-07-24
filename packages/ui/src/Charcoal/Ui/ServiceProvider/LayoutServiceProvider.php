@@ -2,51 +2,49 @@
 
 namespace Charcoal\Ui\ServiceProvider;
 
-// From Pimple
-use Pimple\Container;
-use Pimple\ServiceProviderInterface;
+use DI\Container;
 // From 'charcoal-ui'
 use Charcoal\Ui\Layout\LayoutBuilder;
 use Charcoal\Ui\Layout\LayoutFactory;
+use Psr\Container\ContainerInterface;
 
 /**
  *
  */
-class LayoutServiceProvider implements ServiceProviderInterface
+class LayoutServiceProvider
 {
     /**
-     * @param Container $container A Pimple DI container.
+     * @param Container $container A DI Container.
      * @return void
      */
-    public function register(Container $container)
+    public function register(ContainerInterface $container)
     {
         $this->registerLayoutServices($container);
     }
 
     /**
-     * @param Container $container A Pimple DI container.
+     * @param Container $container A DI Container.
      * @return void
      */
-    private function registerLayoutServices(Container $container)
+    private function registerLayoutServices(ContainerInterface $container)
     {
         /**
-         * @param Container $container A Pimple DI container.
+         * @param Container $container A DI Container.
          * @return LayoutFactory
          */
-        $container['layout/factory'] = function () {
-
+        $container->set('layout/factory', function () {
             $layoutFactory = new LayoutFactory();
             return $layoutFactory;
-        };
+        });
 
         /**
-         * @param Container $container A Pimple DI container.
+         * @param Container $container A DI Container.
          * @return LayoutBuilder
          */
-        $container['layout/builder'] = function (Container $container) {
-            $layoutFactory = $container['layout/factory'];
+        $container->set('layout/builder', function (Container $container) {
+            $layoutFactory = $container->get('layout/factory');
             $layoutBuilder = new LayoutBuilder($layoutFactory, $container);
             return $layoutBuilder;
-        };
+        });
     }
 }

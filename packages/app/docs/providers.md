@@ -1,6 +1,6 @@
 # Service Providers
 
-Dependencies and extensions are handled by a dependency container, using [Pimple], which can be defined via _service providers_ (`Pimple\ServiceProviderInterface`).
+Dependencies and extensions are handled by a dependency container, using [DI], which can be defined via _service providers_.
 
 #### Included Providers
 
@@ -25,7 +25,7 @@ Most providers expect the container to provide the `config` entry, which should 
 
 ## Basic Services
 
-Dependencies are handled with a `Pimple` dependency Container.
+Dependencies are handled with a `DI` dependency Container.
 
 Basic "App" services are:
 
@@ -40,7 +40,7 @@ Basic "App" services are:
   * From a pool of database, available through `databases`.
   * Configured by `config['databases']` and `config['default_database']`.
 * `filesystems`
-  * A (pimple) container of `\League\Flysystem\Filesystem`
+  * A (DI) container of `\League\Flysystem\Filesystem`
   * Configured by `config['filesystem]`
   * Also provide a `\League\Flysystem\MountManager` as `filesystem/manager`. 
 * `logger`
@@ -103,7 +103,7 @@ Also available are the following helpers:
 | **cache/config**            | `CacheConfig`<sup>1</sup>     | Cache configuration.
 | **cache/builder**           | `CacheBuilder`<sup>2</sup>    | Cache pool builder.
 | **cache/available-drivers** | `array`<sup>3</sup>           | Available drivers on the system.
-| **cache/drivers**           | `\Pimple\Contianer`           | Map of all the available Stash driver instances.
+| **cache/drivers**           | `\DI\Contianer`          | Map of all the available Stash driver instances.
 | **cache/driver**            | `DriverInterface`<sup>4</sup> | The Stash driver used by the default pool, `cache`.
 
 1. `\Charcoal\Cache\CacheConfig`
@@ -137,17 +137,17 @@ A full example, in JSON format:
 
 The `DatabaseServiceProvider`, or `charcoal/app/service-provider/database` provides the following services:
 
-| Service       | Type                | Description |
-| ------------- | ------------------- | ----------- |
-| **database**  | `\PDO`              | The default database PDO object.
-| **databases** | `\Pimple\Container` | A map (container) of all the available PDO instances.
+| Service       | Type                 | Description |
+| ------------- | -------------------- | ----------- |
+| **database**  | `\PDO`               | The default database PDO object.
+| **databases** | `\DI\Container`      | A map (container) of all the available PDO instances.
 
 Also available are the following helpers:
 
 | Helper Service       | Type                         | Description |
 | -------------------- | ---------------------------- | ----------- |
 | **database/config**  | `DatabaseConfig`<sup>1</sup> | Default database config container.
-| **databases/config** | `\Pimple\Container`          | A map (container) of all the available PDO instances.
+| **databases/config** | `\DI\Container`              | A map (container) of all the available PDO instances.
 
 1. `\Charcoal\App\Config\DatabaseConfig`
 
@@ -196,7 +196,7 @@ The `FilesystemServiceProvider`, or `charcoal/app/service-provider/filesystem` p
 
 | Service                | Type                             | Description |
 | ---------------------- | -------------------------------- | ----------- |
-| **filesystems**        | `\Pimple\Container`              | A list of `\League\Flysystem\Filesystem`
+| **filesystems**        | `\DI\Container`                  | A list of `\League\Flysystem\Filesystem`
 | **filesystem/manager** | `\League\Flysystem\MountManager` | A mount manager.
 
 Also available are the following helpers:
@@ -407,6 +407,6 @@ Or, in JSON format:
 [charcoal/config]:       https://github.com/charcoal/config
 [charcoal/translator]:   https://github.com/charcoal/translator
 [charcoal/view]:         https://github.com/charcoal/view
-[Pimple]:                https://github.com/silexphp/Pimple
+[DI]:                    https://github.com/PHP-DI/PHP-DI
 [Stash]:                 https://github.com/tedious/Stash
 [symfony/translation]:   https://github.com/symfony/translation

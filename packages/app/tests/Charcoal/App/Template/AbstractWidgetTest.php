@@ -8,8 +8,8 @@ use Psr\Http\Message\RequestInterface;
 // From Slim
 use Slim\Http\Response;
 
-// From Pimple
-use Pimple\Container;
+
+use DI\Container;
 
 // From 'charcoal-app'
 use Charcoal\App\Template\AbstractWidget;

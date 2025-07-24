@@ -26,7 +26,7 @@ class AbstractMenuTest extends AbstractTestCase
     protected function setUp(): void
     {
         $container = $this->getContainer();
-        $container->register(new MenuServiceProvider());
+        (new MenuServiceProvider())->register($container);
 
         $this->obj = $this->getMockForAbstractClass(AbstractMenu::class, [
             [

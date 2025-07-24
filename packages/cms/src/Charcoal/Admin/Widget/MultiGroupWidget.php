@@ -13,8 +13,8 @@ use Charcoal\Factory\FactoryInterface;
 use Charcoal\Property\ModelStructureProperty;
 use Charcoal\Property\PropertyInterface;
 use Charcoal\Property\StructureProperty;
-// From Pimple
-use Pimple\Container;
+
+use DI\Container;
 // From 'charcoal-ui'
 use Charcoal\Ui\Form\FormInterface;
 use Charcoal\Ui\Form\FormTrait;

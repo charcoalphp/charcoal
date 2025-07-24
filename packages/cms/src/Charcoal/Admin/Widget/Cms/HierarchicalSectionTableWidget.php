@@ -2,8 +2,8 @@
 
 namespace Charcoal\Admin\Widget\Cms;
 
-// From Pimple
-use Pimple\Container;
+
+use DI\Container;
 // From 'charcoal-core'
 use Charcoal\Model\ModelInterface;
 // From 'charcoal-property'

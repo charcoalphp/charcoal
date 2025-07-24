@@ -3,8 +3,8 @@
 namespace Charcoal\Cms\Section;
 
 use RuntimeException;
-// From Pimple
-use Pimple\Container;
+
+use DI\Container;
 // From 'charcoal-core'
 use Charcoal\Loader\CollectionLoader;
 // From 'charcoal-cms'

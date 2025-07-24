@@ -10,8 +10,8 @@ use Psr\Log\LoggerAwareTrait;
 // From PSR-7
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
-// From Pimple
-use Pimple\Container;
+
+use DI\Container;
 // From 'league/climate'
 use League\CLImate\CLImate;
 use League\CLImate\Util\Reader\ReaderInterface;
@@ -363,11 +363,11 @@ abstract class AbstractScript extends AbstractEntity implements
     }
 
     /**
-     * Give an opportunity to children classes to inject dependencies from a Pimple Container.
+     * Give an opportunity to children classes to inject dependencies from a DI Container.
      *
      * Does nothing by default, reimplement in children classes.
      *
-     * The `$container` DI-container (from `Pimple`) should not be saved or passed around, only to be used to
+     * The `$container` DI-container (from `DI`) should not be saved or passed around, only to be used to
      * inject dependencies (typically via setters).
      *
      * @param  Container $container A dependencies container instance.

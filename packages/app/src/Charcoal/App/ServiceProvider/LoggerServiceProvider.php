@@ -3,9 +3,7 @@
 namespace Charcoal\App\ServiceProvider;
 
 use InvalidArgumentException;
-// From Pimple
-use Pimple\ServiceProviderInterface;
-use Pimple\Container;
+use DI\Container;
 // From PSR-3
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
@@ -35,7 +33,7 @@ use Charcoal\App\Config\LoggerConfig;
  *
  * - `logger/config` `\Charcoal\App\Config\LoggerConfig`
  */
-class LoggerServiceProvider implements ServiceProviderInterface
+class LoggerServiceProvider
 {
     /**
      * Registers services on the given container.
@@ -52,18 +50,18 @@ class LoggerServiceProvider implements ServiceProviderInterface
          * @param  Container $container A service container.
          * @return LoggerConfig
          */
-        $container['logger/config'] = function (Container $container) {
-            $loggerConfig = ($container['config']['logger'] ?? null);
+        $container->set('logger/config', function (Container $container) {
+            $loggerConfig = ($container->get('config')['logger'] ?? null);
             return new LoggerConfig($loggerConfig);
-        };
+        });
 
         /**
          * @param  Container $container A service container.
          * @throws InvalidArgumentException If the path is not defined or invalid.
          * @return StreamHandler|null
          */
-        $container['logger/handler/stream'] = function (Container $container) {
-            $loggerConfig  = $container['logger/config'];
+        $container->set('logger/handler/stream', function (Container $container) {
+            $loggerConfig  = $container->get('logger/config');
             $handlerConfig = $loggerConfig['handlers.stream'];
 
             if ($handlerConfig['active'] !== true) {
@@ -78,21 +76,21 @@ class LoggerServiceProvider implements ServiceProviderInterface
 
             $stream = $handlerConfig['stream'];
             if (is_string($stream)) {
-                if (isset($container['config']) && ($container['config'] instanceof AppConfig)) {
-                    $stream = $container['config']->resolveValue($stream);
+                if ($container->has('config') && ($container->get('config') instanceof AppConfig)) {
+                    $stream = $container->get('config')->resolveValue($stream);
                 }
             }
 
             $level = $handlerConfig['level'] ?: $loggerConfig['level'];
             return new StreamHandler($stream, $level);
-        };
+        });
 
         /**
          * @param  Container $container A service container.
          * @return BrowserConsoleHandler|null
          */
-        $container['logger/handler/browser-console'] = function (Container $container) {
-            $loggerConfig  = $container['logger/config'];
+        $container->set('logger/handler/browser-console', function (Container $container) {
+            $loggerConfig  = $container->get('logger/config');
             $handlerConfig = $loggerConfig['handlers.console'];
 
             if ($handlerConfig['active'] !== true) {
@@ -101,7 +99,7 @@ class LoggerServiceProvider implements ServiceProviderInterface
 
             $level = $handlerConfig['level'] ?: $loggerConfig['level'];
             return new BrowserConsoleHandler($level);
-        };
+        });
 
         /**
          * Fulfills the PSR-3 dependency with a Monolog logger.
@@ -109,8 +107,8 @@ class LoggerServiceProvider implements ServiceProviderInterface
          * @param  Container $container A service container.
          * @return LoggerInterface
          */
-        $container['logger'] = function (Container $container) {
-            $loggerConfig = $container['logger/config'];
+        $container->set('logger', function (Container $container) {
+            $loggerConfig = $container->get('logger/config');
 
             if ($loggerConfig['active'] !== true) {
                 return new NullLogger();
@@ -124,17 +122,17 @@ class LoggerServiceProvider implements ServiceProviderInterface
             $uidProcessor = new UidProcessor();
             $logger->pushProcessor($uidProcessor);
 
-            $consoleHandler = $container['logger/handler/browser-console'];
+            $consoleHandler = $container->get('logger/handler/browser-console');
             if ($consoleHandler) {
                 $logger->pushHandler($consoleHandler);
             }
 
-            $streamHandler = $container['logger/handler/stream'];
+            $streamHandler = $container->get('logger/handler/stream');
             if ($streamHandler) {
                 $logger->pushHandler($streamHandler);
             }
 
             return $logger;
-        };
+        });
     }
 }

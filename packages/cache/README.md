@@ -61,7 +61,7 @@ Each pool comes with a set of default options which can be individually overridd
 use Charcoal\Cache\CacheConfig;
 use Charcoal\Cache\ServiceProvider\CacheServiceProvider;
 
-$container->register(new CacheServiceProvider());
+(new CacheServiceProvider())->register($container);
 
 $container['cache/config'] = new CacheConfig([
     'prefix' => 'foobar',

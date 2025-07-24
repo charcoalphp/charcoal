@@ -2,8 +2,7 @@
 
 namespace Charcoal\App\Template;
 
-// From Pimple
-use Pimple\Container;
+use DI\Container;
 
 /**
  *

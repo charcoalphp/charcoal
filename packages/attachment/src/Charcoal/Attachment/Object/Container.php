@@ -2,8 +2,7 @@
 
 namespace Charcoal\Attachment\Object;
 
-// From Pimple
-use Pimple\Container as ServiceContainer;
+use DI\Container as ServiceContainer;
 // From 'charcoal-config'
 use Charcoal\Config\ConfigurableInterface;
 // From 'charcoal-attachment'

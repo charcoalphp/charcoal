@@ -5,8 +5,8 @@ namespace Charcoal\Admin\Script\Object;
 // From PSR-7
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
-// From Pimple
-use Pimple\Container;
+
+use DI\Container;
 // From 'charcoal-core'
 use Charcoal\Loader\CollectionLoader;
 // From 'charcoal-factory'
@@ -99,7 +99,7 @@ class ProcessSchedulesScript extends AdminScript implements CronScriptInterface
     }
 
     /**
-     * @param Container $container Pimple DI container.
+     * @param Container $container DI Container.
      * @return void
      */
     protected function setDependencies(Container $container)

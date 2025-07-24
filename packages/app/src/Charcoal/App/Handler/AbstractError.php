@@ -4,8 +4,8 @@ namespace Charcoal\App\Handler;
 
 // From PSR-3
 use Psr\Log\LoggerInterface;
-// From Pimple
-use Pimple\Container;
+
+use DI\Container;
 // From 'charcoal-app'
 use Charcoal\App\Handler\AbstractHandler;
 

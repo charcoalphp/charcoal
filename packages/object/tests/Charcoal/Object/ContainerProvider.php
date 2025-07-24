@@ -10,8 +10,8 @@ use Psr\Log\NullLogger;
 // From tedivm/stash (PSR-6)
 use Stash\Pool;
 
-// From Pimple
-use Pimple\Container;
+
+use DI\Container;
 
 // From 'charcoal-factory'
 use Charcoal\Factory\GenericFactory as Factory;
