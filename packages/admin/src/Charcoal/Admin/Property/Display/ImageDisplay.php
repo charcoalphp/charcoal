@@ -56,6 +56,6 @@ class ImageDisplay extends AbstractPropertyDisplay
     {
         parent::setDependencies($container);
 
-        $this->baseUrl = $container['base-url'];
+        $this->baseUrl = $container->get('base-url');
     }
 }

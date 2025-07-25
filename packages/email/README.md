@@ -28,7 +28,7 @@ use DI\Container;
 $container = new Container();
 (new EmailServiceProvider())->register($container);
 
-$email = $container['email'];
+$email = $container->get('email');
 $email->setData([
     'from' => '"Company inc." <company.inc@example.com>',
     'bcc'  => 'shadow@example.com',
@@ -104,7 +104,7 @@ Also available are the following helpers:
 | Helper Service    | Type                        | Description |
 | ----------------- | --------------------------- | ----------- |
 | **email/config**  | `EmailConfig`<sup>[3]</sup>   | Email configuration.
-| **email/view**    | `ViewInterface`<sup>[4]</sup> | The view object to render email templates (`$container['view']`).
+| **email/view**    | `ViewInterface`<sup>[4]</sup> | The view object to render email templates (`$container->get('view')`).
 
 Notes:
 

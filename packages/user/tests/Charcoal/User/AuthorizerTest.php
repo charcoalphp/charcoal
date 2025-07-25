@@ -104,7 +104,7 @@ class AuthorizerTest extends AbstractTestCase
         $container = $this->container();
 
         $data += [
-            'logger'    => $container['logger'],
+            'logger'    => $container->get('logger'),
             'acl'       => $this->acl,
             'resource'  => 'area',
         ];
@@ -125,7 +125,7 @@ class AuthorizerTest extends AbstractTestCase
         $container = $this->container();
 
         $data += [
-            'logger'    => $container['logger'],
+            'logger'    => $container->get('logger'),
             'acl'       => $this->acl,
             'resource'  => 'area',
         ];
@@ -144,7 +144,7 @@ class AuthorizerTest extends AbstractTestCase
     {
         $container = $this->container();
 
-        $user = $container['model/factory']->create(GenericUser::class);
+        $user = $container->get('model/factory')->create(GenericUser::class);
 
         return $user;
     }
@@ -165,7 +165,7 @@ class AuthorizerTest extends AbstractTestCase
             'resource' => null
         ]);
         $auth = new Authorizer([
-            'logger'    => $container['logger'],
+            'logger'    => $container->get('logger'),
             'acl'       => $this->acl,
             'resource'  => null,
         ]);
@@ -182,7 +182,7 @@ class AuthorizerTest extends AbstractTestCase
 
         $this->expectException(\InvalidArgumentException::class);
         $auth = new Authorizer([
-            'logger'    => $container['logger'],
+            'logger'    => $container->get('logger'),
             'acl'       => $this->acl,
             'resource'  => 35,
         ]);

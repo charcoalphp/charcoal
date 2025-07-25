@@ -21,7 +21,10 @@ use Error;
 use Psr\Http\Message\ServerRequestInterface;
 use Slim\Factory\AppFactory;
 use Nyholm\Psr7\Factory\Psr17Factory;
-use Slim\Factory\ServerRequestCreatorFactory;
+use Slim\Exception\HttpInternalServerErrorException;
+use Slim\Exception\HttpMethodNotAllowedException;
+use Slim\Exception\HttpNotFoundException;
+use Slim\Handlers\ErrorHandler;
 
 /**
  * Charcoal App
@@ -60,10 +63,47 @@ class App extends SlimApp implements
             }
             AppFactory::setContainer($container);
 
-            //static::$instance = AppFactory::create();
-            static::$instance = new static($container);
-            //$called_class = get_called_class();
-            //static::$instance = new $called_class($container);
+            $app = new static($container);
+
+            // Register routing middleware
+            $app->addRoutingMiddleware();
+
+            $logger = ($app->getContainer()->get('logger') ?? null);
+
+            // Add Error middleware + renderers
+            $errorMiddleware = $app->addErrorMiddleware(
+                ($container->get('config')['debug'] ?? false),
+                true,
+                true,
+                $logger
+            );
+
+            $errorMiddleware->setDefaultErrorHandler($container->get('errorHandler'));
+
+            $errorMiddleware->setErrorHandler(
+                HttpNotFoundException::class,
+                $container->get('notFoundHandler')
+            );
+
+            $errorMiddleware->setErrorHandler(
+                HttpMethodNotAllowedException::class,
+                $container->get('notAllowedHandler')
+            );
+
+            /*$errorRenderers = [
+                'application/json' => \Charcoal\App\Error\Renderers\JsonErrorRenderer::class,
+                'application/xml'  => \Charcoal\App\Error\Renderers\XmlErrorRenderer::class,
+                'text/xml'         => \Charcoal\App\Error\Renderers\XmlErrorRenderer::class,
+                'text/html'        => \Charcoal\App\Error\Renderers\HtmlErrorRenderer::class,
+                'text/plain'       => \Charcoal\App\Error\Renderers\PlainTextErrorRenderer::class,
+            ];
+            if ($errorMiddleware instanceof ErrorHandler) {
+                foreach ($errorRenderers as $key => $value) {
+                    $errorMiddleware->getDefaultErrorHandler()->registerErrorRenderer($key, $value);
+                }
+            }*/
+
+            static::$instance = $app;
         }
         return static::$instance;
     }
@@ -97,18 +137,7 @@ class App extends SlimApp implements
      */
     public function run(?ServerRequestInterface $request = null, ?ResponseInterface $response = null): void
     {
-        if (!$request) {
-            $serverRequestCreator = ServerRequestCreatorFactory::create();
-            $request = $serverRequestCreator->createServerRequestFromGlobals();
-        }
-
-        // Add request to container for legacy compatibility
-        /** @var Container $container */
-        $container = $this->getContainer();
-        $container->set('request', $request);
-
         $this->setup();
-
         parent::run($request, $response);
     }
 
@@ -124,9 +153,6 @@ class App extends SlimApp implements
         if (!empty($config['timezone'])) {
             date_default_timezone_set($config['timezone']);
         }
-
-        //var_dump($config);
-        //exit;
 
         // Setup env
         $dotenv = Dotenv::createImmutable($config['basePath']);
@@ -203,14 +229,15 @@ class App extends SlimApp implements
                 $routables = $config['routables'];
 
                 if (is_array($routables) && !empty($routables)) {
-                    $routeFactory = $this['route/factory'];
+                    $routeFactory = $app->getContainer()->get('route/factory');
                     foreach ($routables as $routableType => $routableOptions) {
                         $route = $routeFactory->create($routableType, [
-                            'path'   => $args['catchall'],
-                            'config' => $routableOptions,
+                            'path'      => $args['catchall'],
+                            'config'    => $routableOptions,
+                            'container' => $app->getContainer(),
                         ]);
                         if ($route->pathResolvable($this)) {
-                            $this['logger']->debug(
+                            $app->getContainer()->get('logger')->debug(
                                 sprintf('Loaded routable "%s" for path %s', $routableType, $args['catchall'])
                             );
                             $routeResponse = $route($this, $request);

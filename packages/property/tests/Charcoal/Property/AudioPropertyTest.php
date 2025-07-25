@@ -20,9 +20,9 @@ class AudioPropertyTest extends AbstractFilePropertyTestCase
         $container = $this->getContainer();
 
         return new AudioProperty([
-            'database'   => $container['database'],
-            'logger'     => $container['logger'],
-            'translator' => $container['translator'],
+            'database'   => $container->get('database'),
+            'logger'     => $container->get('logger'),
+            'translator' => $container->get('translator'),
             'container'  => $container,
         ]);
     }

@@ -3,12 +3,9 @@
 namespace Charcoal\Tests\Translator;
 
 use ReflectionClass;
-
 // From 'symfony/translation'
 use Symfony\Component\Translation\Formatter\MessageFormatter;
 use Symfony\Component\Translation\Loader\ArrayLoader;
-use Symfony\Component\Translation\MessageSelector;
-
 // From 'charcoal-translator'
 use Charcoal\Translator\LocalesManager;
 use Charcoal\Translator\Translation;
@@ -49,15 +46,13 @@ class TranslatorTest extends AbstractTestCase
      */
     protected function setUp(): void
     {
-        $selector  = new MessageSelector();
-        $formatter = new MessageFormatter($selector);
+        $formatter = new MessageFormatter();
 
         $this->obj = new Translator([
             'locale'            => 'en',
             'cache_dir'         => null,
             'debug'             => false,
             'manager'           => $this->localesManager(),
-            'message_selector'  => $selector,
             'message_formatter' => $formatter,
         ]);
 
@@ -110,38 +105,6 @@ class TranslatorTest extends AbstractTestCase
         return $this->localesManager;
     }
 
-    /**
-     * @return void
-     */
-    public function testConstructorWithMessageSelector()
-    {
-        $selector   = new MessageSelector();
-        $translator = new Translator([
-            'locale'           => 'en',
-            'cache_dir'        => null,
-            'debug'            => false,
-            'manager'          => $this->localesManager(),
-            'message_selector' => $selector,
-        ]);
-
-        $this->assertSame($selector, $this->callMethod($translator, 'selector'));
-    }
-
-    /**
-     * @return void
-     */
-    public function testConstructorWithoutMessageSelector()
-    {
-        $translator = new Translator([
-            'locale'           => 'en',
-            'cache_dir'        => null,
-            'debug'            => false,
-            'manager'          => $this->localesManager(),
-            'message_selector' => null,
-        ]);
-
-        $this->assertInstanceOf(MessageSelector::class, $this->callMethod($translator, 'selector'));
-    }
 
     /**
      * @return void

@@ -53,9 +53,9 @@ class ScriptRouteTest extends AbstractTestCase
     {
         $container = $this->container();
 
-        $container['script/factory'] = function($c) {
+        $container->set('script/factory', function($c) {
             return new Factory();
-        };
+        });
 
         $request  = $this->createMock(RequestInterface::class);
         $response = $this->createMock(ResponseInterface::class);

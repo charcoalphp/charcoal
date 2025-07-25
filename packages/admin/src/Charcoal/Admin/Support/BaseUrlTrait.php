@@ -28,7 +28,7 @@ trait BaseUrlTrait
     /**
      * Set the base URI of the application.
      *
-     * @see    \Charcoal\App\ServiceProvider\AppServiceProvider `$container['base-url']`
+     * @see    \Charcoal\App\ServiceProvider\AppServiceProvider `$container->get('base-url')`
      * @param  UriInterface $uri The base URI.
      * @return self
      */
@@ -64,7 +64,7 @@ trait BaseUrlTrait
     /**
      * Set the URI of the administration-area.
      *
-     * @see    \Charcoal\App\ServiceProvider\AdminServiceProvider `$container['admin/base-url']`
+     * @see    \Charcoal\App\ServiceProvider\AdminServiceProvider `$container->get('admin/base-url')`
      * @param  UriInterface $uri The base URI.
      * @return self
      */

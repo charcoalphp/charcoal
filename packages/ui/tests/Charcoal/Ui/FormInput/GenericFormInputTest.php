@@ -29,12 +29,12 @@ class GenericFormInputTest extends AbstractTestCase
         (new FormServiceProvider())->register($container);
         (new LayoutServiceProvider())->register($container);
 
-        $container['view'] = null;
+        $container->set('view', null);
 
         $this->obj = new GenericFormInput([
-            'logger'             => $container['logger'],
-            'layout_builder'     => $container['layout/builder'],
-            'form_group_factory' => $container['form/group/factory']
+            'logger'             => $container->get('logger'),
+            'layout_builder'     => $container->get('layout/builder'),
+            'form_group_factory' => $container->get('form/group/factory')
         ]);
     }
 

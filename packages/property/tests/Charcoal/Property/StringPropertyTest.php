@@ -37,9 +37,9 @@ class StringPropertyTest extends AbstractTestCase
         $this->getContainerProvider()->registerMultilingualTranslator($container);
 
         $this->obj = new StringProperty([
-            'database'   => $container['database'],
-            'logger'     => $container['logger'],
-            'translator' => $container['translator']
+            'database'   => $container->get('database'),
+            'logger'     => $container->get('logger'),
+            'translator' => $container->get('translator')
         ]);
     }
 
@@ -126,7 +126,7 @@ class StringPropertyTest extends AbstractTestCase
     public function testDisplayVal()
     {
         $container  = $this->getContainer();
-        $translator = $container['translator'];
+        $translator = $container->get('translator');
 
         $this->assertEquals('', $this->obj->displayVal(null));
         $this->assertEquals('', $this->obj->displayVal(''));
@@ -192,7 +192,7 @@ class StringPropertyTest extends AbstractTestCase
     public function getDisplayChoices()
     {
         $container  = $this->getContainer();
-        $translator = $container['translator'];
+        $translator = $container->get('translator');
 
         return [
             'fox'  => $translator->translation([

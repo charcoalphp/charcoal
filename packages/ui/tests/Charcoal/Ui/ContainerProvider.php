@@ -4,26 +4,16 @@ namespace Charcoal\Tests\Ui;
 
 use Charcoal\App\AppConfig;
 use PDO;
-
 // From PSR-3
 use Psr\Log\NullLogger;
-
 // From 'tedivm/stash' (PSR-6)
 use Stash\Pool;
-
-
 use DI\Container;
-
-// From 'charcoal-core'
-use Charcoal\Source\DatabaseSource;
 use Charcoal\Model\ServiceProvider\ModelServiceProvider;
-
 // From 'charcoal-user'
 use Charcoal\User\ServiceProvider\AuthServiceProvider;
-
 // From 'charcoal-translator'
 use Charcoal\Translator\ServiceProvider\TranslatorServiceProvider;
-
 // From 'charcoal-view'
 use Charcoal\View\ViewServiceProvider;
 
@@ -54,7 +44,7 @@ class ContainerProvider
      */
     public function registerConfig(Container $container)
     {
-        $container['config'] = new AppConfig([
+        $container->set('config', new AppConfig([
             'base_path'  => realpath(__DIR__ . '/../../..'),
             'locales'    => [
                 'en' => [
@@ -64,7 +54,7 @@ class ContainerProvider
             'translator' => [
                 'paths' => [],
             ],
-        ]);
+        ]));
 
         /**
          * List of Charcoal module classes.
@@ -74,7 +64,7 @@ class ContainerProvider
          *
          * @var array
          */
-        $container['module/classes'] = [];
+        $container->set('module/classes', []);
     }
 
     /**
@@ -87,11 +77,11 @@ class ContainerProvider
      */
     public function registerSource(Container $container)
     {
-        $container['database'] = function () {
+        $container->set('database', function () {
             $pdo = new PDO('sqlite::memory:');
             $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             return $pdo;
-        };
+        });
     }
 
     /**
@@ -170,9 +160,9 @@ class ContainerProvider
      */
     public function registerLogger(Container $container)
     {
-        $container['logger'] = function () {
+        $container->set('logger', function () {
             return new NullLogger();
-        };
+        });
     }
 
     /**
@@ -183,8 +173,8 @@ class ContainerProvider
      */
     public function registerCache(Container $container)
     {
-        $container['cache'] = function () {
+        $container->set('cache', function () {
             return new Pool();
-        };
+        });
     }
 }

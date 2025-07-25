@@ -22,7 +22,7 @@ class EmailQueueManagerTest extends AbstractTestCase
         $container = $GLOBALS['container'];
         $this->obj = new EmailQueueManager([
             'logger' => new NullLogger(),
-            'queue_item_factory' => $container['model/factory']
+            'queue_item_factory' => $container->get('model/factory')
         ]);
     }
 

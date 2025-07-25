@@ -59,7 +59,7 @@ class HierarchicalSectionTableWidget extends TableWidget
     {
         parent::setDependencies($container);
 
-        $this->setSectionFactory($container['cms/section/factory']);
+        $this->setSectionFactory($container->get('cms/section/factory'));
     }
 
     /**

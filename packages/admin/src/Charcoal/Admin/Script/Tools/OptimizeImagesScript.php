@@ -121,7 +121,7 @@ class OptimizeImagesScript extends AdminScript
     {
         parent::setDependencies($container);
 
-        $this->basePath = $container['config']['basePath'];
+        $this->basePath = $container->get('config')['basePath'];
     }
 
     /**

@@ -42,28 +42,28 @@ class CacheServiceProviderTest extends AbstractTestCase
         $container = $this->providerFactory();
 
         $this->assertArrayHasKey('cache/config', $container);
-        $this->assertInstanceOf(CacheConfig::class, $container['cache/config']);
+        $this->assertInstanceOf(CacheConfig::class, $container->get('cache/config'));
 
         $this->assertArrayHasKey('cache/available-drivers', $container);
-        $this->assertTrue($this->isAccessible($container['cache/available-drivers']));
+        $this->assertTrue($this->isAccessible($container->get('cache/available-drivers')));
 
         $this->assertArrayHasKey('cache/drivers', $container);
-        $this->assertTrue($this->isAccessible($container['cache/drivers']));
+        $this->assertTrue($this->isAccessible($container->get('cache/drivers')));
 
         $this->assertArrayHasKey('cache/driver', $container);
-        $this->assertInstanceOf(DriverInterface::class, $container['cache/driver']);
+        $this->assertInstanceOf(DriverInterface::class, $container->get('cache/driver'));
 
         $this->assertArrayHasKey('cache/builder', $container);
-        $this->assertInstanceOf(CacheBuilder::class, $container['cache/builder']);
+        $this->assertInstanceOf(CacheBuilder::class, $container->get('cache/builder'));
 
         $this->assertArrayHasKey('cache', $container);
-        $this->assertInstanceOf(PoolInterface::class, $container['cache']);
+        $this->assertInstanceOf(PoolInterface::class, $container->get('cache'));
 
         $this->assertArrayHasKey('cache/facade', $container);
-        $this->assertInstanceOf(CachePoolFacade::class, $container['cache/facade']);
+        $this->assertInstanceOf(CachePoolFacade::class, $container->get('cache/facade'));
 
         $this->assertArrayHasKey('middlewares/charcoal/cache/middleware/cache', $container);
-        $this->assertInstanceOf(CacheMiddleware::class, $container['middlewares/charcoal/cache/middleware/cache']);
+        $this->assertInstanceOf(CacheMiddleware::class, $container->get('middlewares/charcoal/cache/middleware/cache'));
     }
 
     /**
@@ -84,7 +84,7 @@ class CacheServiceProviderTest extends AbstractTestCase
         ]);
 
         $this->assertArrayHasKey('middlewares/charcoal/cache/middleware/cache', $container);
-        $middleware = $container['middlewares/charcoal/cache/middleware/cache'];
+        $middleware = $container->get('middlewares/charcoal/cache/middleware/cache');
         $reflection = new ReflectionClass($middleware);
         $reflectionProperty = $reflection->getProperty('cacheTtl');
         $reflectionProperty->setAccessible(true);
@@ -108,7 +108,7 @@ class CacheServiceProviderTest extends AbstractTestCase
         ];
 
         $driverClassNames = DriverList::getAllDrivers();
-        $driverCollection = $container['cache/drivers'];
+        $driverCollection = $container->get('cache/drivers');
 
         foreach ($driverMap as $driverName => $driverKey) {
             if (isset($driverClassNames[$driverName])) {
@@ -136,7 +136,7 @@ class CacheServiceProviderTest extends AbstractTestCase
         ];
 
         $driverClassNames = DriverList::getAllDrivers();
-        $driverCollection = $container['cache/drivers'];
+        $driverCollection = $container->get('cache/drivers');
 
         foreach ($driverMap as $driverName => $driverKey) {
             if (isset($driverClassNames[$driverName])) {
@@ -168,7 +168,7 @@ class CacheServiceProviderTest extends AbstractTestCase
         $container = $this->providerFactory();
 
         // Emptied to fake unavailability
-        $container['cache/available-drivers'] = [];
+        $container->set('cache/available-drivers', []);
 
         $driverMap = [
             'Apc'      => 'apc',
@@ -178,7 +178,7 @@ class CacheServiceProviderTest extends AbstractTestCase
         ];
 
         $driverClassNames = DriverList::getAllDrivers();
-        $driverCollection = $container['cache/drivers'];
+        $driverCollection = $container->get('cache/drivers');
 
         foreach ($driverMap as $driverName => $driverKey) {
             if (isset($driverClassNames[$driverName])) {
@@ -208,7 +208,7 @@ class CacheServiceProviderTest extends AbstractTestCase
             ],
         ]);
 
-        $this->assertInstanceOf($className, $container['cache/driver']);
+        $this->assertInstanceOf($className, $container->get('cache/driver'));
     }
 
     /**
@@ -277,8 +277,8 @@ class CacheServiceProviderTest extends AbstractTestCase
     {
         $container = new Container($args);
 
-        if (!isset($container['logger'])) {
-            $container['logger'] = new NullLogger();
+        if (!isset($container->get('logger'))) {
+            $container->set('logger', new NullLogger());
         }
 
         $provider  = new CacheServiceProvider();

@@ -41,7 +41,7 @@ class ElfinderTemplateTest extends AbstractTestCase
         $container = $this->container();
 
         $this->obj = new ElfinderTemplate([
-            'logger'    => $container['logger'],
+            'logger'    => $container->get('logger'),
             'container' => $container
         ]);
     }
@@ -67,7 +67,7 @@ class ElfinderTemplateTest extends AbstractTestCase
             $containerProvider = new ContainerProvider();
             $containerProvider->registerTemplateDependencies($container);
             $containerProvider->registerElfinderConfig($container);
-            $container['widget/factory'] = $this->createMock('\Charcoal\Factory\FactoryInterface');
+            $container->set('widget/factory', $this->createMock('\Charcoal\Factory\FactoryInterface'));
 
             $this->container = $container;
         }

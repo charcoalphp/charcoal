@@ -54,7 +54,7 @@ class ExpressionFieldTraitTest extends AbstractTestCase
     {
         $container = $this->getContainer();
 
-        $prop = $container['property/factory']->create('generic');
+        $prop = $container->get('property/factory')->create('generic');
         $prop->setIdent('xyzzy');
 
         return $prop;
@@ -131,7 +131,7 @@ class ExpressionFieldTraitTest extends AbstractTestCase
     public function testPropertyWithInvalidProperty()
     {
         $container = $this->getContainer();
-        $property  = $container['property/factory']->create('generic');
+        $property  = $container->get('property/factory')->create('generic');
 
         $this->expectException(InvalidArgumentException::class);
         $this->createField()->setProperty($property);

@@ -28,8 +28,8 @@ class DatabaseSourceTest extends AbstractTestCase
         $container = $this->getContainer();
 
         $src = new DatabaseSource([
-            'logger' => $container['logger'],
-            'pdo'    => $container['database'],
+            'logger' => $container->get('logger'),
+            'pdo'    => $container->get('database'),
         ]);
 
         $this->assertInstanceOf(DatabaseSourceInterface::class, $src);

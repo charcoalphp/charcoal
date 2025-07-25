@@ -53,36 +53,36 @@ $container = new AppContainer([
 ]);
 
 // Handle "404 Not Found"
-$container['notFoundHandler'] = function ($container)
+$container->set('notFoundHandler', function ($container)
 {
     return function ($request, $response) use ($container)
     {
-        return $container['response']
+        return $container->get('response')
             ->withStatus(404)
-            ->write(sprintf('Script "%s" not found', $container['request']->getUri()->getPath())."\n");
+            ->write(sprintf('Script "%s" not found', $container->get('request')->getUri()->getPath())."\n");
     };
-};
+});
 
 // Handle "500 Server Error"
-$container['errorHandler'] = function ($container)
+$container->set('errorHandler', function ($container)
 {
     return function ($request, $response, $exception) use ($container)
     {
-        return $container['response']
+        return $container->get('response')
             ->withStatus(500)
             ->write(
                 sprintf('Something went wrong! [%s]'."\n", $exception->getMessage())
             );
     };
-};
+});
 
 // Fake environment (for CLI) with path
-$container['environment'] = function($container) use ($path) {
+$container->set('environment', function($container) use ($path) {
     return SlimEnvironment::mock([
         'PATH_INFO'   => $path,
         'REQUEST_URI' => $path
     ]);
-};
+});
 
 // Charcoal / Slim is the main app
 $app = App::instance($container);

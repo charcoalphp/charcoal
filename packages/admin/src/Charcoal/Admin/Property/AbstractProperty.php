@@ -524,16 +524,16 @@ abstract class AbstractProperty implements
     protected function setDependencies(Container $container)
     {
         // Fullfills the DescribableTrait dependencies
-        $this->setMetadataLoader($container['metadata/loader']);
+        $this->setMetadataLoader($container->get('metadata/loader'));
 
         // Fulfills the TranslatorAwareTrait dependencies
-        $this->setTranslator($container['translator']);
+        $this->setTranslator($container->get('translator'));
 
         // Fulfills the ViewableTrait dependencies
-        $this->setView($container['view']);
+        $this->setView($container->get('view'));
 
         // Fulfills the DebugAwareTrait dependencies
-        $this->setDebug($container['debug']);
+        $this->setDebug($container->get('debug'));
     }
 
     /**

@@ -50,8 +50,8 @@ class UpdateAction extends BaseUpdateAction
     {
         parent::setDependencies($container);
 
-        $this->setSelectizeRenderer($container['selectize/renderer']);
-        $this->setPropertyInputFactory($container['property/input/factory']);
-        $this->setPropertyFactory($container['property/factory']);
+        $this->setSelectizeRenderer($container->get('selectize/renderer'));
+        $this->setPropertyInputFactory($container->get('property/input/factory'));
+        $this->setPropertyFactory($container->get('property/factory'));
     }
 }

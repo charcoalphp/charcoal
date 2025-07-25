@@ -75,6 +75,6 @@ abstract class AbstractWidget extends AbstractEntity implements
     protected function setDependencies(Container $container)
     {
         // This method is a stub. Reimplement in children template classes.
-        $this->setView($container['view']);
+        $this->setView($container->get('view'));
     }
 }

@@ -35,10 +35,10 @@ trait ContainerIntegrationTrait
         $container = $this->getContainer();
 
         return [
-            'logger'           => $container['logger'],
-            'property_factory' => $container['property/factory'],
-            'metadata_loader'  => $container['metadata/loader'],
-            'source_factory'   => $container['source/factory'],
+            'logger'           => $container->get('logger'),
+            'property_factory' => $container->get('property/factory'),
+            'metadata_loader'  => $container->get('metadata/loader'),
+            'source_factory'   => $container->get('source/factory'),
         ];
     }
 
@@ -65,9 +65,9 @@ trait ContainerIntegrationTrait
 
         return [
             'container'  => $container,
-            'logger'     => $container['logger'],
-            'database'   => $container['database'],
-            'translator' => $container['translator'],
+            'logger'     => $container->get('logger'),
+            'database'   => $container->get('database'),
+            'translator' => $container->get('translator'),
         ];
     }
 

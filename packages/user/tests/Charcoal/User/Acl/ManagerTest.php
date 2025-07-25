@@ -43,7 +43,7 @@ class ManagerTest extends AbstractTestCase
         $container = $this->container();
 
         $this->obj = new Manager([
-            'logger' => $container['logger']
+            'logger' => $container->get('logger')
         ]);
     }
 

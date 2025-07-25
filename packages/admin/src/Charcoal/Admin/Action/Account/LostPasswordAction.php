@@ -179,7 +179,7 @@ class LostPasswordAction extends AdminAction
     protected function setDependencies(Container $container)
     {
         parent::setDependencies($container);
-        $this->setEmailFactory($container['email/factory']);
+        $this->setEmailFactory($container->get('email/factory'));
     }
 
     /**
@@ -227,7 +227,7 @@ class LostPasswordAction extends AdminAction
     }
 
     /**
-     * @todo   Implement `$container['admin/config']['user.lost_password_email']`
+     * @todo   Implement `$container->get('admin/config')['user.lost_password_email']`
      * @param  User   $user  The user to send the lost-password email to.
      * @param  string $token The lost-password token, as string.
      * @return void

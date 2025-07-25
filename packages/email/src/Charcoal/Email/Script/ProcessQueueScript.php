@@ -186,7 +186,7 @@ class ProcessQueueScript extends AbstractScript implements CronScriptInterface
     protected function setDependencies(Container $container): void
     {
         parent::setDependencies($container);
-        $this->setQueueItemFactory($container['model/factory']);
+        $this->setQueueItemFactory($container->get('model/factory'));
     }
 
     /**

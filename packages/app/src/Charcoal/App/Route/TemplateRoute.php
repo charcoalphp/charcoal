@@ -14,6 +14,7 @@ use Charcoal\Config\ConfigurableTrait;
 // From 'charcoal-app'
 use Charcoal\App\Route\RouteInterface;
 use Charcoal\App\Route\TemplateRouteConfig;
+use Psr\Container\ContainerInterface;
 
 /**
  * Template Route Handler.
@@ -41,6 +42,8 @@ class TemplateRoute implements
 {
     use ConfigurableTrait;
 
+    private ContainerInterface $container;
+
     /**
      * Create new template route
      *
@@ -53,6 +56,7 @@ class TemplateRoute implements
     public function __construct(array $data)
     {
         $this->setConfig($data['config']);
+        $this->container = $data['container'];
     }
 
     /**
@@ -67,21 +71,20 @@ class TemplateRoute implements
     }
 
     /**
-     * @param \DI\Container $container A DI container.
      * @param  RequestInterface  $request   A PSR-7 compatible Request instance.
      * @param  ResponseInterface $response  A PSR-7 compatible Response instance.
      * @return ResponseInterface
      */
     public function __invoke(
-        Container $container,
         RequestInterface $request,
         ResponseInterface $response
     ) {
         $config = $this->config();
+        $container = $this->container;
 
         // Handle explicit redirects
         if (!empty($config['redirect'])) {
-            $redirect = $container['translator']->translation($config['redirect']);
+            $redirect = $container->get('translator')->translation($config['redirect']);
             $uri = $this->parseRedirect((string)$redirect, $request);
 
             if ($uri) {
@@ -111,11 +114,11 @@ class TemplateRoute implements
      * @return string
      */
     protected function templateContent(
-        Container $container,
+        ContainerInterface $container,
         RequestInterface $request
     ) {
         if ($this->cacheEnabled()) {
-            $cachePool = $container['cache'];
+            $cachePool = $container->get('cache');
             $cacheKey  = 'template/' . str_replace('/', '.', $this->cacheIdent());
             $cacheItem = $cachePool->getItem($cacheKey);
 
@@ -138,12 +141,12 @@ class TemplateRoute implements
      * @param  RequestInterface $request   The request to intialize the template with.
      * @return string
      */
-    protected function renderTemplate(Container $container, RequestInterface $request)
+    protected function renderTemplate(ContainerInterface $container, RequestInterface $request)
     {
         $config   = $this->config();
         $template = $this->createTemplate($container, $request);
 
-        return $container['view']->render($config['template'], $template);
+        return $container->get('view')->render($config['template'], $template);
     }
 
     /**
@@ -151,11 +154,11 @@ class TemplateRoute implements
      * @param  RequestInterface $request   The request to intialize the template with.
      * @return string
      */
-    protected function createTemplate(Container $container, RequestInterface $request)
+    protected function createTemplate(ContainerInterface $container, RequestInterface $request)
     {
         $config = $this->config();
 
-        $templateFactory = $container['template/factory'];
+        $templateFactory = $container->get('template/factory');
         if ($config['default_controller'] !== null) {
             $templateFactory->setDefaultClass($config['default_controller']);
         }

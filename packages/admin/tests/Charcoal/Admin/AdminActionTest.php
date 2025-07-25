@@ -49,7 +49,7 @@ class AdminActionTest extends AbstractTestCase
         $container = $this->container();
 
         $this->obj = $this->getMockForAbstractClass(AdminAction::class, [[
-            'logger'    => $container['logger'],
+            'logger'    => $container->get('logger'),
             'container' => $container
         ]]);
     }

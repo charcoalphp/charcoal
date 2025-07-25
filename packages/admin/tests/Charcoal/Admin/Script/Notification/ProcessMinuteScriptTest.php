@@ -41,9 +41,9 @@ class ProcessMinuteScriptTest extends AbstractTestCase
         $containerProvider = new ContainerProvider();
         $containerProvider->registerScriptDependencies($container);
 
-        $container['email/factory'] = function(Container $container) {
-            return $container['model/factory'];
-        };
+        $container->set('email/factory', function (Container $container) {
+            return $container->get('model/factory');
+        });
 
         return $container;
     }

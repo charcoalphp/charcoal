@@ -1017,8 +1017,8 @@ abstract class AbstractProperty extends AbstractEntity implements
      */
     protected function setDependencies(Container $container)
     {
-        $this->setPropertyFactory($container['property/factory']);
-        $this->setMetadataLoader($container['metadata/loader']);
+        $this->setPropertyFactory($container->get('property/factory'));
+        $this->setMetadataLoader($container->get('metadata/loader'));
     }
 
     /**

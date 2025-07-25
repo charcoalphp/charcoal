@@ -6,7 +6,6 @@ use RuntimeException;
 // From 'symfony/translation'
 use Symfony\Component\Translation\Formatter\MessageFormatter;
 use Symfony\Component\Translation\Formatter\MessageFormatterInterface;
-use Symfony\Component\Translation\MessageSelector;
 use Symfony\Component\Translation\Translator as SymfonyTranslator;
 // From 'charcoal-translator'
 use Charcoal\Translator\LocalesManager;
@@ -28,13 +27,6 @@ class Translator extends SymfonyTranslator
     private $manager;
 
     /**
-     * The message selector.
-     *
-     * @var MessageSelector
-     */
-    private $selector;
-
-    /**
      * The message formatter.
      *
      * @var MessageFormatterInterface
@@ -48,6 +40,8 @@ class Translator extends SymfonyTranslator
      */
     private $domains = [ 'messages' ];
 
+    public bool $isIteratingLocales;
+
     /**
      * @param array $data Translator dependencies.
      */
@@ -55,15 +49,9 @@ class Translator extends SymfonyTranslator
     {
         $this->setManager($data['manager']);
 
-        // Ensure Charcoal has control of the message selector.
-        if (!isset($data['message_selector'])) {
-            $data['message_selector'] = new MessageSelector();
-        }
-        $this->setSelector($data['message_selector']);
-
         // Ensure Charcoal has control of the message formatter.
         if (!isset($data['message_formatter'])) {
-            $data['message_formatter'] = new MessageFormatter($data['message_selector']);
+            $data['message_formatter'] = new MessageFormatter();
         }
         $this->setFormatter($data['message_formatter']);
 
@@ -212,10 +200,10 @@ class Translator extends SymfonyTranslator
         $localized   = (string)$translation;
         foreach ($this->availableLocales() as $lang) {
             if (!isset($translation[$lang]) || $translation[$lang] === $val) {
-                $translation[$lang] = $this->transChoice($localized, $number, $parameters, $domain, $lang);
+                $translation[$lang] = $this->trans($localized, $parameters, $domain, $lang);
             } else {
                 $translation[$lang] = strtr(
-                    $this->selector()->choose($translation[$lang], (int)$number, $lang),
+                    $translation[$lang],
                     $parameters
                 );
             }
@@ -248,7 +236,7 @@ class Translator extends SymfonyTranslator
             ], $parameters);
 
             return strtr(
-                $this->selector()->choose($val[$locale], (int)$number, $locale),
+                $val[$locale],
                 $parameters
             );
         }
@@ -259,7 +247,7 @@ class Translator extends SymfonyTranslator
 
         if (is_string($val)) {
             if ($val !== '') {
-                return $this->transChoice($val, $number, $parameters, $domain, $locale);
+                return $this->trans($val, $parameters, $domain, $locale);
             }
 
             return '';
@@ -326,30 +314,6 @@ class Translator extends SymfonyTranslator
     protected function manager()
     {
         return $this->manager;
-    }
-
-    /**
-     * Set the message selector.
-     *
-     * The {@see SymfonyTranslator} keeps the message selector private (as of 3.3.2),
-     * thus we must explicitly require it in this class to guarantee access.
-     *
-     * @param  MessageSelector $selector The selector.
-     * @return void
-     */
-    public function setSelector(MessageSelector $selector)
-    {
-        $this->selector = $selector;
-    }
-
-    /**
-     * Retrieve the message selector.
-     *
-     * @return MessageSelector
-     */
-    protected function selector()
-    {
-        return $this->selector;
     }
 
     /**

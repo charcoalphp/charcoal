@@ -37,8 +37,8 @@ class TextareaInputTest extends AbstractTestCase
         $container = $this->container();
 
         $this->obj = new TextareaInput([
-            'logger'          => $container['logger'],
-            'metadata_loader' => $container['metadata/loader'],
+            'logger'          => $container->get('logger'),
+            'metadata_loader' => $container->get('metadata/loader'),
         ]);
     }
 

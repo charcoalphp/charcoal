@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Charcoal\View\Twig;
 
 use Charcoal\View\Twig\HelpersInterface;
+use Psr\Http\Message\UriInterface;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 
@@ -14,6 +15,8 @@ use Twig\TwigFunction;
 class UrlHelpers extends AbstractExtension implements
     HelpersInterface
 {
+    private UriInterface $baseUrl;
+
     /**
      * @param array $data Class Dependencies.
      */

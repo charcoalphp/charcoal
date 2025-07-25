@@ -123,7 +123,7 @@ The recommended way of setting constructor arguments is by passing an array of a
 $factory = new GenericFactory([
     'arguments' => [
         [
-            'logger' => $container['logger'],
+            'logger' => $container->get('logger'),
         ],
         $secondArgument,
     ],
@@ -144,7 +144,7 @@ The recommended way of adding an object callback is by passing a `Callable` to t
 ```php
 $factory = new GenericFactory([
     'arguments' => [[
-        'logger' => $container['logger']
+        'logger' => $container->get('logger')
     ]],
     'callback' => function ($obj) {
         $obj->foo('bar');

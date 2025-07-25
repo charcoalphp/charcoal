@@ -51,7 +51,7 @@ class PreviewActionTest extends AbstractTestCase
         $container = $this->container();
 
         $this->obj = new PreviewAction([
-            'logger'    => $container['logger'],
+            'logger'    => $container->get('logger'),
             'container' => $container
         ]);
     }

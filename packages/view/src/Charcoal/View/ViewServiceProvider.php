@@ -19,6 +19,8 @@ use Charcoal\View\Php\PhpLoader;
 use Charcoal\View\Renderer;
 use Charcoal\View\Twig\HelpersInterface as TwigHelpersInterface;
 use Charcoal\View\Twig\TranslatorHelpers as TwigTranslatorHelpers;
+use Charcoal\View\Twig\DebugHelpers as TwigDebugHelpers;
+use Charcoal\View\Twig\UrlHelpers as TwigUrlHelpers;
 use Charcoal\View\Twig\TwigEngine;
 use Charcoal\View\Twig\TwigLoader;
 
@@ -185,11 +187,12 @@ class ViewServiceProvider
          * @param Container $container A container instance.
          * @return TwigEngine
          */
+        //$twigHelpers = $container->get('view/twig/helpers');
         $container->set('view/engine/twig', function (Container $container): EngineInterface {
             return new TwigEngine([
                 'config'    => $container->get('view/config'),
                 'loader'    => $container->get('view/loader/twig'),
-                'helpers'   => $container->get('view/twig/helpers'),
+                'helpers'   => [],
                 'cache'     => $container->get('view/twig/cache'),
                 'debug'     => $container->get('debug'),
             ]);
@@ -276,10 +279,11 @@ class ViewServiceProvider
          * @param  Container $container A container instance.
          * @return array
          */
-        $container->set('view/mustache/helpers', function (Container $container): array {
+        $mustacheHelpers = $container->get('view/mustache/helpers');
+        $container->set('view/mustache/helpers', function (Container $container) use ($mustacheHelpers): array {
             $helpers = [];
-            if ($container->has('view/mustache/helpers')) {
-                $helpers = $container->get('view/mustache/helpers');
+            if (!empty($mustacheHelpers)) {
+                $helpers = $mustacheHelpers;
             }
             return array_merge(
                 $helpers,
@@ -314,11 +318,9 @@ class ViewServiceProvider
      */
     protected function registerTwigHelpersServices(Container $container)
     {
-        if (!$container->has('view/twig/helpers')) {
-            $container->set('view/twig/helpers', function () {
-                return [];
-            });
-        }
+        //if (!$container->has('view/twig/helpers')) {
+        //    $container->set('view/twig/helpers', []);
+        //}
 
         /**
          * Translation helpers for Twig.
@@ -331,23 +333,38 @@ class ViewServiceProvider
             ]);
         });
 
-        /**
-         * Extend global helpers for the Twig Engine.
-         *
-         * @param  array     $helpers   The Mustache helper collection.
-         * @param  Container $container A container instance.
-         * @return array
-         */
-        $container->set('view/twig/helpers', function (Container $container): array {
-            $helpers = [];
-            if ($container->has('view/twig/helpers')) {
-                $helpers = $container->get('view/twig/helpers');
-            }
-            return array_merge(
-                $helpers,
-                $container->get('view/twig/helpers/translator')->toArray(),
-            );
+        $container->set('view/twig/helpers/url', function (Container $container): TwigHelpersInterface {
+            return new TwigUrlHelpers([
+                'baseUrl' => $container->get('base-url'),
+            ]);
         });
+
+        $container->set('view/twig/helpers/debug', function (Container $container): TwigHelpersInterface {
+            return new TwigDebugHelpers([
+                'debug'  => $container->get('debug'),
+            ]);
+        });
+
+        $helpers = $container->has('view/twig/helpers') ? $container->get('view/twig/helpers') : [];
+        $container->set('view/twig/helpers', array_merge(
+            $helpers,
+            $container->get('view/twig/helpers/url')->toArray(),
+            $container->get('view/twig/helpers/translator')->toArray(),
+            $container->get('view/twig/helpers/debug')->toArray(),
+        ));
+
+
+        /*$helpers = $container->has('view/twig/helpers') ? $container->get('view/twig/helpers') : [];
+        $container->set('view/twig/helpers', array_merge(
+            $helpers,
+            $container->get('view/twig/helpers/translator')->toArray(),
+        ));*/
+
+        /*if ($container->has('view/engine/twig')) {
+            $container->get('view/engine/twig')->mergeHelpers(
+                $container->get('view/twig/helpers/translator')->toArray()
+            );
+        }*/
     }
 
     /**
@@ -390,5 +407,11 @@ class ViewServiceProvider
             $parsedown->setSafeMode(true);
             return $parsedown;
         });
+
+        if ($container->has('view/engine/twig')) {
+            $container->get('view/engine/twig')->mergeHelpers(
+                $container->get('view/twig/helpers')
+            );
+        }
     }
 }

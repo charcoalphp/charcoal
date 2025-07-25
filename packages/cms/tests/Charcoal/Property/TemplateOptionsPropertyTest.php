@@ -36,7 +36,7 @@ class TemplateOptionsPropertyTest extends AbstractTestCase
 
         $provider->withMultilingualConfig($container);
 
-        $container['config']['templates'] = [
+        $container->get('config')['templates'] = [
             [
                 'value'  => 'foo',
                 'label'  => [
@@ -66,7 +66,7 @@ class TemplateOptionsPropertyTest extends AbstractTestCase
     public function testAddStructureInterface()
     {
         $container = $this->getContainer();
-        $property  = $container['property/factory']->create(TemplateProperty::class);
+        $property  = $container->get('property/factory')->create(TemplateProperty::class);
 
         $property->setVal('foo');
         $return = $this->obj->addStructureInterface($property);
@@ -82,7 +82,7 @@ class TemplateOptionsPropertyTest extends AbstractTestCase
     public function testAddStructureInterfaceException()
     {
         $container = $this->getContainer();
-        $property  = $container['property/factory']->create(TemplateProperty::class);
+        $property  = $container->get('property/factory')->create(TemplateProperty::class);
 
         $this->expectException(InvalidArgumentException::class);
         $this->obj->addStructureInterface($property);

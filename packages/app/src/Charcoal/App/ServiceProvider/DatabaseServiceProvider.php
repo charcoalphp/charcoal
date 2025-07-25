@@ -7,6 +7,7 @@ use PDO;
 use DI\Container;
 // From 'charcoal-app'
 use Charcoal\App\Config\DatabaseConfig;
+use Psr\Container\ContainerInterface;
 
 /**
  * Database Service Provider. Configures and provides a PDO service to a container.
@@ -38,7 +39,7 @@ class DatabaseServiceProvider
          * @param  Container $container A service container.
          * @return Container<string, DatabaseConfig> A map of database configsets.
          */
-        $container->set('databases/config', function (Container $container) {
+        $container->set('databases/config', function (ContainerInterface $container) {
             $databases = ($container->get('config')['databases'] ?? []);
 
             $configs = new Container();
@@ -46,9 +47,9 @@ class DatabaseServiceProvider
                 /**
                  * @return DatabaseConfig
                  */
-                $configs[$dbIdent] = function () use ($dbOptions) {
+                $configs->set($dbIdent, function () use ($dbOptions) {
                     return new DatabaseConfig($dbOptions);
-                };
+                });
             }
 
             return $configs;
@@ -58,7 +59,7 @@ class DatabaseServiceProvider
          * @param  Container $container A service container.
          * @return Container<string, PDO> A map of database handlers.
          */
-        $container->set('databases', function (Container $container) {
+        $container->set('databases', function (ContainerInterface $container) {
             $databases = ($container->get('config')['databases'] ?? []);
 
             $dbs = new Container();
@@ -66,8 +67,8 @@ class DatabaseServiceProvider
                 /**
                  * @return PDO
                  */
-                $dbs[$dbIdent] = function () use ($dbIdent, $container) {
-                    $dbConfig = $container->get('databases/config')[$dbIdent];
+                $dbs->set($dbIdent, function () use ($dbIdent, $container) {
+                    $dbConfig = $container->get('databases/config')->get($dbIdent);
 
                     $type = $dbConfig['type'];
                     $host = $dbConfig['hostname'];
@@ -98,7 +99,7 @@ class DatabaseServiceProvider
                     }
 
                     return $db;
-                };
+                });
             }
 
             return $dbs;
@@ -111,7 +112,7 @@ class DatabaseServiceProvider
          * @throws Exception If the database configset is invalid.
          * @return DatabaseConfig
          */
-        $container->set('database/config', function (Container $container) {
+        $container->set('database/config', function (ContainerInterface $container) {
             $dbIdent   = ($container->get('config')['default_database'] ?? 'default');
             $dbConfigs = $container->get('databases/config');
 
@@ -131,17 +132,17 @@ class DatabaseServiceProvider
          * @throws Exception If the database configuration is invalid.
          * @return PDO
          */
-        $container->set('database', function (Container $container) {
+        $container->set('database', function (ContainerInterface $container) {
             $dbIdent   = ($container->get('config')['default_database'] ?? 'default');
             $databases = $container->get('databases');
 
-            if (!isset($databases[$dbIdent])) {
+            if (!($databases->has($dbIdent))) {
                 throw new Exception(
                     sprintf('The database "%s" is not defined in the "databases" configuration.', $dbIdent)
                 );
             }
 
-            return $databases[$dbIdent];
+            return $databases->get($dbIdent);
         });
     }
 }

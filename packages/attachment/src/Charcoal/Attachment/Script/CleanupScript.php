@@ -127,8 +127,8 @@ class CleanupScript extends AbstractScript implements
     {
         parent::setDependencies($container);
 
-        $this->setAppConfig($container['config']);
-        $this->setModelFactory($container['model/factory']);
+        $this->setAppConfig($container->get('config'));
+        $this->setModelFactory($container->get('model/factory'));
     }
 
     /**

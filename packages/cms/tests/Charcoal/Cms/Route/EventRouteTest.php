@@ -170,7 +170,7 @@ class EventRouteTest extends AbstractRouteTestCase
     {
         $container = $this->getContainer();
 
-        $event = $container['model/factory']->get(Event::class);
+        $event = $container->get('model/factory')->get(Event::class);
         if ($event->source()->tableExists() === false) {
             $event->source()->createTable();
         }
@@ -186,7 +186,7 @@ class EventRouteTest extends AbstractRouteTestCase
     {
         $container = $this->getContainer();
 
-        $event = $container['model/factory']->create(Event::class);
+        $event = $container->get('model/factory')->create(Event::class);
 
         $event->setData($data + [
             'id'    => 1,

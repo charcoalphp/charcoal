@@ -1044,13 +1044,13 @@ class TableWidget extends AdminWidget implements CollectionContainerInterface
         parent::setDependencies($container);
 
         // Satisfies HttpAwareTrait dependencies
-        $this->setHttpRequest($container['request']);
+        $this->setHttpRequest($container->get('request'));
 
-        $this->setView($container['view']);
-        $this->setCollectionLoader($container['model/collection/loader']);
-        $this->setWidgetFactory($container['widget/factory']);
-        $this->setPropertyFactory($container['property/factory']);
-        $this->setPropertyDisplayFactory($container['property/display/factory']);
+        $this->setView($container->get('view'));
+        $this->setCollectionLoader($container->get('model/collection/loader'));
+        $this->setWidgetFactory($container->get('widget/factory'));
+        $this->setPropertyFactory($container->get('property/factory'));
+        $this->setPropertyDisplayFactory($container->get('property/display/factory'));
     }
 
     /**

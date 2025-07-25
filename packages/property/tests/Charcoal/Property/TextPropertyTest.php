@@ -26,9 +26,9 @@ class TextPropertyTest extends AbstractTestCase
         $container = $this->getContainer();
 
         $this->obj = new TextProperty([
-            'database'   => $container['database'],
-            'logger'     => $container['logger'],
-            'translator' => $container['translator']
+            'database'   => $container->get('database'),
+            'logger'     => $container->get('logger'),
+            'translator' => $container->get('translator')
         ]);
     }
 

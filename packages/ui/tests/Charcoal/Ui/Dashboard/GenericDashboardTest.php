@@ -30,10 +30,10 @@ class GenericDashboardTest extends AbstractTestCase
         (new FormServiceProvider())->register($container);
 
         $this->obj = new GenericDashboard([
-            'logger'         => $container['logger'],
-            'view'           => $container['view'],
-            'layout_builder' => $container['layout/builder'],
-            'widget_builder' => $container['form/builder'],
+            'logger'         => $container->get('logger'),
+            'view'           => $container->get('view'),
+            'layout_builder' => $container->get('layout/builder'),
+            'widget_builder' => $container->get('form/builder'),
         ]);
     }
 

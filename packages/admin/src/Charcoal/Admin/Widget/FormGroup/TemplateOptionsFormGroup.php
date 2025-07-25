@@ -224,7 +224,7 @@ class TemplateOptionsFormGroup extends StructureFormGroup
     {
         parent::setDependencies($container);
 
-        $this->setMetadataLoader($container['metadata/loader']);
+        $this->setMetadataLoader($container->get('metadata/loader'));
     }
 
     /**

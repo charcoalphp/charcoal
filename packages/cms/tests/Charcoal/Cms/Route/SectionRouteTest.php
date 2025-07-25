@@ -172,7 +172,7 @@ class SectionRouteTest extends AbstractRouteTestCase
     {
         $container = $this->getContainer();
 
-        $section = $container['model/factory']->get(Section::class);
+        $section = $container->get('model/factory')->get(Section::class);
         if ($section->source()->tableExists() === false) {
             $section->source()->createTable();
         }
@@ -187,7 +187,7 @@ class SectionRouteTest extends AbstractRouteTestCase
     protected function insertMockRoutableContextObjects(array $data = [])
     {
         $container = $this->getContainer();
-        $factory   = $container['model/factory'];
+        $factory   = $container->get('model/factory');
 
         $factory->create(Section::class)
                 ->setData($data + [

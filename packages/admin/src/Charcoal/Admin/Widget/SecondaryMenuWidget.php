@@ -932,9 +932,9 @@ class SecondaryMenuWidget extends AdminWidget implements
         parent::setDependencies($container);
 
         // Satisfies HttpAwareTrait dependencies
-        $this->setHttpRequest($container['request']);
+        $this->setHttpRequest($container->get('request'));
 
-        $this->setSecondaryMenuGroupFactory($container['secondary-menu/group/factory']);
+        $this->setSecondaryMenuGroupFactory($container->get('secondary-menu/group/factory'));
     }
 
     /**

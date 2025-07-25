@@ -40,7 +40,7 @@ class PermissionTest extends AbstractTestCase
 
         $this->obj = new Permission([
             'container' => $container,
-            'logger'    => $container['logger']
+            'logger'    => $container->get('logger')
         ]);
     }
 

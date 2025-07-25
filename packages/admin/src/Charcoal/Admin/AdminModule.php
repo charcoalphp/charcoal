@@ -57,9 +57,6 @@ class AdminModule extends AbstractModule
 
         $this->setConfig($adminConfig);
 
-        //var_dump($adminConfig);
-        //exit;
-
         $groupIdent = '/' . trim($adminConfig['base_path'], '/');
 
         // Add the route group

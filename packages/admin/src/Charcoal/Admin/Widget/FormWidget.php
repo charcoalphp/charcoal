@@ -775,15 +775,15 @@ class FormWidget extends AdminWidget implements
         parent::setDependencies($container);
 
         // Satisfies HttpAwareTrait dependencies
-        $this->setHttpRequest($container['request']);
+        $this->setHttpRequest($container->get('request'));
 
-        $this->setWidgetFactory($container['widget/factory']);
+        $this->setWidgetFactory($container->get('widget/factory'));
 
         // Satisfies FormInterface
-        $this->setFormGroupFactory($container['form/group/factory']);
+        $this->setFormGroupFactory($container->get('form/group/factory'));
 
         // Satisfies LayoutAwareInterface
-        $this->setLayoutBuilder($container['layout/builder']);
+        $this->setLayoutBuilder($container->get('layout/builder'));
     }
 
     /**

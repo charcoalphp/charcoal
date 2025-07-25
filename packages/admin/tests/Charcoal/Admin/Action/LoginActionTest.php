@@ -56,7 +56,7 @@ class LoginActionTest extends AbstractTestCase
         $container = $this->container();
 
         $this->obj = new LoginAction([
-            'logger'    => $container['logger'],
+            'logger'    => $container->get('logger'),
             'container' => $container
         ]);
     }

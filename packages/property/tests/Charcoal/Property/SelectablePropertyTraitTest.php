@@ -40,7 +40,7 @@ class SelectablePropertyTraitTest extends AbstractTestCase
         $this->obj = $this->getMockForTrait(SelectablePropertyTrait::class);
         $this->obj->expects($this->any())
                   ->method('translator')
-                  ->will($this->returnValue($container['translator']));
+                  ->will($this->returnValue($container->get('translator')));
     }
 
     /**
@@ -50,7 +50,7 @@ class SelectablePropertyTraitTest extends AbstractTestCase
     public function translation($val)
     {
         $container = $this->getContainer();
-        $locales   = $container['locales/manager'];
+        $locales   = $container->get('locales/manager');
 
         return new Translation($val, $locales);
     }

@@ -162,11 +162,11 @@ abstract class AbstractHandler implements
      */
     protected function setDependencies(Container $container)
     {
-        $this->setTranslator($container['translator']);
-        $this->setView($container['view']);
-        $this->setTemplateFactory($container['template/factory']);
-        if (isset($container['config']['handlers.defaults'])) {
-            $this->setConfig($container['config']['handlers.defaults']);
+        $this->setTranslator($container->get('translator'));
+        $this->setView($container->get('view'));
+        $this->setTemplateFactory($container->get('template/factory'));
+        if (isset($container->get('config')['handlers.defaults'])) {
+            $this->setConfig($container->get('config')['handlers.defaults']);
         }
         return $this;
     }

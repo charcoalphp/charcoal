@@ -101,6 +101,6 @@ class Permission extends AbstractModel implements CategorizableInterface
     protected function setDependencies(Container $container)
     {
         parent::setDependencies($container);
-        $this->setTranslator($container['translator']);
+        $this->setTranslator($container->get('translator'));
     }
 }

@@ -31,13 +31,13 @@ class FormGroupWidgetTest extends AbstractTestCase
         $containerProvider->registerAuthenticator($container);
 
 
-        $container['form/input/builder'] = $this->createMock(\Charcoal\Ui\FormInput\FormInputBuilder::class, '');
+        $container->set('form/input/builder', $this->createMock(\Charcoal\Ui\FormInput\FormInputBuilder::class, ''));
 
-        $container['authorizer'] = $container['admin/authorizer'];
-        $container['authenticator'] = $container['admin/authenticator'];
+        $container->set('authorizer', $container->get('admin/authorizer'));
+        $container->set('authenticator', $container->get('admin/authenticator'));
 
         $this->obj = new FormGroupWidget([
-            'logger' => $container['logger'],
+            'logger' => $container->get('logger'),
             'container' => $container
         ]);
     }

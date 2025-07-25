@@ -35,11 +35,11 @@ class SecondaryMenuWidgetTest extends AbstractTestCase
         $containerProvider->registerWidgetDependencies($container);
         $containerProvider->registerWidgetFactory($container);
 
-        $container['request'] = Request::createFromEnvironment(Environment::mock());
-        $container['secondary-menu/group/factory'] = $container['widget/factory'];
+        $container->set('request', Request::createFromEnvironment(Environment::mock()));
+        $container->set('secondary-menu/group/factory', $container->get('widget/factory'));
 
         $this->obj = new SecondaryMenuWidget([
-            'logger' => $container['logger'],
+            'logger' => $container->get('logger'),
             'container' => $container
         ]);
     }

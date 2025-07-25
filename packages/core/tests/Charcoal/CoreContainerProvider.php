@@ -3,35 +3,23 @@
 namespace Charcoal\Tests;
 
 use PDO;
-
 // From PSR-3
 use Psr\Log\NullLogger;
-
-// From 'cache/void-adapter' (PSR-6)
-use Cache\Adapter\Void\VoidCachePool;
-
 // From 'tedivm/stash' (PSR-6)
 use Stash\Pool;
 use Stash\Driver\Ephemeral;
-
-
 use DI\Container;
-
 // From 'symfony/translator'
 use Symfony\Component\Translation\Loader\ArrayLoader;
-
 // From 'charcoal-factory'
 use Charcoal\Factory\GenericFactory as Factory;
-
 // From 'charcoal-core'
 use Charcoal\Model\Service\MetadataLoader;
 use Charcoal\Loader\CollectionLoader;
 use Charcoal\Source\DatabaseSource;
-
 // From 'charcoal-translator'
 use Charcoal\Translator\LocalesManager;
 use Charcoal\Translator\Translator;
-
 // From 'charcoal-app'
 use Charcoal\App\AppConfig;
 
@@ -62,11 +50,11 @@ class CoreContainerProvider
      */
     public function registerConfig(Container $container)
     {
-        $container['config'] = function () {
+        $container->set('config', function () {
             return new AppConfig([
                 'base_path' => realpath(__DIR__ . '/../../..')
             ]);
-        };
+        });
     }
 
     /**
@@ -79,11 +67,11 @@ class CoreContainerProvider
      */
     public function registerSource(Container $container)
     {
-        $container['database'] = function () {
+        $container->set('database', function () {
             $pdo = new PDO('sqlite::memory:');
             $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             return $pdo;
-        };
+        });
     }
 
     /**
@@ -94,9 +82,9 @@ class CoreContainerProvider
      */
     public function registerLogger(Container $container)
     {
-        $container['logger'] = function () {
+        $container->set('logger', function () {
             return new NullLogger();
-        };
+        });
     }
 
     /**
@@ -107,9 +95,9 @@ class CoreContainerProvider
      */
     public function registerCache(Container $container)
     {
-        $container['cache'] = function () {
+        $container->set('cache', function () {
             return new Pool();
-        };
+        });
     }
 
     /**
@@ -120,19 +108,19 @@ class CoreContainerProvider
      */
     public function registerTranslator(Container $container)
     {
-        $container['locales/manager'] = function () {
+        $container->set('locales/manager', function () {
             return new LocalesManager([
                 'locales' => [
                     'en' => [ 'locale' => 'en-US' ]
                 ]
             ]);
-        };
+        });
 
-        $container['translator'] = function (Container $container) {
+        $container->set('translator', function (Container $container) {
             return new Translator([
-                'manager' => $container['locales/manager']
+                'manager' => $container->get('locales/manager')
             ]);
-        };
+        });
     }
 
     /**
@@ -143,7 +131,7 @@ class CoreContainerProvider
      */
     public function registerMultilingualTranslator(Container $container)
     {
-        $container['locales/manager'] = function () {
+        $container->set('locales/manager', function () {
             $manager = new LocalesManager([
                 'locales' => [
                     'en'  => [
@@ -176,11 +164,11 @@ class CoreContainerProvider
             $manager->setCurrentLocale($manager->currentLocale());
 
             return $manager;
-        };
+        });
 
-        $container['translator'] = function (Container $container) {
+        $container->set('translator', function (Container $container) {
             $translator = new Translator([
-                'manager' => $container['locales/manager']
+                'manager' => $container->get('locales/manager')
             ]);
 
             $loader = new ArrayLoader();
@@ -191,7 +179,7 @@ class CoreContainerProvider
             $translator->addResource('array', [ 'locale.de' => 'Alemán'   ], 'de', 'messages');
 
             return $translator;
-        };
+        });
     }
 
     /**
@@ -202,11 +190,11 @@ class CoreContainerProvider
      */
     public function registerMetadataLoader(Container $container)
     {
-        $container['metadata/loader'] = function (Container $container) {
+        $container->set('metadata/loader', function (Container $container) {
             return new MetadataLoader([
-                'cache'     => $container['cache'],
-                'logger'    => $container['logger'],
-                'base_path' => $container['config']['base_path'],
+                'cache'     => $container->get('cache'),
+                'logger'    => $container->get('logger'),
+                'base_path' => $container->get('config')['base_path'],
                 'paths'     => [
                     'metadata',
                     // Standalone
@@ -215,7 +203,7 @@ class CoreContainerProvider
                     '/../property/metadata'
                 ]
             ]);
-        };
+        });
     }
 
     /**
@@ -226,18 +214,18 @@ class CoreContainerProvider
      */
     public function registerSourceFactory(Container $container)
     {
-        $container['source/factory'] = function (Container $container) {
+        $container->set('source/factory', function (Container $container) {
             return new Factory([
                 'map' => [
                     'database' => DatabaseSource::class
                 ],
                 'arguments'  => [[
-                    'logger' => $container['logger'],
-                    'cache'  => $container['cache'],
-                    'pdo'    => $container['database']
+                    'logger' => $container->get('logger'),
+                    'cache'  => $container->get('cache'),
+                    'pdo'    => $container->get('database')
                 ]]
             ]);
-        };
+        });
     }
 
     /**
@@ -248,17 +236,17 @@ class CoreContainerProvider
      */
     public function registerModelFactory(Container $container)
     {
-        $container['model/factory'] = function (Container $container) {
+        $container->set('model/factory', function (Container $container) {
             return new Factory([
                 'arguments' => [[
                     'container'         => $container,
-                    'logger'            => $container['logger'],
-                    'metadata_loader'   => $container['metadata/loader'],
-                    'source_factory'    => $container['source/factory'],
-                    'property_factory'  => $container['property/factory']
+                    'logger'            => $container->get('logger'),
+                    'metadata_loader'   => $container->get('metadata/loader'),
+                    'source_factory'    => $container->get('source/factory'),
+                    'property_factory'  => $container->get('property/factory')
                 ]]
             ]);
-        };
+        });
     }
 
     /**
@@ -269,7 +257,7 @@ class CoreContainerProvider
      */
     public function registerPropertyFactory(Container $container)
     {
-        $container['property/factory'] = function (Container $container) {
+        $container->set('property/factory', function (Container $container) {
             return new Factory([
                 'resolver_options' => [
                     'prefix' => '\\Charcoal\\Property\\',
@@ -277,12 +265,12 @@ class CoreContainerProvider
                 ],
                 'arguments' => [[
                     'container'  => $container,
-                    'database'   => $container['database'],
-                    'logger'     => $container['logger'],
-                    'translator' => $container['translator']
+                    'database'   => $container->get('database'),
+                    'logger'     => $container->get('logger'),
+                    'translator' => $container->get('translator')
                 ]]
             ]);
-        };
+        });
     }
 
     /**
@@ -293,11 +281,11 @@ class CoreContainerProvider
      */
     public function registerModelCollectionLoader(Container $container)
     {
-        $container['model/collection/loader'] = function (Container $container) {
+        $container->set('model/collection/loader', function (Container $container) {
             return new CollectionLoader([
-                'logger' => $container['logger'],
-                'cache'  => $container['cache']
+                'logger' => $container->get('logger'),
+                'cache'  => $container->get('cache')
             ]);
-        };
+        });
     }
 }

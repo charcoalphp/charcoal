@@ -31,9 +31,9 @@ class AbstractMenuTest extends AbstractTestCase
         $this->obj = $this->getMockForAbstractClass(AbstractMenu::class, [
             [
                 'container'         => $container,
-                'logger'            => $container['logger'],
-                'view'              => $container['view'],
-                'menu_item_builder' => $container['menu/item/builder'],
+                'logger'            => $container->get('logger'),
+                'view'              => $container->get('view'),
+                'menu_item_builder' => $container->get('menu/item/builder'),
             ],
         ]);
     }

@@ -73,9 +73,9 @@ class UsersTemplate extends AdminTemplate implements
         parent::setDependencies($container);
 
         // Required collection dependencies
-        $this->setCollectionLoader($container['model/collection/loader']);
+        $this->setCollectionLoader($container->get('model/collection/loader'));
 
         // Required dashboard dependencies.
-        $this->setDashboardBuilder($container['dashboard/builder']);
+        $this->setDashboardBuilder($container->get('dashboard/builder'));
     }
 }

@@ -20,6 +20,6 @@ class LoggerServiceProviderTest extends AbstractTestCase
         $provider = new LoggerServiceProvider();
         $provider->register($container);
 
-        $this->assertTrue(isset($container['logger']));
+        $this->assertTrue(isset($container->get('logger')));
     }
 }

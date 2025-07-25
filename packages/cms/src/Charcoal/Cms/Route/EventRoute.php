@@ -88,7 +88,7 @@ class EventRoute extends TemplateRoute
         $templateController = (string)$event['templateIdent'];
 
         if (!$templateController) {
-            $container['logger']->warning(sprintf(
+            $container->get('logger')->warning(sprintf(
                 '[%s] Missing template controller on model [%s] for ID [%s]',
                 get_class($this),
                 get_class($event),
@@ -97,7 +97,7 @@ class EventRoute extends TemplateRoute
             return $response->withStatus(500);
         }
 
-        $templateFactory = $container['template/factory'];
+        $templateFactory = $container->get('template/factory');
 
         $template = $templateFactory->create($templateController);
         $template->init($request);
@@ -106,9 +106,9 @@ class EventRoute extends TemplateRoute
         $template->setData($config['template_data']);
         $template->setEvent($event);
 
-        $templateContent = $container['view']->render($templateIdent, $template);
+        $templateContent = $container->get('view')->render($templateIdent, $template);
         if ($templateContent === $templateIdent || $templateContent === '') {
-            $container['logger']->warning(sprintf(
+            $container->get('logger')->warning(sprintf(
                 '[%s] Missing or bad template identifier on model [%s] for ID [%s]',
                 get_class($this),
                 get_class($event),
@@ -134,12 +134,12 @@ class EventRoute extends TemplateRoute
             $objType = (isset($config['obj_type']) ? $config['obj_type'] : $this->objType);
 
             try {
-                $model = $container['model/factory']->create($objType);
-                $langs = $container['translator']->availableLocales();
+                $model = $container->get('model/factory')->create($objType);
+                $langs = $container->get('translator')->availableLocales();
                 $lang  = $model->loadFromL10n('slug', $this->path, $langs);
 
                 if ($lang) {
-                    $container['translator']->setLocale($lang);
+                    $container->get('translator')->setLocale($lang);
                 }
 
                 if ($model->id()) {
@@ -147,7 +147,7 @@ class EventRoute extends TemplateRoute
                     return $model;
                 }
             } catch (Exception $e) {
-                $container['logger']->debug(sprintf(
+                $container->get('logger')->debug(sprintf(
                     '[%s] Unable to load model [%s] for path [%s]',
                     get_class($this),
                     get_class($model),

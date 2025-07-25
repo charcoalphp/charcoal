@@ -3,18 +3,13 @@
 namespace Charcoal\Tests\View\Mustache;
 
 use LogicException;
-
 // From Mustache
 use Mustache_Engine as MustacheEngine;
-
 // From 'symfony/translation'
-use Symfony\Component\Translation\MessageSelector;
 use Symfony\Component\Translation\Loader\ArrayLoader;
-
 // From 'charcoal-translator'
 use Charcoal\Translator\Translator;
 use Charcoal\Translator\LocalesManager;
-
 // From 'charcoal-view'
 use Charcoal\View\Mustache\TranslatorHelpers;
 use Charcoal\Tests\AbstractTestCase;
@@ -163,7 +158,6 @@ class TranslatorHelpersTest extends AbstractTestCase
             'locale'            => 'en',
             'cache_dir'         => null,
             'debug'             => false,
-            'message_selector'  => new MessageSelector(),
             'manager'           => new LocalesManager([
                 'locales' => [
                     'en' => [

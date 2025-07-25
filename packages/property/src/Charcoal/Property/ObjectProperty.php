@@ -649,9 +649,9 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
     {
         parent::setDependencies($container);
 
-        $this->setModelFactory($container['model/factory']);
-        $this->setCollectionLoader($container['model/collection/loader']);
-        $this->setCachePool($container['cache']);
+        $this->setModelFactory($container->get('model/factory'));
+        $this->setCollectionLoader($container->get('model/collection/loader'));
+        $this->setCachePool($container->get('cache'));
     }
 
     /**

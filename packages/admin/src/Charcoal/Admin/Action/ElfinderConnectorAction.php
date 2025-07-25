@@ -888,15 +888,15 @@ class ElfinderConnectorAction extends AdminAction
     {
         parent::setDependencies($container);
 
-        $this->basePath = $container['config']['base_path'];
-        $this->publicPath = $container['config']['public_path'];
+        $this->basePath = $container->get('config')['base_path'];
+        $this->publicPath = $container->get('config')['public_path'];
 
-        $this->setElfinderConfig($container['elfinder/config']);
-        $this->setCallableResolver($container['callableResolver']);
+        $this->setElfinderConfig($container->get('elfinder/config'));
+        $this->setCallableResolver($container->get('callableResolver'));
 
         /** @see \Charcoal\App\ServiceProvide\FilesystemServiceProvider */
-        $this->filesystemConfig = $container['filesystem/config'];
-        $this->filesystems = $container['filesystems'];
+        $this->filesystemConfig = $container->get('filesystem/config');
+        $this->filesystems = $container->get('filesystems');
     }
 
     /**

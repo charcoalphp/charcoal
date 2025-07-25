@@ -248,7 +248,7 @@ class SpriteProperty extends AbstractProperty implements SelectablePropertyInter
     {
         parent::setDependencies($container);
 
-        $this->view = $container['view'];
+        $this->view = $container->get('view');
     }
 
     /**

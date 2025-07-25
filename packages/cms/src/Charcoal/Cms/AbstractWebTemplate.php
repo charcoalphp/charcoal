@@ -458,7 +458,7 @@ abstract class AbstractWebTemplate extends AbstractTemplate
     /**
      * Set the base URI of the project.
      *
-     * @see    \Charcoal\App\ServiceProvider\AppServiceProvider `$container['base-url']`
+     * @see    \Charcoal\App\ServiceProvider\AppServiceProvider `$container->get('base-url')`
      * @param  UriInterface $uri The base URI.
      * @return self
      */

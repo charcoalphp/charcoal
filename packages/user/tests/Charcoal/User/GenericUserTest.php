@@ -47,10 +47,10 @@ class GenericUserTest extends AbstractTestCase
 
         $this->obj = new GenericUser([
             # 'container'        => $container,
-            'logger'           => $container['logger'],
-            'translator'       => $container['translator'],
-            # 'property_factory' => $container['property/factory'],
-            # 'metadata_loader'  => $container['metadata/loader']
+            'logger'           => $container->get('logger'),
+            'translator'       => $container->get('translator'),
+            # 'property_factory' => $container->get('property/factory'),
+            # 'metadata_loader'  => $container->get('metadata/loader')
         ]);
     }
 

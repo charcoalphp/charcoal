@@ -26,12 +26,12 @@ class SpritePropertyTest extends AbstractTestCase
     protected function setUp(): void
     {
         $container = $this->getContainer();
-        $container['view'] = null;
+        $container->set('view', null);
 
         $this->obj = new SpriteProperty([
-            'database'   => $container['database'],
-            'logger'     => $container['logger'],
-            'translator' => $container['translator'],
+            'database'   => $container->get('database'),
+            'logger'     => $container->get('logger'),
+            'translator' => $container->get('translator'),
             'container'  => $container
         ]);
     }

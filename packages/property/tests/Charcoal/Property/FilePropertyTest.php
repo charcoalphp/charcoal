@@ -27,9 +27,9 @@ class FilePropertyTest extends AbstractFilePropertyTestCase
         $container = $this->getContainer();
 
         return new FileProperty([
-            'database'   => $container['database'],
-            'logger'     => $container['logger'],
-            'translator' => $container['translator'],
+            'database'   => $container->get('database'),
+            'logger'     => $container->get('logger'),
+            'translator' => $container->get('translator'),
             'container'  => $container,
         ]);
     }

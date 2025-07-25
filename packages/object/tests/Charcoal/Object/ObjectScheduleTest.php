@@ -40,7 +40,7 @@ class ObjectScheduleTest extends AbstractTestCase
     {
         $container = $this->container();
 
-        $this->obj = $container['model/factory']->create(ObjectSchedule::class);
+        $this->obj = $container->get('model/factory')->create(ObjectSchedule::class);
     }
 
     /**
@@ -152,7 +152,7 @@ class ObjectScheduleTest extends AbstractTestCase
     public function testProcess()
     {
         $container = $this->container();
-        $this->obj->setModelFactory($container['model/factory']);
+        $this->obj->setModelFactory($container->get('model/factory'));
 
         $this->assertFalse($this->obj->process());
 

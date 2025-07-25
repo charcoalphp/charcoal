@@ -67,8 +67,8 @@ class UploadImageAction extends AdminAction
     {
         parent::setDependencies($container);
 
-        $this->basePath   = $container['config']['base_path'];
-        $this->publicPath = $container['config']['public_path'];
+        $this->basePath   = $container->get('config')['base_path'];
+        $this->publicPath = $container->get('config')['public_path'];
     }
 
     /**

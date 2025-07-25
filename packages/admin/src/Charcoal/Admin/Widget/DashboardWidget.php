@@ -33,9 +33,9 @@ class DashboardWidget extends AdminWidget implements
         parent::setDependencies($container);
 
         // Satisfies DashboardInterface dependencies
-        $this->setWidgetBuilder($container['widget/builder']);
+        $this->setWidgetBuilder($container->get('widget/builder'));
 
         // Satisfies LayoutAwareInterface dependencies
-        $this->setLayoutBuilder($container['layout/builder']);
+        $this->setLayoutBuilder($container->get('layout/builder'));
     }
 }

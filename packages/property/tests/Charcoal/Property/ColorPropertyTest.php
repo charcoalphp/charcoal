@@ -31,9 +31,9 @@ class ColorPropertyTest extends AbstractTestCase
         $container = $this->getContainer();
 
         $this->obj = new ColorProperty([
-            'database'   => $container['database'],
-            'logger'     => $container['logger'],
-            'translator' => $container['translator']
+            'database'   => $container->get('database'),
+            'logger'     => $container->get('logger'),
+            'translator' => $container->get('translator')
         ]);
     }
 

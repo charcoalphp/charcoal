@@ -31,7 +31,7 @@ The _Translation Object_ holds the translation data for a given string in all av
 
 ```php
 // Get a translation object from the Translator
-$translation = $container['translator']->translation([
+$translation = $container->get('translator')->translation([
     'en' => 'Hello World',
     'fr' => 'Bonjour'
 ]);
@@ -94,7 +94,6 @@ The [`TranslatorServiceProvider`][src-translator-provider] provides services and
 
 -   **locales/manager**: An instance of [`LocalesManager`][src-locales-manager], used for handling available languages, their definitions, the default language, and tracks the current language.
 -   **translator**: An instance of [`Translator`][src-translator-service], that is used for translation.
--   **translator/message-selector**: An instance of [`Symfony\Component\Translation\MessageSelector`](https://api.symfony.com/master/Symfony/Component/Translation/MessageSelector.html).
 -   **translator/loader/\***: Instances of the translation [`Symfony\Component\Translation\Loader\LoaderInterface`](https://api.symfony.com/master/Symfony/Component/Translation/Loader/LoaderInterface.html).
 
 ### Configuration

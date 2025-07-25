@@ -8,6 +8,8 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
 // From 'charcoal-app'
 use Charcoal\App\Handler\AbstractHandler;
+use Nyholm\Psr7\Response;
+use Slim\Exception\HttpNotFoundException;
 
 /**
  * "Not Found" Handler
@@ -28,7 +30,7 @@ class NotFound extends AbstractHandler
      */
     public function __invoke(
         ServerRequestInterface $request,
-        ResponseInterface $response
+        HttpNotFoundException $exception
     ) {
         $this->setHttpRequest($request);
 
@@ -59,7 +61,7 @@ class NotFound extends AbstractHandler
         }
 
         return $this->respondWith(
-            $response->withStatus(404),
+            new Response(404),
             $contentType,
             $output
         );

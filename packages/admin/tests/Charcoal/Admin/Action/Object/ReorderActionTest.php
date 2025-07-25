@@ -70,7 +70,7 @@ class ReorderActionTest extends AbstractTestCase
         $containerProvider->registerActionDependencies($container);
 
         $this->action = new ReorderAction([
-            'logger'    => $container['logger'],
+            'logger'    => $container->get('logger'),
             'container' => $container
         ]);
     }
@@ -82,7 +82,7 @@ class ReorderActionTest extends AbstractTestCase
     {
         $container = $this->container();
 
-        $model  = $container['model/factory']->create($this->model);
+        $model  = $container->get('model/factory')->create($this->model);
         $source = $model->source();
 
         if (!$source->tableExists()) {
@@ -116,8 +116,8 @@ class ReorderActionTest extends AbstractTestCase
             $container = $this->container();
 
             $loader = new CollectionLoader([
-                'logger'     => $container['logger'],
-                'factory'    => $container['model/factory'],
+                'logger'     => $container->get('logger'),
+                'factory'    => $container->get('model/factory'),
                 'model'      => $this->model,
                 'collection' => Collection::class
             ]);

@@ -45,7 +45,7 @@ class AdminTemplateTest extends AbstractTestCase
         $container = $this->container();
 
         $this->obj = new AdminTemplate([
-            'logger'    => $container['logger'],
+            'logger'    => $container->get('logger'),
             'container' => $container
         ]);
     }
@@ -93,7 +93,7 @@ class AdminTemplateTest extends AbstractTestCase
             $containerProvider = new ContainerProvider();
             $containerProvider->registerTemplateDependencies($container);
 
-            $container['widget/factory'] = $this->createMock('\Charcoal\Factory\FactoryInterface');
+            $container->set('widget/factory', $this->createMock('\Charcoal\Factory\FactoryInterface'));
 
             $this->container = $container;
         }

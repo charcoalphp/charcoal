@@ -40,7 +40,7 @@ class ContentTest extends AbstractTestCase
     {
         $container = $this->container();
 
-        $this->obj = $container['model/factory']->create(Content::class);
+        $this->obj = $container->get('model/factory')->create(Content::class);
     }
 
     /**

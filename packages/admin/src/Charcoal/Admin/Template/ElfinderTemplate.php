@@ -543,7 +543,7 @@ class ElfinderTemplate extends AdminTemplate
     {
         parent::setDependencies($container);
 
-        $this->elfinderConfig = $container['elfinder/config'];
+        $this->elfinderConfig = $container->get('elfinder/config');
     }
 
     /**

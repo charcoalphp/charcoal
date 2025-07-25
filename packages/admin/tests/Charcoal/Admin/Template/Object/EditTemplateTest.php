@@ -43,8 +43,8 @@ class EditTemplateTest extends AbstractTestCase
         $container = $this->container();
 
         $this->obj = new EditTemplate([
-            'logger'          => $container['logger'],
-            'metadata_loader' => $container['metadata/loader'],
+            'logger'          => $container->get('logger'),
+            'metadata_loader' => $container->get('metadata/loader'),
             'container'       => $container
         ]);
         //$this->obj->setDependencies($container);

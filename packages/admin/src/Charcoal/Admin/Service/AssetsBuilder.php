@@ -2,27 +2,23 @@
 
 namespace Charcoal\Admin\Service;
 
-// from kriswallsmith/assetic
-use Assetic\Asset\AssetCollection;
-use Assetic\Asset\AssetInterface;
-use Assetic\Asset\AssetReference;
-use Assetic\Asset\FileAsset;
-use Assetic\Asset\GlobAsset;
-use Assetic\AssetManager;
 // from charcoal-admin
 use Charcoal\Admin\AssetsConfig;
+use Symfony\Component\Asset\Packages;
+use Symfony\Component\Asset\Package;
+use Symfony\Component\Asset\VersionStrategy\EmptyVersionStrategy;
 
 /**
  * Assets Builder
  *
- * Build custom assets builder using {@link https://github.com/kriswallsmith/assetic}
+ * Build custom assets builder using Symfony Asset component
  */
 final class AssetsBuilder
 {
     /**
-     * @var AssetManager|null
+     * @var Packages|null
      */
-    private $assetManager = null;
+    private $packages = null;
 
     /**
      * @var string|null
@@ -42,7 +38,7 @@ final class AssetsBuilder
      * Alias of {@see self::build()}.
      *
      * @param  AssetsConfig $config The assets management config.
-     * @return AssetManager
+     * @return Packages
      */
     public function __invoke(AssetsConfig $config)
     {
@@ -51,22 +47,26 @@ final class AssetsBuilder
 
     /**
      * @param  AssetsConfig $config The assets management config.
-     * @return AssetManager
+     * @return Packages
      */
     public function build(AssetsConfig $config)
     {
-        $this->assetManager = new AssetManager();
-        $this->parseCollections($config->collections());
-
-        return $this->assetManager;
+        $versionStrategy = new EmptyVersionStrategy();
+        $package = new Package($versionStrategy);
+        $this->packages = new Packages($package);
+        // Optionally, you can add more packages for different base paths or versioning
+        return $this->packages;
     }
 
     /**
+     * Get asset URLs for a collection.
+     *
      * @param array $collections Assets collections.
-     * @return void
+     * @return array
      */
-    private function parseCollections(array $collections)
+    public function getAssetUrls(array $collections)
     {
+        $urls = [];
         foreach ($collections as $collectionIdent => $actions) {
             $files = ($actions['files'] ?? []);
             // Parse scoped files. Solves merging issues.
@@ -75,68 +75,24 @@ final class AssetsBuilder
                     $files = array_merge($files, $scope['files']);
                 }
             });
-
             $files = array_unique($files);
-            $collection = $this->extractFiles($files);
-
-            $ac = new AssetCollection($collection);
-            $this->assetManager->set($collectionIdent, $ac);
+            $urls[$collectionIdent] = $this->generateUrls($files);
         }
+        return $urls;
     }
 
     /**
-     * @param  string[] $files Files to convert to Collection assets.
-     * @return AssetInterface[]
+     * Generate asset URLs from file paths.
+     *
+     * @param string[] $files
+     * @return string[]
      */
-    private function extractFiles(array $files = [])
+    private function generateUrls(array $files = [])
     {
-        $collection = [];
-
+        $urls = [];
         foreach ($files as $file) {
-            // Files starting with '@' should be treated as assets reference.
-            if ($file[0] === '@') {
-                $file = ltrim($file, '@');
-
-                $collection[] = new AssetReference($this->assetManager, $file);
-                continue;
-            }
-
-            // If file is not absolute path, prefix with assets base path.
-            if ($this->basePath && !$this->isAbsolutePath($file)) {
-                $file = $this->basePath . '/' . $file;
-            }
-
-            // Files with asterisks should be treated as glob.
-            if (strpos($file, '*') !== false) {
-                $collection[] = new GlobAsset($file);
-                continue;
-            }
-
-            $collection[] = new FileAsset($file);
+            $urls[] = $this->packages->getUrl($file);
         }
-
-        return $collection;
-    }
-
-    /**
-     * Determine if the given file path is an absolute path.
-     *
-     * Note: Adapted from symfony\filesystem.
-     *
-     * @see https://github.com/symfony/symfony/blob/v3.2.2/LICENSE
-     *
-     * @param  string $file A file path.
-     * @return boolean Returns TRUE if the given path is absolute. Otherwise, returns FALSE.
-     */
-    private function isAbsolutePath($file)
-    {
-        $file = (string)$file;
-
-        return strspn($file, '/\\', 0, 1)
-            || (strlen($file) > 3
-                && ctype_alpha($file[0])
-                && substr($file, 1, 1) === ':'
-                && strspn($file, '/\\', 2, 1))
-            || null !== parse_url($file, PHP_URL_SCHEME);
+        return $urls;
     }
 }

@@ -106,7 +106,7 @@ class ProcessSchedulesScript extends AdminScript implements CronScriptInterface
     {
         parent::setDependencies($container);
 
-        $this->setScheduleFactory($container['model/factory']);
+        $this->setScheduleFactory($container->get('model/factory'));
     }
 
     /**

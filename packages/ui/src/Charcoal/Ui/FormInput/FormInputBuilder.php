@@ -56,8 +56,8 @@ class FormInputBuilder
         $objType = isset($options['type']) ? $options['type'] : self::DEFAULT_TYPE;
 
         $obj = $this->factory->create($objType, [
-            'logger' => $container['logger'],
-            'view'   => $container['view']
+            'logger' => $container->get('logger'),
+            'view'   => $container->get('view')
         ]);
         $obj->setData($options);
 

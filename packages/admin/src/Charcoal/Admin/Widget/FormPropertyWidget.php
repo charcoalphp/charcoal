@@ -1163,10 +1163,10 @@ class FormPropertyWidget extends AdminWidget implements
     {
         parent::setDependencies($container);
 
-        $this->setView($container['view']);
-        $this->setPropertyFactory($container['property/factory']);
-        $this->setPropertyInputFactory($container['property/input/factory']);
-        $this->setPropertyDisplayFactory($container['property/display/factory']);
+        $this->setView($container->get('view'));
+        $this->setPropertyFactory($container->get('property/factory'));
+        $this->setPropertyInputFactory($container->get('property/input/factory'));
+        $this->setPropertyDisplayFactory($container->get('property/display/factory'));
     }
 
     /**

@@ -72,7 +72,7 @@ $formConfig = [
 
 $formBuilder = new FormBuilder([
     'form_factory' => new FormFactory(),
-    'view'         => $container['view'],
+    'view'         => $container->get('view'),
 ]);
 
 $form = $formBuilder->build($formConfig);

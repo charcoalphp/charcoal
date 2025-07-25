@@ -36,8 +36,8 @@ class AbstractInputTest extends AbstractTestCase
 
         $this->obj = $this->getMockForAbstractClass(AbstractPropertyInput::class, [
             [
-                'logger'          => $container['logger'],
-                'metadata_loader' => $container['metadata/loader'],
+                'logger'          => $container->get('logger'),
+                'metadata_loader' => $container->get('metadata/loader'),
             ],
         ]);
     }

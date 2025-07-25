@@ -53,13 +53,13 @@ class RoutableTraitTest extends AbstractTestCase
     {
         $container = $this->container();
 
-        $route = $container['model/factory']->get(ObjectRoute::class);
+        $route = $container->get('model/factory')->get(ObjectRoute::class);
         if ($route->source()->tableExists() === false) {
             $route->source()->createTable();
         }
 
         $this->obj = new RoutableObject([
-            'factory'    => $container['model/factory'],
+            'factory'    => $container->get('model/factory'),
             'translator' => $this->translator()
         ]);
     }

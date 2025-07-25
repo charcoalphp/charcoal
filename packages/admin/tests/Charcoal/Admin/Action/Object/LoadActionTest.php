@@ -51,7 +51,7 @@ class LoadActionTest extends AbstractTestCase
         $container = $this->container();
 
         $this->obj = new LoadAction([
-            'logger'    => $container['logger'],
+            'logger'    => $container->get('logger'),
             'container' => $container
         ]);
     }

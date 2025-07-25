@@ -207,8 +207,8 @@ class Attachment extends Content implements AttachableInterface
     {
         parent::setDependencies($container);
 
-        $this->setBaseUrl($container['base-url']);
-        $this->setCollectionLoader($container['model/collection/loader']);
+        $this->setBaseUrl($container->get('base-url'));
+        $this->setCollectionLoader($container->get('model/collection/loader'));
     }
 
     /**

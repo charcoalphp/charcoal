@@ -55,8 +55,8 @@ class CmsServiceProvider
          * @param Container $container DI Container.
          * @return CmsConfig Website configurations (from cms.json).
          */
-        $container['cms/config'] = function (Container $container) {
-            $appConfig = $container['config'];
+        $container->set('cms/config', function (Container $container) {
+            $appConfig = $container->get('config');
             $cms = $appConfig->get('cms');
 
             $cmsConfig = new CmsConfig();
@@ -68,7 +68,7 @@ class CmsServiceProvider
             if ($configType) {
                 $configId = $cmsConfig->get('config_obj_id') ?: 1;
 
-                $model = $container['model/factory']->create($configType);
+                $model = $container->get('model/factory')->create($configType);
                 $model->load($configId);
 
                 if (!!$model->id()) {
@@ -77,7 +77,7 @@ class CmsServiceProvider
             }
 
             return $cmsConfig;
-        };
+        });
     }
 
     /**
@@ -90,27 +90,27 @@ class CmsServiceProvider
          * @param Container $container DI Container.
          * @return DateHelper
          */
-        $container['cms/date/helper'] = function (Container $container) {
+        $container->set('cms/date/helper', function (Container $container) {
             return new DateHelper([
-                'date_formats' => $container['cms/config']->get('date_formats'),
-                'time_formats' => $container['cms/config']->get('time_formats'),
-                'translator'   => $container['translator']
+                'date_formats' => $container->get('cms/config')->get('date_formats'),
+                'time_formats' => $container->get('cms/config')->get('time_formats'),
+                'translator'   => $container->get('translator')
             ]);
-        };
+        });
 
         /**
          * @param Container $container DI Container.
          * @return DateHelper
          */
-        $container['date/helper'] = function (Container $container) {
+        $container->set('date/helper', function (Container $container) {
             trigger_error(sprintf(
                 '%s is deprecated, use %s instead',
                 '$container[\'date/helper\']',
                 '$container[\'cms/date/helper\']'
             ));
 
-            return $container['cms/date/helper'];
-        };
+            return $container->get('cms/date/helper');
+        });
     }
 
     /**
@@ -123,37 +123,37 @@ class CmsServiceProvider
          * @param Container $container DI Container.
          * @return Factory
          */
-        $container['cms/section/factory'] = function (Container $container) {
+        $container->set('cms/section/factory', function (Container $container) {
             return new Factory([
                 'base_class'       => SectionInterface::class,
-                'arguments'        => $container['model/factory']->arguments(),
+                'arguments'        => $container->get('model/factory')->arguments(),
                 'resolver_options' => [
                     'suffix' => 'Section'
                 ]
             ]);
-        };
+        });
 
         /**
          * @param Container $container DI Container.
          * @return SectionLoader
          */
-        $container['cms/section/loader'] = function (Container $container) {
+        $container->set('cms/section/loader', function (Container $container) {
             $sectionLoader = new SectionLoader([
-                'loader'     => $container['model/collection/loader'],
-                'factory'    => $container['model/factory'],
-                'cache'      => $container['cache'],
-                'translator' => $container['translator']
+                'loader'     => $container->get('model/collection/loader'),
+                'factory'    => $container->get('model/factory'),
+                'cache'      => $container->get('cache'),
+                'translator' => $container->get('translator')
             ]);
 
             // Cms.json
-            $sectionConfig = $container['cms/config']->sectionConfig();
+            $sectionConfig = $container->get('cms/config')->sectionConfig();
 
             $sectionLoader->setObjType($sectionConfig->get('objType'));
             $sectionLoader->setBaseSection($sectionConfig->get('baseSection'));
             $sectionLoader->setSectionTypes($sectionConfig->get('sectionTypes'));
 
             return $sectionLoader;
-        };
+        });
     }
 
     /**
@@ -166,40 +166,40 @@ class CmsServiceProvider
          * @param Container $container DI Container.
          * @return NewsLoader
          */
-        $container['cms/news/loader'] = function (Container $container) {
+        $container->set('cms/news/loader', function (Container $container) {
             $newsLoader = new NewsLoader([
-                'loader'     => $container['model/collection/loader'],
-                'factory'    => $container['model/factory'],
-                'cache'      => $container['cache'],
-                'translator' => $container['translator']
+                'loader'     => $container->get('model/collection/loader'),
+                'factory'    => $container->get('model/factory'),
+                'cache'      => $container->get('cache'),
+                'translator' => $container->get('translator')
             ]);
 
-            $newsConfig = $container['cms/config']->newsConfig();
+            $newsConfig = $container->get('cms/config')->newsConfig();
 
             // Cms.json
             $objType = $newsConfig->get('obj_type');
             $newsLoader->setObjType($objType);
 
             return $newsLoader;
-        };
+        });
 
         /**
          * @param Container $container
          * @return NewsManager
          */
-        $container['cms/news/manager'] = function (Container $container) {
+        $container->set('cms/news/manager', function (Container $container) {
 
             $newsManager = new NewsManager([
-                'loader'      => $container['model/collection/loader'],
-                'factory'     => $container['model/factory'],
-                'news/loader' => $container['cms/news/loader'],
-                'cache'       => $container['cache'],
-                'cms/config'  => $container['cms/config'],
-                'translator'  => $container['translator']
+                'loader'      => $container->get('model/collection/loader'),
+                'factory'     => $container->get('model/factory'),
+                'news/loader' => $container->get('cms/news/loader'),
+                'cache'       => $container->get('cache'),
+                'cms/config'  => $container->get('cms/config'),
+                'translator'  => $container->get('translator')
             ]);
 
             return $newsManager;
-        };
+        });
     }
 
     /**
@@ -212,15 +212,15 @@ class CmsServiceProvider
          * @param Container $container DI Container.
          * @return EventLoader
          */
-        $container['cms/event/loader'] = function (Container $container) {
+        $container->set('cms/event/loader', function (Container $container) {
             $eventLoader = new EventLoader([
-                'loader'     => $container['model/collection/loader'],
-                'factory'    => $container['model/factory'],
-                'cache'      => $container['cache'],
-                'translator' => $container['translator']
+                'loader'     => $container->get('model/collection/loader'),
+                'factory'    => $container->get('model/factory'),
+                'cache'      => $container->get('cache'),
+                'translator' => $container->get('translator')
             ]);
 
-            $eventConfig = $container['cms/config']->eventConfig();
+            $eventConfig = $container->get('cms/config')->eventConfig();
 
             // Cms.json
             $objType = $eventConfig->get('obj_type');
@@ -230,24 +230,24 @@ class CmsServiceProvider
             $eventLoader->setLifespan($lifespan);
 
             return $eventLoader;
-        };
+        });
 
         /**
          * @param Container $container
          * @return EventManager
          */
-        $container['cms/event/manager'] = function (Container $container) {
+        $container->set('cms/event/manager', function (Container $container) {
 
             $eventManager = new EventManager([
-                'loader'       => $container['model/collection/loader'],
-                'factory'      => $container['model/factory'],
-                'event/loader' => $container['cms/event/loader'],
-                'cache'        => $container['cache'],
-                'cms/config'   => $container['cms/config'],
-                'translator'   => $container['translator']
+                'loader'       => $container->get('model/collection/loader'),
+                'factory'      => $container->get('model/factory'),
+                'event/loader' => $container->get('cms/event/loader'),
+                'cache'        => $container->get('cache'),
+                'cms/config'   => $container->get('cms/config'),
+                'translator'   => $container->get('translator')
             ]);
 
             return $eventManager;
-        };
+        });
     }
 }

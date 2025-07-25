@@ -41,14 +41,14 @@ abstract class AdminScript extends AbstractScript
         parent::setDependencies($container);
 
         // Satisfies TranslatorAwareTrait dependencies
-        $this->setTranslator($container['translator']);
+        $this->setTranslator($container->get('translator'));
 
         // Satisfies BaseUrlTrait dependencies
-        $this->setBaseUrl($container['base-url']);
-        $this->setAdminUrl($container['admin/base-url']);
+        $this->setBaseUrl($container->get('base-url'));
+        $this->setAdminUrl($container->get('admin/base-url'));
 
         // Satisfies AdminScript dependencies
-        $this->setModelFactory($container['model/factory']);
+        $this->setModelFactory($container->get('model/factory'));
     }
 
     /**

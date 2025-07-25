@@ -70,8 +70,8 @@ class TranslationParserScript extends AdminScript
      */
     public function setDependencies(Container $container)
     {
-        $this->appConfig = $container['config'];
-        $this->setTranslator($container['translator']);
+        $this->appConfig = $container->get('config');
+        $this->setTranslator($container->get('translator'));
         parent::setDependencies($container);
     }
 

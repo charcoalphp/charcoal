@@ -51,7 +51,7 @@ class ClearCacheActionTest extends AbstractTestCase
         $container = $this->container();
 
         $this->obj = new ClearCacheAction([
-            'logger'    => $container['logger'],
+            'logger'    => $container->get('logger'),
             'container' => $container
         ]);
     }

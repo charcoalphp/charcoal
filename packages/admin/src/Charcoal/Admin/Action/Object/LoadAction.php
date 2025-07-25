@@ -231,7 +231,7 @@ class LoadAction extends AdminAction
     {
         parent::setDependencies($container);
 
-        $this->setCollectionLoader($container['model/collection/loader']);
+        $this->setCollectionLoader($container->get('model/collection/loader'));
     }
 
     /**

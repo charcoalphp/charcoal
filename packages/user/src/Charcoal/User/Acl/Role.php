@@ -215,6 +215,6 @@ class Role extends AbstractModel
     {
         parent::setDependencies($container);
 
-        $this->setTranslator($container['translator']);
+        $this->setTranslator($container->get('translator'));
     }
 }

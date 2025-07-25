@@ -76,11 +76,11 @@ class GroupAttachmentWidget extends AttachmentWidget implements
     {
         parent::setDependencies($container);
 
-        $this->setWidgetFactory($container['widget/factory']);
+        $this->setWidgetFactory($container->get('widget/factory'));
 
         // Satisfies FormInterface
-        $this->setFormGroupFactory($container['form/group/factory']);
-        $this->setMetadataLoader($container['metadata/loader']);
+        $this->setFormGroupFactory($container->get('form/group/factory'));
+        $this->setMetadataLoader($container->get('metadata/loader'));
     }
 
     /**

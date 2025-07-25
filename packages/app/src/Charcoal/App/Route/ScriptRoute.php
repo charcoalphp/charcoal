@@ -52,7 +52,7 @@ class ScriptRoute implements
     public function __invoke(Container $container, RequestInterface $request, ResponseInterface $response)
     {
         $config = $this->config();
-        $script = $container['script/factory']->create($config['controller']);
+        $script = $container->get('script/factory')->create($config['controller']);
         return $script($request, $response);
     }
 }

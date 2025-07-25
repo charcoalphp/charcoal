@@ -73,7 +73,7 @@ $container = new Container([
 ]);
 (new ViewServiceProvider())->register($container);
 
-echo $container['view']->render('foo/bar/template', $context);
+echo $container->get('view')->render('foo/bar/template', $context);
 ```
 
 > 👉 The default view engine, used in those examples, would be _mustache_.
@@ -98,7 +98,7 @@ $app->get('/hello/{name}', function ($request, $response, $args) {
 $app->run();
 ```
 
-> Just like the view, it is possible to simply register all dependencies on a DI container (with the `ViewServiceProvider`) to avoid all this bootstrapping code. The renderer is available as `$container['view/renderer']`.
+> Just like the view, it is possible to simply register all dependencies on a DI container (with the `ViewServiceProvider`) to avoid all this bootstrapping code. The renderer is available as `$container->get('view/renderer')`.
 
 ## Module components
 
@@ -174,16 +174,17 @@ $container->extend('view/mustache/helpers', function(array $helpers, Container $
 Twig can be extended with the help of [TwigExtension](https://twig.symfony.com/doc/3.x/advanced.html#creating-an-extension). Those helpers can be set by extending `view/twig/helpers` in the container:
 
 ```php
-$container['my/twig/helper'] = function (Container $container): MyTwigHelper {
+$container->set('my/twig/helper', function (Container $container): MyTwigHelper {
     return new MyTwigHelper();
 };
 
 $container->extend('view/twig/helpers', function (array $helpers, Container $container): array {
     return array_merge(
         $helpers,
-        $container['my/twig/helper']->toArray(),
+        $container->get('my/twig/helper')->toArray(),
     );
 });
+)
 ```
 
 **Provided helpers:**
@@ -286,7 +287,7 @@ The `ViewServiceProvider` expects the following services / keys to be set on the
 
 #### The View Config
 
-Most service options can be set dynamically from a configuration object (available in `$container['view/config']`).
+Most service options can be set dynamically from a configuration object (available in `$container->get('view/config')`).
 
 **Example for Mustache:**
 

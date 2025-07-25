@@ -25,9 +25,9 @@ class ModelValidatorTest extends AbstractTestCase
 
         return new Model([
             'container'        => $container,
-            'logger'           => $container['logger'],
-            'property_factory' => $container['property/factory'],
-            'metadata_loader'  => $container['metadata/loader']
+            'logger'           => $container->get('logger'),
+            'property_factory' => $container->get('property/factory'),
+            'metadata_loader'  => $container->get('metadata/loader')
         ]);
     }
 

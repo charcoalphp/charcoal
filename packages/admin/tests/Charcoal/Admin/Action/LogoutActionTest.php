@@ -54,7 +54,7 @@ class LogoutActionTest extends AbstractTestCase
 
         $container = $this->container();
         $this->obj = new LogoutAction([
-            'logger'    => $container['logger'],
+            'logger'    => $container->get('logger'),
             'container' => $container
         ]);
     }

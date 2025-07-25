@@ -36,10 +36,10 @@ use Charcoal\App\Template\TemplateInterface;
 use Charcoal\App\Template\TemplateBuilder;
 use Charcoal\App\Template\WidgetInterface;
 use Charcoal\App\Template\WidgetBuilder;
-use Charcoal\View\Twig\DebugHelpers as TwigDebugHelpers;
-use Charcoal\View\Twig\HelpersInterface as TwigHelpersInterface;
-use Charcoal\View\Twig\UrlHelpers as TwigUrlHelpers;
 use Charcoal\View\ViewServiceProvider;
+use Psr\Container\ContainerInterface;
+use Psr\Http\Message\RequestInterface;
+use Charcoal\App\Handler\HandlerInterface;
 
 /**
  * Application Service Provider
@@ -68,6 +68,8 @@ class AppServiceProvider
      */
     public function register(Container $container)
     {
+        $this->registerKernelServices($container);
+
         (new CacheServiceProvider())->register($container);
         (new DatabaseServiceProvider())->register($container);
         (new FilesystemServiceProvider())->register($container);
@@ -76,7 +78,6 @@ class AppServiceProvider
         (new TranslatorServiceProvider())->register($container);
         (new ViewServiceProvider())->register($container);
 
-        $this->registerKernelServices($container);
         $this->registerHandlerServices($container);
         $this->registerRouteServices($container);
         $this->registerMiddlewareServices($container);
@@ -103,11 +104,11 @@ class AppServiceProvider
              * @return boolean
              */
             $container->set('debug', function (Container $container) {
-                if (($container->has('config')['debug'])) {
+                if (!empty($container->get('config')['debug'])) {
                     return !!$container->get('config')['debug'];
                 }
 
-                if (($container->has('config')['dev_mode'])) {
+                if (!empty($container->get('config')['dev_mode'])) {
                     return !!$container->get('config')['dev_mode'];
                 }
 
@@ -123,11 +124,12 @@ class AppServiceProvider
              * @param  Container $container A service container.
              * @return \Psr\Http\Message\UriInterface
              */
-            $container->set('base-url', function (Container $container) {
-                if (($container->has('config')['base_url'])) {
+            $container->set('base-url', function (ContainerInterface $container) {
+                if (!empty($container->get('config')['base_url'])) {
                     $baseUrl = $container->get('config')['base_url'];
                 } else {
-                    $baseUrl = $container->get('request')->getUri()->getBaseUrl();
+                    $uri = $container->get('request')->getUri();
+                    $baseUrl = $uri->getScheme() . '://' . $uri->getHost();
                 }
 
                 $baseUrl = (new Uri($baseUrl))->withUserInfo('');
@@ -157,127 +159,52 @@ class AppServiceProvider
 
         $handlersConfig = $container->get('config')['handlers'];
 
-        if (($container->has('notFoundHandler'))) {
-            /**
-             * HTTP 404 (Not Found) handler.
-             *
-             * @param  object|\Charcoal\App\Handler\HandlerInterface $handler   An error handler instance.
-             * @param  Container                                     $container A container instance.
-             * @return \Charcoal\App\Handler\HandlerInterface
-             */
-            $container->set('notFoundHandler', function (Container $container): array {
-                $handler = [];
+        /**
+         * HTTP 404 (Not Found) handler.
+         */
+        $container->set('notFoundHandler', function (Container $container) {
+            $config  = ($handlersConfig['notFound'] ?? []);
+            $class   = $container->get('notFoundHandler/class');
+            /** @var HandlerInterface $handler */
+            $handler = new $class($container, $config);
+            $handler->init();
+            return $handler;
+        });
 
-                if ($container->has('notFoundHandler')) {
-                    $handler = $container->get('notFoundHandler');
-                }
+        /**
+         * HTTP 405 (Not Allowed) handler.
+         */
+        $container->set('notAllowedHandler', function (Container $container) {
+            $config  = ($handlersConfig['notAllowed'] ?? []);
+            $class   = $container->get('notAllowedHandler/class');
+            /** @var HandlerInterface $handler */
+            $handler = new $class($container, $config);
+            $handler->init();
+            return $handler;
+        });
 
-                if ($handler instanceof \Slim\Handlers\ErrorHandler) {
-                    $config  = ($handlersConfig['notFound'] ?? []);
-                    $class   = $container->get('notFoundHandler/class');
-                    $handler = new $class($container, $config);
-                    $handler->init();
-                }
+        /**
+         * HTTP 500 (Error) handler.
+         */
+        $container->set('errorHandler', function (Container $container) {
+            $config  = ($handlersConfig['error'] ?? []);
+            $class   = $container->get('errorHandler/class');
+            $handler = new $class($container, $config);
+            /** @var HandlerInterface $handler */
+            $handler->init();
+            return $handler;
+        });
 
-                return $handler;
-            });
-        }
-
-        if (($container->has('notAllowedHandler'))) {
-            /**
-             * HTTP 405 (Not Allowed) handler.
-             *
-             * @param  object|\Charcoal\App\Handler\HandlerInterface $handler   An error handler instance.
-             * @param  Container                                     $container A container instance.
-             * @return \Charcoal\App\Handler\HandlerInterface
-             */
-            $container->set('notAllowedHandler', function (Container $container): array {
-                $handler = [];
-
-                if ($container->has('notAllowedHandler')) {
-                    $handler = $container->get('notAllowedHandler');
-                }
-
-                if ($handler instanceof \Slim\Handlers\ErrorHandler) {
-                    $config  = ($handlersConfig['notAllowed'] ?? []);
-                    $class   = $container->get('notAllowedHandler/class');
-                    $handler = new $class($container, $config);
-                    $handler->init();
-                }
-
-                return $handler;
-            });
-        }
-
-        if (($container->has('phpErrorHandler'))) {
-            /**
-             * HTTP 500 (Error) handler for PHP 7+ Throwables.
-             *
-             * @param  object|\Charcoal\App\Handler\HandlerInterface $handler   An error handler instance.
-             * @param  Container                                     $container A container instance.
-             * @return \Charcoal\App\Handler\HandlerInterface
-             */
-            $container->set('phpErrorHandler', function (Container $container): array {
-                $handler = [];
-
-                if ($container->has('phpErrorHandler')) {
-                    $handler = $container->get('phpErrorHandler');
-                }
-
-                if ($handler instanceof \Slim\Handlers\ErrorHandler) {
-                    $config  = ($handlersConfig['phpError'] ?? []);
-                    $class   = $container->get('phpErrorHandler/class');
-                    $handler = new $class($container, $config);
-                    $handler->init();
-                }
-
-                return $handler;
-            });
-        }
-
-        if (($container->has('errorHandler'))) {
-            /**
-             * HTTP 500 (Error) handler.
-             *
-             * @param  object|\Charcoal\App\Handler\HandlerInterface $handler   An error handler instance.
-             * @param  Container                                     $container A container instance.
-             * @return \Charcoal\App\Handler\HandlerInterface
-             */
-            $container->set('errorHandler', function (Container $container): array {
-                $handler = [];
-
-                if ($container->has('errorHandler')) {
-                    $handler = $container->get('errorHandler');
-                }
-
-                if ($handler instanceof \Slim\Handlers\ErrorHandler) {
-                    $config  = ($handlersConfig['error'] ?? []);
-                    $class   = $container->get('errorHandler/class');
-                    $handler = new $class($container, $config);
-                    $handler->init();
-                }
-
-                return $handler;
-            });
-        }
-
-        if (!($container->has('maintenanceHandler'))) {
-            /**
-             * HTTP 503 (Service Unavailable) handler.
-             *
-             * This handler is not part of Slim.
-             *
-             * @param  Container $container A service container.
-             * @return \Charcoal\App\Handler\HandlerInterface
-             */
-            $container->set('maintenanceHandler', function (Container $container) use ($handlersConfig) {
-                $config  = ($handlersConfig['maintenance'] ?? []);
-                $class   = $container->get('maintenanceHandler/class');
-                $handler = new $class($container, $config);
-
-                return $handler->init();
-            });
-        }
+        /**
+         * HTTP 503 (Service Unavailable) handler.
+         * This handler is not part of Slim.
+         */
+        $container->set('maintenanceHandler', function (Container $container) use ($handlersConfig) {
+            $config  = ($handlersConfig['maintenance'] ?? []);
+            $class   = $container->get('maintenanceHandler/class');
+            $handler = new $class($container, $config);
+            return $handler->init();
+        });
     }
 
     /**
@@ -478,8 +405,6 @@ class AppServiceProvider
     protected function registerViewServices(Container $container)
     {
         $this->registerMustacheHelpersServices($container);
-
-        $this->registerTwigHelpersServices($container);
     }
 
     /**
@@ -499,11 +424,12 @@ class AppServiceProvider
          *
          * @return array
          */
-        $container->set('view/mustache/helpers', function (Container $container): array {
+        $mustacheHelpers = $container->get('view/mustache/helpers');
+        $container->set('view/mustache/helpers', function (Container $container) use ($mustacheHelpers): array {
             $helpers = [];
 
-            if ($container->has('view/mustache/helpers')) {
-                $helpers = $container->get('view/mustache/helpers');
+            if (!empty($mustacheHelpers)) {
+                $helpers = $mustacheHelpers;
             }
 
             $baseUrl = $container->get('base-url');
@@ -563,62 +489,6 @@ class AppServiceProvider
             ];
 
             return array_merge($helpers, $urls);
-        });
-    }
-
-    /**
-     * @param Container $container The DI container.
-     * @return void
-     */
-    protected function registerTwigHelpersServices(Container $container): void
-    {
-        if (!($container->has('view/twig/helpers'))) {
-            $container->set('view/twig/helpers', function () {
-                return [];
-            });
-        }
-
-        /**
-         * Url helpers for Twig.
-         *
-         * @return TwigUrlHelpers
-         */
-        $container->set('view/twig/helpers/url', function (Container $container): TwigHelpersInterface {
-            return new TwigUrlHelpers([
-                'baseUrl' => $container->get('base-url'),
-            ]);
-        });
-
-        /**
-         * Debug helpers for Twig.
-         *
-         * @return TwigDebugHelpers
-         */
-        $container->set('view/twig/helpers/debug', function (Container $container): TwigHelpersInterface {
-            return new TwigDebugHelpers([
-                'debug'  => $container->get('debug'),
-            ]);
-        });
-
-        /**
-         * Extend global helpers for the Twig Engine.
-         *
-         * @param  array     $helpers   The Mustache helper collection.
-         * @param  Container $container A container instance.
-         * @return array
-         */
-        $container->set('view/twig/helpers', function (Container $container): array {
-            $helpers = [];
-
-            if ($container->has('view/twig/helpers')) {
-                $helpers = $container->get('view/twig/helpers');
-            }
-
-            return array_merge(
-                $helpers,
-                $container->get('view/twig/helpers/url')->toArray(),
-                $container->get('view/twig/helpers/debug')->toArray(),
-            );
         });
     }
 }

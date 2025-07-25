@@ -55,7 +55,7 @@ class LostPasswordActionTest extends AbstractTestCase
         $containerProvider->registerActionDependencies($container);
 
         $this->obj = new LostPasswordAction([
-            'logger'    => $container['logger'],
+            'logger'    => $container->get('logger'),
             'container' => $container
         ]);
     }

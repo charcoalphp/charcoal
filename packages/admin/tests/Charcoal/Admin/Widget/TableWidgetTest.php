@@ -41,10 +41,10 @@ class TableWidgetTest extends AbstractTestCase
     public function setUp(): void
     {
         $container = $this->container();
-        $container['request'] = Request::createFromEnvironment(Environment::mock());
+        $container->set('request', Request::createFromEnvironment(Environment::mock()));
 
         $this->obj = new TableWidget([
-            'logger'    => $container['logger'],
+            'logger'    => $container->get('logger'),
             'container' => $container
         ]);
     }
@@ -130,7 +130,7 @@ class TableWidgetTest extends AbstractTestCase
             $containerProvider->registerWidgetFactory($container);
             $containerProvider->registerPropertyDisplayFactory($container);
 
-            $container['view'] = $this->createMock('\Charcoal\View\ViewInterface');
+            $container->set('view', $this->createMock('\Charcoal\View\ViewInterface'));
 
             $this->container = $container;
         }

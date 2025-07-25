@@ -17,7 +17,6 @@ use Symfony\Component\Translation\Loader\XliffFileLoader;
 use Symfony\Component\Translation\Loader\JsonFileLoader;
 use Symfony\Component\Translation\Loader\YamlFileLoader;
 use Symfony\Component\Translation\Formatter\MessageFormatter;
-use Symfony\Component\Translation\MessageSelector;
 // From 'charcoal-translator'
 use Charcoal\Translator\LocalesConfig;
 use Charcoal\Translator\LocalesManager;
@@ -229,22 +228,13 @@ class TranslatorServiceProvider
         });
 
         /**
-         * Instance of the Message Selector, that is used to resolve a translation.
-         *
-         * @return MessageSelector
-         */
-        $container->set('translator/message-selector', function () {
-            return new MessageSelector();
-        });
-
-        /**
          * Instance of the Message Formatter, that is used to format a localized message.
          *
          * @param  Container $container DI Container.
          * @return MessageFormatter
          */
         $container->set('translator/message-formatter', function (Container $container) {
-            return new MessageFormatter($container->get('translator/message-selector'));
+            return new MessageFormatter();
         });
 
         /**
@@ -258,7 +248,6 @@ class TranslatorServiceProvider
             $transConfig = $container->get('translator/config');
             $translator  = new Translator([
                 'manager'           => $container->get('locales/manager'),
-                'message_selector'  => $container->get('translator/message-selector'),
                 'message_formatter' => $container->get('translator/message-formatter'),
                 'cache_dir'         => $transConfig['cache_dir'],
                 'debug'             => $transConfig['debug'],
@@ -289,6 +278,12 @@ class TranslatorServiceProvider
 
                         $lang = $names[1];
                         $domain = $names[0];
+
+                        // Validate CSV files before loading
+                        if ($loader === 'csv' && !$this->isValidTranslationCsv($f)) {
+                            continue;
+                        }
+
                         $translator->addResource($loader, $f, $lang, $domain);
                     }
                 }
@@ -421,5 +416,21 @@ class TranslatorServiceProvider
             );
             return new LanguageMiddleware($middlewareConfig);
         });
+    }
+
+    private function isValidTranslationCsv($file)
+    {
+        $handle = fopen($file, 'r');
+        if (!$handle) {
+            return false;
+        }
+        while (($row = fgetcsv($handle, 0, ';', '"')) !== false) {
+            if (empty($row) || !isset($row[0], $row[1])) {
+                fclose($handle);
+                return false;
+            }
+        }
+        fclose($handle);
+        return true;
     }
 }

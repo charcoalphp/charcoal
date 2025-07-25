@@ -55,11 +55,11 @@ class AuthenticatorTest extends AbstractTestCase
         $container = $this->container();
 
         $authenticator = new Authenticator([
-            'logger'        => $container['logger'],
+            'logger'        => $container->get('logger'),
             'user_type'     => User::class,
-            'user_factory'  => $container['model/factory'],
+            'user_factory'  => $container->get('model/factory'),
             'token_type'    => AuthToken::class,
-            'token_factory' => $container['model/factory'],
+            'token_factory' => $container->get('model/factory'),
         ]);
 
         return $authenticator;

@@ -69,7 +69,7 @@ class StatusDisplay extends AbstractPropertyDisplay implements ViewableInterface
         parent::setDependencies($container);
 
         // Fulfills the ViewableTrait dependencies
-        $this->setView($container['view']);
+        $this->setView($container->get('view'));
     }
 
     /**

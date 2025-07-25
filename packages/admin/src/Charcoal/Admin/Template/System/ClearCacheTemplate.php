@@ -639,20 +639,20 @@ class ClearCacheTemplate extends AdminTemplate
     {
         parent::setDependencies($container);
 
-        $this->availableCacheDrivers = $container['cache/available-drivers'];
-        $this->cache                 = $container['cache'];
-        $this->cacheConfig           = $container['cache/config'];
+        $this->availableCacheDrivers = $container->get('cache/available-drivers');
+        $this->cache                 = $container->get('cache');
+        $this->cacheConfig           = $container->get('cache/config');
 
         $this->mustacheEngine = function () use ($container) {
             if (class_exists('\Mustache_Engine')) {
-                return $container['view/engine/mustache'];
+                return $container->get('view/engine/mustache');
             }
 
             return null;
         };
         $this->twigEngine = function () use ($container) {
             if (class_exists('\Twig\Environment')) {
-                return $container['view/engine/twig'];
+                return $container->get('view/engine/twig');
             }
 
             return null;

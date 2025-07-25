@@ -40,7 +40,7 @@ class ObjectRevisionTest extends AbstractTestCase
     {
         $container = $this->container();
 
-        $this->obj = $container['model/factory']->create(ObjectRevision::class);
+        $this->obj = $container->get('model/factory')->create(ObjectRevision::class);
     }
 
     /**

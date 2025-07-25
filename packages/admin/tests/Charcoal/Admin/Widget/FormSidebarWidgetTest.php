@@ -27,11 +27,11 @@ class FormSidebarWidgetTest extends AbstractTestCase
         $containerProvider = new ContainerProvider();
         $containerProvider->registerWidgetDependencies($container);
 
-        $container['property/input/factory'] = $container['property/factory'];
-        $container['property/display/factory'] = $container['property/factory'];
+        $container->set('property/input/factory', $container->get('property/factory'));
+        $container->set('property/display/factory', $container->get('property/factory'));
 
         $this->obj = new FormSidebarWidget([
-            'logger' => $container['logger'],
+            'logger' => $container->get('logger'),
             'container' => $container
         ]);
     }

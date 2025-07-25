@@ -27,7 +27,7 @@ class GenericLayoutTest extends AbstractTestCase
         $container = $this->getContainer();
         (new LayoutServiceProvider())->register($container);
 
-        $container['view'] = null;
+        $container->set('view', null);
 
         $this->obj = new GenericLayout();
     }

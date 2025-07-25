@@ -6,8 +6,6 @@ namespace Charcoal\App\Route;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
-use DI\Container;
-
 /**
  * Base Route Interface.
  *
@@ -16,10 +14,9 @@ use DI\Container;
 interface RouteInterface
 {
     /**
-     * @param Container         $container A DI container (DI) instance.
      * @param RequestInterface  $request   A PSR-7 compatible Request instance.
      * @param ResponseInterface $response  A PSR-7 compatible Response instance.
      * @return ResponseInterface
      */
-    public function __invoke(Container $container, RequestInterface $request, ResponseInterface $response);
+    public function __invoke(RequestInterface $request, ResponseInterface $response);
 }

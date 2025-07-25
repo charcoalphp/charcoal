@@ -45,7 +45,7 @@ class StorablePropertyTraitTest extends AbstractTestCase
     {
         $container = $this->getContainer();
 
-        $prop = $container['property/factory']->create(GenericProperty::class);
+        $prop = $container->get('property/factory')->create(GenericProperty::class);
 
         $prop['ident'] = 'test';
         return $prop;
@@ -80,7 +80,7 @@ class StorablePropertyTraitTest extends AbstractTestCase
     {
         $container = $this->getContainer();
 
-        $val = $container['translator']->translation([ 'en' => 'Cooking', 'fr' => 'Cuisson' ]);
+        $val = $container->get('translator')->translation([ 'en' => 'Cooking', 'fr' => 'Cuisson' ]);
         $ret = $this->obj->storageVal($val);
         $this->assertEquals('Cooking', $ret);
 

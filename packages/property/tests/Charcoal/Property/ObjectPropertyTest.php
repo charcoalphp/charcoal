@@ -59,9 +59,9 @@ class ObjectPropertyTest extends AbstractTestCase
 
         $this->obj = new ObjectProperty([
             'container'  => $container,
-            'database'   => $container['database'],
-            'logger'     => $container['logger'],
-            'translator' => $container['translator']
+            'database'   => $container->get('database'),
+            'logger'     => $container->get('logger'),
+            'translator' => $container->get('translator')
         ]);
     }
 
@@ -75,8 +75,8 @@ class ObjectPropertyTest extends AbstractTestCase
     public function setUpObjects(&$models = null)
     {
         $container  = $this->getContainer();
-        $translator = $container['translator'];
-        $factory    = $container['model/factory'];
+        $translator = $container->get('translator');
+        $factory    = $container->get('model/factory');
         $prototype  = $factory->get(GenericModel::class);
         $source     = $prototype->source();
 
@@ -96,7 +96,7 @@ class ObjectPropertyTest extends AbstractTestCase
 
         $models = [];
         foreach ($objs as $objId => $objData) {
-            $models[$objId] = $container['model/factory']->create(GenericModel::class);
+            $models[$objId] = $container->get('model/factory')->create(GenericModel::class);
             $models[$objId]->setId($objId)->setData($objData)->save();
         }
 
@@ -115,9 +115,9 @@ class ObjectPropertyTest extends AbstractTestCase
         $container = $this->getContainer();
 
         $prop = new ObjectProperty([
-            'database'   => $container['database'],
-            'logger'     => $container['logger'],
-            'translator' => $container['translator']
+            'database'   => $container->get('database'),
+            'logger'     => $container->get('logger'),
+            'translator' => $container->get('translator')
         ]);
 
         $this->expectException($expectedException);
@@ -285,7 +285,7 @@ class ObjectPropertyTest extends AbstractTestCase
         $this->obj->setObjType(GenericModel::class);
 
         $container  = $this->getContainer();
-        $translator = $container['translator'];
+        $translator = $container->get('translator');
 
         $val = [
             'en' => self::OBJ_1,
@@ -336,7 +336,7 @@ class ObjectPropertyTest extends AbstractTestCase
         $this->assertEquals('foo', $this->obj->inputVal('foo'));
         $this->assertEquals('["foo","baz","qux"]', $this->obj->inputVal([ 'foo', 'baz', 'qux' ]));
 
-        $model = $container['model/factory']->create(GenericModel::class);
+        $model = $container->get('model/factory')->create(GenericModel::class);
         $model->setId(self::OBJ_1);
         $this->assertEquals(self::OBJ_1, $this->obj->inputVal($model));
 
@@ -358,7 +358,7 @@ class ObjectPropertyTest extends AbstractTestCase
         $this->assertEquals('foo', $this->obj->storageVal('foo'));
         $this->assertEquals('["foo","baz","qux"]', $this->obj->storageVal([ 'foo', 'baz', 'qux' ]));
 
-        $model = $container['model/factory']->create(GenericModel::class);
+        $model = $container->get('model/factory')->create(GenericModel::class);
         $model->setId(self::OBJ_1);
         $this->assertEquals(self::OBJ_1, $this->obj->storageVal($model));
 
@@ -396,10 +396,10 @@ class ObjectPropertyTest extends AbstractTestCase
         $container = $this->getContainer();
         $this->getContainerProvider()->registerView($container);
 
-        $factory = $container['model/factory'];
+        $factory = $container->get('model/factory');
 
         $depends = $factory->arguments();
-        $depends[0]['view'] = $container['view'];
+        $depends[0]['view'] = $container->get('view');
 
         $factory->setArguments($depends);
 
@@ -417,7 +417,7 @@ class ObjectPropertyTest extends AbstractTestCase
     {
         $container = $this->getContainer();
 
-        $model = $container['model/factory']->create(GenericModel::class);
+        $model = $container->get('model/factory')->create(GenericModel::class);
 
         $this->expectException(InvalidArgumentException::class);
         $return = $this->callMethod($this->obj, 'renderObjPattern', [ $model, false ]);
@@ -430,7 +430,7 @@ class ObjectPropertyTest extends AbstractTestCase
     {
         $container = $this->getContainer();
 
-        $model = $container['model/factory']->create(GenericModel::class);
+        $model = $container->get('model/factory')->create(GenericModel::class);
 
         $this->expectException(InvalidArgumentException::class);
         $return = $this->callMethod($this->obj, 'renderObjPattern', [ $model, null, false ]);
@@ -504,7 +504,7 @@ class ObjectPropertyTest extends AbstractTestCase
     public function testCollectionLoading()
     {
         $container  = $this->getContainer();
-        $translator = $container['translator'];
+        $translator = $container->get('translator');
 
         $this->setUpObjects();
 
@@ -544,7 +544,7 @@ class ObjectPropertyTest extends AbstractTestCase
 
         $this->obj->setObjType(GenericModel::class);
 
-        $expected = $container['model/factory']->create(GenericModel::class);
+        $expected = $container->get('model/factory')->create(GenericModel::class);
         $expected->setId(self::OBJ_1)->setData($objs[self::OBJ_1]);
 
         $return = $this->callMethod($this->obj, 'loadObject', [ $expected ]);

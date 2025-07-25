@@ -63,10 +63,10 @@ use Charcoal\Cache\ServiceProvider\CacheServiceProvider;
 
 (new CacheServiceProvider())->register($container);
 
-$container['cache/config'] = new CacheConfig([
+$container->set('cache/config', new CacheConfig([
     'prefix' => 'foobar',
     'types'  => [ 'apc', 'memcache', 'redis' ],
-]);
+]));
 ```
 
 ### Driver Configuration
@@ -98,7 +98,7 @@ $pool2 = $this->container->get('cache/builder')->build('file', [
 ]);
 
 // Create a Stash pool with the "memory" cache driver.
-$pool3 = new \Stash\Pool($container['cache/drivers']['memory']);
+$pool3 = new \Stash\Pool($container->get('cache/drivers')['memory']);
 ```
 
 Then you can use the cache service directly:

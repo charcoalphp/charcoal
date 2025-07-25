@@ -43,8 +43,8 @@ class ApiModule extends AbstractModule
             $group->get('/link/{linkId}', function (Request $request, Response $response, array $args) use ($container) {
                 $action = new LinkAction(
                     $args['linkId'],
-                    $container['email/tracker'],
-                    $container['model/factory']
+                    $container->get('email/tracker'),
+                    $container->get('model/factory')
                 );
                 return $action($request, $response);
             });
@@ -52,7 +52,7 @@ class ApiModule extends AbstractModule
             $group->get('/open/{emailId}[.png]', function (Request $request, Response $response, array $args) use ($container) {
                 $action = new OpenAction(
                     $args['emailId'],
-                    $container['email/tracker']
+                    $container->get('email/tracker')
                 );
                 return $action($request, $response);
             });

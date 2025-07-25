@@ -51,7 +51,7 @@ class DeleteAllActionTest extends AbstractTestCase
         $container = $this->container();
 
         $this->obj = new DeleteAllAction([
-            'logger'    => $container['logger'],
+            'logger'    => $container->get('logger'),
             'container' => $container
         ]);
     }

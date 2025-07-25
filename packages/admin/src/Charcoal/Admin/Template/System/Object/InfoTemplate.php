@@ -202,12 +202,12 @@ class InfoTemplate extends AdminTemplate implements
         parent::setDependencies($container);
 
         // Required ObjectContainerInterface dependencies
-        $this->setModelFactory($container['model/factory']);
-        $this->metadataLoader = $container['metadata/loader'];
+        $this->setModelFactory($container->get('model/factory'));
+        $this->metadataLoader = $container->get('metadata/loader');
 
-        $this->dashboardBuilder = $container['dashboard/builder'];
+        $this->dashboardBuilder = $container->get('dashboard/builder');
 
-        $this->collectionLoader = $container['model/collection/loader'];
+        $this->collectionLoader = $container->get('model/collection/loader');
     }
 
     /**

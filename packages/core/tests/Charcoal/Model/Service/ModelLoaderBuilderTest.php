@@ -32,23 +32,23 @@ class ModelLoaderBuilderTest extends AbstractTestCase
         $container = $this->getContainer();
 
         $metadataLoader = new MetadataLoader([
-            'logger'    => $container['logger'],
-            'cache'     => $container['cache'],
+            'logger'    => $container->get('logger'),
+            'cache'     => $container->get('cache'),
             'base_path' => __DIR__,
             'paths'     => [ 'metadata' ]
         ]);
 
         $factory = new Factory([
             'arguments' => [[
-                'logger'          => $container['logger'],
+                'logger'          => $container->get('logger'),
                 'metadata_loader' => $metadataLoader
             ]]
         ]);
 
         $this->obj = new ModelLoaderBuilder([
             'factory' => $factory,
-            'logger'  => $container['logger'],
-            'cache'   => $container['cache']
+            'logger'  => $container->get('logger'),
+            'cache'   => $container->get('cache')
         ]);
     }
 

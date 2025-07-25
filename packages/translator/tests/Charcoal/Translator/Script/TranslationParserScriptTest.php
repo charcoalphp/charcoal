@@ -95,7 +95,7 @@ class TranslationParserScriptTest extends AbstractTestCase
         $request   = $this->createMock(RequestInterface::class);
         $response  = $this->createMock(ResponseInterface::class);
 
-        $filePath = rtrim($container['config']['base_path'], '/\\') . '/translations/';
+        $filePath = rtrim($container->get('config')['base_path'], '/\\') . '/translations/';
         $fileName = 'messages.{locale}.csv';
         $fileType = 'mustache';
         $maxDepth = 4;

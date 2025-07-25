@@ -1211,9 +1211,9 @@ class SelectizeInput extends SelectInput
     {
         parent::setDependencies($container);
 
-        $this->setModelFactory($container['model/factory']);
-        $this->setCollectionLoader($container['model/collection/loader']);
-        $this->selectizeRenderer = $container['selectize/renderer'];
+        $this->setModelFactory($container->get('model/factory'));
+        $this->setCollectionLoader($container->get('model/collection/loader'));
+        $this->selectizeRenderer = $container->get('selectize/renderer');
     }
 
     /**

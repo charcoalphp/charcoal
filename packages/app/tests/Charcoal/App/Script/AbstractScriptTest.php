@@ -41,8 +41,8 @@ class AbstractScriptTest extends AbstractTestCase
         $container = $this->container();
 
         $this->obj = $this->getMockForAbstractClass(AbstractScript::class, [[
-            'climate'   => $container['climate'],
-            'logger'    => $container['logger'],
+            'climate'   => $container->get('climate'),
+            'logger'    => $container->get('logger'),
             'container' => $container
         ]]);
     }

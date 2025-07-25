@@ -17,6 +17,7 @@ use InvalidArgumentException;
  * - A key-value pair is internally passed to a (non-private / non-static) setter method (if present)
  *   or assigned to a (non-private / non-static) property (declared or not) and tracks affected keys.
  */
+#[\AllowDynamicProperties]
 abstract class AbstractEntity implements EntityInterface
 {
     /**

@@ -76,43 +76,43 @@ class ModelServiceProviderTest extends AbstractTestCase
     {
         $container = new Container();
 
-        $container['logger']   = new NullLogger();
-        $container['cache']    = new Pool(new Ephemeral());
-        $container['database'] = new PDO('sqlite::memory:');
+        $container->set('logger', new NullLogger());
+        $container->set('cache', new Pool(new Ephemeral()));
+        $container->set('database', new PDO('sqlite::memory:'));
 
-        $container['config'] = new AppConfig([
+        $container->set('config', new AppConfig([
             'base_path' => sys_get_temp_dir(),
             'metadata'  => [
                 'paths' => [],
             ],
-        ]);
+        ]));
 
-        $container['view/loader'] = new PhpLoader([
-            'logger'    => $container['logger'],
+        $container->set('view/loader', new PhpLoader([
+            'logger'    => $container->get('logger'),
             'base_path' => dirname(__DIR__),
             'paths'     => [ 'views' ],
-        ]);
+        ]));
 
-        $container['view/engine'] = new PhpEngine([
-            'logger' => $container['logger'],
-            'loader' => $container['view/loader'],
-        ]);
+        $container->set('view/engine', new PhpEngine([
+            'logger' => $container->get('logger'),
+            'loader' => $container->get('view/loader'),
+        ]));
 
-        $container['view'] = new GenericView([
-            'logger' => $container['logger'],
-            'engine' => $container['view/engine'],
-        ]);
+        $container->set('view', new GenericView([
+            'logger' => $container->get('logger'),
+            'engine' => $container->get('view/engine'),
+        ]));
 
-        $container['locales/manager'] = new LocalesManager([
+        $container->set('locales/manager', new LocalesManager([
             'locales' => [
                 'en' => [
                     'locale' => 'en-US',
                 ],
             ],
-        ]);
-        $container['translator'] = new Translator([
-            'manager' => $container['locales/manager'],
-        ]);
+        ]));
+        $container->set('translator', new Translator([
+            'manager' => $container->get('locales/manager'),
+        ]));
 
         return $container;
     }
@@ -126,14 +126,14 @@ class ModelServiceProviderTest extends AbstractTestCase
 
         $this->obj->register($container);
 
-        $this->assertTrue(isset($container['model/factory']));
-        $this->assertInstanceOf(FactoryInterface::class, $container['model/factory']);
+        $this->assertTrue(isset($container->get('model/factory')));
+        $this->assertInstanceOf(FactoryInterface::class, $container->get('model/factory'));
 
-        $this->assertTrue(isset($container['property/factory']));
-        $this->assertInstanceOf(FactoryInterface::class, $container['property/factory']);
+        $this->assertTrue(isset($container->get('property/factory')));
+        $this->assertInstanceOf(FactoryInterface::class, $container->get('property/factory'));
 
-        $this->assertTrue(isset($container['source/factory']));
-        $this->assertInstanceOf(FactoryInterface::class, $container['source/factory']);
+        $this->assertTrue(isset($container->get('source/factory')));
+        $this->assertInstanceOf(FactoryInterface::class, $container->get('source/factory'));
     }
 
     /**
@@ -144,8 +144,8 @@ class ModelServiceProviderTest extends AbstractTestCase
         $container = $this->container();
         $this->obj->register($container);
 
-        $this->assertTrue(isset($container['model/builder']));
-        $this->assertInstanceOf(ModelBuilder::class, $container['model/builder']);
+        $this->assertTrue(isset($container->get('model/builder')));
+        $this->assertInstanceOf(ModelBuilder::class, $container->get('model/builder'));
     }
 
     /**
@@ -156,8 +156,8 @@ class ModelServiceProviderTest extends AbstractTestCase
         $container = $this->container();
         $this->obj->register($container);
 
-        $this->assertTrue(isset($container['model/loader/builder']));
-        $this->assertInstanceOf(ModelLoaderBuilder::class, $container['model/loader/builder']);
+        $this->assertTrue(isset($container->get('model/loader/builder')));
+        $this->assertInstanceOf(ModelLoaderBuilder::class, $container->get('model/loader/builder'));
     }
 
     /**
@@ -168,8 +168,8 @@ class ModelServiceProviderTest extends AbstractTestCase
         $container = $this->container();
         $this->obj->register($container);
 
-        $this->assertTrue(isset($container['metadata/loader']));
-        $this->assertInstanceOf(MetadataLoader::class, $container['metadata/loader']);
+        $this->assertTrue(isset($container->get('metadata/loader')));
+        $this->assertInstanceOf(MetadataLoader::class, $container->get('metadata/loader'));
     }
 
     /**
@@ -189,7 +189,7 @@ class ModelServiceProviderTest extends AbstractTestCase
         $provider = new ModelServiceProvider();
         $provider->register($container);
 
-        $metadataConfig = $container['metadata/config'];
+        $metadataConfig = $container->get('metadata/config');
         $this->assertContains('tests/Charcoal/Model/metadata', $metadataConfig->paths());
     }
 }

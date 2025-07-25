@@ -39,7 +39,7 @@ class AdminWidgetTest extends AbstractTestCase
         $container = $this->container();
 
         $this->obj = new AdminWidget([
-            'logger'    => $container['logger'],
+            'logger'    => $container->get('logger'),
             'container' => $container
         ]);
     }

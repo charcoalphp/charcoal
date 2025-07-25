@@ -125,7 +125,7 @@ class AbstractExpressionTest extends AbstractTestCase
     {
         $container = $this->getContainer();
 
-        $prop = $container['property/factory']->create('date-time');
+        $prop = $container->get('property/factory')->create('date-time');
         $prop->setVal('13 July 2004');
         $time = new DateTime('8 June 1995');
 

@@ -43,7 +43,7 @@ class AbstractActionTest extends AbstractTestCase
         $container = $this->container();
 
         $this->obj = $this->getMockForAbstractClass(AbstractAction::class, [[
-            'logger'    => $container['logger'],
+            'logger'    => $container->get('logger'),
             'container' => $container
         ]]);
     }

@@ -116,12 +116,12 @@ class AttachmentWidget extends AdminWidget implements
     {
         parent::setDependencies($container);
 
-        $this->setWidgetFactory($container['widget/factory']);
+        $this->setWidgetFactory($container->get('widget/factory'));
 
-        if (isset($container['attachments/config'])) {
-            $this->setConfig($container['attachments/config']);
-        } elseif (isset($container['config']['attachments'])) {
-            $this->setConfig($container['config']['attachments']);
+        if (isset($container->get('attachments/config'))) {
+            $this->setConfig($container->get('attachments/config'));
+        } elseif (isset($container->get('config')['attachments'])) {
+            $this->setConfig($container->get('config')['attachments']);
         }
     }
 

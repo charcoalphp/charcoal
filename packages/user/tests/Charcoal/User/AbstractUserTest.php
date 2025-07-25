@@ -50,8 +50,8 @@ class AbstractUserTest extends AbstractTestCase
             AbstractUser::class,
             [
                 [
-                    'logger'     => $container['logger'],
-                    'translator' => $container['translator'],
+                    'logger'     => $container->get('logger'),
+                    'translator' => $container->get('translator'),
                 ]
             ],
             '',

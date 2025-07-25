@@ -50,7 +50,7 @@ class SaveActionTest extends AbstractTestCase
         $container = $this->container();
 
         $this->obj = new SaveAction([
-            'logger'    => $container['logger'],
+            'logger'    => $container->get('logger'),
             'container' => $container
         ]);
     }

@@ -69,10 +69,10 @@ class UserRolesTemplate extends AdminTemplate implements
         parent::setDependencies($container);
 
         // Required collection dependencies
-        $this->setModelFactory($container['model/factory']);
-        $this->setCollectionLoader($container['model/collection/loader']);
+        $this->setModelFactory($container->get('model/factory'));
+        $this->setCollectionLoader($container->get('model/collection/loader'));
 
         // Required dashboard dependencies.
-        $this->setDashboardBuilder($container['dashboard/builder']);
+        $this->setDashboardBuilder($container->get('dashboard/builder'));
     }
 }

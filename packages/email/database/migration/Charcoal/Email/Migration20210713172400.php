@@ -34,7 +34,7 @@ final class Migration20210713172400 extends AbstractMigration
     {
         parent::setDependencies($container);
 
-        $this->setModelFactory($container['model/factory']);
+        $this->setModelFactory($container->get('model/factory'));
     }
 
     /**

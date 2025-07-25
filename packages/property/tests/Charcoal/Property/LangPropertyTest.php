@@ -36,9 +36,9 @@ class LangPropertyTest extends AbstractTestCase
 
         $this->obj = new LangProperty([
             'container'  => $container,
-            'database'   => $container['database'],
-            'logger'     => $container['logger'],
-            'translator' => $container['translator']
+            'database'   => $container->get('database'),
+            'logger'     => $container->get('logger'),
+            'translator' => $container->get('translator')
         ]);
     }
 
@@ -84,7 +84,7 @@ class LangPropertyTest extends AbstractTestCase
     public function testChoices()
     {
         $container  = $this->getContainer();
-        $translator = $container['translator'];
+        $translator = $container->get('translator');
 
         $this->assertTrue($this->obj->hasChoices());
 
@@ -105,7 +105,7 @@ class LangPropertyTest extends AbstractTestCase
     public function testDisplayVal()
     {
         $container  = $this->getContainer();
-        $translator = $container['translator'];
+        $translator = $container->get('translator');
 
         $this->assertEquals('', $this->obj->displayVal(null));
         $this->assertEquals('', $this->obj->displayVal(''));

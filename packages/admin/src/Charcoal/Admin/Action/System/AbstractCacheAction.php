@@ -85,18 +85,18 @@ abstract class AbstractCacheAction extends AdminAction
     {
         parent::setDependencies($container);
 
-        $this->setCachePool($container['cache']);
+        $this->setCachePool($container->get('cache'));
 
         $this->mustacheEngine = function () use ($container) {
             if (class_exists('\Mustache_Engine')) {
-                return $container['view/engine/mustache'];
+                return $container->get('view/engine/mustache');
             }
 
             return null;
         };
         $this->twigEngine = function () use ($container) {
             if (class_exists('\Twig\Environment')) {
-                return $container['view/engine/twig'];
+                return $container->get('view/engine/twig');
             }
 
             return null;

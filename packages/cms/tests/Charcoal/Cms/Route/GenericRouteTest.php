@@ -56,7 +56,7 @@ class GenericRouteTest extends SectionRouteTest
     {
         $container = $this->getContainer();
 
-        $route = $container['model/factory']->create(ObjectRoute::class);
+        $route = $container->get('model/factory')->create(ObjectRoute::class);
         $route->setData([
             'lang'         => 'en',
             'slug'         => 'en/imaginary',

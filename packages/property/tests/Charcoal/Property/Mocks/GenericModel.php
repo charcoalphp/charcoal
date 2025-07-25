@@ -73,7 +73,7 @@ class GenericModel extends AbstractModel
      */
     public function setDependencies(Container $container)
     {
-        $this->setTranslator($container['translator']);
+        $this->setTranslator($container->get('translator'));
     }
 
     /**

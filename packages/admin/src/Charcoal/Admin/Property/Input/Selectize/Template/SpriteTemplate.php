@@ -34,7 +34,7 @@ class SpriteTemplate extends AbstractTemplate
     {
         parent::setDependencies($container);
 
-        $this->setBaseUrl($container['base-url']);
+        $this->setBaseUrl($container->get('base-url'));
     }
 
     /**

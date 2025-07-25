@@ -85,7 +85,7 @@ class TemplatePropertyTest extends AbstractTestCase
     public function testChoices()
     {
         $container = $this->getContainer();
-        $templates = $container['config']['templates'];
+        $templates = $container->get('config')['templates'];
 
         $this->assertTrue($this->obj->hasChoices());
 
@@ -160,8 +160,8 @@ class TemplatePropertyTest extends AbstractTestCase
     public function testDisplayVal()
     {
         $container  = $this->getContainer();
-        $translator = $container['translator'];
-        $templates  = $container['config']['templates'];
+        $translator = $container->get('translator');
+        $templates  = $container->get('config')['templates'];
 
         $this->assertEquals('', $this->obj->displayVal(null));
         $this->assertEquals('', $this->obj->displayVal(''));

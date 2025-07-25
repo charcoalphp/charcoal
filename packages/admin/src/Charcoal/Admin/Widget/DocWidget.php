@@ -67,7 +67,7 @@ class DocWidget extends FormWidget implements
         parent::setDependencies($container);
 
         // Fill ObjectContainerInterface dependencies
-        $this->setModelFactory($container['model/factory']);
+        $this->setModelFactory($container->get('model/factory'));
     }
 
     /**

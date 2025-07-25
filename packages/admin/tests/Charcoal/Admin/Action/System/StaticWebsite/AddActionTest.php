@@ -51,7 +51,7 @@ class AddActionTest extends AbstractTestCase
         $container = $this->container();
 
         $this->obj = new AddAction([
-            'logger'    => $container['logger'],
+            'logger'    => $container->get('logger'),
             'container' => $container
         ]);
     }

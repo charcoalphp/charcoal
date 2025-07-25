@@ -36,16 +36,16 @@ class ModelLoaderTest extends AbstractTestCase
 
         $factory = new Factory([
             'arguments' => [[
-                'logger'          => $container['logger'],
-                'metadata_loader' => $container['metadata/loader']
+                'logger'          => $container->get('logger'),
+                'metadata_loader' => $container->get('metadata/loader')
             ]]
         ]);
 
         $this->obj = new ModelLoader([
             'obj_type' => 'charcoal/model/model',
             'factory'  => $factory,
-            'logger'   => $container['logger'],
-            'cache'    => $container['cache']
+            'logger'   => $container->get('logger'),
+            'cache'    => $container->get('cache')
         ]);
     }
 

@@ -171,10 +171,10 @@ class CreateTemplate extends AdminTemplate implements
         parent::setDependencies($container);
 
         // Required ObjectContainerInterface dependencies
-        $this->setModelFactory($container['model/factory']);
+        $this->setModelFactory($container->get('model/factory'));
 
         // Required dependencies.
-        $this->dashboardBuilder = $container['dashboard/builder'];
+        $this->dashboardBuilder = $container->get('dashboard/builder');
     }
 
     /**

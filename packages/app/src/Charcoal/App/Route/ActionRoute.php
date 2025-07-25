@@ -67,7 +67,7 @@ class ActionRoute implements
 
         $actionController = $config['controller'];
 
-        $action = $container['action/factory']->create($actionController);
+        $action = $container->get('action/factory')->create($actionController);
         $action->init($request);
 
         // Set custom data from config.

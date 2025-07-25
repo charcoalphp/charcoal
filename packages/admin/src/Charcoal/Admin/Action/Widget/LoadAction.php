@@ -318,8 +318,8 @@ class LoadAction extends AdminAction
     {
         parent::setdependencies($container);
 
-        $this->setWidgetFactory($container['widget/factory']);
-        $this->setWidgetView($container['view']);
+        $this->setWidgetFactory($container->get('widget/factory'));
+        $this->setWidgetView($container->get('view'));
     }
 
 

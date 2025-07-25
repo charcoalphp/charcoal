@@ -11,6 +11,7 @@ use RuntimeException;
 use Symfony\Bridge\Twig\Extension\TranslationExtension;
 use Twig\Environment as TwigEnvironment;
 use Twig\Loader\FilesystemLoader as TwigFilesystemLoader;
+use Twig\Extension\DebugExtension;
 
 /**
  *
@@ -33,6 +34,8 @@ class TwigEngine extends AbstractEngine
      * @var boolean $debug
      */
     private $debug;
+
+    private array $helpers;
 
     /**
      * @return string
@@ -192,6 +195,11 @@ class TwigEngine extends AbstractEngine
             'debug'             => $this->debug,
         ]);
         $twig->setExtensions($this->helpers());
+
+        // Add this line:
+        if ($this->debug) {
+            $twig->addExtension(new DebugExtension());
+        }
         return $twig;
     }
 

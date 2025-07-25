@@ -283,7 +283,7 @@ class ReadonlyInput extends AbstractPropertyInput
     {
         parent::setDependencies($container);
 
-        $this->setPropertyDisplayFactory($container['property/display/factory']);
+        $this->setPropertyDisplayFactory($container->get('property/display/factory'));
     }
 
     /**

@@ -4,7 +4,6 @@ namespace Charcoal\Cms\Route;
 
 use RuntimeException;
 use InvalidArgumentException;
-
 use DI\Container;
 // From PSR-7
 use Psr\Http\Message\RequestInterface;
@@ -24,6 +23,7 @@ use Charcoal\Object\ObjectRouteInterface;
 use Charcoal\Object\RoutableInterface;
 // From 'charcoal-cms'
 use Charcoal\Cms\TemplateableInterface;
+use Psr\Container\ContainerInterface;
 
 /**
  * Generic Object Route Handler
@@ -112,7 +112,7 @@ class GenericRoute extends TemplateRoute
      * @param  Container $container A DI (DI) container.
      * @return boolean
      */
-    public function pathResolvable(Container $container)
+    public function pathResolvable(ContainerInterface $container)
     {
         if ($this->hasDependencies === false) {
             $this->setDependencies($container);
@@ -140,7 +140,6 @@ class GenericRoute extends TemplateRoute
      * @return ResponseInterface
      */
     public function __invoke(
-        Container $container,
         RequestInterface $request,
         ResponseInterface $response
     ) {
@@ -171,7 +170,7 @@ class GenericRoute extends TemplateRoute
             $templateIdent = $config['template'];
 
             if ($templateContent === $templateIdent || $templateContent === '') {
-                $container['logger']->warning(sprintf(
+                $container->get('logger')->warning(sprintf(
                     '[%s] Missing or bad template identifier on model [%s] for ID [%s]',
                     get_class($this),
                     get_class($this->getContextObject()),
@@ -214,14 +213,14 @@ class GenericRoute extends TemplateRoute
      * @param  Container $container A dependencies container instance.
      * @return void
      */
-    protected function setDependencies(Container $container)
+    protected function setDependencies(ContainerInterface $container)
     {
-        $this->setTranslator($container['translator']);
-        $this->setModelFactory($container['model/factory']);
-        $this->setCollectionLoader($container['model/collection/loader']);
+        $this->setTranslator($container->get('translator'));
+        $this->setModelFactory($container->get('model/factory'));
+        $this->setCollectionLoader($container->get('model/collection/loader'));
 
-        if (isset($container['config']['templates'])) {
-            $this->availableTemplates = $container['config']['templates'];
+        if (isset($container->get('config')['templates'])) {
+            $this->availableTemplates = $container->get('config')['templates'];
         }
 
         $this->hasDependencies = true;
@@ -347,7 +346,7 @@ class GenericRoute extends TemplateRoute
      * @param  RequestInterface $request   The request to intialize the template with.
      * @return string
      */
-    protected function createTemplate(Container $container, RequestInterface $request)
+    protected function createTemplate(ContainerInterface $container, RequestInterface $request)
     {
         $template = parent::createTemplate($container, $request);
 

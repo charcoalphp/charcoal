@@ -8,7 +8,11 @@ use Psr\Http\Message\ResponseInterface;
 // From 'charcoal-config'
 use Charcoal\Config\ConfigurableInterface;
 use Charcoal\Config\ConfigurableTrait;
+use Nyholm\Psr7\Response;
+use Nyholm\Psr7\Stream;
 use Psr\Http\Message\ServerRequestInterface;
+use Slim\Routing\Route;
+use Charcoal\App\AppConfig;
 
 /**
  * The route manager takes care of dispatching each route from an app or a module config
@@ -48,10 +52,6 @@ final class RouteManager implements
     public function setupRoutes()
     {
         $routes = $this->config();
-        /*echo '<pre>';
-        print_r($routes);
-        echo '</pre>';
-        exit;*/
 
         if (PHP_SAPI == 'cli') {
             $scripts = ( isset($routes['scripts']) ? $routes['scripts'] : [] );
@@ -77,7 +77,7 @@ final class RouteManager implements
      * Typically for a GET request, the route will render a template.
      *
      * @param  string             $routeIdent     The template's route identifier.
-     * @param  array|\ArrayAccess $templateConfig The template's config for the route.
+     * @param  AppConfig $templateConfig The template's config for the route.
      * @return \Slim\Interfaces\RouteInterface
      */
     private function setupTemplate($routeIdent, $templateConfig)
@@ -92,13 +92,17 @@ final class RouteManager implements
             ? $templateConfig['methods']
             : [ 'GET' ];
 
+        $container = $this->app->getContainer();
+
         $routeHandler = $this->app->map(
             $methods,
             $routePattern,
             function (
                 ServerRequestInterface $request,
+                ResponseInterface $response,
                 array $args = []
             ) use (
+                $container,
                 $routeIdent,
                 $templateConfig
             ) {
@@ -106,8 +110,11 @@ final class RouteManager implements
                     $templateConfig['ident'] = ltrim($routeIdent, '/');
                 }
 
-                $this['logger']->debug(
-                    sprintf('Loaded template route: %s', $templateConfig['ident']),
+                $container->get('logger')->debug(
+                    sprintf(
+                        'Loaded template route: %s',
+                        $templateConfig['ident'],
+                    ),
                     $templateConfig
                 );
 
@@ -122,20 +129,22 @@ final class RouteManager implements
                     );
                 }
 
-                $defaultController = $this['route/controller/template/class'];
+                $defaultController = $container->get('route/controller/template/class');
                 $routeController   = isset($templateConfig['route_controller'])
                     ? $templateConfig['route_controller']
                     : $defaultController;
 
-                $routeFactory = $this['route/factory'];
+                $routeFactory = $container->get('route/factory');
+
                 $routeFactory->setDefaultClass($defaultController);
 
                 $route = $routeFactory->create($routeController, [
-                    'config' => $templateConfig,
-                    'logger' => $this['logger']
+                    'config'    => $templateConfig,
+                    'logger'    => $container->get('logger'),
+                    'container' => $container,
                 ]);
 
-                $response = $route($this, $request);
+                $response = $route($request, $response);
                 if ($response instanceof ResponseInterface) {
                     return $response;
                 }

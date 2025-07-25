@@ -166,7 +166,7 @@ class LinkDisplay extends AbstractPropertyDisplay
         parent::setDependencies($container);
 
         // Satisfies BaseUrlTrait dependencies
-        $this->setBaseUrl($container['base-url']);
-        $this->setAdminUrl($container['admin/base-url']);
+        $this->setBaseUrl($container->get('base-url'));
+        $this->setAdminUrl($container->get('admin/base-url'));
     }
 }

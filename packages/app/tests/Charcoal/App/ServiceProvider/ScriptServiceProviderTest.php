@@ -18,8 +18,8 @@ class ScriptServiceProviderTest extends AbstractTestCase
         $provider  = new ScriptServiceProvider();
         $provider->register($container);
 
-        $this->assertTrue(isset($container['script/factory']));
-        $this->assertTrue(isset($container['script/climate/reader']));
-        $this->assertTrue(isset($container['script/climate']));
+        $this->assertTrue(isset($container->get('script/factory')));
+        $this->assertTrue(isset($container->get('script/climate/reader')));
+        $this->assertTrue(isset($container->get('script/climate')));
     }
 }

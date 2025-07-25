@@ -51,7 +51,7 @@ class DeactivateActionTest extends AbstractTestCase
         $container = $this->container();
 
         $this->obj = new DeactivateAction([
-            'logger'    => $container['logger'],
+            'logger'    => $container->get('logger'),
             'container' => $container
         ]);
     }

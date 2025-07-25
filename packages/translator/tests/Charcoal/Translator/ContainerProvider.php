@@ -13,8 +13,6 @@ use Stash\Driver\Ephemeral;
 // From Slim
 use Nyholm\Psr7\Uri;
 use DI\Container;
-// From 'symfony/translation'
-use Symfony\Component\Translation\MessageSelector;
 // From 'league/climate'
 use League\CLImate\CLImate;
 use League\CLImate\Util\System\Linux;
@@ -90,9 +88,9 @@ class ContainerProvider
      */
     public function registerBaseUrl(Container $container)
     {
-        $container['base-url'] = function () {
+        $container->set('base-url', function () {
             return (new Uri('https://example.com:8080/foo/bar?abc=123'));
-        };
+        });
     }
 
     /**
@@ -103,9 +101,9 @@ class ContainerProvider
      */
     public function registerAdminBaseUrl(Container $container)
     {
-        $container['admin/base-url'] = function () {
+        $container->set('admin/base-url', function () {
             return (new Uri('https://example.com:8080/admin/qux?abc=123'));
-        };
+        });
     }
 
     /**
@@ -116,7 +114,7 @@ class ContainerProvider
      */
     public function registerConfig(Container $container)
     {
-        $container['config'] = function () {
+        $container->set('config', function () {
             return new AppConfig([
                 'base_path' => realpath(__DIR__ . '/../../..'),
                 'locales'   => [
@@ -150,7 +148,7 @@ class ContainerProvider
                     ]
                 ]
             ]);
-        };
+        });
     }
 
     /**
@@ -163,11 +161,11 @@ class ContainerProvider
      */
     public function registerSource(Container $container)
     {
-        $container['database'] = function () {
+        $container->set('database', function () {
             $pdo = new PDO('sqlite::memory:');
             $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             return $pdo;
-        };
+        });
     }
 
     /**
@@ -178,9 +176,9 @@ class ContainerProvider
      */
     public function registerLogger(Container $container)
     {
-        $container['logger'] = function () {
+        $container->set('logger', function () {
             return new NullLogger();
-        };
+        });
     }
 
     /**
@@ -191,9 +189,9 @@ class ContainerProvider
      */
     public function registerCache(Container $container)
     {
-        $container['cache'] = function () {
+        $container->set('cache', function () {
             return new Pool(new Ephemeral());
-        };
+        });
     }
 
     /**
@@ -204,34 +202,33 @@ class ContainerProvider
      */
     public function registerTranslator(Container $container)
     {
-        $container['locales/config'] = function (Container $container) {
-            return new LocalesConfig($container['config']['locales']);
-        };
+        $container->set('locales/config', function (Container $container) {
+            return new LocalesConfig($container->get('config')['locales']);
+        });
 
-        $container['locales/manager'] = function (Container $container) {
+        $container->set('locales/manager', function (Container $container) {
             return new LocalesManager([
-                'locales'            => $container['locales/config']['languages'],
-                'default_language'   => $container['locales/config']['default_language'],
-                'fallback_languages' => $container['locales/config']['fallback_languages']
+                'locales'            => $container->get('locales/config')['languages'],
+                'default_language'   => $container->get('locales/config')['default_language'],
+                'fallback_languages' => $container->get('locales/config')['fallback_languages']
             ]);
-        };
+        });
 
-        $container['translator/config'] = function (Container $container) {
-            return new TranslatorConfig($container['config']['translator']);
-        };
+        $container->set('translator/config', function (Container $container) {
+            return new TranslatorConfig($container->get('config')['translator']);
+        });
 
-        $container['translator'] = function (Container $container) {
+        $container->set('translator', function (Container $container) {
             $translator = new Translator([
-                'manager'          => $container['locales/manager'],
-                'message_selector' => new MessageSelector(),
+                'manager'          => $container->get('locales/manager'),
                 'cache_dir'        => null,
-                'debug'            => $container['translator/config']['debug']
+                'debug'            => $container->get('translator/config')['debug']
             ]);
 
-            $translator->setFallbackLocales($container['locales/config']['fallback_languages']);
+            $translator->setFallbackLocales($container->get('locales/config')['fallback_languages']);
 
             return $translator;
-        };
+        });
     }
 
     /**
@@ -242,11 +239,11 @@ class ContainerProvider
      */
     public function registerMetadataLoader(Container $container)
     {
-        $container['metadata/loader'] = function (Container $container) {
+        $container->set('metadata/loader', function (Container $container) {
             return new MetadataLoader([
-                'cache'     => $container['cache'],
-                'logger'    => $container['logger'],
-                'base_path' => $container['config']['base_path'],
+                'cache'     => $container->get('cache'),
+                'logger'    => $container->get('logger'),
+                'base_path' => $container->get('config')['base_path'],
                 'paths'     => [
                     'metadata',
                     // Standalone
@@ -255,7 +252,7 @@ class ContainerProvider
                     '/../property/metadata'
                 ]
             ]);
-        };
+        });
     }
 
     /**
@@ -266,18 +263,18 @@ class ContainerProvider
      */
     public function registerSourceFactory(Container $container)
     {
-        $container['source/factory'] = function (Container $container) {
+        $container->set('source/factory', function (Container $container) {
             return new Factory([
                 'map' => [
                     'database' => DatabaseSource::class
                 ],
                 'arguments'  => [[
-                    'logger' => $container['logger'],
-                    'cache'  => $container['cache'],
-                    'pdo'    => $container['database']
+                    'logger' => $container->get('logger'),
+                    'cache'  => $container->get('cache'),
+                    'pdo'    => $container->get('database')
                 ]]
             ]);
-        };
+        });
     }
 
     /**
@@ -288,17 +285,17 @@ class ContainerProvider
      */
     public function registerModelFactory(Container $container)
     {
-        $container['model/factory'] = function (Container $container) {
+        $container->set('model/factory', function (Container $container) {
             return new Factory([
                 'arguments' => [[
                     'container'         => $container,
-                    'logger'            => $container['logger'],
-                    'metadata_loader'   => $container['metadata/loader'],
-                    'source_factory'    => $container['source/factory'],
-                    'property_factory'  => $container['property/factory']
+                    'logger'            => $container->get('logger'),
+                    'metadata_loader'   => $container->get('metadata/loader'),
+                    'source_factory'    => $container->get('source/factory'),
+                    'property_factory'  => $container->get('property/factory')
                 ]]
             ]);
-        };
+        });
     }
 
     /**
@@ -309,7 +306,7 @@ class ContainerProvider
      */
     public function registerPropertyFactory(Container $container)
     {
-        $container['property/factory'] = function (Container $container) {
+        $container->set('property/factory', function (Container $container) {
             return new Factory([
                 'resolver_options' => [
                     'prefix' => '\\Charcoal\\Property\\',
@@ -317,12 +314,12 @@ class ContainerProvider
                 ],
                 'arguments' => [[
                     'container'  => $container,
-                    'database'   => $container['database'],
-                    'logger'     => $container['logger'],
-                    'translator' => $container['translator']
+                    'database'   => $container->get('database'),
+                    'logger'     => $container->get('logger'),
+                    'translator' => $container->get('translator')
                 ]]
             ]);
-        };
+        });
     }
 
     /**
@@ -333,43 +330,43 @@ class ContainerProvider
      */
     public function registerClimate(Container $container)
     {
-        $container['climate/system'] = function () {
+        $container->set('climate/system', function () {
             $system = Mockery::mock(Linux::class);
             $system->shouldReceive('hasAnsiSupport')->andReturn(true);
             $system->shouldReceive('width')->andReturn(80);
 
             return $system;
-        };
+        });
 
-        $container['climate/output'] = function () {
+        $container->set('climate/output', function () {
             $output = Mockery::mock(Output::class);
             $output->shouldReceive('persist')->andReturn($output);
             $output->shouldReceive('sameLine')->andReturn($output);
             $output->shouldReceive('write');
 
             return $output;
-        };
+        });
 
-        $container['climate/reader'] = function () {
+        $container->set('climate/reader', function () {
             $reader = Mockery::mock(Stdin::class);
             $reader->shouldReceive('line')->andReturn('line');
             $reader->shouldReceive('char')->andReturn('char');
             $reader->shouldReceive('multiLine')->andReturn('multiLine');
             return $reader;
-        };
+        });
 
-        $container['climate/util'] = function (Container $container) {
-            return new UtilFactory($container['climate/system']);
-        };
+        $container->set('climate/util', function (Container $container) {
+            return new UtilFactory($container->get('climate/system'));
+        });
 
-        $container['climate'] = function (Container $container) {
+        $container->set('climate', function (Container $container) {
             $climate = new CLImate();
 
-            $climate->setOutput($container['climate/output']);
-            $climate->setUtil($container['climate/util']);
-            $climate->setReader($container['climate/reader']);
+            $climate->setOutput($container->get('climate/output'));
+            $climate->setUtil($container->get('climate/util'));
+            $climate->setReader($container->get('climate/reader'));
 
             return $climate;
-        };
+        });
     }
 }

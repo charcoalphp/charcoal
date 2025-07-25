@@ -445,15 +445,8 @@ class AdminServiceProvider
          * @param  AdminConfig $adminConfig The admin configset.
          * @return AdminConfig
          */
-        $container->set('admin/config', function (Container $container): array {
-            $adminConfig = [];
-            $config = $container->get('config');
-            if (isset($config['admin']) && isset($config['admin']['elfinder'])) {
-                $adminConfig = $config['admin'];
-                $adminConfig['elfinder'] = new Config($adminConfig['elfinder']);
-            }
-            return $adminConfig;
-        });
+        $elfinderConfig = new Config($container->get('admin/config')['elfinder']);
+        $container->get('admin/config')['elfinder'] = new Config($elfinderConfig);
 
         /**
          * The elFinder configset.

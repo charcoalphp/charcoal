@@ -51,7 +51,7 @@ class UpdateAllActionTest extends AbstractTestCase
         $container = $this->container();
 
         $this->obj = new UpdateAllAction([
-            'logger'    => $container['logger'],
+            'logger'    => $container->get('logger'),
             'container' => $container
         ]);
     }

@@ -77,7 +77,7 @@ class StaticWebsiteTemplate extends AdminTemplate
     protected function setDependencies(Container $container)
     {
         parent::setDependencies($container);
-        $this->basePath = $container['config']['base_path'];
+        $this->basePath = $container->get('config')['base_path'];
     }
 
     /**

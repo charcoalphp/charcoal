@@ -62,11 +62,11 @@ class ContainerProvider
      */
     public function registerDatabase(Container $container)
     {
-        $container['database'] = function () {
+        $container->set('database', function () {
             $pdo = new PDO('sqlite::memory:');
             $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             return $pdo;
-        };
+        });
     }
 
     /**
@@ -77,9 +77,9 @@ class ContainerProvider
      */
     public function registerLogger(Container $container)
     {
-        $container['logger'] = function () {
+        $container->set('logger', function () {
             return new NullLogger();
-        };
+        });
     }
 
     /**
@@ -90,9 +90,9 @@ class ContainerProvider
      */
     public function registerCache(Container $container)
     {
-        $container['cache'] = function () {
+        $container->set('cache', function () {
             return new Pool();
-        };
+        });
     }
 
     /**
@@ -103,10 +103,10 @@ class ContainerProvider
      */
     public function registerMetadataLoader(Container $container)
     {
-        $container['metadata/loader'] = function (Container $container) {
+        $container->set('metadata/loader', function (Container $container) {
             return new MetadataLoader([
-                'cache'     => $container['cache'],
-                'logger'    => $container['logger'],
+                'cache'     => $container->get('cache'),
+                'logger'    => $container->get('logger'),
                 'base_path' => realpath(__DIR__ . '/../../../'),
                 'paths'     => [
                     'metadata',
@@ -116,7 +116,7 @@ class ContainerProvider
                     '/../user/metadata',
                 ]
             ]);
-        };
+        });
     }
 
     /**
@@ -131,18 +131,18 @@ class ContainerProvider
         $this->registerCache($container);
         $this->registerDatabase($container);
 
-        $container['source/factory'] = function ($container) {
+        $container->set('source/factory', function ($container) {
             return new Factory([
                 'map' => [
                     'database' => DatabaseSource::class
                 ],
                 'arguments'  => [[
-                    'logger' => $container['logger'],
-                    'cache'  => $container['cache'],
-                    'pdo'    => $container['database']
+                    'logger' => $container->get('logger'),
+                    'cache'  => $container->get('cache'),
+                    'pdo'    => $container->get('database')
                 ]]
             ]);
-        };
+        });
     }
 
     /**
@@ -157,17 +157,17 @@ class ContainerProvider
         $this->registerMetadataLoader($container);
         $this->registerPropertyFactory($container);
 
-        $container['model/factory'] = function ($container) {
+        $container->set('model/factory', function ($container) {
             return new Factory([
                 'arguments' => [[
                     'container'         => $container,
-                    'logger'            => $container['logger'],
-                    'metadata_loader'   => $container['metadata/loader'],
-                    'source_factory'    => $container['source/factory'],
-                    'property_factory'  => $container['property/factory']
+                    'logger'            => $container->get('logger'),
+                    'metadata_loader'   => $container->get('metadata/loader'),
+                    'source_factory'    => $container->get('source/factory'),
+                    'property_factory'  => $container->get('property/factory')
                 ]]
             ]);
-        };
+        });
     }
 
     /**
@@ -182,7 +182,7 @@ class ContainerProvider
         $this->registerDatabase($container);
         $this->registerTranslator($container);
 
-        $container['property/factory'] = function (Container $container) {
+        $container->set('property/factory', function (Container $container) {
             return new Factory([
                 'resolver_options' => [
                     'prefix' => '\\Charcoal\\Property\\',
@@ -190,12 +190,12 @@ class ContainerProvider
                 ],
                 'arguments' => [[
                     'container'  => $container,
-                    'database'   => $container['database'],
-                    'logger'     => $container['logger'],
-                    'translator' => $container['translator']
+                    'database'   => $container->get('database'),
+                    'logger'     => $container->get('logger'),
+                    'translator' => $container->get('translator')
                 ]]
             ]);
-        };
+        });
     }
 
     /**
@@ -206,12 +206,12 @@ class ContainerProvider
      */
     public function registerModelCollectionLoader(Container $container)
     {
-        $container['model/collection/loader'] = function (Container $container) {
+        $container->set('model/collection/loader', function (Container $container) {
             return new CollectionLoader([
-                'logger' => $container['logger'],
-                'cache'  => $container['cache']
+                'logger' => $container->get('logger'),
+                'cache'  => $container->get('cache')
             ]);
-        };
+        });
     }
 
     /**
@@ -222,18 +222,18 @@ class ContainerProvider
      */
     public function registerTranslator(Container $container)
     {
-        $container['locales/manager'] = function () {
+        $container->set('locales/manager', function () {
             return new LocalesManager([
                 'locales' => [
                     'en' => [ 'locale' => 'en-US' ]
                 ]
             ]);
-        };
+        });
 
-        $container['translator'] = function (Container $container) {
+        $container->set('translator', function (Container $container) {
             return new Translator([
-                'manager'  => $container['locales/manager']
+                'manager'  => $container->get('locales/manager')
             ]);
-        };
+        });
     }
 }

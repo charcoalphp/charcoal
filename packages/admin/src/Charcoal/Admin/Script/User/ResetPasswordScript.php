@@ -42,7 +42,7 @@ class ResetPasswordScript extends AdminScript implements
         parent::setDependencies($container);
 
         // Satisfies AuthAwareInterface
-        $this->setAuthenticator($container['admin/authenticator']);
+        $this->setAuthenticator($container->get('admin/authenticator'));
     }
 
     /**

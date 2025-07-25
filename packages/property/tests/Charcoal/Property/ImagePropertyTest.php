@@ -22,9 +22,9 @@ class ImagePropertyTest extends AbstractFilePropertyTestCase
         $container = $this->getContainer();
 
         return new ImageProperty([
-            'database'   => $container['database'],
-            'logger'     => $container['logger'],
-            'translator' => $container['translator'],
+            'database'   => $container->get('database'),
+            'logger'     => $container->get('logger'),
+            'translator' => $container->get('translator'),
             'container'  => $container,
         ]);
     }

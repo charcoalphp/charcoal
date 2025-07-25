@@ -107,9 +107,9 @@ class AclPermissions extends AdminWidget implements
     {
         parent::setDependencies($container);
 
-        $this->database         = $container['database'];
-        $this->aclManager       = $container['admin/acl'];
-        $this->collectionLoader = $container['model/collection/loader'];
+        $this->database         = $container->get('database');
+        $this->aclManager       = $container->get('admin/acl');
+        $this->collectionLoader = $container->get('model/collection/loader');
     }
 
     /**

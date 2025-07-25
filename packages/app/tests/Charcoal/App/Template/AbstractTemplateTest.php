@@ -43,7 +43,7 @@ class AbstractTemplateTest extends AbstractTestCase
         $container = $this->container();
 
         $this->obj = $this->getMockForAbstractClass(AbstractTemplate::class, [[
-            'logger'    => $container['logger'],
+            'logger'    => $container->get('logger'),
             'container' => $container
         ]]);
     }

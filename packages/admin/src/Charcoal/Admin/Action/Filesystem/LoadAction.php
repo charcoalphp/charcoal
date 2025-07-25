@@ -467,7 +467,7 @@ class LoadAction extends AdminAction
     {
         parent::setDependencies($container);
 
-        $this->filesystems = $container['filesystems'];
-        $this->filesystemConfig = $container['filesystem/config'];
+        $this->filesystems = $container->get('filesystems');
+        $this->filesystemConfig = $container->get('filesystem/config');
     }
 }

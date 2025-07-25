@@ -55,7 +55,7 @@ class ResetPasswordActionTest extends AbstractTestCase
         $containerProvider->registerActionDependencies($container);
 
         $this->obj = new ResetPasswordAction([
-            'logger'    => $container['logger'],
+            'logger'    => $container->get('logger'),
             'container' => $container
         ]);
     }

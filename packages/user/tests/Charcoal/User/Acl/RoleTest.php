@@ -38,7 +38,7 @@ class RoleTest extends AbstractTestCase
     {
         $container = $this->container();
 
-        $this->obj = $container['model/factory']->create(Role::class);
+        $this->obj = $container->get('model/factory')->create(Role::class);
     }
 
     /**

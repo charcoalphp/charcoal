@@ -58,13 +58,13 @@ class CollectionLoaderTest extends AbstractTestCase
 
         $factory = new Factory([
             'arguments' => [[
-                'logger'          => $container['logger'],
-                'metadata_loader' => $container['metadata/loader']
+                'logger'          => $container->get('logger'),
+                'metadata_loader' => $container->get('metadata/loader')
             ]]
         ]);
 
         $loader = new CollectionLoader([
-            'logger'  => $container['logger'],
+            'logger'  => $container->get('logger'),
             'factory' => $factory,
         ]);
 
@@ -79,16 +79,16 @@ class CollectionLoaderTest extends AbstractTestCase
         $container = $this->getContainer();
 
         $source = new DatabaseSource([
-            'logger' => $container['logger'],
-            'pdo'    => $container['database']
+            'logger' => $container->get('logger'),
+            'pdo'    => $container->get('database')
         ]);
         $source->setTable('tests');
 
         $model = new Model([
             'container'        => $container,
-            'logger'           => $container['logger'],
-            'property_factory' => $container['property/factory'],
-            'metadata_loader'  => $container['metadata/loader']
+            'logger'           => $container->get('logger'),
+            'property_factory' => $container->get('property/factory'),
+            'metadata_loader'  => $container->get('metadata/loader')
         ]);
 
         $source->setModel($model);

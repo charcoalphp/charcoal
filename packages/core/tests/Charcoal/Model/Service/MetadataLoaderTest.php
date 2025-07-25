@@ -26,8 +26,8 @@ class MetadataLoaderTest extends AbstractTestCase
         $container = $this->getContainer();
 
         $this->obj = new MetadataLoader([
-            'logger'    => $container['logger'],
-            'cache'     => $container['cache'],
+            'logger'    => $container->get('logger'),
+            'cache'     => $container->get('cache'),
             'base_path' => __DIR__,
             'paths'     => [ 'metadata' ]
         ]);

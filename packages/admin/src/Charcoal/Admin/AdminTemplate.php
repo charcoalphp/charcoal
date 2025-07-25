@@ -6,7 +6,6 @@ use Exception;
 use InvalidArgumentException;
 // From PSR-7
 use Psr\Http\Message\RequestInterface;
-
 use DI\Container;
 // From 'charcoal-factory'
 use Charcoal\Factory\FactoryInterface;

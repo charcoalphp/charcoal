@@ -6,7 +6,6 @@ use Charcoal\Admin\AssetsConfig;
 use Charcoal\Admin\Mustache\AssetsHelpers;
 use Charcoal\Admin\Service\AssetsBuilder;
 use DI\Container;
-use Assetic\AssetManager;
 use Psr\Container\ContainerInterface;
 
 /**
@@ -96,7 +95,7 @@ class AssetsManagerServiceProvider
 
         /**
          * @param Container $container DI Container.
-         * @return AssetManager
+         * @return Packages
          */
         $container->set('assets', function (Container $container) {
             $assetsBuilder = $container->get('assets/builder');

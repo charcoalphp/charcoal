@@ -36,7 +36,7 @@ class NewsTest extends AbstractTestCase
     {
         $container = $this->getContainer();
 
-        $route = $container['model/factory']->get(ObjectRoute::class);
+        $route = $container->get('model/factory')->get(ObjectRoute::class);
         if ($route->source()->tableExists() === false) {
             $route->source()->createTable();
         }

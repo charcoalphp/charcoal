@@ -22,13 +22,13 @@ class EmailTest extends AbstractTestCase
         /** GLOBALS['container'] is defined in bootstrap file */
         $container = $GLOBALS['container'];
         $this->obj = new Email([
-            'logger'    => $container['logger'],
-            'config'    => $container['email/config'],
-            'view'      => $container['email/view'],
-            'template_factory' => $container['template/factory'],
-            'queue_item_factory' => $container['model/factory'],
-            'log_factory' => $container['model/factory'],
-            'tracker'   => $container['email/tracker']
+            'logger'    => $container->get('logger'),
+            'config'    => $container->get('email/config'),
+            'view'      => $container->get('email/view'),
+            'template_factory' => $container->get('template/factory'),
+            'queue_item_factory' => $container->get('model/factory'),
+            'log_factory' => $container->get('model/factory'),
+            'tracker'   => $container->get('email/tracker')
         ]);
     }
 

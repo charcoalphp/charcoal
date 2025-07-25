@@ -30,8 +30,8 @@ class TextInputTest extends AbstractTestCase
         $containerProvider->registerInputDependencies($container);
 
         $this->obj = new TextInput([
-            'logger'          => $container['logger'],
-            'metadata_loader' => $container['metadata/loader'],
+            'logger'          => $container->get('logger'),
+            'metadata_loader' => $container->get('metadata/loader'),
             'container'       => $container,
         ]);
     }

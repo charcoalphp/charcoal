@@ -29,7 +29,7 @@ class PropertyFieldTest extends AbstractTestCase
         $container = $this->getContainer();
 
         $this->obj = new PropertyField([
-            'translator' => $container['translator']
+            'translator' => $container->get('translator')
         ]);
     }
 

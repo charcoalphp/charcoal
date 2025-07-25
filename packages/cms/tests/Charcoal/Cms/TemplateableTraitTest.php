@@ -75,7 +75,7 @@ class TemplateableTraitTest extends AbstractTestCase
     {
         $container = $this->getContainer();
 
-        $container['database']->query('DROP TABLE IF EXISTS `charcoal_models`;');
+        $container->get('database')->query('DROP TABLE IF EXISTS `charcoal_models`;');
     }
 
     /**

@@ -38,7 +38,7 @@ trait UserProviderTrait
     ) {
         $container = $this->container();
 
-        $user = $container['model/factory']->create($this->userClass);
+        $user = $container->get('model/factory')->create($this->userClass);
         $user->setData([
             'email'    => $email,
             'password' => $password,
@@ -60,7 +60,7 @@ trait UserProviderTrait
     {
         $container = $this->container();
 
-        $user = $container['model/factory']->create($this->userClass);
+        $user = $container->get('model/factory')->create($this->userClass);
         $user->loadFrom('email', $email);
 
         return !!$user->id();
@@ -75,7 +75,7 @@ trait UserProviderTrait
     {
         $container = $this->container();
 
-        return $container['admin/authenticator'];
+        return $container->get('admin/authenticator');
     }
 
     /**

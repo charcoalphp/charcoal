@@ -671,7 +671,7 @@ class ModelStructureProperty extends StructureProperty
     {
         parent::setDependencies($container);
 
-        $this->setStructureModelFactory($container['model/factory']);
+        $this->setStructureModelFactory($container->get('model/factory'));
     }
 
     /**

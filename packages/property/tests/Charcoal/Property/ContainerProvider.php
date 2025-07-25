@@ -64,10 +64,10 @@ class ContainerProvider
      */
     public function registerConfig(Container $container)
     {
-        $container['config'] = [
+        $container->set('config', [
             'base_path'   => realpath(__DIR__.'/../../..'),
             'public_path' => realpath(__DIR__.'/../../..'),
-        ];
+        ]);
     }
 
     /**
@@ -80,11 +80,11 @@ class ContainerProvider
      */
     public function registerSource(Container $container)
     {
-        $container['database'] = function () {
+        $container->set('database', function () {
             $pdo = new PDO('sqlite::memory:');
             $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             return $pdo;
-        };
+        });
     }
 
     /**
@@ -95,9 +95,9 @@ class ContainerProvider
      */
     public function registerLogger(Container $container)
     {
-        $container['logger'] = function () {
+        $container->set('logger', function () {
             return new NullLogger();
-        };
+        });
     }
 
     /**
@@ -108,9 +108,9 @@ class ContainerProvider
      */
     public function registerCache(Container $container)
     {
-        $container['cache'] = function () {
+        $container->set('cache', function () {
             return new Pool();
-        };
+        });
     }
 
     /**
@@ -121,30 +121,30 @@ class ContainerProvider
      */
     public function registerView(Container $container)
     {
-        $container['view/loader'] = function (Container $container) {
+        $container->set('view/loader', function (Container $container) {
             return new MustacheLoader([
-                'logger'    => $container['logger'],
-                'base_path' => $container['config']['base_path'],
+                'logger'    => $container->get('logger'),
+                'base_path' => $container->get('config')['base_path'],
                 'paths'     => [
                     'views'
                 ]
             ]);
-        };
+        });
 
-        $container['view/engine'] = function (Container $container) {
+        $container->set('view/engine', function (Container $container) {
             return new MustacheEngine([
-                'logger' => $container['logger'],
+                'logger' => $container->get('logger'),
                 'cache'  => MustacheEngine::DEFAULT_CACHE_PATH,
-                'loader' => $container['view/loader']
+                'loader' => $container->get('view/loader')
             ]);
-        };
+        });
 
-        $container['view'] = function (Container $container) {
+        $container->set('view', function (Container $container) {
             return new GenericView([
-                'logger' => $container['logger'],
-                'engine' => $container['view/engine']
+                'logger' => $container->get('logger'),
+                'engine' => $container->get('view/engine')
             ]);
-        };
+        });
     }
 
     /**
@@ -155,7 +155,7 @@ class ContainerProvider
      */
     public function registerTranslator(Container $container)
     {
-        $container['locales/manager'] = function () {
+        $container->set('locales/manager', function () {
             $manager = new LocalesManager([
                 'locales' => [
                     'en' => [ 'locale' => 'en-US' ]
@@ -165,13 +165,13 @@ class ContainerProvider
             $manager->setCurrentLocale($manager->currentLocale());
 
             return $manager;
-        };
+        });
 
-        $container['translator'] = function (Container $container) {
+        $container->set('translator', function (Container $container) {
             return new Translator([
-                'manager' => $container['locales/manager']
+                'manager' => $container->get('locales/manager')
             ]);
-        };
+        });
     }
 
     /**
@@ -182,7 +182,7 @@ class ContainerProvider
      */
     public function registerMultilingualTranslator(Container $container)
     {
-        $container['locales/manager'] = function () {
+        $container->set('locales/manager', function () {
             $manager = new LocalesManager([
                 'locales' => [
                     'en'  => [
@@ -215,11 +215,11 @@ class ContainerProvider
             $manager->setCurrentLocale($manager->currentLocale());
 
             return $manager;
-        };
+        });
 
-        $container['translator'] = function (Container $container) {
+        $container->set('translator', function (Container $container) {
             $translator = new Translator([
-                'manager' => $container['locales/manager']
+                'manager' => $container->get('locales/manager')
             ]);
 
             $loader = new ArrayLoader();
@@ -230,7 +230,7 @@ class ContainerProvider
             $translator->addResource('array', [ 'locale.de' => 'Alemán'   ], 'de', 'messages');
 
             return $translator;
-        };
+        });
     }
 
     /**
@@ -241,16 +241,16 @@ class ContainerProvider
      */
     public function registerMetadataLoader(Container $container)
     {
-        $container['metadata/loader'] = function (Container $container) {
+        $container->set('metadata/loader', function (Container $container) {
             return new MetadataLoader([
-                'cache'     => $container['cache'],
-                'logger'    => $container['logger'],
-                'base_path' => $container['config']['base_path'],
+                'cache'     => $container->get('cache'),
+                'logger'    => $container->get('logger'),
+                'base_path' => $container->get('config')['base_path'],
                 'paths'     => [
                     'metadata'
                 ]
             ]);
-        };
+        });
     }
 
     /**
@@ -261,18 +261,18 @@ class ContainerProvider
      */
     public function registerSourceFactory(Container $container)
     {
-        $container['source/factory'] = function ($container) {
+        $container->set('source/factory', function ($container) {
             return new Factory([
                 'map' => [
                     'database' => DatabaseSource::class
                 ],
                 'arguments'  => [[
-                    'logger' => $container['logger'],
-                    'cache'  => $container['cache'],
-                    'pdo'    => $container['database']
+                    'logger' => $container->get('logger'),
+                    'cache'  => $container->get('cache'),
+                    'pdo'    => $container->get('database')
                 ]]
             ]);
-        };
+        });
     }
 
     /**
@@ -283,17 +283,17 @@ class ContainerProvider
      */
     public function registerModelFactory(Container $container)
     {
-        $container['model/factory'] = function ($container) {
+        $container->set('model/factory', function ($container) {
             return new Factory([
                 'arguments' => [[
                     'container'         => $container,
-                    'logger'            => $container['logger'],
-                    'metadata_loader'   => $container['metadata/loader'],
-                    'source_factory'    => $container['source/factory'],
-                    'property_factory'  => $container['property/factory']
+                    'logger'            => $container->get('logger'),
+                    'metadata_loader'   => $container->get('metadata/loader'),
+                    'source_factory'    => $container->get('source/factory'),
+                    'property_factory'  => $container->get('property/factory')
                 ]]
             ]);
-        };
+        });
     }
 
     /**
@@ -304,7 +304,7 @@ class ContainerProvider
      */
     public function registerPropertyFactory(Container $container)
     {
-        $container['property/factory'] = function (Container $container) {
+        $container->set('property/factory', function (Container $container) {
             return new Factory([
                 'resolver_options' => [
                     'prefix' => '\\Charcoal\\Property\\',
@@ -312,12 +312,12 @@ class ContainerProvider
                 ],
                 'arguments' => [[
                     'container'  => $container,
-                    'database'   => $container['database'],
-                    'logger'     => $container['logger'],
-                    'translator' => $container['translator']
+                    'database'   => $container->get('database'),
+                    'logger'     => $container->get('logger'),
+                    'translator' => $container->get('translator')
                 ]]
             ]);
-        };
+        });
     }
 
     /**
@@ -328,12 +328,12 @@ class ContainerProvider
      */
     public function registerModelCollectionLoader(Container $container)
     {
-        $container['model/collection/loader'] = function (Container $container) {
+        $container->set('model/collection/loader', function (Container $container) {
             return new CollectionLoader([
-                'logger'  => $container['logger'],
-                'cache'   => $container['cache'],
-                'factory' => $container['model/factory']
+                'logger'  => $container->get('logger'),
+                'cache'   => $container->get('cache'),
+                'factory' => $container->get('model/factory')
             ]);
-        };
+        });
     }
 }

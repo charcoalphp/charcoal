@@ -6,7 +6,7 @@ declare(strict_types=1);
 use Charcoal\App\App;
 use Charcoal\App\AppConfig;
 use Charcoal\App\AppContainer;
-use Slim\Http\Environment as SlimEnvironment;
+use Slim\Factory\ServerRequestCreatorFactory;
 
 // Ensure this is being used via a CLI
 if (PHP_SAPI !== 'cli') {
@@ -52,6 +52,10 @@ if (!isset($argv[1])) {
 
 $path = '/' . ltrim($argv[1], '/');
 
+// Set up fake HTTP environment for CLI
+$_SERVER['REQUEST_URI'] = $path;
+$_SERVER['PATH_INFO'] = $path;
+
 // Default file path
 $confFile = $baseDir . '/config/config.php';
 if (!file_exists($confFile)) {
@@ -62,43 +66,51 @@ $config = new AppConfig([
     'base_path' => $baseDir,
 ]);
 $config->addFile($confFile);
+
+$serverRequestCreator = ServerRequestCreatorFactory::create();
+$request = $serverRequestCreator->createServerRequestFromGlobals();
+
 // Create container and configure it (with charcoal-config)
 $container = new AppContainer([
     'config' => $config,
+    'request' => $request,
 ]);
 
+// Set legacy 'environment' container item for compatibility
+$container->set('environment', function () use ($path) {
+    return [
+        'PATH_INFO'   => $path,
+        'REQUEST_URI' => $path,
+    ];
+});
+
 // Convert HTTP 404 Not Found to CLI-friendly error
-$container['notFoundHandler'] = function ($container) {
+$container->set('notFoundHandler', function ($container) {
     return function ($request, $response) use ($container) {
-        return $container['response']
+        return $container->get('response')
             ->withStatus(404)
             ->write(sprintf(
                 'Script "%s" not found' . "\n",
-                $container['request']->getUri()->getPath()
+                $container->get('request')->getUri()->getPath()
             ));
     };
-};
+});
 
 // Convert HTTP 500 Server Error to CLI-friendly error
-$container['errorHandler'] = function ($container) {
+$container->set('errorHandler', function ($container) {
     return function ($request, $response, $exception) use ($container) {
-        return $container['response']
+        return $container->get('response')
             ->withStatus(500)
             ->write(sprintf(
                 'Something went wrong! [%s]' . "\n",
                 $exception->getMessage()
             ));
     };
-};
-
-// Create a fake HTTP environment from the first CLI argument
-$container['environment'] = function ($container) use ($path) {
-    return SlimEnvironment::mock([
-        'PATH_INFO'   => $path,
-        'REQUEST_URI' => $path,
-    ]);
-};
+});
 
 // Charcoal / Slim is the main app
 $app = App::instance($container);
-$app->run();
+$app->setConfig($config);
+$app->setBasePath('');
+$response = $app->getResponseFactory()->createResponse();
+$app->run($request, $response);

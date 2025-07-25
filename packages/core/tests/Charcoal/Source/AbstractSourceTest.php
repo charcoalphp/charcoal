@@ -57,7 +57,7 @@ class AbstractSourceTest extends AbstractTestCase
         $container = $this->getContainer();
 
         $this->obj = $this->getMockForAbstractClass(AbstractSource::class, [[
-            'logger' => $container['logger']
+            'logger' => $container->get('logger')
         ]]);
     }
 
@@ -70,7 +70,7 @@ class AbstractSourceTest extends AbstractTestCase
     {
         $container = $this->getContainer();
 
-        $prop = $container['property/factory']->create('generic');
+        $prop = $container->get('property/factory')->create('generic');
         $prop->setIdent('xyzzy');
 
         return $prop;
@@ -146,12 +146,12 @@ class AbstractSourceTest extends AbstractTestCase
 
         $obj = $this->obj;
         $model = new Model([
-            'logger'          => $container['logger'],
+            'logger'          => $container->get('logger'),
             'metadata_loader' => new MetadataLoader([
                 'base_path'   => '',
                 'paths'       => [],
-                'logger'      => $container['logger'],
-                'cache'       => $container['cache']
+                'logger'      => $container->get('logger'),
+                'cache'       => $container->get('cache')
             ])
         ]);
         $ret = $obj->setModel($model);
@@ -798,7 +798,7 @@ class AbstractSourceTest extends AbstractTestCase
     {
         $container = $this->getContainer();
 
-        $obj = $container['model/factory']->create(Model::class);
+        $obj = $container->get('model/factory')->create(Model::class);
         $obj->setMetadata($this->getModelMetadata());
 
         return $obj;

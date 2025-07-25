@@ -318,8 +318,8 @@ class TagsInput extends AbstractSelectableInput
     {
         parent::setDependencies($container);
 
-        $this->setModelFactory($container['model/factory']);
-        $this->setCollectionLoader($container['model/collection/loader']);
+        $this->setModelFactory($container->get('model/factory'));
+        $this->setCollectionLoader($container->get('model/collection/loader'));
     }
 
     /**

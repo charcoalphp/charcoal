@@ -234,8 +234,8 @@ class TemplateProperty extends AbstractProperty implements SelectablePropertyInt
     {
         parent::setDependencies($container);
 
-        if (isset($container['config']['templates'])) {
-            $this->availableTemplates = $this->parseChoices($container['config']['templates']);
+        if (isset($container->get('config')['templates'])) {
+            $this->availableTemplates = $this->parseChoices($container->get('config')['templates']);
             $this->choices = $this->availableTemplates;
         }
     }

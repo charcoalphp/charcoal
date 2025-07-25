@@ -170,7 +170,7 @@ class NewsRouteTest extends AbstractRouteTestCase
     {
         $container = $this->getContainer();
 
-        $news = $container['model/factory']->get(News::class);
+        $news = $container->get('model/factory')->get(News::class);
         if ($news->source()->tableExists() === false) {
             $news->source()->createTable();
         }
@@ -186,7 +186,7 @@ class NewsRouteTest extends AbstractRouteTestCase
     {
         $container = $this->getContainer();
 
-        $news = $container['model/factory']->create(News::class);
+        $news = $container->get('model/factory')->create(News::class);
 
         $news->setData($data + [
             'id'    => 1,

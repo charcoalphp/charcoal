@@ -28,7 +28,7 @@ class TextWidgetTest extends AbstractTestCase
         $containerProvider->registerWidgetDependencies($container);
 
         $this->obj = new TextWidget([
-            'logger' => $container['logger'],
+            'logger' => $container->get('logger'),
             'container' => $container
         ]);
     }

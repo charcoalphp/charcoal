@@ -134,6 +134,6 @@ class ExportAction extends AdminAction
     {
         parent::setDependencies($container);
 
-        $this->propertyFactory = $container['property/factory'];
+        $this->propertyFactory = $container->get('property/factory');
     }
 }

@@ -169,7 +169,7 @@ class InlineAction extends AdminAction
     {
         parent::setDependencies($container);
 
-        $this->setWidgetFactory($container['widget/factory']);
+        $this->setWidgetFactory($container->get('widget/factory'));
     }
 
     /**

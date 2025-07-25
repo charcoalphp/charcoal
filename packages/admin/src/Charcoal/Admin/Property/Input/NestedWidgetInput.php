@@ -86,8 +86,8 @@ class NestedWidgetInput extends AbstractPropertyInput implements
     {
         parent::setDependencies($container);
 
-        $this->setWidgetFactory($container['widget/factory']);
-        $this->setFormGroupFactory($container['form/group/factory']);
+        $this->setWidgetFactory($container->get('widget/factory'));
+        $this->setFormGroupFactory($container->get('form/group/factory'));
     }
 
     /**

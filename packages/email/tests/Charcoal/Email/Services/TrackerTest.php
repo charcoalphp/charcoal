@@ -32,8 +32,8 @@ class TrackerTest extends TestCase
     {
         /** GLOBALS['container'] is defined in bootstrap file */
         $container = $GLOBALS['container'];
-        $this->obj = new Tracker('', $container['model/factory']);
-        $this->email = $container['email'];
+        $this->obj = new Tracker('', $container->get('model/factory'));
+        $this->email = $container->get('email');
     }
 
     /**

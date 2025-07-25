@@ -74,7 +74,7 @@ class ContainerProvider
      */
     public function registerConfig(Container $container)
     {
-        $container['config'] = function () {
+        $container->set('config', function () {
             return new AppConfig([
                 'base_path' => realpath(__DIR__ . '/../../..'),
                 'templates' => [],
@@ -96,7 +96,7 @@ class ContainerProvider
                     'default_controller' => GenericTemplate::class,
                 ],
             ]);
-        };
+        });
     }
 
     /**
@@ -243,12 +243,12 @@ class ContainerProvider
      */
     public function registerDatabase(Container $container)
     {
-        $container['database'] = function () {
+        $container->set('database', function () {
             $pdo = new PDO('sqlite::memory:');
             $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
             return $pdo;
-        };
+        });
     }
 
     /**
@@ -257,9 +257,9 @@ class ContainerProvider
      */
     public function registerLogger(Container $container)
     {
-        $container['logger'] = function () {
+        $container->set('logger', function () {
             return new NullLogger();
-        };
+        });
     }
 
     /**
@@ -268,9 +268,9 @@ class ContainerProvider
      */
     public function registerCache(Container $container)
     {
-        $container['cache'] = function () {
+        $container->set('cache', function () {
             return new Pool();
-        };
+        });
     }
 
     /**
@@ -347,9 +347,9 @@ class ContainerProvider
      */
     public function registerCmsConfig(Container $container)
     {
-        $container['cms/config'] = function () {
+        $container->set('cms/config', function () {
             return new CmsConfig();
-        };
+        });
     }
 
     /**
@@ -358,12 +358,12 @@ class ContainerProvider
      */
     public function registerDateHelper(Container $container)
     {
-        $container['date/helper'] = function () {
+        $container->set('date/helper', function () {
             return new DateHelper([
                 'date_formats' => '',
                 'time_formats' => '',
             ]);
-        };
+        });
     }
 
     /**
@@ -372,7 +372,7 @@ class ContainerProvider
      */
     public function registerTemplateFactory(Container $container)
     {
-        $container['template/factory'] = function (Container $container) {
+        $container->set('template/factory', function (Container $container) {
             return new Factory([
                 'base_class'       => TemplateInterface::class,
                 'resolver_options' => [
@@ -381,10 +381,10 @@ class ContainerProvider
                 'arguments'        => [
                     [
                         'container' => $container,
-                        'logger'    => $container['logger'],
+                        'logger'    => $container->get('logger'),
                     ],
                 ],
             ]);
-        };
+        });
     }
 }

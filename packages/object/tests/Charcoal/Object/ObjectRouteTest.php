@@ -40,7 +40,7 @@ class ObjectRouteTest extends AbstractTestCase
     {
         $container = $this->container();
 
-        $this->obj = $container['model/factory']->create(ObjectRoute::class);
+        $this->obj = $container->get('model/factory')->create(ObjectRoute::class);
     }
 
     /**

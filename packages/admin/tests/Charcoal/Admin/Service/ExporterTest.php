@@ -41,10 +41,10 @@ class ExporterTest extends AbstractTestCase
         $container = $this->container();
 
         $this->obj = new Exporter([
-           'logger'          => $container['logger'],
-           'factory'         => $container['model/factory'],
-           'propertyFactory' => $container['property/factory'],
-           'translator'      => $container['translator'],
+           'logger'          => $container->get('logger'),
+           'factory'         => $container->get('model/factory'),
+           'propertyFactory' => $container->get('property/factory'),
+           'translator'      => $container->get('translator'),
            'obj_type'        => 'charcoal/admin/user',
            'export_ident'    => 'y',
         ]);
@@ -73,7 +73,7 @@ class ExporterTest extends AbstractTestCase
             $containerProvider->registerModelServiceProvider($container);
             $containerProvider->registerTranslatorServiceProvider($container);
 
-            $container['view'] = $this->createMock('\Charcoal\View\ViewInterface');
+            $container->set('view', $this->createMock('\Charcoal\View\ViewInterface'));
 
             $this->container = $container;
         }

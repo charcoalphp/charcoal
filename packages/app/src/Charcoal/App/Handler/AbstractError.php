@@ -129,7 +129,7 @@ abstract class AbstractError extends AbstractHandler
     {
         parent::setDependencies($container);
 
-        $displayDetails = $container['settings']['displayErrorDetails'];
+        $displayDetails = $container->get('settings')['displayErrorDetails'];
         $this->setDisplayErrorDetails($displayDetails);
 
         return $this;

@@ -46,7 +46,7 @@ class DatabaseFilterTest extends AbstractTestCase
     {
         $container = $this->getContainer();
 
-        $prop = $container['property/factory']->create('generic');
+        $prop = $container->get('property/factory')->create('generic');
         $prop->setIdent('xyzzy');
 
         return $prop;

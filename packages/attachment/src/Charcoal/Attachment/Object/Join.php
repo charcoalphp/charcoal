@@ -130,7 +130,7 @@ class Join extends AbstractModel implements
     {
         parent::setDependencies($container);
 
-        $this->setModelFactory($container['model/factory']);
+        $this->setModelFactory($container->get('model/factory'));
     }
 
 

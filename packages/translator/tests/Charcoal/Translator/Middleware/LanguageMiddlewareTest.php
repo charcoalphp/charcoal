@@ -84,9 +84,9 @@ class LanguageMiddlewareTest extends AbstractTestCase
         $container = $this->getContainer();
 
         $defaults = [
-            'translator'       => $container['translator'],
-            'browser_language' => $container['locales/browser-language'],
-            'default_language' => $container['translator']->getLocale(),
+            'translator'       => $container->get('translator'),
+            'browser_language' => $container->get('locales/browser-language'),
+            'default_language' => $container->get('translator')->getLocale(),
         ];
 
         $middleware = new LanguageMiddleware(array_replace($defaults, $data));

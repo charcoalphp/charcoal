@@ -52,7 +52,7 @@ class ExportActionTest extends AbstractTestCase
         $containerProvider->registerActionDependencies($container);
 
         $this->obj = new ExportAction([
-            'logger'    => $container['logger'],
+            'logger'    => $container->get('logger'),
             'container' => $container
         ]);
     }

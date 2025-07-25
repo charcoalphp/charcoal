@@ -14,6 +14,8 @@ use Twig\TwigFunction;
 class DebugHelpers extends AbstractExtension implements
     HelpersInterface
 {
+    private bool $debug;
+
     /**
      * @param array $data Class Dependencies.
      */

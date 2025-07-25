@@ -45,8 +45,8 @@ class PublishableTraitTest extends AbstractTestCase
         $container = $this->container();
 
         $this->obj = new PublishableObject([
-            'factory'    => $container['model/factory'],
-            'translator' => $container['translator']
+            'factory'    => $container->get('model/factory'),
+            'translator' => $container->get('translator')
         ]);
     }
 

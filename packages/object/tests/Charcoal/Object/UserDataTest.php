@@ -40,7 +40,7 @@ class UserDataTest extends AbstractTestCase
     {
         $container = $this->container();
 
-        $this->obj = $container['model/factory']->create(UserData::class);
+        $this->obj = $container->get('model/factory')->create(UserData::class);
     }
 
     /**
