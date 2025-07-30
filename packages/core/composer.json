@@ -25,7 +25,7 @@
         "ext-pdo": "*",
         "ext-mbstring": "*",
         "psr/log": "^1.0",
-        "psr/cache": "^1.0",
+        "psr/cache": "^2.0",
         "pimple/pimple": "^3.0",
         "charcoal/cache": "^5.1",
         "charcoal/config": "^5.1",

@@ -424,7 +424,7 @@ class TranslatorServiceProvider
         if (!$handle) {
             return false;
         }
-        while (($row = fgetcsv($handle, 0, ';', '"')) !== false) {
+        while (($row = fgetcsv($handle, 0, ';', '"', '\\')) !== false) {
             if (empty($row) || !isset($row[0], $row[1])) {
                 fclose($handle);
                 return false;

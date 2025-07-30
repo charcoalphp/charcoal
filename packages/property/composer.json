@@ -26,7 +26,7 @@
         "ext-pdo": "*",
         "ext-simplexml": "*",
         "psr/log": "^1.0",
-        "psr/cache": "^1.0",
+        "psr/cache": "^2.0",
         "charcoal/config": "^5.1",
         "charcoal/core": "^5.1",
         "charcoal/factory": "^5.1",
