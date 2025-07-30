@@ -94,8 +94,8 @@ class LoadAction extends AdminAction
             '{{ parameter }} required, must be a {{ expectedType }}, received {{ actualType }}'
         );
 
-        $objType = $request->getParam('obj_type');
-        $objId   = $request->getParam('obj_id');
+        $objType = $this->getParam($request, 'obj_type');
+        $objId   = $this->getParam($request, 'obj_id');
 
         if ($objId) {
             $this->addFeedback('error', strtr('{{ parameter }} not supported', [

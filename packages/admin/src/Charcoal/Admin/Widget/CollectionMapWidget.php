@@ -289,7 +289,7 @@ class CollectionMapWidget extends AdminWidget implements CollectionContainerInte
      */
     public function dataFromRequest()
     {
-        return $this->httpRequest()->getParams($this->acceptedRequestData());
+        return $this->getParams($this->acceptedRequestData());
     }
 
     /**

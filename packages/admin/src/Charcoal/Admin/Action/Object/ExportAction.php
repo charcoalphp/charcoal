@@ -63,8 +63,8 @@ class ExportAction extends AdminAction
             '{{ parameter }} must be a {{ expectedType }}, received {{ actualType }}'
         );
 
-        $objType     = $request->getParam('obj_type');
-        $exportIdent = $request->getParam('ident');
+        $objType     = $this->getParam($request, 'obj_type');
+        $exportIdent = $this->getParam($request, 'ident');
 
         if (!$objType) {
             $actualType = is_object($objType) ? get_class($objType) : gettype($objType);

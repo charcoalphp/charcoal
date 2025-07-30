@@ -157,6 +157,6 @@ trait HttpAwareTrait
     protected function getParam(string $key): mixed
     {
         $params = $this->getParams([$key]);
-        return ($params ?? null);
+        return (!empty($params) ? array_values($params)[0] : null);
     }
 }

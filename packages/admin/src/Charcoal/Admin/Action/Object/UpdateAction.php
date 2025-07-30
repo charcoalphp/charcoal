@@ -51,7 +51,7 @@ class UpdateAction extends AbstractSaveAction
     {
         parent::setDataFromRequest($request);
 
-        $data = $this->filterUpdateData($request->getParams());
+        $data = $this->filterUpdateData($this->getParams($request));
 
         $this->setUpdateData($data);
 
@@ -134,8 +134,8 @@ class UpdateAction extends AbstractSaveAction
                 '{{ parameter }} must be a {{ expectedType }}, received {{ actualType }}'
             );
 
-            $objType = $request->getParam('obj_type');
-            $objId   = $request->getParam('obj_id');
+            $objType = $this->getParam($request, 'obj_type');
+            $objId   = $this->getParam($request, 'obj_id');
 
             if (!$objType) {
                 $actualType = is_object($objType) ? get_class($objType) : gettype($objType);

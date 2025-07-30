@@ -5,7 +5,6 @@ namespace Charcoal\Admin\Widget;
 use ArrayIterator;
 use RuntimeException;
 use InvalidArgumentException;
-
 use DI\Container;
 // From Mustache
 use Mustache_LambdaHelper as LambdaHelper;
@@ -118,7 +117,7 @@ class AttachmentWidget extends AdminWidget implements
 
         $this->setWidgetFactory($container->get('widget/factory'));
 
-        if (isset($container->get('attachments/config'))) {
+        if (($container->has('attachments/config'))) {
             $this->setConfig($container->get('attachments/config'));
         } elseif (isset($container->get('config')['attachments'])) {
             $this->setConfig($container->get('config')['attachments']);

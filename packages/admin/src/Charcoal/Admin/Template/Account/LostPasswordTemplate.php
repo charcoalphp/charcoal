@@ -7,6 +7,7 @@ use Psr\Http\Message\RequestInterface;
 // From 'charcoal-admin'
 use Charcoal\Admin\AdminTemplate;
 use Charcoal\Admin\Template\AuthTemplateTrait;
+use Charcoal\App\Action\AbstractAction;
 
 /**
  * Lost Password Template
@@ -27,7 +28,7 @@ class LostPasswordTemplate extends AdminTemplate
     {
         $translator = $this->translator();
 
-        $notice = $request->getParam('notice');
+        $notice = AbstractAction::getParam($request, 'notice');
         switch ($notice) {
             case 'invalidtoken':
                 $message = $translator->translate('Your password reset token is invalid or expired.') . ' ' .

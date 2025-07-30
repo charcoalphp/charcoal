@@ -315,6 +315,6 @@ abstract class AbstractAction extends AbstractEntity implements
     public static function getParam(ServerRequestInterface $request, string $key): mixed
     {
         $params = self::getParams($request, [$key]);
-        return ($params ?? null);
+        return (!empty($params) ? array_values($params)[0] : null);
     }
 }

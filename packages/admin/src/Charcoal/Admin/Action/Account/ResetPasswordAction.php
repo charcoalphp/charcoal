@@ -57,10 +57,10 @@ class ResetPasswordAction extends AdminAction
 
         $ip = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : null;
 
-        $token     = $request->getParam('token');
-        $email     = $request->getParam('email');
-        $password1 = $request->getParam('password1');
-        $password2 = $request->getParam('password2');
+        $token     = $this->getParam($request, 'token');
+        $email     = $this->getParam($request, 'email');
+        $password1 = $this->getParam($request, 'password1');
+        $password2 = $this->getParam($request, 'password2');
 
         if (!$token) {
             $this->addFeedback('error', $translator->translate('Missing reset token.'));

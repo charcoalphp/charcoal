@@ -32,7 +32,7 @@ class PreviewAction extends AdminAction
      */
     public function run(RequestInterface $request, ResponseInterface $response)
     {
-        $url = $request->getParam('url');
+        $url = $this->getParam($request, 'url');
         $relativeUrl = str_replace($this->baseUrl(), '', $url);
         $url = $this->baseUrl() . $relativeUrl;
 

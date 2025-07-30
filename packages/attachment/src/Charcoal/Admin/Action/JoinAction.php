@@ -25,7 +25,7 @@ class JoinAction extends AdminAction
      */
     public function run(RequestInterface $request, ResponseInterface $response)
     {
-        $params = $request->getParams();
+        $params = $this->getParams($request);
 
         if (
             !isset($params['attachments']) ||

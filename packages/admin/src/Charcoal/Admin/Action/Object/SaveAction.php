@@ -57,7 +57,7 @@ class SaveAction extends AbstractSaveAction
     {
         parent::setDataFromRequest($request);
 
-        $data = $this->filterSaveData($request->getParams());
+        $data = $this->filterSaveData($this->getParams($request));
 
         $this->setSaveData($data);
 
@@ -166,7 +166,7 @@ class SaveAction extends AbstractSaveAction
                 '{{ parameter }} required, must be a {{ expectedType }}, received {{ actualType }}'
             );
 
-            $objType = $request->getParam('obj_type');
+            $objType = $this->getParam($request, 'obj_type');
             if (!$objType) {
                 $actualType = is_object($objType) ? get_class($objType) : gettype($objType);
                 $this->addFeedback('error', strtr($reqMessage, [

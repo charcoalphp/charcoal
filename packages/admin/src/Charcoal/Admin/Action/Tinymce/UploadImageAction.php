@@ -82,7 +82,7 @@ class UploadImageAction extends AdminAction
      */
     public function run(RequestInterface $request, ResponseInterface $response)
     {
-        $path = $request->getParam('upload_path');
+        $path = $this->getParam($request, 'upload_path');
 
         if (!!$path) {
             $this->setUploadPath($path);

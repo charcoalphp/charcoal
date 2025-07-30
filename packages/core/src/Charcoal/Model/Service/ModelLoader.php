@@ -145,7 +145,7 @@ final class ModelLoader implements ArrayAccess
      * @param  string $ident The object identifier to lookup.
      * @return boolean
      */
-    public function offsetExists($ident)
+    public function offsetExists($ident): bool
     {
         return true;
     }
@@ -157,7 +157,7 @@ final class ModelLoader implements ArrayAccess
      * @param  string|integer $ident The object identifier to load.
      * @return ModelInterface
      */
-    public function offsetGet($ident)
+    public function offsetGet($ident): mixed
     {
         return $this->load($ident);
     }
@@ -171,7 +171,7 @@ final class ModelLoader implements ArrayAccess
      * @throws LogicException This method should never be called.
      * @return void
      */
-    public function offsetSet($ident, $obj)
+    public function offsetSet($ident, $obj): void
     {
         throw new LogicException(
             'Can not set value on a loader'
@@ -186,7 +186,7 @@ final class ModelLoader implements ArrayAccess
      * @throws LogicException This method should never be called.
      * @return void
      */
-    public function offsetUnset($ident)
+    public function offsetUnset($ident): void
     {
         throw new LogicException(
             'Can not unset value on a loader'

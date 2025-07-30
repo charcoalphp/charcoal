@@ -32,7 +32,7 @@ class UpdateAction extends AdminAction
             $this->setSuccess(false);
             return $response->withStatus(500);
         }
-        $url = $request->getParam('url');
+        $url = $this->getParam($request, 'url');
         $relativeUrl = str_replace($this->baseUrl(), '', $url);
         $url = $this->baseUrl() . $relativeUrl;
 

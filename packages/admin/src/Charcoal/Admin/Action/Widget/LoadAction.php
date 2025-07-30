@@ -93,10 +93,10 @@ class LoadAction extends AdminAction
      */
     public function run(RequestInterface $request, ResponseInterface $response)
     {
-        $previousId    = $request->getParam('widget_id');
-        $widgetType    = $request->getParam('widget_type');
-        $widgetOptions = $request->getParam('widget_options');
-        $withData      = $request->getParam('with_data');
+        $previousId    = $this->getParam($request, 'widget_id');
+        $widgetType    = $this->getParam($request, 'widget_type');
+        $widgetOptions = $this->getParam($request, 'widget_options');
+        $withData      = $this->getParam($request, 'with_data');
 
         if ($previousId) {
             $failMessage = $this->translator()->translation('Failed to reload widget');

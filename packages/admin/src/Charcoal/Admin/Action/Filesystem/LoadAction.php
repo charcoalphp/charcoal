@@ -101,7 +101,7 @@ class LoadAction extends AdminAction
     protected function setDataFromRequest(RequestInterface $request)
     {
         $keys = $this->validDataFromRequest();
-        $data = $request->getParams($keys);
+        $data = $this->getParams($keys);
         $this->mergeData($data);
 
         return $this;

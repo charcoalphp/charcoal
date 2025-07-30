@@ -72,10 +72,10 @@ class ReorderAction extends AdminAction implements ObjectContainerInterface
             '{{ parameter }} must be a {{ expectedType }}, received {{ actualType }}'
         );
 
-        $objType       = $request->getParam('obj_type');
-        $objOrders     = $request->getParam('obj_orders');
-        $orderProperty = $request->getParam('order_property', 'position');
-        $startingOrder = (int)$request->getParam('start_order');
+        $objType       = $this->getParam($request, 'obj_type');
+        $objOrders     = $this->getParam($request, 'obj_orders');
+        $orderProperty = $this->getParam($request, 'order_property', 'position');
+        $startingOrder = (int)$this->getParam($request, 'start_order');
 
         try {
             if (!$objType) {

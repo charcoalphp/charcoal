@@ -19,6 +19,7 @@ use Charcoal\Translator\Translation;
 use Charcoal\Property\FileProperty;
 // From 'charcoal-admin'
 use Charcoal\Admin\AdminTemplate;
+use Charcoal\App\Action\AbstractAction;
 
 /**
  *
@@ -100,7 +101,7 @@ class ElfinderTemplate extends AdminTemplate
     protected function setDataFromRequest(RequestInterface $request)
     {
         $keys = $this->validDataFromRequest();
-        $data = $request->getParams($keys);
+        $data = AbstractAction::getParams($request, $keys);
 
         if (isset($data['obj_type'])) {
             $objType = isset($data['obj_type']) ? strip_tags(trim($data['obj_type'])) : null;

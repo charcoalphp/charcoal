@@ -213,7 +213,7 @@ class TableWidget extends AdminWidget implements CollectionContainerInterface
      */
     public function dataFromRequest()
     {
-        return $this->httpRequest()->getParams($this->acceptedRequestData());
+        return $this->getParams($this->acceptedRequestData());
     }
 
     /**

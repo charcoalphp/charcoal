@@ -72,8 +72,8 @@ class InlineMultiAction extends AdminAction
             '{{ parameter }} must be a {{ expectedType }}, received {{ actualType }}'
         );
 
-        $objType = $request->getParam('obj_type');
-        $objIds  = $request->getParam('obj_ids');
+        $objType = $this->getParam($request, 'obj_type');
+        $objIds  = $this->getParam($request, 'obj_ids');
 
         if (!$objType) {
             $actualType = is_object($objType) ? get_class($objType) : gettype($objType);

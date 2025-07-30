@@ -54,8 +54,8 @@ class DeleteAction extends AdminAction
                 '{{ parameter }} must be a {{ expectedType }}, received {{ actualType }}'
             );
 
-            $objType = $request->getParam('obj_type');
-            $objId   = $request->getParam('obj_id');
+            $objType = $this->getParam($request, 'obj_type');
+            $objId   = $this->getParam($request, 'obj_id');
 
             if (!$objType) {
                 $actualType = is_object($objType) ? get_class($objType) : gettype($objType);

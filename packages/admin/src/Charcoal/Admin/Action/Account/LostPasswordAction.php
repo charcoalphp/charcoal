@@ -66,7 +66,7 @@ class LostPasswordAction extends AdminAction
 
         $ip = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : null;
 
-        $email = $request->getParam('email');
+        $email = $this->getParam($request, 'email');
         if (!$email) {
             $this->addFeedback('error', $translator->translate('Missing email.'));
             $this->setSuccess(false);

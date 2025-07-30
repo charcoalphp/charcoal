@@ -128,7 +128,7 @@ class ElfinderConnectorAction extends AdminAction
     protected function setDataFromRequest(RequestInterface $request)
     {
         $keys = $this->validDataFromRequest();
-        $data = $request->getParams($keys);
+        $data = $this->getParams($request, $keys);
 
         if (isset($data['obj_type'])) {
             $this->objType = $data['obj_type'];

@@ -284,7 +284,7 @@ class SecondaryMenuWidget extends AdminWidget implements
      */
     public function objType()
     {
-        return $this->httpRequest()->getParam('obj_type');
+        return $this->getParam('obj_type');
     }
 
     /**

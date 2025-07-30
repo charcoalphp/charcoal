@@ -9,6 +9,7 @@ use Charcoal\Model\ModelFactoryTrait;
 use Charcoal\Admin\Ui\ObjectContainerInterface;
 use Charcoal\Admin\Ui\ObjectRevisionsInterface;
 use Charcoal\Admin\Ui\ObjectRevisionsTrait;
+use Charcoal\App\Action\AbstractAction;
 // From 'charcoal-ui'
 use Charcoal\Ui\FormGroup\AbstractFormGroup;
 
@@ -110,7 +111,9 @@ class ObjectRevisionsFormGroup extends AbstractFormGroup implements
 
         $this->setModelFactory($container->get('model/factory'));
 
-        $this->objType = $container->get('request')->getParam('obj_type');
-        $this->objId = $container->get('request')->getParam('obj_id');
+        $request = $container->get('request');
+
+        $this->objType = AbstractAction::getParam($request, 'obj_type');
+        $this->objId = AbstractAction::getParam($request, 'obj_id');
     }
 }

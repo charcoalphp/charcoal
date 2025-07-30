@@ -8,6 +8,7 @@ use Psr\Http\Message\RequestInterface;
 use Charcoal\Admin\AdminTemplate;
 use Charcoal\Admin\Template\AuthTemplateTrait;
 use Charcoal\Admin\User\LostPasswordToken;
+use Charcoal\App\Action\AbstractAction;
 
 /**
  * Reset Password Template
@@ -40,7 +41,7 @@ class ResetPasswordTemplate extends AdminTemplate
         if (isset($routeInfo[2]['token'])) {
             $this->lostPasswordToken = $routeInfo[2]['token'];
         } else {
-            $this->lostPasswordToken = $request->getParam('token');
+            $this->lostPasswordToken = AbstractAction::getParam($request, 'token');
         }
 
         if ($this->lostPasswordToken && $this->validateToken($this->lostPasswordToken)) {

@@ -23,7 +23,7 @@ class ClearCacheAction extends AbstractCacheAction
     {
         $translator = $this->translator();
 
-        $cacheType = $request->getParam('cache_type');
+        $cacheType = $this->getParam($request, 'cache_type');
         if (!is_string($cacheType) || empty($cacheType)) {
             $this->addFeedback('error', $translator->translate('Cache type not defined.'));
             $this->setSuccess(false);
