@@ -156,7 +156,6 @@ class LanguageMiddleware
         $path = $uri->getPath();
         foreach ($this->excludedPath as $excluded) {
             if (preg_match('@' . $excluded . '@', $path)) {
-                exit;
                 return $handler->handle($request);
             }
         }

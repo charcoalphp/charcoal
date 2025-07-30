@@ -12,6 +12,7 @@ use DI\Container;
 use Charcoal\Config\AbstractEntity;
 // From 'charcoal-app'
 use Charcoal\App\Template\TemplateInterface;
+use Psr\Http\Message\ServerRequestInterface;
 
 /**
  * Template (View Controller) base class
@@ -73,10 +74,10 @@ abstract class AbstractTemplate extends AbstractEntity implements
     /**
      * Initialize the template with a request.
      *
-     * @param RequestInterface $request The request to intialize.
+     * @param ServerRequestInterface $request The request to intialize.
      * @return boolean Success / Failure.
      */
-    public function init(RequestInterface $request)
+    public function init(ServerRequestInterface $request)
     {
         // This method is a stub. Reimplement in children methods to ensure template initialization.
         return true;

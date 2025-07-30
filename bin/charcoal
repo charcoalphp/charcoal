@@ -6,6 +6,11 @@ declare(strict_types=1);
 use Charcoal\App\App;
 use Charcoal\App\AppConfig;
 use Charcoal\App\AppContainer;
+use GuzzleHttp\Psr7\Stream;
+use Nyholm\Psr7\Factory\Psr17Factory;
+use Nyholm\Psr7\Response;
+use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 use Slim\Factory\ServerRequestCreatorFactory;
 
 // Ensure this is being used via a CLI
@@ -86,25 +91,25 @@ $container->set('environment', function () use ($path) {
 
 // Convert HTTP 404 Not Found to CLI-friendly error
 $container->set('notFoundHandler', function ($container) {
-    return function ($request, $response) use ($container) {
-        return $container->get('response')
-            ->withStatus(404)
-            ->write(sprintf(
-                'Script "%s" not found' . "\n",
-                $container->get('request')->getUri()->getPath()
-            ));
+    return function (ServerRequestInterface $request, Throwable $exception) {
+        $response = (new Psr17Factory())->createResponse(404, sprintf(
+            'Script "%s" not found' . "\n",
+            $exception->getMessage()
+        ));
+        echo $response->getBody();
+        return $response;
     };
 });
 
 // Convert HTTP 500 Server Error to CLI-friendly error
 $container->set('errorHandler', function ($container) {
-    return function ($request, $response, $exception) use ($container) {
-        return $container->get('response')
-            ->withStatus(500)
-            ->write(sprintf(
-                'Something went wrong! [%s]' . "\n",
-                $exception->getMessage()
-            ));
+    return function (ServerRequestInterface $request, Throwable $exception) {
+        $response = (new Psr17Factory())->createResponse(500, sprintf(
+            'Something went wrong! [%s]' . "\n",
+            $exception->getMessage()
+        ));
+        echo $response->getBody();
+        return $response;
     };
 });
 
@@ -112,5 +117,6 @@ $container->set('errorHandler', function ($container) {
 $app = App::instance($container);
 $app->setConfig($config);
 $app->setBasePath('');
-$response = $app->getResponseFactory()->createResponse();
-$app->run($request, $response);
+$app->run($request);
+//$response = $app->handle($request);
+//echo (string)$response->getBody();

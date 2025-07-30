@@ -8,6 +8,8 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
 // From 'charcoal-app'
 use Charcoal\App\Handler\AbstractHandler;
+use Nyholm\Psr7\Response;
+use Slim\Exception\HttpMethodNotAllowedException;
 
 /**
  * "Not Allowed" Handler
@@ -36,11 +38,10 @@ class NotAllowed extends AbstractHandler
      */
     public function __invoke(
         ServerRequestInterface $request,
-        ResponseInterface $response,
-        array $methods
+        HttpMethodNotAllowedException $exception
     ) {
         $this->setHttpRequest($request);
-        $this->setMethods($methods);
+        $this->setMethods($exception->getAllowedMethods());
 
         if ($request->getMethod() === 'OPTIONS') {
             $status = 200;
@@ -76,7 +77,7 @@ class NotAllowed extends AbstractHandler
         }
 
         return $this->respondWith(
-            $response->withStatus($status)
+            (new Response($status))
                      ->withHeader('Allow', $this->getMethods()),
             $contentType,
             $output

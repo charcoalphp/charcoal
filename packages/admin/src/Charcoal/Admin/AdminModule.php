@@ -11,6 +11,10 @@ use Charcoal\App\Module\AbstractModule;
 // From 'charcoal-admin'
 use Charcoal\Admin\ServiceProvider\AdminServiceProvider;
 use DI\Container;
+use Slim\Interfaces\RouteCollectorProxyInterface;
+use GuzzleHttp\Psr7\Request;
+use Psr\Http\Server\RequestHandlerInterface;
+use Psr\Http\Message\ServerRequestInterface;
 
 /**
  * Charcoal Administration Module
@@ -60,8 +64,14 @@ class AdminModule extends AbstractModule
         $groupIdent = '/' . trim($adminConfig['base_path'], '/');
 
         // Add the route group
-        $this->app()->group($groupIdent, 'charcoal/admin/module:setupRoutes')
-                    ->add('charcoal/admin/module:setupHandlers');
+        $this->app()->group($groupIdent, [$this, 'setupRoutes'])
+            ->add([$this, 'setupHandlers']);
+
+        /*foreach ($this->app()->getRouteCollector()->getRoutes() as $route) {
+            echo implode(', ', $route->getMethods()) . ' - ' . $route->getPattern();
+            echo "<br>";
+        }
+        exit;*/
 
         return $this;
     }
@@ -71,13 +81,13 @@ class AdminModule extends AbstractModule
      *
      * @return AdminModule Chainable
      */
-    public function setupRoutes()
+    public function setupRoutes(?RouteCollectorProxyInterface $group = null)
     {
         if ($this->routeManager === null) {
-            parent::setupRoutes();
+            parent::setupRoutes($group);
 
             // Serve the Admin's "Not Found" handler for the Admin's route group.
-            $this->app()->any('{catchall:.*}', 'notFoundHandler');
+            $group->any('{catchall:.*}', 'notFoundHandler');
         }
 
         return $this;
@@ -92,10 +102,10 @@ class AdminModule extends AbstractModule
      * @return ResponseInterface A PSR7 response object.
      */
     public function setupHandlers(
-        RequestInterface $request,
-        ResponseInterface $response,
-        callable $next
-    ) {
+        ServerRequestInterface $request,
+        RequestHandlerInterface $handler
+    ): ResponseInterface {
+        /** @var Container */
         $container = $this->app()->getContainer();
 
         /**
@@ -104,7 +114,7 @@ class AdminModule extends AbstractModule
          * @param  object|HandlerInterface $handler An error handler instance.
          * @return HandlerInterface
          */
-        $container->extend('notFoundHandler', function ($handler, $container) {
+        /*$container->extend('notFoundHandler', function ($handler, $container) {
             $appConfig = $container->get('config');
             $adminConfig = $container->get('admin/config');
             if ($handler instanceof HandlerInterface) {
@@ -119,7 +129,7 @@ class AdminModule extends AbstractModule
             }
 
             return $handler;
-        });
+        });*/
 
         /**
          * HTTP 405 (Not Allowed) handler.
@@ -127,7 +137,7 @@ class AdminModule extends AbstractModule
          * @param  object|HandlerInterface $handler An error handler instance.
          * @return HandlerInterface
          */
-        $container->extend('notAllowedHandler', function ($handler, $container) {
+        /*$container->extend('notAllowedHandler', function ($handler, $container) {
             $appConfig = $container->get('config');
             $adminConfig = $container->get('admin/config');
             if ($handler instanceof HandlerInterface) {
@@ -142,7 +152,7 @@ class AdminModule extends AbstractModule
             }
 
             return $handler;
-        });
+        });*/
 
         /**
          * HTTP 500 (Error) handler for PHP 7+ Throwables.
@@ -150,7 +160,7 @@ class AdminModule extends AbstractModule
          * @param  object|HandlerInterface $handler An error handler instance.
          * @return HandlerInterface
          */
-        $container->extend('phpErrorHandler', function ($handler, $container) {
+        /*$container->extend('phpErrorHandler', function ($handler, $container) {
             $appConfig = $container->get('config');
             $adminConfig = $container->get('admin/config');
             if ($handler instanceof HandlerInterface) {
@@ -165,7 +175,7 @@ class AdminModule extends AbstractModule
             }
 
             return $handler;
-        });
+        });*/
 
         /**
          * HTTP 500 (Error) handler.
@@ -173,7 +183,20 @@ class AdminModule extends AbstractModule
          * @param  object|HandlerInterface $handler An error handler instance.
          * @return HandlerInterface
          */
-        $container->extend('errorHandler', function ($handler, $container) {
+        $container->set('errorHandler', function (Container $container) use ($handler) {
+            $appConfig = $container->get('config');
+            $adminConfig = $container->get('admin/config');
+            $config = $handler->createConfig($appConfig['handlers.defaults']);
+            $config->merge($adminConfig['handlers.defaults']);
+
+            if (!empty($adminConfig['handlers.error'])) {
+                $config->merge($adminConfig['handlers.error']);
+            }
+
+            $handler->setConfig($config)->init();
+            return $handler;
+        });
+        /*$container->set('errorHandler', function ($handler, $container) {
             $appConfig = $container->get('config');
             $adminConfig = $container->get('admin/config');
             if ($handler instanceof HandlerInterface) {
@@ -188,7 +211,7 @@ class AdminModule extends AbstractModule
             }
 
             return $handler;
-        });
+        });*/
 
         /**
          * HTTP 503 (Service Unavailable) handler.
@@ -198,7 +221,7 @@ class AdminModule extends AbstractModule
          * @param  object|HandlerInterface $handler An error handler instance.
          * @return HandlerInterface
          */
-        $container->extend('maintenanceHandler', function ($handler, $container) {
+        /*$container->extend('maintenanceHandler', function ($handler, $container) {
             $appConfig = $container->get('config');
             $adminConfig = $container->get('admin/config');
             if ($handler instanceof HandlerInterface) {
@@ -213,9 +236,9 @@ class AdminModule extends AbstractModule
             }
 
             return $handler;
-        });
+        });*/
 
-        return $next($request, $response);
+        return $handler->handle($request);
     }
 
     /**

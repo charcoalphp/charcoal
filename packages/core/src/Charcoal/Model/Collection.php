@@ -10,6 +10,7 @@ use InvalidArgumentException;
 // From 'charcoal-core'
 use Charcoal\Model\CollectionInterface;
 use Charcoal\Model\ModelInterface;
+use SebastianBergmann\Type\IterableType;
 
 /**
  * A Model Collection
@@ -236,7 +237,7 @@ class Collection implements CollectionInterface
      * @param  mixed $offset The object primary key or array offset.
      * @return boolean
      */
-    public function offsetExists($offset)
+    public function offsetExists($offset): bool
     {
         if (is_int($offset)) {
             $offset  = $this->resolveOffset($offset);
@@ -255,7 +256,7 @@ class Collection implements CollectionInterface
      * @param  mixed $offset The object primary key or array offset.
      * @return mixed Returns the requested object or NULL if not in the collection.
      */
-    public function offsetGet($offset)
+    public function offsetGet($offset): mixed
     {
         if (is_int($offset)) {
             $offset  = $this->resolveOffset($offset);
@@ -277,7 +278,7 @@ class Collection implements CollectionInterface
      * @throws LogicException Attempts to assign an offset.
      * @return void
      */
-    public function offsetSet($offset, $value)
+    public function offsetSet($offset, $value): void
     {
         if ($offset === null) {
             $this->add($value);
@@ -295,7 +296,7 @@ class Collection implements CollectionInterface
      * @param  mixed $offset The object primary key or array offset.
      * @return void
      */
-    public function offsetUnset($offset)
+    public function offsetUnset($offset): void
     {
         if (is_int($offset)) {
             $offset = $this->resolveOffset($offset);
@@ -337,7 +338,7 @@ class Collection implements CollectionInterface
      * @see    \Countable
      * @return integer
      */
-    public function count()
+    public function count(): int
     {
         return count($this->objects);
     }
@@ -351,7 +352,7 @@ class Collection implements CollectionInterface
      * @see    \IteratorAggregate
      * @return \ArrayIterator
      */
-    public function getIterator()
+    public function getIterator(): ArrayIterator
     {
         return new ArrayIterator($this->objects);
     }

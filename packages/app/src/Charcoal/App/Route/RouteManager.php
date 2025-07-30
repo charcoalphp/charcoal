@@ -13,6 +13,7 @@ use Nyholm\Psr7\Stream;
 use Psr\Http\Message\ServerRequestInterface;
 use Slim\Routing\Route;
 use Charcoal\App\AppConfig;
+use Slim\Interfaces\RouteCollectorProxyInterface;
 
 /**
  * The route manager takes care of dispatching each route from an app or a module config
@@ -49,24 +50,24 @@ final class RouteManager implements
      *
      * @return void
      */
-    public function setupRoutes()
+    public function setupRoutes(?RouteCollectorProxyInterface $group = null)
     {
         $routes = $this->config();
 
         if (PHP_SAPI == 'cli') {
             $scripts = ( isset($routes['scripts']) ? $routes['scripts'] : [] );
             foreach ($scripts as $scriptIdent => $scriptConfig) {
-                $this->setupScript($scriptIdent, $scriptConfig);
+                $this->setupScript($scriptIdent, $scriptConfig, $group);
             }
         } else {
             $templates = ( isset($routes['templates']) ? $routes['templates'] : [] );
             foreach ($templates as $routeIdent => $templateConfig) {
-                $this->setupTemplate($routeIdent, $templateConfig);
+                $this->setupTemplate($routeIdent, $templateConfig, $group);
             }
 
             $actions = ( isset($routes['actions']) ? $routes['actions'] : [] );
             foreach ($actions as $actionIdent => $actionConfig) {
-                $this->setupAction($actionIdent, $actionConfig);
+                $this->setupAction($actionIdent, $actionConfig, $group);
             }
         }
     }
@@ -80,8 +81,10 @@ final class RouteManager implements
      * @param  AppConfig $templateConfig The template's config for the route.
      * @return \Slim\Interfaces\RouteInterface
      */
-    private function setupTemplate($routeIdent, $templateConfig)
+    private function setupTemplate($routeIdent, $templateConfig, ?RouteCollectorProxyInterface $group = null)
     {
+        $group = !empty($group) ? $group : $this->app;
+
         $routePattern = isset($templateConfig['route'])
             ? $templateConfig['route']
             : '/' . ltrim($routeIdent, '/');
@@ -94,7 +97,7 @@ final class RouteManager implements
 
         $container = $this->app->getContainer();
 
-        $routeHandler = $this->app->map(
+        $routeHandler = $group->map(
             $methods,
             $routePattern,
             function (
@@ -168,8 +171,10 @@ final class RouteManager implements
      * @param  array|\ArrayAccess $actionConfig The action's config for the route.
      * @return \Slim\Interfaces\RouteInterface
      */
-    private function setupAction($routeIdent, $actionConfig)
+    private function setupAction($routeIdent, $actionConfig, ?RouteCollectorProxyInterface $group = null)
     {
+        $group = !empty($group) ? $group : $this->app;
+
         $routePattern = isset($actionConfig['route'])
             ? $actionConfig['route']
             : '/' . ltrim($routeIdent, '/');
@@ -180,13 +185,17 @@ final class RouteManager implements
             ? $actionConfig['methods']
             : [ 'POST' ];
 
-        $routeHandler = $this->app->map(
+        $container = $this->app->getContainer();
+
+        $routeHandler = $group->map(
             $methods,
             $routePattern,
             function (
                 ServerRequestInterface $request,
+                ResponseInterface $response,
                 array $args = []
             ) use (
+                $container,
                 $routeIdent,
                 $actionConfig
             ) {
@@ -194,7 +203,7 @@ final class RouteManager implements
                     $actionConfig['ident'] = ltrim($routeIdent, '/');
                 }
 
-                $this['logger']->debug(
+                $container->get('logger')->debug(
                     sprintf('Loaded action route: %s', $actionConfig['ident']),
                     $actionConfig
                 );
@@ -210,20 +219,21 @@ final class RouteManager implements
                     );
                 }
 
-                $defaultController = $this['route/controller/action/class'];
+                $defaultController = $container->get('route/controller/action/class');
                 $routeController   = isset($actionConfig['route_controller'])
                     ? $actionConfig['route_controller']
                     : $defaultController;
 
-                $routeFactory = $this['route/factory'];
+                $routeFactory = $container->get('route/factory');
                 $routeFactory->setDefaultClass($defaultController);
 
                 $route = $routeFactory->create($routeController, [
                     'config' => $actionConfig,
-                    'logger' => $this['logger']
+                    'container' => $container,
+                    'logger' => $container->get('logger')
                 ]);
 
-                $response = $route($this, $request);
+                $response = $route($request, $response);
                 if ($response instanceof ResponseInterface) {
                     return $response;
                 }
@@ -247,8 +257,10 @@ final class RouteManager implements
      * @param  array|\ArrayAccess $scriptConfig The script's config for the route.
      * @return \Slim\Interfaces\RouteInterface
      */
-    private function setupScript($routeIdent, $scriptConfig)
+    private function setupScript($routeIdent, $scriptConfig, ?RouteCollectorProxyInterface $group = null)
     {
+        $group = !empty($group) ? $group : $this->app;
+
         $routePattern = isset($scriptConfig['route'])
             ? $scriptConfig['route']
             : '/' . ltrim($routeIdent, '/');
@@ -259,13 +271,17 @@ final class RouteManager implements
             ? $scriptConfig['methods']
             : [ 'GET' ];
 
-        $routeHandler = $this->app->map(
+        $container = $this->app->getContainer();
+
+        $routeHandler = $group->map(
             $methods,
             $routePattern,
             function (
                 ServerRequestInterface $request,
+                ResponseInterface $response,
                 array $args = []
             ) use (
+                $container,
                 $routeIdent,
                 $scriptConfig
             ) {
@@ -273,7 +289,7 @@ final class RouteManager implements
                     $scriptConfig['ident'] = ltrim($routeIdent, '/');
                 }
 
-                $this['logger']->debug(
+                $container->get('logger')->debug(
                     sprintf('Loaded script route: %s', $scriptConfig['ident']),
                     $scriptConfig
                 );
@@ -289,20 +305,21 @@ final class RouteManager implements
                     );
                 }
 
-                $defaultController = $this['route/controller/script/class'];
+                $defaultController = $container->get('route/controller/script/class');
                 $routeController   = isset($scriptConfig['route_controller'])
                     ? $scriptConfig['route_controller']
                     : $defaultController;
 
-                $routeFactory = $this['route/factory'];
+                $routeFactory = $container->get('route/factory');
                 $routeFactory->setDefaultClass($defaultController);
 
                 $route = $routeFactory->create($routeController, [
-                    'config' => $scriptConfig,
-                    'logger' => $this['logger']
+                    'config'    => $scriptConfig,
+                    'container' => $container,
+                    'logger'    => $container->get('logger')
                 ]);
 
-                $response = $route($this, $request);
+                $response = $route($request, $response);
                 if ($response instanceof ResponseInterface) {
                     return $response;
                 }

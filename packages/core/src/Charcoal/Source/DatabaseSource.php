@@ -46,6 +46,8 @@ class DatabaseSource extends AbstractSource implements
      */
     private $table;
 
+    protected $tableExistsCache = [];
+
     /**
      * Create a new database handler.
      *
@@ -178,7 +180,7 @@ class DatabaseSource extends AbstractSource implements
         /** @todo Add indexes for all defined list constraints (yea... tough job...) */
         if ($driver === self::MYSQL_DRIVER_NAME) {
             $engine = 'InnoDB';
-            $query .= ') ENGINE=' . $engine . ' DEFAULT CHARSET=utf8 COMMENT="' . addslashes($metadata['name']) . '";';
+            $query .= ') ENGINE=' . $engine . ' DEFAULT CHARSET=utf8 COMMENT="' . addslashes(($metadata['name'] ?? '')) . '";';
         } else {
             $query .= ');';
         }
@@ -264,11 +266,10 @@ class DatabaseSource extends AbstractSource implements
      */
     public function tableExists()
     {
-        $dbh    = $this->db();
         $table  = $this->table();
 
-        if (isset($dbh->tableExists, $dbh->tableExists[$table])) {
-            return $dbh->tableExists[$table];
+        if (isset($this->tableExistsCache[$table])) {
+            return $this->tableExistsCache[$table];
         }
 
         $exists = $this->performTableExists();
@@ -309,14 +310,13 @@ class DatabaseSource extends AbstractSource implements
      */
     protected function setTableExists($exists = true)
     {
-        $dbh   = $this->db();
         $table = $this->table();
 
-        if (!isset($dbh->tableExists)) {
-            $dbh->tableExists = [];
+        if (!isset($this->tableExistsCache)) {
+            $this->tableExistsCache = [];
         }
 
-        $dbh->tableExists[$table] = $exists;
+        $this->tableExistsCache[$table] = $exists;
     }
 
     /**

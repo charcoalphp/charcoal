@@ -132,7 +132,9 @@ trait BaseUrlTrait
                 $path  = isset($parts['path']) ? ltrim($parts['path'], '/') : '';
                 $query = isset($parts['query']) ? $parts['query'] : '';
                 $hash  = isset($parts['fragment']) ? $parts['fragment'] : '';
-                $targetPath = $basePath->withPath($path)->withQuery($query)->withFragment($hash);
+
+                $combinedPath = rtrim($basePath->getPath(), '/') . '/' . ltrim($path, '/');
+                $targetPath = $basePath->withPath($combinedPath)->withQuery($query)->withFragment($hash);
             }
         }
 

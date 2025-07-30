@@ -24,6 +24,8 @@ use Charcoal\Admin\Ui\FeedbackContainerTrait;
 use Charcoal\Admin\Support\AdminTrait;
 use Charcoal\Admin\Support\BaseUrlTrait;
 use Charcoal\Admin\Support\SecurityTrait;
+use GuzzleHttp\Psr7\Request;
+use Psr\Http\Message\ServerRequestInterface;
 
 /**
  * The base class for the `admin` Actions.
@@ -122,14 +124,14 @@ abstract class AdminAction extends AbstractAction implements
     /**
      * Sets the action data from a PSR Request object.
      *
-     * @param  RequestInterface $request A PSR-7 compatible Request instance.
+     * @param  ServerRequestInterface $request A PSR-7 compatible Request instance.
      * @return self
      */
-    protected function setDataFromRequest(RequestInterface $request)
+    protected function setDataFromRequest(ServerRequestInterface $request)
     {
         $keys = $this->validDataFromRequest();
         if (!empty($keys)) {
-            $this->setData($request->getParams($keys));
+            $this->setData($this->getParams($request, $keys));
         }
 
         return $this;
@@ -334,15 +336,15 @@ abstract class AdminAction extends AbstractAction implements
     /**
      * Validate a Google reCAPTCHA user response from a PSR Request object.
      *
-     * @param  RequestInterface       $request  A PSR-7 compatible Request instance.
+     * @param  ServerRequestInterface $request  A PSR-7 compatible Request instance.
      * @param  ResponseInterface|null $response A PSR-7 compatible Response instance.
      *     If $response is provided and challenge fails, then it is replaced
      *     with a new Response object that represents a client error.
      * @return boolean Returns TRUE if the user response is valid, FALSE if it is invalid.
      */
-    protected function validateCaptchaFromRequest(RequestInterface $request, ResponseInterface &$response = null)
+    protected function validateCaptchaFromRequest(ServerRequestInterface $request, ResponseInterface &$response = null)
     {
-        $token = $request->getParam('g-recaptcha-response', false);
+        $token = ($this->getParam($request, 'g-recaptcha-response') ?? false);
         if (empty($token)) {
             if ($response !== null) {
                 $this->addFeedback('error', $this->translator()->translate('Missing CAPTCHA response.'));

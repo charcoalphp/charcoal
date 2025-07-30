@@ -82,7 +82,7 @@ class CreateTemplate extends AdminTemplate implements
                 if (!$title && isset($metadata['admin']['forms'])) {
                     $adminMetadata = $metadata['admin'];
 
-                    $formIdent = filter_input(INPUT_GET, 'form_ident', FILTER_SANITIZE_STRING);
+                    $formIdent = isset($_GET['form_ident']) ? strip_tags(trim($_GET['form_ident'])) : null;
                     if (!$formIdent) {
                         if (isset($adminMetadata['defaultForm'])) {
                             $fomIdent = $adminMetadata['defaultForm'];

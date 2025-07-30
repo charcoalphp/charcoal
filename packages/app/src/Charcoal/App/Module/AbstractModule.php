@@ -12,6 +12,7 @@ use Charcoal\Config\ConfigurableInterface;
 use Charcoal\App\App;
 use Charcoal\App\AppAwareTrait;
 use Charcoal\App\Route\RouteManager;
+use Slim\Interfaces\RouteCollectorProxyInterface;
 
 /**
  *
@@ -103,7 +104,7 @@ abstract class AbstractModule implements
      *
      * @return self
      */
-    public function setupRoutes()
+    public function setupRoutes(?RouteCollectorProxyInterface $group = null)
     {
         if (!isset($this->routeManager)) {
             $config = $this->config();
@@ -115,7 +116,7 @@ abstract class AbstractModule implements
                 'logger' => $this->logger
             ]);
 
-            $this->routeManager->setupRoutes();
+            $this->routeManager->setupRoutes($group);
         }
 
         return $this;

@@ -133,10 +133,11 @@ trait ContextualTemplateTrait
                 $uri = $baseUrl->withPath($endpoint[$lang]);
 
                 if ($this->routeGroup) {
-                    $uri = $uri->withBasePath($this->routeGroup[$lang]);
+                    $basePath = '/' . $this->routeGroup[$lang];
+                    $uri = $uri->withPath($this->routeGroup[$lang]);
                 }
 
-                $base = $uri->getBasePath();
+                $base = ($basePath ?? '');
                 $path = $uri->getPath();
                 $path = $base . '/' . ltrim($path, '/');
 

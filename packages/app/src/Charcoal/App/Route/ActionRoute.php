@@ -11,9 +11,9 @@ use DI\Container;
 use Charcoal\Config\ConfigurableInterface;
 use Charcoal\Config\ConfigurableTrait;
 // From 'charcoal-app'
-use Charcoal\App\Action\ActionInterface;
 use Charcoal\App\Route\RouteInterface;
 use Charcoal\App\Route\ActionRouteConfig;
+use Psr\Container\ContainerInterface;
 
 /**
  * Action Route Handler.
@@ -23,6 +23,8 @@ class ActionRoute implements
     ConfigurableInterface
 {
     use ConfigurableTrait;
+
+    private ContainerInterface $container;
 
     /**
      * Create new action route
@@ -42,6 +44,7 @@ class ActionRoute implements
     public function __construct(array $data)
     {
         $this->setConfig($data['config']);
+        $this->container = $data['container'];
     }
 
     /**
@@ -56,14 +59,14 @@ class ActionRoute implements
     }
 
     /**
-     * @param Container         $container A container instance.
      * @param RequestInterface  $request   A PSR-7 compatible Request instance.
      * @param ResponseInterface $response  A PSR-7 compatible Response instance.
      * @return ResponseInterface
      */
-    public function __invoke(Container $container, RequestInterface $request, ResponseInterface $response)
+    public function __invoke(RequestInterface $request, ResponseInterface $response)
     {
         $config = $this->config();
+        $container = $this->container;
 
         $actionController = $config['controller'];
 

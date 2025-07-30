@@ -11,6 +11,7 @@ use Charcoal\Config\DelegatesAwareTrait;
 /**
  * Mock object of {@see \Charcoal\Tests\Config\Mixin\DelegatesAwareTest}
  */
+#[\AllowDynamicProperties]
 class DelegateEntity extends Entity implements DelegatesAwareInterface
 {
     use DelegatesAwareTrait {

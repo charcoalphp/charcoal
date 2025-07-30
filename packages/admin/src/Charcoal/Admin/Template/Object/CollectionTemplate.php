@@ -154,7 +154,8 @@ class CollectionTemplate extends AdminTemplate implements
         if (!$objLabel && isset($metadata['admin']['lists'])) {
             $adminMetadata = $metadata['admin'];
 
-            $listIdent = filter_input(INPUT_GET, 'collection_ident', FILTER_SANITIZE_STRING);
+            $listIdent = isset($_GET['collection_ident']) ? trim($_GET['collection_ident']) : null;
+
             if (!$listIdent) {
                 $listIdent = $this->collectionIdent();
             }
@@ -162,6 +163,8 @@ class CollectionTemplate extends AdminTemplate implements
             if (!$listIdent) {
                 $listIdent = $this->collectionIdentFallback();
             }
+
+            $listIdent = strip_tags($listIdent);
 
             if ($listIdent && $hasView) {
                 $listIdent = $model->render($listIdent);
@@ -289,8 +292,9 @@ class CollectionTemplate extends AdminTemplate implements
      */
     private function metadataDashboardIdent()
     {
-        $dashboardIdent = filter_input(INPUT_GET, 'dashboard_ident', FILTER_SANITIZE_STRING);
-        if ($dashboardIdent) {
+        $dashboardIdent = isset($_GET['dashboard_ident']) ? trim($_GET['dashboard_ident']) : null;
+        if ($dashboardIdent !== null) {
+            $dashboardIdent = strip_tags($dashboardIdent);
             return $dashboardIdent;
         }
 

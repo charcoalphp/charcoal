@@ -16,6 +16,7 @@ use Charcoal\Config\AbstractEntity;
 // From 'charcoal-app'
 use Charcoal\App\Helper\CallbackStream;
 use Charcoal\App\Action\ActionInterface;
+use Psr\Http\Message\ServerRequestInterface;
 
 /**
  * Default implementation, as abstract class, of  the `ActionInterface`.
@@ -79,22 +80,22 @@ abstract class AbstractAction extends AbstractEntity implements
     /**
      * Initialize the action with a request.
      *
-     * @param RequestInterface $request The request to initialize.
+     * @param ServerRequestInterface $request The request to initialize.
      * @return boolean Success / Failure.
      */
-    public function init(RequestInterface $request)
+    public function init(ServerRequestInterface $request)
     {
         // This method is a stub. Reimplement in children methods to ensure template initialization.
         return true;
     }
 
     /**
-     * @param RequestInterface  $request  A PSR-7 compatible Request instance.
+     * @param ServerRequestInterface  $request  A PSR-7 compatible Request instance.
      * @param ResponseInterface $response A PSR-7 compatible Response instance.
      * @return ResponseInterface
      * @see self::run()
      */
-    final public function __invoke(RequestInterface $request, ResponseInterface $response)
+    final public function __invoke(ServerRequestInterface $request, ResponseInterface $response)
     {
         $response = $this->run($request, $response);
 
@@ -271,11 +272,11 @@ abstract class AbstractAction extends AbstractEntity implements
      *
      * Called from `__invoke()` as the first thing.
      *
-     * @param RequestInterface  $request  A PSR-7 compatible Request instance.
+     * @param ServerRequestInterface  $request  A PSR-7 compatible Request instance.
      * @param ResponseInterface $response A PSR-7 compatible Response instance.
      * @return ResponseInterface
      */
-    abstract public function run(RequestInterface $request, ResponseInterface $response);
+    abstract public function run(ServerRequestInterface $request, ResponseInterface $response);
 
     /**
      * Give an opportunity to children classes to inject dependencies from a DI Container.
@@ -291,5 +292,29 @@ abstract class AbstractAction extends AbstractEntity implements
     protected function setDependencies(Container $container)
     {
         // This method is a stub. Reimplement in children action classes.
+    }
+
+    public static function getParams(ServerRequestInterface $request, ?array $keys = []): array
+    {
+        $params = $request->getQueryParams();
+        $body = $request->getParsedBody();
+
+        if (is_array($body)) {
+            $params = array_merge($params, $body);
+        }
+
+        if (!empty($keys)) {
+            $params = array_filter($params, function ($param) use ($keys) {
+                return in_array($param, $keys);
+            }, ARRAY_FILTER_USE_KEY);
+        }
+
+        return $params;
+    }
+
+    public static function getParam(ServerRequestInterface $request, string $key): mixed
+    {
+        $params = self::getParams($request, [$key]);
+        return ($params ?? null);
     }
 }

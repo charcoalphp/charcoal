@@ -145,11 +145,12 @@ class AdminServiceProvider
                 if (isset($adminConfig['base_url'])) {
                     $adminUrl = $adminConfig['base_url'];
                 } else {
+                    /** @var Uri $adminUrl */
                     $adminUrl = clone $container->get('base-url');
                     if ($adminConfig['base_path']) {
-                        $basePath  = rtrim($adminUrl->getBasePath(), '/');
+                        $basePath  = rtrim($adminUrl->getPath(), '/');
                         $adminPath = ltrim($adminConfig['base_path'], '/');
-                        $adminUrl  = $adminUrl->withBasePath($basePath . '/' . $adminPath);
+                        $adminUrl  = $adminUrl->withPath($basePath . '/' . $adminPath);
                     }
                 }
 
@@ -158,7 +159,7 @@ class AdminServiceProvider
                 /** Fix the base path */
                 $path = $adminUrl->getPath();
                 if ($path) {
-                    $adminUrl = $adminUrl->withBasePath($path)->withPath('');
+                    $adminUrl = $adminUrl->withPath($path . '/');
                 }
 
                 return $adminUrl;
@@ -185,19 +186,13 @@ class AdminServiceProvider
          * @param Container $container A container instance.
          * @return ViewInterface
          */
-        $container->set('view/config', function (Container $container): ViewConfig {
-            $viewConfig = [];
+        if ($container->has('view/config')) {
+            $viewConfig  = $container->get('view/config');
             $adminConfig = $container->get('admin/config');
-
-            if ($container->has('view/config')) {
-                $viewConfig = $container->get('view/config');
-            }
-
             if (isset($adminConfig['view']['paths'])) {
                 $viewConfig->addPaths($adminConfig['view']['paths']);
             }
-            return $viewConfig;
-        });
+        }
     }
 
     /**
@@ -222,26 +217,15 @@ class AdminServiceProvider
         } else {
             /**
              * Alters the application's metadata configset.
-             *
              * This extension will merge any Admin-only metadata settings.
-             *
-             * @param  MetadataConfig $metaConfig The metadata configset.
-             * @param  Container      $container  The DI Container.
-             * @return MetadataConfig
              */
-            $container->set('metadata/config', function (Container $container): array {
+            if ($container->has('metadata/config')) {
                 $settings = $container->get('admin/config')['metadata'];
-                $metaConfig = [];
-
-                if ($container->has('metadata/config')) {
-                    $metaConfig = $container->get('metadata/config');
-                    if (is_array($settings) && !empty($settings)) {
-                        $metaConfig->merge($settings);
-                    }
+                $metaConfig = $container->get('metadata/config');
+                if (is_array($settings) && !empty($settings)) {
+                    $metaConfig->merge($settings);
                 }
-
-                return $metaConfig;
-            });
+            }
         }
 
         /**
@@ -273,18 +257,9 @@ class AdminServiceProvider
          *
          * Any data included from the "admin" subdirectory will override
          * any "base" data that's been imported.
-         *
-         * @param  MetadataConfig $metaConfig The metadata configset.
-         * @param  Container      $container  The DI Container.
-         * @return MetadataConfig
          */
-        $container->set('metadata/config', function (Container $container): array {
-            $metaConfig = [];
-
-            if ($container->has('metadata/config')) {
-                $metaConfig = $container->get('metadata/config');
-            }
-
+        if ($container->has('metadata/config')) {
+            $metaConfig  = $container->get('metadata/config');
             $adminConfig = $container->get('admin/config');
             $adminDir    = '/' . trim($adminConfig['base_path'], '/');
 
@@ -297,9 +272,7 @@ class AdminServiceProvider
             }
 
             $metaConfig->setPaths($parsedPaths);
-
-            return $metaConfig;
-        });
+        }
     }
 
     /**
@@ -367,11 +340,11 @@ class AdminServiceProvider
      */
     protected function registerViewExtensions(ContainerInterface $container)
     {
-        if (!($container->has('view/mustache/helpers'))) {
+        /*if (!($container->has('view/mustache/helpers'))) {
             $container->set('view/mustache/helpers', function () {
                 return [];
             });
-        }
+        }*/
 
         /**
          * Extend helpers for the Mustache Engine
@@ -423,9 +396,9 @@ class AdminServiceProvider
                 }
             ];
 
-            if ($container->has('view/mustache/helpers')) {
+            /*if ($container->has('view/mustache/helpers')) {
                 $helpers = $container->get('view/mustache/helpers');
-            }
+            }*/
 
             return array_merge($helpers, $urls);
         });

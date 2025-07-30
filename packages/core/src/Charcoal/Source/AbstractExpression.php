@@ -255,9 +255,30 @@ abstract class AbstractExpression implements
      * @uses   self::diffValues()
      * @return array<string,mixed> An associative array containing only mutated values.
      */
-    public function jsonSerialize()
+    public function jsonSerialize(): mixed
     {
         return array_udiff_assoc($this->data(), $this->defaultData(), [ $this, 'diffValues' ]);
+    }
+
+    /**
+     * Magic method for serialization (PHP 7.4+).
+     *
+     * @return array
+     */
+    public function __serialize(): array
+    {
+        return $this->jsonSerialize();
+    }
+
+    /**
+     * Magic method for unserialization (PHP 7.4+).
+     *
+     * @param array $data
+     * @return void
+     */
+    public function __unserialize(array $data): void
+    {
+        $this->setData($data);
     }
 
     /**
@@ -266,8 +287,11 @@ abstract class AbstractExpression implements
      * @see    Serializable
      * @return string Returns a string containing a byte-stream representation of the object.
      */
-    public function serialize()
+    public function serialize(): string
     {
+        if (method_exists($this, '__serialize')) {
+            return serialize($this->__serialize());
+        }
         return serialize($this->jsonSerialize());
     }
 
@@ -278,9 +302,13 @@ abstract class AbstractExpression implements
      * @param  string $data The serialized data.
      * @return void
      */
-    public function unserialize($data)
+    public function unserialize($data): void
     {
         $data = unserialize($data);
-        $this->setData($data);
+        if (method_exists($this, '__unserialize')) {
+            $this->__unserialize($data);
+        } else {
+            $this->setData($data);
+        }
     }
 }

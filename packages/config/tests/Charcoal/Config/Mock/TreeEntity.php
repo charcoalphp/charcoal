@@ -11,6 +11,7 @@ use Charcoal\Config\SeparatorAwareTrait;
 /**
  * Mock object of {@see \Charcoal\Tests\Config\Mixin\SeparatorAwareTest}
  */
+#[\AllowDynamicProperties]
 class TreeEntity extends Entity implements SeparatorAwareInterface
 {
     use SeparatorAwareTrait {

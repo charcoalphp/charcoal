@@ -12,7 +12,8 @@ use Charcoal\Source\RawExpressionInterface;
  * Represents a query expression.
  */
 class Expression extends AbstractExpression implements
-    RawExpressionInterface
+    RawExpressionInterface,
+    \Serializable // Keep for legacy support
 {
     /**
      * Custom query expression.
@@ -114,5 +115,60 @@ class Expression extends AbstractExpression implements
     public function condition()
     {
         return $this->condition;
+    }
+
+    /**
+     * Serialize the object (PHP < 7.4 compatibility).
+     *
+     * @return string
+     */
+    public function serialize(): string
+    {
+        if (method_exists($this, '__serialize')) {
+            return serialize($this->__serialize());
+        }
+        // Fallback for older PHP
+        return serialize([
+            'condition' => $this->condition,
+        ]);
+    }
+
+    /**
+     * Unserialize the object (PHP < 7.4 compatibility).
+     *
+     * @param string $data
+     * @return void
+     */
+    public function unserialize($data): void
+    {
+        $values = unserialize($data);
+        if (method_exists($this, '__unserialize')) {
+            $this->__unserialize($values);
+        } else {
+            $this->condition = ($values['condition'] ?? null);
+        }
+    }
+
+    /**
+     * Magic method for serialization (PHP 7.4+).
+     *
+     * @return array
+     */
+    public function __serialize(): array
+    {
+        return [
+            'condition' => $this->condition,
+        ];
+    }
+
+    /**
+     * Magic method for unserialization (PHP 7.4+).
+     *
+     * @param array $data
+     * @return void
+     */
+    public function __unserialize(array $data): void
+    {
+        $this->condition = ($data['condition'] ?? null);
     }
 }

@@ -9,6 +9,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
 // From 'charcoal-app'
 use Charcoal\App\Handler\AbstractError;
+use Nyholm\Psr7\Response;
 
 /**
  * Error Handler for PHP 7+ Throwables
@@ -30,7 +31,6 @@ class PhpError extends AbstractError
      */
     public function __invoke(
         ServerRequestInterface $request,
-        ResponseInterface $response,
         Throwable $error
     ) {
         $this->setHttpRequest($request);
@@ -65,7 +65,7 @@ class PhpError extends AbstractError
         $this->writeToErrorLog($error);
 
         return $this->respondWith(
-            $response->withStatus(500),
+            new Response(500),
             $contentType,
             $output
         );

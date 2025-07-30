@@ -25,6 +25,7 @@ use Slim\Exception\HttpInternalServerErrorException;
 use Slim\Exception\HttpMethodNotAllowedException;
 use Slim\Exception\HttpNotFoundException;
 use Slim\Handlers\ErrorHandler;
+use Slim\Routing\Route;
 
 /**
  * Charcoal App
@@ -89,19 +90,6 @@ class App extends SlimApp implements
                 HttpMethodNotAllowedException::class,
                 $container->get('notAllowedHandler')
             );
-
-            /*$errorRenderers = [
-                'application/json' => \Charcoal\App\Error\Renderers\JsonErrorRenderer::class,
-                'application/xml'  => \Charcoal\App\Error\Renderers\XmlErrorRenderer::class,
-                'text/xml'         => \Charcoal\App\Error\Renderers\XmlErrorRenderer::class,
-                'text/html'        => \Charcoal\App\Error\Renderers\HtmlErrorRenderer::class,
-                'text/plain'       => \Charcoal\App\Error\Renderers\PlainTextErrorRenderer::class,
-            ];
-            if ($errorMiddleware instanceof ErrorHandler) {
-                foreach ($errorRenderers as $key => $value) {
-                    $errorMiddleware->getDefaultErrorHandler()->registerErrorRenderer($key, $value);
-                }
-            }*/
 
             static::$instance = $app;
         }

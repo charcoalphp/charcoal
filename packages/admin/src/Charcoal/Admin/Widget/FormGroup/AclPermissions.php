@@ -73,7 +73,8 @@ class AclPermissions extends AdminWidget implements
      */
     public function objId()
     {
-        return filter_input(INPUT_GET, 'obj_id', FILTER_SANITIZE_STRING);
+        $objId = isset($_GET['obj_id']) ? strip_tags(trim($_GET['obj_id'])) : null;
+        return $objId;
     }
 
     /**

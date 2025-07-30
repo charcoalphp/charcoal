@@ -2,9 +2,7 @@
 
 namespace Charcoal\App\Template;
 
-// From PSR-7
-use Psr\Http\Message\RequestInterface;
-use DI\Container;
+use Psr\Http\Message\ServerRequestInterface;
 
 /**
  *
@@ -20,8 +18,8 @@ interface TemplateInterface
     /**
      * Initialize the template with a request.
      *
-     * @param RequestInterface $request The request to intialize.
+     * @param ServerRequestInterface $request The request to intialize.
      * @return boolean
      */
-    public function init(RequestInterface $request);
+    public function init(ServerRequestInterface $request);
 }

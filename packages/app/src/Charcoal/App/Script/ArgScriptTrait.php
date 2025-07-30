@@ -9,6 +9,7 @@ use InvalidArgumentException;
 /**
  * Additional utilities for handling arguments and inputs.
  */
+#[\AllowDynamicProperties]
 trait ArgScriptTrait
 {
     /**

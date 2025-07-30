@@ -9,6 +9,8 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
 // From 'charcoal-app'
 use Charcoal\App\Handler\AbstractError;
+use Nyholm\Psr7\Response;
+use Throwable;
 
 /**
  * Error Handler
@@ -24,14 +26,13 @@ class Error extends AbstractError
      *
      * @param  ServerRequestInterface $request  The most recent Request object.
      * @param  ResponseInterface      $response The most recent Response object.
-     * @param  Exception              $error    The caught Exception object.
+     * @param  Throwable              $error    The caught Exception object.
      * @throws UnexpectedValueException If the content type could not be determined.
      * @return ResponseInterface
      */
     public function __invoke(
         ServerRequestInterface $request,
-        ResponseInterface $response,
-        Exception $error
+        Throwable $error
     ) {
         $this->setHttpRequest($request);
         $this->setThrown($error);
@@ -65,7 +66,7 @@ class Error extends AbstractError
         $this->writeToErrorLog($error);
 
         return $this->respondWith(
-            $response->withStatus(500),
+            new Response(500),
             $contentType,
             $output
         );

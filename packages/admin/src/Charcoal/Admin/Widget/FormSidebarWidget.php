@@ -23,6 +23,7 @@ use Charcoal\Admin\Widget\FormWidget;
 /**
  * Form Sidebar Widget
  */
+#[\AllowDynamicProperties]
 class FormSidebarWidget extends AdminWidget implements
     FormSidebarInterface,
     HasLanguageSwitcherInterface

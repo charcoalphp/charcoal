@@ -146,7 +146,7 @@ class TemplateRoute implements
         $config   = $this->config();
         $template = $this->createTemplate($container, $request);
 
-        return $container->get('view')->render($config['template'], $template);
+        return $container->get('view')->render($config->get('template'), $template);
     }
 
     /**

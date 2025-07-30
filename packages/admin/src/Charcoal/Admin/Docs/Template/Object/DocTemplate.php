@@ -84,7 +84,7 @@ class DocTemplate extends AdminTemplate implements
         if (!$objLabel && isset($metadata['admin']['forms'])) {
             $adminMetadata = $metadata['admin'];
 
-            $formIdent = filter_input(INPUT_GET, 'form_ident', FILTER_SANITIZE_STRING);
+            $formIdent = isset($_GET['form_ident']) ? strip_tags(trim($_GET['form_ident'])) : null;
             if (!$formIdent) {
                 if (isset($adminMetadata['defaultForm'])) {
                         $fomIdent = $adminMetadata['defaultForm'];
@@ -147,7 +147,7 @@ class DocTemplate extends AdminTemplate implements
         $dashboardIdent = $this->dashboardIdent();
 
         if (empty($dashboardIdent)) {
-            $dashboardIdent = filter_input(INPUT_GET, 'dashboard_ident', FILTER_SANITIZE_STRING);
+            $dashboardIdent = isset($_GET['dashboard_ident']) ? strip_tags(trim($_GET['dashboard_ident'])) : null;
         }
 
         if (empty($dashboardIdent)) {

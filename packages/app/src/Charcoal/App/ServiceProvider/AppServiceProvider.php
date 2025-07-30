@@ -137,7 +137,7 @@ class AppServiceProvider
                 /** Fix the base path */
                 $path = $baseUrl->getPath();
                 if ($path) {
-                    $baseUrl = $baseUrl->withBasePath($path)->withPath('');
+                    $baseUrl = $baseUrl->withPath($path . '/');
                 }
 
                 return $baseUrl;
@@ -186,14 +186,16 @@ class AppServiceProvider
         /**
          * HTTP 500 (Error) handler.
          */
-        $container->set('errorHandler', function (Container $container) {
-            $config  = ($handlersConfig['error'] ?? []);
-            $class   = $container->get('errorHandler/class');
-            $handler = new $class($container, $config);
-            /** @var HandlerInterface $handler */
-            $handler->init();
-            return $handler;
-        });
+        if (!$container->has('errorHandler')) {
+            $container->set('errorHandler', function (Container $container) {
+                $config  = ($handlersConfig['error'] ?? []);
+                $class   = $container->get('errorHandler/class');
+                $handler = new $class($container, $config);
+                /** @var HandlerInterface $handler */
+                $handler->init();
+                return $handler;
+            });
+        }
 
         /**
          * HTTP 503 (Service Unavailable) handler.

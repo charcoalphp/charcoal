@@ -14,6 +14,7 @@ use Charcoal\View\Mustache\HelpersInterface;
 /**
  * Assets Helpers
  */
+#[\AllowDynamicProperties]
 class AssetsHelpers implements HelpersInterface
 {
     /**

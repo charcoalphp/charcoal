@@ -103,15 +103,18 @@ class ElfinderTemplate extends AdminTemplate
         $data = $request->getParams($keys);
 
         if (isset($data['obj_type'])) {
-            $this->objType = filter_var($data['obj_type'], FILTER_SANITIZE_STRING);
+            $objType = isset($data['obj_type']) ? strip_tags(trim($data['obj_type'])) : null;
+            $this->objType = $objType;
         }
 
         if (isset($data['obj_id'])) {
-            $this->objId = filter_var($data['obj_id'], FILTER_SANITIZE_STRING);
+            $objId = isset($data['obj_id']) ? strip_tags(trim($data['obj_id'])) : null;
+            $this->objId = $objId;
         }
 
         if (isset($data['property'])) {
-            $this->propertyIdent = filter_var($data['property'], FILTER_SANITIZE_STRING);
+            $propertyIdent = isset($data['property']) ? strip_tags(trim($data['property'])) : null;
+            $this->propertyIdent = $propertyIdent;
         }
 
         if (isset($data['assets'])) {
@@ -119,7 +122,8 @@ class ElfinderTemplate extends AdminTemplate
         }
 
         if (isset($data['callback'])) {
-            $this->callbackIdent = filter_var($data['callback'], FILTER_SANITIZE_STRING);
+            $callbackIdent = isset($data['callback']) ? strip_tags(trim($data['callback'])) : null;
+            $this->callbackIdent = $callbackIdent;
         }
 
         if (isset($this->elfinderConfig['translations'])) {
@@ -486,7 +490,7 @@ class ElfinderTemplate extends AdminTemplate
 
         $property = $this->formProperty();
         if ($property) {
-            $mimeTypes = filter_input(INPUT_GET, 'filetype', FILTER_SANITIZE_STRING);
+            $mimeTypes = isset($_GET['filetype']) ? strip_tags(trim($_GET['filetype'])) : null;
 
             if ($mimeTypes) {
                 if ($mimeTypes === 'file') {

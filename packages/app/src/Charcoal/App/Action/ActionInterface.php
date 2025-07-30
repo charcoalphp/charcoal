@@ -5,8 +5,8 @@ namespace Charcoal\App\Action;
 // From PSR-7
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
-
 use DI\Container;
+use Psr\Http\Message\ServerRequestInterface;
 
 /**
  *
@@ -16,11 +16,11 @@ interface ActionInterface
     /**
      * Actions are callable, with http request and response as parameters.
      *
-     * @param RequestInterface  $request  A PSR-7 compatible Request instance.
+     * @param ServerRequestInterface  $request  A PSR-7 compatible Request instance.
      * @param ResponseInterface $response A PSR-7 compatible Response instance.
      * @return ResponseInterface
      */
-    public function __invoke(RequestInterface $request, ResponseInterface $response);
+    public function __invoke(ServerRequestInterface $request, ResponseInterface $response);
 
     /**
      * @param array $data The data to set.
@@ -83,17 +83,17 @@ interface ActionInterface
     public function results();
 
     /**
-     * @param RequestInterface  $request  A PSR-7 compatible Request instance.
+     * @param ServerRequestInterface  $request  A PSR-7 compatible Request instance.
      * @param ResponseInterface $response A PSR-7 compatible Response instance.
      * @return ResponseInterface
      */
-    public function run(RequestInterface $request, ResponseInterface $response);
+    public function run(ServerRequestInterface $request, ResponseInterface $response);
 
     /**
      * Initialize the action with a request.
      *
-     * @param RequestInterface $request The request to initialize.
+     * @param ServerRequestInterface $request The request to initialize.
      * @return boolean Success / Failure.
      */
-    public function init(RequestInterface $request);
+    public function init(ServerRequestInterface $request);
 }

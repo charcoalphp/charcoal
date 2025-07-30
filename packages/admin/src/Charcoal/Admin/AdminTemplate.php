@@ -25,6 +25,8 @@ use Charcoal\Admin\Support\AdminTrait;
 use Charcoal\Admin\Support\BaseUrlTrait;
 use Charcoal\Admin\Support\SecurityTrait;
 use Charcoal\Admin\Ui\FeedbackContainerTrait;
+use Charcoal\App\Action\AbstractAction;
+use Psr\Http\Message\ServerRequestInterface;
 
 /**
  * Base class for all `admin` Templates.
@@ -151,11 +153,11 @@ class AdminTemplate extends AbstractTemplate implements
      * - to authenticate
      * - to initialize the template data with the PSR Request object
      *
-     * @param RequestInterface $request The request to initialize.
+     * @param ServerRequestInterface $request The request to initialize.
      * @return boolean
      * @see \Charcoal\App\Route\TemplateRoute::__invoke()
      */
-    public function init(RequestInterface $request)
+    public function init(ServerRequestInterface $request)
     {
         if (!session_id()) {
             session_cache_limiter(false);
@@ -172,10 +174,10 @@ class AdminTemplate extends AbstractTemplate implements
      * Determine if the current user is authenticated, if not redirect them to the login page.
      *
      * @todo   Move auth-check and redirection to a middleware or dedicated admin route.
-     * @param  RequestInterface $request The request to initialize.
+     * @param  ServerRequestInterface $request The request to initialize.
      * @return void
      */
-    protected function authRedirect(RequestInterface $request)
+    protected function authRedirect(ServerRequestInterface $request)
     {
         // Test if authentication is required.
         if ($this->authRequired() === false) {
@@ -197,14 +199,14 @@ class AdminTemplate extends AbstractTemplate implements
     /**
      * Sets the template data from a PSR Request object.
      *
-     * @param  RequestInterface $request A PSR-7 compatible Request instance.
+     * @param  ServerRequestInterface $request A PSR-7 compatible Request instance.
      * @return self
      */
-    protected function setDataFromRequest(RequestInterface $request)
+    protected function setDataFromRequest(ServerRequestInterface $request)
     {
         $keys = $this->validDataFromRequest();
         if (!empty($keys)) {
-            $this->setData($request->getParams($keys));
+            $this->setData(AbstractAction::getParams($request, $keys));
         }
 
         return $this;
@@ -821,8 +823,10 @@ class AdminTemplate extends AbstractTemplate implements
             }
 
             // Get main menu from the obj_type
-            $objType = filter_input(INPUT_GET, 'obj_type', FILTER_SANITIZE_STRING);
+            $objType = isset($_GET['obj_type']) ? trim($_GET['obj_type']) : null;
+
             if ($objType) {
+                $objType = strip_tags($objType);
                 $secondaryMenuItems = $this->adminConfig('secondary_menu');
                 foreach ($secondaryMenuItems as $main => $item) {
                     if ($this->isObjTypeInSecondaryMenuItem($objType, $item)) {
@@ -833,8 +837,10 @@ class AdminTemplate extends AbstractTemplate implements
             }
 
             // Choose main menu with a get parameter
-            $mainMenuFromRequest = filter_input(INPUT_GET, 'main_menu', FILTER_SANITIZE_STRING);
+            $mainMenuFromRequest = isset($_GET['main_menu']) ? trim($_GET['main_menu']) : null;
+
             if ($mainMenuFromRequest) {
+                $mainMenuFromRequest = strip_tags($mainMenuFromRequest);
                 $mainMenuIdent = $mainMenuFromRequest;
             }
 

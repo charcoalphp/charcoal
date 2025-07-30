@@ -8,6 +8,7 @@ use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 // From 'charcoal-admin'
 use Charcoal\Admin\AdminAction;
+use Psr\Http\Message\ServerRequestInterface;
 
 /**
  * Action: Attempt to log a user in.
@@ -50,11 +51,11 @@ class LoginAction extends AdminAction
     }
 
     /**
-     * @param RequestInterface  $request  A PSR-7 compatible Request instance.
+     * @param ServerRequestInterface  $request  A PSR-7 compatible Request instance.
      * @param ResponseInterface $response A PSR-7 compatible Response instance.
      * @return ResponseInterface
      */
-    public function run(RequestInterface $request, ResponseInterface $response)
+    public function run(ServerRequestInterface $request, ResponseInterface $response)
     {
         $translator = $this->translator();
 
@@ -67,10 +68,12 @@ class LoginAction extends AdminAction
 
             $ip = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : null;
 
-            $email    = $request->getParam('email');
-            $password = $request->getParam('password');
-            $remember = $request->getParam('remember-me');
-            $nextUrl  = $request->getParam('next_url');
+            $params    = $this->getParams($request);
+
+            $email    = ($params['email'] ?? null);
+            $password = ($params['password'] ?? null);
+            $remember = ($params['remember-me'] ?? null);
+            $nextUrl  = ($params['next_url'] ?? null);
 
             $email    = filter_var($email, FILTER_SANITIZE_EMAIL);
             $remember = filter_var($remember, FILTER_VALIDATE_BOOLEAN);

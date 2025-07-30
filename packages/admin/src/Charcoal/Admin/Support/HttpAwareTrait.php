@@ -7,6 +7,7 @@ use RuntimeException;
 use Psr\Http\Message\MessageInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 
 /**
  * PSR-7 Awareness
@@ -16,7 +17,7 @@ trait HttpAwareTrait
     /**
      * Store the HTTP request object.
      *
-     * @var RequestInterface
+     * @var ServerRequestInterface
      */
     protected $httpRequest;
 
@@ -31,7 +32,7 @@ trait HttpAwareTrait
      * Retrieve the HTTP request.
      *
      * @throws RuntimeException If the HTTP request was not previously set.
-     * @return RequestInterface
+     * @return ServerRequestInterface
      */
     public function httpRequest()
     {
@@ -52,16 +53,16 @@ trait HttpAwareTrait
      */
     public function hasHttpRequest()
     {
-        return $this->httpRequest instanceof RequestInterface;
+        return $this->httpRequest instanceof ServerRequestInterface;
     }
 
     /**
      * Set an HTTP request object.
      *
-     * @param  RequestInterface $request A PSR-7 compatible Request instance.
+     * @param  ServerRequestInterface $request A PSR-7 compatible Request instance.
      * @return void
      */
-    protected function setHttpRequest(RequestInterface $request)
+    protected function setHttpRequest(ServerRequestInterface $request)
     {
         $this->httpRequest = $request;
     }
@@ -132,5 +133,30 @@ trait HttpAwareTrait
         $response = $this->httpResponse();
 
         return ($response->isSuccessful() || $response->isInformational());
+    }
+
+    protected function getParams(?array $keys = []): array
+    {
+        $request = $this->httpRequest();
+        $params = $request->getQueryParams();
+        $body = $request->getParsedBody();
+
+        if (is_array($body)) {
+            $params = array_merge($params, $body);
+        }
+
+        if (!empty($keys)) {
+            $params = array_filter($params, function ($param) use ($keys) {
+                return in_array($param, $keys);
+            }, ARRAY_FILTER_USE_KEY);
+        }
+
+        return $params;
+    }
+
+    protected function getParam(string $key): mixed
+    {
+        $params = $this->getParams([$key]);
+        return ($params ?? null);
     }
 }

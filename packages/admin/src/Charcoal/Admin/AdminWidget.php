@@ -27,6 +27,7 @@ use Charcoal\Admin\Support\BaseUrlTrait;
 /**
  * The base Widget for the `admin` module.
  */
+#[\AllowDynamicProperties]
 class AdminWidget extends AbstractWidget implements
     AuthAwareInterface,
     PrioritizableInterface,

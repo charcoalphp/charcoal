@@ -24,13 +24,13 @@ class NotFound extends AbstractHandler
      * Invoke "Not Found" Handler
      *
      * @param  ServerRequestInterface $request  The most recent Request object.
-     * @param  ResponseInterface      $response The most recent Response object.
+     * @param  HttpNotFoundException|Response $response The most recent Response object.
      * @throws UnexpectedValueException If the content type could not be determined.
      * @return ResponseInterface
      */
     public function __invoke(
         ServerRequestInterface $request,
-        HttpNotFoundException $exception
+        mixed $exception
     ) {
         $this->setHttpRequest($request);
 

@@ -1068,8 +1068,9 @@ class TableWidget extends AdminWidget implements CollectionContainerInterface
         $this->configureCollectionLoaderFromTrait($loader, $data);
 
         if (!isset($loader->hasMainMenuCallback)) {
-            $mainMenu = filter_input(INPUT_GET, 'main_menu', FILTER_SANITIZE_STRING);
+            $mainMenu = isset($_GET['main_menu']) ? trim($_GET['main_menu']) : null;
             if ($mainMenu) {
+                $mainMenu = strip_tags($mainMenu);
                 $fn = function (&$obj) use ($mainMenu) {
                     if (!$obj['main_menu']) {
                         $obj['main_menu'] = $mainMenu;

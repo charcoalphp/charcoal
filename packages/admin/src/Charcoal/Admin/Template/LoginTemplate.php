@@ -7,6 +7,7 @@ use Psr\Http\Message\RequestInterface;
 // From 'charcoal-admin'
 use Charcoal\Admin\AdminTemplate;
 use Charcoal\Admin\Template\AuthTemplateTrait;
+use GuzzleHttp\Psr7\ServerRequest;
 
 /**
  *
@@ -18,14 +19,14 @@ class LoginTemplate extends AdminTemplate
     /**
      * Determine if the password token is valid.
      *
-     * @param  RequestInterface $request The PSR-7 HTTP request.
+     * @param  ServerRequest $request The PSR-7 HTTP request.
      * @return boolean
      */
     public function init(RequestInterface $request)
     {
         $translator = $this->translator();
 
-        $notice = $request->getParam('notice');
+        $notice = ($request->getQueryParams()['notice'] ?? null);
         switch ($notice) {
             case 'resetpass':
                 $message = $translator->translate('Check your email for instructions to reset your password.');

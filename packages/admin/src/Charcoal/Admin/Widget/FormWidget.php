@@ -822,7 +822,7 @@ class FormWidget extends AdminWidget implements
      */
     protected function dataFromRequest()
     {
-        return $this->httpRequest()->getParams($this->acceptedRequestData());
+        return $this->getParams($this->acceptedRequestData());
     }
 
     /**

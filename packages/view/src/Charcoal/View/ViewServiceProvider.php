@@ -64,9 +64,9 @@ class ViewServiceProvider
     {
         $this->registerViewConfig($container);
         $this->registerLoaderServices($container);
-        $this->registerEngineServices($container);
         $this->registerMustacheTemplatingServices($container);
         $this->registerTwigTemplatingServices($container);
+        $this->registerEngineServices($container);
         $this->registerViewServices($container);
     }
 
@@ -135,6 +135,18 @@ class ViewServiceProvider
          * @return MustacheLoader
          */
         $container->set('view/loader/mustache', function (Container $container): LoaderInterface {
+            /*echo '<pre>';
+            print_r($container->get('view/loader/dependencies'));
+            echo '</pre>';
+
+            foreach ($container->get('view/loader/dependencies')['paths'] as $path) {
+                $fullPath = $container->get('view/loader/dependencies')['base_path'] . DIRECTORY_SEPARATOR . $path . 'login.mustache';
+                echo $fullPath . '<br>';
+                if (file_exists($fullPath)) {
+                    exit('Found template at: ' . $fullPath);
+                }
+            }
+            exit;*/
             return new MustacheLoader($container->get('view/loader/dependencies'));
         });
 
@@ -167,11 +179,17 @@ class ViewServiceProvider
          */
         $container->set('view/engine/mustache', function (Container $container): EngineInterface {
             return new MustacheEngine([
+                'config'    => $container->get('view/config'),
                 'loader'    => $container->get('view/loader/mustache'),
-                'helpers'   => $container->get('view/mustache/helpers'),
-                'cache'     => $container->get('view/mustache/cache')
+                'helpers'   => [],
+                'cache'     => $container->get('view/mustache/cache'),
+                'debug'     => $container->get('debug'),
             ]);
         });
+
+        $container->get('view/engine/mustache')->mergeHelpers(
+            $container->get('view/mustache/helpers')
+        );
 
         /**
          * @param Container $container A container instance.
@@ -197,6 +215,10 @@ class ViewServiceProvider
                 'debug'     => $container->get('debug'),
             ]);
         });
+
+        $container->get('view/engine/twig')->mergeHelpers(
+            $container->get('view/twig/helpers')
+        );
 
         /**
          * The default view engine.
@@ -235,11 +257,11 @@ class ViewServiceProvider
      */
     protected function registerMustacheHelpersServices(Container $container): void
     {
-        if (!$container->has('view/mustache/helpers')) {
+        /*if (!$container->has('view/mustache/helpers')) {
             $container->set('view/mustache/helpers', function () {
                 return [];
             });
-        }
+        }*/
 
         /**
          * Asset helpers for Mustache.
@@ -262,6 +284,17 @@ class ViewServiceProvider
         });
 
         /**
+         * A Markdown parser.
+         *
+         * @return Parsedown
+         */
+        $container->set('view/parsedown', function (): Parsedown {
+            $parsedown = new Parsedown();
+            $parsedown->setSafeMode(true);
+            return $parsedown;
+        });
+
+        /**
          * Markdown helpers for Mustache.
          *
          * @return MarkdownHelpers
@@ -279,19 +312,13 @@ class ViewServiceProvider
          * @param  Container $container A container instance.
          * @return array
          */
-        $mustacheHelpers = $container->get('view/mustache/helpers');
-        $container->set('view/mustache/helpers', function (Container $container) use ($mustacheHelpers): array {
-            $helpers = [];
-            if (!empty($mustacheHelpers)) {
-                $helpers = $mustacheHelpers;
-            }
-            return array_merge(
-                $helpers,
-                $container->get('view/mustache/helpers/assets')->toArray(),
-                $container->get('view/mustache/helpers/translator')->toArray(),
-                $container->get('view/mustache/helpers/markdown')->toArray()
-            );
-        });
+        $helpers = $container->has('view/mustache/helpers') ? $container->get('view/mustache/helpers') : [];
+        $container->set('view/mustache/helpers', array_merge(
+            $helpers,
+            $container->get('view/mustache/helpers/assets')->toArray(),
+            $container->get('view/mustache/helpers/translator')->toArray(),
+            $container->get('view/mustache/helpers/markdown')->toArray()
+        ));
     }
 
     /**
@@ -352,19 +379,6 @@ class ViewServiceProvider
             $container->get('view/twig/helpers/translator')->toArray(),
             $container->get('view/twig/helpers/debug')->toArray(),
         ));
-
-
-        /*$helpers = $container->has('view/twig/helpers') ? $container->get('view/twig/helpers') : [];
-        $container->set('view/twig/helpers', array_merge(
-            $helpers,
-            $container->get('view/twig/helpers/translator')->toArray(),
-        ));*/
-
-        /*if ($container->has('view/engine/twig')) {
-            $container->get('view/engine/twig')->mergeHelpers(
-                $container->get('view/twig/helpers/translator')->toArray()
-            );
-        }*/
     }
 
     /**
@@ -396,22 +410,5 @@ class ViewServiceProvider
                 'view' => $container->get('view')
             ]);
         });
-
-        /**
-         * A Markdown parser.
-         *
-         * @return Parsedown
-         */
-        $container->set('view/parsedown', function (): Parsedown {
-            $parsedown = new Parsedown();
-            $parsedown->setSafeMode(true);
-            return $parsedown;
-        });
-
-        if ($container->has('view/engine/twig')) {
-            $container->get('view/engine/twig')->mergeHelpers(
-                $container->get('view/twig/helpers')
-            );
-        }
     }
 }

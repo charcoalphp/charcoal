@@ -26,6 +26,7 @@ use Charcoal\Source\SourceInterface;
 /**
  * Object Collection Loader
  */
+#[\AllowDynamicProperties]
 class CollectionLoader implements
     FilterCollectionInterface,
     OrderCollectionInterface,

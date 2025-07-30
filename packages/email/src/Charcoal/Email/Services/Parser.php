@@ -72,7 +72,8 @@ class Parser
             return $email;
         }
 
-        $name = str_replace('"', '', filter_var($arr['name'], FILTER_SANITIZE_STRING));
+        $name = isset($arr['name']) ? strip_tags(trim($arr['name'])) : null;
+        $name = str_replace('"', '', $name);
         return sprintf('"%s" <%s>', $name, $email);
     }
 }
