@@ -68,7 +68,7 @@ class SeparatorAwareTest extends AbstractTestCase
      * @param  array $data Data to pre-populate the object.
      * @return TreeEntity
      */
-    public function createObject(array $data = null)
+    public function createObject(?array $data = null)
     {
         return new TreeEntity($data);
     }

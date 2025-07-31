@@ -321,7 +321,7 @@ class ObjectRevision extends AbstractModel implements ObjectRevisionInterface
      * @param array $dataObj  Optional. Current revision (object) data.
      * @return array The diff data
      */
-    public function createDiff(array $dataPrev = null, array $dataObj = null)
+    public function createDiff(?array $dataPrev = null, ?array $dataObj = null)
     {
         if ($dataPrev === null) {
             $dataPrev = $this->getDataPrev();

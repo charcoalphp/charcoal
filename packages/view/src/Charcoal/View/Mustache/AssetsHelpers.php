@@ -104,7 +104,7 @@ class AssetsHelpers implements HelpersInterface
      * @param LambdaHelper $helper For rendering strings in the current context.
      * @return void
      */
-    public function addJs(string $js, LambdaHelper $helper = null): void
+    public function addJs(string $js, ?LambdaHelper $helper = null): void
     {
         if ($helper !== null) {
             $js = $helper->render($js);
@@ -133,7 +133,7 @@ class AssetsHelpers implements HelpersInterface
      * @param LambdaHelper $helper For rendering strings in the current context.
      * @return void
      */
-    public function addJsRequirement(string $js, LambdaHelper $helper = null): void
+    public function addJsRequirement(string $js, ?LambdaHelper $helper = null): void
     {
         $js  = trim($js);
         $key = md5($js);
@@ -179,7 +179,7 @@ class AssetsHelpers implements HelpersInterface
      * @param LambdaHelper $helper For rendering strings in the current context.
      * @return void
      */
-    public function addCss(string $css, LambdaHelper $helper = null): void
+    public function addCss(string $css, ?LambdaHelper $helper = null): void
     {
         if ($helper !== null) {
             $css = $helper->render($css);
@@ -208,7 +208,7 @@ class AssetsHelpers implements HelpersInterface
      * @param LambdaHelper $helper For rendering strings in the current context.
      * @return void
      */
-    public function addCssRequirement(string $css, LambdaHelper $helper = null): void
+    public function addCssRequirement(string $css, ?LambdaHelper $helper = null): void
     {
         $css = trim($css);
         $key = md5($css);

@@ -7,7 +7,7 @@ use DomainException;
 use InvalidArgumentException;
 use JsonSerializable;
 use Stringable;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Translatable Value
@@ -204,7 +204,7 @@ class TranslatableValue implements
      * @throws DomainException If the array key is not found.
      * @see    ArrayAccess::offsetGet()
      */
-    public function offsetGet($offset)
+    public function offsetGet($offset): mixed
     {
         if (!is_string($offset)) {
             throw new InvalidArgumentException(sprintf(
@@ -230,7 +230,7 @@ class TranslatableValue implements
      * @throws InvalidArgumentException If array key isn't a string.
      * @see    ArrayAccess::offsetSet()
      */
-    public function offsetSet($offset, $value)
+    public function offsetSet($offset, $value): void
     {
         if (!is_string($offset)) {
             throw new InvalidArgumentException(sprintf(
@@ -254,7 +254,7 @@ class TranslatableValue implements
      * @return void
      * @throws InvalidArgumentException If array key isn't a string.
      */
-    public function offsetUnset($offset)
+    public function offsetUnset($offset): void
     {
         if (!is_string($offset)) {
             throw new InvalidArgumentException(sprintf(

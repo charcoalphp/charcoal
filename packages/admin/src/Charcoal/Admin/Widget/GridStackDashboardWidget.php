@@ -55,7 +55,7 @@ class GridStackDashboardWidget extends AdminWidget implements
      * @param callable $widgetCallback A callback applied to each widget.
      * @return UiItemInterface[]|\Generator
      */
-    public function widgets(callable $widgetCallback = null)
+    public function widgets(?callable $widgetCallback = null)
     {
         $widgets = $this->widgets;
 

@@ -100,7 +100,7 @@ class MultiGroupFormGroup extends MultiGroupWidget implements
      * @throws \UnexpectedValueException If a property data is invalid.
      * @return FormPropertyWidget[]
      */
-    public function formProperties(array $group = null)
+    public function formProperties(?array $group = null)
     {
         if (
             !key_exists(self::DATA_SOURCE_METADATA, array_flip($this->dataSources())) ||

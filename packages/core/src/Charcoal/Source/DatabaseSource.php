@@ -413,7 +413,7 @@ class DatabaseSource extends AbstractSource implements
      * @param  StorableInterface $item  Optional item to load into.
      * @return StorableInterface
      */
-    public function loadItem($ident, StorableInterface $item = null)
+    public function loadItem($ident, ?StorableInterface $item = null)
     {
         $key = $this->model()->key();
 
@@ -429,7 +429,7 @@ class DatabaseSource extends AbstractSource implements
      * @throws \Exception If the query fails.
      * @return StorableInterface
      */
-    public function loadItemFromKey($key, $ident, StorableInterface $item = null)
+    public function loadItemFromKey($key, $ident, ?StorableInterface $item = null)
     {
         if ($item !== null) {
             $this->setModel($item);
@@ -472,7 +472,7 @@ class DatabaseSource extends AbstractSource implements
      * @throws PDOException If there is a query error.
      * @return StorableInterface
      */
-    public function loadItemFromQuery($query, array $binds = [], StorableInterface $item = null)
+    public function loadItemFromQuery($query, array $binds = [], ?StorableInterface $item = null)
     {
         if ($item !== null) {
             $this->setModel($item);
@@ -508,7 +508,7 @@ class DatabaseSource extends AbstractSource implements
      * @param  StorableInterface|null $item Optional model.
      * @return StorableInterface[]
      */
-    public function loadItems(StorableInterface $item = null)
+    public function loadItems(?StorableInterface $item = null)
     {
         if ($item !== null) {
             $this->setModel($item);
@@ -526,7 +526,7 @@ class DatabaseSource extends AbstractSource implements
      * @param  StorableInterface|null $item  Model Item.
      * @return StorableInterface[]
      */
-    public function loadItemsFromQuery($query, array $binds = [], StorableInterface $item = null)
+    public function loadItemsFromQuery($query, array $binds = [], ?StorableInterface $item = null)
     {
         if ($item !== null) {
             $this->setModel($item);
@@ -625,7 +625,7 @@ class DatabaseSource extends AbstractSource implements
      * @param  array             $properties The list of properties to update, if not all.
      * @return boolean TRUE if the item was updated, otherwise FALSE.
      */
-    public function updateItem(StorableInterface $item, array $properties = null)
+    public function updateItem(StorableInterface $item, ?array $properties = null)
     {
         if ($item !== null) {
             $this->setModel($item);
@@ -704,7 +704,7 @@ class DatabaseSource extends AbstractSource implements
      * @throws UnexpectedValueException If the item does not have an ID.
      * @return boolean TRUE if the item was deleted, otherwise FALSE.
      */
-    public function deleteItem(StorableInterface $item = null)
+    public function deleteItem(?StorableInterface $item = null)
     {
         if ($item !== null) {
             $this->setModel($item);
@@ -990,7 +990,7 @@ class DatabaseSource extends AbstractSource implements
      * @param  array $data Optional expression data.
      * @return DatabaseFilter
      */
-    protected function createFilter(array $data = null)
+    protected function createFilter(?array $data = null)
     {
         $filter = new DatabaseFilter();
         if ($data !== null) {
@@ -1005,7 +1005,7 @@ class DatabaseSource extends AbstractSource implements
      * @param  array $data Optional expression data.
      * @return DatabaseOrder
      */
-    protected function createOrder(array $data = null)
+    protected function createOrder(?array $data = null)
     {
         $order = new DatabaseOrder();
         if ($data !== null) {
@@ -1020,7 +1020,7 @@ class DatabaseSource extends AbstractSource implements
      * @param  array $data Optional clause data.
      * @return DatabasePagination
      */
-    protected function createPagination(array $data = null)
+    protected function createPagination(?array $data = null)
     {
         $pagination = new DatabasePagination();
         if ($data !== null) {
@@ -1036,7 +1036,7 @@ class DatabaseSource extends AbstractSource implements
      * @param  array $data Optional data.
      * @return DatabaseSourceConfig
      */
-    public function createConfig(array $data = null)
+    public function createConfig(?array $data = null)
     {
         $config = new DatabaseSourceConfig($data);
         return $config;

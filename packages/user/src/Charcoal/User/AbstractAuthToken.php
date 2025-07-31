@@ -310,7 +310,7 @@ abstract class AbstractAuthToken extends AbstractModel implements
      * @param  array $properties The properties (ident) set for update.
      * @return boolean
      */
-    protected function preUpdate(array $properties = null)
+    protected function preUpdate(?array $properties = null)
     {
         $result = parent::preUpdate($properties);
 
@@ -336,7 +336,7 @@ abstract class AbstractAuthToken extends AbstractModel implements
      * @param  array $data Optional metadata to merge on the object.
      * @return AuthTokenMetadata
      */
-    protected function createMetadata(array $data = null)
+    protected function createMetadata(?array $data = null)
     {
         $class = $this->metadataClass();
         return new $class($data);

@@ -240,9 +240,9 @@ class EmailQueueItem extends AbstractModel implements QueueItemInterface
      *                                       processed.
      */
     public function process(
-        callable $alwaysCallback = null,
-        callable $successCallback = null,
-        callable $failureCallback = null
+        ?callable $alwaysCallback = null,
+        ?callable $successCallback = null,
+        ?callable $failureCallback = null
     ): ?bool {
         $email = $this->emailFactory()->create('email');
         $email->setData($this->data());

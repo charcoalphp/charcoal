@@ -601,7 +601,7 @@ abstract class AbstractAuthenticator implements
      * @param  AuthenticatableInterface|null $user The authenticated user to forget.
      * @return void
      */
-    protected function deleteUserSession(AuthenticatableInterface $user = null)
+    protected function deleteUserSession(?AuthenticatableInterface $user = null)
     {
         if ($user === null) {
             $user = $this->userFactory()->get($this->userType());
@@ -619,7 +619,7 @@ abstract class AbstractAuthenticator implements
      * @param  AuthenticatableInterface|null $user The authenticated user to forget.
      * @return void
      */
-    protected function deleteUserTokens(AuthenticatableInterface $user = null)
+    protected function deleteUserTokens(?AuthenticatableInterface $user = null)
     {
         $authToken = $this->createToken();
         if (!$authToken->isEnabled()) {

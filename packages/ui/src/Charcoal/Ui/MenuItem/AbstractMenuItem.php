@@ -205,7 +205,7 @@ abstract class AbstractMenuItem extends AbstractUiItem implements MenuItemInterf
      * @param callable $childCallback Optional callback.
      * @return MenuItemInterface[]
      */
-    public function children(callable $childCallback = null)
+    public function children(?callable $childCallback = null)
     {
         $children = $this->children;
         uasort($children, ['self', 'sortChildrenByPrioriy']);

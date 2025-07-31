@@ -70,7 +70,7 @@ abstract class AbstractFactory implements FactoryInterface
     /**
      * @param array $data Constructor dependencies.
      */
-    public function __construct(array $data = null)
+    public function __construct(?array $data = null)
     {
         if (isset($data['base_class'])) {
             $this->setBaseClass($data['base_class']);
@@ -118,7 +118,7 @@ abstract class AbstractFactory implements FactoryInterface
      * @throws InvalidArgumentException If type argument is not a string or is not an available type.
      * @return mixed The instance / object
      */
-    final public function create($type, array $args = null, callable $cb = null)
+    final public function create($type, ?array $args = null, ?callable $cb = null)
     {
         if (!is_string($type)) {
             throw new InvalidArgumentException(
@@ -192,7 +192,7 @@ abstract class AbstractFactory implements FactoryInterface
      * @throws InvalidArgumentException If type argument is not a string.
      * @return mixed The instance / object
      */
-    final public function get($type, array $args = null)
+    final public function get($type, ?array $args = null)
     {
         if (!is_string($type)) {
             throw new InvalidArgumentException(
@@ -494,7 +494,7 @@ abstract class AbstractFactory implements FactoryInterface
      * @param callable $customCallback An optional additional custom callback.
      * @return void
      */
-    private function runCallbacks(&$obj, callable $customCallback = null)
+    private function runCallbacks(&$obj, ?callable $customCallback = null)
     {
         $factoryCallback = $this->callback();
         if (isset($factoryCallback)) {

@@ -750,7 +750,7 @@ class AbstractSourceTest extends AbstractTestCase
      * @param  array $data Optional expression data.
      * @return Filter
      */
-    final public function createFilter(array $data = null)
+    final public function createFilter(?array $data = null)
     {
         $expr = new Filter();
         if ($data !== null) {
@@ -765,7 +765,7 @@ class AbstractSourceTest extends AbstractTestCase
      * @param  array $data Optional expression data.
      * @return Order
      */
-    final public function createOrder(array $data = null)
+    final public function createOrder(?array $data = null)
     {
         $expr = new Order();
         if ($data !== null) {
@@ -780,7 +780,7 @@ class AbstractSourceTest extends AbstractTestCase
      * @param  array $data Optional expression data.
      * @return Pagination
      */
-    final public function createPagination(array $data = null)
+    final public function createPagination(?array $data = null)
     {
         $expr = new Pagination();
         if ($data !== null) {

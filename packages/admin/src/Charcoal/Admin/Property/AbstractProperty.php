@@ -543,7 +543,7 @@ abstract class AbstractProperty implements
      * @param  array $data Optional metadata to merge on the object.
      * @return PropertyMetadata
      */
-    protected function createMetadata(array $data = null)
+    protected function createMetadata(?array $data = null)
     {
         $class = $this->metadataClass();
         return new $class($data);

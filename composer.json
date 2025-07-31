@@ -40,7 +40,7 @@
         "ext-simplexml": "*",
         "ext-spl": "*",
         "barryvdh/elfinder-flysystem-driver": "^0.3",
-        "erusev/parsedown": "^1.7",
+        "erusev/parsedown": "dev-master#6ae0128",
         "guzzlehttp/guzzle": "^6.0 || ^7.0",
         "laminas/laminas-permissions-acl": "^2.8",
         "league/climate": "^3.2",
@@ -60,7 +60,7 @@
         "studio-42/elfinder": "2.1.64",
         "symfony/console": "^6.0",
         "symfony/translation": "^6.0",
-        "tedivm/stash": "~0.18",
+        "tedivm/stash": "^1.2",
         "vlucas/phpdotenv": "^5.4",
         "zeuxisoo/slim-whoops": "^0.7.3",
         "symfony/asset": "^6.0"

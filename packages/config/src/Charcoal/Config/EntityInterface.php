@@ -27,7 +27,7 @@ interface EntityInterface extends
      * @param  string[] $keys Optional. Extracts only the requested data.
      * @return array An associative array.
      */
-    public function data(array $keys = null);
+    public function data(?array $keys = null);
 
     /**
      * Sets data on this entity.

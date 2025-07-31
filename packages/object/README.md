@@ -203,7 +203,7 @@ Revisionable objects create _revisions_ which logs the changes between an object
 * `generateRevision()`
 * `latestRevision()`
 * `revisionNum(integer $revNum)`
-* `allRevisions(callable $callback = null)`
+* `allRevisions(?callable $callback = null)`
 * `revertToRevision(integer $revNum)`
 
 **Properties (metadata)**

@@ -122,7 +122,7 @@ class FormWidget extends AdminWidget implements
      * @param array $data Optional. The form property data to set.
      * @return FormPropertyWidget
      */
-    public function createFormProperty(array $data = null)
+    public function createFormProperty(?array $data = null)
     {
         $p = $this->widgetFactory()->create($this->formPropertyClass());
         if ($data !== null) {
@@ -167,7 +167,7 @@ class FormWidget extends AdminWidget implements
      * @throws InvalidArgumentException If the property is already registered.
      * @return \Charcoal\Admin\Widget\FormPropertyWidget|mixed
      */
-    public function getOrCreateFormProperty($ident, array $data = null)
+    public function getOrCreateFormProperty($ident, ?array $data = null)
     {
         if ($this->updateFormProperty($ident, $data)) {
             return $this->formProperties[$ident];
@@ -203,7 +203,7 @@ class FormWidget extends AdminWidget implements
      * @throws InvalidArgumentException If the property is already registered.
      * @return \Charcoal\Admin\Widget\FormPropertyWidget|mixed
      */
-    public function getOrCreateHiddenProperty($ident, array $data = null)
+    public function getOrCreateHiddenProperty($ident, ?array $data = null)
     {
         if ($this->updateHiddenProperty($ident, $data)) {
             return $this->hiddenProperties[$ident];
@@ -233,7 +233,7 @@ class FormWidget extends AdminWidget implements
      * @param array  $data  Property metadata.
      * @return \Charcoal\Admin\Widget\FormPropertyWidget|mixed
      */
-    protected function buildFormProperty($ident, array $data = null)
+    protected function buildFormProperty($ident, ?array $data = null)
     {
         $formProperty = $this->createFormProperty();
         $formProperty->setPropertyIdent($ident);
@@ -264,7 +264,7 @@ class FormWidget extends AdminWidget implements
      * @param array  $data  Property metadata.
      * @return \Charcoal\Admin\Widget\FormPropertyWidget|null
      */
-    protected function updateFormProperty($ident, array $data = null)
+    protected function updateFormProperty($ident, ?array $data = null)
     {
         if ($ident && isset($this->formProperties[$ident])) {
             $formProperty = $this->formProperties[$ident];
@@ -286,7 +286,7 @@ class FormWidget extends AdminWidget implements
      * @param  array  $data  Property metadata.
      * @return \Charcoal\Admin\Widget\FormPropertyWidget|null
      */
-    protected function updateHiddenProperty($ident, array $data = null)
+    protected function updateHiddenProperty($ident, ?array $data = null)
     {
         if ($ident && isset($this->hiddenProperties[$ident])) {
             $formProperty = $this->hiddenProperties[$ident];

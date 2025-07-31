@@ -4,10 +4,8 @@ namespace Charcoal\Tests\View\Mustache;
 
 // From Mustache
 use Mustache_Engine as MustacheEngine;
-
 // From 'erusev/parsedown'
 use Parsedown;
-
 // From 'charcoal-view'
 use Charcoal\View\Mustache\MarkdownHelpers;
 use Charcoal\Tests\AbstractTestCase;

@@ -36,7 +36,7 @@ class TemplateableModel extends AbstractModel implements
      * @param  array $properties Optional. The list of properties to update.
      * @return boolean
      */
-    public function preUpdate(array $properties = null)
+    public function preUpdate(?array $properties = null)
     {
         if ($properties === null || array_search('template_options', $properties)) {
             $this->saveTemplateOptions();

@@ -175,7 +175,7 @@ abstract class AbstractImage implements ImageInterface
      * @param array $effects Optional. The effects to process. If null, use in-memory's.
      * @return ImageInterface Chainable
      */
-    public function process(array $effects = null)
+    public function process(?array $effects = null)
     {
         if ($effects !== null) {
             $this->setEffects($effects);

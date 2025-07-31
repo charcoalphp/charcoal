@@ -585,7 +585,7 @@ class ClearCacheTemplate extends AdminTemplate
      * @param DateTimeInterface|null $date2 The datetime to compare against.
      * @return string
      */
-    private function formatTimeDiff(DateTimeInterface $date1, DateTimeInterface $date2 = null)
+    private function formatTimeDiff(DateTimeInterface $date1, ?DateTimeInterface $date2 = null)
     {
         $isNow = $date2 === null;
         if ($isNow) {

@@ -40,7 +40,7 @@ class AssetsHelpers implements HelpersInterface
     /**
      * @param array $data Class Dependencies.
      */
-    public function __construct(array $data = null)
+    public function __construct(?array $data = null)
     {
         if (isset($data['assets']) && $data['assets'] instanceof AssetManager) {
             $this->assets = $data['assets'];
@@ -81,7 +81,7 @@ class AssetsHelpers implements HelpersInterface
      * @param  LambdaHelper|null $helper For rendering strings in the current context.
      * @return string
      */
-    public function __invoke($text = null, LambdaHelper $helper = null)
+    public function __invoke($text = null, ?LambdaHelper $helper = null)
     {
         if ($helper) {
             $text = $helper->render($text);

@@ -220,7 +220,7 @@ abstract class AbstractCropEffect extends AbstractEffect
      * @param  array $data The effect data.
      * @return AbstractCropEffect
      */
-    public function process(array $data = null)
+    public function process(?array $data = null)
     {
         if ($data !== null) {
             $this->setData($data);

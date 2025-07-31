@@ -23,7 +23,7 @@ class OrderCollectionClass implements
      * @param  array $data Optional expression data.
      * @return OrderInterface
      */
-    protected function createOrder(array $data = null)
+    protected function createOrder(?array $data = null)
     {
         $order = new Order();
         if ($data !== null) {

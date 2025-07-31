@@ -34,7 +34,7 @@ trait ExpressionCollectionTestTrait
      * @param  array $data Optional expression data.
      * @return ExpressionInterface
      */
-    abstract protected function createExpression(array $data = null);
+    abstract protected function createExpression(?array $data = null);
 
     /**
      * Test expression creation from collector.

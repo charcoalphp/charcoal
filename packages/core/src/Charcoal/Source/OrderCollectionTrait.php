@@ -165,5 +165,5 @@ trait OrderCollectionTrait
      * @param  array $data Optional expression data.
      * @return OrderInterface A new order expression object.
      */
-    abstract protected function createOrder(array $data = null);
+    abstract protected function createOrder(?array $data = null);
 }

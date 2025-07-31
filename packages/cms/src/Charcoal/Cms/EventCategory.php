@@ -26,7 +26,7 @@ class EventCategory extends Content implements CategoryInterface
      * Section constructor.
      * @param array $data Init data.
      */
-    public function __construct(array $data = null)
+    public function __construct(?array $data = null)
     {
         parent::__construct($data);
 
@@ -76,7 +76,7 @@ class EventCategory extends Content implements CategoryInterface
      * @param ValidatorInterface $v Optional. A custom validator object to use for validation. If null, use object's.
      * @return boolean
      */
-    public function validate(ValidatorInterface &$v = null)
+    public function validate(?ValidatorInterface &$v = null)
     {
         parent::validate($v);
 

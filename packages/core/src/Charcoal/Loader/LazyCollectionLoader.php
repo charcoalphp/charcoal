@@ -18,7 +18,7 @@ class LazyCollectionLoader extends CollectionLoader
      * @param  callable|null       $after   Process each entity after applying raw data.
      * @return ModelInterface[]|\Generator
      */
-    protected function processCollection($results, callable $before = null, callable $after = null)
+    protected function processCollection($results, ?callable $before = null, ?callable $after = null)
     {
         foreach ($results as $objData) {
             $obj = $this->processModel($objData, $before, $after);

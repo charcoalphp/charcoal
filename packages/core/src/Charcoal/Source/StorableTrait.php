@@ -267,7 +267,7 @@ trait StorableTrait
      * @param  string[] $keys If provided, only update the properties specified.
      * @return boolean TRUE on success.
      */
-    final public function update(array $keys = null)
+    final public function update(?array $keys = null)
     {
         $pre = $this->preUpdate($keys);
         if ($pre === false) {
@@ -402,7 +402,7 @@ trait StorableTrait
      * @param  string[] $keys Optional list of properties to update.
      * @return boolean TRUE to proceed with update; FALSE to stop update.
      */
-    protected function preUpdate(array $keys = null)
+    protected function preUpdate(?array $keys = null)
     {
         return true;
     }
@@ -413,7 +413,7 @@ trait StorableTrait
      * @param  string[] $keys Optional list of properties to update.
      * @return boolean TRUE to indicate object was updated.
      */
-    protected function postUpdate(array $keys = null)
+    protected function postUpdate(?array $keys = null)
     {
         return true;
     }

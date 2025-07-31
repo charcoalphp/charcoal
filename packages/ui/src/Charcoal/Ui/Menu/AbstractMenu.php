@@ -126,7 +126,7 @@ abstract class AbstractMenu extends AbstractUiItem implements
      * @param callable $itemCallback Optional. Item callback.
      * @return MenuItemInterface[]
      */
-    public function items(callable $itemCallback = null)
+    public function items(?callable $itemCallback = null)
     {
         $items = $this->items;
         uasort($items, [ $this, 'sortItemsByPriority' ]);

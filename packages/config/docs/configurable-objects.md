@@ -18,7 +18,7 @@ The trait provides three methods: `config()`, `setConfig()`, and `createConfig()
     ```
     
     ```php
-    public ConfigurableTrait::config ( string $key [, mixed $default = null ] ) : mixed
+    public ConfigurableTrait::config ( string $key [, ?mixed $default = null ] ) : mixed
     ```
 
 -   `setConfig()` — Assign the given instance of `ConfigInterface `. Otherwise, create a new Config object with the given associative array or the config file to import.
@@ -34,7 +34,7 @@ The trait provides three methods: `config()`, `setConfig()`, and `createConfig()
 -   `createConfig()` — Create a new Config object with. Optionally, merge the data from the given instance of `ConfigInterface `, the associative array, or from the config file to import.
     
     ```php
-    protected ConfigurableTrait::createConfig ( [ mixed $data = null ] ) : ConfigInterface
+    protected ConfigurableTrait::createConfig ( [ ?mixed $data = null ] ) : ConfigInterface
     ```
 
 #### Examples

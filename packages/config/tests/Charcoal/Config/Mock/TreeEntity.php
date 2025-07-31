@@ -3,7 +3,6 @@
 namespace Charcoal\Tests\Config\Mock;
 
 use InvalidArgumentException;
-
 // From 'charcoal-config'
 use Charcoal\Config\SeparatorAwareInterface;
 use Charcoal\Config\SeparatorAwareTrait;
@@ -27,7 +26,7 @@ class TreeEntity extends Entity implements SeparatorAwareInterface
      * @throws InvalidArgumentException If the $key is not a string or is a numeric value.
      * @return boolean TRUE if $key exists and has a value other than NULL, FALSE otherwise.
      */
-    public function offsetExists($key)
+    public function offsetExists($key): bool
     {
         if (is_numeric($key)) {
             throw new InvalidArgumentException(
@@ -46,7 +45,7 @@ class TreeEntity extends Entity implements SeparatorAwareInterface
             return false;
         }
 
-        $getter = 'get'.ucfirst($key);
+        $getter = 'get' . ucfirst($key);
         if (!isset($this->mutatorCache[$getter])) {
             $this->mutatorCache[$getter] = is_callable([ $this, $getter ]);
         }
@@ -79,7 +78,7 @@ class TreeEntity extends Entity implements SeparatorAwareInterface
      * @throws InvalidArgumentException If the $key is not a string or is a numeric value.
      * @return mixed Value of the requested $key on success, NULL if the $key is not set.
      */
-    public function offsetGet($key)
+    public function offsetGet($key): mixed
     {
         if (is_numeric($key)) {
             throw new InvalidArgumentException(
@@ -98,7 +97,7 @@ class TreeEntity extends Entity implements SeparatorAwareInterface
             return null;
         }
 
-        $getter = 'get'.ucfirst($key);
+        $getter = 'get' . ucfirst($key);
         if (!isset($this->mutatorCache[$getter])) {
             $this->mutatorCache[$getter] = is_callable([ $this, $getter ]);
         }
@@ -132,7 +131,7 @@ class TreeEntity extends Entity implements SeparatorAwareInterface
      * @throws InvalidArgumentException If the $key is not a string or is a numeric value.
      * @return void
      */
-    public function offsetSet($key, $value)
+    public function offsetSet($key, $value): void
     {
         if (is_numeric($key)) {
             throw new InvalidArgumentException(
@@ -152,7 +151,7 @@ class TreeEntity extends Entity implements SeparatorAwareInterface
             return;
         }
 
-        $setter = 'set'.ucfirst($key);
+        $setter = 'set' . ucfirst($key);
         if (!isset($this->mutatorCache[$setter])) {
             $this->mutatorCache[$setter] = is_callable([ $this, $setter ]);
         }

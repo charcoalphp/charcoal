@@ -42,7 +42,7 @@ class TemplateRoute implements
 {
     use ConfigurableTrait;
 
-    private ContainerInterface $container;
+    protected ContainerInterface $container;
 
     /**
      * Create new template route

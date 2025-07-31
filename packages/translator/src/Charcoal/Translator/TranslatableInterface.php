@@ -2,7 +2,7 @@
 
 namespace Charcoal\Translator;
 
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 interface TranslatableInterface
 {

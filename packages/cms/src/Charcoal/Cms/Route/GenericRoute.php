@@ -23,6 +23,7 @@ use Charcoal\Object\ObjectRouteInterface;
 use Charcoal\Object\RoutableInterface;
 // From 'charcoal-cms'
 use Charcoal\Cms\TemplateableInterface;
+use Nyholm\Psr7\Factory\Psr17Factory;
 use Psr\Container\ContainerInterface;
 
 /**
@@ -143,12 +144,16 @@ class GenericRoute extends TemplateRoute
         RequestInterface $request,
         ResponseInterface $response
     ) {
+        $container = $this->container;
+
         if ($this->hasDependencies === false) {
             $this->setDependencies($container);
         }
 
         $response = $this->resolveLatestObjectRoute($request, $response);
-        if (!$response->isRedirect()) {
+        $isRedirect = $response->getStatusCode() > 300 && $response->getStatusCode() < 400;
+
+        if (!$isRedirect) {
             $objectRoute = $this->getObjectRouteFromPath();
             if (!$objectRoute || !$this->isValidObjectRoute($objectRoute)) {
                 // If the ObjectRoute is invalid, it probably does not exist
@@ -179,7 +184,9 @@ class GenericRoute extends TemplateRoute
                 return $response->withStatus(500);
             }
 
-            $response->write($templateContent);
+            $response = $response->withBody(
+                (new Psr17Factory())->createStream($templateContent)
+            );
         }
 
         return $response;

@@ -91,7 +91,7 @@ final class MetadataLoader implements LoggerAwareInterface
      * @param  array $data The loader's dependencies.
      * @return void
      */
-    public function __construct(array $data = null)
+    public function __construct(?array $data = null)
     {
         $this->setLogger($data['logger']);
         $this->setCachePool($data['cache']);
@@ -121,7 +121,7 @@ final class MetadataLoader implements LoggerAwareInterface
      *     as an array or an instance of {@see MetadataInterface}.
      *     See $metadata for more details.
      */
-    public function load($ident, $metadata = [], array $idents = null)
+    public function load($ident, $metadata = [], ?array $idents = null)
     {
         if (!is_string($ident)) {
             throw new InvalidArgumentException(sprintf(
@@ -293,7 +293,7 @@ final class MetadataLoader implements LoggerAwareInterface
      *     and these metadata identifiers are loaded instead.
      * @return array The data associated with the metadata identifier.
      */
-    private function loadMetadataFromCache($ident, array $idents = null)
+    private function loadMetadataFromCache($ident, ?array $idents = null)
     {
         $cacheKey  = $this->cacheKeyFromMetaKey($ident);
         $cacheItem = $this->cachePool()->getItem($cacheKey);

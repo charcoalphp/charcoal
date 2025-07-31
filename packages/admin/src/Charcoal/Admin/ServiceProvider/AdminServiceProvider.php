@@ -369,7 +369,7 @@ class AdminServiceProvider
                  * @param  string $uri A URI path to wrap.
                  * @return UriInterface|null
                  */
-                'withAdminUrl' => function ($uri, LambdaHelper $helper = null) use ($adminUrl) {
+                'withAdminUrl' => function ($uri, ?LambdaHelper $helper = null) use ($adminUrl) {
                     if ($helper) {
                         $uri = $helper->render($uri);
                     }

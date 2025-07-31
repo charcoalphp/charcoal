@@ -42,7 +42,7 @@ abstract class AbstractConfig extends AbstractEntity implements
      * @param  EntityInterface[] $delegates An array of delegates (config) to set.
      * @throws InvalidArgumentException If $data is invalid.
      */
-    final public function __construct($data = null, array $delegates = null)
+    final public function __construct($data = null, ?array $delegates = null)
     {
         // Always set the default chaining notation
         $this->setSeparator(self::DEFAULT_SEPARATOR);

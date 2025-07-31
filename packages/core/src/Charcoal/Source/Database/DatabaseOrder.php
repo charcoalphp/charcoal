@@ -175,7 +175,7 @@ class DatabaseOrder extends Order implements
         }
 
         $values = array_filter($values, 'is_scalar');
-        $values = array_map('self::quoteValue', $values);
+        $values = array_map([self::class, 'quoteValue'], $values);
 
         return $values;
     }

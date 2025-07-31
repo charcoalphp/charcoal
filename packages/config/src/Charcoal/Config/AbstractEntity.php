@@ -59,7 +59,7 @@ abstract class AbstractEntity implements EntityInterface
      * @param  string[] $keys Optional. Extracts only the requested data.
      * @return array Key-value array of data, excluding pairs with NULL values.
      */
-    public function data(array $keys = null)
+    public function data(?array $keys = null)
     {
         if ($keys === null) {
             $keys = $this->keys();

@@ -23,7 +23,7 @@ class FilterCollectionClass implements
      * @param  array $data Optional expression data.
      * @return FilterInterface
      */
-    protected function createFilter(array $data = null)
+    protected function createFilter(?array $data = null)
     {
         $filter = new Filter();
         if ($data !== null) {

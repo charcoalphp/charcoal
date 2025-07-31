@@ -50,7 +50,7 @@ interface ModelInterface extends EntityInterface, DescribableInterface, Storable
      *     for retrieving a subset of property objects.
      * @return \Charcoal\Property\PropertyInterface[]
      */
-    public function properties(array $propertyIdents = null);
+    public function properties(?array $propertyIdents = null);
 
     /**
      * Retrieve an instance of {@see PropertyInterface} for the given property.

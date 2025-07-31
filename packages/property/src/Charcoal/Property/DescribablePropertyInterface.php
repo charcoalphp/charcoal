@@ -19,7 +19,7 @@ interface DescribablePropertyInterface extends DescribableInterface
      *     for retrieving a subset of property objects.
      * @return PropertyInterface[]
      */
-    public function properties(array $propertyIdents = null);
+    public function properties(?array $propertyIdents = null);
 
     /**
      * Retrieve an instance of {@see PropertyInterface} for the given property.

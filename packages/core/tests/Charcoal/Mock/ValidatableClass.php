@@ -22,7 +22,7 @@ class ValidatableClass implements ValidatableInterface
      * @param  array|null $data Validator data.
      * @return ValidatorClass
      */
-    public function createValidator(array $data = null)
+    public function createValidator(?array $data = null)
     {
         $v = new ValidatorClass();
         if ($data !== null) {

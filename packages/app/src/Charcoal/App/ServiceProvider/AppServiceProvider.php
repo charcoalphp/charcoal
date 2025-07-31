@@ -460,7 +460,7 @@ class AppServiceProvider
                  * @param  string $uri A URI path to wrap.
                  * @return UriInterface|null
                  */
-                'withBaseUrl' => function ($uri, LambdaHelper $helper = null) use ($baseUrl) {
+                'withBaseUrl' => function ($uri, ?LambdaHelper $helper = null) use ($baseUrl) {
                     if ($helper) {
                         $uri = $helper->render($uri);
                     }
@@ -485,7 +485,7 @@ class AppServiceProvider
 
                     return $uri;
                 },
-                'renderContext' => function ($text, LambdaHelper $helper = null) {
+                'renderContext' => function ($text, ?LambdaHelper $helper = null) {
                     return $helper->render('{{>' . $helper->render($text) . '}}');
                 },
             ];

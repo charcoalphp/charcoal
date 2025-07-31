@@ -339,7 +339,7 @@ trait FormTrait
      * @param  array|null $data Optional. The form group data to set.
      * @return FormGroupInterface
      */
-    protected function createFormGroup(array $data = null)
+    protected function createFormGroup(?array $data = null)
     {
         if (isset($data['type'])) {
             $type = $data['type'];
@@ -367,7 +367,7 @@ trait FormTrait
      */
     protected function updateFormGroup(
         FormGroupInterface $group,
-        array $groupData = null,
+        ?array $groupData = null,
         $groupIdent = null
     ) {
         $group->setForm($this->formWidget());
@@ -399,7 +399,7 @@ trait FormTrait
      * @param callable $groupCallback Optional callback applied to each form group.
      * @return FormGroupInterface[]|Generator
      */
-    public function groups(callable $groupCallback = null)
+    public function groups(?callable $groupCallback = null)
     {
         $groups = $this->groups;
         uasort($groups, [ $this, 'sortItemsByPriority' ]);

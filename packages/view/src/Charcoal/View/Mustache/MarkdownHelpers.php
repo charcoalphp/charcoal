@@ -48,7 +48,7 @@ class MarkdownHelpers implements HelpersInterface
      * @param  LambdaHelper|null $helper For rendering strings in the current context.
      * @return string
      */
-    public function __invoke($text, LambdaHelper $helper = null): string
+    public function __invoke($text, ?LambdaHelper $helper = null): string
     {
         if ($helper !== null) {
             $text = $helper->render($text);

@@ -228,7 +228,7 @@ class App extends SlimApp implements
                             $app->getContainer()->get('logger')->debug(
                                 sprintf('Loaded routable "%s" for path %s', $routableType, $args['catchall'])
                             );
-                            $routeResponse = $route($this, $request);
+                            $routeResponse = $route($request, $response);
                             if ($routeResponse instanceof \Psr\Http\Message\ResponseInterface) {
                                 return $routeResponse;
                             }

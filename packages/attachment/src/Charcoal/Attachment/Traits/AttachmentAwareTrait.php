@@ -57,8 +57,8 @@ trait AttachmentAwareTrait
     public function getAttachments(
         $group = null,
         $type = null,
-        callable $before = null,
-        callable $after = null
+        ?callable $before = null,
+        ?callable $after = null
     ) {
         if (is_array($group)) {
             $options = $group;

@@ -165,5 +165,5 @@ trait FilterCollectionTrait
      * @param  array $data Optional expression data.
      * @return FilterInterface A new filter expression object.
      */
-    abstract protected function createFilter(array $data = null);
+    abstract protected function createFilter(?array $data = null);
 }
