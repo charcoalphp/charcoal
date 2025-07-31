@@ -280,8 +280,12 @@ class TranslatorServiceProvider
                         $domain = $names[0];
 
                         // Validate CSV files before loading
-                        if ($loader === 'csv' && !$this->isValidTranslationCsv($f)) {
-                            continue;
+                        if ($loader === 'csv') {
+                            if (!$this->isValidTranslationCsv($f)) {
+                                continue;
+                            }
+                            // Clean CSV file before loading
+                            $f = $this->filterValidCsvRows($f);
                         }
 
                         $translator->addResource($loader, $f, $lang, $domain);
@@ -425,6 +429,11 @@ class TranslatorServiceProvider
             return false;
         }
         while (($row = fgetcsv($handle, 0, ';', '"', '\\')) !== false) {
+            // Skip blank lines
+            if (empty($row) || (count($row) === 1 && trim((string)$row[0]) === '')) {
+                continue;
+            }
+
             if (empty($row) || !isset($row[0], $row[1])) {
                 fclose($handle);
                 return false;
@@ -432,5 +441,34 @@ class TranslatorServiceProvider
         }
         fclose($handle);
         return true;
+    }
+
+    /**
+     * Clean a CSV file by removing blank lines and rows with missing keys/values.
+     * Returns the path to a temporary cleaned file.
+     */
+    private function filterValidCsvRows(string $file): string
+    {
+        $rows = [];
+        $handle = fopen($file, 'r');
+        if (!$handle) {
+            return $file;
+        }
+        while (($row = fgetcsv($handle, 0, ';', '"', '\\')) !== false) {
+            if (!isset($row[0], $row[1]) || trim((string)$row[0]) === '' || trim((string)$row[1]) === '') {
+                continue;
+            }
+            $rows[] = $row;
+        }
+        fclose($handle);
+
+        $tmpFile = tempnam(sys_get_temp_dir(), 'csv');
+        $handle = fopen($tmpFile, 'w');
+        foreach ($rows as $row) {
+            fputcsv($handle, $row, ';', '"', '\\');
+        }
+        fclose($handle);
+
+        return $tmpFile;
     }
 }

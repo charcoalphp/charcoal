@@ -85,7 +85,7 @@ class Translator extends SymfonyTranslator
      * @param  string|null $domain   The domain.
      * @return void
      */
-    public function addResource($format, $resource, $locale, $domain = null)
+    public function addResource(string $format, mixed $resource, string $locale, ?string $domain = null): void
     {
         if (null !== $domain) {
             $this->domains[] = $domain;
@@ -288,7 +288,7 @@ class Translator extends SymfonyTranslator
      * @param  string $locale The locale.
      * @return void
      */
-    public function setLocale($locale)
+    public function setLocale(string $locale): void
     {
         parent::setLocale($locale);
 

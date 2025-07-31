@@ -59,7 +59,7 @@
         "slim/slim": "^4.0",
         "studio-42/elfinder": "2.1.64",
         "symfony/console": "^6.0",
-        "symfony/translation": "^6.0",
+        "symfony/translation": "^7.0",
         "tedivm/stash": "^1.2",
         "vlucas/phpdotenv": "^5.4",
         "zeuxisoo/slim-whoops": "^0.7.3",
