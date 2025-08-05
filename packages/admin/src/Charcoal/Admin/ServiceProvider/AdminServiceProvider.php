@@ -38,6 +38,7 @@ use Charcoal\Admin\Ui\SecondaryMenu\SecondaryMenuGroupInterface;
 use Charcoal\Admin\User;
 use Charcoal\Admin\User\AuthToken;
 use Psr\Container\ContainerInterface;
+use Charcoal\App\AppConfig;
 
 /**
  * Charcoal Administration Service Provider
@@ -186,13 +187,19 @@ class AdminServiceProvider
          * @param Container $container A container instance.
          * @return ViewInterface
          */
-        if ($container->has('view/config')) {
-            $viewConfig  = $container->get('view/config');
+
+        // Get the previous definition (if it exists)
+        $previousViewConfig = $container->has('view/config') ? $container->get('view/config') : null;
+
+        // Redefine the service, wrapping the previous
+        $container->set('view/config', function (Container $container) use ($previousViewConfig) {
+            /** @var \Charcoal\Admin\Config $adminConfig */
             $adminConfig = $container->get('admin/config');
-            if (isset($adminConfig['view']['paths'])) {
-                $viewConfig->addPaths($adminConfig['view']['paths']);
+            if ($previousViewConfig && isset($adminConfig['view']['paths'])) {
+                $previousViewConfig->addPaths($adminConfig['view']['paths']);
             }
-        }
+            return $previousViewConfig;
+        });
     }
 
     /**
@@ -340,20 +347,14 @@ class AdminServiceProvider
      */
     protected function registerViewExtensions(ContainerInterface $container)
     {
-        /*if (!($container->has('view/mustache/helpers'))) {
-            $container->set('view/mustache/helpers', function () {
-                return [];
-            });
-        }*/
-
         /**
          * Extend helpers for the Mustache Engine
          *
          * @return array
          */
-        $container->set('view/mustache/helpers', function (Container $container): array {
+        $helpers = $container->has('view/mustache/helpers') ? $container->get('view/mustache/helpers') : [];
+        $container->set('view/mustache/helpers', function (Container $container) use ($helpers): array {
             $adminUrl = $container->get('admin/base-url');
-            $helpers = [];
 
             $urls = [
                 /**

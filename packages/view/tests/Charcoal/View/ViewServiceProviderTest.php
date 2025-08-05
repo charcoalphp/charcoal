@@ -31,10 +31,10 @@ class ViewServiceProviderTest extends AbstractTestCase
         $provider = new ViewServiceProvider();
         $provider->register($container);
 
-        $this->assertTrue(isset($container->get('view/config')));
-        $this->assertTrue(isset($container->get('view/engine')));
-        $this->assertTrue(isset($container->get('view/renderer')));
-        $this->assertTrue(isset($container->get('view')));
+        $this->assertTrue($container->has('view/config'));
+        $this->assertTrue($container->has('view/engine'));
+        $this->assertTrue($container->has('view/renderer'));
+        $this->assertTrue($container->has('view'));
     }
 
     /**

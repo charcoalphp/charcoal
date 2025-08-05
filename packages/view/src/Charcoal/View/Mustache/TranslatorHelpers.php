@@ -11,6 +11,7 @@ use Mustache_LambdaHelper as LambdaHelper;
 use Charcoal\Translator\Translator;
 // From 'charcoal-view'
 use Charcoal\View\Mustache\HelpersInterface;
+use Mustache\RenderedString;
 
 /**
  * Translating Mustache Templates
@@ -106,7 +107,7 @@ class TranslatorHelpers implements HelpersInterface
      * @param  LambdaHelper|null $helper For rendering strings in the current context.
      * @return string
      */
-    public function __invoke(string $text, ?LambdaHelper $helper = null): string
+    public function __invoke(string $text, ?LambdaHelper $helper = null): RenderedString
     {
         if ($this->translator) {
             if ($this->number === null) {

@@ -10,11 +10,13 @@ use Charcoal\App\Handler\HandlerInterface;
 use Charcoal\App\Module\AbstractModule;
 // From 'charcoal-admin'
 use Charcoal\Admin\ServiceProvider\AdminServiceProvider;
+use Charcoal\App\Handler\HandlerConfig;
 use DI\Container;
 use Slim\Interfaces\RouteCollectorProxyInterface;
 use GuzzleHttp\Psr7\Request;
 use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Slim\MiddlewareDispatcher;
 
 /**
  * Charcoal Administration Module
@@ -183,24 +185,27 @@ class AdminModule extends AbstractModule
          * @param  object|HandlerInterface $handler An error handler instance.
          * @return HandlerInterface
          */
-        $container->set('errorHandler', function (Container $container) use ($handler) {
+        $container->set('errorHandler', function (Container $container) {
             $appConfig = $container->get('config');
             $adminConfig = $container->get('admin/config');
-            $config = $handler->createConfig($appConfig['handlers.defaults']);
+            $config = new HandlerConfig($appConfig['handlers.defaults']);
             $config->merge($adminConfig['handlers.defaults']);
 
             if (!empty($adminConfig['handlers.error'])) {
                 $config->merge($adminConfig['handlers.error']);
             }
 
-            $handler->setConfig($config)->init();
+            $handlerClass = $container->get('errorHandler/class');
+            $handler = new $handlerClass($container, $config);
+            $handler->init();
+
             return $handler;
         });
         /*$container->set('errorHandler', function ($handler, $container) {
             $appConfig = $container->get('config');
             $adminConfig = $container->get('admin/config');
             if ($handler instanceof HandlerInterface) {
-                $config = $handler->createConfig($appConfig['handlers.defaults']);
+                $config = new HandlerConfig($appConfig['handlers.defaults']);
                 $config->merge($adminConfig['handlers.defaults']);
 
                 if (!empty($adminConfig['handlers.error'])) {
@@ -225,7 +230,7 @@ class AdminModule extends AbstractModule
             $appConfig = $container->get('config');
             $adminConfig = $container->get('admin/config');
             if ($handler instanceof HandlerInterface) {
-                $config = $handler->createConfig($appConfig['handlers.defaults']);
+                $config = new HandlerConfig($appConfig['handlers.defaults']);
                 $config->merge($adminConfig['handlers.defaults']);
 
                 if (!empty($adminConfig['handlers.maintenance'])) {

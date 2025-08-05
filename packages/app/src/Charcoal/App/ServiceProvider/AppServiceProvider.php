@@ -162,7 +162,7 @@ class AppServiceProvider
         /**
          * HTTP 404 (Not Found) handler.
          */
-        $container->set('notFoundHandler', function (Container $container) {
+        $container->set('notFoundHandler', function (Container $container) use ($handlersConfig) {
             $config  = ($handlersConfig['notFound'] ?? []);
             $class   = $container->get('notFoundHandler/class');
             /** @var HandlerInterface $handler */
@@ -174,7 +174,7 @@ class AppServiceProvider
         /**
          * HTTP 405 (Not Allowed) handler.
          */
-        $container->set('notAllowedHandler', function (Container $container) {
+        $container->set('notAllowedHandler', function (Container $container) use ($handlersConfig) {
             $config  = ($handlersConfig['notAllowed'] ?? []);
             $class   = $container->get('notAllowedHandler/class');
             /** @var HandlerInterface $handler */
@@ -187,7 +187,7 @@ class AppServiceProvider
          * HTTP 500 (Error) handler.
          */
         if (!$container->has('errorHandler')) {
-            $container->set('errorHandler', function (Container $container) {
+            $container->set('errorHandler', function (Container $container) use ($handlersConfig) {
                 $config  = ($handlersConfig['error'] ?? []);
                 $class   = $container->get('errorHandler/class');
                 $handler = new $class($container, $config);
@@ -415,25 +415,13 @@ class AppServiceProvider
      */
     protected function registerMustacheHelpersServices(Container $container): void
     {
-        if (!($container->has('view/mustache/helpers'))) {
-            $container->set('view/mustache/helpers', function () {
-                return [];
-            });
-        }
-
         /**
          * Extend helpers for the Mustache Engine
          *
          * @return array
          */
-        $mustacheHelpers = $container->get('view/mustache/helpers');
-        $container->set('view/mustache/helpers', function (Container $container) use ($mustacheHelpers): array {
-            $helpers = [];
-
-            if (!empty($mustacheHelpers)) {
-                $helpers = $mustacheHelpers;
-            }
-
+        $helpers = $container->has('view/mustache/helpers') ? $container->get('view/mustache/helpers') : [];
+        $container->set('view/mustache/helpers', function (Container $container) use ($helpers): array {
             $baseUrl = $container->get('base-url');
             $urls = [
                 /**
@@ -483,7 +471,7 @@ class AppServiceProvider
                         }
                     }
 
-                    return $uri;
+                    return (string)$uri;
                 },
                 'renderContext' => function ($text, ?LambdaHelper $helper = null) {
                     return $helper->render('{{>' . $helper->render($text) . '}}');

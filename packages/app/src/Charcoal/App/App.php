@@ -26,6 +26,7 @@ use Slim\Exception\HttpMethodNotAllowedException;
 use Slim\Exception\HttpNotFoundException;
 use Slim\Handlers\ErrorHandler;
 use Slim\Routing\Route;
+use Slim\Middleware\ErrorMiddleware;
 
 /**
  * Charcoal App
@@ -38,17 +39,10 @@ class App extends SlimApp implements
 {
     use ConfigurableTrait;
 
-    /**
-     * Store the unique instance
-     *
-     * @var App $instance
-     */
-    protected static $instance;
-
-    /**
-     * @var RouteManager
-     */
-    private $routeManager;
+    /** Store the unique instance */
+    protected static App $instance;
+    private RouteManager $routeManager;
+    private ErrorMiddleware $errorMiddleware;
 
     /**
      * Getter for creating/returning the unique instance of this class.
@@ -68,27 +62,16 @@ class App extends SlimApp implements
 
             // Register routing middleware
             $app->addRoutingMiddleware();
+            $app->addBodyParsingMiddleware();
 
             $logger = ($app->getContainer()->get('logger') ?? null);
 
             // Add Error middleware + renderers
-            $errorMiddleware = $app->addErrorMiddleware(
+            $app->errorMiddleware = $app->addErrorMiddleware(
                 ($container->get('config')['debug'] ?? false),
                 true,
                 true,
                 $logger
-            );
-
-            $errorMiddleware->setDefaultErrorHandler($container->get('errorHandler'));
-
-            $errorMiddleware->setErrorHandler(
-                HttpNotFoundException::class,
-                $container->get('notFoundHandler')
-            );
-
-            $errorMiddleware->setErrorHandler(
-                HttpMethodNotAllowedException::class,
-                $container->get('notAllowedHandler')
             );
 
             static::$instance = $app;
@@ -159,6 +142,8 @@ class App extends SlimApp implements
 
         // Setup middlewares
         $this->setupMiddlewares();
+
+        $this->setupErrorHandlers();
     }
 
     /**
@@ -276,6 +261,29 @@ class App extends SlimApp implements
                 $this->add($container->get('middlewares/' . $id));
             }
         }
+    }
+
+    public function setupErrorHandlers()
+    {
+        $errorMiddleware = $this->errorMiddleware;
+        $container = $this->getContainer();
+        $errorMiddleware->setDefaultErrorHandler(function (...$args) use ($container) {
+            return $container->get('errorHandler')(...$args);
+        });
+
+        $errorMiddleware->setErrorHandler(
+            HttpNotFoundException::class,
+            function (...$args) use ($container) {
+                return $container->get('notFoundHandler')(...$args);
+            }
+        );
+
+        $errorMiddleware->setErrorHandler(
+            HttpMethodNotAllowedException::class,
+            function (...$args) use ($container) {
+                return $container->get('notAllowedHandler')(...$args);
+            }
+        );
     }
 
     /**
