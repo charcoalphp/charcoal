@@ -297,7 +297,7 @@ abstract class AbstractAction extends AbstractEntity implements
     public static function getParams(ServerRequestInterface $request, ?array $keys = []): array
     {
         $params = $request->getQueryParams();
-        $body = $request->getParsedBody();
+        $body   = $request->getParsedBody();
 
         if (is_array($body)) {
             $params = array_merge($params, $body);

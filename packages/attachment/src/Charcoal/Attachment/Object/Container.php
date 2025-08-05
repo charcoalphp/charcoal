@@ -36,7 +36,7 @@ class Container extends Attachment implements
     {
         parent::setDependencies($container);
 
-        if (isset($container->get('attachments/config'))) {
+        if ($container->has('attachments/config')) {
             $this->setConfig($container->get('attachments/config'));
         } elseif (isset($container->get('config')['attachments'])) {
             $this->setConfig($container->get('config')['attachments']);
