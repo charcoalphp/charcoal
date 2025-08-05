@@ -86,8 +86,12 @@ class AssetsHelpers implements HelpersInterface
         if ($helper) {
             $text = $helper->render($text);
         }
-        $return = $this->{$this->action}($this->collection, $text);
-        $text   = $return;
+
+        if (!empty($this->action)) {
+            $return = $this->{$this->action}($this->collection, $text);
+        }
+
+        $text = ($return ?? '');
 
         $this->reset();
 

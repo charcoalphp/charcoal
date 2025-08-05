@@ -34,12 +34,6 @@ class AssetsManagerServiceProvider
      */
     protected function registerMustacheHelpersServices(ContainerInterface $container)
     {
-        if (!($container->has('view/mustache/helpers'))) {
-            $container->set('view/mustache/helpers', function () {
-                return [];
-            });
-        }
-
         /**
          * Translation helpers for Mustache.
          *
@@ -59,13 +53,8 @@ class AssetsManagerServiceProvider
          * @param  Container $container A container instance.
          * @return array
          */
-        $container->set('view/mustache/helpers', function (Container $container): array {
-            $helpers = [];
-
-            if ($container->has('view/mustache/helpers')) {
-                $helpers = $container->get('view/mustache/helpers');
-            }
-
+        $helpers = $container->has('view/mustache/helpers') ? $container->get('view/mustache/helpers') : [];
+        $container->set('view/mustache/helpers', function (Container $container) use ($helpers): array {
             return array_merge(
                 $helpers,
                 $container->get('view/mustache/helpers/assets-manager')->toArray()

@@ -480,14 +480,7 @@ abstract class AbstractPropertyInput extends AbstractProperty implements
     public function setInputPrefix($affix)
     {
         $affix = $this->translator()->translation($affix);
-
-        if ($affix instanceof Translation) {
-            $affix->isRendered = false;
-        } else {
-            $affix = false;
-        }
-
-        $this->inputPrefix = $affix;
+        $this->inputPrefix = $affix instanceof Translation ? $affix : false;
 
         return $this;
     }
@@ -525,20 +518,13 @@ abstract class AbstractPropertyInput extends AbstractProperty implements
     /**
      * Retrieve the control's suffix.
      *
-     * @param  mixed $affix Text to display after the control.
+     * @param  mixed $suffix Text to display after the control.
      * @return self
      */
-    public function setInputSuffix($affix)
+    public function setInputSuffix($suffix)
     {
-        $affix = $this->translator()->translation($affix);
-
-        if ($affix instanceof Translation) {
-            $affix->isRendered = false;
-        } else {
-            $affix = false;
-        }
-
-        $this->inputSuffix = $affix;
+        $suffix = $this->translator()->translation($suffix);
+        $this->inputSuffix = $suffix instanceof Translation ? $suffix : false;
 
         return $this;
     }
@@ -653,14 +639,7 @@ abstract class AbstractPropertyInput extends AbstractProperty implements
     public function setPlaceholder($placeholder)
     {
         $placeholder = $this->translator()->translation($placeholder);
-
-        if ($placeholder instanceof Translation) {
-            $placeholder->isRendered = false;
-        } else {
-            $placeholder = false;
-        }
-
-        $this->placeholder = $placeholder;
+        $this->placeholder = $placeholder instanceof Translation ? $placeholder : false;
 
         return $this;
     }
