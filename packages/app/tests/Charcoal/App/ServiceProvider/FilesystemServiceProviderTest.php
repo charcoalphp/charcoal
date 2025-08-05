@@ -45,9 +45,9 @@ class FilesystemServiceProviderTest extends AbstractTestCase
             ])
         ]);
 
-        $this->assertTrue(isset($container->get('filesystem/config')));
-        $this->assertTrue(isset($container->get('filesystem/manager')));
-        $this->assertTrue(isset($container->get('filesystems')));
+        $this->assertTrue($container->has('filesystem/config'));
+        $this->assertTrue($container->has('filesystem/manager'));
+        $this->assertTrue($container->has('filesystems'));
 
         $this->assertInstanceOf(FilesystemConfig::class, $container->get('filesystem/config'));
         $this->assertInstanceOf(MountManager::class, $container->get('filesystem/manager'));

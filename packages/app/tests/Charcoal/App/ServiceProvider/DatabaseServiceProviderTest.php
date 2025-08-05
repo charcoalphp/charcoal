@@ -20,9 +20,9 @@ class DatabaseServiceProviderTest extends AbstractTestCase
         $provider = new DatabaseServiceProvider();
         $provider->register($container);
 
-        $this->assertTrue(isset($container->get('databases/config')));
-        $this->assertTrue(isset($container->get('databases')));
-        $this->assertTrue(isset($container->get('database/config')));
-        $this->assertTrue(isset($container->get('database')));
+        $this->assertTrue($container->has('databases/config'));
+        $this->assertTrue($container->has('databases'));
+        $this->assertTrue($container->has('database/config'));
+        $this->assertTrue($container->has('database'));
     }
 }

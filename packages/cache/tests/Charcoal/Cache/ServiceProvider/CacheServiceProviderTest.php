@@ -277,7 +277,7 @@ class CacheServiceProviderTest extends AbstractTestCase
     {
         $container = new Container($args);
 
-        if (!isset($container->get('logger'))) {
+        if (!$container->has('logger')) {
             $container->set('logger', new NullLogger());
         }
 

@@ -18,12 +18,12 @@ class AppServiceProviderTest extends AbstractTestCase
         $provider  = new AppServiceProvider();
         $provider->register($container);
 
-        $this->assertTrue(isset($container->get('base-url')));
-        $this->assertTrue(isset($container->get('route/factory')));
-        $this->assertTrue(isset($container->get('action/factory')));
-        $this->assertTrue(isset($container->get('template/factory')));
-        $this->assertTrue(isset($container->get('widget/factory')));
-        $this->assertTrue(isset($container->get('widget/builder')));
-        $this->assertTrue(isset($container->get('module/factory')));
+        $this->assertTrue($container->has('base-url'));
+        $this->assertTrue($container->has('route/factory'));
+        $this->assertTrue($container->has('action/factory'));
+        $this->assertTrue($container->has('template/factory'));
+        $this->assertTrue($container->has('widget/factory'));
+        $this->assertTrue($container->has('widget/builder'));
+        $this->assertTrue($container->has('module/factory'));
     }
 }

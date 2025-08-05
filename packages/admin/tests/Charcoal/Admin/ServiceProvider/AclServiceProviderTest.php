@@ -25,6 +25,6 @@ class AclServiceProviderTest extends AbstractTestCase
         $provider = new AclServiceProvider();
         $provider->register($container);
 
-        $this->assertTrue(isset($container->get('admin/acl')));
+        $this->assertTrue($container->has('admin/acl')
     }
 }

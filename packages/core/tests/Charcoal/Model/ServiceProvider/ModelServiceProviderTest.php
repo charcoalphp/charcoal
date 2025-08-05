@@ -126,13 +126,13 @@ class ModelServiceProviderTest extends AbstractTestCase
 
         $this->obj->register($container);
 
-        $this->assertTrue(isset($container->get('model/factory')));
+        $this->assertTrue($container->has('model/factory'));
         $this->assertInstanceOf(FactoryInterface::class, $container->get('model/factory'));
 
-        $this->assertTrue(isset($container->get('property/factory')));
+        $this->assertTrue($container->has('property/factory'));
         $this->assertInstanceOf(FactoryInterface::class, $container->get('property/factory'));
 
-        $this->assertTrue(isset($container->get('source/factory')));
+        $this->assertTrue($container->has('source/factory'));
         $this->assertInstanceOf(FactoryInterface::class, $container->get('source/factory'));
     }
 
@@ -144,7 +144,7 @@ class ModelServiceProviderTest extends AbstractTestCase
         $container = $this->container();
         $this->obj->register($container);
 
-        $this->assertTrue(isset($container->get('model/builder')));
+        $this->assertTrue($container->has('model/builder'));
         $this->assertInstanceOf(ModelBuilder::class, $container->get('model/builder'));
     }
 
@@ -156,7 +156,7 @@ class ModelServiceProviderTest extends AbstractTestCase
         $container = $this->container();
         $this->obj->register($container);
 
-        $this->assertTrue(isset($container->get('model/loader/builder')));
+        $this->assertTrue($container->has('model/loader/builder'));
         $this->assertInstanceOf(ModelLoaderBuilder::class, $container->get('model/loader/builder'));
     }
 
@@ -168,7 +168,7 @@ class ModelServiceProviderTest extends AbstractTestCase
         $container = $this->container();
         $this->obj->register($container);
 
-        $this->assertTrue(isset($container->get('metadata/loader')));
+        $this->assertTrue($container->has('metadata/loader'));
         $this->assertInstanceOf(MetadataLoader::class, $container->get('metadata/loader'));
     }
 
