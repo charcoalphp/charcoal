@@ -3,10 +3,10 @@
 namespace Charcoal\Admin\Property\Input;
 
 use InvalidArgumentException;
-
 use DI\Container;
 // From 'charcoal-admin'
 use Charcoal\Admin\Property\AbstractPropertyInput;
+use Psr\Container\ContainerInterface;
 
 /**
  *
@@ -159,7 +159,7 @@ class MapWidgetInput extends AbstractPropertyInput
      * @param Container $container A dependencies container instance.
      * @return void
      */
-    protected function setDependencies(Container $container)
+    protected function setDependencies(ContainerInterface $container)
     {
         parent::setDependencies($container);
 

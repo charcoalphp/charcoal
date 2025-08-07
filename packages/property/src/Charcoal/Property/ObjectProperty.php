@@ -8,7 +8,6 @@ use InvalidArgumentException;
 use PDO;
 // From PSR-6
 use Psr\Cache\CacheItemPoolInterface;
-
 use DI\Container;
 // From 'charcoal-core'
 use Charcoal\Loader\CollectionLoader;
@@ -24,6 +23,7 @@ use Charcoal\Translator\Translation;
 // From 'charcoal-property'
 use Charcoal\Property\AbstractProperty;
 use Charcoal\Property\SelectablePropertyInterface;
+use Psr\Container\ContainerInterface;
 
 /**
  * Object Property holds a reference to an external object.
@@ -645,7 +645,7 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
      * @param  Container $container A dependencies container instance.
      * @return void
      */
-    protected function setDependencies(Container $container)
+    protected function setDependencies(ContainerInterface $container)
     {
         parent::setDependencies($container);
 

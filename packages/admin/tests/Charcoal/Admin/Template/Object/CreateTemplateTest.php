@@ -1,11 +1,8 @@
 <?php
+
 namespace Charcoal\Tests\Admin\Template\Object;
 
-use ReflectionClass;
-
-
 use DI\Container;
-
 // From 'charcoal-admin'
 use Charcoal\Admin\Template\Object\CreateTemplate;
 use Charcoal\Tests\AbstractTestCase;

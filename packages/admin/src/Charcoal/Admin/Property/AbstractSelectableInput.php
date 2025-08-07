@@ -272,7 +272,7 @@ abstract class AbstractSelectableInput extends AbstractPropertyInput implements
                 if (isset($obj[$prop])) {
                     return $this->parseChoiceVal($obj[$prop]);
                 }
-                return [];
+                return '';
             };
 
             return preg_replace_callback('~\{\{\s*(.*?)\s*\}\}~i', $callback, $prop);

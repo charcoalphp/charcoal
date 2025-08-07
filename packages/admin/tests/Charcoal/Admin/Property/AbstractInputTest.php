@@ -2,9 +2,7 @@
 
 namespace Charcoal\Tests\Admin\Property;
 
-
 use DI\Container;
-
 // From 'charcoal-admin'
 use Charcoal\Admin\Property\AbstractPropertyInput;
 use Charcoal\Tests\AbstractTestCase;

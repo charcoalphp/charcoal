@@ -5,10 +5,9 @@ namespace Charcoal\Admin\Action\System\StaticWebsite;
 // From PSR-7
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
-
 use DI\Container;
-use GuzzleHttp\Client as GuzzleClient;
 use Charcoal\Admin\AdminAction;
+use Psr\Container\ContainerInterface;
 
 /**
  * Class PreviewAction
@@ -77,7 +76,7 @@ class PreviewAction extends AdminAction
      * @param Container $container DI Container.
      * @return void
      */
-    protected function setDependencies(Container $container)
+    protected function setDependencies(ContainerInterface $container)
     {
         parent::setDependencies($container);
 

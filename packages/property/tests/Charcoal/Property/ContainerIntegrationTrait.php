@@ -2,9 +2,7 @@
 
 namespace Charcoal\Tests\Property;
 
-
 use DI\Container;
-
 // From 'charcoal-property/tests'
 use Charcoal\Tests\Property\ContainerProvider;
 

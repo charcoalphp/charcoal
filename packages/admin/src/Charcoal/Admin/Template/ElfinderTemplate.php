@@ -3,16 +3,12 @@
 namespace Charcoal\Admin\Template;
 
 use ArrayIterator;
-use RuntimeException;
 use InvalidArgumentException;
 // From PSR-7
 use Psr\Http\Message\RequestInterface;
-
 use DI\Container;
 // From Mustache
 use Mustache_LambdaHelper as LambdaHelper;
-// From 'charcoal-factory'
-use Charcoal\Factory\FactoryInterface;
 // From 'charcoal-translator'
 use Charcoal\Translator\Translation;
 // From 'charcoal-property'
@@ -20,6 +16,7 @@ use Charcoal\Property\FileProperty;
 // From 'charcoal-admin'
 use Charcoal\Admin\AdminTemplate;
 use Charcoal\App\Action\AbstractAction;
+use Psr\Container\ContainerInterface;
 
 /**
  *
@@ -544,7 +541,7 @@ class ElfinderTemplate extends AdminTemplate
      * @param  Container $container A dependencies container instance.
      * @return void
      */
-    protected function setDependencies(Container $container)
+    protected function setDependencies(ContainerInterface $container)
     {
         parent::setDependencies($container);
 

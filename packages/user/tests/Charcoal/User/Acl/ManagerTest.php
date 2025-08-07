@@ -2,13 +2,10 @@
 
 namespace Charcoal\Tests\User\Acl;
 
-
 use DI\Container;
-
 // From 'laminas/laminas-permissions-acl'
 use Laminas\Permissions\Acl\Acl;
 use Laminas\Permissions\Acl\Resource\GenericResource as Resource;
-
 // From 'charcoal-user'
 use Charcoal\User\Acl\Manager;
 use Charcoal\Tests\AbstractTestCase;

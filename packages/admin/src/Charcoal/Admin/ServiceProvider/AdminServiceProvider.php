@@ -26,7 +26,6 @@ use Charcoal\User\Authenticator;
 use Charcoal\User\Authorizer;
 // From 'charcoal-view'
 use Charcoal\View\GenericView;
-use Charcoal\View\ViewConfig;
 use Charcoal\View\ViewInterface;
 // From 'charcoal-admin'
 use Charcoal\Admin\Config as AdminConfig;
@@ -38,7 +37,6 @@ use Charcoal\Admin\Ui\SecondaryMenu\SecondaryMenuGroupInterface;
 use Charcoal\Admin\User;
 use Charcoal\Admin\User\AuthToken;
 use Psr\Container\ContainerInterface;
-use Charcoal\App\AppConfig;
 
 /**
  * Charcoal Administration Service Provider

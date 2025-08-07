@@ -3,21 +3,15 @@
 namespace Charcoal\Tests\Translation\ServiceProvider;
 
 use Charcoal\App\AppConfig;
-use ReflectionClass;
-
 // From PSR-7
 use Psr\Http\Message\UriInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\RequestInterface as ClientRequestInterface;
 use Psr\Http\Message\ResponseInterface;
-
-
 use DI\Container;
-
 // From 'charcoal-translator'
 use Charcoal\Translator\Middleware\LanguageMiddleware;
 use Charcoal\Translator\ServiceProvider\TranslatorServiceProvider;
-use Charcoal\Tests\Translator\ContainerProvider;
 use Charcoal\Tests\Translator\AbstractTestCase;
 
 /**

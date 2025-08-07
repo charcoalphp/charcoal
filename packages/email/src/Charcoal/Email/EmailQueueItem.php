@@ -6,7 +6,6 @@ namespace Charcoal\Email;
 
 use Charcoal\Email\Exception\EmailNotSentException;
 use Exception;
-
 use DI\Container;
 // From 'charcoal/factory'
 use Charcoal\Factory\FactoryInterface;
@@ -15,6 +14,7 @@ use Charcoal\Model\AbstractModel;
 // From 'charcoal/queue'
 use Charcoal\Queue\QueueItemInterface;
 use Charcoal\Queue\QueueItemTrait;
+use Psr\Container\ContainerInterface;
 
 /**
  * Email queue item.
@@ -296,7 +296,7 @@ class EmailQueueItem extends AbstractModel implements QueueItemInterface
      * @param Container $container DI Container.
      * @return void
      */
-    protected function setDependencies(Container $container): void
+    protected function setDependencies(ContainerInterface $container): void
     {
         parent::setDependencies($container);
         $this->setEmailFactory($container->get('email/factory'));

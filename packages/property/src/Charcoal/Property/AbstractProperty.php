@@ -3,15 +3,12 @@
 namespace Charcoal\Property;
 
 use PDO;
-use Exception;
 use LogicException;
 use RuntimeException;
 use InvalidArgumentException;
 // From PSR-3
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
-use Psr\Log\NullLogger;
-
 use DI\Container;
 // From 'charcoal-config'
 use Charcoal\Config\AbstractEntity;
@@ -33,6 +30,7 @@ use Charcoal\Property\PropertyInterface;
 use Charcoal\Property\PropertyValidator;
 use Charcoal\Property\StorablePropertyInterface;
 use Charcoal\Property\StorablePropertyTrait;
+use Psr\Container\ContainerInterface;
 
 /**
  * An abstract class that implements the full `PropertyInterface`.
@@ -1015,7 +1013,7 @@ abstract class AbstractProperty extends AbstractEntity implements
      * @param Container $container A DI Container.
      * @return void
      */
-    protected function setDependencies(Container $container)
+    protected function setDependencies(ContainerInterface $container)
     {
         $this->setPropertyFactory($container->get('property/factory'));
         $this->setMetadataLoader($container->get('metadata/loader'));

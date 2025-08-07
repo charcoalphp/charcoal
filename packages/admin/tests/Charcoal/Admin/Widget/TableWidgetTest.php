@@ -2,13 +2,10 @@
 
 namespace Charcoal\Tests\Admin\Widget;
 
-
 use DI\Container;
-
 // From Slim
 use Slim\Http\Environment;
 use Slim\Http\Request;
-
 // From 'charcoal-admin'
 use Charcoal\Admin\Widget\TableWidget;
 use Charcoal\Tests\AbstractTestCase;

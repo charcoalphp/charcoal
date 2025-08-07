@@ -2,9 +2,7 @@
 
 namespace Charcoal\Tests\App\Route;
 
-
 use DI\Container;
-
 // From 'charcoal-app'
 use Charcoal\App\Route\ActionRoute;
 use Charcoal\Tests\App\ContainerProvider;

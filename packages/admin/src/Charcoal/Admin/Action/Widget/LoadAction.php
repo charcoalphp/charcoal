@@ -8,7 +8,6 @@ use InvalidArgumentException;
 // From PSR-7
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
-
 use DI\Container;
 // From 'charcoal-factory'
 use Charcoal\Factory\FactoryInterface;
@@ -16,6 +15,7 @@ use Charcoal\Factory\FactoryInterface;
 use Charcoal\View\ViewInterface;
 // From 'charcoal-admin'
 use Charcoal\Admin\AdminAction;
+use Psr\Container\ContainerInterface;
 
 /**
  * Action: Build a widget.
@@ -314,7 +314,7 @@ class LoadAction extends AdminAction
      * @param  Container $container A dependencies container instance.
      * @return void
      */
-    protected function setDependencies(Container $container)
+    protected function setDependencies(ContainerInterface $container)
     {
         parent::setdependencies($container);
 

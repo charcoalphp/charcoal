@@ -9,7 +9,6 @@ use RuntimeException;
 use InvalidArgumentException;
 // From PSR-7
 use Psr\Http\Message\UriInterface;
-
 use DI\Container;
 // From 'charcoal-core'
 use Charcoal\Loader\CollectionLoader;
@@ -30,6 +29,7 @@ use Charcoal\Attachment\Object\Accordion;
 use Charcoal\Attachment\Object\Link;
 use Charcoal\Attachment\Object\Container as AttachmentContainer;
 use Charcoal\Attachment\Object\Join;
+use Psr\Container\ContainerInterface;
 
 /**
  *
@@ -203,7 +203,7 @@ class Attachment extends Content implements AttachableInterface
      * @param  Container $container A dependencies container instance.
      * @return void
      */
-    protected function setDependencies(Container $container)
+    protected function setDependencies(ContainerInterface $container)
     {
         parent::setDependencies($container);
 

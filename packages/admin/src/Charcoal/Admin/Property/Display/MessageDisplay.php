@@ -2,7 +2,6 @@
 
 namespace Charcoal\Admin\Property\Display;
 
-
 use DI\Container;
 // From 'charcoal-view'
 use Charcoal\View\ViewableInterface;

@@ -2,9 +2,7 @@
 
 namespace Charcoal\Tests\Admin;
 
-
 use DI\Container;
-
 // From 'charcoal-admin'
 use Charcoal\Admin\AdminWidget;
 use Charcoal\Tests\AbstractTestCase;

@@ -3,49 +3,36 @@
 namespace Charcoal\Tests\App;
 
 use PDO;
-
 // From Mockery
 use Mockery;
-
 // From PSR-3
 use Psr\Log\NullLogger;
-
 // From 'tedivm/stash' (PSR-6)
 use Stash\Pool;
-
 // From Slim
-use Slim\Http\Uri;
-
-
+use GuzzleHttp\Psr7\Uri;
 use DI\Container;
-
 // From 'league/climate'
 use League\CLImate\CLImate;
 use League\CLImate\Util\System\Linux;
 use League\CLImate\Util\Output;
 use League\CLImate\Util\Reader\Stdin;
 use League\CLImate\Util\UtilFactory;
-
 // From 'charcoal-factory'
 use Charcoal\Factory\GenericFactory as Factory;
-
 // From 'charcoal-cache'
 use Charcoal\Cache\CacheConfig;
-
 // From 'charcoal-app'
 use Charcoal\App\AppConfig;
 use Charcoal\App\Module\ModuleInterface;
 use Charcoal\App\Template\WidgetBuilder;
-
 // From 'charcoal-core'
 use Charcoal\Model\Service\MetadataLoader;
 use Charcoal\Source\DatabaseSource;
-
 // From 'charcoal-view'
 use Charcoal\View\GenericView;
 use Charcoal\View\Mustache\MustacheEngine;
 use Charcoal\View\Mustache\MustacheLoader;
-
 // From 'charcoal-translator'
 use Charcoal\Translator\LocalesManager;
 use Charcoal\Translator\Translator;

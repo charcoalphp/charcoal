@@ -2,12 +2,8 @@
 
 namespace Charcoal\Admin\Template\System\Object;
 
-use Charcoal\Model\Service\CollectionLoader;
-use Charcoal\Model\Service\MetadataLoader;
-use Exception;
 use ReflectionClass;
 use ReflectionObject;
-
 use DI\Container;
 // From 'charcoal-admin'
 use Charcoal\Admin\AdminTemplate;
@@ -15,6 +11,7 @@ use Charcoal\Admin\Ui\DashboardContainerInterface;
 use Charcoal\Admin\Ui\DashboardContainerTrait;
 use Charcoal\Admin\Ui\ObjectContainerInterface;
 use Charcoal\Admin\Ui\ObjectContainerTrait;
+use Psr\Container\ContainerInterface;
 
 /**
  * Object Info Template
@@ -197,7 +194,7 @@ class InfoTemplate extends AdminTemplate implements
      * @param Container $container DI container.
      * @return void
      */
-    protected function setDependencies(Container $container)
+    protected function setDependencies(ContainerInterface $container)
     {
         parent::setDependencies($container);
 

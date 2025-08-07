@@ -2,8 +2,6 @@
 
 namespace Charcoal\Admin\Widget;
 
-use InvalidArgumentException;
-
 use DI\Container;
 // From 'charcoal-ui'
 use Charcoal\Ui\AbstractUiItem;
@@ -14,6 +12,7 @@ use Charcoal\Ui\Layout\LayoutAwareTrait;
 // From 'charcoal-admin'
 use Charcoal\Admin\Ui\ObjectContainerInterface;
 use Charcoal\Admin\Ui\FormGroupInterface;
+use Psr\Container\ContainerInterface;
 
 /**
  * Form Group Widget Controller
@@ -338,7 +337,7 @@ class FormGroupWidget extends AbstractUiItem implements
      * @param Container $container The DI container.
      * @return void
      */
-    protected function setDependencies(Container $container)
+    protected function setDependencies(ContainerInterface $container)
     {
         parent::setDependencies($container);
 

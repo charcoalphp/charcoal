@@ -5,10 +5,8 @@ namespace Charcoal\Admin\Widget;
 use ArrayIterator;
 use RuntimeException;
 use InvalidArgumentException;
-
 use DI\Container;
 // From PSR-7
-use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\UriInterface;
 // From 'charcoal-factory'
 use Charcoal\Factory\FactoryInterface;
@@ -17,6 +15,7 @@ use Charcoal\Admin\AdminWidget;
 use Charcoal\Admin\Support\HttpAwareTrait;
 use Charcoal\Admin\Ui\ActionContainerTrait;
 use Charcoal\Admin\Ui\SecondaryMenu\SecondaryMenuGroupInterface;
+use Psr\Container\ContainerInterface;
 
 /**
  * Admin Secondary Menu Widget
@@ -927,7 +926,7 @@ class SecondaryMenuWidget extends AdminWidget implements
      * @param  Container $container A dependencies container instance.
      * @return void
      */
-    protected function setDependencies(Container $container)
+    protected function setDependencies(ContainerInterface $container)
     {
         parent::setDependencies($container);
 

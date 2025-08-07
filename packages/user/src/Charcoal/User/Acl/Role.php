@@ -2,13 +2,12 @@
 
 namespace Charcoal\User\Acl;
 
-use InvalidArgumentException;
-
 use DI\Container;
 // From 'charcoal-translator'
 use Charcoal\Translator\TranslatorAwareTrait;
 // From 'charcoal-core'
 use Charcoal\Model\AbstractModel;
+use Psr\Container\ContainerInterface;
 
 /**
  * ACL Roles define hierarchical allowed and denied permissions.
@@ -211,7 +210,7 @@ class Role extends AbstractModel
      * @param  Container $container DI Container.
      * @return void
      */
-    protected function setDependencies(Container $container)
+    protected function setDependencies(ContainerInterface $container)
     {
         parent::setDependencies($container);
 

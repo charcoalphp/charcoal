@@ -3,7 +3,6 @@
 namespace Charcoal\Admin\Widget\FormGroup;
 
 use RuntimeException;
-
 use DI\Container;
 // From 'charcoal-factory'
 use Charcoal\Factory\FactoryInterface;
@@ -12,6 +11,7 @@ use Charcoal\Ui\FormGroup\AbstractFormGroup;
 // From 'charcoal-admin'
 use Charcoal\Admin\Ui\NestedWidgetContainerInterface;
 use Charcoal\Admin\Ui\NestedWidgetContainerTrait;
+use Psr\Container\ContainerInterface;
 
 /**
  * Nested Widget Form Group
@@ -154,7 +154,7 @@ class NestedWidgetFormGroup extends AbstractFormGroup implements
      * @param  Container $container The DI container.
      * @return void
      */
-    protected function setDependencies(Container $container)
+    protected function setDependencies(ContainerInterface $container)
     {
         parent::setDependencies($container);
 

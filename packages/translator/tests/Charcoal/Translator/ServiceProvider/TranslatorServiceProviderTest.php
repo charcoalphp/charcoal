@@ -2,10 +2,8 @@
 
 namespace Charcoal\Tests\Translation\ServiceProvider;
 
-
 use Charcoal\App\AppConfig;
 use DI\Container;
-
 // From 'charcoal-translator'
 use Charcoal\Translator\Middleware\LanguageMiddleware;
 use Charcoal\Translator\ServiceProvider\TranslatorServiceProvider;

@@ -2,7 +2,6 @@
 
 namespace Charcoal\Admin\Widget;
 
-
 use Charcoal\Ui\Layout\LayoutBuilder;
 use Charcoal\Ui\Layout\LayoutInterface;
 use DI\Container;
@@ -17,6 +16,7 @@ use Charcoal\Ui\UiItemInterface;
 // From 'charcoal-admin'
 use Charcoal\Admin\AdminWidget;
 use Charcoal\Admin\Decorator\GridStackWidgetDecorator;
+use Psr\Container\ContainerInterface;
 
 /**
  * The dashboard widget is a simple dashboard interface / layout aware object.
@@ -41,7 +41,7 @@ class GridStackDashboardWidget extends AdminWidget implements
      * @param Container $container The DI container.
      * @return void
      */
-    protected function setDependencies(Container $container)
+    protected function setDependencies(ContainerInterface $container)
     {
         parent::setDependencies($container);
 

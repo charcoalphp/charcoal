@@ -4,7 +4,6 @@ namespace Charcoal\Admin\Widget;
 
 use UnexpectedValueException;
 use InvalidArgumentException;
-
 use DI\Container;
 // From 'charcoal-core'
 use Charcoal\Model\ModelInterface;
@@ -20,6 +19,7 @@ use Charcoal\Admin\Ui\FormGroupInterface as AdminFormGroupInterface;
 use Charcoal\Admin\Ui\LanguageSwitcherAwareInterface;
 use Charcoal\Admin\Ui\ObjectContainerInterface;
 use Charcoal\Admin\Ui\ObjectContainerTrait;
+use Psr\Container\ContainerInterface;
 
 /**
  * Object Admin Form
@@ -411,7 +411,7 @@ class ObjectFormWidget extends FormWidget implements
      * @param Container $container The DI container.
      * @return void
      */
-    protected function setDependencies(Container $container)
+    protected function setDependencies(ContainerInterface $container)
     {
         parent::setDependencies($container);
 

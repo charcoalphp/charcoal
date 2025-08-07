@@ -2,16 +2,11 @@
 
 namespace Charcoal\Tests\Admin\Action\System\StaticWebsite;
 
-use ReflectionClass;
-
-
 use DI\Container;
-
 // From Slim
 use Slim\Http\Environment;
 use Slim\Http\Request;
 use Slim\Http\Response;
-
 // From 'charcoal-admin'
 use Charcoal\Admin\Action\System\StaticWebsite\AddAction;
 use Charcoal\Tests\AbstractTestCase;

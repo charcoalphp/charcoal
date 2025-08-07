@@ -3,24 +3,17 @@
 namespace Charcoal\Tests\Object;
 
 use PDO;
-
 // From PSR-3
 use Psr\Log\NullLogger;
-
 // From tedivm/stash (PSR-6)
 use Stash\Pool;
-
-
 use DI\Container;
-
 // From 'charcoal-factory'
 use Charcoal\Factory\GenericFactory as Factory;
-
 // From 'charcoal-core'
 use Charcoal\Model\Service\MetadataLoader;
 use Charcoal\Loader\CollectionLoader;
 use Charcoal\Source\DatabaseSource;
-
 // From 'charcoal-translator'
 use Charcoal\Translator\LocalesManager;
 use Charcoal\Translator\Translator;

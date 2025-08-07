@@ -4,12 +4,9 @@ namespace Charcoal\App\ServiceProvider;
 
 // From PSR-7
 use Charcoal\Factory\GenericResolver;
-use Psr\Http\Message\UriInterface;
 use DI\Container;
 // From Slim
 use Nyholm\Psr7\Uri;
-// From 'league/climate'
-use League\CLImate\CLImate;
 // From Mustache
 use Mustache_LambdaHelper as LambdaHelper;
 use Charcoal\Factory\GenericFactory as Factory;
@@ -27,18 +24,15 @@ use Charcoal\App\Module\ModuleInterface;
 use Charcoal\App\Route\ActionRoute;
 use Charcoal\App\Route\RouteInterface;
 use Charcoal\App\Route\TemplateRoute;
-use Charcoal\App\Script\ScriptInterface;
 use Charcoal\App\ServiceProvider\DatabaseServiceProvider;
 use Charcoal\App\ServiceProvider\FilesystemServiceProvider;
 use Charcoal\App\ServiceProvider\ScriptServiceProvider;
 use Charcoal\App\ServiceProvider\LoggerServiceProvider;
 use Charcoal\App\Template\TemplateInterface;
-use Charcoal\App\Template\TemplateBuilder;
 use Charcoal\App\Template\WidgetInterface;
 use Charcoal\App\Template\WidgetBuilder;
 use Charcoal\View\ViewServiceProvider;
 use Psr\Container\ContainerInterface;
-use Psr\Http\Message\RequestInterface;
 use Charcoal\App\Handler\HandlerInterface;
 
 /**

@@ -3,12 +3,12 @@
 namespace Charcoal\Admin\Property\Input;
 
 use RuntimeException;
-
 use DI\Container;
 // From PSR-7
 use Psr\Http\Message\UriInterface;
 // From 'charcoal-admin'
 use Charcoal\Admin\Property\Input\TextInput;
+use Psr\Container\ContainerInterface;
 
 /**
  * Permalink Property Form Control
@@ -42,7 +42,7 @@ class PermalinkInput extends TextInput
      * @param  Container $container A service locator.
      * @return void
      */
-    protected function setDependencies(Container $container)
+    protected function setDependencies(ContainerInterface $container)
     {
         parent::setDependencies($container);
 

@@ -9,6 +9,7 @@ use InvalidArgumentException;
 use DI\Container;
 // From 'charcoal-core'
 use Charcoal\Model\AbstractModel;
+use Psr\Container\ContainerInterface;
 
 /**
  *
@@ -122,7 +123,7 @@ class LostPasswordToken extends AbstractModel
      * @param Container $container DI Container.
      * @return void
      */
-    protected function setDependencies(Container $container)
+    protected function setDependencies(ContainerInterface $container)
     {
         parent::setDependencies($container);
         $this->defaultExpiry = ($container->get('admin/config')['login']['token_expiry'] ?? '2 hours');

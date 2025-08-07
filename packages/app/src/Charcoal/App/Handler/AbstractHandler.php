@@ -8,17 +8,14 @@ use Psr\Log\LoggerAwareTrait;
 // From PSR-7
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Message\UriInterface;
 // From Nyholm
 use Nyholm\Psr7\Stream;
-
 use DI\Container;
 // From 'charcoal-config'
 use Charcoal\Config\ConfigurableTrait;
 // From 'charcoal-factory'
 use Charcoal\Factory\FactoryInterface;
 // From 'charcoal-view'
-use Charcoal\View\ViewInterface;
 use Charcoal\View\ViewableTrait;
 // From 'charcoal-translator'
 use Charcoal\Translator\TranslatorAwareTrait;
@@ -26,6 +23,7 @@ use Charcoal\Translator\TranslatorAwareTrait;
 use Charcoal\App\Handler\HandlerConfig;
 use Charcoal\App\Handler\HandlerInterface;
 use Charcoal\App\Handler\TemplateableHandlerTrait;
+use Psr\Container\ContainerInterface;
 
 /**
  * Abstract Charcoal Application Handler
@@ -160,7 +158,7 @@ abstract class AbstractHandler implements
      * @param  Container $container A service locator.
      * @return self
      */
-    protected function setDependencies(Container $container)
+    protected function setDependencies(ContainerInterface $container)
     {
         $this->setTranslator($container->get('translator'));
         $this->setView($container->get('view'));

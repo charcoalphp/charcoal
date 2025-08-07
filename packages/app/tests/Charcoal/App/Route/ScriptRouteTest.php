@@ -5,13 +5,9 @@ namespace Charcoal\Tests\App\Route;
 // From PSR-7
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
-
-
 use DI\Container;
-
 // From 'charcoal-factory'
 use Charcoal\Factory\GenericFactory as Factory;
-
 // From 'charcoal-app'
 use Charcoal\App\Route\ScriptRoute;
 use Charcoal\App\Route\ScriptRouteConfig;

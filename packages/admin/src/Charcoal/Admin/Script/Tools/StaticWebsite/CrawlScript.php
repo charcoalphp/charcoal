@@ -6,7 +6,6 @@ use InvalidArgumentException;
 // From PSR-7
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
-
 use DI\Container;
 // From 'guzzlehttp/guzzle'
 use GuzzleHttp\Client as GuzzleClient;
@@ -14,6 +13,7 @@ use GuzzleHttp\Client as GuzzleClient;
 use Goutte\Client as GoutteClient;
 // From 'charcoal-admin'
 use Charcoal\Admin\AdminScript;
+use Psr\Container\ContainerInterface;
 
 /**
  *
@@ -132,7 +132,7 @@ class CrawlScript extends AdminScript
      * @param Container $container DI Container.
      * @return void
      */
-    protected function setDependencies(Container $container)
+    protected function setDependencies(ContainerInterface $container)
     {
         parent::setDependencies($container);
 

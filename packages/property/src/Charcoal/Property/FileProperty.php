@@ -7,12 +7,12 @@ use PDO;
 use Exception;
 use InvalidArgumentException;
 use UnexpectedValueException;
-
 use DI\Container;
 // From 'charcoal-translator'
 use Charcoal\Translator\Translation;
 // From 'charcoal-property'
 use Charcoal\Property\AbstractProperty;
+use Psr\Container\ContainerInterface;
 
 /**
  * File Property
@@ -1301,7 +1301,7 @@ class FileProperty extends AbstractProperty
      * @param  Container $container A dependencies container instance.
      * @return void
      */
-    protected function setDependencies(Container $container)
+    protected function setDependencies(ContainerInterface $container)
     {
         parent::setDependencies($container);
 

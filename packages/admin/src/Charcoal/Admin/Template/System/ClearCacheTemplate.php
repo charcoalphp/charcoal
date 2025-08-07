@@ -4,7 +4,6 @@ namespace Charcoal\Admin\Template\System;
 
 use APCUIterator;
 use APCIterator;
-use DateInterval;
 use DateTimeInterface;
 use DateTime;
 use FilesystemIterator;
@@ -17,9 +16,9 @@ use Stash\Driver\Memcache;
 use DI\Container;
 // From 'charcoal-admin'
 use Charcoal\Admin\AdminTemplate;
-use Charcoal\View\EngineInterface;
 use Charcoal\View\Mustache\MustacheEngine;
 use Charcoal\View\Twig\TwigEngine;
+use Psr\Container\ContainerInterface;
 
 /**
  * Cache information.
@@ -635,7 +634,7 @@ class ClearCacheTemplate extends AdminTemplate
      * @param Container $container DI Container.
      * @return void
      */
-    protected function setDependencies(Container $container)
+    protected function setDependencies(ContainerInterface $container)
     {
         parent::setDependencies($container);
 

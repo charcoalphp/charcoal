@@ -5,12 +5,6 @@ namespace Charcoal\App\Handler;
 use RuntimeException;
 // From PSR-7
 use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\UriInterface;
-
-use DI\Container;
-// From 'charcoal-translator'
-use Charcoal\Translator\Translator;
 // From 'charcoal-view'
 use Charcoal\View\ViewInterface;
 

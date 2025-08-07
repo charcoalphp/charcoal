@@ -2,11 +2,6 @@
 
 namespace Charcoal\Cms\Section;
 
-use RuntimeException;
-
-use DI\Container;
-// From 'charcoal-core'
-use Charcoal\Loader\CollectionLoader;
 // From 'charcoal-cms'
 use Charcoal\Cms\AbstractSection;
 use Charcoal\Cms\Mixin\BlocksSectionInterface;

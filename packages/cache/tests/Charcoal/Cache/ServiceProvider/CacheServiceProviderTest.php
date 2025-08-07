@@ -3,19 +3,14 @@
 namespace Charcoal\Tests\Cache\ServiceProvider;
 
 use Throwable;
-
 // From PSR-3
 use Psr\Log\NullLogger;
-
-
 use DI\Container;
-
 // From 'tedivm/stash'
 use ReflectionClass;
 use Stash\DriverList;
 use Stash\Interfaces\DriverInterface;
 use Stash\Interfaces\PoolInterface;
-
 // From 'charcoal-cache'
 use Charcoal\Tests\AbstractTestCase;
 use Charcoal\Cache\CacheBuilder;

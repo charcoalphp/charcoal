@@ -2,9 +2,7 @@
 
 namespace Charcoal\Tests\Admin\ServiceProvider;
 
-
 use DI\Container;
-
 // From 'charcoal-admin'
 use Charcoal\Admin\ServiceProvider\AclServiceProvider;
 use Charcoal\Tests\AbstractTestCase;
@@ -25,6 +23,6 @@ class AclServiceProviderTest extends AbstractTestCase
         $provider = new AclServiceProvider();
         $provider->register($container);
 
-        $this->assertTrue($container->has('admin/acl')
+        $this->assertTrue($container->has('admin/acl'));
     }
 }

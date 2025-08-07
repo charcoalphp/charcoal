@@ -5,7 +5,6 @@ namespace Charcoal\Admin\Widget;
 use ReflectionClass;
 use InvalidArgumentException;
 use UnexpectedValueException;
-
 use DI\Container;
 // From 'charcoal-ui'
 use Charcoal\Ui\FormGroup\FormGroupInterface;
@@ -15,6 +14,7 @@ use Charcoal\Admin\Ui\FormSidebarInterface;
 use Charcoal\Admin\Ui\ObjectContainerInterface;
 use Charcoal\Admin\Ui\ObjectContainerTrait;
 use Charcoal\Admin\Widget\FormWidget;
+use Psr\Container\ContainerInterface;
 
 /**
  * Object Admin Form
@@ -62,7 +62,7 @@ class DocWidget extends FormWidget implements
      * @param Container $container The DI container.
      * @return void
      */
-    public function setDependencies(Container $container)
+    public function setDependencies(ContainerInterface $container)
     {
         parent::setDependencies($container);
 

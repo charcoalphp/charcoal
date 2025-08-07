@@ -2,7 +2,6 @@
 
 namespace Charcoal\Admin\Widget\Cms;
 
-
 use DI\Container;
 // From 'charcoal-core'
 use Charcoal\Model\ModelInterface;
@@ -14,6 +13,7 @@ use Charcoal\Object\HierarchicalInterface;
 // From 'charcoal-admin'
 use Charcoal\Admin\Property\Display\HierarchicalDisplay;
 use Charcoal\Admin\Widget\TableWidget;
+use Psr\Container\ContainerInterface;
 
 /**
  * The hierarchical table widget displays a collection in a tabular (table) format.
@@ -55,7 +55,7 @@ class HierarchicalSectionTableWidget extends TableWidget
      * @param  Container $container A dependencies container instance.
      * @return void
      */
-    protected function setDependencies(Container $container)
+    protected function setDependencies(ContainerInterface $container)
     {
         parent::setDependencies($container);
 

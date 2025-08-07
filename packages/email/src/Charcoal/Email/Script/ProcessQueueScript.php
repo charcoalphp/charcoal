@@ -7,7 +7,6 @@ namespace Charcoal\Email\Script;
 // From PSR-7
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
-
 use DI\Container;
 // From 'charcoal-app'
 use Charcoal\App\Script\AbstractScript;
@@ -17,6 +16,7 @@ use Charcoal\App\Script\CronScriptTrait;
 use Charcoal\Factory\FactoryInterface;
 // From 'charcoal-email'
 use Charcoal\Email\EmailQueueManager;
+use Psr\Container\ContainerInterface;
 
 /**
  * Script: Process Email Queue
@@ -183,7 +183,7 @@ class ProcessQueueScript extends AbstractScript implements CronScriptInterface
      * @param  Container $container DI Container.
      * @return void
      */
-    protected function setDependencies(Container $container): void
+    protected function setDependencies(ContainerInterface $container): void
     {
         parent::setDependencies($container);
         $this->setQueueItemFactory($container->get('model/factory'));

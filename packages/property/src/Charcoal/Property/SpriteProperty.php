@@ -11,6 +11,7 @@ use SimpleXMLElement;
 use Charcoal\View\ViewInterface;
 // from 'pimple'
 use DI\Container;
+use Psr\Container\ContainerInterface;
 
 /**
  * Sprite Property holds a reference to an external sprite svg.
@@ -244,7 +245,7 @@ class SpriteProperty extends AbstractProperty implements SelectablePropertyInter
      * @param Container $container A DI Container.
      * @return void
      */
-    protected function setDependencies(Container $container)
+    protected function setDependencies(ContainerInterface $container)
     {
         parent::setDependencies($container);
 

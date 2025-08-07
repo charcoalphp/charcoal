@@ -2,12 +2,12 @@
 
 namespace Charcoal\Admin\Property\Input;
 
-
 use DI\Container;
 // From Mustache
 use Mustache_LambdaHelper as LambdaHelper;
 // // From 'charcoal-admin'
 use Charcoal\Admin\Property\AbstractPropertyInput;
+use Psr\Container\ContainerInterface;
 
 /**
  * File Property Input
@@ -433,7 +433,7 @@ class FileInput extends AbstractPropertyInput
      * @param Container $container A dependencies container instance.
      * @return void
      */
-    protected function setDependencies(Container $container)
+    protected function setDependencies(ContainerInterface $container)
     {
         parent::setDependencies($container);
 

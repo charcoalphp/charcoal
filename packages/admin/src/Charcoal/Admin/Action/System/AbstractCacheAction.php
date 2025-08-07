@@ -2,20 +2,14 @@
 
 namespace Charcoal\Admin\Action\System;
 
-// From PSR-6
-use Psr\Cache\CacheItemPoolInterface;
-// From PSR-7
-use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\ResponseInterface;
-
 use DI\Container;
 // From 'charcoal-cache'
 use Charcoal\Cache\CachePoolAwareTrait;
 // From 'charcoal-admin'
 use Charcoal\Admin\AdminAction;
-use Charcoal\View\EngineInterface;
 use Charcoal\View\Mustache\MustacheEngine;
 use Charcoal\View\Twig\TwigEngine;
+use Psr\Container\ContainerInterface;
 
 /**
  * Base Cache Action
@@ -81,7 +75,7 @@ abstract class AbstractCacheAction extends AdminAction
      * @param  Container $container A service locator.
      * @return void
      */
-    protected function setDependencies(Container $container)
+    protected function setDependencies(ContainerInterface $container)
     {
         parent::setDependencies($container);
 

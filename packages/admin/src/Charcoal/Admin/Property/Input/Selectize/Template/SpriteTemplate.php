@@ -2,12 +2,12 @@
 
 namespace Charcoal\Admin\Property\Input\Selectize\Template;
 
-
 use DI\Container;
 // From 'charcoal-app'
 use Charcoal\App\Template\AbstractTemplate;
 // From 'charcoal-admin'
 use Charcoal\Admin\Support\BaseUrlTrait;
+use Psr\Container\ContainerInterface;
 
 /**
  * Controller for selectize template
@@ -30,7 +30,7 @@ class SpriteTemplate extends AbstractTemplate
      * @param Container $container A DI Container.
      * @return void
      */
-    protected function setDependencies(Container $container)
+    protected function setDependencies(ContainerInterface $container)
     {
         parent::setDependencies($container);
 

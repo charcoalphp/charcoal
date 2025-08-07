@@ -6,6 +6,7 @@ use Charcoal\Admin\AdminAction;
 use DI\Container;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
+use Psr\Container\ContainerInterface;
 
 /**
  * Action : Upload an image and return path.
@@ -63,7 +64,7 @@ class UploadImageAction extends AdminAction
      * @param  Container $container A dependencies container instance.
      * @return void
      */
-    protected function setDependencies(Container $container)
+    protected function setDependencies(ContainerInterface $container)
     {
         parent::setDependencies($container);
 

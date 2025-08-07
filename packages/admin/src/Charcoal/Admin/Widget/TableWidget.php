@@ -3,7 +3,6 @@
 namespace Charcoal\Admin\Widget;
 
 use RuntimeException;
-
 use DI\Container;
 // From 'charcoal-core'
 use Charcoal\Loader\CollectionLoader;
@@ -18,6 +17,7 @@ use Charcoal\Admin\Support\HttpAwareTrait;
 use Charcoal\Admin\Ui\ActionContainerTrait;
 use Charcoal\Admin\Ui\CollectionContainerInterface;
 use Charcoal\Admin\Ui\CollectionContainerTrait;
+use Psr\Container\ContainerInterface;
 
 /**
  * Displays a collection of models in a tabular (table) format.
@@ -1039,7 +1039,7 @@ class TableWidget extends AdminWidget implements CollectionContainerInterface
      * @param Container $container DI Container.
      * @return void
      */
-    protected function setDependencies(Container $container)
+    protected function setDependencies(ContainerInterface $container)
     {
         parent::setDependencies($container);
 

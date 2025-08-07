@@ -10,7 +10,6 @@ use Psr\Log\LoggerAwareTrait;
 // From PSR-7
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
-
 use DI\Container;
 // From 'league/climate'
 use League\CLImate\CLImate;
@@ -18,8 +17,8 @@ use League\CLImate\Util\Reader\ReaderInterface;
 // From 'charcoal-config'
 use Charcoal\Config\AbstractEntity;
 // From 'charcoal-app'
-use Charcoal\App\AppInterface;
 use Charcoal\App\Script\ScriptInterface;
+use Psr\Container\ContainerInterface;
 
 /**
  * Abstract CLI Script
@@ -373,7 +372,7 @@ abstract class AbstractScript extends AbstractEntity implements
      * @param  Container $container A dependencies container instance.
      * @return void
      */
-    protected function setDependencies(Container $container)
+    protected function setDependencies(ContainerInterface $container)
     {
         // This method is a stub. Reimplement in children template classes.
     }

@@ -6,6 +6,7 @@ use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use DI\Container;
 use Charcoal\Admin\AdminScript;
+use Psr\Container\ContainerInterface;
 
 /**
  *
@@ -117,7 +118,7 @@ class OptimizeImagesScript extends AdminScript
      * @param Container $container DI Container.
      * @return void
      */
-    protected function setDependencies(Container $container)
+    protected function setDependencies(ContainerInterface $container)
     {
         parent::setDependencies($container);
 

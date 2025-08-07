@@ -62,7 +62,7 @@ class FilesystemServiceProvider
 
             foreach ($filesystemConfig['connections'] as $ident => $connection) {
                 $fs = $this->createConnection($connection, $container);
-                $filesystems[$ident] = $fs;
+                $filesystems->set($ident, $fs);
                 $container->get('filesystem/manager')->mountFilesystem($ident, $fs);
             }
 

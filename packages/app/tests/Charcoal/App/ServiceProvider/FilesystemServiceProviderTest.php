@@ -4,23 +4,9 @@ namespace Charcoal\Tests\App\ServiceProvider;
 
 use Charcoal\App\AppConfig;
 use DI\Container;
-
 // Dependencies from `league/flysystem`
 use League\Flysystem\MountManager;
 use League\Flysystem\Filesystem;
-use League\Flysystem\Adapter\Local as LocalAdapter;
-use League\Flysystem\Adapter\Ftp as FtpAdapter;
-use League\Flysystem\Adapter\NullAdapter;
-
-// Dependency from `league/flysystem-aws-s3-v3`
-use League\Flysystem\AwsS3v3\AwsS3Adapter;
-
-// Dependency from `league/flysystem-dropbox`
-use League\Flysystem\Dropbox\DropboxAdapter;
-
-// Dependency from `league/flysystem-sftp`
-use League\Flysystem\Sftp\SftpAdapter;
-
 use Charcoal\App\Config\FilesystemConfig;
 use Charcoal\App\ServiceProvider\FilesystemServiceProvider;
 use Charcoal\Tests\AbstractTestCase;

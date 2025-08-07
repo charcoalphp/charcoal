@@ -6,12 +6,12 @@ use Exception;
 // From PSR-7
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
-
 use DI\Container;
 // From 'charcoal-admin'
 use Charcoal\Admin\AdminAction;
 use Charcoal\Admin\Ui\ObjectContainerInterface;
 use Charcoal\Admin\Ui\ObjectContainerTrait;
+use Psr\Container\ContainerInterface;
 
 /**
  * Action: Reorder a collection of objects.
@@ -181,7 +181,7 @@ class ReorderAction extends AdminAction implements ObjectContainerInterface
      * @param  Container $container A DI Container.
      * @return void
      */
-    protected function setDependencies(Container $container)
+    protected function setDependencies(ContainerInterface $container)
     {
         parent::setDependencies($container);
 

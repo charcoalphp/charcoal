@@ -4,7 +4,6 @@ namespace Charcoal\User;
 
 use InvalidArgumentException;
 use RuntimeException;
-
 use DI\Container;
 
 /**

@@ -4,7 +4,6 @@ namespace Charcoal\Admin\Template\System;
 
 // From PSR-7
 use Psr\Http\Message\RequestInterface;
-
 use DI\Container;
 // From 'charcoal-admin'
 use Charcoal\Admin\AdminTemplate;
@@ -12,7 +11,7 @@ use Charcoal\Admin\Ui\CollectionContainerInterface;
 use Charcoal\Admin\Ui\CollectionContainerTrait;
 use Charcoal\Admin\Ui\DashboardContainerInterface;
 use Charcoal\Admin\Ui\DashboardContainerTrait;
-use Charcoal\Admin\User;
+use Psr\Container\ContainerInterface;
 
 /**
  * List Admin User Permissions
@@ -99,7 +98,7 @@ class UserPermissionsTemplate extends AdminTemplate implements
      * @param Container $container DI Container.
      * @return void
      */
-    protected function setDependencies(Container $container)
+    protected function setDependencies(ContainerInterface $container)
     {
         parent::setDependencies($container);
 

@@ -2,11 +2,7 @@
 
 namespace Charcoal\Tests\User;
 
-use DateTime;
-
-
 use DI\Container;
-
 // From 'charcoal-user'
 use Charcoal\User\GenericUser;
 use Charcoal\User\UserInterface;

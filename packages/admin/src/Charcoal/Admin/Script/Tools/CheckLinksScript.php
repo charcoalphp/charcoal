@@ -5,7 +5,6 @@ namespace Charcoal\Admin\Script\Tools;
 use Exception;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
-use DI\Container;
 use Goutte\Client as GoutteClient;
 use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\TransferStats;

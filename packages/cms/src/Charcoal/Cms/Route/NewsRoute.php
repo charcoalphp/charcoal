@@ -3,7 +3,6 @@
 namespace Charcoal\Cms\Route;
 
 use Exception;
-
 use DI\Container;
 // From PSR-7
 use Psr\Http\Message\RequestInterface;

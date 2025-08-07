@@ -2,25 +2,7 @@
 
 namespace Charcoal\Tests\Admin\Script\User;
 
-use PDO;
-
-// From PSR-3
-use Psr\Log\NullLogger;
-
-// From PSR-7
-use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\ResponseInterface;
-
-
 use DI\Container;
-
-// From 'charcoal-factory'
-use Charcoal\Factory\GenericFactory as Factory;
-
-// From 'charcoal-core'
-use Charcoal\Model\Service\MetadataLoader;
-use Charcoal\Source\DatabaseSource;
-
 // From 'charcoal-admin'
 use Charcoal\Admin\Script\User\CreateScript;
 use Charcoal\Tests\AbstractTestCase;
@@ -101,7 +83,7 @@ class CreateScriptTest extends AbstractTestCase
         $source->createTable();
 
         $table = $source->table();
-        $q = 'select count(`email`) as num from `'.$table.'`';
+        $q = 'select count(`email`) as num from `' . $table . '`';
         $req = $this->container['database']->query($q);
         return $req->fetchColumn(0);
     }

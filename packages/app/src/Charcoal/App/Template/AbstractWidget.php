@@ -5,7 +5,6 @@ namespace Charcoal\App\Template;
 // From PSR-3
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
-
 use DI\Container;
 // From 'charcoal-config'
 use Charcoal\Config\AbstractEntity;
@@ -14,6 +13,7 @@ use Charcoal\View\ViewableInterface;
 use Charcoal\View\ViewableTrait;
 // From 'charcoal-app'
 use Charcoal\App\Template\WidgetInterface;
+use Psr\Container\ContainerInterface;
 
 /**
  *
@@ -72,7 +72,7 @@ abstract class AbstractWidget extends AbstractEntity implements
      * @param Container $container A dependencies container instance.
      * @return void
      */
-    protected function setDependencies(Container $container)
+    protected function setDependencies(ContainerInterface $container)
     {
         // This method is a stub. Reimplement in children template classes.
         $this->setView($container->get('view'));

@@ -2,9 +2,7 @@
 
 namespace Charcoal\Tests;
 
-
 use DI\Container;
-
 // From 'charcoal-attachment'
 use Charcoal\Tests\ContainerProvider;
 

@@ -2,7 +2,6 @@
 
 namespace Charcoal\Ui\Layout;
 
-
 use DI\Container;
 // From 'charcoal-factory'
 use Charcoal\Factory\FactoryInterface;

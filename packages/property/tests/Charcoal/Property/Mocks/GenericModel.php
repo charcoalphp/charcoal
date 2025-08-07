@@ -9,12 +9,10 @@
 
 namespace Charcoal\Tests\Property\Mocks;
 
-
 use DI\Container;
-
+use Psr\Container\ContainerInterface;
 // From 'charcoal-core'
 use Charcoal\Model\AbstractModel;
-
 // From 'charcoal-translator'
 use Charcoal\Translator\Translation;
 use Charcoal\Translator\TranslatorAwareTrait;
@@ -71,7 +69,7 @@ class GenericModel extends AbstractModel
      * @param  Container $container DI Container.
      * @return void
      */
-    public function setDependencies(Container $container)
+    public function setDependencies(ContainerInterface $container)
     {
         $this->setTranslator($container->get('translator'));
     }

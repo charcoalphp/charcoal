@@ -3,13 +3,10 @@
 namespace Charcoal\Cms\ServiceProvider;
 
 use DI\Container;
-// From 'charcoal-core'
-use Charcoal\Model\AbstractModel;
 // From 'charcoal-factory'
 use Charcoal\Factory\GenericFactory as Factory;
 // From 'charcoal-cms'
 use Charcoal\Cms\SectionInterface;
-use Charcoal\Cms\Config;
 use Charcoal\Cms\Config\CmsConfig;
 use Charcoal\Cms\Service\Loader\EventLoader;
 use Charcoal\Cms\Service\Loader\NewsLoader;

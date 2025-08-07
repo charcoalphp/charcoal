@@ -2,14 +2,7 @@
 
 namespace Charcoal\Tests\Admin;
 
-use ReflectionClass;
-
-// From PSR-7
-use Psr\Http\Message\RequestInterface;
-
-
 use DI\Container;
-
 // From 'charcoal-admin'
 use Charcoal\Admin\AdminAction;
 use Charcoal\Tests\AbstractTestCase;

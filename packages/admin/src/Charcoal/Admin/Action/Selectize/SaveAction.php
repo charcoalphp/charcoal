@@ -2,11 +2,10 @@
 
 namespace Charcoal\Admin\Action\Selectize;
 
-
 use DI\Container;
 // From 'charcoal-admin'
 use Charcoal\Admin\Action\Object\SaveAction as BaseSaveAction;
-use Charcoal\Admin\Service\SelectizeRenderer;
+use Psr\Container\ContainerInterface;
 
 /**
  * Selectize Save Action
@@ -46,7 +45,7 @@ class SaveAction extends BaseSaveAction
      * @param Container $container DI Container.
      * @return void
      */
-    protected function setDependencies(Container $container)
+    protected function setDependencies(ContainerInterface $container)
     {
         parent::setDependencies($container);
 

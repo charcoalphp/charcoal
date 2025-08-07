@@ -5,7 +5,6 @@ namespace Charcoal\Admin\Script\Object;
 // From PSR-7
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
-
 use DI\Container;
 // From 'charcoal-core'
 use Charcoal\Loader\CollectionLoader;
@@ -18,6 +17,7 @@ use Charcoal\App\Script\CronScriptTrait;
 use Charcoal\Object\ObjectSchedule;
 // From 'charcoal-admin'
 use Charcoal\Admin\AdminScript;
+use Psr\Container\ContainerInterface;
 
 /**
  * Process object schedules.
@@ -102,7 +102,7 @@ class ProcessSchedulesScript extends AdminScript implements CronScriptInterface
      * @param Container $container DI Container.
      * @return void
      */
-    protected function setDependencies(Container $container)
+    protected function setDependencies(ContainerInterface $container)
     {
         parent::setDependencies($container);
 

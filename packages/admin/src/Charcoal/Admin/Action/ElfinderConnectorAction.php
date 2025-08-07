@@ -3,13 +3,10 @@
 namespace Charcoal\Admin\Action;
 
 use InvalidArgumentException;
-use RuntimeException;
 use UnexpectedValueException;
 // From PSR-7
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\UriInterface;
-
 use DI\Container;
 // From elFinder
 use elFinder;
@@ -17,8 +14,6 @@ use elFinderConnector;
 use elFinderVolumeDriver;
 // From 'charcoal-config'
 use Charcoal\Config\ConfigInterface;
-// From 'charcoal-factory'
-use Charcoal\Factory\FactoryInterface;
 // From 'charcoal-property'
 use Charcoal\Property\PropertyInterface;
 // From 'charcoal-app'
@@ -26,6 +21,8 @@ use Charcoal\App\CallableResolverAwareTrait;
 // From 'charcoal-admin'
 use Charcoal\Admin\AdminAction;
 use Charcoal\Admin\Template\ElfinderTemplate;
+use Psr\Container\ContainerInterface;
+use Slim\CallableResolver;
 
 /**
  * Action: Setup elFinder Connector
@@ -58,7 +55,7 @@ class ElfinderConnectorAction extends AdminAction
     /**
      * Store the collection of filesystem adapters.
      *
-     * @var \League\Flysystem\FilesystemInterface[]
+     * @var Container
      */
     protected $filesystems;
 
@@ -416,7 +413,7 @@ class ElfinderConnectorAction extends AdminAction
     public function getPublicRoots()
     {
         $roots = [];
-        foreach ($this->filesystems->keys() as $ident) {
+        foreach ($this->filesystems->getKnownEntryNames() as $ident) {
             if ($this->isFilesystemPublic($ident)) {
                 $disk = $this->getNamedRoot($ident);
                 if ($disk !== null) {
@@ -436,7 +433,7 @@ class ElfinderConnectorAction extends AdminAction
     public function getAllRoots()
     {
         $roots = [];
-        foreach ($this->filesystems->keys() as $ident) {
+        foreach ($this->filesystems->getKnownEntryNames() as $ident) {
             $disk = $this->getNamedRoot($ident);
             if ($disk !== null) {
                 $roots[$ident] = $disk;
@@ -884,7 +881,7 @@ class ElfinderConnectorAction extends AdminAction
      * @param  Container $container A dependencies container instance.
      * @return void
      */
-    public function setDependencies(Container $container)
+    public function setDependencies(ContainerInterface $container)
     {
         parent::setDependencies($container);
 
@@ -892,7 +889,7 @@ class ElfinderConnectorAction extends AdminAction
         $this->publicPath = $container->get('config')['public_path'];
 
         $this->setElfinderConfig($container->get('elfinder/config'));
-        $this->setCallableResolver($container->get('callableResolver'));
+        $this->setCallableResolver(new CallableResolver($container));
 
         /** @see \Charcoal\App\ServiceProvide\FilesystemServiceProvider */
         $this->filesystemConfig = $container->get('filesystem/config');
@@ -908,8 +905,8 @@ class ElfinderConnectorAction extends AdminAction
      */
     protected function getFilesystem($ident)
     {
-        if (isset($this->filesystems[$ident])) {
-            return $this->filesystems[$ident];
+        if (!empty($ident) && $this->filesystems->has($ident)) {
+            return $this->filesystems->get($ident);
         }
 
         return null;

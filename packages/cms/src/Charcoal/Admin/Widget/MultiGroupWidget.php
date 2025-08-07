@@ -13,7 +13,6 @@ use Charcoal\Factory\FactoryInterface;
 use Charcoal\Property\ModelStructureProperty;
 use Charcoal\Property\PropertyInterface;
 use Charcoal\Property\StructureProperty;
-
 use DI\Container;
 // From 'charcoal-ui'
 use Charcoal\Ui\Form\FormInterface;
@@ -21,6 +20,7 @@ use Charcoal\Ui\Form\FormTrait;
 use Charcoal\Ui\Layout\LayoutAwareInterface;
 use Charcoal\Ui\Layout\LayoutAwareTrait;
 use Charcoal\Ui\PrioritizableInterface;
+use Psr\Container\ContainerInterface;
 
 /**
  * Class TemplateAttachmentWidget
@@ -109,7 +109,7 @@ class MultiGroupWidget extends AdminWidget implements
      * @param  Container $container The DI container.
      * @return void
      */
-    protected function setDependencies(Container $container)
+    protected function setDependencies(ContainerInterface $container)
     {
         parent::setDependencies($container);
 

@@ -6,7 +6,6 @@ use LogicException;
 use RuntimeException;
 use InvalidArgumentException;
 use UnexpectedValueException;
-
 use DI\Container;
 // From 'charcoal-factory'
 use Charcoal\Factory\FactoryInterface;
@@ -19,6 +18,7 @@ use Charcoal\Ui\FormGroup\FormGroupInterface;
 use Charcoal\Ui\FormInput\FormInputInterface;
 // From 'charcoal-admin'
 use Charcoal\Admin\AdminWidget;
+use Psr\Container\ContainerInterface;
 
 /**
  * Form Control Widget
@@ -1159,7 +1159,7 @@ class FormPropertyWidget extends AdminWidget implements
      * @param  Container $container Service container.
      * @return void
      */
-    protected function setDependencies(Container $container)
+    protected function setDependencies(ContainerInterface $container)
     {
         parent::setDependencies($container);
 

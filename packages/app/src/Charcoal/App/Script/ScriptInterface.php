@@ -6,8 +6,6 @@ namespace Charcoal\App\Script;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
-use DI\Container;
-
 /**
  * Script are actions called from the CLI.
  *

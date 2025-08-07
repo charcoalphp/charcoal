@@ -5,14 +5,13 @@ namespace Charcoal\App\Template;
 // From 'psr/log'
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
-// From 'psr/http-message'
-use Psr\Http\Message\RequestInterface;
 use DI\Container;
 // From 'charcoal-config'
 use Charcoal\Config\AbstractEntity;
 // From 'charcoal-app'
 use Charcoal\App\Template\TemplateInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Container\ContainerInterface;
 
 /**
  * Template (View Controller) base class
@@ -94,7 +93,7 @@ abstract class AbstractTemplate extends AbstractEntity implements
      * @param Container $container A dependencies container instance.
      * @return void
      */
-    protected function setDependencies(Container $container)
+    protected function setDependencies(ContainerInterface $container)
     {
         // This method is a stub. Reimplement in children template classes.
     }

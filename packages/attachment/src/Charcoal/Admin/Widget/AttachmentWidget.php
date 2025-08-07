@@ -2,18 +2,14 @@
 
 namespace Charcoal\Admin\Widget;
 
-use ArrayIterator;
 use RuntimeException;
 use InvalidArgumentException;
 use DI\Container;
-// From Mustache
-use Mustache_LambdaHelper as LambdaHelper;
 // From 'charcoal-config'
 use Charcoal\Config\ConfigurableInterface;
 // From 'charcoal-factory'
 use Charcoal\Factory\FactoryInterface;
 // From 'charcoal-core'
-use Charcoal\Loader\CollectionLoader;
 use Charcoal\Model\ModelInterface;
 // From 'charcoal-translator'
 use Charcoal\Translator\Translation;
@@ -24,6 +20,7 @@ use Charcoal\Admin\Ui\ObjectContainerTrait;
 // From 'charcoal-attachment'
 use Charcoal\Attachment\Interfaces\AttachmentContainerInterface;
 use Charcoal\Attachment\Traits\ConfigurableAttachmentsTrait;
+use Psr\Container\ContainerInterface;
 
 /**
  *
@@ -111,7 +108,7 @@ class AttachmentWidget extends AdminWidget implements
      * @param Container $container A dependencies container instance.
      * @return void
      */
-    protected function setDependencies(Container $container)
+    protected function setDependencies(ContainerInterface $container)
     {
         parent::setDependencies($container);
 

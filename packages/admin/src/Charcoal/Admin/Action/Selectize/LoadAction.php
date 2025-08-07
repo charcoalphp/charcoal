@@ -3,7 +3,6 @@
 namespace Charcoal\Admin\Action\Selectize;
 
 use Exception;
-
 use DI\Container;
 // From PSR-7
 use Psr\Http\Message\RequestInterface;
@@ -11,6 +10,7 @@ use Psr\Http\Message\ResponseInterface;
 // From 'charcoal-admin'
 use Charcoal\Admin\Action\Object\LoadAction as BaseLoadAction;
 use Charcoal\Admin\Action\Selectize\SelectizeRendererAwareTrait;
+use Psr\Container\ContainerInterface;
 
 /**
  * Selectize Load Action
@@ -195,7 +195,7 @@ class LoadAction extends BaseLoadAction
      * @param Container $container DI Container.
      * @return void
      */
-    protected function setDependencies(Container $container)
+    protected function setDependencies(ContainerInterface $container)
     {
         parent::setDependencies($container);
 

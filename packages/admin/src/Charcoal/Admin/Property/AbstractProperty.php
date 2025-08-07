@@ -2,14 +2,11 @@
 
 namespace Charcoal\Admin\Property;
 
-use Traversable;
 use InvalidArgumentException;
-use UnexpectedValueException;
 // From PSR-3
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 use Psr\Log\NullLogger;
-
 use DI\Container;
 // From 'charcoal-core'
 use Charcoal\Model\DescribableInterface;
@@ -21,13 +18,13 @@ use Charcoal\View\ViewableTrait;
 use Charcoal\Translator\Translation;
 use Charcoal\Translator\TranslatorAwareTrait;
 // From 'charcoal-property'
-use Charcoal\Property\PropertyFactory;
 use Charcoal\Property\PropertyInterface as ModelPropertyInterface;
 use Charcoal\Property\PropertyMetadata;
 // From 'charcoal-app'
 use Charcoal\App\DebugAwareTrait;
 // From 'charcoal-admin'
 use Charcoal\Admin\Property\PropertyInterface as AdminPropertyInterface;
+use Psr\Container\ContainerInterface;
 
 /**
  * Base Admin model property decorator
@@ -522,7 +519,7 @@ abstract class AbstractProperty implements
      * @param Container $container A dependencies container instance.
      * @return void
      */
-    protected function setDependencies(Container $container)
+    protected function setDependencies(ContainerInterface $container)
     {
         // Fullfills the DescribableTrait dependencies
         $this->setMetadataLoader($container->get('metadata/loader'));

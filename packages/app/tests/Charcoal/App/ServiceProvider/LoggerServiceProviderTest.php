@@ -3,7 +3,6 @@
 namespace Charcoal\Tests\App\ServiceProvider;
 
 use DI\Container;
-
 use Charcoal\App\ServiceProvider\LoggerServiceProvider;
 use Charcoal\Tests\AbstractTestCase;
 

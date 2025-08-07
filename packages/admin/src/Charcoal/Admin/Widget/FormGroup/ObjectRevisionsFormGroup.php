@@ -12,6 +12,7 @@ use Charcoal\Admin\Ui\ObjectRevisionsTrait;
 use Charcoal\App\Action\AbstractAction;
 // From 'charcoal-ui'
 use Charcoal\Ui\FormGroup\AbstractFormGroup;
+use Psr\Container\ContainerInterface;
 
 /**
  * Form Group: Object Revisions List
@@ -105,7 +106,7 @@ class ObjectRevisionsFormGroup extends AbstractFormGroup implements
      * @param  Container $container A dependencies container instance.
      * @return void
      */
-    protected function setDependencies(Container $container)
+    protected function setDependencies(ContainerInterface $container)
     {
         parent::setDependencies($container);
 

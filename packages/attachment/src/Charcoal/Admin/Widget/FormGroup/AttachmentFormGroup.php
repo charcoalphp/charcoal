@@ -20,6 +20,7 @@ use Charcoal\Translator\Translation;
 use DI\Container;
 // from 'charcoal-attachment'
 use Charcoal\Attachment\Traits\ConfigurableAttachmentsTrait;
+use Psr\Container\ContainerInterface;
 
 /**
  * Attachment widget, as form group.
@@ -165,7 +166,7 @@ class AttachmentFormGroup extends AbstractFormGroup implements
      * @param Container $container The DI container.
      * @return void
      */
-    protected function setDependencies(Container $container)
+    protected function setDependencies(ContainerInterface $container)
     {
         parent::setDependencies($container);
 

@@ -2,15 +2,9 @@
 
 namespace Charcoal\Tests\User;
 
-
 use DI\Container;
-
 // From 'laminas/laminas-permissions-acl'
 use Laminas\Permissions\Acl\Acl;
-use Laminas\Permissions\Acl\Exception\ExceptionInterface as AclExceptionInterface;
-use Laminas\Permissions\Acl\Resource\GenericResource as Resource;
-use Laminas\Permissions\Acl\Role\GenericRole as Role;
-
 // From 'charcoal-user'
 use Charcoal\User\AbstractAuthorizer;
 use Charcoal\User\Authorizer;

@@ -3,7 +3,6 @@
 namespace Charcoal\App\Action;
 
 // From PSR-7
-use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use DI\Container;
 use Psr\Http\Message\ServerRequestInterface;

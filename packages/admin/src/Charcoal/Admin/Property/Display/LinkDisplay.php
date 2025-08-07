@@ -3,16 +3,15 @@
 namespace Charcoal\Admin\Property\Display;
 
 use InvalidArgumentException;
-
 use DI\Container;
 // From 'charcoal-property'
 use Charcoal\Property\FileProperty;
-use Charcoal\Property\ImageProperty;
 // From 'charcoal-translator'
 use Charcoal\Translator\Translation;
 // From 'charcoal-admin'
 use Charcoal\Admin\Property\AbstractPropertyDisplay;
 use Charcoal\Admin\Support\BaseUrlTrait;
+use Psr\Container\ContainerInterface;
 
 /**
  * Link Display Property
@@ -161,7 +160,7 @@ class LinkDisplay extends AbstractPropertyDisplay
      * @param Container $container A dependencies container instance.
      * @return void
      */
-    protected function setDependencies(Container $container)
+    protected function setDependencies(ContainerInterface $container)
     {
         parent::setDependencies($container);
 

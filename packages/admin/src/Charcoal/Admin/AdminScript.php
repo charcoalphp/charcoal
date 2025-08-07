@@ -2,7 +2,6 @@
 
 namespace Charcoal\Admin;
 
-
 use DI\Container;
 // From 'league/climate'
 use League\CLImate\TerminalObject\Dynamic\Input as LeagueInput;
@@ -16,6 +15,7 @@ use Charcoal\Property\PropertyInterface;
 use Charcoal\Translator\TranslatorAwareTrait;
 // From 'charcoal-admin'
 use Charcoal\Admin\Support\BaseUrlTrait;
+use Psr\Container\ContainerInterface;
 
 /**
  *
@@ -36,7 +36,7 @@ abstract class AdminScript extends AbstractScript
      * @param  Container $container DI Container.
      * @return void
      */
-    protected function setDependencies(Container $container)
+    protected function setDependencies(ContainerInterface $container)
     {
         parent::setDependencies($container);
 

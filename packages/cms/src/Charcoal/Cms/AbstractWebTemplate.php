@@ -6,10 +6,7 @@ use ArrayIterator;
 use RuntimeException;
 // From 'psr/http-message'
 use Psr\Http\Message\UriInterface;
-
 use DI\Container;
-// From 'charcoal-core'
-use Charcoal\Model\ModelInterface;
 // From 'charcoal-translator'
 use Charcoal\Translator\TranslatorAwareTrait;
 // From 'charcoal-app'
@@ -23,6 +20,7 @@ use Charcoal\Cms\MetatagInterface;
 use Charcoal\Cms\Support\ContextualTemplateTrait;
 use Charcoal\Cms\Support\DocumentTrait;
 use Charcoal\Cms\Support\LocaleAwareTrait;
+use Psr\Container\ContainerInterface;
 
 /**
  * Hypertext Template Controller
@@ -72,7 +70,7 @@ abstract class AbstractWebTemplate extends AbstractTemplate
      * @param  Container $container A dependencies container instance.
      * @return void
      */
-    protected function setDependencies(Container $container)
+    protected function setDependencies(ContainerInterface $container)
     {
         parent::setDependencies($container);
 

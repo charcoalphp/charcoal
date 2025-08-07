@@ -13,10 +13,8 @@ use Charcoal\Admin\ServiceProvider\AdminServiceProvider;
 use Charcoal\App\Handler\HandlerConfig;
 use DI\Container;
 use Slim\Interfaces\RouteCollectorProxyInterface;
-use GuzzleHttp\Psr7\Request;
 use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Slim\MiddlewareDispatcher;
 
 /**
  * Charcoal Administration Module

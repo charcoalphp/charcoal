@@ -3,10 +3,8 @@
 namespace Charcoal\Admin\Widget;
 
 use ArrayAccess;
-use RuntimeException;
 use InvalidArgumentException;
 use UnexpectedValueException;
-
 use DI\Container;
 // From 'charcoal-core'
 use Charcoal\Model\ModelInterface;
@@ -15,6 +13,7 @@ use Charcoal\Admin\AdminWidget;
 use Charcoal\Admin\Support\HttpAwareTrait;
 use Charcoal\Admin\Ui\CollectionContainerInterface;
 use Charcoal\Admin\Ui\CollectionContainerTrait;
+use Psr\Container\ContainerInterface;
 
 /**
  * Displays a collection of models on a map.
@@ -381,7 +380,7 @@ class CollectionMapWidget extends AdminWidget implements CollectionContainerInte
      * @param  Container $container A dependencies container instance.
      * @return void
      */
-    protected function setDependencies(Container $container)
+    protected function setDependencies(ContainerInterface $container)
     {
         parent::setDependencies($container);
 

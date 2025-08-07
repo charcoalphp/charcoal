@@ -9,9 +9,6 @@ use UnexpectedValueException;
 // From PSR-3
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
-use Psr\Log\NullLogger;
-
-use DI\Container;
 // From 'charcoal-config'
 use Charcoal\Config\AbstractEntity;
 // From 'charcoal-view'
@@ -20,9 +17,7 @@ use Charcoal\View\ViewableTrait;
 // From 'charcoal-property'
 use Charcoal\Property\DescribablePropertyInterface;
 use Charcoal\Property\DescribablePropertyTrait;
-use Charcoal\Property\PropertyInterface;
 // From 'charcoal-core'
-use Charcoal\Model\DescribableInterface;
 use Charcoal\Model\DescribableTrait;
 use Charcoal\Model\ModelInterface;
 use Charcoal\Model\ModelMetadata;
@@ -30,6 +25,7 @@ use Charcoal\Model\ModelValidator;
 use Charcoal\Source\StorableTrait;
 use Charcoal\Validator\ValidatableInterface;
 use Charcoal\Validator\ValidatableTrait;
+use Psr\Container\ContainerInterface;
 
 /**
  * An abstract class that implements most of `ModelInterface`.
@@ -515,10 +511,10 @@ abstract class AbstractModel extends AbstractEntity implements
     /**
      * Inject dependencies from a DI Container.
      *
-     * @param  Container $container A DI service container.
+     * @param  ContainerInterface $container A DI service container.
      * @return void
      */
-    protected function setDependencies(Container $container)
+    protected function setDependencies(ContainerInterface $container)
     {
         // This method is a stub.
         // Reimplement in children method to inject dependencies in your class from a DI container.

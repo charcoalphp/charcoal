@@ -2,9 +2,7 @@
 
 namespace Charcoal\Tests\User\Acl;
 
-
 use DI\Container;
-
 // From 'charcoal-user'
 use Charcoal\User\Acl\PermissionCategory;
 use Charcoal\Tests\AbstractTestCase;

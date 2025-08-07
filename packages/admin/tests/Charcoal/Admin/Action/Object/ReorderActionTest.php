@@ -2,20 +2,14 @@
 
 namespace Charcoal\Tests\Admin\Action\Object;
 
-use ReflectionClass;
-
-
 use DI\Container;
-
 // From Slim
 use Slim\Http\Environment;
 use Slim\Http\Request;
 use Slim\Http\Response;
-
 // From 'charcoal-core'
 use Charcoal\Loader\CollectionLoader;
 use Charcoal\Model\Collection;
-
 // From 'charcoal-admin'
 use Charcoal\Admin\Action\Object\ReorderAction;
 use Charcoal\Tests\AbstractTestCase;

@@ -3,40 +3,27 @@
 namespace Charcoal\Tests\Model\ServiceProvider;
 
 use PDO;
-
 // From PSR-3
 use Psr\Log\NullLogger;
-
-// From 'cache/void-adapter' (PSR-6)
-use Cache\Adapter\Void\VoidCachePool;
-
 // From 'tedivm/stash' (PSR-6)
 use Stash\Pool;
 use Stash\Driver\Ephemeral;
-
-
 use DI\Container;
-
 // From 'charcoal-factory'
 use Charcoal\Factory\FactoryInterface;
-
 // From 'charcoal-app'
 use Charcoal\App\AppConfig;
-
 // From 'charcoal-view'
 use Charcoal\View\GenericView;
 use Charcoal\View\Php\PhpEngine;
 use Charcoal\View\Php\PhpLoader;
-
 // From 'charcoal-translator'
 use Charcoal\Translator\LocalesManager;
 use Charcoal\Translator\Translator;
-
 // From 'charcoal-core'
 use Charcoal\Model\ServiceProvider\ModelServiceProvider;
 use Charcoal\Model\Service\ModelBuilder;
 use Charcoal\Model\Service\ModelLoaderBuilder;
-use Charcoal\Model\Service\MetadataConfig;
 use Charcoal\Model\Service\MetadataLoader;
 use Charcoal\Tests\AbstractTestCase;
 

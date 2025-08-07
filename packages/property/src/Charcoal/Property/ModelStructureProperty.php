@@ -6,7 +6,6 @@ use ArrayAccess;
 use RuntimeException;
 use InvalidArgumentException;
 use UnexpectedValueException;
-
 use DI\Container;
 // From 'charcoal-core'
 use Charcoal\Model\DescribableInterface;
@@ -21,6 +20,7 @@ use Charcoal\Property\Structure\StructureMetadata;
 use Charcoal\Property\Structure\StructureModel;
 // From 'charcoal-translator'
 use Charcoal\Translator\Translation;
+use Psr\Container\ContainerInterface;
 
 /**
  * Model Structure Data Property
@@ -667,7 +667,7 @@ class ModelStructureProperty extends StructureProperty
      * @param  Container $container A dependencies container instance.
      * @return void
      */
-    protected function setDependencies(Container $container)
+    protected function setDependencies(ContainerInterface $container)
     {
         parent::setDependencies($container);
 

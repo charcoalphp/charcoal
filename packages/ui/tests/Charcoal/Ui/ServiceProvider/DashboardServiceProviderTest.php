@@ -4,10 +4,7 @@ namespace Charcoal\Tests\Ui\ServiceProvider;
 
 // From PSR-3
 use Psr\Log\NullLogger;
-
-
 use DI\Container;
-
 // From 'charcoal-ui'
 use Charcoal\Ui\ServiceProvider\DashboardServiceProvider;
 use Charcoal\Tests\AbstractTestCase;

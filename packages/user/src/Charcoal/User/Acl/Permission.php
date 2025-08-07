@@ -3,7 +3,6 @@
 namespace Charcoal\User\Acl;
 
 use InvalidArgumentException;
-
 use DI\Container;
 // From 'charcoal-core'
 use Charcoal\Model\AbstractModel;
@@ -12,6 +11,7 @@ use Charcoal\Translator\TranslatorAwareTrait;
 // From 'charcoal-object'
 use Charcoal\Object\CategorizableInterface;
 use Charcoal\Object\CategorizableTrait;
+use Psr\Container\ContainerInterface;
 
 /**
  * A permission is a simple string, that can be read with additional data (name + category) from storage.
@@ -98,7 +98,7 @@ class Permission extends AbstractModel implements CategorizableInterface
      * @param Container $container DI Container.
      * @return void
      */
-    protected function setDependencies(Container $container)
+    protected function setDependencies(ContainerInterface $container)
     {
         parent::setDependencies($container);
         $this->setTranslator($container->get('translator'));

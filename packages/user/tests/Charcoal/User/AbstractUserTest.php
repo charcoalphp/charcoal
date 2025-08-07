@@ -4,10 +4,7 @@ namespace Charcoal\Tests\User;
 
 use DateTime;
 use InvalidArgumentException;
-
-
 use DI\Container;
-
 // From 'charcoal-user'
 use Charcoal\User\AbstractUser;
 use Charcoal\User\UserInterface;

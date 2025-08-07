@@ -40,7 +40,7 @@ class AclServiceProvider
          * @param Container $container DI container
          * @return Acl
          */
-        $container->set('admin/acl', function (Container $container) {
+        $container->set('admin/acl', function (ContainerInterface $container) {
             $adminConfig = $container->get('admin/config');
 
             $resourceName = 'admin';

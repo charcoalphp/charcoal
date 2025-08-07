@@ -2,7 +2,6 @@
 
 namespace Charcoal\Translator\Script;
 
-
 use DI\Container;
 // From PSR-7
 use Psr\Http\Message\RequestInterface;
@@ -11,6 +10,7 @@ use Psr\Http\Message\ResponseInterface;
 use Charcoal\Admin\AdminScript;
 // From 'charcoal-translator'
 use Charcoal\Translator\TranslatorAwareTrait;
+use Psr\Container\ContainerInterface;
 
 /**
  * Find all strings to be translated in templates
@@ -68,7 +68,7 @@ class TranslationParserScript extends AdminScript
      * @param Container $container DI Container.
      * @return void
      */
-    public function setDependencies(Container $container)
+    public function setDependencies(ContainerInterface $container)
     {
         $this->appConfig = $container->get('config');
         $this->setTranslator($container->get('translator'));

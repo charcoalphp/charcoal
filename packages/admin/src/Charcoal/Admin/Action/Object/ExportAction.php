@@ -5,11 +5,11 @@ namespace Charcoal\Admin\Action\Object;
 // From PSR-7
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
-
 use DI\Container;
 // From 'charcoal-admin'
 use Charcoal\Admin\AdminAction;
 use Charcoal\Admin\Service\Exporter;
+use Psr\Container\ContainerInterface;
 
 /**
  * Action: Export one or more objects from storage.
@@ -130,7 +130,7 @@ class ExportAction extends AdminAction
      * @param  Container $container A dependencies container instance.
      * @return void
      */
-    protected function setDependencies(Container $container)
+    protected function setDependencies(ContainerInterface $container)
     {
         parent::setDependencies($container);
 

@@ -4,12 +4,10 @@ namespace Charcoal\App\Action;
 
 use InvalidArgumentException;
 // From PSR-7
-use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 // From PSR-3
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
-
 use DI\Container;
 // From 'charcoal-config'
 use Charcoal\Config\AbstractEntity;
@@ -17,6 +15,7 @@ use Charcoal\Config\AbstractEntity;
 use Charcoal\App\Helper\CallbackStream;
 use Charcoal\App\Action\ActionInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Container\ContainerInterface;
 
 /**
  * Default implementation, as abstract class, of  the `ActionInterface`.
@@ -289,7 +288,7 @@ abstract class AbstractAction extends AbstractEntity implements
      * @param Container $container A dependencies container instance.
      * @return void
      */
-    protected function setDependencies(Container $container)
+    protected function setDependencies(ContainerInterface $container)
     {
         // This method is a stub. Reimplement in children action classes.
     }

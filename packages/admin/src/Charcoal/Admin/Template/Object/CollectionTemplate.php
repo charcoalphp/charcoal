@@ -3,10 +3,8 @@
 namespace Charcoal\Admin\Template\Object;
 
 use Exception;
-use InvalidArgumentException;
 // From PSR-7
 use Psr\Http\Message\RequestInterface;
-
 use DI\Container;
 // From 'charcoal-admin'
 use Charcoal\Admin\AdminTemplate;
@@ -15,6 +13,7 @@ use Charcoal\Admin\Ui\CollectionContainerTrait;
 use Charcoal\Admin\Ui\DashboardContainerInterface;
 use Charcoal\Admin\Ui\DashboardContainerTrait;
 use Charcoal\Admin\Widget\SearchWidget;
+use Psr\Container\ContainerInterface;
 
 /**
  * Object collection template (table with a list of objects).
@@ -206,7 +205,7 @@ class CollectionTemplate extends AdminTemplate implements
      * @param Container $container DI Container.
      * @return void
      */
-    protected function setDependencies(Container $container)
+    protected function setDependencies(ContainerInterface $container)
     {
         parent::setDependencies($container);
 

@@ -2,15 +2,10 @@
 
 namespace Charcoal\Tests\Object;
 
-use DateTime;
-
-
 use DI\Container;
-
 // From 'charcoal-translator'
 use Charcoal\Translator\Translator;
 use Charcoal\Translator\LocalesManager;
-
 // From 'charcoal-object'
 use Charcoal\Object\ObjectRoute;
 use Charcoal\Object\RoutableTrait;

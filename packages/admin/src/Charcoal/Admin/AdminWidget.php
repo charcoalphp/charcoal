@@ -23,6 +23,7 @@ use Charcoal\App\Template\AbstractWidget;
 // From 'charcoal-admin'
 use Charcoal\Admin\Support\AdminTrait;
 use Charcoal\Admin\Support\BaseUrlTrait;
+use Psr\Container\ContainerInterface;
 
 /**
  * The base Widget for the `admin` module.
@@ -447,7 +448,7 @@ class AdminWidget extends AbstractWidget implements
      * @param  Container $container DI Container.
      * @return void
      */
-    protected function setDependencies(Container $container)
+    protected function setDependencies(ContainerInterface $container)
     {
         parent::setDependencies($container);
 

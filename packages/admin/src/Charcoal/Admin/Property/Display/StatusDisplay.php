@@ -9,6 +9,7 @@ use Charcoal\View\ViewableInterface;
 use Charcoal\View\ViewableTrait;
 use DI\Container;
 use UnexpectedValueException;
+use Psr\Container\ContainerInterface;
 
 /**
  * Textual Display Property with status indicator
@@ -64,7 +65,7 @@ class StatusDisplay extends AbstractPropertyDisplay implements ViewableInterface
      * @param Container $container A dependencies container instance.
      * @return void
      */
-    protected function setDependencies(Container $container)
+    protected function setDependencies(ContainerInterface $container)
     {
         parent::setDependencies($container);
 

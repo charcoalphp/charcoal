@@ -2,7 +2,6 @@
 
 namespace Charcoal\Ui;
 
-use InvalidArgumentException;
 // From PSR-3 (Logger)
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
@@ -16,12 +15,12 @@ use Charcoal\Translator\TranslatorAwareTrait;
 use Charcoal\User\AuthAwareInterface;
 use Charcoal\User\AuthAwareTrait;
 // From 'charcoal-view'
-use Charcoal\View\ViewableInterface;
 use Charcoal\View\ViewableTrait;
 // Intra-module ('charcoal-ui') dependencies
 use Charcoal\Ui\PrioritizableTrait;
 use Charcoal\Ui\UiItemInterface;
 use Charcoal\Ui\UiItemTrait;
+use Psr\Container\ContainerInterface;
 
 /**
  * An abstract UI Item.
@@ -64,7 +63,7 @@ abstract class AbstractUiItem extends AbstractEntity implements
      * @param  Container $container A dependencies container instance.
      * @return void
      */
-    protected function setDependencies(Container $container)
+    protected function setDependencies(ContainerInterface $container)
     {
         $this->setTranslator($container->get('translator'));
         $this->setAuthenticator($container->get('authenticator'));

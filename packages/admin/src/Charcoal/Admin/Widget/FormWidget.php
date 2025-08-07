@@ -2,13 +2,9 @@
 
 namespace Charcoal\Admin\Widget;
 
-use Exception;
 use InvalidArgumentException;
 use RuntimeException;
-
 use DI\Container;
-// From PSR-7
-use Psr\Http\Message\RequestInterface;
 // From 'charcoal-factory'
 use Charcoal\Factory\FactoryInterface;
 // From 'charcoal-translator'
@@ -27,6 +23,7 @@ use Charcoal\Admin\Ui\FormSidebarInterface;
 use Charcoal\Admin\Ui\LanguageSwitcherAwareInterface;
 use Charcoal\Admin\Ui\ObjectContainerInterface;
 use Charcoal\Admin\Widget\FormPropertyWidget;
+use Psr\Container\ContainerInterface;
 
 /**
  * A Basic Admin Form
@@ -770,7 +767,7 @@ class FormWidget extends AdminWidget implements
      * @param  Container $container The DI container.
      * @return void
      */
-    protected function setDependencies(Container $container)
+    protected function setDependencies(ContainerInterface $container)
     {
         parent::setDependencies($container);
 

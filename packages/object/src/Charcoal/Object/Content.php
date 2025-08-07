@@ -3,8 +3,6 @@
 namespace Charcoal\Object;
 
 use InvalidArgumentException;
-
-use DI\Container;
 // From 'charcoal-factory'
 use Charcoal\Factory\FactoryInterface;
 // From 'charcoal-core'
@@ -19,6 +17,8 @@ use Charcoal\Object\RevisionableInterface;
 use Charcoal\Object\RevisionableTrait;
 use Charcoal\Object\TimestampableInterface;
 use Charcoal\Object\TimestampableTrait;
+use Psr\Container\ContainerInterface;
+use DI\Container;
 
 /**
  *
@@ -62,7 +62,7 @@ class Content extends AbstractModel implements
      * @param Container $container DI Container.
      * @return void
      */
-    protected function setDependencies(Container $container)
+    protected function setDependencies(ContainerInterface $container)
     {
         parent::setDependencies($container);
 

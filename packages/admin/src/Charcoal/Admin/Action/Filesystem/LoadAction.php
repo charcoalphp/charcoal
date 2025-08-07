@@ -13,6 +13,7 @@ use Nyholm\Psr7\Stream;
 use League\Flysystem\FileNotFoundException;
 // From 'charcoal-admin'
 use Charcoal\Admin\AdminAction;
+use Psr\Container\ContainerInterface;
 
 /**
  * Action: Create a streamed response for a given file.
@@ -463,7 +464,7 @@ class LoadAction extends AdminAction
      * @param  Container $container A service locator.
      * @return void
      */
-    protected function setDependencies(Container $container)
+    protected function setDependencies(ContainerInterface $container)
     {
         parent::setDependencies($container);
 

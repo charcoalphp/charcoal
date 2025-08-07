@@ -2,7 +2,6 @@
 
 namespace Charcoal\Ui\Form;
 
-
 use DI\Container;
 // From 'charcoal-factory'
 use Charcoal\Factory\FactoryInterface;

@@ -2,12 +2,7 @@
 
 namespace Charcoal\Tests\Admin\Script\Notification;
 
-use DateTime;
-use ReflectionClass;
-
-
 use DI\Container;
-
 // From 'charcoal-admin'
 use Charcoal\Admin\Script\Notification\ProcessMonthlyScript;
 use Charcoal\Tests\AbstractTestCase;

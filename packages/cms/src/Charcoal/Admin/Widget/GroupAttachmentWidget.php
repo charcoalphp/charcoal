@@ -4,7 +4,6 @@ namespace Charcoal\Admin\Widget;
 
 use InvalidArgumentException;
 use RuntimeException;
-
 use DI\Container;
 // From 'charcoal-core'
 use Charcoal\Model\MetadataInterface;
@@ -19,6 +18,7 @@ use Charcoal\Ui\Layout\LayoutAwareTrait;
 use Charcoal\Ui\PrioritizableInterface;
 // From 'charcoal-cms'
 use Charcoal\Cms\TemplateableInterface;
+use Psr\Container\ContainerInterface;
 
 /**
  * Class TemplateAttachmentWidget
@@ -72,7 +72,7 @@ class GroupAttachmentWidget extends AttachmentWidget implements
      * @param  Container $container The DI container.
      * @return void
      */
-    protected function setDependencies(Container $container)
+    protected function setDependencies(ContainerInterface $container)
     {
         parent::setDependencies($container);
 

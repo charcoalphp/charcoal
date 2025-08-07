@@ -2,22 +2,15 @@
 
 namespace Charcoal\Tests\Admin\Action\Account;
 
-use ReflectionClass;
-
 // From Mockery
 use Mockery as m;
-
-
 use DI\Container;
-
 // From Slim
 use Slim\Http\Environment;
 use Slim\Http\Request;
 use Slim\Http\Response;
-
 // From 'charcoal-admin'
 use Charcoal\Admin\Action\Account\ResetPasswordAction;
-use Charcoal\Admin\User;
 use Charcoal\Tests\AbstractTestCase;
 use Charcoal\Tests\ReflectionsTrait;
 use Charcoal\Tests\Admin\ContainerProvider;

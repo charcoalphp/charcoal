@@ -6,7 +6,7 @@ use Exception;
 use LogicException;
 use RuntimeException;
 use InvalidArgumentException;
-use DI\Container as ServiceContainer;
+use DI\Container;
 // From 'charcoal-factory'
 use Charcoal\Factory\FactoryInterface;
 // From 'charcoal-core'
@@ -15,6 +15,7 @@ use Charcoal\Model\AbstractModel;
 use Charcoal\Attachment\Interfaces\AttachmentContainerInterface;
 use Charcoal\Attachment\Interfaces\JoinInterface;
 use Charcoal\Attachment\Object\Attachment;
+use Psr\Container\ContainerInterface;
 
 /**
  * Intermediate table for object to attachment relationships.
@@ -123,10 +124,10 @@ class Join extends AbstractModel implements
     /**
      * Set the model's dependencies.
      *
-     * @param  ServiceContainer $container Service container.
+     * @param  Container $container Service container.
      * @return void
      */
-    protected function setDependencies(ServiceContainer $container)
+    protected function setDependencies(ContainerInterface $container)
     {
         parent::setDependencies($container);
 

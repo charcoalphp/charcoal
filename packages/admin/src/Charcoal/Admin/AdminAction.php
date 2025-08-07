@@ -6,7 +6,6 @@ use RuntimeException;
 // From PSR-7
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
-
 use DI\Container;
 // From 'charcoal-factory'
 use Charcoal\Factory\FactoryInterface;
@@ -24,8 +23,8 @@ use Charcoal\Admin\Ui\FeedbackContainerTrait;
 use Charcoal\Admin\Support\AdminTrait;
 use Charcoal\Admin\Support\BaseUrlTrait;
 use Charcoal\Admin\Support\SecurityTrait;
-use GuzzleHttp\Psr7\Request;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Container\ContainerInterface;
 
 /**
  * The base class for the `admin` Actions.
@@ -181,7 +180,7 @@ abstract class AdminAction extends AbstractAction implements
      * @param  Container $container DI Container.
      * @return void
      */
-    protected function setDependencies(Container $container)
+    protected function setDependencies(ContainerInterface $container)
     {
         parent::setDependencies($container);
 

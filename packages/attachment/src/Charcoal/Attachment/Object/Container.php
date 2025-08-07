@@ -11,6 +11,7 @@ use Charcoal\Attachment\Interfaces\AttachmentContainerInterface;
 use Charcoal\Attachment\Traits\AttachmentAwareTrait;
 use Charcoal\Attachment\Traits\AttachmentContainerTrait;
 use Charcoal\Attachment\Traits\ConfigurableAttachmentsTrait;
+use Psr\Container\ContainerInterface;
 
 /**
  * Gallery Attachment Type
@@ -32,7 +33,7 @@ class Container extends Attachment implements
      * @param  ServiceContainer $container A dependencies container instance.
      * @return void
      */
-    protected function setDependencies(ServiceContainer $container)
+    protected function setDependencies(ContainerInterface $container)
     {
         parent::setDependencies($container);
 

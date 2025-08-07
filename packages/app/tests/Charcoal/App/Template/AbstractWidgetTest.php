@@ -2,15 +2,7 @@
 
 namespace Charcoal\Tests\App\Template;
 
-// From PSR-7
-use Psr\Http\Message\RequestInterface;
-
-// From Slim
-use Slim\Http\Response;
-
-
 use DI\Container;
-
 // From 'charcoal-app'
 use Charcoal\App\Template\AbstractWidget;
 use Charcoal\Tests\AbstractTestCase;

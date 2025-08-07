@@ -3,10 +3,7 @@
 namespace Charcoal\Tests\User;
 
 use DateTime;
-
-
 use DI\Container;
-
 // From 'charcoal-user'
 use Charcoal\User\AuthToken;
 use Charcoal\Tests\AbstractTestCase;

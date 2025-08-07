@@ -2,11 +2,11 @@
 
 namespace Charcoal\Admin\Property\Display;
 
-
 use DI\Container;
 // From 'charcoal-admin'
 use Charcoal\Admin\Ui\ImageAttributesTrait;
 use Charcoal\Admin\Property\AbstractPropertyDisplay;
+use Psr\Container\ContainerInterface;
 
 /**
  * Image Display Property
@@ -52,7 +52,7 @@ class ImageDisplay extends AbstractPropertyDisplay
      * @param Container $container A dependencies container instance.
      * @return void
      */
-    protected function setDependencies(Container $container)
+    protected function setDependencies(ContainerInterface $container)
     {
         parent::setDependencies($container);
 

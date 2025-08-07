@@ -2,9 +2,7 @@
 
 namespace Charcoal\Tests\User;
 
-
 use DI\Container;
-
 // From 'charcoal-user'
 use Charcoal\User\Authenticator;
 use Charcoal\User\AuthToken;

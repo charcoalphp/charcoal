@@ -3,9 +3,7 @@
 namespace Charcoal\Property;
 
 use PDO;
-use RuntimeException;
 use InvalidArgumentException;
-
 use DI\Container;
 // From 'charcoal-translator'
 use Charcoal\Translator\Translation;
@@ -13,6 +11,7 @@ use Charcoal\Translator\Translation;
 use Charcoal\Property\AbstractProperty;
 use Charcoal\Property\SelectablePropertyInterface;
 use Charcoal\Property\SelectablePropertyTrait;
+use Psr\Container\ContainerInterface;
 
 /**
  * Template Selector Property
@@ -230,7 +229,7 @@ class TemplateProperty extends AbstractProperty implements SelectablePropertyInt
      * @param  Container $container A dependencies container instance.
      * @return void
      */
-    protected function setDependencies(Container $container)
+    protected function setDependencies(ContainerInterface $container)
     {
         parent::setDependencies($container);
 

@@ -2,11 +2,7 @@
 
 namespace Charcoal\Tests\Admin\Template;
 
-use ReflectionClass;
-
-
 use DI\Container;
-
 // From 'charcoal-admin'
 use Charcoal\Admin\Template\ElfinderTemplate;
 use Charcoal\Tests\AbstractTestCase;

@@ -13,9 +13,6 @@ use Monolog\Processor\MemoryUsageProcessor;
 use Monolog\Processor\UidProcessor;
 use Monolog\Handler\BrowserConsoleHandler;
 use Monolog\Handler\StreamHandler;
-// From 'charcoal-factory'
-use Charcoal\Factory\GenericFactory as Factory;
-use Charcoal\Factory\FactoryInterface;
 // From 'charcoal-app'
 use Charcoal\App\AppConfig;
 use Charcoal\App\Config\LoggerConfig;

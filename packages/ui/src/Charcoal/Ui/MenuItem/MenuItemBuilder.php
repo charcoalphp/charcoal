@@ -2,7 +2,6 @@
 
 namespace Charcoal\Ui\MenuItem;
 
-
 use DI\Container;
 // From 'charcoal-factory'
 use Charcoal\Factory\FactoryInterface;

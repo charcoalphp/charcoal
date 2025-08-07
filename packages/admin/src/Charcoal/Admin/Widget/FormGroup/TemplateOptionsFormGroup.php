@@ -5,7 +5,6 @@ namespace Charcoal\Admin\Widget\FormGroup;
 use RuntimeException;
 use UnexpectedValueException;
 use InvalidArgumentException;
-
 use DI\Container;
 // From 'charcoal-core'
 use Charcoal\Model\Service\MetadataLoader;
@@ -13,12 +12,11 @@ use Charcoal\Model\MetadataInterface;
 // From 'charcoal-property'
 use Charcoal\Property\PropertyInterface;
 use Charcoal\Property\Structure\StructureMetadata;
-use Charcoal\Property\TemplateProperty;
-use Charcoal\Property\SelectablePropertyInterface;
 // From 'charcoal-cms'
 use Charcoal\Cms\TemplateableInterface;
 // From 'charcoal-admin'
 use Charcoal\Admin\Widget\FormGroup\StructureFormGroup;
+use Psr\Container\ContainerInterface;
 
 /**
  * Template Options Form Group
@@ -220,7 +218,7 @@ class TemplateOptionsFormGroup extends StructureFormGroup
      * @param  Container $container A dependencies container instance.
      * @return void
      */
-    protected function setDependencies(Container $container)
+    protected function setDependencies(ContainerInterface $container)
     {
         parent::setDependencies($container);
 

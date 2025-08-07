@@ -4,13 +4,9 @@ namespace Charcoal\Tests\App\Action;
 
 // From PSR-7
 use Psr\Http\Message\RequestInterface;
-
 // From Slim
 use Slim\Http\Response;
-
-
 use DI\Container;
-
 // From 'charcoal-app'
 use Charcoal\App\Action\AbstractAction;
 use Charcoal\Tests\App\ContainerProvider;

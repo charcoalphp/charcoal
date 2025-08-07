@@ -2,17 +2,15 @@
 
 namespace Charcoal\Admin\Widget;
 
-
 use DI\Container;
 // From 'charcoal-ui'
 use Charcoal\Ui\Dashboard\DashboardInterface;
 use Charcoal\Ui\Dashboard\DashboardTrait;
-use Charcoal\Ui\Layout\LayoutAwareInterface;
 use Charcoal\Ui\Layout\LayoutAwareTrait;
 use Charcoal\Ui\UiItemTrait;
-use Charcoal\Ui\UiItemInterface;
 // From 'charcoal-admin'
 use Charcoal\Admin\AdminWidget;
+use Psr\Container\ContainerInterface;
 
 /**
  * The dashboard widget is a simple dashboard interface / layout aware object.
@@ -28,7 +26,7 @@ class DashboardWidget extends AdminWidget implements
      * @param Container $container The DI container.
      * @return void
      */
-    protected function setDependencies(Container $container)
+    protected function setDependencies(ContainerInterface $container)
     {
         parent::setDependencies($container);
 

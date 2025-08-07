@@ -2,15 +2,7 @@
 
 namespace Charcoal\Tests\Admin;
 
-// From PSR-3
-use Psr\Log\NullLogger;
-
-
 use DI\Container;
-
-// From 'charcoal-factory'
-use Charcoal\Factory\GenericFactory;
-
 // From 'charcoal-admin'
 use Charcoal\Admin\Service\Exporter;
 use Charcoal\Tests\AbstractTestCase;

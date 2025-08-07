@@ -6,10 +6,7 @@ namespace Charcoal\Tests\View;
 use Charcoal\App\AppConfig;
 use Charcoal\Translator\ServiceProvider\TranslatorServiceProvider;
 use Slim\Http\Response;
-
-
 use DI\Container;
-
 // From 'charcoal-view'
 use Charcoal\View\ViewServiceProvider;
 use Charcoal\Tests\AbstractTestCase;

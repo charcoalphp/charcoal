@@ -8,6 +8,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\RequestInterface;
 // From 'charcoal-admin'
 use Charcoal\Admin\AdminScript;
+use Psr\Container\ContainerInterface;
 
 /**
  * Copy the Admin assets to a given destination.
@@ -90,7 +91,7 @@ class CopyAssetsScript extends AdminScript
      * @param Container $container DI Container.
      * @return void
      */
-    protected function setDependencies(Container $container)
+    protected function setDependencies(ContainerInterface $container)
     {
         parent::setDependencies($container);
 

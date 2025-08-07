@@ -5,16 +5,14 @@ namespace Charcoal\Object;
 use InvalidArgumentException;
 use DateTime;
 use DateTimeInterface;
-
 use DI\Container;
-// From 'charcoal-factory'
-use Charcoal\Factory\FactoryInterface;
 // From 'charcoal-core'
 use Charcoal\Model\AbstractModel;
 use Charcoal\Model\ModelFactoryTrait;
 // From 'charcoal-object'
 use Charcoal\Object\ObjectRevisionInterface;
 use Charcoal\Object\RevisionableInterface;
+use Psr\Container\ContainerInterface;
 
 /**
  * Represents the changeset of an object.
@@ -80,7 +78,7 @@ class ObjectRevision extends AbstractModel implements ObjectRevisionInterface
      * @param  Container $container DI Container.
      * @return void
      */
-    protected function setDependencies(Container $container)
+    protected function setDependencies(ContainerInterface $container)
     {
         parent::setDependencies($container);
 

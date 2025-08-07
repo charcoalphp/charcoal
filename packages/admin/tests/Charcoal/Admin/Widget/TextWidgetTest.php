@@ -2,12 +2,7 @@
 
 namespace Charcoal\Tests\Admin\Widget;
 
-// From PSR-3
-use Psr\Log\NullLogger;
-
-
 use DI\Container;
-
 // From 'charcoal-admin'
 use Charcoal\Admin\Widget\TextWidget;
 use Charcoal\Tests\AbstractTestCase;

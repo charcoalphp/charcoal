@@ -8,7 +8,6 @@ use UnexpectedValueException;
 // From PSR-7
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
-
 use DI\Container;
 // From 'charcoal-factory'
 use Charcoal\Factory\FactoryInterface;
@@ -16,6 +15,7 @@ use Charcoal\Factory\FactoryInterface;
 use Charcoal\Admin\AdminAction;
 use Charcoal\Admin\Widget\ObjectFormWidget;
 use Charcoal\Admin\Widget\FormPropertyWidget;
+use Psr\Container\ContainerInterface;
 
 /**
  * Action: Inline editing of multiple objects in Table Widget
@@ -169,7 +169,7 @@ class InlineMultiAction extends AdminAction
      * @param Container $container DI container.
      * @return void
      */
-    protected function setDependencies(Container $container)
+    protected function setDependencies(ContainerInterface $container)
     {
         parent::setDependencies($container);
 

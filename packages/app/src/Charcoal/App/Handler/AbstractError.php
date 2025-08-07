@@ -4,10 +4,10 @@ namespace Charcoal\App\Handler;
 
 // From PSR-3
 use Psr\Log\LoggerInterface;
-
 use DI\Container;
 // From 'charcoal-app'
 use Charcoal\App\Handler\AbstractHandler;
+use Psr\Container\ContainerInterface;
 
 /**
  * Abstract Charcoal Application Error Handler
@@ -125,7 +125,7 @@ abstract class AbstractError extends AbstractHandler
      * @param  Container $container A service locator.
      * @return self
      */
-    protected function setDependencies(Container $container)
+    protected function setDependencies(ContainerInterface $container)
     {
         parent::setDependencies($container);
 

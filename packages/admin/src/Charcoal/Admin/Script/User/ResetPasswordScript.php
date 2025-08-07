@@ -5,14 +5,13 @@ namespace Charcoal\Admin\Script\User;
 // From PSR-7
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
-
 use DI\Container;
 // From 'charcoal-user'
 use Charcoal\User\AuthAwareInterface;
 use Charcoal\User\AuthAwareTrait;
 // From 'charcoal-admin'
 use Charcoal\Admin\AdminScript;
-use Charcoal\Admin\User;
+use Psr\Container\ContainerInterface;
 
 /**
  *
@@ -37,7 +36,7 @@ class ResetPasswordScript extends AdminScript implements
      * @param  Container $container DI Container.
      * @return void
      */
-    protected function setDependencies(Container $container)
+    protected function setDependencies(ContainerInterface $container)
     {
         parent::setDependencies($container);
 

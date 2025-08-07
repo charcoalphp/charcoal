@@ -5,7 +5,6 @@ namespace Charcoal\Admin;
 use Exception;
 use InvalidArgumentException;
 // From PSR-7
-use Psr\Http\Message\RequestInterface;
 use DI\Container;
 // From 'charcoal-factory'
 use Charcoal\Factory\FactoryInterface;
@@ -15,7 +14,6 @@ use Charcoal\User\AuthAwareTrait;
 // From 'charcoal-translator'
 use Charcoal\Translator\TranslatorAwareTrait;
 // From 'charcoal-ui'
-use Charcoal\Ui\PrioritizableInterface;
 // From 'charcoal-app'
 use Charcoal\App\DebugAwareTrait;
 use Charcoal\App\Template\AbstractTemplate;
@@ -27,6 +25,7 @@ use Charcoal\Admin\Support\SecurityTrait;
 use Charcoal\Admin\Ui\FeedbackContainerTrait;
 use Charcoal\App\Action\AbstractAction;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Container\ContainerInterface;
 
 /**
  * Base class for all `admin` Templates.
@@ -682,7 +681,7 @@ class AdminTemplate extends AbstractTemplate implements
      * @param Container $container DI Container.
      * @return void
      */
-    protected function setDependencies(Container $container)
+    protected function setDependencies(ContainerInterface $container)
     {
         parent::setDependencies($container);
 

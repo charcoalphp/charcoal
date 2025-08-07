@@ -5,19 +5,15 @@ namespace Charcoal\Object;
 use DateTime;
 use DateTimeInterface;
 use InvalidArgumentException;
-use RuntimeException;
 use Exception;
-
 use DI\Container;
 // From 'charcoal-core'
 use Charcoal\Model\AbstractModel;
-use Charcoal\Loader\CollectionLoader;
 use Charcoal\Model\ModelFactoryTrait;
 use Charcoal\Loader\CollectionLoaderAwareTrait;
-// From 'charcoal-factory'
-use Charcoal\Factory\FactoryInterface;
 // From 'charcoal-object'
 use Charcoal\Object\ObjectRouteInterface;
+use Psr\Container\ContainerInterface;
 
 /**
  * Represents a route to an object (i.e., a permalink).
@@ -129,7 +125,7 @@ class ObjectRoute extends AbstractModel implements
      * @param  Container $container A dependencies container instance.
      * @return void
      */
-    protected function setDependencies(Container $container)
+    protected function setDependencies(ContainerInterface $container)
     {
         parent::setDependencies($container);
 

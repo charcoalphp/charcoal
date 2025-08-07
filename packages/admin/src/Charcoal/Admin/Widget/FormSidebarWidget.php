@@ -4,9 +4,6 @@ namespace Charcoal\Admin\Widget;
 
 use Charcoal\Object\RevisionableInterface;
 use Charcoal\User\AuthAwareInterface;
-use InvalidArgumentException;
-
-use DI\Container;
 // From 'charcoal-ui'
 use Charcoal\Ui\Form\FormInterface;
 // From 'charcoal-translator'
@@ -18,7 +15,6 @@ use Charcoal\Admin\Ui\FormSidebarInterface;
 use Charcoal\Admin\Ui\HasLanguageSwitcherInterface;
 use Charcoal\Admin\Ui\HasLanguageSwitcherTrait;
 use Charcoal\Admin\Ui\LanguageSwitcherAwareInterface;
-use Charcoal\Admin\Widget\FormWidget;
 
 /**
  * Form Sidebar Widget

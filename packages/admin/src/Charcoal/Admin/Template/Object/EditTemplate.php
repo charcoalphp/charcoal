@@ -3,7 +3,6 @@
 namespace Charcoal\Admin\Template\Object;
 
 use Exception;
-
 use DI\Container;
 use Psr\Http\Message\RequestInterface;
 // From 'charcoal-admin'
@@ -12,6 +11,7 @@ use Charcoal\Admin\Ui\DashboardContainerInterface;
 use Charcoal\Admin\Ui\DashboardContainerTrait;
 use Charcoal\Admin\Ui\ObjectContainerInterface;
 use Charcoal\Admin\Ui\ObjectContainerTrait;
+use Psr\Container\ContainerInterface;
 
 /**
  * Object Edit Template
@@ -154,7 +154,7 @@ class EditTemplate extends AdminTemplate implements
      * @param Container $container DI container.
      * @return void
      */
-    protected function setDependencies(Container $container)
+    protected function setDependencies(ContainerInterface $container)
     {
         parent::setDependencies($container);
 

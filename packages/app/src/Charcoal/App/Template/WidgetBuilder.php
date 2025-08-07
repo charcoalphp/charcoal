@@ -3,7 +3,6 @@
 namespace Charcoal\App\Template;
 
 use InvalidArgumentException;
-
 use DI\Container;
 // From 'charcoal-factory'
 use Charcoal\Factory\FactoryInterface;

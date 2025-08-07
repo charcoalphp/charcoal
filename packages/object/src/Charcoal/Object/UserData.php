@@ -6,7 +6,6 @@ use DateTime;
 use DateTimeInterface;
 use Exception;
 use InvalidArgumentException;
-
 use DI\Container;
 // From 'charcoal-core'
 use Charcoal\Model\AbstractModel;
@@ -14,6 +13,7 @@ use Charcoal\Model\AbstractModel;
 use Charcoal\Translator\TranslatorAwareTrait;
 // From 'charcoal-object'
 use Charcoal\Object\UserDataInterface;
+use Psr\Container\ContainerInterface;
 
 /**
  * User Data is a base model for objects typically submitted by the end-user of the application.
@@ -58,7 +58,7 @@ class UserData extends AbstractModel implements
      * @param Container $container DI Container.
      * @return void
      */
-    protected function setDependencies(Container $container)
+    protected function setDependencies(ContainerInterface $container)
     {
         parent::setDependencies($container);
 

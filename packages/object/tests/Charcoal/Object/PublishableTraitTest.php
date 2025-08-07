@@ -5,10 +5,7 @@ namespace Charcoal\Tests\Object;
 use DateTime;
 use InvalidArgumentException;
 use UnexpectedValueException;
-
-
 use DI\Container;
-
 // From 'charcoal-object'
 use Charcoal\Object\PublishableTrait;
 use Charcoal\Object\PublishableInterface as Publishable;

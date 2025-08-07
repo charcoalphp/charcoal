@@ -14,6 +14,7 @@ use Charcoal\Factory\FactoryInterface;
 use Charcoal\Admin\AdminAction;
 use Charcoal\Admin\User;
 use Charcoal\Admin\User\LostPasswordToken;
+use Psr\Container\ContainerInterface;
 
 /**
  * Lost Password Action
@@ -176,7 +177,7 @@ class LostPasswordAction extends AdminAction
      * @param Container $container DI Container.
      * @return void
      */
-    protected function setDependencies(Container $container)
+    protected function setDependencies(ContainerInterface $container)
     {
         parent::setDependencies($container);
         $this->setEmailFactory($container->get('email/factory'));

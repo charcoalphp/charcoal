@@ -5,7 +5,6 @@ namespace Charcoal\Attachment\Script;
 use PDO;
 use Exception;
 use InvalidArgumentException;
-
 use DI\Container;
 // From PSR-7
 use Psr\Http\Message\RequestInterface;
@@ -23,6 +22,7 @@ use Utils\Support\Traits\ConfigAwareTrait;
 use Utils\Support\Traits\ModelAwareTrait;
 use Utils\Support\Interfaces\ConfigAwareInterface;
 use Utils\Support\Interfaces\ModelAwareInterface;
+use Psr\Container\ContainerInterface;
 
 /**
  * Remove unassociated attachments
@@ -123,7 +123,7 @@ class CleanupScript extends AbstractScript implements
      * @param Container $container A dependencies container instance.
      * @return void
      */
-    protected function setDependencies(Container $container)
+    protected function setDependencies(ContainerInterface $container)
     {
         parent::setDependencies($container);
 

@@ -5,7 +5,6 @@ namespace Charcoal\Admin\Script\Notification;
 // From PSR-7
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
-
 use DI\Container;
 // From 'charcoal-core'
 use Charcoal\Loader\CollectionLoader;
@@ -21,6 +20,7 @@ use Charcoal\App\Script\CronScriptTrait;
 use Charcoal\Admin\AdminScript;
 use Charcoal\Admin\Object\Notification;
 use Charcoal\Admin\User;
+use Psr\Container\ContainerInterface;
 
 /**
  * Base class for all the notification script
@@ -101,7 +101,7 @@ abstract class AbstractNotificationScript extends AdminScript implements CronScr
      * @param Container $container DI Container.
      * @return void
      */
-    protected function setDependencies(Container $container)
+    protected function setDependencies(ContainerInterface $container)
     {
         parent::setDependencies($container);
         $this->setNotificationFactory($container->get('model/factory'));

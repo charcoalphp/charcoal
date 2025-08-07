@@ -2,13 +2,9 @@
 
 namespace Charcoal\Tests\User;
 
-
-use DI\Container;
-
 // From 'charcoal-user'
 use Charcoal\User\AuthTokenMetadata;
 use Charcoal\Tests\AbstractTestCase;
-use Charcoal\Tests\User\ContainerProvider;
 
 /**
  *

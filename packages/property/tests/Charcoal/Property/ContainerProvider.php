@@ -3,36 +3,23 @@
 namespace Charcoal\Tests\Property;
 
 use PDO;
-
 // From PSR-3
 use Psr\Log\NullLogger;
-
-// From 'cache/void-adapter' (PSR-6)
-use Cache\Adapter\Void\VoidCachePool;
-
 // From 'tedivm/stash' (PSR-6)
 use Stash\Pool;
-use Stash\Driver\Ephemeral;
-
-
 use DI\Container;
-
 // From 'symfony/translator'
 use Symfony\Component\Translation\Loader\ArrayLoader;
-
 // From 'charcoal-factory'
 use Charcoal\Factory\GenericFactory as Factory;
-
 // From 'charcoal-core'
 use Charcoal\Model\Service\MetadataLoader;
 use Charcoal\Loader\CollectionLoader;
 use Charcoal\Source\DatabaseSource;
-
 // From 'charcoal-view'
 use Charcoal\View\GenericView;
 use Charcoal\View\Mustache\MustacheEngine;
 use Charcoal\View\Mustache\MustacheLoader;
-
 // From 'charcoal-translator'
 use Charcoal\Translator\LocalesManager;
 use Charcoal\Translator\Translator;

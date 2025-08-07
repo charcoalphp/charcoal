@@ -2,19 +2,13 @@
 
 namespace Charcoal\Tests\Admin\Action\Object;
 
-use ReflectionClass;
-
-
 use DI\Container;
-
 // From Slim
 use Slim\Http\Environment;
 use Slim\Http\Request;
 use Slim\Http\Response;
-
 // From 'charcoal-admin'
 use Charcoal\Admin\Action\Object\UpdateAction;
-use Charcoal\Admin\User;
 use Charcoal\Tests\AbstractTestCase;
 use Charcoal\Tests\ReflectionsTrait;
 use Charcoal\Tests\Admin\ContainerProvider;

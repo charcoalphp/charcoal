@@ -2,9 +2,7 @@
 
 namespace Charcoal\Tests\Admin\Property\Input;
 
-
 use DI\Container;
-
 // From 'charcoal-admin'
 use Charcoal\Admin\Property\Input\TextareaInput;
 use Charcoal\Tests\AbstractTestCase;

@@ -5,16 +5,14 @@ namespace Charcoal\Admin\Property\Input;
 use JsonException;
 use RuntimeException;
 use UnexpectedValueException;
-
 use DI\Container;
 // From 'charcoal-factory'
 use Charcoal\Factory\FactoryInterface;
-// From 'charcoal-translator'
-use Charcoal\Translator\Translation;
 // From 'charcoal-property'
 use Charcoal\Property\HtmlProperty;
 // From 'charcoal-admin'
 use Charcoal\Admin\Property\AbstractPropertyInput;
+use Psr\Container\ContainerInterface;
 
 /**
  * Static Control Value Property
@@ -279,7 +277,7 @@ class ReadonlyInput extends AbstractPropertyInput
      * @param Container $container DI Container.
      * @return void
      */
-    protected function setDependencies(Container $container)
+    protected function setDependencies(ContainerInterface $container)
     {
         parent::setDependencies($container);
 

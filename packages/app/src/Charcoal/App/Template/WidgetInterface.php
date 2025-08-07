@@ -2,8 +2,6 @@
 
 namespace Charcoal\App\Template;
 
-use DI\Container;
-
 /**
  *
  */

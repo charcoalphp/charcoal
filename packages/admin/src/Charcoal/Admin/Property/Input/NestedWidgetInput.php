@@ -5,7 +5,6 @@ namespace Charcoal\Admin\Property\Input;
 use Charcoal\Ui\Form\FormInterface;
 use RuntimeException;
 use InvalidArgumentException;
-
 use DI\Container;
 // From 'charcoal-factory'
 use Charcoal\Factory\FactoryInterface;
@@ -18,6 +17,7 @@ use Charcoal\App\Template\WidgetInterface;
 use Charcoal\Admin\Property\AbstractPropertyInput;
 use Charcoal\Admin\Ui\NestedWidgetContainerInterface;
 use Charcoal\Admin\Ui\NestedWidgetContainerTrait;
+use Psr\Container\ContainerInterface;
 
 /**
  * Nested Widget Form Field
@@ -82,7 +82,7 @@ class NestedWidgetInput extends AbstractPropertyInput implements
      * @param Container $container A dependencies container instance.
      * @return void
      */
-    protected function setDependencies(Container $container)
+    protected function setDependencies(ContainerInterface $container)
     {
         parent::setDependencies($container);
 

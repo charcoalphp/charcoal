@@ -4,7 +4,6 @@ namespace Charcoal\Admin\Widget\FormGroup;
 
 use PDO;
 use RuntimeException;
-
 use DI\Container;
 // From 'laminas/laminas-permissions-acl'
 use Laminas\Permissions\Acl\Acl;
@@ -21,6 +20,7 @@ use Charcoal\User\Acl\Manager as AclManager;
 use Charcoal\Admin\AdminWidget;
 use Charcoal\Admin\User\Permission;
 use Charcoal\Admin\User\PermissionCategory;
+use Psr\Container\ContainerInterface;
 
 /**
  * ACL Permissions Widget (Form Group)
@@ -104,7 +104,7 @@ class AclPermissions extends AdminWidget implements
      * @param  Container $container A dependencies container instance.
      * @return void
      */
-    protected function setDependencies(Container $container)
+    protected function setDependencies(ContainerInterface $container)
     {
         parent::setDependencies($container);
 

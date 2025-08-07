@@ -2,9 +2,7 @@
 
 namespace Charcoal\Tests\Ui;
 
-
 use DI\Container;
-
 // From 'charcoal-ui'
 use Charcoal\Tests\Ui\ContainerProvider;
 

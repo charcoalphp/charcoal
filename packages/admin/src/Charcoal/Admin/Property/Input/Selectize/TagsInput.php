@@ -4,7 +4,6 @@ namespace Charcoal\Admin\Property\Input\Selectize;
 
 use RuntimeException;
 use InvalidArgumentException;
-
 use DI\Container;
 // From 'charcoal-core'
 use Charcoal\Loader\CollectionLoader;
@@ -14,6 +13,7 @@ use Charcoal\Factory\FactoryInterface;
 use Charcoal\Property\ObjectProperty;
 // From 'charcoal-admin'
 use Charcoal\Admin\Property\AbstractSelectableInput;
+use Psr\Container\ContainerInterface;
 
 /**
  * Tags Input Selectize
@@ -314,7 +314,7 @@ class TagsInput extends AbstractSelectableInput
      * @param  Container $container A dependencies container instance.
      * @return void
      */
-    protected function setDependencies(Container $container)
+    protected function setDependencies(ContainerInterface $container)
     {
         parent::setDependencies($container);
 

@@ -6,6 +6,7 @@ use Charcoal\DatabaseMigrator\AbstractMigration;
 use Charcoal\Model\ModelFactoryTrait;
 use PDOException;
 use DI\Container;
+use Psr\Container\ContainerInterface;
 
 /**
  * Migration 2021-07-13 17:24:00
@@ -30,7 +31,7 @@ final class Migration20210713172400 extends AbstractMigration
      * @param Container $container A DI service container.
      * @return void
      */
-    protected function setDependencies(Container $container): void
+    protected function setDependencies(ContainerInterface $container): void
     {
         parent::setDependencies($container);
 

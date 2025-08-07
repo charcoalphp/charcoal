@@ -2,7 +2,6 @@
 
 namespace Charcoal\Admin\Template\System;
 
-
 use DI\Container;
 // From 'charcoal-admin'
 use Charcoal\Admin\AdminTemplate;
@@ -10,7 +9,7 @@ use Charcoal\Admin\Ui\CollectionContainerInterface;
 use Charcoal\Admin\Ui\CollectionContainerTrait;
 use Charcoal\Admin\Ui\DashboardContainerInterface;
 use Charcoal\Admin\Ui\DashboardContainerTrait;
-use Charcoal\Admin\User;
+use Psr\Container\ContainerInterface;
 
 /**
  * List Admin Users
@@ -68,7 +67,7 @@ class UsersTemplate extends AdminTemplate implements
      * @param Container $container DI Container.
      * @return void
      */
-    protected function setDependencies(Container $container)
+    protected function setDependencies(ContainerInterface $container)
     {
         parent::setDependencies($container);
 

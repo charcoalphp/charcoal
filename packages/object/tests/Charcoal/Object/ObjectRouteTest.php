@@ -3,10 +3,7 @@
 namespace Charcoal\Tests\Object;
 
 use DateTime;
-
-
 use DI\Container;
-
 // From 'charcoal-object'
 use Charcoal\Object\ObjectRoute;
 use Charcoal\Tests\AbstractTestCase;
