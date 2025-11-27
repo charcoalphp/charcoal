@@ -1,0 +1,32 @@
+{{!--
+
+    System Info Template
+    =============
+
+--}}
+{{> charcoal/admin/template/inc.header }}
+
+<main class="c-page-container o-flex_main">
+    {{> charcoal/admin/template/inc.page-header }}
+    <section class="o-container -top -bottom">
+        {{> charcoal/admin/widget/feedbacks }}
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Details</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{# systemInfo }}
+                    <tr>
+                        <td>{{ label }}</td>
+                        <td><pre>{{ value }}</pre></td>
+                    </tr>
+                {{/ systemInfo }}
+            </tbody>
+        </table>
+    </section>
+</main>
+
+{{> charcoal/admin/template/inc.footer }}

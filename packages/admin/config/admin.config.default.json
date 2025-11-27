@@ -20,6 +20,9 @@
             "help": {
                 "ident": "charcoal/admin/template/help"
             },
+            "system-info": {
+                "ident": "charcoal/admin/template/system-info"
+            },
             "account/lost-password": {
                 "ident": "charcoal/admin/template/account/lost-password"
             },
