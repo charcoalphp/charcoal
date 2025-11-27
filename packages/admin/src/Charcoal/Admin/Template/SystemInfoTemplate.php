@@ -4,6 +4,7 @@ namespace Charcoal\Admin\Template;
 
 // From 'charcoal-admin'
 use Charcoal\Admin\AdminTemplate;
+use Composer\InstalledVersions;
 
 /**
  * Admin System Info template
@@ -42,6 +43,7 @@ class SystemInfoTemplate extends AdminTemplate
         $extensions['pdo_drivers'] = $pdoDrivers;
 
         $data = [
+            'charcoal_version'    => InstalledVersions::getVersion('charcoal/charcoal'),
             'php_version'         => PHP_VERSION,
             'php_sapi'            => php_sapi_name(),
             'os'                  => php_uname(),
