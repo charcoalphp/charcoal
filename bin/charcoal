@@ -6,11 +6,8 @@ declare(strict_types=1);
 use Charcoal\App\App;
 use Charcoal\App\AppConfig;
 use Charcoal\App\AppContainer;
-use GuzzleHttp\Psr7\Stream;
 use Nyholm\Psr7\Factory\Psr17Factory;
-use Nyholm\Psr7\Response;
 use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Server\RequestHandlerInterface;
 use Slim\Factory\ServerRequestCreatorFactory;
 
 // Ensure this is being used via a CLI
@@ -118,5 +115,3 @@ $app = App::instance($container);
 $app->setConfig($config);
 $app->setBasePath('');
 $app->run($request);
-//$response = $app->handle($request);
-//echo (string)$response->getBody();
