@@ -17,7 +17,7 @@ return static function (MBConfig $mbConfig): void {
     // for "merge" command.
     $mbConfig->dataToAppend([
         ComposerJsonSection::REQUIRE_DEV => [
-            'phpunit/phpunit' => '^9.5',
+            'phpunit/phpunit' => '^11.0',
         ],
     ]);
 
