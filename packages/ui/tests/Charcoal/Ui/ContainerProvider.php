@@ -4,18 +4,16 @@ namespace Charcoal\Tests\Ui;
 
 use Charcoal\App\AppConfig;
 use PDO;
-// From PSR-3
 use Psr\Log\NullLogger;
-// From 'tedivm/stash' (PSR-6)
 use Stash\Pool;
 use DI\Container;
 use Charcoal\Model\ServiceProvider\ModelServiceProvider;
-// From 'charcoal-user'
 use Charcoal\User\ServiceProvider\AuthServiceProvider;
-// From 'charcoal-translator'
 use Charcoal\Translator\ServiceProvider\TranslatorServiceProvider;
-// From 'charcoal-view'
 use Charcoal\View\ViewServiceProvider;
+use GuzzleHttp\Psr7\Uri;
+use Charcoal\Translator\LocalesManager;
+use Charcoal\Translator\Translator;
 
 /**
  * Service Container for Unit Tests
@@ -34,6 +32,9 @@ class ContainerProvider
         $this->registerSource($container);
         $this->registerLogger($container);
         $this->registerCache($container);
+        $this->registerBaseUrl($container);
+        $this->registerTranslator($container);
+        $this->registerDebug($container);
     }
 
     /**
@@ -176,5 +177,54 @@ class ContainerProvider
         $container->set('cache', function () {
             return new Pool();
         });
+    }
+
+    /**
+     * Setup the application's base URI.
+     *
+     * @param  Container $container A DI container.
+     * @return void
+     */
+    public function registerBaseUrl(Container $container)
+    {
+        $container->set('base-url', function () {
+            return (new Uri(''));
+        });
+    }
+
+    /**
+     * Setup the application's translator service.
+     *
+     * @param  Container $container A DI container.
+     * @return void
+     */
+    public function registerTranslator(Container $container)
+    {
+        $container->set('locales/manager', function (Container $container) {
+            return new LocalesManager([
+                'locales' => [
+                    'en' => [ 'locale' => 'en-US' ]
+                ]
+            ]);
+        });
+
+        $container->set('translator', function (Container $container) {
+            return new Translator([
+                'manager' => $container->get('locales/manager')
+            ]);
+        });
+    }
+
+    /**
+     * Register the unit tests required services.
+     *
+     * @param  Container $container A DI container.
+     * @return void
+     */
+    public function registerDebug(Container $container)
+    {
+        if (!($container->has('debug'))) {
+            $container->set('debug', false);
+        }
     }
 }

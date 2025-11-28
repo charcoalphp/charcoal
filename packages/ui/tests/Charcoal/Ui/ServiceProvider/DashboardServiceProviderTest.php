@@ -32,20 +32,20 @@ class DashboardServiceProviderTest extends AbstractTestCase
         $this->obj = new DashboardServiceProvider();
         $this->container = new Container();
 
-        $this->container['logger'] = function () {
+        $this->container->set('logger', function () {
             return new NullLogger();
-        };
+        });
 
         // Required depdendencies (stub)
-        $this->container['view'] = function () {
+        $this->container->set('view', function () {
             return null;
-        };
-        $this->container['widget/builder'] = function () {
+        });
+        $this->container->set('widget/builder', function () {
             return null;
-        };
-        $this->container['layout/builder'] = function () {
+        });
+        $this->container->set('layout/builder', function () {
             return null;
-        };
+        });
     }
 
     /**
@@ -56,10 +56,10 @@ class DashboardServiceProviderTest extends AbstractTestCase
      */
     public function testRegisterRegistersAllProviders()
     {
-        $this->container->register($this->obj);
+        $this->obj->register($this->container);
 
-        $this->assertTrue(isset($this->container['dashboard/factory']));
-        $this->assertTrue(isset($this->container['dashboard/builder']));
+        $this->assertTrue($this->container->has('dashboard/factory'));
+        $this->assertTrue($this->container->has('dashboard/builder'));
     }
 
     /**
@@ -67,8 +67,8 @@ class DashboardServiceProviderTest extends AbstractTestCase
      */
     public function testDashboardFactory()
     {
-        $this->container->register($this->obj);
-        $factory = $this->container['dashboard/factory'];
+        $this->obj->register($this->container);
+        $factory = $this->container->get('dashboard/factory');
         $this->assertInstanceOf('\Charcoal\Factory\GenericFactory', $factory);
     }
 
@@ -77,8 +77,8 @@ class DashboardServiceProviderTest extends AbstractTestCase
      */
     public function testDashboardBuilder()
     {
-        $this->container->register($this->obj);
-        $factory = $this->container['dashboard/builder'];
+        $this->obj->register($this->container);
+        $factory = $this->container->get('dashboard/builder');
         $this->assertInstanceOf('\Charcoal\Ui\Dashboard\DashboardBuilder', $factory);
     }
 }

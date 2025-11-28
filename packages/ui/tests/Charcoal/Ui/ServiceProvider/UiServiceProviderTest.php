@@ -39,27 +39,27 @@ class UiServiceProviderTest extends AbstractTestCase
      */
     public function testRegisterRegistersAllProviders()
     {
-        $this->container->register($this->obj);
+        $this->obj->register($this->container);
 
         // \Charcoal\Ui\ServiceProvider\DashboardServiceProvider
-        $this->assertTrue(isset($this->container['dashboard/factory']));
-        $this->assertTrue(isset($this->container['dashboard/builder']));
+        $this->assertTrue($this->container->has('dashboard/factory'));
+        $this->assertTrue($this->container->has('dashboard/builder'));
 
         // \Charcoal\Ui\ServiceProvider\FormServiceProvider
-        $this->assertTrue(isset($this->container['form/factory']));
-        $this->assertTrue(isset($this->container['form/builder']));
-        $this->assertTrue(isset($this->container['form/group/factory']));
-        $this->assertTrue(isset($this->container['form/input/factory']));
-        $this->assertTrue(isset($this->container['form/input/builder']));
+        $this->assertTrue($this->container->has('form/factory'));
+        $this->assertTrue($this->container->has('form/builder'));
+        $this->assertTrue($this->container->has('form/group/factory'));
+        $this->assertTrue($this->container->has('form/input/factory'));
+        $this->assertTrue($this->container->has('form/input/builder'));
 
         // \Charcoal\Ui\ServiceProvider\LayoutServiceProvider
-        $this->assertTrue(isset($this->container['layout/factory']));
-        $this->assertTrue(isset($this->container['layout/builder']));
+        $this->assertTrue($this->container->has('layout/factory'));
+        $this->assertTrue($this->container->has('layout/builder'));
 
         // \Charcoal\Ui\ServiceProvider\MenuServiceProvider
-        $this->assertTrue(isset($this->container['menu/factory']));
-        $this->assertTrue(isset($this->container['menu/builder']));
-        $this->assertTrue(isset($this->container['menu/item/factory']));
-        $this->assertTrue(isset($this->container['menu/item/builder']));
+        $this->assertTrue($this->container->has('menu/factory'));
+        $this->assertTrue($this->container->has('menu/builder'));
+        $this->assertTrue($this->container->has('menu/item/factory'));
+        $this->assertTrue($this->container->has('menu/item/builder'));
     }
 }

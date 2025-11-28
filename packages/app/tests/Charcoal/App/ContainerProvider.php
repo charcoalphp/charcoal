@@ -65,7 +65,7 @@ class ContainerProvider
      */
     public function registerBaseUrl(Container $container)
     {
-        $container->set('base-url', function (Container $container) {
+        $container->set('base-url', function () {
             return (new Uri('https://example.com:8080/foo/bar?abc=123'));
         });
     }
