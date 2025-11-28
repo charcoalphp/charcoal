@@ -6,26 +6,36 @@
 --}}
 {{> charcoal/admin/template/inc.header }}
 
+<style>
+    html {
+        scroll-behavior: smooth;
+    }
+</style>
+
 <main class="c-page-container o-flex_main">
     {{> charcoal/admin/template/inc.page-header }}
     <section class="o-container -top -bottom">
         {{> charcoal/admin/widget/feedbacks }}
-        <table class="table table-bordered table-striped">
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Details</th>
-                </tr>
-            </thead>
-            <tbody>
-                {{# systemInfo }}
-                    <tr>
-                        <td>{{ label }}</td>
-                        <td><pre>{{ value }}</pre></td>
-                    </tr>
-                {{/ systemInfo }}
-            </tbody>
-        </table>
+        <div class="section-legend card sticky-top float-right p-3" style="margin-top: -30px; margin-right: 1.5rem;">
+            <div class="label">{{# _t }}Legend{{/ _t }}</div>
+            <div class="buttons">
+                <a href="system-info#section-system-info" role="button" class="btn btn-primary">{{# _t }}System Info{{/ _t }}</a>
+                <a href="system-info#section-php-info" role="button" class="btn btn-primary">{{# _t }}PHP Info{{/ _t }}</a>
+            </div>
+        </div>
+        <div id="section-system-info" class="p-4 mb-5">
+            <h2>{{# _t }}System Info{{/ _t }}</h2>
+            {{# systemInfo }}
+                {{> charcoal/admin/template/partial/system-info-table }}
+            {{/ systemInfo }}
+        </div>
+
+        <div id="section-php-info" class="p-4 mb-5">
+            <h2>{{# _t }}PHP Info{{/ _t }}</h2>
+            {{# phpInfo }}
+                {{> charcoal/admin/template/partial/system-info-table }}
+            {{/ phpInfo }}
+        </div>
     </section>
 </main>
 
