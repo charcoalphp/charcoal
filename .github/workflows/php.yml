@@ -28,7 +28,7 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: 8.3
+          php-version: 8.4
           coverage: none
 
       - name: Install Composer dependencies
@@ -48,7 +48,7 @@ jobs:
 
     strategy:
       matrix:
-        php-versions: ['8.3']
+        php-versions: ['8.4']
         package: ${{fromJson(needs.provide_packages_json.outputs.matrix)}}
 
     steps:
