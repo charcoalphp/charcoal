@@ -80,8 +80,9 @@ class DatabaseServiceProvider
                     // Set UTf-8 compatibility by default. Disable it if it is set as such in config
                     $extraOptions = null;
                     if (!isset($dbConfig['disable_utf8']) || !$dbConfig['disable_utf8']) {
+                        $initCommand = class_exists('PDO\Mysql') ? Pdo\Mysql::ATTR_INIT_COMMAND : PDO::MYSQL_ATTR_INIT_COMMAND;
                         $extraOptions = [
-                            Pdo\Mysql::ATTR_INIT_COMMAND => 'SET NAMES utf8mb4',
+                            $initCommand => 'SET NAMES utf8mb4',
                         ];
                     }
 
@@ -95,7 +96,8 @@ class DatabaseServiceProvider
 
                     $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
                     if ($type === 'mysql') {
-                        $db->setAttribute(Pdo\Mysql::ATTR_USE_BUFFERED_QUERY, true);
+                        $useBufferedQuery = class_exists('PDO\Mysql') ? Pdo\Mysql::ATTR_USE_BUFFERED_QUERY : PDO::MYSQL_ATTR_USE_BUFFERED_QUERY;
+                        $db->setAttribute($useBufferedQuery, true);
                     }
 
                     return $db;
