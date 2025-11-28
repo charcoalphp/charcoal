@@ -23,7 +23,6 @@ trait ReflectionsTrait
     public function getMethod($class, $name)
     {
         $reflected = new ReflectionMethod($class, $name);
-        $reflected->setAccessible(true);
         return $reflected;
     }
 
@@ -70,7 +69,6 @@ trait ReflectionsTrait
     public function getProperty($class, $name)
     {
         $reflected = new ReflectionProperty($class, $name);
-        $reflected->setAccessible(true);
         return $reflected;
     }
 

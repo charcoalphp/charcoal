@@ -32,7 +32,6 @@ class AbstractUiItemTest extends AbstractTestCase
         ]]);
 
         $method = new ReflectionMethod($this->obj, 'setAuthDependencies');
-        $method->setAccessible(true);
         $method->invoke($this->obj, $container);
     }
 

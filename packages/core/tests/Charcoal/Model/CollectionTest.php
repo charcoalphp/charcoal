@@ -196,7 +196,6 @@ class CollectionTest extends AbstractTestCase
 
         $class = new ReflectionClass($c);
         $method = $class->getMethod('asArray');
-        $method->setAccessible(true);
 
         $items = new Collection($this->arr);
         $array = $method->invokeArgs($c, [ $items ]);

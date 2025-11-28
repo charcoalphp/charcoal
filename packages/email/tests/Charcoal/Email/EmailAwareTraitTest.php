@@ -22,7 +22,6 @@ class EmailAwareTraitTest extends AbstractTestCase
     {
         $class = new ReflectionClass($obj);
         $method = $class->getMethod($name);
-        $method->setAccessible(true);
         return $method;
     }
 

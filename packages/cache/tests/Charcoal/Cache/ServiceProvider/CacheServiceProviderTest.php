@@ -82,7 +82,6 @@ class CacheServiceProviderTest extends AbstractTestCase
         $middleware = $container->get('middlewares/charcoal/cache/middleware/cache');
         $reflection = new ReflectionClass($middleware);
         $reflectionProperty = $reflection->getProperty('cacheTtl');
-        $reflectionProperty->setAccessible(true);
 
         $this->assertEquals(1, $reflectionProperty->getValue($middleware));
     }

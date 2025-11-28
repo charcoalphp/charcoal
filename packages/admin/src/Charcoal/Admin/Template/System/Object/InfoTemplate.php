@@ -134,11 +134,9 @@ class InfoTemplate extends AdminTemplate implements
             $files = [];
             $reflector = new ReflectionObject($this->metadataLoader);
             $method = $reflector->getMethod('hierarchy');
-            $method->setAccessible(true);
             $hierarchy = $method->invoke($this->metadataLoader, $this->objType());
 
             $method2 = $reflector->getMethod('loadMetadataFromSource');
-            $method2->setAccessible(true);
             foreach ($hierarchy as $source) {
                 $ret = $method2->invoke($this->metadataLoader, $source);
                 if (!empty($ret)) {

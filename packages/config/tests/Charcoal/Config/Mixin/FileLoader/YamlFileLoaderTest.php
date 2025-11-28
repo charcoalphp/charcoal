@@ -135,7 +135,6 @@ class YamlFileLoaderTest extends AbstractFileLoaderTestCase
         $classMap = $autoloader->getClassMap();
         if (isset($classMap['Symfony\\Component\\Yaml\\Parser'])) {
             $refClassMap = new ReflectionProperty($autoloader, 'classMap');
-            $refClassMap->setAccessible(true);
 
             unset($classMap['Symfony\\Component\\Yaml\\Parser']);
             $refClassMap->setValue($autoloader, $classMap);
@@ -144,7 +143,6 @@ class YamlFileLoaderTest extends AbstractFileLoaderTestCase
         $prefixesPsr4 = $autoloader->getPrefixesPsr4();
         if (isset($prefixesPsr4['Symfony\\Component\\Yaml\\'])) {
             $refPrefixesPsr4 = new ReflectionProperty($autoloader, 'prefixDirsPsr4');
-            $refPrefixesPsr4->setAccessible(true);
 
             unset($prefixesPsr4['Symfony\\Component\\Yaml\\']);
             $refPrefixesPsr4->setValue($autoloader, $prefixesPsr4);
@@ -166,7 +164,6 @@ class YamlFileLoaderTest extends AbstractFileLoaderTestCase
         $classMap = $autoloader->getClassMap();
         if (!isset($classMap['Symfony\\Component\\Yaml\\Parser'])) {
             $refClassMap = new ReflectionProperty($autoloader, 'classMap');
-            $refClassMap->setAccessible(true);
 
             $refClassLoader  = $refClassMap->getDeclaringClass();
             $classLoaderPath = $refClassLoader->getFileName();
@@ -179,7 +176,6 @@ class YamlFileLoaderTest extends AbstractFileLoaderTestCase
         $prefixesPsr4 = $autoloader->getPrefixesPsr4();
         if (!isset($prefixesPsr4['Symfony\\Component\\Yaml\\'])) {
             $refPrefixesPsr4 = new ReflectionProperty($autoloader, 'prefixDirsPsr4');
-            $refPrefixesPsr4->setAccessible(true);
 
             $refClassLoader  = $refPrefixesPsr4->getDeclaringClass();
             $classLoaderPath = $refClassLoader->getFileName();

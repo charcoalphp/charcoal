@@ -311,7 +311,6 @@ class TranslatorTest extends AbstractTestCase
     public function testInvalidArrayTranslation()
     {
         $method = $this->getMethod($this->obj, 'isValidTranslation');
-        $method->setAccessible(true);
 
         $this->assertFalse($method->invokeArgs($this->obj, [ [ 0 => 'Hello!' ] ]));
         $this->assertFalse($method->invokeArgs($this->obj, [ [ 'hello' => 0 ] ]));

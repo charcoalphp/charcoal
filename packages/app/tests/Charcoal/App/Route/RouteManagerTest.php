@@ -64,7 +64,6 @@ class RouteManagerTest extends AbstractTestCase
 
         $reflector = new \ReflectionObject($obj);
         $method = $reflector->getMethod('setupTemplate');
-        $method->setAccessible(true);
         foreach($config['templates'] as $routeIdent => $templateConfig) {
             $ret = $method->invoke($obj, $routeIdent, $templateConfig);
             $this->assertInstanceOf(RouteInterface::class, $ret);
@@ -88,7 +87,6 @@ class RouteManagerTest extends AbstractTestCase
 
         $reflector = new \ReflectionObject($obj);
         $method = $reflector->getMethod('setupAction');
-        $method->setAccessible(true);
         foreach($config['actions'] as $routeIdent => $actionConfig) {
             $ret = $method->invoke($obj, $routeIdent, $actionConfig);
             $this->assertInstanceOf(RouteInterface::class, $ret);
@@ -112,7 +110,6 @@ class RouteManagerTest extends AbstractTestCase
 
         $reflector = new \ReflectionObject($obj);
         $method = $reflector->getMethod('setupScript');
-        $method->setAccessible(true);
         foreach($config['scripts'] as $routeIdent => $scriptConfig) {
             $ret = $method->invoke($obj, $routeIdent, $scriptConfig);
             $this->assertInstanceOf(RouteInterface::class, $ret);
