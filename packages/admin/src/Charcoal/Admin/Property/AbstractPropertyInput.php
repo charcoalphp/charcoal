@@ -503,7 +503,7 @@ abstract class AbstractPropertyInput extends AbstractProperty implements
     public function inputPrefix()
     {
         if ($this->inputPrefix instanceof Translation) {
-            if (isset($this->inputPrefix->isRendered) && $this->inputPrefix->isRendered === false) {
+            if (!$this->inputPrefix->isRendered()) {
                 $this->inputPrefix = $this->renderTranslatableTemplate($this->inputPrefix);
             }
 
@@ -547,7 +547,7 @@ abstract class AbstractPropertyInput extends AbstractProperty implements
     public function inputSuffix()
     {
         if ($this->inputSuffix instanceof Translation) {
-            if (isset($this->inputSuffix->isRendered) && $this->inputSuffix->isRendered === false) {
+            if (!$this->inputSuffix->isRendered()) {
                 $this->inputSuffix = $this->renderTranslatableTemplate($this->inputSuffix);
             }
 
@@ -668,7 +668,7 @@ abstract class AbstractPropertyInput extends AbstractProperty implements
         }
 
         if ($this->placeholder instanceof Translation) {
-            if (isset($this->placeholder->isRendered) && $this->placeholder->isRendered === false) {
+            if (!$this->placeholder->isRendered()) {
                 $this->placeholder = $this->renderTranslatableTemplate($this->placeholder);
             }
 

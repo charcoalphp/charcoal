@@ -33,6 +33,8 @@ class Translation implements
      */
     private $manager;
 
+    private bool $isRendered;
+
     /**
      * @param Translation|array|string $val     The translation values.
      * @param LocalesManager           $manager A LocalesManager instance.
@@ -249,5 +251,16 @@ class Translation implements
         }
 
         return $this;
+    }
+
+    public function setIsRendered(bool $isRendered = true): self
+    {
+        $this->isRendered = $isRendered;
+        return $this;
+    }
+
+    public function isRendered(): bool
+    {
+        return isset($this->isRendered) && $this->isRendered === true;
     }
 }

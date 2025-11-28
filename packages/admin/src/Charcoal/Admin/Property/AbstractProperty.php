@@ -457,7 +457,7 @@ abstract class AbstractProperty implements
                 }
             }
             $this->translator()->setLocale($origLang);
-            $templateString->isRendered = true;
+            $templateString->setIsRendered(true);
 
             return $templateString;
         } elseif (is_string($templateString)) {

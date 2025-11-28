@@ -49,7 +49,7 @@ class MessageDisplay extends AbstractPropertyDisplay implements
     {
         $this->message = $this->translator()->translation($message);
         if ($this->message instanceof Translation) {
-            $this->message->isRendered = false;
+            $this->message->setIsRendered(false);
         }
 
         return $this;
@@ -77,7 +77,7 @@ class MessageDisplay extends AbstractPropertyDisplay implements
     public function displayMessage()
     {
         if ($this->message instanceof Translation) {
-            if (isset($this->message->isRendered) && $this->message->isRendered === false) {
+            if (!$this->message->isRendered()) {
                 $this->message = $this->renderTranslatableTemplate($this->message);
             }
 
