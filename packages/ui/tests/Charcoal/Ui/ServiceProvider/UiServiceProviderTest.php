@@ -3,13 +3,11 @@
 namespace Charcoal\Tests\Ui\ServiceProvider;
 
 use DI\Container;
-// From 'charcoal-ui'
 use Charcoal\Ui\ServiceProvider\UiServiceProvider;
 use Charcoal\Tests\AbstractTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- *
- */
+#[CoversClass(UiServiceProvider::class)]
 class UiServiceProviderTest extends AbstractTestCase
 {
     /**

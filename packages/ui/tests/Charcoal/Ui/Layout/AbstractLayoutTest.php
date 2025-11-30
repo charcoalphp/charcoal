@@ -2,13 +2,11 @@
 
 namespace Charcoal\Tests\Ui\Layout;
 
-// From 'charcoal-ui'
 use Charcoal\Ui\Layout\AbstractLayout;
 use Charcoal\Tests\AbstractTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- *
- */
+#[CoversClass(AbstractLayout::class)]
 class AbstractLayoutTest extends AbstractTestCase
 {
     /**

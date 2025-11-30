@@ -2,14 +2,12 @@
 
 namespace Charcoal\Tests\Ui\MenuItem;
 
-// From 'charcoal-ui'
 use Charcoal\Ui\MenuItem\AbstractMenuItem;
 use Charcoal\Ui\ServiceProvider\MenuServiceProvider;
 use Charcoal\Tests\AbstractTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- *
- */
+#[CoversClass(AbstractMenuItem::class)]
 class AbstractMenuItemTest extends AbstractTestCase
 {
     use \Charcoal\Tests\Ui\ContainerIntegrationTrait;

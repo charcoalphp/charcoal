@@ -3,14 +3,11 @@
 namespace Charcoal\Tests\Ui;
 
 use ReflectionMethod;
-
-// From 'charcoal-ui'
 use Charcoal\Ui\AbstractUiItem;
 use Charcoal\Tests\AbstractTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- *
- */
+#[CoversClass(AbstractUiItem::class)]
 class AbstractUiItemTest extends AbstractTestCase
 {
     use \Charcoal\Tests\Ui\ContainerIntegrationTrait;

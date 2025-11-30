@@ -2,16 +2,14 @@
 
 namespace Charcoal\Tests\Ui;
 
-// From 'charcoal-ui'
 use Charcoal\Ui\Form\GenericForm;
 use Charcoal\Ui\FormGroup\GenericFormGroup;
 use Charcoal\Ui\ServiceProvider\FormServiceProvider;
 use Charcoal\Ui\ServiceProvider\LayoutServiceProvider;
 use Charcoal\Tests\AbstractTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- *
- */
+#[CoversClass(GenericFormGroup::class)]
 class GenericFormGroupTest extends AbstractTestCase
 {
     use \Charcoal\Tests\Ui\ContainerIntegrationTrait;

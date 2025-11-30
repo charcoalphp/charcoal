@@ -2,15 +2,13 @@
 
 namespace Charcoal\Tests\Ui;
 
-// From 'charcoal-ui'
 use Charcoal\Ui\Dashboard\GenericDashboard;
 use Charcoal\Ui\ServiceProvider\FormServiceProvider;
 use Charcoal\Ui\ServiceProvider\LayoutServiceProvider;
 use Charcoal\Tests\AbstractTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- *
- */
+#[CoversClass(GenericDashboard::class)]
 class GenericDashboardTest extends AbstractTestCase
 {
     use \Charcoal\Tests\Ui\ContainerIntegrationTrait;

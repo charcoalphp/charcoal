@@ -7,10 +7,9 @@ use Charcoal\Ui\Menu\AbstractMenu;
 use Charcoal\Ui\MenuItem\MenuItemInterface;
 use Charcoal\Ui\ServiceProvider\MenuServiceProvider;
 use Charcoal\Tests\AbstractTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- *
- */
+#[CoversClass(AbstractMenu::class)]
 class AbstractMenuTest extends AbstractTestCase
 {
     use \Charcoal\Tests\Ui\ContainerIntegrationTrait;
