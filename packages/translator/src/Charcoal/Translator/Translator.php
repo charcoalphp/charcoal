@@ -2,12 +2,9 @@
 
 namespace Charcoal\Translator;
 
-use RuntimeException;
-// From 'symfony/translation'
 use Symfony\Component\Translation\Formatter\MessageFormatter;
 use Symfony\Component\Translation\Formatter\MessageFormatterInterface;
 use Symfony\Component\Translation\Translator as SymfonyTranslator;
-// From 'charcoal-translator'
 use Charcoal\Translator\LocalesManager;
 use Charcoal\Translator\Translation;
 
@@ -40,8 +37,6 @@ class Translator extends SymfonyTranslator
      */
     private $domains = [ 'messages' ];
 
-    public bool $isIteratingLocales;
-
     /**
      * @param array $data Translator dependencies.
      */
@@ -51,7 +46,7 @@ class Translator extends SymfonyTranslator
 
         // Ensure Charcoal has control of the message formatter.
         if (!isset($data['message_formatter'])) {
-            $data['message_formatter'] = new MessageFormatter();
+            $data['message_formatter'] = new MessageFormatter($data['message_selector']);
         }
         $this->setFormatter($data['message_formatter']);
 
@@ -136,6 +131,27 @@ class Translator extends SymfonyTranslator
     }
 
     /**
+     * Get unparsed translation object
+     * @param Translation|array|string $val
+     */
+    public function translationRaw($val, ?string $domain = "messages"): ?Translation
+    {
+        if ($this->isValidTranslation($val) === false) {
+            return null;
+        }
+
+        $translation = new Translation($val, $this->manager());
+        $localized   = (string)$translation;
+        foreach ($this->availableLocales() as $lang) {
+            if (!isset($translation[$lang]) || $translation[$lang] === $val) {
+                $translation[$lang] = $this->trans($localized, [], $domain, $lang);
+            }
+        }
+
+        return $translation;
+    }
+
+    /**
      * Translates the given (mixed) message.
      *
      * @uses   SymfonyTranslator::trans()
@@ -192,21 +208,37 @@ class Translator extends SymfonyTranslator
             return null;
         }
 
+        // Convert old parameters
+        $oldParameters = $parameters;
+        $parameters = [];
+        foreach ($oldParameters as $key => $value) {
+            $key = preg_replace('/^%(\w+)%$/', '$1', $key);
+            $parameters[$key] = $value;
+        }
+
         $parameters = array_merge([
-            '%count%' => $number,
+            'count' => $number,
         ], $parameters);
 
         $translation = new Translation($val, $this->manager());
         $localized   = (string)$translation;
+
         foreach ($this->availableLocales() as $lang) {
+            $hasTranslation = $this->hasTrans($localized, ($domain ?? null), $lang);
             if (!isset($translation[$lang]) || $translation[$lang] === $val) {
-                $translation[$lang] = $this->trans($localized, $parameters, $domain, $lang);
+                if ($hasTranslation) {
+                    $translation[$lang] = $this->translationRaw($localized, ($domain ?? null))[$lang];
+                    $translation[$lang] = $this->convertLegacyChoiceFormat((string)$translation[$lang], $parameters);
+                } else if (isset($translation[$lang])) {
+                    $translation[$lang] = $this->convertLegacyChoiceFormat((string)$val, $parameters);
+                } else {
+                    continue;
+                }
             } else {
-                $translation[$lang] = strtr(
-                    $translation[$lang],
-                    $parameters
-                );
+                $translation[$lang] = $this->convertLegacyChoiceFormat((string)$translation[$lang], $parameters);
             }
+
+            $translation[$lang] = $this->formatMessage($lang, $translation[$lang], $parameters);
         }
 
         return $translation;
@@ -230,15 +262,32 @@ class Translator extends SymfonyTranslator
             $locale = $this->getLocale();
         }
 
-        if ($val instanceof Translation) {
-            $parameters = array_merge([
-                '%count%' => $number,
-            ], $parameters);
+        // Convert old parameters
+        $oldParameters = $parameters;
+        $parameters = [];
+        foreach ($oldParameters as $key => $value) {
+            if ($key != '%count%') {
+                $key = preg_replace('/^%(\w+)%$/', '$1', $key);
+                $parameters[$key] = $value;
+            } else {
+                $parameters[$key] = $value;
+            }
+        }
 
-            return strtr(
-                $val[$locale],
-                $parameters
-            );
+        $parameters = array_merge([
+            'count' => $number,
+        ], $parameters);
+
+        if ($val instanceof Translation) {
+            // Convert any legacy patterns inside the Translation for all locales
+            $val->sanitize(function($string) use ($parameters) {
+                return $this->convertLegacyChoiceFormat((string)$string, $parameters);
+            });
+
+            // Prefer the locale-specific pattern if present
+            $pattern = $val[$locale] ?? (string)$val;
+
+            return $this->formatMessage($locale, (string)$pattern, $parameters);
         }
 
         if (is_object($val) && method_exists($val, '__toString')) {
@@ -247,7 +296,13 @@ class Translator extends SymfonyTranslator
 
         if (is_string($val)) {
             if ($val !== '') {
-                return $this->trans($val, $parameters, $domain, $locale);
+                if ($this->hasTrans($val, ($domain ?? null), $locale)) {
+                    $translation = $this->translationRaw($val, ($domain ?? null));
+                    $val = $translation[$locale];
+                }
+
+                $val = $this->convertLegacyChoiceFormat((string)$val, $parameters);
+                return $this->formatMessage($locale, $val, $parameters);
             }
 
             return '';
@@ -259,6 +314,223 @@ class Translator extends SymfonyTranslator
         }
 
         return '';
+    }
+
+    private function formatMessage(string $locale, string $pattern, array $parameters)
+    {
+        $originalParams = $parameters;
+
+        // Normalize keys: accept "{count}", "%count%" or "count"
+        $normalized = [];
+        foreach ($parameters as $k => $v) {
+            if (is_string($k) && preg_match('/^\{(.+)\}$/', $k, $m)) {
+                $normalized[$m[1]] = $v;
+            } elseif (is_string($k) && preg_match('/^%(.+)%$/', $k, $m)) {
+                if ($m[0] !== '%count%') {
+                    $normalized[$m[1]] = $v;
+                } else {
+                    $pattern = str_replace($m[0], $v, $pattern);
+                }
+            } else {
+                $normalized[$k] = $v;
+            }
+        }
+
+        // Coerce numeric 'count' to int/float when possible (count may be a numeric string)
+        /*if (isset($normalized['count'])) {
+            if (is_numeric($normalized['count'])) {
+                $normalized['count'] = (strpos((string)$normalized['count'], '.') === false)
+                    ? (int)$normalized['count']
+                    : (float)$normalized['count'];
+            }
+        }*/
+
+        // Try intl MessageFormatter (named args). If it fails for named args and we have a numeric count,
+        // try positional fallback: change {count, ...} => {0, ...} and pass [count]
+        try {
+            if (class_exists('\MessageFormatter')) {
+                $mf = \MessageFormatter::create($locale, $pattern);
+                if ($mf !== null) {
+                    $res = $mf->format($normalized);
+                    if ($res === false && isset($normalized['count'])) {
+                        // positional fallback for 'count' (some ICU builds expect positional args)
+                        $posPattern = preg_replace('/\{\s*count\b/i', '{0', $pattern);
+                        $posPattern = str_replace('{count}', '{0}', $posPattern);
+                        $mf2 = \MessageFormatter::create($locale, $posPattern);
+                        if ($mf2 !== null) {
+                            $args = [ $normalized['count'] ];
+                            $res2 = $mf2->format($args);
+                            if ($res2 !== false) {
+                                $res = $res2;
+                            }
+                        }
+                    }
+
+                    if ($res !== false) {
+                        // Post-format: apply legacy %key% or {key} overrides (keep these as last step)
+                        foreach ($originalParams as $ok => $ov) {
+                            if (!is_string($ok)) {
+                                continue;
+                            }
+                            if (preg_match('/^\{(.+)\}$/', $ok, $m)) {
+                                $res = str_replace('{'.$m[1].'}', (string)$ov, $res);
+                            } elseif (preg_match('/^%(.+)%$/', $ok, $m)) {
+                                $res = str_replace('%'.$m[1].'%', (string)$ov, $res);
+                            } else {
+                                $res = str_replace('{'.$ok.'}', (string)$ov, $res);
+                                $res = str_replace('%'.$ok.'%', (string)$ov, $res);
+                            }
+                        }
+
+                        return $res;
+                    }
+                }
+            }
+        } catch (\Throwable $e) {
+            // fallthrough to manual fallback below
+        }
+
+        // Manual fallback: replace placeholders but avoid touching plural/select selectors.
+        $out = $pattern;
+        foreach ($normalized as $k => $v) {
+            $placeholder = preg_quote($k, '/');
+            $out = preg_replace_callback(
+                ['/\\{'.$placeholder.'\\}(?!\\s*,\\s*(plural|select|selectordinal))/i', '/%'.$placeholder.'%/'],
+                function ($m) use ($v) {
+                    return (string)$v;
+                },
+                $out
+            );
+        }
+
+        // Apply explicit legacy overrides after manual formatting
+        foreach ($originalParams as $ok => $ov) {
+            if (!is_string($ok)) {
+                continue;
+            }
+            if (preg_match('/^\{(.+)\}$/', $ok, $m)) {
+                $out = str_replace('{'.$m[1].'}', (string)$ov, $out);
+            } elseif (preg_match('/^%(.+)%$/', $ok, $m)) {
+                $out = str_replace('%'.$m[1].'%', (string)$ov, $out);
+            } else {
+                $out = str_replace('{'.$ok.'}', (string)$ov, $out);
+                $out = str_replace('%'.$ok.'%', (string)$ov, $out);
+            }
+        }
+
+        return $out;
+    }
+
+    private function convertLegacyChoiceFormat(string $string, ?array $parameters = []): string
+    {
+        // If already looks like ICU plural/select, return
+        if (preg_match('/\{\s*count\s*,\s*(plural|select|selectordinal)\b/i', $string)) {
+            return $string;
+        }
+
+        // If there is no '|' return as-is (nothing to convert)
+        if (strpos($string, '|') === false) {
+            return $string;
+        }
+
+        // IMPORTANT: do NOT convert %count% -> {count}. Use '#' inside branch text for ICU numeric placeholder.
+        $parts = explode('|', $string);
+        $rules = [];
+
+        foreach ($parts as $part) {
+            $part = trim($part);
+
+            // exact number: "{0} text"
+            if (preg_match('/^\{(-?\d+)\}\s*(.*)$/u', $part, $m)) {
+                $num  = (int)$m[1];
+                $text = str_replace('{count}', '#', $m[2]);
+                $text = str_replace('%count%', '%count%', $text); // keep %count% for post-replace
+                $rules["=".$num] = $text;
+                continue;
+            }
+
+            // Interval: "[0,1] text" or "]1,Inf] text" etc.
+            if (preg_match('/^([\[\]])\s*([^\],]+)\s*,\s*([^\]\s]+)\s*([\[\]])\s*(.*)$/u', $part, $m)) {
+                $lowRaw  = $m[2];
+                $highRaw = $m[3];
+                $text    = str_replace('{count}', '#', $m[5]);
+                $text    = str_replace('%count%', '%count%', $text);
+                $low  = ($lowRaw === '-Inf') ? null : (is_numeric($lowRaw) ? (int)$lowRaw : null);
+                $high = ($highRaw === 'Inf') ? null : (is_numeric($highRaw) ? (int)$highRaw : null);
+
+                if ($low !== null && $high !== null && $high - $low <= 50) {
+                    for ($n = $low; $n <= $high; $n++) {
+                        $rules["=".$n] = $text;
+                    }
+                } else {
+                    if ($low === 0 && $high === 1) {
+                        $rules['=0'] = $text;
+                        $rules['=1'] = $text;
+                    } elseif ($low !== null && $high === null && $low >= 1) {
+                        $rules['other'] = $text;
+                    } else {
+                        // fallback: push to 'other'
+                        $rules['other'] = $text;
+                    }
+                }
+                continue;
+            }
+
+            // Named key: "one: text" or "more: text"
+            if (preg_match('/^([a-zA-Z_]+)\s*:\s*(.*)$/u', $part, $m)) {
+                $name = strtolower($m[1]);
+                $text = str_replace('{count}', '#', $m[2]);
+                $text = str_replace('%count%', '%count%', $text);
+                if ($name === 'more' || $name === 'other') {
+                    $rules['other'] = $text;
+                } elseif ($name === 'one') {
+                    $rules['one'] = $text;
+                } else {
+                    // unknown name -> keep as other
+                    $rules[$name] = $text;
+                }
+                continue;
+            }
+
+            // plain fallback: if two parts, assume singular|plural -> one/other
+            if (count($parts) === 2) {
+                $rules['one'] = str_replace('{count}', '#', $parts[0]);
+                $rules['other'] = str_replace('{count}', '#', $parts[1]);
+                break;
+            }
+
+            $rules['other'] = str_replace('{count}', '#', $part);
+        }
+
+        // If no rules determined, return original
+        if (empty($rules)) {
+            return $string;
+        }
+
+        // Build ICU plural pattern with '#' inside branches and keep %count% tokens for later replacement.
+        $pieces = [];
+        // preserve order: =n, one, other etc.
+        // sort keys so exact matches come first
+        uksort($rules, function ($a, $b) {
+            $pa = ($a[0] === '=') ? 0 : 1;
+            $pb = ($b[0] === '=') ? 0 : 1;
+            if ($pa !== $pb) {
+                return $pa - $pb;
+            }
+            if ($a === 'one') return -1;
+            if ($b === 'one') return 1;
+            if ($a === 'other') return 1;
+            if ($b === 'other') return -1;
+            return strcmp($a, $b);
+        });
+
+        foreach ($rules as $selector => $text) {
+            $pieces[] = $selector.' {'.trim($text).'}';
+        }
+
+        $result = '{count, plural, '.implode(' ', $pieces).'}';
+
+        return $result;
     }
 
     /**
