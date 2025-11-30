@@ -232,7 +232,7 @@ class StringPropertyTest extends AbstractTestCase
      * @used-by testRenderedDisplayChoices()
      * @return  array
      */
-    public function getDisplayChoicesProvider()
+    public static function getDisplayChoicesProvider()
     {
         return [
             [ 'Brown fox, Lazy dog, wolf',          [ 'fox', 'dog', 'wolf' ] ],

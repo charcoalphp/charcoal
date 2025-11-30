@@ -164,34 +164,34 @@ class FilePropertyTest extends AbstractFilePropertyTestCase
      *
      * @dataProvider provideDataForValidateMimetypes
      *
-     * @param  mixed   $val               The value(s) to be validated.
-     * @param  boolean $l10n              Whether the property value is multilingual.
-     * @param  boolean $multiple          Whether the property accepts zero or more values.
+     * @param  mixed   $propertyValues               The value(s) to be validated.
+     * @param  boolean $propertyL10n              Whether the property value is multilingual.
+     * @param  boolean $propertyMultiple          Whether the property accepts zero or more values.
      * @param  mixed   $acceptedMimetypes The accepted MIME types.
-     * @param  boolean $expectedReturn    The expected return value of the method.
-     * @param  array   $expectedResults   The expected validation results.
+     * @param  boolean $assertValidationReturn    The expected return value of the method.
+     * @param  array   $assertValidationResults   The expected validation results.
      * @return void
      */
     public function testValidateMimetypes(
-        $val,
-        $l10n,
-        $multiple,
+        $propertyValues,
+        $propertyL10n,
+        $propertyMultiple,
         $acceptedMimetypes,
-        $expectedReturn,
-        array $expectedResults = []
+        $assertValidationReturn,
+        array $assertValidationResults = []
     ) {
         $obj = $this->obj;
 
         $obj['uploadPath'] = $this->getPathToFixtures().'/files';
         $obj['acceptedMimetypes'] = $acceptedMimetypes;
-        $obj['l10n'] = $l10n;
-        $obj['multiple'] = $multiple;
-        $obj['val'] = $val;
+        $obj['l10n'] = $propertyL10n;
+        $obj['multiple'] = $propertyMultiple;
+        $obj['val'] = $propertyValues;
 
-        $this->assertSame($expectedReturn, $obj->validateMimetypes());
+        $this->assertSame($assertValidationReturn, $obj->validateMimetypes());
 
         $this->assertValidatorHasResults(
-            $expectedResults,
+            $assertValidationResults,
             $obj->validator()->results()
         );
     }
@@ -201,34 +201,34 @@ class FilePropertyTest extends AbstractFilePropertyTestCase
      *
      * @dataProvider provideDataForValidateFilesizes
      *
-     * @param  mixed   $val             The value(s) to be validated.
-     * @param  boolean $l10n            Whether the property value is multilingual.
-     * @param  boolean $multiple        Whether the property accepts zero or more values.
+     * @param  mixed   $propertyValues             The value(s) to be validated.
+     * @param  boolean $propertyL10n            Whether the property value is multilingual.
+     * @param  boolean $propertyMultiple        Whether the property accepts zero or more values.
      * @param  integer $maxFilesize     The maximum file size accepted.
-     * @param  boolean $expectedReturn  The expected return value of the method.
-     * @param  array   $expectedResults The expected validation results.
+     * @param  boolean $assertValidationReturn  The expected return value of the method.
+     * @param  array   $assertValidationResults The expected validation results.
      * @return void
      */
     public function testValidateFilesizes(
-        $val,
-        $l10n,
-        $multiple,
+        $propertyValues,
+        $propertyL10n,
+        $propertyMultiple,
         $maxFilesize,
-        $expectedReturn,
-        array $expectedResults = []
+        $assertValidationReturn,
+        array $assertValidationResults = []
     ) {
         $obj = $this->obj;
 
         $obj['uploadPath'] = $this->getPathToFixtures().'/files';
         $obj['maxFilesize'] = $maxFilesize;
-        $obj['l10n'] = $l10n;
-        $obj['multiple'] = $multiple;
-        $obj['val'] = $val;
+        $obj['l10n'] = $propertyL10n;
+        $obj['multiple'] = $propertyMultiple;
+        $obj['val'] = $propertyValues;
 
-        $this->assertSame($expectedReturn, $obj->validateFilesizes());
+        $this->assertSame($assertValidationReturn, $obj->validateFilesizes());
 
         $this->assertValidatorHasResults(
-            $expectedResults,
+            $assertValidationResults,
             $obj->validator()->results()
         );
     }
@@ -292,7 +292,7 @@ class FilePropertyTest extends AbstractFilePropertyTestCase
     /**
      * @return array
      */
-    public function filenameProvider()
+    public static function filenameProvider()
     {
         return [
             [ 'foobar',              'foobar'              ],
@@ -369,9 +369,9 @@ class FilePropertyTest extends AbstractFilePropertyTestCase
      * @used-by self::testValidateMimetypes()
      * @return  array
      */
-    public function provideDataForValidateMimetypes()
+    public static function provideDataForValidateMimetypes()
     {
-        $paths = $this->getFileMapOfFixtures();
+        $paths = self::getFileMapOfFixtures();
 
         return [
             'any MIME types, no value' => [
@@ -523,9 +523,9 @@ class FilePropertyTest extends AbstractFilePropertyTestCase
      * @used-by self::testValidateFilesizes()
      * @return  array
      */
-    public function provideDataForValidateFilesizes()
+    public static function provideDataForValidateFilesizes()
     {
-        $paths = $this->getFileMapOfFixtures();
+        $paths = self::getFileMapOfFixtures();
 
         return [
             'any size, no value' => [

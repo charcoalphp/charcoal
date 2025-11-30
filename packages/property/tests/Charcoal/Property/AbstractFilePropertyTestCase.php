@@ -54,16 +54,15 @@ abstract class AbstractFilePropertyTestCase extends AbstractTestCase
     /**
      * @return array<string, string>
      */
-    public function getFileMapOfFixtures()
+    public static function getFileMapOfFixtures()
     {
-        if ($this->fileMapOfFixtures === null) {
-            $this->fileMapOfFixtures = [];
-            foreach (self::FIXTURES as $filename) {
-                $this->fileMapOfFixtures[$filename] = $this->getPathToFixture('files/'.$filename);
-            }
+        $fileMapOfFixtures = [];
+
+        foreach (self::FIXTURES as $filename) {
+            $fileMapOfFixtures[$filename] = self::getPathToFixture('files/'.$filename);
         }
 
-        return $this->fileMapOfFixtures;
+        return $fileMapOfFixtures;
     }
 
     /**

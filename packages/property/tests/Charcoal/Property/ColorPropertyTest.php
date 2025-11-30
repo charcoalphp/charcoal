@@ -146,7 +146,7 @@ class ColorPropertyTest extends AbstractTestCase
      *
      * @return array
      */
-    public function colorProviderNoAlpha()
+    public static function colorProviderNoAlpha()
     {
         return [
             ['#FF00FF', '#FF00FF'],
@@ -172,7 +172,7 @@ class ColorPropertyTest extends AbstractTestCase
      *
      * @return array
      */
-    public function colorProviderAlpha()
+    public static function colorProviderAlpha()
     {
         return [
             ['#FF00FF', 'rgba(255,0,255,0)'],
