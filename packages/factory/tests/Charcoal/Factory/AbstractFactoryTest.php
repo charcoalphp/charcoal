@@ -5,13 +5,11 @@ namespace Charcoal\Tests\Factory;
 use DateTime;
 use DateTimeInterface;
 use InvalidArgumentException;
-
 use Charcoal\Factory\AbstractFactory;
 use Charcoal\Tests\AbstractTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- *
- */
+#[CoversClass(AbstractFactory::class)]
 class AbstractFactoryTest extends AbstractTestCase
 {
     /**

@@ -4,10 +4,9 @@ namespace Charcoal\Tests\Factory;
 
 use Charcoal\Factory\GenericFactory;
 use Charcoal\Tests\AbstractTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- *
- */
+#[CoversClass(GenericFactory::class)]
 class GenericFactoryTest extends AbstractTestCase
 {
     /**
@@ -77,7 +76,7 @@ class GenericFactoryTest extends AbstractTestCase
      */
     public function testCreateCallback()
     {
-        $ret = $this->obj->create('\DateTime', null, function($obj) {
+        $ret = $this->obj->create('\DateTime', null, function ($obj) {
             $this->assertInstanceOf('\DateTime', $obj);
         });
     }

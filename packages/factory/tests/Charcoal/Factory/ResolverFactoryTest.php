@@ -4,10 +4,9 @@ namespace Charcoal\Tests\Factory;
 
 use Charcoal\Factory\ResolverFactory;
 use Charcoal\Tests\AbstractTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- *
- */
+#[CoversClass(ResolverFactory::class)]
 class ResolverFactoryTest extends AbstractTestCase
 {
     /**
@@ -68,9 +67,9 @@ class ResolverFactoryTest extends AbstractTestCase
      */
     public function testSetResoverReplacements()
     {
-        $ret = $this->obj->setResolverReplacements(['$'=>'_']);
+        $ret = $this->obj->setResolverReplacements(['$' => '_']);
         $this->assertSame($ret, $this->obj);
-        $this->assertEquals(['$'=>'_'], $this->obj->resolverReplacements());
+        $this->assertEquals(['$' => '_'], $this->obj->resolverReplacements());
 
         $this->assertEquals('\_abc_de', $this->obj->resolve('$abc$de'));
     }
@@ -88,7 +87,7 @@ class ResolverFactoryTest extends AbstractTestCase
 
         // Test with additional prefix / suffix
         $this->obj->setResolverSuffix('Test');
-        $this->assertEquals($classname.'Test', $this->obj->resolve($type));
+        $this->assertEquals($classname . 'Test', $this->obj->resolve($type));
     }
 
     /**
@@ -124,7 +123,7 @@ class ResolverFactoryTest extends AbstractTestCase
     /**
      * @return array
      */
-    public function providerResolve()
+    public static function providerResolve()
     {
         return [
             ['foo', '\Foo'],
