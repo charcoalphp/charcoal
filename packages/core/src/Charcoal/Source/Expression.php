@@ -158,6 +158,8 @@ class Expression extends AbstractExpression implements
     {
         return [
             'condition' => $this->condition,
+            'name'      => $this->name,
+            'active'    => $this->active,
         ];
     }
 
@@ -170,5 +172,7 @@ class Expression extends AbstractExpression implements
     public function __unserialize(array $data): void
     {
         $this->condition = ($data['condition'] ?? null);
+        $this->name      = ($data['name'] ?? null);
+        $this->active    = ($data['active'] ?? null);
     }
 }
