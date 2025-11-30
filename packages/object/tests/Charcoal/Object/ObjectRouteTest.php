@@ -8,10 +8,9 @@ use DI\Container;
 use Charcoal\Object\ObjectRoute;
 use Charcoal\Tests\AbstractTestCase;
 use Charcoal\Tests\Object\ContainerProvider;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- *
- */
+#[CoversClass(ObjectRoute::class)]
 class ObjectRouteTest extends AbstractTestCase
 {
     /**

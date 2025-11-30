@@ -8,10 +8,9 @@ use DI\Container;
 use Charcoal\Object\ObjectSchedule;
 use Charcoal\Tests\AbstractTestCase;
 use Charcoal\Tests\Object\ContainerProvider;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- *
- */
+#[CoversClass(ObjectSchedule::class)]
 class ObjectScheduleTest extends AbstractTestCase
 {
     /**

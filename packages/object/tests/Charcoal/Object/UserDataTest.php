@@ -8,10 +8,9 @@ use DI\Container;
 use Charcoal\Object\UserData;
 use Charcoal\Tests\AbstractTestCase;
 use Charcoal\Tests\Object\ContainerProvider;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- *
- */
+#[CoversClass(UserData::class)]
 class UserDataTest extends AbstractTestCase
 {
     /**

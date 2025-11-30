@@ -12,10 +12,9 @@ use Charcoal\Object\PublishableInterface as Publishable;
 use Charcoal\Tests\AbstractTestCase;
 use Charcoal\Tests\Object\ContainerProvider;
 use Charcoal\Tests\Object\Mocks\PublishableClass as PublishableObject;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- *
- */
+#[CoversClass(PublishableTrait::class)]
 class PublishableTraitTest extends AbstractTestCase
 {
     /**
@@ -204,7 +203,7 @@ class PublishableTraitTest extends AbstractTestCase
     /**
      * @return array
      */
-    public function providerPublishStatus()
+    public static function providerPublishStatus()
     {
         return [
             [ null, null, Publishable::STATUS_PUBLISHED ],

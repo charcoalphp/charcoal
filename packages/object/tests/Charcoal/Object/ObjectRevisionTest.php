@@ -8,10 +8,9 @@ use DI\Container;
 use Charcoal\Object\ObjectRevision;
 use Charcoal\Tests\AbstractTestCase;
 use Charcoal\Tests\Object\ContainerProvider;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- *
- */
+#[CoversClass(ObjectRevision::class)]
 class ObjectRevisionTest extends AbstractTestCase
 {
     /**

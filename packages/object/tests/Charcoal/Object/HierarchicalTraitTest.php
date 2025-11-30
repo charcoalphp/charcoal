@@ -7,10 +7,9 @@ use Charcoal\Object\HierarchicalTrait;
 use Charcoal\Tests\AbstractTestCase;
 use Charcoal\Tests\Object\ContainerProvider;
 use Charcoal\Tests\Object\Mocks\HierarchicalClass as HierarchicalObject;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- *
- */
+#[CoversClass(HierarchicalTrait::class)]
 class HierarchicalTraitTest extends AbstractTestCase
 {
     /**

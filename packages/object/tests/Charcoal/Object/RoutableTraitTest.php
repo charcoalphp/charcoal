@@ -12,10 +12,9 @@ use Charcoal\Object\RoutableTrait;
 use Charcoal\Tests\AbstractTestCase;
 use Charcoal\Tests\Object\ContainerProvider;
 use Charcoal\Tests\Object\Mocks\RoutableClass as RoutableObject;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- *
- */
+#[CoversClass(RoutableTrait::class)]
 class RoutableTraitTest extends AbstractTestCase
 {
     /**
@@ -209,7 +208,7 @@ class RoutableTraitTest extends AbstractTestCase
     /**
      * @return array
      */
-    public function providerSlugs()
+    public static function providerSlugs()
     {
         return [
             [ 'A B C', 'a-b-c' ],

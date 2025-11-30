@@ -6,10 +6,9 @@ namespace Charcoal\Tests\Object;
 use Charcoal\Object\ArchivableTrait;
 use Charcoal\Tests\AbstractTestCase;
 use Charcoal\Tests\Object\ContainerProvider;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- *
- */
+#[CoversClass(ArchivableTrait::class)]
 class ArchivableTraitTest extends AbstractTestCase
 {
     /**

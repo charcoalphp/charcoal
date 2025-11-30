@@ -6,10 +6,9 @@ namespace Charcoal\Tests\Object;
 use Charcoal\Object\CategorizableTrait;
 use Charcoal\Tests\AbstractTestCase;
 use Charcoal\Tests\Object\ContainerProvider;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- *
- */
+#[CoversClass(CategorizableTrait::class)]
 class CategorizableTraitTest extends AbstractTestCase
 {
     /**
