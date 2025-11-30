@@ -24,10 +24,9 @@ use Charcoal\Tests\AbstractTestCase;
 use Charcoal\Tests\ReflectionsTrait;
 use Charcoal\Tests\Property\ContainerIntegrationTrait;
 use Charcoal\Tests\Property\Mocks\GenericModel;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- *
- */
+#[CoversClass(ObjectProperty::class)]
 class ObjectPropertyTest extends AbstractTestCase
 {
     use ReflectionsTrait;
@@ -127,7 +126,7 @@ class ObjectPropertyTest extends AbstractTestCase
     /**
      * @return array
      */
-    public function provideMissingDependencies()
+    public static function provideMissingDependencies()
     {
         return [
             [ 'modelFactory',     RuntimeException::class ],
@@ -154,7 +153,7 @@ class ObjectPropertyTest extends AbstractTestCase
     /**
      * @return array
      */
-    public function provideSatisfiedDependencies()
+    public static function provideSatisfiedDependencies()
     {
         return [
             [ 'modelFactory',     FactoryInterface::class ],

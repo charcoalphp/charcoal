@@ -11,10 +11,9 @@ use Charcoal\Validator\ValidatorInterface as Validator;
 
 // From 'charcoal-property'
 use Charcoal\Property\FileProperty;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- *
- */
+#[CoversClass(FileProperty::class)]
 class FilePropertyTest extends AbstractFilePropertyTestCase
 {
     /**
@@ -264,7 +263,7 @@ class FilePropertyTest extends AbstractFilePropertyTestCase
     /**
      * @return array
      */
-    public function providePathsForIsAbsolutePath()
+    public static function providePathsForIsAbsolutePath()
     {
         return [
             [ '/var/lib',       true  ],
@@ -670,7 +669,7 @@ class FilePropertyTest extends AbstractFilePropertyTestCase
      * @used-by AbstractFilePropertyTestCase::testGenerateExtensionFromDataProvider()
      * @return  array
      */
-    public function provideDataForGenerateExtension()
+    public static function provideDataForGenerateExtension()
     {
         return [
             [ 'text/plain',  'txt' ],

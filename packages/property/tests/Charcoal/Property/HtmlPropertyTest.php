@@ -5,10 +5,9 @@ namespace Charcoal\Tests\Property;
 // From 'charcoal-property'
 use Charcoal\Property\HtmlProperty;
 use Charcoal\Tests\AbstractTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- *
- */
+#[CoversClass(HtmlProperty::class)]
 class HtmlPropertyTest extends AbstractTestCase
 {
     use \Charcoal\Tests\Property\ContainerIntegrationTrait;

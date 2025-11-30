@@ -4,10 +4,9 @@ namespace Charcoal\Tests\Property;
 
 use Charcoal\Property\UrlProperty;
 use Charcoal\Tests\AbstractTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- *
- */
+#[CoversClass(UrlProperty::class)]
 class UrlPropertyTest extends AbstractTestCase
 {
     use \Charcoal\Tests\Property\ContainerIntegrationTrait;

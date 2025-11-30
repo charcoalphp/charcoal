@@ -8,10 +8,9 @@ use ReflectionClass;
 // From 'charcoal-property'
 use Charcoal\Property\LangProperty;
 use Charcoal\Tests\AbstractTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * Lang Property Test
- */
+#[CoversClass(LangProperty::class)]
 class LangPropertyTest extends AbstractTestCase
 {
     use \Charcoal\Tests\Property\ContainerIntegrationTrait;

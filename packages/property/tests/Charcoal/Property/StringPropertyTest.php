@@ -10,10 +10,9 @@ use Charcoal\Translator\Translation;
 // From 'charcoal-property'
 use Charcoal\Property\StringProperty;
 use Charcoal\Tests\AbstractTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- *
- */
+#[CoversClass(StringProperty::class)]
 class StringPropertyTest extends AbstractTestCase
 {
     use \Charcoal\Tests\Property\ContainerIntegrationTrait;

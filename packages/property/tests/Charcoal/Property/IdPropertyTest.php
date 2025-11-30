@@ -9,11 +9,9 @@ use InvalidArgumentException;
 // From 'charcoal-property'
 use Charcoal\Property\IdProperty;
 use Charcoal\Tests\AbstractTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * ## TODOs
- * - 2015-03-12:
- */
+#[CoversClass(IdProperty::class)]
 class IdPropertyTest extends AbstractTestCase
 {
     use \Charcoal\Tests\Property\ContainerIntegrationTrait;

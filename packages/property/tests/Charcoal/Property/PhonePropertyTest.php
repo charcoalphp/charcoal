@@ -5,10 +5,9 @@ namespace Charcoal\Tests\Property;
 // From 'charcoal-property'
 use Charcoal\Property\PhoneProperty;
 use Charcoal\Tests\AbstractTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- *
- */
+#[CoversClass(PhoneProperty::class)]
 class PhonePropertyTest extends AbstractTestCase
 {
     use \Charcoal\Tests\Property\ContainerIntegrationTrait;

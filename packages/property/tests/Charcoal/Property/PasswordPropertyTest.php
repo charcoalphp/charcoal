@@ -5,10 +5,9 @@ namespace Charcoal\Tests\Property;
 // From 'charcoal-property'
 use Charcoal\Property\PasswordProperty;
 use Charcoal\Tests\AbstractTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- *
- */
+#[CoversClass(PasswordProperty::class)]
 class PasswordPropertyTest extends AbstractTestCase
 {
     use \Charcoal\Tests\Property\ContainerIntegrationTrait;

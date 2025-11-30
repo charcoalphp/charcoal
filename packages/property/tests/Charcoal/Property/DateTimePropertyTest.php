@@ -10,9 +10,9 @@ use InvalidArgumentException;
 // From 'charcoal-property'
 use Charcoal\Property\DateTimeProperty;
 use Charcoal\Tests\AbstractTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- */
+#[CoversClass(DateTimeProperty::class)]
 class DateTimePropertyTest extends AbstractTestCase
 {
     use \Charcoal\Tests\Property\ContainerIntegrationTrait;

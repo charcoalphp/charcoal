@@ -10,10 +10,9 @@ use ReflectionClass;
 // From 'charcoal-property'
 use Charcoal\Property\ColorProperty;
 use Charcoal\Tests\AbstractTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- *
- */
+#[CoversClass(ColorProperty::class)]
 class ColorPropertyTest extends AbstractTestCase
 {
     use \Charcoal\Tests\Property\ContainerIntegrationTrait;

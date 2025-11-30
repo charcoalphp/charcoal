@@ -12,10 +12,9 @@ use Charcoal\Property\SelectablePropertyTrait;
 use Charcoal\Tests\AbstractTestCase;
 use Charcoal\Tests\ReflectionsTrait;
 use Charcoal\Tests\Property\ContainerIntegrationTrait;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * Selectable Property Test
- */
+#[CoversClass(SelectablePropertyTrait::class)]
 class SelectablePropertyTraitTest extends AbstractTestCase
 {
     use ReflectionsTrait;

@@ -5,11 +5,9 @@ namespace Charcoal\Tests\Property;
 // From 'charcoal-property'
 use Charcoal\Property\MapStructureProperty;
 use Charcoal\Tests\AbstractTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * ## TODOs
- * - 2015-03-12:
- */
+#[CoversClass(MapStructureProperty::class)]
 class MapStructurePropertyTest extends AbstractTestCase
 {
     use \Charcoal\Tests\Property\ContainerIntegrationTrait;

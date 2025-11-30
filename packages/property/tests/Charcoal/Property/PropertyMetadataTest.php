@@ -5,10 +5,9 @@ namespace Charcoal\Tests\Property;
 // From 'charcoal-property'
 use Charcoal\Property\PropertyMetadata;
 use Charcoal\Tests\AbstractTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- *
- */
+#[CoversClass(PropertyMetadata::class)]
 class PropertyMetadataTest extends AbstractTestCase
 {
     /**

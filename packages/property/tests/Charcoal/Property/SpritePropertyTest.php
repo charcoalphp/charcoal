@@ -7,10 +7,9 @@ use InvalidArgumentException;
 // From 'charcoal-property'
 use Charcoal\Property\SpriteProperty;
 use Charcoal\Tests\AbstractTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- *
- */
+#[CoversClass(SpriteProperty::class)]
 class SpritePropertyTest extends AbstractTestCase
 {
     use \Charcoal\Tests\Property\ContainerIntegrationTrait;

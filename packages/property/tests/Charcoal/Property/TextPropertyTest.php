@@ -4,11 +4,9 @@ namespace Charcoal\Tests\Property;
 
 use Charcoal\Property\TextProperty;
 use Charcoal\Tests\AbstractTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * ## TODOs
- * - 2015-03-12:
- */
+#[CoversClass(TextProperty::class)]
 class TextPropertyTest extends AbstractTestCase
 {
     use \Charcoal\Tests\Property\ContainerIntegrationTrait;

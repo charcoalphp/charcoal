@@ -7,10 +7,9 @@ use PDO;
 // From 'charcoal-property'
 use Charcoal\Property\IpProperty;
 use Charcoal\Tests\AbstractTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- *
- */
+#[CoversClass(IpProperty::class)]
 class IpPropertyTest extends AbstractTestCase
 {
     use \Charcoal\Tests\Property\ContainerIntegrationTrait;

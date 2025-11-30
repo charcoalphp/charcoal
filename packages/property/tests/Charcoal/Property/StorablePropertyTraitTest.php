@@ -12,10 +12,9 @@ use Charcoal\Property\StorablePropertyTrait;
 use Charcoal\Tests\AbstractTestCase;
 use Charcoal\Tests\ReflectionsTrait;
 use Charcoal\Tests\Property\ContainerIntegrationTrait;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- *
- */
+#[CoversClass(StorablePropertyTrait::class)]
 class StorablePropertyTraitTest extends AbstractTestCase
 {
     use ReflectionsTrait;

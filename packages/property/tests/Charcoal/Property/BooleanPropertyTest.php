@@ -7,11 +7,9 @@ use PDO;
 // From 'charcoal-property'
 use Charcoal\Property\BooleanProperty;
 use Charcoal\Tests\AbstractTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * ## TODOs
- * - 2015-03-12:
- */
+#[CoversClass(BooleanProperty::class)]
 class BooleanPropertyTest extends AbstractTestCase
 {
     use \Charcoal\Tests\Property\ContainerIntegrationTrait;

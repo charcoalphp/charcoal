@@ -11,10 +11,9 @@ use InvalidArgumentException;
 use Charcoal\Property\AbstractProperty;
 use Charcoal\Tests\AbstractTestCase;
 use Charcoal\Tests\Property\ContainerIntegrationTrait;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- *
- */
+#[CoversClass(AbstractProperty::class)]
 class AbstractPropertyTest extends AbstractTestCase
 {
     use ContainerIntegrationTrait;

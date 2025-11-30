@@ -6,10 +6,9 @@ use InvalidArgumentException;
 
 // From 'charcoal-property'
 use Charcoal\Property\ImageProperty;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- *
- */
+#[CoversClass(ImageProperty::class)]
 class ImagePropertyTest extends AbstractFilePropertyTestCase
 {
     /**
@@ -204,7 +203,7 @@ class ImagePropertyTest extends AbstractFilePropertyTestCase
      * @used-by AbstractFilePropertyTestCase::testGenerateExtensionFromDataProvider()
      * @return  array
      */
-    public function provideDataForGenerateExtension()
+    public static function provideDataForGenerateExtension()
     {
         return [
             [ 'image/gif',     'gif' ],

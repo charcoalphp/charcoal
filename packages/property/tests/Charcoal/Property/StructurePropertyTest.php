@@ -8,10 +8,9 @@ use InvalidArgumentException;
 // From 'charcoal-property'
 use Charcoal\Property\StructureProperty;
 use Charcoal\Tests\AbstractTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- *
- */
+#[CoversClass(StructureProperty::class)]
 class StructurePropertyTest extends AbstractTestCase
 {
     use \Charcoal\Tests\Property\ContainerIntegrationTrait;

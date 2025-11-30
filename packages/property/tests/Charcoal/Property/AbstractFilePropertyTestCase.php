@@ -371,5 +371,5 @@ abstract class AbstractFilePropertyTestCase extends AbstractTestCase
      * @used-by self::testGenerateExtension()
      * @return  array Format: `[ "mime-type", "extension" ]`
      */
-    abstract public function provideDataForGenerateExtension();
+    abstract public static function provideDataForGenerateExtension();
 }

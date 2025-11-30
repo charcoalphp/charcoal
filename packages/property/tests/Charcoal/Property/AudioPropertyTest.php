@@ -4,10 +4,9 @@ namespace Charcoal\Tests\Property;
 
 // From 'charcoal-property'
 use Charcoal\Property\AudioProperty;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- *
- */
+#[CoversClass(AudioProperty::class)]
 class AudioPropertyTest extends AbstractFilePropertyTestCase
 {
     /**
@@ -200,7 +199,7 @@ class AudioPropertyTest extends AbstractFilePropertyTestCase
      * @used-by AbstractFilePropertyTestCase::testGenerateExtensionFromDataProvider()
      * @return  array
      */
-    public function provideDataForGenerateExtension()
+    public static function provideDataForGenerateExtension()
     {
         return [
             [ 'audio/mp3',      'mp3' ],
