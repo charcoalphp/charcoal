@@ -7,6 +7,8 @@ use Charcoal\Tests\Config\Config\AbstractConfigTestCase;
 use Charcoal\Config\GenericConfig;
 use Charcoal\Config\FileAwareInterface;
 use InvalidArgumentException;
+use PHPUnit\Framework\Attributes\CoversClass;
+use Charcoal\Config\AbstractConfig;
 
 /**
  * Test FileAwareTrait implementation in AbstractConfig
@@ -17,10 +19,8 @@ use InvalidArgumentException;
  * @todo ::__construct()
  * @todo ::addFile()
  * @todo ::merge()
- *
- *
- * @coversDefaultClass \Charcoal\Config\AbstractConfig
  */
+#[CoversClass(AbstractConfig::class)]
 class ConfigFileAwareTest extends AbstractConfigTestCase
 {
     /**

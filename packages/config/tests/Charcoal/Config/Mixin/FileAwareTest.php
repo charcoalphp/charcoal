@@ -7,12 +7,9 @@ use Charcoal\Tests\Config\Mixin\FileLoader\AbstractFileLoaderTestCase;
 use Charcoal\Config\FileAwareInterface;
 use Charcoal\Config\FileAwareTrait;
 use InvalidArgumentException;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * Test FileAwareTrait
- *
- * @coversDefaultClass \Charcoal\Config\FileAwareTrait
- */
+#[CoversClass(FileAwareTrait::class)]
 class FileAwareTest extends AbstractFileLoaderTestCase
 {
     /**

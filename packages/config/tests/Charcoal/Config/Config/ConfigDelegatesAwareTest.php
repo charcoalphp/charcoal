@@ -7,12 +7,12 @@ use Charcoal\Tests\Config\Config\AbstractConfigTestCase;
 use Charcoal\Tests\Config\Mock\MacroConfig;
 use Charcoal\Config\AbstractConfig;
 use Charcoal\Config\DelegatesAwareInterface;
+use PHPUnit\Framework\Attributes\CoversClass;
 
 /**
  * Test DelegatesAwareTrait implementation in AbstractConfig
- *
- * @coversDefaultClass \Charcoal\Config\AbstractConfig
  */
+#[CoversClass(AbstractConfig::class)]
 class ConfigDelegatesAwareTest extends AbstractConfigTestCase
 {
     /**

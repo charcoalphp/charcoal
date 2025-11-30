@@ -6,12 +6,9 @@ namespace Charcoal\Tests\Config\Mixin\FileLoader;
 use Charcoal\Tests\Config\Mixin\FileLoader\AbstractFileLoaderTestCase;
 use Charcoal\Config\FileAwareTrait;
 use UnexpectedValueException;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * Test {@see FileAwareTrait::loadIniFile() INI File Loading}
- *
- * @coversDefaultClass \Charcoal\Config\FileAwareTrait
- */
+#[CoversClass(FileAwareTrait::class)]
 class IniFileLoaderTest extends AbstractFileLoaderTestCase
 {
     /**

@@ -8,12 +8,12 @@ use Charcoal\Tests\Config\Config\AbstractConfigTestCase;
 use Charcoal\Tests\Config\Mock\MacroConfig;
 use Charcoal\Config\AbstractConfig;
 use Charcoal\Config\SeparatorAwareInterface;
+use PHPUnit\Framework\Attributes\CoversClass;
 
 /**
  * Test SeparatorAwareTrait implementation in AbstractConfig
- *
- * @coversDefaultClass \Charcoal\Config\AbstractConfig
  */
+#[CoversClass(AbstractConfig::class)]
 class ConfigSeparatorAwareTest extends AbstractConfigTestCase
 {
     use AssertionsTrait;

@@ -9,12 +9,9 @@ use Charcoal\Tests\Config\Entity\AbstractEntityTestCase;
 use Charcoal\Tests\Config\Mixin\ArrayAccessTestTrait;
 use Charcoal\Tests\Config\Mock\MacroEntity;
 use Charcoal\Config\AbstractEntity;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * Test ArrayAccess implementation in AbstractEntity
- *
- * @coversDefaultClass \Charcoal\Config\AbstractEntity
- */
+#[CoversClass(AbstractEntity::class)]
 class EntityArrayAccessTest extends AbstractEntityTestCase
 {
     use ArrayAccessTestTrait;

@@ -12,12 +12,9 @@ use Charcoal\Config\ConfigurableTrait;
 use Charcoal\Config\ConfigInterface;
 use Charcoal\Config\GenericConfig;
 use InvalidArgumentException;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * Test ConfigurableTrait
- *
- * @coversDefaultClass \Charcoal\Config\ConfigurableTrait
- */
+#[CoversClass(ConfigurableTrait::class)]
 class ConfigurableTest extends AbstractTestCase
 {
     use AssertionsTrait;

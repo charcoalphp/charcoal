@@ -8,12 +8,9 @@ use Charcoal\Tests\Config\Mock\DelegateEntity;
 use Charcoal\Tests\Config\Mock\Entity;
 use Charcoal\Config\DelegatesAwareInterface;
 use Charcoal\Config\DelegatesAwareTrait;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * Test DelegatesAwareTrait
- *
- * @coversDefaultClass \Charcoal\Config\DelegatesAwareTrait
- */
+#[CoversClass(DelegatesAwareTrait::class)]
 class DelegatesAwareTest extends AbstractTestCase
 {
     /**

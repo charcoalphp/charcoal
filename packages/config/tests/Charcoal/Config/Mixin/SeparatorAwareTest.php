@@ -9,12 +9,10 @@ use Charcoal\Tests\Config\Mock\TreeEntity;
 use Charcoal\Config\SeparatorAwareInterface;
 use Charcoal\Config\SeparatorAwareTrait;
 use InvalidArgumentException;
+use PHPUnit\Framework\Attributes\CoversClass;
+use ValueError;
 
-/**
- * Test SeparatorAwareTrait
- *
- * @coversDefaultClass \Charcoal\Config\SeparatorAwareTrait
- */
+#[CoversClass(SeparatorAwareTrait::class)]
 class SeparatorAwareTest extends AbstractTestCase
 {
     use AssertionsTrait;

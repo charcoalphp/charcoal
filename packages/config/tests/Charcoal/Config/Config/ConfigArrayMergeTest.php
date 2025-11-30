@@ -11,12 +11,13 @@ use InvalidArgumentException;
 use Charcoal\Tests\Config\Config\AbstractConfigTestCase;
 use Charcoal\Config\GenericConfig;
 use Charcoal\Tests\AssertionsTrait;
+use PHPUnit\Framework\Attributes\CoversClass;
+use Charcoal\Config\AbstractConfig;
 
 /**
  * Test data merging in AbstractConfig
- *
- * @coversDefaultClass \Charcoal\Config\AbstractConfig
  */
+#[CoversClass(AbstractConfig::class)]
 class ConfigArrayMergeTest extends AbstractConfigTestCase
 {
     use AssertionsTrait;

@@ -15,6 +15,7 @@ use Psr\Container\ContainerInterface;
 use Charcoal\Tests\Config\Config\AbstractConfigTestCase;
 use Charcoal\Tests\Config\Mock\MacroConfig;
 use Charcoal\Config\AbstractConfig;
+use PHPUnit\Framework\Attributes\CoversClass;
 
 /**
  * Test AbstractConfig
@@ -26,9 +27,8 @@ use Charcoal\Config\AbstractConfig;
  * - ConfigSeparatorAwareTest
  * - ConfigFileAwareTest
  * - FileLoader/*
- *
- * @coversDefaultClass \Charcoal\Config\AbstractConfig
  */
+#[CoversClass(AbstractConfig::class)]
 class ConfigTest extends AbstractConfigTestCase
 {
     use AssertionsTrait;

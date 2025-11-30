@@ -9,12 +9,12 @@ use Charcoal\Tests\Config\Config\AbstractConfigTestCase;
 use Charcoal\Tests\Config\Mixin\ArrayAccessTestTrait;
 use Charcoal\Tests\Config\Mock\MacroConfig;
 use Charcoal\Config\AbstractConfig;
+use PHPUnit\Framework\Attributes\CoversClass;
 
 /**
  * Test ArrayAccess implementation in AbstractConfig
- *
- * @coversDefaultClass \Charcoal\Config\AbstractConfig
  */
+#[CoversClass(AbstractConfig::class)]
 class ConfigArrayAccessTest extends AbstractConfigTestCase
 {
     use ArrayAccessTestTrait;
