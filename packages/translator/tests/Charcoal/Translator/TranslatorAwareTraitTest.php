@@ -9,10 +9,9 @@ use ReflectionClass;
 use Charcoal\Translator\TranslatorAwareTrait;
 use Charcoal\Translator\Translator;
 use Charcoal\Tests\Translator\AbstractTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- *
- */
+#[CoversClass(TranslatorAwareTrait::class)]
 class TranslatorAwareTraitTest extends AbstractTestCase
 {
     /**

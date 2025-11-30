@@ -9,10 +9,9 @@ use InvalidArgumentException;
 use Charcoal\Translator\LocalesManager;
 use Charcoal\Translator\Translation;
 use Charcoal\Tests\Translator\AbstractTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- *
- */
+#[CoversClass(Translation::class)]
 class TranslationTest extends AbstractTestCase
 {
     /**

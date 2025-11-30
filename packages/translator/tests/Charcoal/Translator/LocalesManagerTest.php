@@ -4,13 +4,11 @@ namespace Charcoal\Tests\Translator;
 
 use InvalidArgumentException;
 
-// From 'charcoal-translator'
 use Charcoal\Translator\LocalesManager;
 use Charcoal\Tests\Translator\AbstractTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- *
- */
+#[CoversClass(LocalesManager::class)]
 class LocalesManagerTest extends AbstractTestCase
 {
     /**

@@ -3,14 +3,12 @@
 namespace Charcoal\Tests\Translation\Script;
 
 use DI\Container;
-// From 'charcoal-translator'
 use Charcoal\Translator\Script\TranslationParserScript;
 use Charcoal\Tests\Translator\ContainerProvider;
 use Charcoal\Tests\Translator\AbstractTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- *
- */
+#[CoversClass(TranslationParserScript::class)]
 class TranslationParserScriptTest extends AbstractTestCase
 {
     /**
@@ -43,12 +41,12 @@ class TranslationParserScriptTest extends AbstractTestCase
     {
         $this->container = $this->getContainer();
 
-        $this->output = $this->container['climate']->output;
+        $this->output = $this->container->get('climate')->output;
 
         $this->obj = new TranslationParserScript([
-            'logger'        => $this->container['logger'],
-            'climate'       => $this->container['climate'],
-            'model_factory' => $this->container['model/factory'],
+            'logger'        => $this->container->get('logger'),
+            'climate'       => $this->container->get('climate'),
+            'model_factory' => $this->container->get('model/factory'),
             'container'     => $this->container
         ]);
     }

@@ -7,10 +7,9 @@ use InvalidArgumentException;
 // From 'charcoal-translator'
 use Charcoal\Translator\LocalesConfig;
 use Charcoal\Tests\Translator\AbstractTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- *
- */
+#[CoversClass(LocalesConfig::class)]
 class LocalesConfigTest extends AbstractTestCase
 {
     /**
