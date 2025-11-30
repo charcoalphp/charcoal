@@ -99,7 +99,7 @@ class ConfigSeparatorAwareTest extends AbstractConfigTestCase
     {
         $cfg = $this->cfg;
 
-        $this->assertObjectHasAttribute('connections', $cfg);
+        $this->assertObjectHasProperty('connections', $cfg);
         $this->assertTrue(isset($cfg['connections.default.host']));
     }
 
@@ -114,7 +114,7 @@ class ConfigSeparatorAwareTest extends AbstractConfigTestCase
     {
         $cfg = $this->cfg;
 
-        $this->assertObjectHasAttribute('connections', $cfg);
+        $this->assertObjectHasProperty('connections', $cfg);
         $this->assertTrue(isset($cfg['connections.default']));
     }
 

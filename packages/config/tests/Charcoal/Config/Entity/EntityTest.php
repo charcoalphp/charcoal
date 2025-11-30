@@ -191,7 +191,7 @@ class EntityTest extends AbstractEntityTestCase
         $obj = $this->obj;
 
         $obj->set('foo_bar', 'waldo');
-        $this->assertObjectHasAttribute('fooBar', $obj);
+        $this->assertObjectHasProperty('fooBar', $obj);
         $this->assertEquals('waldo', $obj['fooBar']);
         $this->assertEquals('waldo', $obj['foo___bar']);
         $this->assertArrayContains([ 'fooBar' ], $obj->keys());

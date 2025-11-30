@@ -111,8 +111,8 @@ class ConfigDelegatesAwareTest extends AbstractConfigTestCase
     {
         $cfg = $this->cfg;
 
-        $this->assertObjectNotHasAttribute('bar', $cfg);
-        $this->assertObjectHasAttribute('bar', $this->delegates[1]);
+        $this->assertObjectNotHasProperty('bar', $cfg);
+        $this->assertObjectHasProperty('bar', $this->delegates[1]);
         $this->assertTrue(isset($cfg['bar']));
     }
 
@@ -127,7 +127,7 @@ class ConfigDelegatesAwareTest extends AbstractConfigTestCase
     {
         $cfg = $this->cfg;
 
-        $this->assertObjectNotHasAttribute('zyx', $cfg);
+        $this->assertObjectNotHasProperty('zyx', $cfg);
         $this->assertFalse(isset($cfg['zyx']));
     }
 
@@ -142,8 +142,8 @@ class ConfigDelegatesAwareTest extends AbstractConfigTestCase
     {
         $cfg = $this->cfg;
 
-        $this->assertObjectNotHasAttribute('qux', $cfg);
-        $this->assertObjectHasAttribute('qux', $this->delegates[2]);
+        $this->assertObjectNotHasProperty('qux', $cfg);
+        $this->assertObjectHasProperty('qux', $this->delegates[2]);
         $this->assertEquals($this->delegates[2]['qux'], $cfg['qux']);
     }
 
@@ -158,7 +158,7 @@ class ConfigDelegatesAwareTest extends AbstractConfigTestCase
     {
         $cfg = $this->cfg;
 
-        $this->assertObjectNotHasAttribute('xyz', $cfg);
+        $this->assertObjectNotHasProperty('xyz', $cfg);
         $this->assertNull($cfg['xyz']);
     }
 
@@ -172,11 +172,11 @@ class ConfigDelegatesAwareTest extends AbstractConfigTestCase
     {
         $cfg = $this->cfg;
 
-        $this->assertObjectNotHasAttribute('qux', $cfg);
-        $this->assertObjectHasAttribute('qux', $this->delegates[2]);
+        $this->assertObjectNotHasProperty('qux', $cfg);
+        $this->assertObjectHasProperty('qux', $this->delegates[2]);
 
         $cfg['qux'] = 'garply';
-        $this->assertObjectHasAttribute('qux', $cfg);
+        $this->assertObjectHasProperty('qux', $cfg);
         $this->assertEquals('garply', $cfg['qux']);
         $this->assertEquals('xyzzy', $this->delegates[2]['qux']);
     }
@@ -191,8 +191,8 @@ class ConfigDelegatesAwareTest extends AbstractConfigTestCase
     {
         $cfg = $this->cfg;
 
-        $this->assertObjectNotHasAttribute('qux', $cfg);
-        $this->assertObjectHasAttribute('qux', $this->delegates[2]);
+        $this->assertObjectNotHasProperty('qux', $cfg);
+        $this->assertObjectHasProperty('qux', $this->delegates[2]);
 
         unset($cfg['qux']);
         $this->assertEquals($this->delegates[2]['qux'], $cfg['qux']);
@@ -209,7 +209,7 @@ class ConfigDelegatesAwareTest extends AbstractConfigTestCase
     {
         $cfg = $this->cfg;
 
-        $this->assertObjectHasAttribute('hud', $cfg);
+        $this->assertObjectHasProperty('hud', $cfg);
         $this->assertEquals('flob', $cfg['hud']);
 
         unset($cfg['hud']);

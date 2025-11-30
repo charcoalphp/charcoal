@@ -243,7 +243,7 @@ class ConfigurableTest extends AbstractTestCase
      */
     public function testGetConfigReturnsFallbackMethodOnNonexistentKey(ConfigurableInterface $obj)
     {
-        $val = $obj->config('charset', [ $this, 'getName' ]);
+        $val = $obj->config('charset', [ $this, 'name' ]);
         $this->assertEquals('testGetConfigReturnsFallbackMethodOnNonexistentKey', $val);
     }
 

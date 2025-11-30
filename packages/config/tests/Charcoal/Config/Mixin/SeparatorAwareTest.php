@@ -274,8 +274,7 @@ class SeparatorAwareTest extends AbstractTestCase
      */
     public function testHasWithSeparatorWithoutDelimiterInPhp7()
     {
-        $this->expectError();
-
+        $this->expectException(ValueError::class);
         $this->delegatedTestHasWithSeparatorWithoutDelimiter();
     }
 
@@ -395,7 +394,7 @@ class SeparatorAwareTest extends AbstractTestCase
      */
     public function testGetWithSeparatorWithoutDelimiterInPhp7()
     {
-        $this->expectError();
+        $this->expectException(ValueError::class);
 
         $this->delegatedTestGetWithSeparatorWithoutDelimiter();
     }
@@ -527,7 +526,7 @@ class SeparatorAwareTest extends AbstractTestCase
      */
     public function testSetWithSeparatorWithoutDelimiterInPhp7()
     {
-        $this->expectError();
+        $this->expectException(ValueError::class);
 
         $this->delegatedTestSetWithSeparatorWithoutDelimiter();
     }
