@@ -2,13 +2,11 @@
 
 namespace Charcoal\Tests\Service;
 
-// From 'charcoal-core'
 use Charcoal\Model\Service\MetadataLoader;
 use Charcoal\Tests\AbstractTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- *
- */
+#[CoversClass(MetadataLoader::class)]
 class MetadataLoaderTest extends AbstractTestCase
 {
     use \Charcoal\Tests\CoreContainerIntegrationTrait;

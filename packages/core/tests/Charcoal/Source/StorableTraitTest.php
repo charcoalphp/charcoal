@@ -21,10 +21,9 @@ use Charcoal\Tests\Mock\StorableMock;
 use Charcoal\Tests\Mock\SourceMock;
 use Charcoal\Tests\AbstractTestCase;
 use Charcoal\Tests\ReflectionsTrait;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * Test {@see StorableTrait} and {@see StorableInterface}.
- */
+#[CoversClass(StorableTrait::class)]
 class StorableTraitTest extends AbstractTestCase
 {
     use ReflectionsTrait;

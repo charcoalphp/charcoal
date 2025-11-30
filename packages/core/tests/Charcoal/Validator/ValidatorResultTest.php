@@ -7,10 +7,9 @@ use InvalidArgumentException;
 // From 'charcoal-core'
 use Charcoal\Validator\ValidatorResult;
 use Charcoal\Tests\AbstractTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- *
- */
+#[CoversClass(ValidatorResult::class)]
 class ValidatorResultTest extends AbstractTestCase
 {
     /**

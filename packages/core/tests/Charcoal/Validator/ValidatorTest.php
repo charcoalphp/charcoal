@@ -10,10 +10,10 @@ use Charcoal\Validator\ValidatorResult;
 use Charcoal\Tests\AbstractTestCase;
 use Charcoal\Tests\Mock\ValidatorClass;
 use Charcoal\Tests\Mock\ValidatableClass;
+use Charcoal\Validator\AbstractValidator;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- *
- */
+#[CoversClass(AbstractValidator::class)]
 class ValidatorTest extends AbstractTestCase
 {
     /**

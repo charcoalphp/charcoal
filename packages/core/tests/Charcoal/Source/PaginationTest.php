@@ -10,10 +10,9 @@ use Charcoal\Source\PaginationInterface;
 use Charcoal\Tests\AbstractTestCase;
 use Charcoal\Tests\CoreContainerIntegrationTrait;
 use Charcoal\Tests\Source\ExpressionTestTrait;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * Test {@see Pagination} and {@see PaginationInterface}.
- */
+#[CoversClass(Pagination::class)]
 class PaginationTest extends AbstractTestCase
 {
     use CoreContainerIntegrationTrait;
@@ -51,7 +50,7 @@ class PaginationTest extends AbstractTestCase
      * @used-by ExpressionTestTrait::testDefaultValues()
      * @return  array
      */
-    final public function provideDefaultValues()
+    final public static function provideDefaultValues()
     {
         return [
             'page num' => [ 'page',         1 ],

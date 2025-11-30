@@ -39,16 +39,6 @@ trait ExpressionTestFieldTrait
     }
 
     /**
-     * @requires PHP >= 7.0
-     * @return   void
-     */
-    public function testDeprecatedTableNameErrorInPhp7()
-    {
-        $this->expectDeprecation();
-        $this->delegatedTestDeprecatedTableNameError();
-    }
-
-    /**
      * Assert the given expression has data from {@see ExpressionFieldInterface}.
      *
      * @param ExpressionFieldInterface $obj      The expression to test.

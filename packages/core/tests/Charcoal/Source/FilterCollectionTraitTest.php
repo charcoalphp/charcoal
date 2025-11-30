@@ -16,10 +16,9 @@ use Charcoal\Tests\AssertionsTrait;
 use Charcoal\Tests\ReflectionsTrait;
 use Charcoal\Tests\Mock\FilterCollectionClass;
 use Charcoal\Tests\Source\ExpressionCollectionTestTrait;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * Test {@see FilterCollectionTrait} and {@see FilterCollectionInterface}.
- */
+#[CoversClass(FilterCollectionTrait::class)]
 class FilterCollectionTraitTest extends AbstractTestCase
 {
     use AssertionsTrait;

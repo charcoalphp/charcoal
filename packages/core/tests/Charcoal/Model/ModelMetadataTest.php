@@ -7,10 +7,9 @@ use Exception;
 // From 'charcoal-core'
 use Charcoal\Model\ModelMetadata;
 use Charcoal\Tests\AbstractTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- *
- */
+#[CoversClass(ModelMetadata::class)]
 class ModelMetadataTest extends AbstractTestCase
 {
     /**
@@ -67,13 +66,13 @@ class ModelMetadataTest extends AbstractTestCase
     public function testArrayAccessUnset()
     {
         $obj = $this->obj;
-        $this->assertObjectNotHasAttribute('foo', $obj);
+        $this->assertObjectNotHasProperty('foo', $obj);
 
         $obj['foo'] = 'bar';
-        $this->assertObjectHasAttribute('foo', $obj);
+        $this->assertObjectHasProperty('foo', $obj);
 
         unset($obj['foo']);
-        //$this->assertObjectNotHasAttribute('foo', $obj);
+        //$this->assertObjectNotHasProperty('foo', $obj);
     }
 
     /**

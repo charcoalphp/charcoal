@@ -6,14 +6,12 @@ use InvalidArgumentException;
 
 // From 'charcoal-core'
 use Charcoal\Source\Expression;
-use Charcoal\Source\ExpressionInterface;
 use Charcoal\Tests\AbstractTestCase;
 use Charcoal\Tests\CoreContainerIntegrationTrait;
 use Charcoal\Tests\Source\ExpressionTestTrait;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * Test {@see Expression} and {@see ExpressionInterface}.
- */
+#[CoversClass(Expression::class)]
 class ExpressionTest extends AbstractTestCase
 {
     use CoreContainerIntegrationTrait;
@@ -35,7 +33,7 @@ class ExpressionTest extends AbstractTestCase
      * @used-by ExpressionTestTrait::testDefaultValues()
      * @return  array
      */
-    final public function provideDefaultValues()
+    final public static function provideDefaultValues()
     {
         return [
             'condition' => [ 'condition', null ],

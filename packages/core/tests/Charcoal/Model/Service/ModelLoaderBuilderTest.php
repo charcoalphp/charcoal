@@ -11,10 +11,9 @@ use Charcoal\Model\Service\ModelLoader;
 use Charcoal\Model\Service\ModelLoaderBuilder;
 use Charcoal\Tests\AbstractTestCase;
 use Charcoal\Tests\Mock\GenericModel;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- *
- */
+#[CoversClass(ModelLoaderBuilder::class)]
 class ModelLoaderBuilderTest extends AbstractTestCase
 {
     use \Charcoal\Tests\CoreContainerIntegrationTrait;

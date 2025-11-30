@@ -8,19 +8,13 @@ use CachingIterator;
 use InvalidArgumentException;
 use LogicException;
 use ReflectionClass;
-
-// From 'mockery/mockery'
 use Mockery as m;
-
-// From 'charcoal-core'
 use Charcoal\Model\Model;
-use Charcoal\Model\ModelInterface;
 use Charcoal\Model\Collection;
 use Charcoal\Tests\AbstractTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- *
- */
+#[CoversClass(Collection::class)]
 class CollectionTest extends AbstractTestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;

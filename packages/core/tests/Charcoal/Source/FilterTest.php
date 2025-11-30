@@ -13,10 +13,9 @@ use Charcoal\Tests\CoreContainerIntegrationTrait;
 use Charcoal\Tests\ReflectionsTrait;
 use Charcoal\Tests\Source\ExpressionTestFieldTrait;
 use Charcoal\Tests\Source\ExpressionTestTrait;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * Test {@see Filter} and {@see FilterInterface}.
- */
+#[CoversClass(Filter::class)]
 class FilterTest extends AbstractTestCase
 {
     use CoreContainerIntegrationTrait;
@@ -90,7 +89,7 @@ class FilterTest extends AbstractTestCase
      * @used-by ExpressionTestTrait::testDefaultValues()
      * @return  array
      */
-    final public function provideDefaultValues()
+    final public static function provideDefaultValues()
     {
         return [
             'property'    => [ 'property',     null ],
@@ -158,18 +157,6 @@ class FilterTest extends AbstractTestCase
     public function delegatedTestDeprecatedValError()
     {
         $this->createExpression()->setData([ 'val' => 'qux' ]);
-    }
-
-    /**
-     *
-     *
-     * @requires PHP >= 7.0
-     * @return   void
-     */
-    public function testDeprecatedValErrorInPhp7()
-    {
-        $this->expectDeprecation();
-        $this->delegatedTestDeprecatedValError();
     }
 
 
@@ -363,18 +350,6 @@ class FilterTest extends AbstractTestCase
     }
 
     /**
-     *
-     *
-     * @requires PHP >= 7.0
-     * @return   void
-     */
-    public function testDeprecatedOperandErrorInPhp7()
-    {
-        $this->expectDeprecation();
-        $this->delegatedTestDeprecatedOperandError();
-    }
-
-    /**
      * Test implementation of {@see Countable}.
      *
      * Assertions:
@@ -537,15 +512,5 @@ class FilterTest extends AbstractTestCase
     public function delegatedTestDeprecatedStringError()
     {
         $this->createExpression()->setData([ 'string' => '1 = 1' ]);
-    }
-
-    /**
-     * @requires PHP >= 7.0
-     * @return   void
-     */
-    public function testDeprecatedStringErrorInPhp7()
-    {
-        $this->expectDeprecation();
-        $this->delegatedTestDeprecatedStringError();
     }
 }

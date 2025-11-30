@@ -12,10 +12,9 @@ use Charcoal\Source\Database\DatabaseOrder;
 use Charcoal\Tests\AbstractTestCase;
 use Charcoal\Tests\ReflectionsTrait;
 use Charcoal\Tests\Source\DatabaseExpressionTestTrait;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * Test {@see DatabaseOrder}.
- */
+#[CoversClass(DatabaseOrder::class)]
 class DatabaseOrderTest extends AbstractTestCase
 {
     use DatabaseExpressionTestTrait;
@@ -151,7 +150,7 @@ class DatabaseOrderTest extends AbstractTestCase
      * @used-by self::testSqlDirectionMode()
      * @return  array
      */
-    public function provideSqlDirectionMode()
+    public static function provideSqlDirectionMode()
     {
         return [
             [ 'asc',  'ASC'  ],

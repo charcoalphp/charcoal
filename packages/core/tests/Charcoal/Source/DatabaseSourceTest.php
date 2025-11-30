@@ -12,10 +12,9 @@ use Charcoal\Source\DatabaseSource;
 use Charcoal\Source\DatabaseSourceInterface;
 use Charcoal\Source\SourceInterface;
 use Charcoal\Tests\AbstractTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- *
- */
+#[CoversClass(DatabaseSource::class)]
 class DatabaseSourceTest extends AbstractTestCase
 {
     use \Charcoal\Tests\CoreContainerIntegrationTrait;

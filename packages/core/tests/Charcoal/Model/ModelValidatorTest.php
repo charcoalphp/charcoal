@@ -2,16 +2,12 @@
 
 namespace Charcoal\Tests\Model;
 
-use PDO;
-
-// From 'charcoal-core'
 use Charcoal\Model\ModelValidator;
 use Charcoal\Model\Model;
 use Charcoal\Tests\AbstractTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- *
- */
+#[CoversClass(ModelValidator::class)]
 class ModelValidatorTest extends AbstractTestCase
 {
     use \Charcoal\Tests\CoreContainerIntegrationTrait;

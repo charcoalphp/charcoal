@@ -19,10 +19,9 @@ use Charcoal\Source\DatabaseSource;
 use Charcoal\Tests\AbstractTestCase;
 use Charcoal\Tests\CoreContainerIntegrationTrait;
 use Charcoal\Tests\ReflectionsTrait;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- *
- */
+#[CoversClass(CollectionLoader::class)]
 class CollectionLoaderTest extends AbstractTestCase
 {
     use CoreContainerIntegrationTrait;

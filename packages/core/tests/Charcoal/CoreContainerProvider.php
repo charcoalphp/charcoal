@@ -118,7 +118,7 @@ class CoreContainerProvider
 
         $container->set('translator', function (Container $container) {
             return new Translator([
-                'manager' => $container->get('locales/manager')
+                'manager'           => $container->get('locales/manager'),
             ]);
         });
     }
@@ -168,7 +168,7 @@ class CoreContainerProvider
 
         $container->set('translator', function (Container $container) {
             $translator = new Translator([
-                'manager' => $container->get('locales/manager')
+                'manager' => $container->get('locales/manager'),
             ]);
 
             $loader = new ArrayLoader();

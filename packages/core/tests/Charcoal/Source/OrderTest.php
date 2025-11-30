@@ -11,10 +11,9 @@ use Charcoal\Tests\AbstractTestCase;
 use Charcoal\Tests\CoreContainerIntegrationTrait;
 use Charcoal\Tests\Source\ExpressionTestFieldTrait;
 use Charcoal\Tests\Source\ExpressionTestTrait;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * Test {@see Order} and {@see OrderInterface}.
- */
+#[CoversClass(Order::class)]
 class OrderTest extends AbstractTestCase
 {
     use CoreContainerIntegrationTrait;
@@ -53,7 +52,7 @@ class OrderTest extends AbstractTestCase
      * @used-by ExpressionTestTrait::testDefaultValues()
      * @return  array
      */
-    final public function provideDefaultValues()
+    final public static function provideDefaultValues()
     {
         return [
             'property'  => [ 'property',   null ],
@@ -365,17 +364,5 @@ class OrderTest extends AbstractTestCase
     public function delegatedTestDeprecatedStringError()
     {
         $this->createExpression()->setData([ 'string' => '1 = 1' ]);
-    }
-
-    /**
-     *
-     *
-     * @requires PHP >= 7.0
-     * @return   void
-     */
-    public function testDeprecatedStringErrorInPhp7()
-    {
-        $this->expectDeprecation();
-        $this->delegatedTestDeprecatedStringError();
     }
 }

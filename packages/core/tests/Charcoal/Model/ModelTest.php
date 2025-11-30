@@ -2,15 +2,13 @@
 
 namespace Charcoal\Tests\Model;
 
-// From 'charcoal-core'
 use Charcoal\Model\AbstractModel;
 use Charcoal\Model\ModelInterface;
 use Charcoal\Model\Model;
 use Charcoal\Tests\AbstractTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- *
- */
+#[CoversClass(Model::class)]
 class ModelTest extends AbstractTestCase
 {
     use \Charcoal\Tests\CoreContainerIntegrationTrait;
@@ -254,7 +252,7 @@ class ModelTest extends AbstractTestCase
 
         $serialized = serialize($obj);
         $this->assertEquals(
-            'C:20:"Charcoal\Model\Model":69:{a:3:{s:2:"id";i:1;s:4:"name";s:6:"Huxley";s:4:"role";s:8:"Novelist";}}',
+            'O:20:"Charcoal\Model\Model":3:{s:2:"id";i:1;s:4:"name";s:6:"Huxley";s:4:"role";s:8:"Novelist";}',
             serialize($obj)
         );
 

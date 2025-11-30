@@ -10,10 +10,9 @@ use Charcoal\Source\Database\DatabasePagination;
 use Charcoal\Tests\AbstractTestCase;
 use Charcoal\Tests\ReflectionsTrait;
 use Charcoal\Tests\Source\DatabaseExpressionTestTrait;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * Test {@see DatabasePagination}.
- */
+#[CoversClass(DatabasePagination::class)]
 class DatabasePaginationTest extends AbstractTestCase
 {
     use DatabaseExpressionTestTrait;

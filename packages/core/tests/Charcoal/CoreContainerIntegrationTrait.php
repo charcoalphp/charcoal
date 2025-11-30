@@ -67,4 +67,20 @@ trait CoreContainerIntegrationTrait
         $this->container = $container;
         $this->containerProvider = $provider;
     }
+
+    protected static function getStaticContainer()
+    {
+        $provider  = new CoreContainerProvider();
+        $container = new Container();
+
+        $provider->registerBaseServices($container);
+        $provider->registerTranslator($container);
+        $provider->registerMetadataLoader($container);
+        $provider->registerSourceFactory($container);
+        $provider->registerPropertyFactory($container);
+        $provider->registerModelFactory($container);
+        $provider->registerModelCollectionLoader($container);
+
+        return $container;
+    }
 }

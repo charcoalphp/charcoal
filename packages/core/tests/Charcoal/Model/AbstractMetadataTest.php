@@ -2,13 +2,11 @@
 
 namespace Charcoal\Tests\Model;
 
-// From 'charcoal-core'
 use Charcoal\Model\AbstractMetadata;
 use Charcoal\Tests\AbstractTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- *
- */
+#[CoversClass(AbstractMetadata::class)]
 class AbstractMetadataTest extends AbstractTestCase
 {
     /**

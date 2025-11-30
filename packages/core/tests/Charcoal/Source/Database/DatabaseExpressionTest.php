@@ -10,10 +10,9 @@ use Charcoal\Source\Database\DatabaseExpression;
 use Charcoal\Tests\AbstractTestCase;
 use Charcoal\Tests\ReflectionsTrait;
 use Charcoal\Tests\Source\DatabaseExpressionTestTrait;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * Test {@see DatabaseExpression}.
- */
+#[CoversClass(DatabaseExpression::class)]
 class DatabaseExpressionTest extends AbstractTestCase
 {
     use DatabaseExpressionTestTrait;

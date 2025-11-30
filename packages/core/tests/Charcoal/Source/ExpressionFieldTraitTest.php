@@ -13,10 +13,9 @@ use Charcoal\Source\ExpressionFieldTrait;
 use Charcoal\Source\ExpressionFieldInterface;
 use Charcoal\Tests\AbstractTestCase;
 use Charcoal\Tests\CoreContainerIntegrationTrait;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * Test {@see ExpressionFieldTrait} and {@see ExpressionFieldInterface}.
- */
+#[CoversClass(ExpressionFieldTrait::class)]
 class ExpressionFieldTraitTest extends AbstractTestCase
 {
     use CoreContainerIntegrationTrait;

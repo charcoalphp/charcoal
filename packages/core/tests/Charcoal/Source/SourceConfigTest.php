@@ -7,10 +7,9 @@ use InvalidArgumentException;
 // From 'charcoal-core'
 use Charcoal\Source\SourceConfig;
 use Charcoal\Tests\AbstractTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- *
- */
+#[CoversClass(SourceConfig::class)]
 class SourceConfigTest extends AbstractTestCase
 {
     /**

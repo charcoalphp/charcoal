@@ -26,10 +26,9 @@ use Charcoal\Model\Service\ModelBuilder;
 use Charcoal\Model\Service\ModelLoaderBuilder;
 use Charcoal\Model\Service\MetadataLoader;
 use Charcoal\Tests\AbstractTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- *
- */
+#[CoversClass(ModelServiceProvider::class)]
 class ModelServiceProviderTest extends AbstractTestCase
 {
     /**

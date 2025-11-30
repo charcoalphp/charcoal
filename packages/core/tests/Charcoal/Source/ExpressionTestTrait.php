@@ -33,7 +33,7 @@ trait ExpressionTestTrait
      * @used-by self::testDefaultValues()
      * @return  array
      */
-    abstract public function provideDefaultValues();
+    abstract public static function provideDefaultValues();
 
     /**
      * Test new instance.

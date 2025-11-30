@@ -10,10 +10,9 @@ use Charcoal\Factory\GenericFactory as Factory;
 // From 'charcoal-core'
 use Charcoal\Model\Service\ModelLoader;
 use Charcoal\Tests\AbstractTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- *
- */
+#[CoversClass(ModelLoader::class)]
 class ModelLoaderTest extends AbstractTestCase
 {
     use \Charcoal\Tests\CoreContainerIntegrationTrait;

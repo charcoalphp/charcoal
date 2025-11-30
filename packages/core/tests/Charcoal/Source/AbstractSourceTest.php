@@ -30,10 +30,9 @@ use Charcoal\Tests\AssertionsTrait;
 use Charcoal\Tests\CoreContainerIntegrationTrait;
 use Charcoal\Tests\Mock\OrderTree;
 use Charcoal\Tests\ReflectionsTrait;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * Test {@see AbstractSource} and {@see SourceInterface}.
- */
+#[CoversClass(AbstractSource::class)]
 class AbstractSourceTest extends AbstractTestCase
 {
     use AssertionsTrait;

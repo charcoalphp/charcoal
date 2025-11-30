@@ -17,10 +17,9 @@ use Charcoal\Tests\ReflectionsTrait;
 use Charcoal\Tests\Mock\OrderCollectionClass;
 use Charcoal\Tests\Mock\OrderTree;
 use Charcoal\Tests\Source\ExpressionCollectionTestTrait;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * Test {@see OrderCollectionTrait} and {@see OrderCollectionInterface}.
- */
+#[CoversClass(OrderCollectionTrait::class)]
 class OrderCollectionTraitTest extends AbstractTestCase
 {
     use AssertionsTrait;

@@ -17,10 +17,9 @@ use Charcoal\Tests\AbstractTestCase;
 use Charcoal\Tests\CoreContainerIntegrationTrait;
 use Charcoal\Tests\ReflectionsTrait;
 use Charcoal\Tests\Source\DatabaseExpressionTestTrait;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * Test {@see DatabaseFilter}.
- */
+#[CoversClass(DatabaseFilter::class)]
 class DatabaseFilterTest extends AbstractTestCase
 {
     use CoreContainerIntegrationTrait;
@@ -167,11 +166,11 @@ class DatabaseFilterTest extends AbstractTestCase
      * @used-by self::testNestedSql()
      * @return  array
      */
-    public function providedNestedExpressions()
+    public static function providedNestedExpressions()
     {
         return [
-            'One Level'  => $this->nestedExpressionsDataset1(),
-            'Two Levels' => $this->nestedExpressionsDataset2(),
+            'One Level'  => self::nestedExpressionsDataset1(),
+            'Two Levels' => self::nestedExpressionsDataset2(),
         ];
     }
 
@@ -181,7 +180,7 @@ class DatabaseFilterTest extends AbstractTestCase
      * @used-by self::providedNestedExpressions()
      * @return  array
      */
-    protected function nestedExpressionsDataset1()
+    protected static function nestedExpressionsDataset1()
     {
         $time = new DateTime('3 days ago');
 
@@ -215,7 +214,7 @@ class DatabaseFilterTest extends AbstractTestCase
      * @used-by self::providedNestedExpressions()
      * @return  array
      */
-    protected function nestedExpressionsDataset2()
+    protected static function nestedExpressionsDataset2()
     {
         $time = date('Y-m-d');
 
@@ -545,7 +544,7 @@ class DatabaseFilterTest extends AbstractTestCase
      * @used-by self::testSqlComparisonOperators()
      * @return  array
      */
-    public function provideComparisonOperators()
+    public static function provideComparisonOperators()
     {
         return [
             [ '=' ], [ '!=' ],
@@ -561,7 +560,7 @@ class DatabaseFilterTest extends AbstractTestCase
      * @used-by self::testSqlSetOperators()
      * @return  array
      */
-    public function provideSetOperators()
+    public static function provideSetOperators()
     {
         return [
             'FIND_IN_SET' => [ 'FIND_IN_SET', ',',     'FIND_IN_SET(\'%2$s\', %1$s)' ],
@@ -576,7 +575,7 @@ class DatabaseFilterTest extends AbstractTestCase
      * @used-by self::testSqlConditionalOperators()
      * @return  array
      */
-    public function provideConditionalOperators()
+    public static function provideConditionalOperators()
     {
         return [
             [ 'IS NULL' ], [ 'IS NOT NULL' ],
@@ -592,7 +591,7 @@ class DatabaseFilterTest extends AbstractTestCase
      * @used-by self::testSqlNegationOperators()
      * @return  array
      */
-    public function provideNegationOperators()
+    public static function provideNegationOperators()
     {
         return [
             [ '!' ],

@@ -8,14 +8,11 @@ use InvalidArgumentException;
 
 // From 'charcoal-core'
 use Charcoal\Source\AbstractExpression;
-use Charcoal\Source\ExpressionInterface;
 use Charcoal\Tests\AbstractTestCase;
 use Charcoal\Tests\CoreContainerIntegrationTrait;
-use Charcoal\Tests\Source\ExpressionTestTrait;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * Test {@see AbstractExpression}.
- */
+#[CoversClass(AbstractExpression::class)]
 class AbstractExpressionTest extends AbstractTestCase
 {
     use CoreContainerIntegrationTrait;
@@ -121,9 +118,10 @@ class AbstractExpressionTest extends AbstractTestCase
      * @used-by self::testParseValue()
      * @return  array
      */
-    public function provideParsableValues()
+    public static function provideParsableValues()
     {
-        $container = $this->getContainer();
+        //$container = $this->getContainer();
+        $container = self::getStaticContainer();
 
         $prop = $container->get('property/factory')->create('date-time');
         $prop->setVal('13 July 2004');
@@ -163,7 +161,7 @@ class AbstractExpressionTest extends AbstractTestCase
      * @used-by self::testQuoteValue()
      * @return  array
      */
-    public function provideQuotableValues()
+    public static function provideQuotableValues()
     {
         $obj = new stdClass();
 
@@ -202,7 +200,7 @@ class AbstractExpressionTest extends AbstractTestCase
      * @used-by self::testQuoteIdentifier()
      * @return  array
      */
-    public function provideQuotableIdentifiers()
+    public static function provideQuotableIdentifiers()
     {
         return [
             [ null,   null,   ''          ],
@@ -273,7 +271,7 @@ class AbstractExpressionTest extends AbstractTestCase
      * @used-by self::testDiffValues()
      * @return  array
      */
-    public function provideDiffValues()
+    public static function provideDiffValues()
     {
         return [
             'Same Type'      => [ 5, 5, 0 ],
@@ -303,7 +301,7 @@ class AbstractExpressionTest extends AbstractTestCase
      * @used-by self::testIsCallable()
      * @return  array
      */
-    public function provideCallableValues()
+    public static function provideCallableValues()
     {
         return [
             'Null Type'   => [ null, false ],
