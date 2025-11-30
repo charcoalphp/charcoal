@@ -46,7 +46,7 @@ class Translator extends SymfonyTranslator
 
         // Ensure Charcoal has control of the message formatter.
         if (!isset($data['message_formatter'])) {
-            $data['message_formatter'] = new MessageFormatter($data['message_selector']);
+            $data['message_formatter'] = new MessageFormatter($data['message_selector'] ?? null);
         }
         $this->setFormatter($data['message_formatter']);
 
