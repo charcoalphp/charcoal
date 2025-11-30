@@ -1,4 +1,5 @@
 .phpunit.result.cache
+.phpunit.cache
 charcoal_test
 node_modules/
 packages/**/composer.lock
