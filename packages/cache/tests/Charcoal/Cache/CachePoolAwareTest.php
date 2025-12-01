@@ -4,16 +4,13 @@ namespace Charcoal\Tests\Cache;
 
 // From 'tedivm/stash'
 use Stash\Pool;
-
 // From 'charcoal-cache'
 use Charcoal\Tests\AbstractTestCase;
 use Charcoal\Tests\Mocks\CachePoolAware;
+use Charcoal\Cache\CachePoolAwareTrait;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * Test CachePoolAwareTrait
- *
- * @coversDefaultClass \Charcoal\Cache\CachePoolAwareTrait
- */
+#[CoversClass(CachePoolAwareTrait::class)]
 class CachePoolAwareTest extends AbstractTestCase
 {
     /**

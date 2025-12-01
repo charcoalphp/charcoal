@@ -75,6 +75,10 @@ class CacheServiceProvider
 
             $available = $container->get('cache/available-drivers');
 
+            if (empty($available)) {
+                return [];
+            }
+
             // APC
             $drivers['apc'] = function () use ($container, $available) {
                 if (!isset($available['Apc'])) {

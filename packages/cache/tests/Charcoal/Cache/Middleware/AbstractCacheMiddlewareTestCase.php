@@ -7,25 +7,18 @@ use Psr\Http\Message\UriInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\StreamInterface;
-// From Slim
-use Slim\Http\Body;
-use Slim\Http\Environment;
-use Slim\Http\Headers;
-use Slim\Http\Request;
-use Slim\Http\RequestBody;
-use Slim\Http\Response;
-use Nyholm\Psr7\Uri;
-// From 'charcoal-cache'
+use Nyholm\Psr7\ServerRequest;
+use Nyholm\Psr7\Response;
+use Nyholm\Psr7\Stream;
 use Charcoal\Tests\AbstractTestCase;
 use Charcoal\Tests\Cache\CachePoolTrait;
 use Charcoal\Tests\Mocks\DefaultsAwareCacheMiddlewares as CacheMiddleware;
+use PHPUnit\Framework\Attributes\CoversClass;
+use Nyholm\Psr7\Uri;
+use Psr\Http\Server\RequestHandlerInterface;
 
-/**
- * Test CacheMiddleware
- *
- * @coversDefaultClass \Charcoal\Cache\Middleware\CacheMiddleware
- */
-abstract class AbstractCacheMiddlewareTest extends AbstractTestCase
+#[CoversClass(\Charcoal\Cache\Middleware\CacheMiddleware::class)]
+abstract class AbstractCacheMiddlewareTestCase extends AbstractTestCase
 {
     use CachePoolTrait;
 
@@ -94,11 +87,11 @@ abstract class AbstractCacheMiddlewareTest extends AbstractTestCase
      * Create a new Headers instance.
      *
      * @param  array $data A collection of HTTP headers.
-     * @return StreamInterface
+     * @return array
      */
     protected function createHeaders($data = [])
     {
-        return new Headers($data);
+        return $data;
     }
 
     /**
@@ -111,16 +104,39 @@ abstract class AbstractCacheMiddlewareTest extends AbstractTestCase
      */
     protected function createRequest($method = 'GET', $uri = '/', $query = null)
     {
-        $env = Environment::mock();
-        $env['REQUEST_METHOD'] = strtoupper($method);
-        $env['REQUEST_URI']    = $uri;
+        $method = strtoupper($method);
+        $uriObj = $this->createUri($uri);
+
+        $request = new ServerRequest($method, $uriObj);
 
         if ($query !== null) {
-            $env['QUERY_STRING'] = is_array($query) ? http_build_query($query) : $query;
+            if (is_array($query)) {
+                $request = $request->withQueryParams($query);
+            } else {
+                // parse query string into array
+                parse_str($query, $qp);
+                $request = $request->withQueryParams($qp);
+            }
         }
 
-        $request = Request::createFromEnvironment($env);
-        return $request;
+         return $request;
+    }
+
+    /**
+     * Create a new HTTP Request instance.
+     */
+    protected function createHandler(): RequestHandlerInterface
+    {
+        return new class () implements RequestHandlerInterface {
+            public function handle(ServerRequestInterface $request): ResponseInterface
+            {
+                return new \Nyholm\Psr7\Response(
+                    200,
+                    ['Content-Type' => 'text/html; charset=UTF-8'],
+                    \Nyholm\Psr7\Stream::create('')
+                );
+            }
+        };
     }
 
     /**
@@ -131,12 +147,7 @@ abstract class AbstractCacheMiddlewareTest extends AbstractTestCase
      */
     protected function createResponseBody($data = null)
     {
-        $body = new Body(fopen('php://temp', 'r+'));
-
-        if ($data !== null) {
-            $body->write($data);
-        }
-
+        $body = Stream::create(($data ?? ''));
         return $body;
     }
 
@@ -153,7 +164,7 @@ abstract class AbstractCacheMiddlewareTest extends AbstractTestCase
             $body = $this->createResponseBody($body);
         }
 
-        $headers  = new Headers([ 'Content-Type' => 'text/html; charset=UTF-8' ]);
+        $headers = [ 'Content-Type' => 'text/html; charset=UTF-8' ];
         $response = new Response($status, $headers, $body);
         return $response;
     }

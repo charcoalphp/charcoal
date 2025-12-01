@@ -7,15 +7,13 @@ use Stash\DriverList;
 use Stash\Interfaces\DriverInterface;
 use Stash\Interfaces\PoolInterface;
 use Stash\Pool;
-
 // From 'charcoal-cache'
 use Charcoal\Tests\AbstractTestCase;
 use Charcoal\Cache\CacheBuilder;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * Base CacheBuilder Test
- */
-abstract class AbstractCacheBuilderTest extends AbstractTestCase
+#[CoversClass(CacheBuilder::class)]
+abstract class AbstractCacheBuilderTestCase extends AbstractTestCase
 {
     /**
      * Create a new CacheBuilder instance.

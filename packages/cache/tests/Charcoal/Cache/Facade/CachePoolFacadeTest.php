@@ -6,26 +6,18 @@ use DateInterval;
 use DateTime;
 use DateTimeImmutable;
 use DateTimeInterface;
-
-// From PSR-3
-use Psr\Log\NullLogger;
-
-// From 'tedivm/stash'
-use Stash\Interfaces\ItemInterface;
-
 // From 'charcoal-cache'
 use Charcoal\Tests\AbstractTestCase;
 use Charcoal\Tests\Cache\CachePoolTrait;
 use Charcoal\Cache\Facade\CachePoolFacade;
-use Charcoal\Cache\CacheConfig;
+use PHPUnit\Framework\Attributes\CoversClass;
 
 /**
  * Test CachePoolFacade
  *
  * This class is based on {@see \Stash\Test\AbstractPoolTest}.
- *
- * @coversDefaultClass \Charcoal\Cache\Facade\CachePoolFacade
  */
+#[CoversClass(CachePoolFacade::class)]
 class CachePoolFacadeTest extends AbstractTestCase
 {
     use CachePoolTrait;
@@ -201,7 +193,7 @@ class CachePoolFacadeTest extends AbstractTestCase
      * @used-by self::testTtlOnSave()
      * @return  array
      */
-    public function provideTtlOnSave()
+    public static function provideTtlOnSave()
     {
         $data = [];
         $date = new DateTimeImmutable('now');

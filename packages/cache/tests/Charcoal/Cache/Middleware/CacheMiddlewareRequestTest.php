@@ -2,19 +2,12 @@
 
 namespace Charcoal\Tests\Cache\Middleware;
 
-// From 'tedivm/stash'
-use Stash\Pool;
-
-// From 'charcoal-cache'
-use Charcoal\Cache\CacheConfig;
 use Charcoal\Cache\Middleware\CacheMiddleware;
+use PHPUnit\Framework\Attributes\CoversClass;
+use Psr\Http\Server\RequestHandlerInterface;
 
-/**
- * Test HTTP Requests with CacheMiddleware.
- *
- * @coversDefaultClass \Charcoal\Cache\Middleware\CacheMiddleware
- */
-class CacheMiddlewareRequestTest extends AbstractCacheMiddlewareTest
+#[CoversClass(CacheMiddleware::class)]
+class CacheMiddlewareRequestTest extends AbstractCacheMiddlewareTestCase
 {
     /**
      * Prepare the cache pool.
@@ -61,23 +54,18 @@ class CacheMiddlewareRequestTest extends AbstractCacheMiddlewareTest
     {
         $middleware = $this->middlewareFactory($cacheConfig);
         $request    = $this->createRequest('GET', $requestUri);
-        $response   = $this->createResponse();
-        $finalize   = $this->mockFinalMiddleware('Hello, World!', 200);
+        $handler    = $this->createHandler();
 
-        $result = $middleware($request, $response, $finalize);
-
-        // Validate the HTTP response
-        $this->assertEquals('Hello, World!', (string) $result->getBody());
-        $this->assertEquals(200, $result->getStatusCode());
+        $response = $middleware($request, $handler);
 
         // Validate that the HTTP response is NOT cached
         $pool = static::getCachePool();
-        $item = $pool->getItem('request/GET/' . md5((string) $request->getUri()));
+        $item = $pool->getItem('request/GET/' . md5((string)$request->getUri()));
 
         $this->assertEquals($expected, $item->isHit());
 
         if ($checkHttpHeaders) {
-            $this->assertResponseHasDisabledCacheHeaders($result->getHeaders());
+            $this->assertResponseHasDisabledCacheHeaders($response->getHeaders());
         }
     }
 
@@ -87,7 +75,7 @@ class CacheMiddlewareRequestTest extends AbstractCacheMiddlewareTest
      * @used-by self::testInvoke()
      * @return  array
      */
-    public function provideInvokableSituations()
+    public static function provideInvokableSituations()
     {
         $target1 = '/foo/bar';
         $target2 = '/foo/bar?abc=123';

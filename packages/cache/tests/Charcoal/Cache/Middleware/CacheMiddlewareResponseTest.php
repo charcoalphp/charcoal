@@ -2,22 +2,15 @@
 
 namespace Charcoal\Tests\Cache\Middleware;
 
-// From PSR-7
+use Charcoal\Cache\Middleware\CacheMiddleware;
+use Nyholm\Psr7\Stream;
+use PHPUnit\Framework\Attributes\CoversClass;
+use Psr\Http\Server\RequestHandlerInterface;
+use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
-// From 'tedivm/stash'
-use Stash\Pool;
-
-// From 'charcoal-cache'
-use Charcoal\Cache\CacheConfig;
-use Charcoal\Cache\Middleware\CacheMiddleware;
-
-/**
- * Test HTTP Responses from CacheMiddleware.
- *
- * @coversDefaultClass \Charcoal\Cache\Middleware\CacheMiddleware
- */
-class CacheMiddlewareResponseTest extends AbstractCacheMiddlewareTest
+#[CoversClass(CacheMiddleware::class)]
+class CacheMiddlewareResponseTest extends AbstractCacheMiddlewareTestCase
 {
     /**
      * Prepare the cache pool.
@@ -53,18 +46,26 @@ class CacheMiddlewareResponseTest extends AbstractCacheMiddlewareTest
 
         $middleware = $this->middlewareFactory([ 'included_query' => '*' ]);
         $request    = $this->createRequest('GET', '/foo/bar?abc=123');
-        $response   = $this->createResponse()->withHeader('X-Charcoal-1', 'foo');
-        $finalize   = $this->mockFinalMiddleware($txt);
+        $handler    = new class () implements RequestHandlerInterface {
+            public function handle(ServerRequestInterface $request): ResponseInterface
+            {
+                $response = new \Nyholm\Psr7\Response(200, [
+                    'Content-Type' => 'text/html; charset=UTF-8',
+                    'X-Charcoal-1' => 'foo',
+                ], \Nyholm\Psr7\Stream::create('Lorem ipsum dolor sit amet.'));
+                return $response;
+            }
+        };
 
-        $result = $middleware($request, $response, $finalize);
+        $result = $middleware($request, $handler);
 
         // Validate the HTTP response
-        $this->assertEquals($txt, (string) $result->getBody());
+        $this->assertEquals($txt, (string)$result->getBody());
         $this->assertEquals(200, $result->getStatusCode());
 
         // Validate that the HTTP response is cached
         $pool = static::getCachePool();
-        $item = $pool->getItem('request/GET/' . md5((string) $request->getUri()));
+        $item = $pool->getItem('request/GET/' . md5((string)$request->getUri()));
 
         $this->assertTrue($item->isHit());
 
@@ -95,15 +96,23 @@ class CacheMiddlewareResponseTest extends AbstractCacheMiddlewareTest
         $txt = 'Lorem ipsum dolor sit amet.';
 
         $request  = $this->createRequest('GET', '/foo/bar?abc=123');
-        $response = $this->createResponse()
-                         ->withHeader('X-Charcoal-1', 'bar')
-                         ->withHeader('X-Charcoal-2', 'qux');
-        $finalize = $this->mockFinalMiddleware('Vestibulum gravida ultricies lacus ac porta.');
+        $handler = new class () implements RequestHandlerInterface {
+            public function handle(ServerRequestInterface $request): ResponseInterface
+            {
+                $response = new \Nyholm\Psr7\Response(200, [
+                    'Content-Type' => 'text/html; charset=UTF-8',
+                ], \Nyholm\Psr7\Stream::create('Vestibulum gravida ultricies lacus ac porta.'));
+                return $response;
+            }
+        };
 
-        $result = $middleware($request, $response, $finalize);
+        $result = $middleware($request, $handler);
+
+        $result = $result->withAddedHeader('X-Charcoal-1', 'bar')
+                         ->withAddedHeader('X-Charcoal-2', 'qux');
 
         // Validate the HTTP response
-        $this->assertEquals($txt, (string) $result->getBody());
+        $this->assertEquals($txt, (string)$result->getBody());
         $this->assertEquals(200, $result->getStatusCode());
 
         // Validate the HTTP response headers
@@ -115,7 +124,7 @@ class CacheMiddlewareResponseTest extends AbstractCacheMiddlewareTest
 
         // Validate that the HTTP response is cached
         $pool = static::getCachePool();
-        $item = $pool->getItem('request/GET/' . md5((string) $request->getUri()));
+        $item = $pool->getItem('request/GET/' . md5((string)$request->getUri()));
 
         $data = $item->get();
         $this->assertArrayHasKey('body', $data);

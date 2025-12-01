@@ -4,19 +4,15 @@ namespace Charcoal\Tests\Cache\Factory;
 
 use StdClass;
 use InvalidArgumentException;
-
-// From 'tedivm/stash'
-use Stash\Interfaces\DriverInterface;
-
 // From 'charcoal-cache'
 use Charcoal\Cache\CacheBuilder;
+use PHPUnit\Framework\Attributes\CoversClass;
 
 /**
  * Test the cache driver resolution from the CacheBuilder.
- *
- * @coversDefaultClass \Charcoal\Cache\CacheBuilder
  */
-class CacheBuilderDriverTest extends AbstractCacheBuilderTest
+#[CoversClass(CacheBuilder::class)]
+class CacheBuilderDriverTest extends AbstractCacheBuilderTestCase
 {
     /**
      * Test builder with a {@see DriverInterface driver object}.

@@ -2,7 +2,6 @@
 
 namespace Charcoal\Tests\Mocks;
 
-use Charcoal\Tests\Cache\Factory\CacheBuilderPoolTest;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -13,17 +12,14 @@ class DefaultAwarePool extends \Stash\Pool
     /**
      * @return string
      */
-    public function getItemClass():string
+    public function getItemClass(): string
     {
         return $this->itemClass;
     }
 
-    /**
-     * @return false|string
-     */
-    public function getNamespace(): ?string
+    public function getNamespace(): bool|string
     {
-        return $this->namespace;
+        return ($this->namespace ?? false);
     }
 
     /**

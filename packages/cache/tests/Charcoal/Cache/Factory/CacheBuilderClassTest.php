@@ -3,21 +3,17 @@
 namespace Charcoal\Tests\Cache\Factory;
 
 use InvalidArgumentException;
-
-// From PSR-3
-use Psr\Log\NullLogger;
-
 // From 'tedivm/stash'
 use Stash\Interfaces\ItemInterface;
 use Stash\Interfaces\PoolInterface;
-use Stash\Pool;
+use Charcoal\Cache\CacheBuilder;
+use PHPUnit\Framework\Attributes\CoversClass;
 
 /**
  * Test constructor and class attributes from the CacheBuilder.
- *
- * @coversDefaultClass \Charcoal\Cache\CacheBuilder
  */
-class CacheBuilderClassTest extends AbstractCacheBuilderTest
+#[CoversClass(CacheBuilder::class)]
+class CacheBuilderClassTest extends AbstractCacheBuilderTestCase
 {
     /**
      * @covers ::__construct
@@ -83,18 +79,17 @@ class CacheBuilderClassTest extends AbstractCacheBuilderTest
      */
     public function testSetItemClass()
     {
-        $mockItem      = $this->createMock(ItemInterface::class);
-        $mockClassName = get_class($mockItem);
+        $itemClass = \Stash\Item::class;
 
         $driver  = $this->createDriver('BlackHole');
         $builder = $this->createBuilder([
-            'item_class' => $mockClassName,
+            'item_class' => $itemClass,
         ]);
 
         /** 1. Pool's Item Class */
         $pool = $builder($driver);
         $item = $pool->getItem('test');
-        $this->assertInstanceOf($mockClassName, $item);
+        $this->assertInstanceOf($itemClass, $item);
     }
 
     /**

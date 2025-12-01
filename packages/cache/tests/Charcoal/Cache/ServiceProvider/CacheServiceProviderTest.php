@@ -18,12 +18,10 @@ use Charcoal\Cache\CacheConfig;
 use Charcoal\Cache\Facade\CachePoolFacade;
 use Charcoal\Cache\Middleware\CacheMiddleware;
 use Charcoal\Cache\ServiceProvider\CacheServiceProvider;
+use Closure;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * Test CacheServiceProvider
- *
- * @coversDefaultClass \Charcoal\Cache\ServiceProvider\CacheServiceProvider
- */
+#[CoversClass(CacheServiceProvider::class)]
 class CacheServiceProviderTest extends AbstractTestCase
 {
     /**
@@ -36,28 +34,28 @@ class CacheServiceProviderTest extends AbstractTestCase
     {
         $container = $this->providerFactory();
 
-        $this->assertArrayHasKey('cache/config', $container);
+        $this->assertTrue($container->has('cache/config'));
         $this->assertInstanceOf(CacheConfig::class, $container->get('cache/config'));
 
-        $this->assertArrayHasKey('cache/available-drivers', $container);
+        $this->assertTrue($container->has('cache/available-drivers'));
         $this->assertTrue($this->isAccessible($container->get('cache/available-drivers')));
 
-        $this->assertArrayHasKey('cache/drivers', $container);
+        $this->assertTrue($container->has('cache/drivers'));
         $this->assertTrue($this->isAccessible($container->get('cache/drivers')));
 
-        $this->assertArrayHasKey('cache/driver', $container);
+        $this->assertTrue($container->has('cache/driver'));
         $this->assertInstanceOf(DriverInterface::class, $container->get('cache/driver'));
 
-        $this->assertArrayHasKey('cache/builder', $container);
+        $this->assertTrue($container->has('cache/builder'));
         $this->assertInstanceOf(CacheBuilder::class, $container->get('cache/builder'));
 
-        $this->assertArrayHasKey('cache', $container);
+        $this->assertTrue($container->has('cache'));
         $this->assertInstanceOf(PoolInterface::class, $container->get('cache'));
 
-        $this->assertArrayHasKey('cache/facade', $container);
+        $this->assertTrue($container->has('cache/facade'));
         $this->assertInstanceOf(CachePoolFacade::class, $container->get('cache/facade'));
 
-        $this->assertArrayHasKey('middlewares/charcoal/cache/middleware/cache', $container);
+        $this->assertTrue($container->has('middlewares/charcoal/cache/middleware/cache'));
         $this->assertInstanceOf(CacheMiddleware::class, $container->get('middlewares/charcoal/cache/middleware/cache'));
     }
 
@@ -78,7 +76,7 @@ class CacheServiceProviderTest extends AbstractTestCase
             ],
         ]);
 
-        $this->assertArrayHasKey('middlewares/charcoal/cache/middleware/cache', $container);
+        $this->assertTrue($container->has('middlewares/charcoal/cache/middleware/cache'));
         $middleware = $container->get('middlewares/charcoal/cache/middleware/cache');
         $reflection = new ReflectionClass($middleware);
         $reflectionProperty = $reflection->getProperty('cacheTtl');
@@ -108,7 +106,7 @@ class CacheServiceProviderTest extends AbstractTestCase
             if (isset($driverClassNames[$driverName])) {
                 $className = $driverClassNames[$driverName];
                 $driver    = $driverCollection[$driverKey];
-                $this->assertInstanceOf($className, $driver);
+                $this->assertInstanceOf($className, $driver instanceof Closure ? $driver() : $driver);
             }
         }
     }
@@ -139,14 +137,14 @@ class CacheServiceProviderTest extends AbstractTestCase
                 if ($className::isAvailable()) {
                     try {
                         $driver = $driverCollection[$driverKey];
-                        $this->assertInstanceOf($className, $driver);
+                        $this->assertInstanceOf($className, $driver instanceof Closure ? $driver() : $driver);
                     } catch (Throwable $t) {
                         // Do nothing; Some cache drivers, such as Redis,
                         // are not correctly implemented.
                     }
                 } else {
                     $driver = $driverCollection[$driverKey];
-                    $this->assertNull($driver);
+                    $this->assertNull($driver instanceof Closure ? $driver() : $driver);
                 }
             }
         }
@@ -211,7 +209,7 @@ class CacheServiceProviderTest extends AbstractTestCase
      * @used-by self::testMainDriverInstance()
      * @return  array
      */
-    public function provideConfigsForMainDriver()
+    public static function provideConfigsForMainDriver()
     {
         $driverClassNames = DriverList::getAvailableDrivers();
 
@@ -267,7 +265,7 @@ class CacheServiceProviderTest extends AbstractTestCase
      * @param  array $args Parameters for the initialization of a Container.
      * @return Container
      */
-    public function providerFactory(array $args = [])
+    public static function providerFactory(array $args = [])
     {
         $container = new Container($args);
 

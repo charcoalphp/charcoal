@@ -3,16 +3,12 @@
 namespace Charcoal\Tests\Cache;
 
 use InvalidArgumentException;
-
 // From 'charcoal-cache'
 use Charcoal\Tests\AbstractTestCase;
 use Charcoal\Cache\CacheConfig;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * Test CacheConfig
- *
- * @coversDefaultClass \Charcoal\Cache\CacheConfig
- */
+#[CoversClass(CacheConfig::class)]
 class CacheConfigTest extends AbstractTestCase
 {
     /**

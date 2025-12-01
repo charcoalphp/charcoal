@@ -5,19 +5,18 @@ namespace Charcoal\Tests\Cache\Factory;
 // From PSR-3
 use Charcoal\Tests\Mocks\DefaultAwarePool;
 use Psr\Log\NullLogger;
-
 use Charcoal\Tests\Mocks\LoggerAwarePool;
-
 // From 'tedivm/stash'
 use Stash\Interfaces\ItemInterface;
 use Stash\Interfaces\PoolInterface;
+use PHPUnit\Framework\Attributes\CoversClass;
+use Charcoal\Cache\CacheBuilder;
 
 /**
  * Test the cache pool creation and pool attributes from the CacheBuilder.
- *
- * @coversDefaultClass \Charcoal\Cache\CacheBuilder
  */
-class CacheBuilderPoolTest extends AbstractCacheBuilderTest
+#[CoversClass(CacheBuilder::class)]
+class CacheBuilderPoolTest extends AbstractCacheBuilderTestCase
 {
     /**
      * Asserts that the CacheBuilder is invokable.
@@ -43,7 +42,7 @@ class CacheBuilderPoolTest extends AbstractCacheBuilderTest
     {
         $builder = $this->createBuilder();
         $driver  = $this->createDriver('BlackHole');
-        $logger  = new NullLogger;
+        $logger  = new NullLogger();
 
         $pool = $builder($driver, [
             'pool_class' => LoggerAwarePool::class,
@@ -85,15 +84,14 @@ class CacheBuilderPoolTest extends AbstractCacheBuilderTest
         $builder = $this->createBuilder();
         $driver  = $this->createDriver('BlackHole');
 
-        $mockItem      = $this->createMock(ItemInterface::class);
-        $mockClassName = get_class($mockItem);
+        $itemClass = \Stash\Item::class;
 
         $pool = $builder($driver, [
-            'item_class' => $mockClassName,
+            'item_class' => $itemClass,
         ]);
         $item = $pool->getItem('test');
 
-        $this->assertInstanceOf($mockClassName, $item);
+        $this->assertInstanceOf($itemClass, $item);
     }
 
     /**
