@@ -8,10 +8,9 @@ use DI\Container;
 use Charcoal\User\AuthToken;
 use Charcoal\Tests\AbstractTestCase;
 use Charcoal\Tests\User\ContainerProvider;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- *
- */
+#[CoversClass(AuthToken::class)]
 class AuthTokenTest extends AbstractTestCase
 {
     /**

@@ -10,10 +10,9 @@ use Laminas\Permissions\Acl\Resource\GenericResource as Resource;
 use Charcoal\User\Acl\Manager;
 use Charcoal\Tests\AbstractTestCase;
 use Charcoal\Tests\User\ContainerProvider;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- *
- */
+#[CoversClass(Manager::class)]
 class ManagerTest extends AbstractTestCase
 {
     /**

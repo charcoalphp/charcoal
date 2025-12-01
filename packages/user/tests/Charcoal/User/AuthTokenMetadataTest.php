@@ -5,10 +5,9 @@ namespace Charcoal\Tests\User;
 // From 'charcoal-user'
 use Charcoal\User\AuthTokenMetadata;
 use Charcoal\Tests\AbstractTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- *
- */
+#[CoversClass(AuthTokenMetadata::class)]
 class AuthTokenMetadataTest extends AbstractTestCase
 {
     /**

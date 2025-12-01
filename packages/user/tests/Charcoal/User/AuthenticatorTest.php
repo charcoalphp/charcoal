@@ -9,10 +9,9 @@ use Charcoal\User\AuthToken;
 use Charcoal\User\GenericUser as User;
 use Charcoal\Tests\AbstractTestCase;
 use Charcoal\Tests\User\ContainerProvider;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- *
- */
+#[CoversClass(Authenticator::class)]
 class AuthenticatorTest extends AbstractTestCase
 {
     /**

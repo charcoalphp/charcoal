@@ -10,10 +10,9 @@ use Charcoal\User\AbstractUser;
 use Charcoal\User\UserInterface;
 use Charcoal\Tests\AbstractTestCase;
 use Charcoal\Tests\User\ContainerProvider;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- *
- */
+#[CoversClass(AbstractUser::class)]
 class AbstractUserTest extends AbstractTestCase
 {
     /**

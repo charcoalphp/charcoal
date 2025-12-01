@@ -13,10 +13,9 @@ use Charcoal\User\GenericUser;
 use Charcoal\Tests\AbstractTestCase;
 use Charcoal\Tests\ReflectionsTrait;
 use Charcoal\Tests\User\ContainerProvider;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- *
- */
+#[CoversClass(Authorizer::class)]
 class AuthorizerTest extends AbstractTestCase
 {
     use ReflectionsTrait;

@@ -7,10 +7,9 @@ use DI\Container;
 use Charcoal\User\Acl\Permission;
 use Charcoal\Tests\AbstractTestCase;
 use Charcoal\Tests\User\ContainerProvider;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- *
- */
+#[CoversClass(Permission::class)]
 class PermissionTest extends AbstractTestCase
 {
     /**
