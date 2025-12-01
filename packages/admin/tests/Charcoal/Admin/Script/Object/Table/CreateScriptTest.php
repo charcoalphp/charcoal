@@ -42,10 +42,10 @@ class CreateScriptTest extends AbstractTestCase
         $this->container = $this->getContainer();
 
         $this->obj = new CreateScript([
-            'logger' => $this->container['logger'],
-            'climate' => $this->container['climate'],
-            'climate_reader' => $this->container['climate/reader'],
-            'model_factory' => $this->container['model/factory'],
+            'logger' => $this->container->get('logger'),
+            'climate' => $this->container->get('climate'),
+            'climate_reader' => $this->container->get('climate/reader'),
+            'model_factory' => $this->container->get('model/factory'),
 
             // Will call `setDependencies()` on object. AdminScript expects a 'mode/factory'.
             'container' => $this->container

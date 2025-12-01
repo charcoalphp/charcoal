@@ -3,10 +3,8 @@
 namespace Charcoal\Tests\Admin\Action\Object;
 
 use DI\Container;
-// From Slim
-use Slim\Http\Environment;
-use Slim\Http\Request;
-use Slim\Http\Response;
+use Nyholm\Psr7\ServerRequest;
+use Nyholm\Psr7\Response;
 // From 'charcoal-core'
 use Charcoal\Loader\CollectionLoader;
 use Charcoal\Model\Collection;
@@ -28,7 +26,7 @@ class ReorderActionTest extends AbstractTestCase
      *
      * @var string
      */
-    private $model = Model::class;
+    private const MODEL = Model::class;
 
     /**
      * Store the tested instance.
@@ -75,7 +73,7 @@ class ReorderActionTest extends AbstractTestCase
     {
         $container = $this->container();
 
-        $model  = $container->get('model/factory')->create($this->model);
+        $model  = $container->get('model/factory')->create(self::MODEL);
         $source = $model->source();
 
         if (!$source->tableExists()) {
@@ -111,7 +109,7 @@ class ReorderActionTest extends AbstractTestCase
             $loader = new CollectionLoader([
                 'logger'     => $container->get('logger'),
                 'factory'    => $container->get('model/factory'),
-                'model'      => $this->model,
+                'model'      => self::MODEL,
                 'collection' => Collection::class
             ]);
             $loader->addOrder('position');
@@ -145,7 +143,7 @@ class ReorderActionTest extends AbstractTestCase
             $this->setUpObjects();
         }
 
-        $request  = Request::createFromEnvironment(Environment::mock($mock));
+        $request = (new ServerRequest('GET', 'foo.bar'))->withQueryParams($mock);
         $response = new Response();
 
         $response = $this->action->run($request, $response);
@@ -163,15 +161,15 @@ class ReorderActionTest extends AbstractTestCase
     /**
      * @return array
      */
-    public function runRequestProvider()
+    public static function runRequestProvider()
     {
         return [
             [ 400, false, [] ],
-            [ 400, false, [ 'QUERY_STRING' => 'obj_type='.$this->model ] ],
-            [ 400, false, [ 'QUERY_STRING' => 'obj_type='.$this->model.'&order_property=5' ] ],
-            [ 400, false, [ 'QUERY_STRING' => 'obj_type='.$this->model.'&order_property=foobar' ] ],
-            [ 500, false, [ 'QUERY_STRING' => 'obj_type='.$this->model.'&obj_orders[]=xyzzy&obj_orders[]=qwerty' ] ],
-            [ 200, true,  [ 'QUERY_STRING' => 'obj_type='.$this->model.'&obj_orders[]=baz&obj_orders[]=bar&obj_orders[]=qux&obj_orders[]=foo' ] ],
+            [ 400, false, [ 'obj_type' => self::MODEL ] ],
+            [ 400, false, [ 'obj_type' => self::MODEL, 'order_property' => '5' ] ],
+            [ 400, false, [ 'obj_type' => self::MODEL, 'order_property' => 'foobar' ] ],
+            [ 500, false, [ 'obj_type' => self::MODEL, 'obj_orders' => ['xyzzy', 'qwerty'] ] ],
+            [ 200, true,  [ 'obj_type' => self::MODEL, 'obj_orders' => ['baz', 'bar', 'qux', 'foo'] ] ],
         ];
     }
 

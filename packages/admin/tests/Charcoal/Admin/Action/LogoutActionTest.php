@@ -3,10 +3,8 @@
 namespace Charcoal\Tests\Admin\Action;
 
 use DI\Container;
-// From Slim
-use Slim\Http\Environment;
-use Slim\Http\Request;
-use Slim\Http\Response;
+use Nyholm\Psr7\ServerRequest;
+use Nyholm\Psr7\Response;
 // From 'charcoal-admin'
 use Charcoal\Admin\Action\LogoutAction;
 use Charcoal\Tests\AbstractTestCase;
@@ -69,7 +67,7 @@ class LogoutActionTest extends AbstractTestCase
     {
         $this->createUser('foo@bar.com');
 
-        $request  = Request::createFromEnvironment(Environment::mock());
+        $request  = $this->createMock(ServerRequest::class);
         $response = new Response();
 
         $response = $this->obj->run($request, $response);
@@ -87,7 +85,7 @@ class LogoutActionTest extends AbstractTestCase
         $user = $this->createUser('foo@bar.com');
         $this->getAuthenticator()->setUser($user);
 
-        $request  = Request::createFromEnvironment(Environment::mock());
+        $request  = $this->createMock(ServerRequest::class);
         $response = new Response();
 
         $response = $this->obj->run($request, $response);
@@ -99,10 +97,8 @@ class LogoutActionTest extends AbstractTestCase
 
     /**
      * Set up the service container.
-     *
-     * @return Container
      */
-    protected function container()
+    protected function container(): Container
     {
         if ($this->container === null) {
             $container = new Container();

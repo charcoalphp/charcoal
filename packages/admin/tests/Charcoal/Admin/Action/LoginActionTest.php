@@ -3,10 +3,8 @@
 namespace Charcoal\Tests\Admin\Action;
 
 use DI\Container;
-// From Slim
-use Slim\Http\Environment;
-use Slim\Http\Request;
-use Slim\Http\Response;
+use Nyholm\Psr7\ServerRequest;
+use Nyholm\Psr7\Response;
 // From 'charcoal-admin'
 use Charcoal\Admin\Action\LoginAction;
 use Charcoal\Tests\AbstractTestCase;
@@ -46,6 +44,7 @@ class LoginActionTest extends AbstractTestCase
             session_unset();
         }
 
+        /** @var Container $container */
         $container = $this->container();
 
         $this->obj = new LoginAction([
@@ -68,7 +67,7 @@ class LoginActionTest extends AbstractTestCase
      */
     public function testRunWithoutParamsIs400()
     {
-        $request  = Request::createFromEnvironment(Environment::mock());
+        $request  = $this->createMock(ServerRequest::class);
         $response = new Response();
 
         $response = $this->obj->run($request, $response);
@@ -82,9 +81,9 @@ class LoginActionTest extends AbstractTestCase
     {
         $this->createUser('foo@bar.com');
 
-        $request = Request::createFromEnvironment(Environment::mock([
-            'QUERY_STRING' => 'password=asdfgh'
-        ]));
+        $request = (new ServerRequest('GET', 'foo.bar'))->withQueryParams([
+            'password' => 'asdfgh',
+        ]);
         $response = new Response();
 
         $response = $this->obj->run($request, $response);
@@ -117,10 +116,8 @@ class LoginActionTest extends AbstractTestCase
 
     /**
      * Set up the service container.
-     *
-     * @return Container
      */
-    protected function container()
+    protected function container(): Container
     {
         if ($this->container === null) {
             $container = new Container();

@@ -44,9 +44,6 @@ use Charcoal\Admin\User as AdminUser;
 use Charcoal\Tests\Admin\Mock\AuthToken as AdminAuthToken;
 use Nyholm\Psr7\Uri;
 
-/**
- *
- */
 class ContainerProvider
 {
     /**
@@ -70,6 +67,7 @@ class ContainerProvider
      */
     public function registerBaseServices(Container $container)
     {
+        $this->registerBaseUrl($container);
         $this->registerDebug($container);
         $this->registerConfig($container);
         $this->registerDatabase($container);
@@ -85,8 +83,8 @@ class ContainerProvider
      */
     public function registerAdminServices(Container $container)
     {
-        $this->registerBaseServices($container);
         $this->registerBaseUrl($container);
+        $this->registerBaseServices($container);
         $this->registerAdminConfig($container);
     }
 
@@ -531,9 +529,9 @@ class ContainerProvider
         $this->registerAuthenticator($container);
         $this->registerAuthorizer($container);
 
-        $this->registerViewServiceProvider($container);
         $this->registerModelServiceProvider($container);
         $this->registerTranslatorServiceProvider($container);
+        $this->registerViewServiceProvider($container);
     }
 
     /**
@@ -553,9 +551,9 @@ class ContainerProvider
         $this->registerAuthenticator($container);
         $this->registerAuthorizer($container);
 
-        $this->registerViewServiceProvider($container);
         $this->registerModelServiceProvider($container);
         $this->registerTranslatorServiceProvider($container);
+        $this->registerViewServiceProvider($container);
 
         $container->set('menu/builder', null);
         $container->set('menu/item/builder', null);
@@ -578,9 +576,9 @@ class ContainerProvider
         $this->registerAuthenticator($container);
         $this->registerAuthorizer($container);
 
-        $this->registerViewServiceProvider($container);
         $this->registerModelServiceProvider($container);
         $this->registerTranslatorServiceProvider($container);
+        $this->registerViewServiceProvider($container);
     }
 
     /**
@@ -600,9 +598,9 @@ class ContainerProvider
         $this->registerAuthenticator($container);
         $this->registerAuthorizer($container);
 
-        $this->registerViewServiceProvider($container);
         $this->registerModelServiceProvider($container);
         $this->registerTranslatorServiceProvider($container);
+        $this->registerViewServiceProvider($container);
     }
 
     /**
@@ -622,9 +620,9 @@ class ContainerProvider
         $this->registerAuthenticator($container);
         $this->registerAuthorizer($container);
 
-        $this->registerViewServiceProvider($container);
         $this->registerModelServiceProvider($container);
         $this->registerTranslatorServiceProvider($container);
+        $this->registerViewServiceProvider($container);
 
         $this->registerClimate($container);
     }

@@ -50,9 +50,9 @@ class ProcessMinuteScriptTest extends AbstractTestCase
         $this->container = $this->getContainer();
 
         $this->obj = new ProcessMinuteScript([
-            'logger' => $this->container['logger'],
-            'climate' => $this->container['climate'],
-            'model_factory' => $this->container['model/factory'],
+            'logger' => $this->container->get('logger'),
+            'climate' => $this->container->get('climate'),
+            'model_factory' => $this->container->get('model/factory'),
 
             // Will call `setDependencies()` on object. AdminScript expects a 'mode/factory'.
             'container' => $this->container

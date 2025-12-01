@@ -5,10 +5,8 @@ namespace Charcoal\Tests\Admin\Action\Account;
 // From Mockery
 use Mockery as m;
 use DI\Container;
-// From Slim
-use Slim\Http\Environment;
-use Slim\Http\Request;
-use Slim\Http\Response;
+use Nyholm\Psr7\ServerRequest;
+use Nyholm\Psr7\Response;
 // From 'charcoal-admin'
 use Charcoal\Admin\Action\Account\ResetPasswordAction;
 use Charcoal\Tests\AbstractTestCase;
@@ -66,7 +64,7 @@ class ResetPasswordActionTest extends AbstractTestCase
      */
     public function testRunWithoutTokenReturns400()
     {
-        $request  = Request::createFromEnvironment(Environment::mock());
+        $request  = $this->createMock(ServerRequest::class);
         $response = new Response();
 
         $response = $this->obj->run($request, $response);
@@ -81,9 +79,9 @@ class ResetPasswordActionTest extends AbstractTestCase
      */
     public function testRunWithoutEmailReturns400()
     {
-        $request = Request::createFromEnvironment(Environment::mock([
-            'QUERY_STRING' => 'token=foobar'
-        ]));
+        $request = (new ServerRequest('GET', 'foo.bar'))->withQueryParams([
+            'token' => 'foobar'
+        ]);
         $response = new Response();
 
         $response = $this->obj->run($request, $response);
@@ -98,9 +96,10 @@ class ResetPasswordActionTest extends AbstractTestCase
      */
     public function testRunWithoutPasswordReturns400()
     {
-        $request = Request::createFromEnvironment(Environment::mock([
-            'QUERY_STRING' => 'token=foobar&email=foobar@foo.bar'
-        ]));
+        $request = (new ServerRequest('GET', 'foo.bar'))->withQueryParams([
+            'token' => 'foobar',
+            'email' => 'foobar@foo.bar'
+        ]);
         $response = new Response();
 
         $response = $this->obj->run($request, $response);
@@ -115,9 +114,12 @@ class ResetPasswordActionTest extends AbstractTestCase
      */
     public function testRunWithoutMatchingPasswordsReturns400()
     {
-        $request = Request::createFromEnvironment(Environment::mock([
-            'QUERY_STRING' => 'token=foobar&email=foobar@foo.bar&password1=foo&password2=bar'
-        ]));
+        $request = (new ServerRequest('GET', 'foo.bar'))->withQueryParams([
+            'token' => 'foobar',
+            'email' => 'foobar@foo.bar',
+            'password1' => 'foo',
+            'password2' => 'bar',
+        ]);
         $response = new Response();
 
         $response = $this->obj->run($request, $response);
@@ -138,11 +140,15 @@ class ResetPasswordActionTest extends AbstractTestCase
                 ->with(null)
                     ->andReturn(false);
 
-        $request = Request::createFromEnvironment(Environment::mock([
-            'QUERY_STRING' => 'token=foobar&email=foobar@foo.bar&password1=foo&password2=foo'
-        ]));
+        $request = (new ServerRequest('GET', 'foo.bar'))->withQueryParams([
+            'token' => 'foobar',
+            'email' => 'foobar@foo.bar',
+            'password1' => 'foo',
+            'password2' => 'foo',
+        ]);
         $response = new Response();
 
+        /** @var ResetPasswordAction $mock */
         $response = $mock->run($request, $response);
         $this->assertEquals(400, $response->getStatusCode());
 
@@ -161,11 +167,16 @@ class ResetPasswordActionTest extends AbstractTestCase
                 ->with('foobar')
                     ->andReturn(false);
 
-        $request = Request::createFromEnvironment(Environment::mock([
-            'QUERY_STRING' => 'token=foobar&email=foobar@foo.bar&password1=foo&password2=foo&g-recaptcha-response=foobar'
-        ]));
+        $request = (new ServerRequest('GET', 'foo.bar'))->withQueryParams([
+            'token' => 'foobar',
+            'email' => 'foobar@foo.bar',
+            'password1' => 'foo',
+            'password2' => 'foo',
+            'g-recaptcha-response' => 'foobar'
+        ]);
         $response = new Response();
 
+        /** @var ResetPasswordAction $mock */
         $response = $mock->run($request, $response);
         $this->assertEquals(400, $response->getStatusCode());
 

@@ -42,9 +42,9 @@ class CreateScriptTest extends AbstractTestCase
         $this->container = $this->getContainer();
 
         $this->obj = new CreateScript([
-            'logger'        => $this->container['logger'],
-            'climate'       => $this->container['climate'],
-            'model_factory' => $this->container['model/factory'],
+            'logger'        => $this->container->get('logger'),
+            'climate'       => $this->container->get('climate'),
+            'model_factory' => $this->container->get('model/factory'),
             'container'     => $this->container,
         ]);
     }
@@ -78,12 +78,12 @@ class CreateScriptTest extends AbstractTestCase
      */
     private function numAdminUsersInSource()
     {
-        $source = $this->container['model/factory']->create('charcoal/admin/user')->source();
+        $source = $this->container->get('model/factory')->create('charcoal/admin/user')->source();
         $source->createTable();
 
         $table = $source->table();
         $q = 'select count(`email`) as num from `' . $table . '`';
-        $req = $this->container['database']->query($q);
+        $req = $this->container->get('database')->query($q);
         return $req->fetchColumn(0);
     }
 
@@ -134,7 +134,7 @@ class CreateScriptTest extends AbstractTestCase
     //     // Ensure one user was created in database
     //     $this->assertEquals(1, $this->numAdminUsersInSource());
 
-    //     $created = $this->container['model/factory']->create('charcoal/admin/user')->load('foo');
+    //     $created = $this->container->get('model/factory')->create('charcoal/admin/user')->load('foo');
     //     $this->assertEquals('foo@example.com', $created['email']);
     //     $this->assertEquals(['admin'], $created['roles']);
     // }

@@ -5,10 +5,8 @@ namespace Charcoal\Tests\Admin\Action\Account;
 // From Mockery
 use Mockery as m;
 use DI\Container;
-// From Slim
-use Slim\Http\Environment;
-use Slim\Http\Request;
-use Slim\Http\Response;
+use Nyholm\Psr7\ServerRequest;
+use Nyholm\Psr7\Response;
 // From 'charcoal-admin'
 use Charcoal\Admin\Action\Account\LostPasswordAction;
 use Charcoal\Tests\AbstractTestCase;
@@ -66,7 +64,7 @@ class LostPasswordActionTest extends AbstractTestCase
      */
     public function testRunWithoutEmailReturns400()
     {
-        $request  = Request::createFromEnvironment(Environment::mock());
+        $request  = $this->createMock(ServerRequest::class);
         $response = new Response();
 
         $response = $this->obj->run($request, $response);
@@ -87,11 +85,12 @@ class LostPasswordActionTest extends AbstractTestCase
                 ->with(null)
                     ->andReturn(false);
 
-        $request = Request::createFromEnvironment(Environment::mock([
-            'QUERY_STRING' => 'email=foobar@foo.bar'
-        ]));
+        $request = (new ServerRequest('GET', 'foo.bar'))->withQueryParams([
+            'email' => 'foobar@foo.bar'
+        ]);
         $response = new Response();
 
+        /** @var LostPasswordAction $mock */
         $response = $mock->run($request, $response);
         $this->assertEquals(400, $response->getStatusCode());
 
@@ -110,11 +109,13 @@ class LostPasswordActionTest extends AbstractTestCase
                 ->with('foobar')
                     ->andReturn(false);
 
-        $request = Request::createFromEnvironment(Environment::mock([
-            'QUERY_STRING' => 'email=foobar@foo.bar&g-recaptcha-response=foobar'
-        ]));
+        $request = (new ServerRequest('GET', 'foo.bar'))->withQueryParams([
+            'email' => 'foobar@foo.bar',
+            'g-recaptcha-response' => 'foobar'
+        ]);
         $response = new Response();
 
+        /** @var LostPasswordAction $mock */
         $response = $mock->run($request, $response);
         $this->assertEquals(400, $response->getStatusCode());
 

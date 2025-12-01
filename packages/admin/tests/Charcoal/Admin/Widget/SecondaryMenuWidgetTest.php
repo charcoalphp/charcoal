@@ -3,9 +3,7 @@
 namespace Charcoal\Tests\Admin\Widget;
 
 use DI\Container;
-// From Slim
-use Slim\Http\Environment;
-use Slim\Http\Request;
+use Nyholm\Psr7\ServerRequest;
 // From 'charcoal-admin'
 use Charcoal\Admin\Widget\SecondaryMenuWidget;
 use Charcoal\Tests\AbstractTestCase;
@@ -30,7 +28,7 @@ class SecondaryMenuWidgetTest extends AbstractTestCase
         $containerProvider->registerWidgetDependencies($container);
         $containerProvider->registerWidgetFactory($container);
 
-        $container->set('request', Request::createFromEnvironment(Environment::mock()));
+        $container->set('request', $this->createMock(ServerRequest::class));
         $container->set('secondary-menu/group/factory', $container->get('widget/factory'));
 
         $this->obj = new SecondaryMenuWidget([

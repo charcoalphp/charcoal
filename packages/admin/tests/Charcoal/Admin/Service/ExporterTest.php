@@ -60,9 +60,9 @@ class ExporterTest extends AbstractTestCase
             $container = new Container();
             $containerProvider = new ContainerProvider();
             $containerProvider->registerBaseServices($container);
+            $containerProvider->registerTranslatorServiceProvider($container);
             $containerProvider->registerViewServiceProvider($container);
             $containerProvider->registerModelServiceProvider($container);
-            $containerProvider->registerTranslatorServiceProvider($container);
 
             $container->set('view', $this->createMock('\Charcoal\View\ViewInterface'));
 

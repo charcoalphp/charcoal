@@ -3,10 +3,8 @@
 namespace Charcoal\Tests\Admin\Action\Object;
 
 use DI\Container;
-// From Slim
-use Slim\Http\Environment;
-use Slim\Http\Request;
-use Slim\Http\Response;
+use Nyholm\Psr7\ServerRequest;
+use Nyholm\Psr7\Response;
 // From 'charcoal-admin'
 use Charcoal\Admin\Action\Object\DeleteAction;
 use Charcoal\Tests\AbstractTestCase;
@@ -64,7 +62,7 @@ class DeleteActionTest extends AbstractTestCase
      */
     public function testRunWithoutObjTypeIs400()
     {
-        $request  = Request::createFromEnvironment(Environment::mock());
+        $request  = $this->createMock(ServerRequest::class);
         $response = new Response();
 
         $response = $this->obj->run($request, $response);
@@ -79,9 +77,9 @@ class DeleteActionTest extends AbstractTestCase
      */
     public function testRunWithoutObjIdIs400()
     {
-        $request = Request::createFromEnvironment(Environment::mock([
-            'QUERY_STRING' => 'obj_type=charcoal/admin/user'
-        ]));
+        $request = (new ServerRequest('GET', 'foo.bar'))->withQueryParams([
+            'obj_type' => 'charcoal/admin/user',
+        ]);
         $response = new Response();
 
         $response = $this->obj->run($request, $response);
@@ -100,9 +98,10 @@ class DeleteActionTest extends AbstractTestCase
         $user  = $this->createUser($email);
         $this->assertTrue($this->userExists($email));
 
-        $request = Request::createFromEnvironment(Environment::mock([
-            'QUERY_STRING' => 'obj_type=charcoal/admin/user&obj_id=bazqux'
-        ]));
+        $request = (new ServerRequest('GET', 'foo.bar'))->withQueryParams([
+            'obj_type' => 'charcoal/admin/user',
+            'obj_id'   => 'bazqux',
+        ]);
         $response = new Response();
 
         $response = $this->obj->run($request, $response);
@@ -123,9 +122,10 @@ class DeleteActionTest extends AbstractTestCase
         $user = $this->createUser($email);
         $this->assertTrue($this->userExists($email));
 
-        $request = Request::createFromEnvironment(Environment::mock([
-            'QUERY_STRING' => 'obj_type=charcoal/admin/user&obj_id='.$user->id()
-        ]));
+        $request = (new ServerRequest('GET', 'foo.bar'))->withQueryParams([
+            'obj_type' => 'charcoal/admin/user',
+            'obj_id' => $user->id(),
+        ]);
         $response = new Response();
 
         $response = $this->obj->run($request, $response);

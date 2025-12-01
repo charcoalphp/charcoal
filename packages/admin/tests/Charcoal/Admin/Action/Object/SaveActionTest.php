@@ -3,10 +3,8 @@
 namespace Charcoal\Tests\Admin\Action\Object;
 
 use DI\Container;
-// From Slim
-use Slim\Http\Environment;
-use Slim\Http\Request;
-use Slim\Http\Response;
+use Nyholm\Psr7\ServerRequest;
+use Nyholm\Psr7\Response;
 // From 'charcoal-admin'
 use Charcoal\Admin\Action\Object\SaveAction;
 use Charcoal\Tests\AbstractTestCase;
@@ -62,7 +60,7 @@ class SaveActionTest extends AbstractTestCase
      */
     public function testRunWithoutObjTypeIs400()
     {
-        $request  = Request::createFromEnvironment(Environment::mock());
+        $request  = $this->createMock(ServerRequest::class);
         $response = new Response();
 
         $response = $this->obj->run($request, $response);

@@ -3,9 +3,7 @@
 namespace Charcoal\Tests\Admin\Widget;
 
 use DI\Container;
-// From Slim
-use Slim\Http\Environment;
-use Slim\Http\Request;
+use Nyholm\Psr7\ServerRequest;
 // From 'charcoal-admin'
 use Charcoal\Admin\Widget\TableWidget;
 use Charcoal\Tests\AbstractTestCase;
@@ -37,7 +35,7 @@ class TableWidgetTest extends AbstractTestCase
     public function setUp(): void
     {
         $container = $this->container();
-        $container->set('request', Request::createFromEnvironment(Environment::mock()));
+        $container->set('request', $this->createMock(ServerRequest::class));
 
         $this->obj = new TableWidget([
             'logger'    => $container->get('logger'),

@@ -102,7 +102,7 @@ class AdminActionTest extends AbstractTestCase
      */
     public function testAdminUrl()
     {
-        $this->assertEquals('/admin/', $this->obj->adminUrl());
+        $this->assertEquals('admin/', $this->obj->adminUrl());
     }
 
     /**

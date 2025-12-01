@@ -42,9 +42,9 @@ class ResetPasswordScriptTest extends AbstractTestCase
         $this->container = $this->getContainer();
 
         $this->obj = new ResetPasswordScript([
-            'logger' => $this->container['logger'],
-            'climate' => $this->container['climate'],
-            'model_factory' => $this->container['model/factory'],
+            'logger' => $this->container->get('logger'),
+            'climate' => $this->container->get('climate'),
+            'model_factory' => $this->container->get('model/factory'),
 
             // Will call `setDependencies()` on object. AdminScript expects a 'mode/factory'.
             'container' => $this->container
@@ -90,7 +90,7 @@ class ResetPasswordScriptTest extends AbstractTestCase
         $argv[] = '--password';
         $argv[] = '[Foo]{bar}123';
 
-        $model = $this->container['model/factory']->create('charcoal/admin/user');
+        $model = $this->container->get('model/factory')->create('charcoal/admin/user');
         $source = $model->source();
         $source->createTable();
 

@@ -3,10 +3,8 @@
 namespace Charcoal\Tests\Admin\Action\Object;
 
 use DI\Container;
-// From Slim
-use Slim\Http\Environment;
-use Slim\Http\Request;
-use Slim\Http\Response;
+use Nyholm\Psr7\ServerRequest;
+use Nyholm\Psr7\Response;
 // From 'charcoal-admin'
 use Charcoal\Admin\Action\Object\LoadAction;
 use Charcoal\Tests\AbstractTestCase;
@@ -64,7 +62,7 @@ class LoadActionTest extends AbstractTestCase
      */
     public function testRunWithoutObjTypeIs400()
     {
-        $request  = Request::createFromEnvironment(Environment::mock());
+        $request  = $this->createMock(ServerRequest::class);
         $response = new Response();
 
         $response = $this->obj->run($request, $response);
@@ -81,9 +79,9 @@ class LoadActionTest extends AbstractTestCase
     {
         $user = $this->createUser('foo@bar.com');
 
-        $request = Request::createFromEnvironment(Environment::mock([
-            'QUERY_STRING' => 'obj_type=charcoal/admin/user'
-        ]));
+        $request = (new ServerRequest('GET', 'foo.bar'))->withQueryParams([
+            'obj_type' => 'charcoal/admin/user',
+        ]);
         $response = new Response();
 
         $response = $this->obj->run($request, $response);
