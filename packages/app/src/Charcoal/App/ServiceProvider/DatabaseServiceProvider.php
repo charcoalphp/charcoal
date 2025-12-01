@@ -76,20 +76,19 @@ class DatabaseServiceProvider
                     $database = $dbConfig['database'];
                     $username = $dbConfig['username'];
                     $password = $dbConfig['password'];
-
-                    // Set UTf-8 compatibility by default. Disable it if it is set as such in config
                     $extraOptions = null;
-                    if (!isset($dbConfig['disable_utf8']) || !$dbConfig['disable_utf8']) {
-                        $initCommand = class_exists('PDO\Mysql') ? Pdo\Mysql::ATTR_INIT_COMMAND : PDO::MYSQL_ATTR_INIT_COMMAND;
-                        $extraOptions = [
-                            $initCommand => 'SET NAMES utf8mb4',
-                        ];
-                    }
 
                     if ($type === 'sqlite') {
                         $dsn = $type . ':' . $database;
                     } else {
                         $dsn = $type . ':host=' . $host . ';dbname=' . $database;
+
+                        if ($type === 'mysql') {
+                            // Set UTf-8 compatibility by default. Disable it if it is set as such in config
+                            if (!isset($dbConfig['disable_utf8']) || !$dbConfig['disable_utf8']) {
+                                $dsn .= ';charset=utf8mb4';
+                            }
+                        }
                     }
 
                     $db = new PDO($dsn, $username, $password, $extraOptions);
