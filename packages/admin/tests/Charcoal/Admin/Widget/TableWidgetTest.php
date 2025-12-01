@@ -10,10 +10,9 @@ use Slim\Http\Request;
 use Charcoal\Admin\Widget\TableWidget;
 use Charcoal\Tests\AbstractTestCase;
 use Charcoal\Tests\Admin\ContainerProvider;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- *
- */
+#[CoversClass(TableWidget::class)]
 class TableWidgetTest extends AbstractTestCase
 {
     /**

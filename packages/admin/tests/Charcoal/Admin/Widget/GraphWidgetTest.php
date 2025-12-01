@@ -4,14 +4,12 @@ namespace Charcoal\Tests\Admin\Widget;
 
 // From PSR-3
 use Psr\Log\NullLogger;
-
 // From 'charcoal-admin'
 use Charcoal\Admin\Widget\Graph\AbstractGraphWidget;
 use Charcoal\Tests\AbstractTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- *
- */
+#[CoversClass(AbstractGraphWidget::class)]
 class GraphWidgetTest extends AbstractTestCase
 {
     /**

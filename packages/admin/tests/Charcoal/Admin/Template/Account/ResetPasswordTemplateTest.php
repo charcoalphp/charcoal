@@ -2,19 +2,15 @@
 
 namespace Charcoal\Tests\Admin\Template\Account;
 
-use ReflectionClass;
-
 // From PSR-3
 use Psr\Log\NullLogger;
-
 // From 'charcoal-admin'
 use Charcoal\Admin\Template\Account\ResetPasswordTemplate;
 use Charcoal\Tests\AbstractTestCase;
 use Charcoal\Tests\ReflectionsTrait;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- *
- */
+#[CoversClass(ResetPasswordTemplate::class)]
 class ResetPasswordTemplateTest extends AbstractTestCase
 {
     use ReflectionsTrait;

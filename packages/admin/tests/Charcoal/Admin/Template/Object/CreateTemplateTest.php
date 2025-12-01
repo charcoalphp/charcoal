@@ -8,10 +8,9 @@ use Charcoal\Admin\Template\Object\CreateTemplate;
 use Charcoal\Tests\AbstractTestCase;
 use Charcoal\Tests\ReflectionsTrait;
 use Charcoal\Tests\Admin\ContainerProvider;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- *
- */
+#[CoversClass(CreateTemplate::class)]
 class CreateTemplateTest extends AbstractTestCase
 {
     use ReflectionsTrait;

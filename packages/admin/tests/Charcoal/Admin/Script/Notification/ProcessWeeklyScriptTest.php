@@ -8,10 +8,9 @@ use Charcoal\Admin\Script\Notification\ProcessWeeklyScript;
 use Charcoal\Tests\AbstractTestCase;
 use Charcoal\Tests\ReflectionsTrait;
 use Charcoal\Tests\Admin\ContainerProvider;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- *
- */
+#[CoversClass(ProcessWeeklyScript::class)]
 class ProcessWeeklyScriptTest extends AbstractTestCase
 {
     use ReflectionsTrait;

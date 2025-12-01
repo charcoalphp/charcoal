@@ -7,10 +7,9 @@ use DI\Container;
 use Charcoal\Admin\Script\User\ResetPasswordScript;
 use Charcoal\Tests\AbstractTestCase;
 use Charcoal\Tests\Admin\ContainerProvider;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- *
- */
+#[CoversClass(ResetPasswordScript::class)]
 class ResetPasswordScriptTest extends AbstractTestCase
 {
     /**

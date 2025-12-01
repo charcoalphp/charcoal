@@ -7,10 +7,9 @@ use DI\Container;
 use Charcoal\Admin\AdminWidget;
 use Charcoal\Tests\AbstractTestCase;
 use Charcoal\Tests\Admin\ContainerProvider;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- *
- */
+#[CoversClass(AdminWidget::class)]
 class AdminWidgetTest extends AbstractTestCase
 {
     /**

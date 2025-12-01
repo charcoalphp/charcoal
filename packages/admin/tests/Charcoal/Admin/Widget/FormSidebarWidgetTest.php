@@ -7,10 +7,9 @@ use DI\Container;
 use Charcoal\Admin\Widget\FormSidebarWidget;
 use Charcoal\Tests\AbstractTestCase;
 use Charcoal\Tests\Admin\ContainerProvider;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- *
- */
+#[CoversClass(FormSidebarWidget::class)]
 class FormSidebarWidgetTest extends AbstractTestCase
 {
     /**

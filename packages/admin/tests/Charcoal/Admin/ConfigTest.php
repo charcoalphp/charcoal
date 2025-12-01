@@ -5,10 +5,9 @@ namespace Charcoal\Tests\Admin;
 // From 'charcoal-admin'
 use Charcoal\Admin\Config;
 use Charcoal\Tests\AbstractTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- *
- */
+#[CoversClass(Config::class)]
 class ConfigTest extends AbstractTestCase
 {
     /**

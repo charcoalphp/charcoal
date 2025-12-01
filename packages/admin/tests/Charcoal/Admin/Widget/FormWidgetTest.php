@@ -4,15 +4,13 @@ namespace Charcoal\Tests\Admin\Widget;
 
 // From PSR-3
 use Psr\Log\NullLogger;
-
 // From 'charcoal-admin'
 use Charcoal\Admin\Widget\FormSidebarWidget;
 use Charcoal\Admin\Widget\FormWidget;
 use Charcoal\Tests\AbstractTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- *
- */
+#[CoversClass(FormWidget::class)]
 class FormWidgetTest extends AbstractTestCase
 {
     /**

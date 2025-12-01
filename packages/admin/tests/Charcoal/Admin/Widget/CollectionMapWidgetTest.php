@@ -4,14 +4,12 @@ namespace Charcoal\Tests\Admin\Widget;
 
 // From PSR-3
 use Psr\Log\NullLogger;
-
 // From 'charcoal-admin'
 use Charcoal\Admin\Widget\CollectionMapWidget;
 use Charcoal\Tests\AbstractTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- *
- */
+#[CoversClass(CollectionMapWidget::class)]
 class CollectionMapWidgetTest extends AbstractTestCase
 {
     /**

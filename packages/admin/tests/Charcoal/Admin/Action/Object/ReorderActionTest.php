@@ -16,10 +16,9 @@ use Charcoal\Tests\AbstractTestCase;
 use Charcoal\Tests\ReflectionsTrait;
 use Charcoal\Tests\Admin\ContainerProvider;
 use Charcoal\Tests\Admin\Mock\SortableModel as Model;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- *
- */
+#[CoversClass(ReorderAction::class)]
 class ReorderActionTest extends AbstractTestCase
 {
     use ReflectionsTrait;

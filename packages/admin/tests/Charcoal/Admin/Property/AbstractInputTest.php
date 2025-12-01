@@ -7,10 +7,9 @@ use DI\Container;
 use Charcoal\Admin\Property\AbstractPropertyInput;
 use Charcoal\Tests\AbstractTestCase;
 use Charcoal\Tests\Admin\ContainerProvider;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- *
- */
+#[CoversClass(AbstractPropertyInput::class)]
 class AbstractInputTest extends AbstractTestCase
 {
     /**

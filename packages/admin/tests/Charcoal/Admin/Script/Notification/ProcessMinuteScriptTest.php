@@ -8,10 +8,9 @@ use Charcoal\Admin\Script\Notification\ProcessMinuteScript;
 use Charcoal\Tests\AbstractTestCase;
 use Charcoal\Tests\ReflectionsTrait;
 use Charcoal\Tests\Admin\ContainerProvider;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- *
- */
+#[CoversClass(ProcessMinuteScript::class)]
 class ProcessMinuteScriptTest extends AbstractTestCase
 {
     use ReflectionsTrait;

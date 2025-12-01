@@ -6,10 +6,9 @@ use DI\Container;
 // From 'charcoal-admin'
 use Charcoal\Admin\ServiceProvider\AclServiceProvider;
 use Charcoal\Tests\AbstractTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- *
- */
+#[CoversClass(AclServiceProvider::class)]
 class AclServiceProviderTest extends AbstractTestCase
 {
     /**

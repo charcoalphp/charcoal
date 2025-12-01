@@ -10,10 +10,9 @@ use Slim\Http\Request;
 use Charcoal\Admin\Widget\SecondaryMenuWidget;
 use Charcoal\Tests\AbstractTestCase;
 use Charcoal\Tests\Admin\ContainerProvider;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * Class SecondaryMenuWidgetTest
- */
+#[CoversClass(SecondaryMenuWidget::class)]
 class SecondaryMenuWidgetTest extends AbstractTestCase
 {
     /**

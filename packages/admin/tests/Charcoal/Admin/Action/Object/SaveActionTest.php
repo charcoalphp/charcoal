@@ -12,10 +12,9 @@ use Charcoal\Admin\Action\Object\SaveAction;
 use Charcoal\Tests\AbstractTestCase;
 use Charcoal\Tests\ReflectionsTrait;
 use Charcoal\Tests\Admin\ContainerProvider;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- *
- */
+#[CoversClass(SaveAction::class)]
 class SaveActionTest extends AbstractTestCase
 {
     use ReflectionsTrait;

@@ -7,10 +7,9 @@ use DI\Container;
 use Charcoal\Admin\Property\Input\TextInput;
 use Charcoal\Tests\AbstractTestCase;
 use Charcoal\Tests\Admin\ContainerProvider;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- *
- */
+#[CoversClass(TextInput::class)]
 class TextInputTest extends AbstractTestCase
 {
     /**

@@ -14,10 +14,9 @@ use Charcoal\Admin\Action\Account\ResetPasswordAction;
 use Charcoal\Tests\AbstractTestCase;
 use Charcoal\Tests\ReflectionsTrait;
 use Charcoal\Tests\Admin\ContainerProvider;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- *
- */
+#[CoversClass(ResetPasswordAction::class)]
 class ResetPasswordActionTest extends AbstractTestCase
 {
     use ReflectionsTrait;

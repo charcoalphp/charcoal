@@ -13,10 +13,9 @@ use Charcoal\Tests\AbstractTestCase;
 use Charcoal\Tests\ReflectionsTrait;
 use Charcoal\Tests\Admin\ContainerProvider;
 use Charcoal\Tests\Admin\Mock\UserProviderTrait;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- *
- */
+#[CoversClass(LoginAction::class)]
 class LoginActionTest extends AbstractTestCase
 {
     use ReflectionsTrait;

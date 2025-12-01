@@ -14,10 +14,9 @@ use Charcoal\Admin\Action\Account\LostPasswordAction;
 use Charcoal\Tests\AbstractTestCase;
 use Charcoal\Tests\ReflectionsTrait;
 use Charcoal\Tests\Admin\ContainerProvider;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- *
- */
+#[CoversClass(LostPasswordAction::class)]
 class LostPasswordActionTest extends AbstractTestCase
 {
     use ReflectionsTrait;

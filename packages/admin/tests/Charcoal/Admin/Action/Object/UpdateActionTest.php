@@ -12,10 +12,9 @@ use Charcoal\Admin\Action\Object\UpdateAction;
 use Charcoal\Tests\AbstractTestCase;
 use Charcoal\Tests\ReflectionsTrait;
 use Charcoal\Tests\Admin\ContainerProvider;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- *
- */
+#[CoversClass(UpdateAction::class)]
 class UpdateActionTest extends AbstractTestCase
 {
     use ReflectionsTrait;

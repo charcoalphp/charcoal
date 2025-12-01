@@ -7,10 +7,9 @@ use DI\Container;
 use Charcoal\Admin\Template\ElfinderTemplate;
 use Charcoal\Tests\AbstractTestCase;
 use Charcoal\Tests\Admin\ContainerProvider;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- *
- */
+#[CoversClass(ElfinderTemplate::class)]
 class ElfinderTemplateTest extends AbstractTestCase
 {
     /**

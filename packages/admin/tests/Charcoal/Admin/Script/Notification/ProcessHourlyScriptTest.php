@@ -8,10 +8,9 @@ use Charcoal\Admin\Script\Notification\ProcessHourlyScript;
 use Charcoal\Tests\AbstractTestCase;
 use Charcoal\Tests\ReflectionsTrait;
 use Charcoal\Tests\Admin\ContainerProvider;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- *
- */
+#[CoversClass(ProcessHourlyScript::class)]
 class ProcessHourlyScriptTest extends AbstractTestCase
 {
     use ReflectionsTrait;

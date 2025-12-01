@@ -7,10 +7,9 @@ use DI\Container;
 use Charcoal\Admin\Service\Exporter;
 use Charcoal\Tests\AbstractTestCase;
 use Charcoal\Tests\Admin\ContainerProvider;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- *
- */
+#[CoversClass(Exporter::class)]
 class ExporterTest extends AbstractTestCase
 {
     /**

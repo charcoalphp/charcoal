@@ -7,10 +7,9 @@ use DI\Container;
 use Charcoal\Admin\Widget\FormPropertyWidget;
 use Charcoal\Tests\AbstractTestCase;
 use Charcoal\Tests\Admin\ContainerProvider;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- *
- */
+#[CoversClass(FormPropertyWidget::class)]
 class FormPropertyWidgetTest extends AbstractTestCase
 {
     /**

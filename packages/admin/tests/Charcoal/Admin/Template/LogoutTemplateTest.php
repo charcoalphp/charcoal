@@ -4,15 +4,13 @@ namespace Charcoal\Tests\Admin\Template;
 
 // From PSR-3
 use Psr\Log\NullLogger;
-
 // From 'charcoal-admin'
 use Charcoal\Admin\Template\LogoutTemplate;
 use Charcoal\Tests\AbstractTestCase;
 use Charcoal\Tests\ReflectionsTrait;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- *
- */
+#[CoversClass(LogoutTemplate::class)]
 class LogoutTemplateTest extends AbstractTestCase
 {
     use ReflectionsTrait;

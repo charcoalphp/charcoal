@@ -9,10 +9,9 @@ use Charcoal\Tests\AbstractTestCase;
 use Charcoal\Tests\AssertionsTrait;
 use Charcoal\Tests\ReflectionsTrait;
 use Charcoal\Tests\Admin\ContainerProvider;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- *
- */
+#[CoversClass(AdminAction::class)]
 class AdminActionTest extends AbstractTestCase
 {
     use AssertionsTrait;

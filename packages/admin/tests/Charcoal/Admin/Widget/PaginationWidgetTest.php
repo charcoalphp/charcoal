@@ -3,17 +3,14 @@
 namespace Charcoal\Tests\Admin\Widget;
 
 use InvalidArgumentException;
-
 // From PSR-3
 use Psr\Log\NullLogger;
-
 // From 'charcoal-admin'
 use Charcoal\Admin\Widget\PaginationWidget;
 use Charcoal\Tests\AbstractTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- *
- */
+#[CoversClass(PaginationWidget::class)]
 class PaginationWidgetTest extends AbstractTestCase
 {
     /**
