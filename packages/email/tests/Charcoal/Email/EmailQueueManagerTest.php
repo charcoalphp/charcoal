@@ -4,13 +4,11 @@ namespace Charcoal\Tests\Email;
 
 use Charcoal\Email\EmailQueueItem;
 use Charcoal\Email\EmailQueueManager;
-use Charcoal\Tests\AbstractTestCase;
 use Psr\Log\NullLogger;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * Class EmailQueueManagerTest
- */
-class EmailQueueManagerTest extends AbstractTestCase
+#[CoversClass(EmailQueueManager::class)]
+class EmailQueueManagerTest extends AbstractEmailTestCase
 {
     /**
      * @var EmailQueueManager
@@ -19,7 +17,7 @@ class EmailQueueManagerTest extends AbstractTestCase
 
     protected function setUp(): void
     {
-        $container = $GLOBALS['container'];
+        $container = $this->container();
         $this->obj = new EmailQueueManager([
             'logger' => new NullLogger(),
             'queue_item_factory' => $container->get('model/factory')

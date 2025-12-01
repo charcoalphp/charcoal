@@ -2,14 +2,11 @@
 
 namespace Charcoal\Tests\App\Email;
 
-use InvalidArgumentException;
-
 use Charcoal\Email\Email;
 use Charcoal\Tests\AbstractTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * Test the AbstractEmail methods, through concrete `Email` class.
- */
+#[CoversClass(Email::class)]
 class EmailTest extends AbstractTestCase
 {
     /**

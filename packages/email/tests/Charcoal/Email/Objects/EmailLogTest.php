@@ -3,11 +3,12 @@
 namespace Charcoal\Tests\Email\Objects;
 
 use DateTime;
-
 use Charcoal\Email\Objects\EmailLog;
 use Charcoal\Tests\AbstractTestCase;
 use Psr\Log\NullLogger;
+use PHPUnit\Framework\Attributes\CoversClass;
 
+#[CoversClass(EmailLog::class)]
 class EmailLogTest extends AbstractTestCase
 {
     /**

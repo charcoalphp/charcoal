@@ -6,7 +6,9 @@ use Charcoal\Email\EmailQueueItem;
 use Charcoal\Queue\QueueItemInterface;
 use Charcoal\Tests\AbstractTestCase;
 use Psr\Log\NullLogger;
+use PHPUnit\Framework\Attributes\CoversClass;
 
+#[CoversClass(EmailQueueItem::class)]
 class EmailQueueItemTest extends AbstractTestCase
 {
     /**

@@ -4,15 +4,12 @@ declare(strict_types=1);
 
 namespace Charcoal\Email\Tests\Services;
 
-
 use PHPUnit\Framework\TestCase;
-
 use Charcoal\Email\Email;
 use Charcoal\Email\Services\Tracker;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- *
- */
+#[CoversClass(Tracker::class)]
 class TrackerTest extends TestCase
 {
     /**

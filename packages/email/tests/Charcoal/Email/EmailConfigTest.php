@@ -3,10 +3,11 @@
 namespace Charcoal\Tests\Email;
 
 use InvalidArgumentException;
-
 use Charcoal\Email\EmailConfig;
 use Charcoal\Tests\AbstractTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
+#[CoversClass(EmailConfig::class)]
 class EmailConfigTest extends AbstractTestCase
 {
     /**

@@ -3,11 +3,12 @@
 use Charcoal\App\AppConfig;
 use Charcoal\App\AppContainer;
 use Charcoal\Config\GenericConfig;
+use Slim\Factory\ServerRequestCreatorFactory;
 
 if (($_ENV['TEST_MODE'] ?? '') === 'PACKAGE') {
-    require getcwd().'/tests/bootstrap.php';
+    require getcwd() . '/tests/bootstrap.php';
 } else {
-    $autoloader = require __DIR__.'/../vendor/autoload.php';
+    $autoloader = require __DIR__ . '/../vendor/autoload.php';
 }
 
 $config = new AppConfig([
@@ -36,6 +37,11 @@ $config = new AppConfig([
     ]
 ]);
 
+$serverRequestCreator = ServerRequestCreatorFactory::create();
+$request = $serverRequestCreator->createServerRequestFromGlobals();
+$request = $request->withUri($request->getUri()->withPort(null));
+
 $GLOBALS['container'] = new AppContainer([
-    'config' => $config
+    'config'  => $config,
+    'request' => $request,
 ]);
