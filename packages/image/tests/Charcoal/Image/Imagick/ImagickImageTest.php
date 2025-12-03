@@ -3,12 +3,12 @@
 namespace Charcoals\Tests\Image;
 
 use InvalidArgumentException;
-
 use Imagick;
-
 use Charcoal\Image\ImageFactory;
 use Charcoal\Image\Imagick\ImagickImage as Image;
+use PHPUnit\Framework\Attributes\CoversClass;
 
+#[CoversClass(Image::class)]
 class ImagickImageTest extends \PHPUnit\Framework\TestCase
 {
     private $factory;
@@ -60,7 +60,7 @@ class ImagickImageTest extends \PHPUnit\Framework\TestCase
     public function testOpen()
     {
         $obj = $this->createImage();
-        $ret = $obj->open(EXAMPLES_DIR.'/test01.jpg');
+        $ret = $obj->open(EXAMPLES_DIR . '/test01.jpg');
         $this->assertSame($ret, $obj);
 
         $this->expectException('\InvalidArgumentException');
@@ -77,12 +77,12 @@ class ImagickImageTest extends \PHPUnit\Framework\TestCase
     public function testOpenWithoutParamUseSource()
     {
         $obj1 = $this->createImage();
-        $obj1->open(EXAMPLES_DIR.'/test01.jpg');
+        $obj1->open(EXAMPLES_DIR . '/test01.jpg');
 
         $id1 = $obj1->imagick()->identifyImage();
 
         $obj2 = $this->createImage();
-        $obj2->setSource(EXAMPLES_DIR.'/test01.jpg');
+        $obj2->setSource(EXAMPLES_DIR . '/test01.jpg');
         $obj2->open();
 
         $id2 = $obj2->imagick()->identifyImage();
@@ -93,7 +93,7 @@ class ImagickImageTest extends \PHPUnit\Framework\TestCase
     public function testWidth()
     {
         $obj = $this->createImage();
-        $ret = $obj->open(EXAMPLES_DIR.'/test01.jpg');
+        $ret = $obj->open(EXAMPLES_DIR . '/test01.jpg');
 
         $width = $obj->width();
         $this->assertEquals(3456, $width);
@@ -102,7 +102,7 @@ class ImagickImageTest extends \PHPUnit\Framework\TestCase
     public function testHeight()
     {
         $obj = $this->createImage();
-        $ret = $obj->open(EXAMPLES_DIR.'/test01.jpg');
+        $ret = $obj->open(EXAMPLES_DIR . '/test01.jpg');
 
         $height = $obj->height();
         $this->assertEquals(2304, $height);
@@ -134,12 +134,12 @@ class ImagickImageTest extends \PHPUnit\Framework\TestCase
     public function testEffects($effect, $filename)
     {
         $obj = $this->createImage();
-        $obj->open(EXAMPLES_DIR.'/test02.png');
+        $obj->open(EXAMPLES_DIR . '/test02.png');
 
         $obj->processEffect($effect);
-        $obj->save(OUTPUT_DIR.'/'.$filename);
+        $obj->save(OUTPUT_DIR . '/' . $filename);
 
-        $this->assertTrue(file_exists(OUTPUT_DIR.'/'.$filename));
+        $this->assertTrue(file_exists(OUTPUT_DIR . '/' . $filename));
     }
 
     /**
@@ -148,13 +148,13 @@ class ImagickImageTest extends \PHPUnit\Framework\TestCase
     public function testInvalidEffect($effect)
     {
         $obj = $this->createImage();
-        $obj->open(EXAMPLES_DIR.'/test02.png');
+        $obj->open(EXAMPLES_DIR . '/test02.png');
 
         $this->expectException(InvalidArgumentException::class);
         $obj->processsEffect($effect);
     }
 
-    public function effectProvider()
+    public static function effectProvider()
     {
         return [
             # Blur
@@ -206,21 +206,21 @@ class ImagickImageTest extends \PHPUnit\Framework\TestCase
             [ [ 'type' => 'tint', 'color' => 'rgb(255,0,0)' ], 'imagick-tint-red.png' ],
             [ [ 'type' => 'tint', 'color' => 'rgb(255,0,0)', 'midtone' => false ], 'imagick-tint-red-colorize.png' ],
             # Watermarkk
-            [ [ 'type' => 'watermark', 'watermark' => EXAMPLES_DIR.'/watermark.png' ], 'imagick-watermark-default.png' ],
-            [ [ 'type' => 'watermark', 'watermark' => EXAMPLES_DIR.'/watermark.png', 'gravity' => 'nw' ], 'imagick-watermark-nw.png' ],
-            [ [ 'type' => 'watermark', 'watermark' => EXAMPLES_DIR.'/watermark.png', 'gravity' => 'n' ], 'imagick-watermark-n.png' ],
-            [ [ 'type' => 'watermark', 'watermark' => EXAMPLES_DIR.'/watermark.png', 'gravity' => 'ne' ], 'imagick-watermark-ne.png' ],
-            [ [ 'type' => 'watermark', 'watermark' => EXAMPLES_DIR.'/watermark.png', 'gravity' => 'w' ], 'imagick-watermark-w.png' ],
-            [ [ 'type' => 'watermark', 'watermark' => EXAMPLES_DIR.'/watermark.png', 'gravity' => 'center' ], 'imagick-watermark-center.png' ],
-            [ [ 'type' => 'watermark', 'watermark' => EXAMPLES_DIR.'/watermark.png', 'gravity' => 'e' ], 'imagick-watermark-e.png' ],
-            [ [ 'type' => 'watermark', 'watermark' => EXAMPLES_DIR.'/watermark.png', 'gravity' => 'sw' ], 'imagick-watermark-sw.png' ],
-            [ [ 'type' => 'watermark', 'watermark' => EXAMPLES_DIR.'/watermark.png', 'gravity' => 's' ], 'imagick-watermark-s.png' ],
-            [ [ 'type' => 'watermark', 'watermark' => EXAMPLES_DIR.'/watermark.png', 'gravity' => 'se' ], 'imagick-watermark-se.png' ],
-            [ [ 'type' => 'watermark', 'watermark' => EXAMPLES_DIR.'/watermark.png', 'opacity' => 0.5 ], 'imagick-watermark-05.png' ]
+            [ [ 'type' => 'watermark', 'watermark' => EXAMPLES_DIR . '/watermark.png' ], 'imagick-watermark-default.png' ],
+            [ [ 'type' => 'watermark', 'watermark' => EXAMPLES_DIR . '/watermark.png', 'gravity' => 'nw' ], 'imagick-watermark-nw.png' ],
+            [ [ 'type' => 'watermark', 'watermark' => EXAMPLES_DIR . '/watermark.png', 'gravity' => 'n' ], 'imagick-watermark-n.png' ],
+            [ [ 'type' => 'watermark', 'watermark' => EXAMPLES_DIR . '/watermark.png', 'gravity' => 'ne' ], 'imagick-watermark-ne.png' ],
+            [ [ 'type' => 'watermark', 'watermark' => EXAMPLES_DIR . '/watermark.png', 'gravity' => 'w' ], 'imagick-watermark-w.png' ],
+            [ [ 'type' => 'watermark', 'watermark' => EXAMPLES_DIR . '/watermark.png', 'gravity' => 'center' ], 'imagick-watermark-center.png' ],
+            [ [ 'type' => 'watermark', 'watermark' => EXAMPLES_DIR . '/watermark.png', 'gravity' => 'e' ], 'imagick-watermark-e.png' ],
+            [ [ 'type' => 'watermark', 'watermark' => EXAMPLES_DIR . '/watermark.png', 'gravity' => 'sw' ], 'imagick-watermark-sw.png' ],
+            [ [ 'type' => 'watermark', 'watermark' => EXAMPLES_DIR . '/watermark.png', 'gravity' => 's' ], 'imagick-watermark-s.png' ],
+            [ [ 'type' => 'watermark', 'watermark' => EXAMPLES_DIR . '/watermark.png', 'gravity' => 'se' ], 'imagick-watermark-se.png' ],
+            [ [ 'type' => 'watermark', 'watermark' => EXAMPLES_DIR . '/watermark.png', 'opacity' => 0.5 ], 'imagick-watermark-05.png' ]
         ];
     }
 
-    public function invalidEffectProvider()
+    public static function invalidEffectProvider()
     {
         return [
             # Blur

@@ -2,6 +2,10 @@
 
 namespace Charcoals\Tests\Image\Effect;
 
+use Charcoal\Image\Effect\AbstractWatermarkEffect;
+use PHPUnit\Framework\Attributes\CoversClass;
+
+#[CoversClass(AbstractWatermarkEffect::class)]
 class AbstractWatermarkEffectTest extends \PHPUnit\Framework\TestCase
 {
     public $obj;
@@ -28,11 +32,11 @@ class AbstractWatermarkEffectTest extends \PHPUnit\Framework\TestCase
         $obj = $this->obj;
         $ret = $obj->setData(
             [
-            'watermark'=>'foo/bar.png',
-            'opacity'=>0.5,
-            'gravity'=>'se',
-            'x'=>-10,
-            'y'=>20
+            'watermark' => 'foo/bar.png',
+            'opacity' => 0.5,
+            'gravity' => 'se',
+            'x' => -10,
+            'y' => 20
             ]
         );
         $this->assertSame($ret, $obj);

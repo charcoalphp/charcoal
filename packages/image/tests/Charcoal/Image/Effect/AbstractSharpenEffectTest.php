@@ -2,6 +2,10 @@
 
 namespace Charcoals\Tests\Image\Effect;
 
+use Charcoal\Image\Effect\AbstractSharpenEffect;
+use PHPUnit\Framework\Attributes\CoversClass;
+
+#[CoversClass(AbstractSharpenEffect::class)]
 class AbstractSharpenEffectTest extends \PHPUnit\Framework\TestCase
 {
     public $obj;

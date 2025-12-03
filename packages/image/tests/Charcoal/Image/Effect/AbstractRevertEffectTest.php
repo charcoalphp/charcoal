@@ -2,6 +2,10 @@
 
 namespace Charcoals\Tests\Image\Effect;
 
+use Charcoal\Image\Effect\AbstractRevertEffect;
+use PHPUnit\Framework\Attributes\CoversClass;
+
+#[CoversClass(AbstractRevertEffect::class)]
 class AbstractRevertEffectTest extends \PHPUnit\Framework\TestCase
 {
     public $obj;

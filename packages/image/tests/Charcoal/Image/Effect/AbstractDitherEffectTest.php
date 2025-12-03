@@ -2,6 +2,10 @@
 
 namespace Charcoals\Tests\Image\Effect;
 
+use Charcoal\Image\Effect\AbstractDitherEffect;
+use PHPUnit\Framework\Attributes\CoversClass;
+
+#[CoversClass(AbstractDitherEffect::class)]
 class AbstractDitherEffectTest extends \PHPUnit\Framework\TestCase
 {
     public $obj;

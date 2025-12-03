@@ -2,6 +2,10 @@
 
 namespace Charcoals\Tests\Image\Effect;
 
+use Charcoal\Image\Effect\AbstractModulateEffect;
+use PHPUnit\Framework\Attributes\CoversClass;
+
+#[CoversClass(AbstractModulateEffect::class)]
 class AbstractModulateEffectTest extends \PHPUnit\Framework\TestCase
 {
     public $obj;

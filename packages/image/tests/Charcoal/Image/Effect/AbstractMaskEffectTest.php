@@ -2,6 +2,10 @@
 
 namespace Charcoals\Tests\Image\Effect;
 
+use Charcoal\Image\Effect\AbstractMaskEffect;
+use PHPUnit\Framework\Attributes\CoversClass;
+
+#[CoversClass(AbstractMaskEffect::class)]
 class AbstractMaskEffectTest extends \PHPUnit\Framework\TestCase
 {
     public $obj;

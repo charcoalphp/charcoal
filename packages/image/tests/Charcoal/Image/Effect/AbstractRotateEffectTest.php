@@ -2,6 +2,10 @@
 
 namespace Charcoals\Tests\Image\Effect;
 
+use Charcoal\Image\Effect\AbstractRotateEffect;
+use PHPUnit\Framework\Attributes\CoversClass;
+
+#[CoversClass(AbstractRotateEffect::class)]
 class AbstractRotateEffectTest extends \PHPUnit\Framework\TestCase
 {
     public $obj;

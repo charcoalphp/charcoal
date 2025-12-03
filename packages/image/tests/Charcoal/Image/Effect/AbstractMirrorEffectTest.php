@@ -2,6 +2,10 @@
 
 namespace Charcoals\Tests\Image\Effect;
 
+use Charcoal\Image\Effect\AbstractMirrorEffect;
+use PHPUnit\Framework\Attributes\CoversClass;
+
+#[CoversClass(AbstractMirrorEffect::class)]
 class AbstractMirrorEffectTest extends \PHPUnit\Framework\TestCase
 {
     public $obj;

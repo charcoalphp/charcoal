@@ -3,10 +3,11 @@
 namespace Charcoals\Tests\Image;
 
 use InvalidArgumentException;
-
 use Charcoal\Image\ImageFactory;
 use Charcoal\Image\Imagemagick\ImagemagickImage as Image;
+use PHPUnit\Framework\Attributes\CoversClass;
 
+#[CoversClass(Image::class)]
 class ImagemagickImageTest extends \PHPUnit\Framework\TestCase
 {
     private $factory;
@@ -58,7 +59,7 @@ class ImagemagickImageTest extends \PHPUnit\Framework\TestCase
     public function testOpen()
     {
         $obj = $this->createImage();
-        $ret = $obj->open(EXAMPLES_DIR.'/test01.jpg');
+        $ret = $obj->open(EXAMPLES_DIR . '/test01.jpg');
         $this->assertSame($ret, $obj);
 
         $this->expectException(InvalidArgumentException::class);
@@ -91,7 +92,7 @@ class ImagemagickImageTest extends \PHPUnit\Framework\TestCase
     public function testWidth()
     {
         $obj = $this->createImage();
-        $obj->open(EXAMPLES_DIR.'/test01.jpg');
+        $obj->open(EXAMPLES_DIR . '/test01.jpg');
 
         $width = $obj->width();
         $this->assertEquals(3456, $width);
@@ -100,7 +101,7 @@ class ImagemagickImageTest extends \PHPUnit\Framework\TestCase
     public function testHeight()
     {
         $obj = $this->createImage();
-        $obj->open(EXAMPLES_DIR.'/test01.jpg');
+        $obj->open(EXAMPLES_DIR . '/test01.jpg');
 
         $height = $obj->height();
         $this->assertEquals(2304, $height);
@@ -112,12 +113,12 @@ class ImagemagickImageTest extends \PHPUnit\Framework\TestCase
     public function testEffects($effect, $filename)
     {
         $obj = $this->createImage();
-        $obj->open(EXAMPLES_DIR.'/test02.png');
+        $obj->open(EXAMPLES_DIR . '/test02.png');
 
         $obj->processEffect($effect);
-        $obj->save(OUTPUT_DIR.'/'.$filename);
+        $obj->save(OUTPUT_DIR . '/' . $filename);
 
-        $this->assertTrue(file_exists(OUTPUT_DIR.'/'.$filename));
+        $this->assertTrue(file_exists(OUTPUT_DIR . '/' . $filename));
     }
 
     /**
@@ -126,13 +127,13 @@ class ImagemagickImageTest extends \PHPUnit\Framework\TestCase
     public function testInvalidEffext($effect)
     {
         $obj = $this->createImage();
-        $obj->open(EXAMPLES_DIR.'/test02.png');
+        $obj->open(EXAMPLES_DIR . '/test02.png');
 
         $this->expectException(InvalidArgumentException::class);
         $obj->processsEffect($effect);
     }
 
-    public function effectProvider()
+    public static function effectProvider()
     {
         return [
             # Blur
@@ -186,7 +187,7 @@ class ImagemagickImageTest extends \PHPUnit\Framework\TestCase
         ];
     }
 
-    public function invalidEffectProvider()
+    public static function invalidEffectProvider()
     {
         return [
             # Dither
@@ -196,7 +197,7 @@ class ImagemagickImageTest extends \PHPUnit\Framework\TestCase
             [ [ 'type' => 'mask' ] ],
 
             # Watermarkk
-            [ [ 'type' => 'watermark', 'watermark' => EXAMPLES_DIR.'/watermark.png' ], 'imagemagick-watermark-default.png' ]
+            [ [ 'type' => 'watermark', 'watermark' => EXAMPLES_DIR . '/watermark.png' ], 'imagemagick-watermark-default.png' ]
         ];
     }
 }

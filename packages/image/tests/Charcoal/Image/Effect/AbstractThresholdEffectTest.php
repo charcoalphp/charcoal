@@ -2,6 +2,10 @@
 
 namespace Charcoals\Tests\Image\Effect;
 
+use Charcoal\Image\Effect\AbstractThresholdEffect;
+use PHPUnit\Framework\Attributes\CoversClass;
+
+#[CoversClass(AbstractThresholdEffect::class)]
 class AbstractThresholdEffectTest extends \PHPUnit\Framework\TestCase
 {
     public $obj;

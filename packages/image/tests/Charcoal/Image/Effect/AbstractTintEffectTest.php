@@ -2,6 +2,10 @@
 
 namespace Charcoals\Tests\Image\Effect;
 
+use Charcoal\Image\Effect\AbstractTintEffect;
+use PHPUnit\Framework\Attributes\CoversClass;
+
+#[CoversClass(AbstractTintEffect::class)]
 class AbstractTintEffectTest extends \PHPUnit\Framework\TestCase
 {
     public $obj;

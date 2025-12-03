@@ -2,6 +2,10 @@
 
 namespace Charcoals\Tests\Image\Effect;
 
+use Charcoal\Image\Effect\AbstractSepiaEffect;
+use PHPUnit\Framework\Attributes\CoversClass;
+
+#[CoversClass(AbstractSepiaEffect::class)]
 class AbstractSepiaEffectTest extends \PHPUnit\Framework\TestCase
 {
     public $obj;

@@ -2,6 +2,10 @@
 
 namespace Charcoals\Tests\Image\Effect;
 
+use Charcoal\Image\Effect\AbstractGrayscaleEffect;
+use PHPUnit\Framework\Attributes\CoversClass;
+
+#[CoversClass(AbstractGrayscaleEffect::class)]
 class AbstractGrayscaleEffectTest extends \PHPUnit\Framework\TestCase
 {
     public $obj;

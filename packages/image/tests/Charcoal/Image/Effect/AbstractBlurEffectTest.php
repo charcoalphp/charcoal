@@ -2,6 +2,10 @@
 
 namespace Charcoals\Tests\Image\Effect;
 
+use Charcoal\Image\Effect\AbstractBlurEffect;
+use PHPUnit\Framework\Attributes\CoversClass;
+
+#[CoversClass(AbstractBlurEffect::class)]
 class AbstractBlurEffectTest extends \PHPUnit\Framework\TestCase
 {
     public $obj;

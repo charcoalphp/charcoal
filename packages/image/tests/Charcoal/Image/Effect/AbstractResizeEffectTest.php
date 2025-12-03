@@ -2,6 +2,10 @@
 
 namespace Charcoals\Tests\Image\Effect;
 
+use Charcoal\Image\Effect\AbstractResizeEffect;
+use PHPUnit\Framework\Attributes\CoversClass;
+
+#[CoversClass(AbstractResizeEffect::class)]
 class AbstractResizeEffectTest extends \PHPUnit\Framework\TestCase
 {
     public $obj;
