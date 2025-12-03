@@ -5,10 +5,9 @@ namespace Charcoal\Tests\View\Mustache;
 // From 'charcoal-view'
 use Charcoal\View\ViewConfig;
 use Charcoal\Tests\AbstractTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- *
- */
+#[CoversClass(ViewConfig::class)]
 class ViewConfigTest extends AbstractTestCase
 {
     /**

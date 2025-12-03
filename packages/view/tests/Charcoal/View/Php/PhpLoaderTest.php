@@ -5,10 +5,9 @@ namespace Charcoal\Tests\View\Php;
 // From 'charcoal-view'
 use Charcoal\View\Php\PhpLoader;
 use Charcoal\Tests\AbstractTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- *
- */
+#[CoversClass(PhpLoader::class)]
 class PhpLoaderTest extends AbstractTestCase
 {
     /**

@@ -4,16 +4,14 @@ namespace Charcoal\Tests\View\Mustache;
 
 use InvalidArgumentException;
 use RuntimeException;
-
 // From 'charcoal-view'
 use Charcoal\View\Mustache\MustacheEngine;
 use Charcoal\View\Mustache\MustacheLoader;
 use Charcoal\Tests\AbstractTestCase;
 use Charcoal\Tests\View\Mustache\Mock\MockHelpers;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- *
- */
+#[CoversClass(MustacheEngine::class)]
 class MustacheEngineTest extends AbstractTestCase
 {
     /**

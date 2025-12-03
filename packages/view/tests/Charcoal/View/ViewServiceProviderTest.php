@@ -2,18 +2,20 @@
 
 namespace Charcoal\Tests\View;
 
-// From Slim
+use DI\Container;
+use Nyholm\Psr7\Response;
 use Charcoal\App\AppConfig;
 use Charcoal\Translator\ServiceProvider\TranslatorServiceProvider;
-use Slim\Http\Response;
-use DI\Container;
 // From 'charcoal-view'
 use Charcoal\View\ViewServiceProvider;
 use Charcoal\Tests\AbstractTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use Nyholm\Psr7\Uri;
+use Charcoal\Translator\LocalesManager;
+use Psr\Container\ContainerInterface;
+use Charcoal\Translator\Translator;
 
-/**
- *
- */
+#[CoversClass(ViewServiceProvider::class)]
 class ViewServiceProviderTest extends AbstractTestCase
 {
     /**
@@ -24,6 +26,8 @@ class ViewServiceProviderTest extends AbstractTestCase
         $container = new Container([
             'config' => [],
         ]);
+
+        $this->registerBaseServices($container);
 
         $provider = new ViewServiceProvider();
         $provider->register($container);
@@ -48,6 +52,8 @@ class ViewServiceProviderTest extends AbstractTestCase
             ],
         ]);
 
+        $this->registerBaseServices($container);
+
         $provider = new ViewServiceProvider();
         $provider->register($container);
 
@@ -70,6 +76,9 @@ class ViewServiceProviderTest extends AbstractTestCase
                 ]
             ]),
         ]);
+
+        $this->registerBaseServices($container);
+
         $provider = new ViewServiceProvider();
         $provider->register($container);
 
@@ -99,6 +108,9 @@ class ViewServiceProviderTest extends AbstractTestCase
                 ]
             ]),
         ]);
+
+        $this->registerBaseServices($container);
+
         $provider = new ViewServiceProvider();
         $provider->register($container);
 
@@ -116,7 +128,7 @@ class ViewServiceProviderTest extends AbstractTestCase
     public function testProviderPhp()
     {
         $container = new Container([
-            'config' => new AppConfig ([
+            'config' => new AppConfig([
                 'base_path' => __DIR__,
                 'view'      => [
                     'paths'          => [ 'Php/templates' ],
@@ -124,6 +136,9 @@ class ViewServiceProviderTest extends AbstractTestCase
                 ]
             ]),
         ]);
+
+        $this->registerBaseServices($container);
+
         $provider = new ViewServiceProvider();
         $provider->register($container);
 
@@ -133,5 +148,65 @@ class ViewServiceProviderTest extends AbstractTestCase
         $response = new Response();
         $ret = $container->get('view/renderer')->render($response, 'foo', [ 'foo' => 'Baz' ]);
         $this->assertEquals('Hello Baz', trim((string)$ret->getBody()));
+    }
+
+    /**
+     * Setup the application's base URI.
+     *
+     * @param  Container $container A DI container.
+     * @return void
+     */
+    public function registerBaseUrl(Container $container)
+    {
+        $container->set('base-url', function () {
+            return (new Uri(''));
+        });
+
+        $container->set('admin/base-url', function () {
+            return (new Uri('admin'));
+        });
+    }
+
+    public function registerBaseServices(ContainerInterface $container)
+    {
+        $this->registerDebug($container);
+        $this->registerBaseUrl($container);
+        $this->registerTranslator($container);
+    }
+
+    /**
+     * Setup the application's translator service.
+     *
+     * @param  Container $container A DI container.
+     * @return void
+     */
+    public function registerTranslator(Container $container)
+    {
+        $container->set('locales/manager', function (Container $container) {
+            return new LocalesManager([
+                'locales' => [
+                    'en' => [ 'locale' => 'en-US' ]
+                ]
+            ]);
+        });
+
+        $container->set('translator', function (Container $container) {
+            return new Translator([
+                'manager' => $container->get('locales/manager')
+            ]);
+        });
+    }
+
+    /**
+     * Register the unit tests required services.
+     *
+     * @param  Container $container A DI container.
+     * @return void
+     */
+    public function registerDebug(Container $container)
+    {
+        if (!($container->has('debug'))) {
+            $container->set('debug', false);
+        }
     }
 }

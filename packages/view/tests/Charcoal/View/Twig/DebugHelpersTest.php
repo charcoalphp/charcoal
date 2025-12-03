@@ -2,20 +2,15 @@
 
 namespace Charcoal\Tests\View\Twig;
 
-use LogicException;
 // From Twig
 use Twig\Environment as TwigEnvironment;
-// From 'charcoal-translator'
-use Charcoal\Translator\Translator;
-use Charcoal\Translator\LocalesManager;
 // From 'charcoal-view'
 use Charcoal\Tests\AbstractTestCase;
 use Charcoal\View\Twig\DebugHelpers;
 use Charcoal\View\Twig\TwigLoader;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- *
- */
+#[CoversClass(DebugHelpers::class)]
 class DebugHelpersTest extends AbstractTestCase
 {
     /**

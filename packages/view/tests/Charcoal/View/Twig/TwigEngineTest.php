@@ -4,17 +4,15 @@ namespace Charcoal\Tests\View\Twig;
 
 use InvalidArgumentException;
 use RuntimeException;
-
 // From 'charcoal-view'
 use Charcoal\View\Twig\TwigEngine;
 use Charcoal\View\Twig\TwigLoader;
 use Charcoal\Tests\AbstractTestCase;
 use Charcoal\View\ViewConfig;
 use Charcoal\Tests\View\Twig\Mock\MockHelpers;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- *
- */
+#[CoversClass(TwigEngine::class)]
 class TwigEngineTest extends AbstractTestCase
 {
     /**

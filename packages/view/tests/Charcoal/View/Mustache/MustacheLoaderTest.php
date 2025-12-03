@@ -5,10 +5,9 @@ namespace Charcoal\Tests\View\Mustache;
 // From 'charcoal-view'
 use Charcoal\View\Mustache\MustacheLoader;
 use Charcoal\Tests\AbstractTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- *
- */
+#[CoversClass(MustacheLoader::class)]
 class MustacheLoaderTest extends AbstractTestCase
 {
     /**
@@ -37,7 +36,7 @@ class MustacheLoaderTest extends AbstractTestCase
     {
         $ret = $this->obj->load($template);
 
-        $expected = file_get_contents(__DIR__.'/templates/'.$template.'.mustache');
+        $expected = file_get_contents(__DIR__ . '/templates/' . $template . '.mustache');
         $this->assertEquals($expected, $ret);
     }
 
@@ -52,7 +51,7 @@ class MustacheLoaderTest extends AbstractTestCase
         $this->obj->setDynamicTemplate('dynamic', $template);
         $ret = $this->obj->load('$dynamic');
 
-        $expected = file_get_contents(__DIR__.'/templates/'.$template.'.mustache');
+        $expected = file_get_contents(__DIR__ . '/templates/' . $template . '.mustache');
         $this->assertEquals($expected, $ret);
     }
 
@@ -68,7 +67,7 @@ class MustacheLoaderTest extends AbstractTestCase
     /**
      * @return array
      */
-    public function templateProvider()
+    public static function templateProvider()
     {
         return [
             [ 'foo' ],

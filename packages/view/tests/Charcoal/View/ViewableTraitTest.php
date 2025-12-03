@@ -10,10 +10,9 @@ use Charcoal\View\Mustache\MustacheLoader;
 use Charcoal\View\Mustache\MustacheEngine;
 use Charcoal\View\ViewableTrait as MockTrait;
 use Charcoal\Tests\AbstractTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- *
- */
+#[CoversClass(ViewableTrait::class)]
 class ViewableTraitTest extends AbstractTestCase
 {
     /**

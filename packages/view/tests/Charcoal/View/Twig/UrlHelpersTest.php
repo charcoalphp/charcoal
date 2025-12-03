@@ -2,22 +2,15 @@
 
 namespace Charcoal\Tests\View\Twig;
 
-use LogicException;
 // From Twig
 use Twig\Environment as TwigEnvironment;
-// From 'symfony/translation'
-use Symfony\Component\Translation\Loader\ArrayLoader;
-// From 'charcoal-translator'
-use Charcoal\Translator\Translator;
-use Charcoal\Translator\LocalesManager;
 // From 'charcoal-view'
 use Charcoal\Tests\AbstractTestCase;
 use Charcoal\View\Twig\UrlHelpers;
 use Charcoal\View\Twig\TwigLoader;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- *
- */
+#[CoversClass(UrlHelpers::class)]
 class UrlHelpersTest extends AbstractTestCase
 {
     /**

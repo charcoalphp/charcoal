@@ -9,10 +9,9 @@ use Parsedown;
 // From 'charcoal-view'
 use Charcoal\View\Mustache\MarkdownHelpers;
 use Charcoal\Tests\AbstractTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- *
- */
+#[CoversClass(MarkdownHelpers::class)]
 class MarkdownHelpersTest extends AbstractTestCase
 {
     /**

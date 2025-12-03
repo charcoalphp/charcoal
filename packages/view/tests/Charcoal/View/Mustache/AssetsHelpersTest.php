@@ -3,19 +3,14 @@
 namespace Charcoal\Tests\View\Mustache;
 
 use StdClass;
-
 // From Mustache
 use Mustache_Engine as MustacheEngine;
-use Mustache_LambdaHelper as LambdaHelper;
-use Mustache_Template as MustacheTemplate;
-
 // From 'charcoal-view'
 use Charcoal\View\Mustache\AssetsHelpers;
 use Charcoal\Tests\AbstractTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- *
- */
+#[CoversClass(AssetsHelpers::class)]
 class AssetsHelpersTest extends AbstractTestCase
 {
     /**

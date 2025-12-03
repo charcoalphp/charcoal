@@ -6,10 +6,9 @@ namespace Charcoal\Tests\View\Php;
 use Charcoal\View\Php\PhpEngine;
 use Charcoal\View\Php\PhpLoader;
 use Charcoal\Tests\AbstractTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- *
- */
+#[CoversClass(PhpEngine::class)]
 class PhpEngineTest extends AbstractTestCase
 {
     /**

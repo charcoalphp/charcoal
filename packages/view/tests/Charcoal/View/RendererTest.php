@@ -2,19 +2,16 @@
 
 namespace Charcoal\Tests\View;
 
-// From Slim
-use Slim\Http\Response;
-
+use Nyholm\Psr7\Response;
 // From 'charcoal-view'
 use Charcoal\View\Mustache\MustacheLoader;
 use Charcoal\View\Mustache\MustacheEngine;
 use Charcoal\View\GenericView;
 use Charcoal\View\Renderer;
 use Charcoal\Tests\AbstractTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- *
- */
+#[CoversClass(Renderer::class)]
 class RendererTest extends AbstractTestCase
 {
     /**

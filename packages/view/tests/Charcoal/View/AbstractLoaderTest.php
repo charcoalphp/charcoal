@@ -2,17 +2,12 @@
 
 namespace Charcoal\Tests\View;
 
-use Exception;
-use InvalidArgumentException;
-
-
 // From 'charcoal-view'
 use Charcoal\View\AbstractLoader;
 use Charcoal\Tests\AbstractTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- *
- */
+#[CoversClass(AbstractLoader::class)]
 class AbstractLoaderTest extends AbstractTestCase
 {
     /**

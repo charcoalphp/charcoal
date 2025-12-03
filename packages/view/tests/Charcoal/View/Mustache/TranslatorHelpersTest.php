@@ -13,10 +13,9 @@ use Charcoal\Translator\LocalesManager;
 // From 'charcoal-view'
 use Charcoal\View\Mustache\TranslatorHelpers;
 use Charcoal\Tests\AbstractTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- *
- */
+#[CoversClass(TranslatorHelpers::class)]
 class TranslatorHelpersTest extends AbstractTestCase
 {
     /**

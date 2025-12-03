@@ -3,17 +3,14 @@
 namespace Charcoal\Tests\View\Twig;
 
 use DateTime;
-
 // From Twig
 use Twig\Source as TwigSource;
-
 // From 'charcoal-view'
 use Charcoal\View\Twig\TwigLoader;
 use Charcoal\Tests\AbstractTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- *
- */
+#[CoversClass(TwigLoader::class)]
 class TwigLoaderTest extends AbstractTestCase
 {
     /**

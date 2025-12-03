@@ -8,10 +8,9 @@ use Charcoal\View\Mustache\MustacheEngine;
 use Charcoal\View\Mustache\AssetsHelpers;
 use Charcoal\View\AbstractView;
 use Charcoal\Tests\AbstractTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- *
- */
+#[CoversClass(AbstractView::class)]
 class AbstractViewTest extends AbstractTestCase
 {
     /**
