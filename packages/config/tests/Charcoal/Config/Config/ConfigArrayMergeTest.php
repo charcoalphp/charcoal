@@ -2,22 +2,19 @@
 
 namespace Charcoal\Tests\Config\Config;
 
-use StdClass;
-use Iterator;
-use IteratorAggregate;
 use InvalidArgumentException;
-
 // From 'charcoal-config'
 use Charcoal\Tests\Config\Config\AbstractConfigTestCase;
 use Charcoal\Config\GenericConfig;
 use Charcoal\Tests\AssertionsTrait;
-use PHPUnit\Framework\Attributes\CoversClass;
 use Charcoal\Config\AbstractConfig;
+use PHPUnit\Framework\Attributes\CoversMethod;
 
 /**
  * Test data merging in AbstractConfig
  */
-#[CoversClass(AbstractConfig::class)]
+#[CoversMethod(AbstractConfig::class, 'offsetReplace')]
+#[CoversMethod(AbstractConfig::class, 'merge')]
 class ConfigArrayMergeTest extends AbstractConfigTestCase
 {
     use AssertionsTrait;
@@ -53,9 +50,6 @@ class ConfigArrayMergeTest extends AbstractConfigTestCase
 
     /**
      * Test {@see AbstractEntity::merge()} with array.
-     *
-     * @covers AbstractConfig::offsetReplace()
-     * @covers AbstractConfig::merge()
      * @return void
      */
     public function testMergeDataWithArray()
@@ -75,9 +69,6 @@ class ConfigArrayMergeTest extends AbstractConfigTestCase
 
     /**
      * Test {@see AbstractEntity::merge()} with another Config instance.
-     *
-     * @covers AbstractConfig::offsetReplace()
-     * @covers AbstractConfig::merge()
      * @return void
      */
     public function testMergeDataWithConfigInstance()
@@ -165,7 +156,6 @@ class ConfigArrayMergeTest extends AbstractConfigTestCase
      * Asserts that the container assigns a value to the endpoint
      * {@see SeparatorAwareTrait::setWithSeparator() of the keypath}.
      *
-     * @covers AbstractConfig::offsetReplace()
      * @return void
      */
     public function testOffsetMergeOnEndKeyPath()
@@ -187,7 +177,6 @@ class ConfigArrayMergeTest extends AbstractConfigTestCase
      * Asserts that the container assigns a value to the endpoint of a nonexistent midpoint
      * {@see SeparatorAwareTrait::setWithSeparator() in the keypath}.
      *
-     * @covers AbstractConfig::offsetReplace()
      * @return void
      */
     public function testOffsetMergeOnNonexistentMidKeyPath()
@@ -208,20 +197,12 @@ class ConfigArrayMergeTest extends AbstractConfigTestCase
 
     // =========================================================================
 
-    /**
-     * @covers AbstractConfig::offsetReplace()
-     * @return void
-     */
     public function testOffsetMergeIgnoredOnZeroLengthKey()
     {
         $this->cfg->offsetReplace('', 'waldo');
         $this->assertNull($this->cfg['']);
     }
 
-    /**
-     * @covers AbstractConfig::offsetReplace()
-     * @return void
-     */
     public function testOffsetMergeIgnoredOnUnderscoreKey()
     {
         $this->cfg->offsetReplace('_', 'waldo');
@@ -231,7 +212,6 @@ class ConfigArrayMergeTest extends AbstractConfigTestCase
     /**
      * Asserts that a numeric key throws an exception, when merging a value.
      *
-     * @covers AbstractConfig::offsetReplace()
      * @return void
      */
     public function testOffsetMergeThrowsExceptionOnNumericKey()

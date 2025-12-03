@@ -9,10 +9,14 @@ use Charcoal\Tests\Config\Mock\TreeEntity;
 use Charcoal\Config\SeparatorAwareInterface;
 use Charcoal\Config\SeparatorAwareTrait;
 use InvalidArgumentException;
-use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversMethod;
 use ValueError;
 
-#[CoversClass(SeparatorAwareTrait::class)]
+#[CoversMethod(SeparatorAwareTrait::class, 'separator')]
+#[CoversMethod(SeparatorAwareTrait::class, 'setSeparator')]
+#[CoversMethod(SeparatorAwareTrait::class, 'hasWithSeparator')]
+#[CoversMethod(SeparatorAwareTrait::class, 'getWithSeparator')]
+#[CoversMethod(SeparatorAwareTrait::class, 'setWithSeparator')]
 class SeparatorAwareTest extends AbstractTestCase
 {
     use AssertionsTrait;
@@ -90,7 +94,6 @@ class SeparatorAwareTest extends AbstractTestCase
     /**
      * Asserts that the separator is disabled by default.
      *
-     * @covers SeparatorAwareTrait::separator()
      * @return void
      */
     public function testDefaultSeparatorIsEmptyString()
@@ -98,11 +101,6 @@ class SeparatorAwareTest extends AbstractTestCase
         $this->assertEmpty($this->obj->separator());
     }
 
-    /**
-     * @covers SeparatorAwareTrait::setSeparator()
-     * @covers SeparatorAwareTrait::separator()
-     * @return TreeEntity
-     */
     public function testSetSeparator()
     {
         $obj  = $this->obj;
@@ -114,11 +112,6 @@ class SeparatorAwareTest extends AbstractTestCase
         return $obj;
     }
 
-    /**
-     * @covers SeparatorAwareTrait::setSeparator()
-     * @covers SeparatorAwareTrait::separator()
-     * @return void
-     */
     public function testMutatedSeparator()
     {
         $obj = $this->obj;
@@ -130,11 +123,6 @@ class SeparatorAwareTest extends AbstractTestCase
         );
     }
 
-    /**
-     * @covers SeparatorAwareTrait::setSeparator()
-     * @covers SeparatorAwareTrait::separator()
-     * @return void
-     */
     public function testEmptySeparator()
     {
         $obj = $this->obj;
@@ -143,10 +131,6 @@ class SeparatorAwareTest extends AbstractTestCase
         $this->assertEquals('', $obj->separator());
     }
 
-    /**
-     * @covers SeparatorAwareTrait::setSeparator()
-     * @return void
-     */
     public function testSetSeparatorWithInvalidType()
     {
         $this->expectExceptionMessage('Separator must be a string');
@@ -155,10 +139,6 @@ class SeparatorAwareTest extends AbstractTestCase
         $this->obj->setSeparator(1);
     }
 
-    /**
-     * @covers SeparatorAwareTrait::setSeparator()
-     * @return void
-     */
     public function testSetSeparatorWithInvalidToken()
     {
         $this->expectExceptionMessage('Separator must be one-character, or empty');
@@ -173,7 +153,6 @@ class SeparatorAwareTest extends AbstractTestCase
     // =========================================================================
 
     /**
-     * @covers  ::hasWithSeparator()
      * @depends testSetSeparator
      *
      * @param  SeparatorAwareInterface $obj The SeparatorAwareInterface implementation to test.
@@ -185,7 +164,6 @@ class SeparatorAwareTest extends AbstractTestCase
     }
 
     /**
-     * @covers  ::hasWithSeparator()
      * @depends testSetSeparator
      *
      * @param  SeparatorAwareInterface $obj The SeparatorAwareInterface implementation to test.
@@ -197,7 +175,6 @@ class SeparatorAwareTest extends AbstractTestCase
     }
 
     /**
-     * @covers  ::hasWithSeparator()
      * @depends testSetSeparator
      *
      * @param  SeparatorAwareInterface $obj The SeparatorAwareInterface implementation to test.
@@ -209,7 +186,6 @@ class SeparatorAwareTest extends AbstractTestCase
     }
 
     /**
-     * @covers  ::hasWithSeparator()
      * @depends testSetSeparator
      *
      * @param  SeparatorAwareInterface $obj The SeparatorAwareInterface implementation to test.
@@ -221,7 +197,6 @@ class SeparatorAwareTest extends AbstractTestCase
     }
 
     /**
-     * @covers  ::hasWithSeparator()
      * @depends testSetSeparator
      *
      * @param  SeparatorAwareInterface $obj The SeparatorAwareInterface implementation to test.
@@ -233,7 +208,6 @@ class SeparatorAwareTest extends AbstractTestCase
     }
 
     /**
-     * @covers  ::hasWithSeparator()
      * @depends testSetSeparator
      *
      * @param  SeparatorAwareInterface $obj The SeparatorAwareInterface implementation to test.
@@ -245,7 +219,6 @@ class SeparatorAwareTest extends AbstractTestCase
     }
 
     /**
-     * @covers  ::hasWithSeparator()
      * @depends testSetSeparator
      *
      * @param  SeparatorAwareInterface $obj The SeparatorAwareInterface implementation to test.
@@ -260,7 +233,6 @@ class SeparatorAwareTest extends AbstractTestCase
      * @used-by self::testHasWithSeparatorWithoutDelimiterInPhp7()
      * @used-by self::testHasWithSeparatorWithoutDelimiterInPhp5()
      *
-     * @covers SeparatorAwareTrait::hasWithSeparator()
      * @return void
      */
     public function delegatedTestHasWithSeparatorWithoutDelimiter()
@@ -284,7 +256,6 @@ class SeparatorAwareTest extends AbstractTestCase
     // =========================================================================
 
     /**
-     * @covers  ::getWithSeparator()
      * @depends testSetSeparator
      *
      * @param  SeparatorAwareInterface $obj The SeparatorAwareInterface implementation to test.
@@ -299,7 +270,6 @@ class SeparatorAwareTest extends AbstractTestCase
     }
 
     /**
-     * @covers  ::getWithSeparator()
      * @depends testSetSeparator
      *
      * @param  SeparatorAwareInterface $obj The SeparatorAwareInterface implementation to test.
@@ -314,7 +284,6 @@ class SeparatorAwareTest extends AbstractTestCase
     }
 
     /**
-     * @covers  ::getWithSeparator()
      * @depends testSetSeparator
      *
      * @param  SeparatorAwareInterface $obj The SeparatorAwareInterface implementation to test.
@@ -329,7 +298,6 @@ class SeparatorAwareTest extends AbstractTestCase
     }
 
     /**
-     * @covers  ::getWithSeparator()
      * @depends testSetSeparator
      *
      * @param  SeparatorAwareInterface $obj The SeparatorAwareInterface implementation to test.
@@ -341,7 +309,6 @@ class SeparatorAwareTest extends AbstractTestCase
     }
 
     /**
-     * @covers  ::getWithSeparator()
      * @depends testSetSeparator
      *
      * @param  SeparatorAwareInterface $obj The SeparatorAwareInterface implementation to test.
@@ -353,7 +320,6 @@ class SeparatorAwareTest extends AbstractTestCase
     }
 
     /**
-     * @covers  ::getWithSeparator()
      * @depends testSetSeparator
      *
      * @param  SeparatorAwareInterface $obj The SeparatorAwareInterface implementation to test.
@@ -365,7 +331,6 @@ class SeparatorAwareTest extends AbstractTestCase
     }
 
     /**
-     * @covers  ::getWithSeparator()
      * @depends testSetSeparator
      *
      * @param  SeparatorAwareInterface $obj The SeparatorAwareInterface implementation to test.
@@ -380,7 +345,6 @@ class SeparatorAwareTest extends AbstractTestCase
      * @used-by self::testGetWithSeparatorWithoutDelimiterInPhp7()
      * @used-by self::testGetWithSeparatorWithoutDelimiterInPhp5()
      *
-     * @covers SeparatorAwareTrait::getWithSeparator()
      * @return void
      */
     public function delegatedTestGetWithSeparatorWithoutDelimiter()
@@ -404,7 +368,6 @@ class SeparatorAwareTest extends AbstractTestCase
     // =========================================================================
 
     /**
-     * @covers  ::setWithSeparator()
      * @depends testSetSeparator
      *
      * @param  SeparatorAwareInterface $obj The SeparatorAwareInterface implementation to test.
@@ -427,7 +390,6 @@ class SeparatorAwareTest extends AbstractTestCase
     }
 
     /**
-     * @covers  ::setWithSeparator()
      * @depends testSetSeparator
      *
      * @param  SeparatorAwareInterface $obj The SeparatorAwareInterface implementation to test.
@@ -440,7 +402,6 @@ class SeparatorAwareTest extends AbstractTestCase
     }
 
     /**
-     * @covers  ::setWithSeparator()
      * @depends testSetSeparator
      *
      * @param  SeparatorAwareInterface $obj The SeparatorAwareInterface implementation to test.
@@ -453,7 +414,6 @@ class SeparatorAwareTest extends AbstractTestCase
     }
 
     /**
-     * @covers  ::setWithSeparator()
      * @depends testSetSeparator
      *
      * @param  SeparatorAwareInterface $obj The SeparatorAwareInterface implementation to test.
@@ -466,7 +426,6 @@ class SeparatorAwareTest extends AbstractTestCase
     }
 
     /**
-     * @covers  ::setWithSeparator()
      * @depends testSetSeparator
      *
      * @param  SeparatorAwareInterface $obj The SeparatorAwareInterface implementation to test.
@@ -479,7 +438,6 @@ class SeparatorAwareTest extends AbstractTestCase
     }
 
     /**
-     * @covers  ::setWithSeparator()
      * @depends testSetSeparator
      *
      * @param  SeparatorAwareInterface $obj The SeparatorAwareInterface implementation to test.
@@ -492,7 +450,6 @@ class SeparatorAwareTest extends AbstractTestCase
     }
 
     /**
-     * @covers  ::setWithSeparator()
      * @depends testSetSeparator
      *
      * @param  SeparatorAwareInterface $obj The SeparatorAwareInterface implementation to test.
@@ -512,7 +469,6 @@ class SeparatorAwareTest extends AbstractTestCase
      * @used-by self::testSetWithSeparatorWithoutDelimiterInPhp7()
      * @used-by self::testSetWithSeparatorWithoutDelimiterInPhp5()
      *
-     * @covers SeparatorAwareTrait::setWithSeparator()
      * @return void
      */
     public function delegatedTestSetWithSeparatorWithoutDelimiter()

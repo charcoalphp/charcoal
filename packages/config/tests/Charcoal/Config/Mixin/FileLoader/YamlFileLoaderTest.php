@@ -4,21 +4,19 @@ namespace Charcoal\Tests\Config\Mixin\FileLoader;
 
 use LogicException;
 use ReflectionProperty;
-
 // From 'charcoal-config'
 use Charcoal\Tests\Config\Mixin\FileLoader\AbstractFileLoaderTestCase;
 use Charcoal\Config\FileAwareTrait;
 use UnexpectedValueException;
-use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversMethod;
 
-#[CoversClass(FileAwareTrait::class)]
+#[CoversMethod(FileAwareTrait::class, 'loadYamlFile')]
+#[CoversMethod(FileAwareTrait::class, 'loadFile')]
 class YamlFileLoaderTest extends AbstractFileLoaderTestCase
 {
     /**
      * Asserts that the File Loader supports '.yml' YAML config files.
      *
-     * @covers FileAwareTrait::loadYamlFile()
-     * @covers FileAwareTrait::loadFile()
      * @return void
      */
     public function testLoadFileWithYmlExtension()
@@ -41,8 +39,6 @@ class YamlFileLoaderTest extends AbstractFileLoaderTestCase
     /**
      * Asserts that the File Loader supports '.yaml' YAML config files.
      *
-     * @covers FileAwareTrait::loadYamlFile()
-     * @covers FileAwareTrait::loadFile()
      * @return void
      */
     public function testLoadFileWithYamlExtension()
@@ -67,7 +63,6 @@ class YamlFileLoaderTest extends AbstractFileLoaderTestCase
      *
      * @runInSeparateProcess
      * @preserveGlobalState disabled
-     * @covers FileAwareTrait::loadYamlFile()
      * @return void
      */
     public function testLoadFileWithNoYamlParser()
@@ -91,7 +86,6 @@ class YamlFileLoaderTest extends AbstractFileLoaderTestCase
     /**
      * Asserts that an empty file is silently ignored.
      *
-     * @covers FileAwareTrait::loadYamlFile()
      * @return void
      */
     public function testLoadEmptyFile()
@@ -105,7 +99,6 @@ class YamlFileLoaderTest extends AbstractFileLoaderTestCase
     /**
      * Asserts that a broken file is NOT ignored.
      *
-     * @covers FileAwareTrait::loadYamlFile()
      * @return void
      */
     public function testLoadMalformedFile()

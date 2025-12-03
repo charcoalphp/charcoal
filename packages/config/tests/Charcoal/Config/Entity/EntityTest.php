@@ -5,11 +5,18 @@ namespace Charcoal\Tests\Config\Entity;
 // From 'charcoal-config'
 use Charcoal\Tests\AssertionsTrait;
 use Charcoal\Tests\Config\Entity\AbstractEntityTestCase;
-use Charcoal\Tests\Config\Mock\MacroEntity;
 use Charcoal\Config\AbstractEntity;
-use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversMethod;
 
-#[CoversClass(AbstractEntity::class)]
+#[CoversMethod(AbstractEntity::class, 'keys')]
+#[CoversMethod(AbstractEntity::class, 'setData')]
+#[CoversMethod(AbstractEntity::class, 'data')]
+#[CoversMethod(AbstractEntity::class, 'offsetSet')]
+#[CoversMethod(AbstractEntity::class, 'offsetGet')]
+#[CoversMethod(AbstractEntity::class, 'camelize')]
+#[CoversMethod(AbstractEntity::class, 'jsonSerialize')]
+#[CoversMethod(AbstractEntity::class, 'serialize')]
+#[CoversMethod(AbstractEntity::class, 'unserialize')]
 class EntityTest extends AbstractEntityTestCase
 {
     use AssertionsTrait;
@@ -37,7 +44,6 @@ class EntityTest extends AbstractEntityTestCase
      * - Keys are added automatically when setting a value via {@see ArrayAccess::offsetSet()}
      * - Keys are removed automatically when unsetting a value via {@see ArrayAccess::offsetUnset()}
      *
-     * @covers AbstractEntity::keys()
      * @return void
      */
     public function testKeys()
@@ -94,8 +100,6 @@ class EntityTest extends AbstractEntityTestCase
      *   to prevent recursion calls.
      * - The key-value pair "foo" will be passed to {@see MacroEntity::setFoo()}
      *
-     * @covers AbstractEntity::setData()
-     * @covers AbstractEntity::data()
      * @return void
      */
     public function testSetData()
@@ -127,7 +131,6 @@ class EntityTest extends AbstractEntityTestCase
      * - The entity will accept "name", "type", "foo", "baz"
      * - The entity will pass "foo" to {@see MacroEntity::setFoo()}
      *
-     * @covers AbstractEntity::data()
      * @return void
      */
     public function testGetDataSubset()
@@ -148,10 +151,6 @@ class EntityTest extends AbstractEntityTestCase
     /**
      * Test {@see AbstractEntity::setData()} via {@see \ArrayAccess::offsetSet()}.
      *
-     * @covers AbstractEntity::offsetSet()
-     * @covers AbstractEntity::offsetGet()
-     * @covers AbstractEntity::setData()
-     * @covers AbstractEntity::data()
      * @return void
      */
     public function testSetDataViaArrayAccess()
@@ -183,7 +182,6 @@ class EntityTest extends AbstractEntityTestCase
      * - Keys are converted to "camelCase" for method calls or property assignments
      * - Keys are memorized as "camelCase"
      *
-     * @covers AbstractEntity::camelize()
      * @return void
      */
     public function testCamelize()
@@ -204,7 +202,6 @@ class EntityTest extends AbstractEntityTestCase
      * 1. Serialization from default state
      * 2. Serialization from mutated state
      *
-     * @covers AbstractEntity::jsonSerialize()
      * @return void
      */
     public function testJsonSerializable()
@@ -235,8 +232,6 @@ class EntityTest extends AbstractEntityTestCase
      * 1. Serialization from default state
      * 2. Serialization from mutated state
      *
-     * @covers AbstractEntity::serialize()
-     * @covers AbstractEntity::unserialize()
      * @return void
      */
     public function testSerializable()

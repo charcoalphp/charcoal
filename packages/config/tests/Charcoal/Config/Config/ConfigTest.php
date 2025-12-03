@@ -7,15 +7,12 @@ use StdClass;
 use ArrayIterator;
 use IteratorAggregate;
 use InvalidArgumentException;
-
 // From PSR-11
 use Psr\Container\ContainerInterface;
-
 // From 'charcoal-config'
 use Charcoal\Tests\Config\Config\AbstractConfigTestCase;
-use Charcoal\Tests\Config\Mock\MacroConfig;
 use Charcoal\Config\AbstractConfig;
-use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversMethod;
 
 /**
  * Test AbstractConfig
@@ -28,7 +25,11 @@ use PHPUnit\Framework\Attributes\CoversClass;
  * - ConfigFileAwareTest
  * - FileLoader/*
  */
-#[CoversClass(AbstractConfig::class)]
+#[CoversMethod(AbstractConfig::class, 'getIterator')]
+#[CoversMethod(AbstractConfig::class, '__construct')]
+#[CoversMethod(AbstractConfig::class, 'merge')]
+#[CoversMethod(AbstractConfig::class, 'setData')]
+#[CoversMethod(AbstractConfig::class, 'defaults')]
 class ConfigTest extends AbstractConfigTestCase
 {
     use AssertionsTrait;
@@ -62,7 +63,6 @@ class ConfigTest extends AbstractConfigTestCase
     /**
      * Asserts that the object implements IteratorAggregate.
      *
-     * @covers AbstractConfig::getIterator()
      * @return void
      */
     public function testIteratorAggregate()
@@ -71,11 +71,6 @@ class ConfigTest extends AbstractConfigTestCase
         $this->assertInstanceOf(ArrayIterator::class, $this->cfg->getIterator());
     }
 
-    /**
-     * @covers AbstractConfig::__construct
-     * @covers AbstractConfig::merge
-     * @return void
-     */
     public function testConstructWithArray()
     {
         $cfg = $this->mockConfig([
@@ -84,22 +79,12 @@ class ConfigTest extends AbstractConfigTestCase
         $this->assertEquals('Charcoal', $cfg['name']);
     }
 
-    /**
-     * @covers AbstractConfig::__construct
-     * @covers AbstractConfig::merge
-     * @return void
-     */
     public function testConstructWithConfigInstance()
     {
         $cfg = $this->mockConfig($this->cfg);
         $this->assertEquals('garply', $cfg['baz']);
     }
 
-    /**
-     * @covers AbstractConfig::__construct
-     * @covers AbstractConfig::merge
-     * @return void
-     */
     public function testConstructWithTraversableInstance()
     {
         $iter = new ArrayIterator([
@@ -109,12 +94,6 @@ class ConfigTest extends AbstractConfigTestCase
         $this->assertEquals('Charcoal', $cfg['name']);
     }
 
-    /**
-     *
-     * @covers AbstractConfig::__construct
-     * @covers AbstractConfig::merge
-     * @return void
-     */
     public function testConstructWithInvalidData()
     {
         $this->expectExceptionMessage('Data must be a config file, an associative array, or an object implementing Traversable');
@@ -132,9 +111,6 @@ class ConfigTest extends AbstractConfigTestCase
     /**
      * Asserts that, when defined, a Config will apply the class' default data.
      *
-     * @covers AbstractConfig::__construct
-     * @covers AbstractConfig::setData
-     * @covers AbstractConfig::defaults
      * @return void
      */
     public function testConstructWithDefaults()
@@ -174,7 +150,6 @@ class ConfigTest extends AbstractConfigTestCase
     /**
      * Asserts that, by default, a Config has no default data.
      *
-     * @covers AbstractConfig::defaults
      * @return void
      */
     public function testEmptyDefaults()

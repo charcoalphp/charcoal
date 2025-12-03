@@ -4,12 +4,13 @@ namespace Charcoal\Tests\Cache\Middleware;
 
 use Charcoal\Cache\Middleware\CacheMiddleware;
 use Nyholm\Psr7\Stream;
-use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversMethod;
 use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
-#[CoversClass(CacheMiddleware::class)]
+#[CoversMethod(CacheMiddleware::class, '__invoke')]
+#[CoversMethod(CacheMiddleware::class, 'cacheKeyFromRequest')]
 class CacheMiddlewareResponseTest extends AbstractCacheMiddlewareTestCase
 {
     /**

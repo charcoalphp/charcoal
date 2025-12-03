@@ -19,17 +19,14 @@ use Charcoal\Cache\Facade\CachePoolFacade;
 use Charcoal\Cache\Middleware\CacheMiddleware;
 use Charcoal\Cache\ServiceProvider\CacheServiceProvider;
 use Closure;
-use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversMethod;
 
-#[CoversClass(CacheServiceProvider::class)]
+#[CoversMethod(CacheServiceProvider::class, 'register')]
+#[CoversMethod(CacheServiceProvider::class, 'registerDrivers')]
+#[CoversMethod(CacheServiceProvider::class, 'registerService')]
+#[CoversMethod(CacheServiceProvider::class, 'registerMiddleware')]
 class CacheServiceProviderTest extends AbstractTestCase
 {
-    /**
-     * @covers CacheServiceProvider::register
-     * @covers CacheServiceProvider::registerDrivers
-     * @covers CacheServiceProvider::registerService
-     * @covers CacheServiceProvider::registerMiddleware
-     */
     public function testProvider()
     {
         $container = $this->providerFactory();
@@ -61,8 +58,6 @@ class CacheServiceProviderTest extends AbstractTestCase
 
     /**
      * Test "middlewares/charcoal/cache/middleware/cache" with a user-preferences.
-     *
-     * @covers CacheServiceProvider::registerMiddleware
      */
     public function testCustomizedMiddleware()
     {
@@ -86,8 +81,6 @@ class CacheServiceProviderTest extends AbstractTestCase
 
     /**
      * Test "cache/drivers"; basic drivers are instances of {@see DriverInterface}.
-     *
-     * @covers CacheServiceProvider::registerDrivers
      */
     public function testBasicDriverInstances()
     {
@@ -113,8 +106,6 @@ class CacheServiceProviderTest extends AbstractTestCase
 
     /**
      * Test "cache/drivers"; vendor drivers are instances of {@see DriverInterface}.
-     *
-     * @covers CacheServiceProvider::registerDrivers
      */
     public function testAvailableVendorDriverInstances()
     {
@@ -152,8 +143,6 @@ class CacheServiceProviderTest extends AbstractTestCase
 
     /**
      * Test "cache/drivers"; unavailable vendor drivers return NULL.
-     *
-     * @covers CacheServiceProvider::registerDrivers
      */
     public function testUnavailableVendorDriverInstances()
     {
@@ -182,9 +171,6 @@ class CacheServiceProviderTest extends AbstractTestCase
 
     /**
      * Assert "cache/driver" resolves as expected.
-     *
-     * @covers CacheServiceProvider::registerDrivers
-     * @covers CacheServiceProvider::registerService
      *
      * @dataProvider provideConfigsForMainDriver
      *

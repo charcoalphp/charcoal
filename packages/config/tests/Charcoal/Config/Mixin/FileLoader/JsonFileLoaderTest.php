@@ -6,16 +6,15 @@ namespace Charcoal\Tests\Config\Mixin\FileLoader;
 use Charcoal\Tests\Config\Mixin\FileLoader\AbstractFileLoaderTestCase;
 use Charcoal\Config\FileAwareTrait;
 use UnexpectedValueException;
-use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversMethod;
 
-#[CoversClass(FileAwareTrait::class)]
+#[CoversMethod(FileAwareTrait::class, 'loadJsonFile')]
+#[CoversMethod(FileAwareTrait::class, 'loadFile')]
 class JsonFileLoaderTest extends AbstractFileLoaderTestCase
 {
     /**
      * Asserts that the File Loader supports JSON config files.
      *
-     * @covers FileAwareTrait::loadJsonFile()
-     * @covers FileAwareTrait::loadFile()
      * @return void
      */
     public function testLoadFile()
@@ -38,7 +37,6 @@ class JsonFileLoaderTest extends AbstractFileLoaderTestCase
     /**
      * Asserts that an empty file is silently ignored.
      *
-     * @covers FileAwareTrait::loadJsonFile()
      * @return void
      */
     public function testLoadEmptyFile()
@@ -52,7 +50,6 @@ class JsonFileLoaderTest extends AbstractFileLoaderTestCase
     /**
      * Asserts that a broken file is NOT ignored.
      *
-     * @covers FileAwareTrait::loadJsonFile()
      * @return void
      */
     public function testLoadMalformedFile()

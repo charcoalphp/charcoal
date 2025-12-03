@@ -7,9 +7,9 @@ use Charcoal\Tests\Config\Mixin\FileLoader\AbstractFileLoaderTestCase;
 use Charcoal\Config\FileAwareInterface;
 use Charcoal\Config\FileAwareTrait;
 use InvalidArgumentException;
-use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversMethod;
 
-#[CoversClass(FileAwareTrait::class)]
+#[CoversMethod(FileAwareTrait::class, 'loadFile')]
 class FileAwareTest extends AbstractFileLoaderTestCase
 {
     /**
@@ -23,10 +23,6 @@ class FileAwareTest extends AbstractFileLoaderTestCase
         $this->assertInstanceOf(FileAwareInterface::class, $this->obj);
     }
 
-    /**
-     * @covers FileAwareTrait::loadFile()
-     * @return void
-     */
     public function testLoadWithUnsupportedFormat()
     {
         $this->expectExceptionMessageMatches('/^Unsupported file format for ".+?"; must be one of ".+?"$/');
@@ -36,10 +32,6 @@ class FileAwareTest extends AbstractFileLoaderTestCase
         $data = $this->obj->loadFile($path);
     }
 
-    /**
-     * @covers FileAwareTrait::loadFile()
-     * @return void
-     */
     public function testLoadWithInvalidPath()
     {
         $this->expectExceptionMessageMatches('/^File ".+?" does not exist$/');
@@ -49,10 +41,6 @@ class FileAwareTest extends AbstractFileLoaderTestCase
         $data = $this->obj->loadFile($path);
     }
 
-    /**
-     * @covers FileAwareTrait::loadFile()
-     * @return void
-     */
     public function testLoadWithInvalidType()
     {
         $this->expectExceptionMessage('File must be a string');

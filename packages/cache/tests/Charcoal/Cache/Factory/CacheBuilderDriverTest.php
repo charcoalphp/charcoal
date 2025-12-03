@@ -6,18 +6,19 @@ use StdClass;
 use InvalidArgumentException;
 // From 'charcoal-cache'
 use Charcoal\Cache\CacheBuilder;
-use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversMethod;
 
 /**
  * Test the cache driver resolution from the CacheBuilder.
  */
-#[CoversClass(CacheBuilder::class)]
+#[CoversMethod(CacheBuilder::class, 'build')]
+#[CoversMethod(CacheBuilder::class, 'isIterable')]
+#[CoversMethod(CacheBuilder::class, 'resolveDriver')]
+#[CoversMethod(CacheBuilder::class, 'resolveOneDriver')]
 class CacheBuilderDriverTest extends AbstractCacheBuilderTestCase
 {
     /**
      * Test builder with a {@see DriverInterface driver object}.
-     *
-     * @covers CacheBuilder::build
      */
     public function testBuildOnDriverInstance()
     {
@@ -35,11 +36,6 @@ class CacheBuilderDriverTest extends AbstractCacheBuilderTestCase
 
     /**
      * Test builder with a driver class.
-     *
-     * @covers CacheBuilder::build
-     * @covers CacheBuilder::isIterable
-     * @covers CacheBuilder::resolveDriver
-     * @covers CacheBuilder::resolveOneDriver
      */
     public function testBuildOnDriverClass()
     {
@@ -52,11 +48,6 @@ class CacheBuilderDriverTest extends AbstractCacheBuilderTestCase
 
     /**
      * Test builder with a named driver associated to a {@see DriverInterface driver object}.
-     *
-     * @covers CacheBuilder::build
-     * @covers CacheBuilder::isIterable
-     * @covers CacheBuilder::resolveDriver
-     * @covers CacheBuilder::resolveOneDriver
      */
     public function testBuildOnNamedDriverWithInstance()
     {
@@ -73,11 +64,6 @@ class CacheBuilderDriverTest extends AbstractCacheBuilderTestCase
 
     /**
      * Test builder with a named driver associated to a driver class.
-     *
-     * @covers CacheBuilder::build
-     * @covers CacheBuilder::isIterable
-     * @covers CacheBuilder::resolveDriver
-     * @covers CacheBuilder::resolveOneDriver
      */
     public function testBuildOnNamedDriverWithClass()
     {
@@ -96,8 +82,6 @@ class CacheBuilderDriverTest extends AbstractCacheBuilderTestCase
 
     /**
      * Test builder with an empty driver name.
-     *
-     * @covers CacheBuilder::resolveOneDriver
      */
     public function testBuildOnEmptyDriver()
     {
@@ -110,8 +94,6 @@ class CacheBuilderDriverTest extends AbstractCacheBuilderTestCase
 
     /**
      * Test builder with an invalid driver instance.
-     *
-     * @covers CacheBuilder::resolveOneDriver
      */
     public function testBuildOnInvalidDriverInstance()
     {
@@ -126,8 +108,6 @@ class CacheBuilderDriverTest extends AbstractCacheBuilderTestCase
 
     /**
      * Test builder with a named driver associated to an empty value.
-     *
-     * @covers CacheBuilder::resolveOneDriver
      */
     public function testBuildOnNamedDriverWithEmptyEntry()
     {
@@ -145,8 +125,6 @@ class CacheBuilderDriverTest extends AbstractCacheBuilderTestCase
 
     /**
      * Test builder with a named driver associated to an invalid instance.
-     *
-     * @covers CacheBuilder::resolveOneDriver
      */
     public function testBuildOnNamedDriverWithBadEntry()
     {
@@ -165,8 +143,6 @@ class CacheBuilderDriverTest extends AbstractCacheBuilderTestCase
 
     /**
      * Test builder with an invalid driver class.
-     *
-     * @covers CacheBuilder::resolveOneDriver
      */
     public function testBuildOnInvalidDriverClass()
     {
@@ -186,11 +162,6 @@ class CacheBuilderDriverTest extends AbstractCacheBuilderTestCase
 
     /**
      * Test builder with an array of {@see DriverInterface driver objects}.
-     *
-     * @covers CacheBuilder::build
-     * @covers CacheBuilder::isIterable
-     * @covers CacheBuilder::resolveDriver
-     * @covers CacheBuilder::resolveOneDriver
      */
     public function testBuildOnArrayOfDriverInstances()
     {
@@ -205,8 +176,6 @@ class CacheBuilderDriverTest extends AbstractCacheBuilderTestCase
 
     /**
      * Test builder with an invalid array of drivers.
-     *
-     * @covers CacheBuilder::resolveDriver
      */
     public function testBuildOnArrayOfInvalidDrivers()
     {

@@ -46,7 +46,6 @@ trait ArrayAccessTestTrait
     // =========================================================================
 
     /**
-     * @covers  ::offsetGet()
      * @depends testArrayAccess
      *
      * @param  ArrayAccess $obj The ArrayAccess implementation to test.
@@ -58,7 +57,6 @@ trait ArrayAccessTestTrait
     }
 
     /**
-     * @covers  ::offsetExists()
      * @depends testArrayAccess
      *
      * @param  ArrayAccess $obj The ArrayAccess implementation to test.
@@ -75,7 +73,6 @@ trait ArrayAccessTestTrait
     // =========================================================================
 
     /**
-     * @covers  ::offsetGet()
      * @depends testArrayAccess
      *
      * @param  ArrayAccess $obj The ArrayAccess implementation to test.
@@ -87,7 +84,6 @@ trait ArrayAccessTestTrait
     }
 
     /**
-     * @covers  ::offsetExists()
      * @depends testArrayAccess
      *
      * @param  ArrayAccess $obj The ArrayAccess implementation to test.
@@ -99,7 +95,6 @@ trait ArrayAccessTestTrait
     }
 
     /**
-     * @covers  ::offsetSet()
      * @depends testArrayAccess
      *
      * @param  ArrayAccess $obj The ArrayAccess implementation to test.
@@ -112,7 +107,6 @@ trait ArrayAccessTestTrait
     }
 
     /**
-     * @covers  ::offsetUnset()
      * @depends testArrayAccess
      *
      * @param  ArrayAccess $obj The ArrayAccess implementation to test.
@@ -130,7 +124,6 @@ trait ArrayAccessTestTrait
     // =========================================================================
 
     /**
-     * @covers  ::offsetGet()
      * @depends testArrayAccess
      *
      * @param  ArrayAccess $obj The ArrayAccess implementation to test.
@@ -142,7 +135,6 @@ trait ArrayAccessTestTrait
     }
 
     /**
-     * @covers  ::offsetExists()
      * @depends testArrayAccess
      *
      * @param  ArrayAccess $obj The ArrayAccess implementation to test.
@@ -154,7 +146,6 @@ trait ArrayAccessTestTrait
     }
 
     /**
-     * @covers  ::offsetSet()
      * @depends testArrayAccess
      *
      * @param  ArrayAccess $obj The ArrayAccess implementation to test.
@@ -167,7 +158,6 @@ trait ArrayAccessTestTrait
     }
 
     /**
-     * @covers  ::offsetUnset()
      * @depends testArrayAccess
      *
      * @param  ArrayAccess $obj The ArrayAccess implementation to test.
@@ -186,7 +176,6 @@ trait ArrayAccessTestTrait
     /**
      * Asserts that a numeric key throws an exception, when retrieving a value.
      *
-     * @covers  ::offsetGet()
      * @depends testArrayAccess
      *
      * @param  ArrayAccess $obj The ArrayAccess implementation to test.
@@ -201,7 +190,6 @@ trait ArrayAccessTestTrait
     /**
      * Asserts that a numeric key throws an exception, when assigning a value.
      *
-     * @covers  ::offsetSet()
      * @depends testArrayAccess
      *
      * @param  ArrayAccess $obj The ArrayAccess implementation to test.
@@ -216,7 +204,6 @@ trait ArrayAccessTestTrait
     /**
      * Asserts that a numeric key throws an exception, when looking up if a key/value exists.
      *
-     * @covers  ::offsetExists()
      * @depends testArrayAccess
      *
      * @param  ArrayAccess $obj The ArrayAccess implementation to test.
@@ -231,7 +218,6 @@ trait ArrayAccessTestTrait
     /**
      * Asserts that a numeric key throws an exception, when deleting a key/value.
      *
-     * @covers  ::offsetUnset()
      * @depends testArrayAccess
      *
      * @param  ArrayAccess $obj The ArrayAccess implementation to test.

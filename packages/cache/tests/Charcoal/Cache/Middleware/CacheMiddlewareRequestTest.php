@@ -3,10 +3,18 @@
 namespace Charcoal\Tests\Cache\Middleware;
 
 use Charcoal\Cache\Middleware\CacheMiddleware;
-use PHPUnit\Framework\Attributes\CoversClass;
 use Psr\Http\Server\RequestHandlerInterface;
+use PHPUnit\Framework\Attributes\CoversMethod;
 
-#[CoversClass(CacheMiddleware::class)]
+#[CoversMethod(CacheMiddleware::class, '__invoke')]
+#[CoversMethod(CacheMiddleware::class, 'isRequestMethodValid')]
+#[CoversMethod(CacheMiddleware::class, 'isResponseStatusValid')]
+#[CoversMethod(CacheMiddleware::class, 'isPathIncluded')]
+#[CoversMethod(CacheMiddleware::class, 'isPathExcluded')]
+#[CoversMethod(CacheMiddleware::class, 'isQueryIncluded')]
+#[CoversMethod(CacheMiddleware::class, 'isQueryExcluded')]
+#[CoversMethod(CacheMiddleware::class, 'parseIgnoredParams')]
+#[CoversMethod(CacheMiddleware::class, 'disableCacheHeadersOnResponse')]
 class CacheMiddlewareRequestTest extends AbstractCacheMiddlewareTestCase
 {
     /**
@@ -31,16 +39,6 @@ class CacheMiddlewareRequestTest extends AbstractCacheMiddlewareTestCase
 
     /**
      * Test middleware with an invalid HTTP request method.
-     *
-     * @covers CacheMiddleware::__invoke
-     * @covers CacheMiddleware::isRequestMethodValid
-     * @covers CacheMiddleware::isResponseStatusValid
-     * @covers CacheMiddleware::isPathIncluded
-     * @covers CacheMiddleware::isPathExcluded
-     * @covers CacheMiddleware::isQueryIncluded
-     * @covers CacheMiddleware::isQueryExcluded
-     * @covers CacheMiddleware::parseIgnoredParams
-     * @covers CacheMiddleware::disableCacheHeadersOnResponse
      *
      * @dataProvider provideInvokableSituations
      *

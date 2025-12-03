@@ -7,12 +7,17 @@ use Charcoal\Tests\Config\Config\AbstractConfigTestCase;
 use Charcoal\Tests\Config\Mock\MacroConfig;
 use Charcoal\Config\AbstractConfig;
 use Charcoal\Config\DelegatesAwareInterface;
-use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversMethod;
 
 /**
  * Test DelegatesAwareTrait implementation in AbstractConfig
  */
-#[CoversClass(AbstractConfig::class)]
+#[CoversMethod(AbstractConfig::class, '__construct')]
+#[CoversMethod(AbstractConfig::class, 'setDelegates')]
+#[CoversMethod(AbstractConfig::class, 'addDelegate')]
+#[CoversMethod(AbstractConfig::class, 'prependDelegate')]
+#[CoversMethod(AbstractConfig::class, 'offsetExists')]
+#[CoversMethod(AbstractConfig::class, 'offsetGet')]
 class ConfigDelegatesAwareTest extends AbstractConfigTestCase
 {
     /**
@@ -76,13 +81,6 @@ class ConfigDelegatesAwareTest extends AbstractConfigTestCase
     // Test Delegate Collecting
     // =========================================================================
 
-    /**
-     * @covers AbstractConfig::__construct()
-     * @covers AbstractConfig::setDelegates()
-     * @covers AbstractConfig::addDelegate()
-     * @covers AbstractConfig::prependDelegate()
-     * @return void
-     */
     public function testSetDelegates()
     {
         $cfg = $this->createConfig(null, [ $this->delegates[0] ]);
@@ -104,7 +102,6 @@ class ConfigDelegatesAwareTest extends AbstractConfigTestCase
      * Asserts that the delegate container returns TRUE if a data key is found
      * {@see DelegatesAwareTrait::hasInDelegates() among its delegates}.
      *
-     * @covers AbstractConfig::offsetExists()
      * @return void
      */
     public function testOffsetExistsInDelegates()
@@ -120,7 +117,6 @@ class ConfigDelegatesAwareTest extends AbstractConfigTestCase
      * Asserts that the delegate container returns FALSE if a data key is nonexistent
      * {@see DelegatesAwareTrait::hasInDelegates() among its delegates}.
      *
-     * @covers AbstractConfig::offsetExists()
      * @return void
      */
     public function testOffsetExistsReturnsFalseOnNonexistentKeyInDelegates()
@@ -135,7 +131,6 @@ class ConfigDelegatesAwareTest extends AbstractConfigTestCase
      * Asserts that the delegate container returns the value of a data key found
      * {@see DelegatesAwareTrait::getInDelegates() among its delegates}.
      *
-     * @covers AbstractConfig::offsetGet()
      * @return void
      */
     public function testOffsetGetInDelegates()
@@ -151,7 +146,6 @@ class ConfigDelegatesAwareTest extends AbstractConfigTestCase
      * Asserts that the delegate container returns NULL if a data key is nonexistent
      * {@see DelegatesAwareTrait::getInDelegates() among its delegates}.
      *
-     * @covers AbstractConfig::offsetExists()
      * @return void
      */
     public function testOffsetGetReturnsNullOnNonexistentKeyInDelegates()

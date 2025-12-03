@@ -8,9 +8,13 @@ use Charcoal\Tests\Config\Mock\DelegateEntity;
 use Charcoal\Tests\Config\Mock\Entity;
 use Charcoal\Config\DelegatesAwareInterface;
 use Charcoal\Config\DelegatesAwareTrait;
-use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversMethod;
 
-#[CoversClass(DelegatesAwareTrait::class)]
+#[CoversMethod(DelegatesAwareTrait::class, 'setDelegates')]
+#[CoversMethod(DelegatesAwareTrait::class, 'addDelegate')]
+#[CoversMethod(DelegatesAwareTrait::class, 'prependDelegate')]
+#[CoversMethod(DelegatesAwareTrait::class, 'hasInDelegates')]
+#[CoversMethod(DelegatesAwareTrait::class, 'getInDelegates')]
 class DelegatesAwareTest extends AbstractTestCase
 {
     /**
@@ -103,12 +107,6 @@ class DelegatesAwareTest extends AbstractTestCase
         $this->assertEmpty($this->obj->delegates());
     }
 
-    /**
-     * @covers DelegatesAwareTrait::setDelegates()
-     * @covers DelegatesAwareTrait::addDelegate()
-     * @covers DelegatesAwareTrait::prependDelegate()
-     * @return void
-     */
     public function testSetDelegates()
     {
         $obj = $this->obj;
@@ -154,7 +152,6 @@ class DelegatesAwareTest extends AbstractTestCase
     // =========================================================================
 
     /**
-     * @covers  ::hasInDelegates()
      * @depends testSetNestedDelegates
      *
      * @see    self::$delegates[1]['bubble']
@@ -167,7 +164,6 @@ class DelegatesAwareTest extends AbstractTestCase
     }
 
     /**
-     * @covers  ::hasInDelegates()
      * @depends testSetNestedDelegates
      *
      * @param  DelegatesAwareInterface $obj The DelegatesAwareInterface implementation to test.
@@ -185,7 +181,6 @@ class DelegatesAwareTest extends AbstractTestCase
     // =========================================================================
 
     /**
-     * @covers  ::getInDelegates()
      * @depends testSetNestedDelegates
      *
      * @see    self::$delegates[2]['level']
@@ -201,7 +196,6 @@ class DelegatesAwareTest extends AbstractTestCase
     }
 
     /**
-     * @covers  ::getInDelegates()
      * @depends testSetNestedDelegates
      *
      * @param  DelegatesAwareInterface $obj The DelegatesAwareInterface implementation to test.

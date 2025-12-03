@@ -6,16 +6,15 @@ namespace Charcoal\Tests\Config\Mixin\FileLoader;
 use Charcoal\Tests\Config\Mixin\FileLoader\AbstractFileLoaderTestCase;
 use Charcoal\Config\FileAwareTrait;
 use UnexpectedValueException;
-use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversMethod;
 
-#[CoversClass(FileAwareTrait::class)]
+#[CoversMethod(FileAwareTrait::class, 'loadIniFile')]
+#[CoversMethod(FileAwareTrait::class, 'loadFile')]
 class IniFileLoaderTest extends AbstractFileLoaderTestCase
 {
     /**
      * Asserts that the File Loader supports INI config files.
      *
-     * @covers FileAwareTrait::loadIniFile()
-     * @covers FileAwareTrait::loadFile()
      * @return void
      */
     public function testLoadFile()
@@ -39,7 +38,6 @@ class IniFileLoaderTest extends AbstractFileLoaderTestCase
      * Asserts that the File Loader does NOT support key-paths in INI config files.
      *
      * @see    \Charcoal\Tests\Config\Config\ConfigFileAwareTest::testLoadIniFileWithDelimitedData
-     * @covers FileAwareTrait::loadIniFile()
      * @return void
      */
     public function testLoadFileWithDelimitedData()
@@ -62,7 +60,6 @@ class IniFileLoaderTest extends AbstractFileLoaderTestCase
     /**
      * Asserts that an empty file is silently ignored.
      *
-     * @covers FileAwareTrait::loadIniFile()
      * @return void
      */
     public function testLoadEmptyFile()
@@ -76,7 +73,6 @@ class IniFileLoaderTest extends AbstractFileLoaderTestCase
     /**
      * Asserts that a broken file is NOT ignored.
      *
-     * @covers FileAwareTrait::loadIniFile()
      * @return void
      */
     public function testLoadMalformedFile()
@@ -93,7 +89,6 @@ class IniFileLoaderTest extends AbstractFileLoaderTestCase
     /**
      * Asserts that an unparsable file is silently ignored.
      *
-     * @covers FileAwareTrait::loadIniFile()
      * @return void
      */
     public function testLoadUnparsableFile()

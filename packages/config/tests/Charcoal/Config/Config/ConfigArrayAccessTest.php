@@ -3,18 +3,20 @@
 namespace Charcoal\Tests\Config\Config;
 
 use ArrayAccess;
-
 // From 'charcoal-config'
 use Charcoal\Tests\Config\Config\AbstractConfigTestCase;
 use Charcoal\Tests\Config\Mixin\ArrayAccessTestTrait;
 use Charcoal\Tests\Config\Mock\MacroConfig;
 use Charcoal\Config\AbstractConfig;
-use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversMethod;
 
 /**
  * Test ArrayAccess implementation in AbstractConfig
  */
-#[CoversClass(AbstractConfig::class)]
+#[CoversMethod(AbstractConfig::class, 'offsetExists')]
+#[CoversMethod(AbstractConfig::class, 'offsetGet')]
+#[CoversMethod(AbstractConfig::class, 'offsetSet')]
+#[CoversMethod(AbstractConfig::class, 'offsetUnset')]
 class ConfigArrayAccessTest extends AbstractConfigTestCase
 {
     use ArrayAccessTestTrait;
@@ -55,10 +57,6 @@ class ConfigArrayAccessTest extends AbstractConfigTestCase
     // Test ArrayAccess on non-private properties
     // =========================================================================
 
-    /**
-     * @covers AbstractConfig::offsetExists()
-     * @return void
-     */
     public function testOffsetExists()
     {
         $cfg = $this->cfg;
@@ -74,10 +72,6 @@ class ConfigArrayAccessTest extends AbstractConfigTestCase
         $this->assertTrue(isset($cfg['erd']));
     }
 
-    /**
-     * @covers AbstractConfig::offsetGet()
-     * @return void
-     */
     public function testOffsetGet()
     {
         $cfg = $this->cfg;
@@ -92,10 +86,6 @@ class ConfigArrayAccessTest extends AbstractConfigTestCase
         $this->assertEquals(true, $cfg['erd']);
     }
 
-    /**
-     * @covers AbstractConfig::offsetSet()
-     * @return void
-     */
     public function testOffsetSet()
     {
         $cfg = $this->cfg;
@@ -105,10 +95,6 @@ class ConfigArrayAccessTest extends AbstractConfigTestCase
         $this->assertEquals('waldo', $cfg['baz']);
     }
 
-    /**
-     * @covers AbstractConfig::offsetUnset()
-     * @return void
-     */
     public function testOffsetUnset()
     {
         $cfg = $this->cfg;
@@ -123,11 +109,6 @@ class ConfigArrayAccessTest extends AbstractConfigTestCase
     // Test ArrayAccess on encapsulated properties
     // =========================================================================
 
-    /**
-     * @covers \Charcoal\Tests\Config\Mock\MacroConfig::foo()
-     * @covers AbstractConfig::offsetExists()
-     * @return void
-     */
     public function testOffsetExistsOnEncapsulatedMethod()
     {
         $cfg = $this->cfg;
@@ -136,11 +117,6 @@ class ConfigArrayAccessTest extends AbstractConfigTestCase
         $this->assertTrue(isset($cfg['foo']));
     }
 
-    /**
-     * @covers \Charcoal\Tests\Config\Mock\MacroConfig::foo()
-     * @covers AbstractConfig::offsetGet()
-     * @return void
-     */
     public function testOffsetGetOnEncapsulatedMethod()
     {
         $cfg = $this->cfg;
@@ -148,11 +124,6 @@ class ConfigArrayAccessTest extends AbstractConfigTestCase
         $this->assertEquals('foo is 20', $cfg['foo']);
     }
 
-    /**
-     * @covers \Charcoal\Tests\Config\Mock\MacroConfig::setFoo()
-     * @covers AbstractConfig::offsetSet()
-     * @return void
-     */
     public function testOffsetSetOnEncapsulatedMethod()
     {
         $cfg = $this->cfg;
@@ -161,11 +132,6 @@ class ConfigArrayAccessTest extends AbstractConfigTestCase
         $this->assertEquals('foo is 42', $cfg['foo']);
     }
 
-    /**
-     * @covers \Charcoal\Tests\Config\Mock\MacroConfig::setFoo()
-     * @covers AbstractConfig::offsetUnset()
-     * @return void
-     */
     public function testOffsetUnsetOnEncapsulatedMethod()
     {
         $cfg = $this->cfg;

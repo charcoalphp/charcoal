@@ -6,16 +6,15 @@ namespace Charcoal\Tests\Config\Mixin\FileLoader;
 use Charcoal\Tests\Config\Mixin\FileLoader\AbstractFileLoaderTestCase;
 use Charcoal\Config\FileAwareTrait;
 use UnexpectedValueException;
-use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversMethod;
 
-#[CoversClass(FileAwareTrait::class)]
+#[CoversMethod(FileAwareTrait::class, 'loadPhpFile')]
+#[CoversMethod(FileAwareTrait::class, 'loadFile')]
 class PhpFileLoaderTest extends AbstractFileLoaderTestCase
 {
     /**
      * Asserts that the File Loader supports PHP config files.
      *
-     * @covers FileAwareTrait::loadPhpFile()
-     * @covers FileAwareTrait::loadFile()
      * @return void
      */
     public function testLoadFile()
@@ -38,7 +37,6 @@ class PhpFileLoaderTest extends AbstractFileLoaderTestCase
     /**
      * Asserts that the scope of PHP config files is bound to the File Loader.
      *
-     * @covers FileAwareTrait::loadPhpFile()
      * @return void
      */
     public function testLoadFileThatMutatesContext()
@@ -53,7 +51,6 @@ class PhpFileLoaderTest extends AbstractFileLoaderTestCase
     /**
      * Asserts that an empty file is silently ignored.
      *
-     * @covers FileAwareTrait::loadPhpFile()
      * @return void
      */
     public function testLoadEmptyFile()
@@ -68,7 +65,6 @@ class PhpFileLoaderTest extends AbstractFileLoaderTestCase
      * Asserts that a broken file is NOT ignored.
      *
      * @requires PHP >= 7.0
-     * @covers   ::loadPhpFile()
      * @return   void
      */
     public function testLoadMalformedFileInPhp7()
@@ -85,7 +81,6 @@ class PhpFileLoaderTest extends AbstractFileLoaderTestCase
     /**
      * Asserts that an exception thrown within the file is caught.
      *
-     * @covers FileAwareTrait::loadPhpFile()
      * @return void
      */
     public function testLoadExceptionalFile()

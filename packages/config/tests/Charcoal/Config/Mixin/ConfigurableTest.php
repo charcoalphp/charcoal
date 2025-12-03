@@ -12,9 +12,11 @@ use Charcoal\Config\ConfigurableTrait;
 use Charcoal\Config\ConfigInterface;
 use Charcoal\Config\GenericConfig;
 use InvalidArgumentException;
-use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversMethod;
 
-#[CoversClass(ConfigurableTrait::class)]
+#[CoversMethod(ConfigurableTrait::class, 'createConfig')]
+#[CoversMethod(ConfigurableTrait::class, 'setConfig')]
+#[CoversMethod(ConfigurableTrait::class, 'config')]
 class ConfigurableTest extends AbstractTestCase
 {
     use AssertionsTrait;
@@ -91,11 +93,6 @@ class ConfigurableTest extends AbstractTestCase
     // Test SetConfig
     // =========================================================================
 
-    /**
-     * @covers ConfigurableTrait::createConfig()
-     * @covers ConfigurableTrait::setConfig()
-     * @return void
-     */
     public function testSetConfigWithString()
     {
         $path = $this->getPathToFixture('pass/valid.json');
@@ -107,11 +104,6 @@ class ConfigurableTest extends AbstractTestCase
         $this->assertJsonStringEqualsJsonFile($path, json_encode($cfg));
     }
 
-    /**
-     * @covers ConfigurableTrait::createConfig()
-     * @covers ConfigurableTrait::setConfig()
-     * @return ConfigurableInterface
-     */
     public function testSetConfigWithArray()
     {
         $this->obj->setConfig($this->data);
@@ -123,11 +115,6 @@ class ConfigurableTest extends AbstractTestCase
         return $this->obj;
     }
 
-    /**
-     * @covers ConfigurableTrait::createConfig()
-     * @covers ConfigurableTrait::setConfig()
-     * @return void
-     */
     public function testSetConfigWithConfigInstance()
     {
         $this->obj->setConfig($this->cfg);
@@ -137,10 +124,6 @@ class ConfigurableTest extends AbstractTestCase
         $this->assertArraySubsets($this->data, $cfg->data());
     }
 
-    /**
-     * @covers ConfigurableTrait::setConfig()
-     * @return void
-     */
     public function testSetConfigWithInvalidData()
     {
         $this->expectExceptionMessage('Configset must be an associative array, a file path, or an instance of Charcoal\Config\ConfigInterface');
@@ -159,8 +142,6 @@ class ConfigurableTest extends AbstractTestCase
      * Asserts that the object will create a new Config
      * if one has not been assigned to object.
      *
-     * @covers ConfigurableTrait::createConfig()
-     * @covers ConfigurableTrait::config()
      * @return void
      */
     public function testGetConfigCreatesConfig()
@@ -170,7 +151,6 @@ class ConfigurableTest extends AbstractTestCase
     }
 
     /**
-     * @covers  ::config()
      * @depends testSetConfigWithArray
      *
      * @param  ConfigurableInterface $obj The ConfigurableInterface implementation to test.
@@ -183,7 +163,6 @@ class ConfigurableTest extends AbstractTestCase
     }
 
     /**
-     * @covers  ::config()
      * @depends testSetConfigWithArray
      *
      * @param  ConfigurableInterface $obj The ConfigurableInterface implementation to test.
@@ -195,7 +174,6 @@ class ConfigurableTest extends AbstractTestCase
     }
 
     /**
-     * @covers  ::config()
      * @depends testSetConfigWithArray
      *
      * @param  ConfigurableInterface $obj The ConfigurableInterface implementation to test.
@@ -207,7 +185,6 @@ class ConfigurableTest extends AbstractTestCase
     }
 
     /**
-     * @covers  ::config()
      * @depends testSetConfigWithArray
      *
      * @param  ConfigurableInterface $obj The ConfigurableInterface implementation to test.
@@ -220,7 +197,6 @@ class ConfigurableTest extends AbstractTestCase
     }
 
     /**
-     * @covers  ::config()
      * @depends testSetConfigWithArray
      *
      * @param  ConfigurableInterface $obj The ConfigurableInterface implementation to test.
@@ -235,7 +211,6 @@ class ConfigurableTest extends AbstractTestCase
     }
 
     /**
-     * @covers  ::config()
      * @depends testSetConfigWithArray
      *
      * @param  ConfigurableInterface $obj The ConfigurableInterface implementation to test.
@@ -248,7 +223,6 @@ class ConfigurableTest extends AbstractTestCase
     }
 
     /**
-     * @covers  ::config()
      * @depends testSetConfigWithArray
      *
      * @param  ConfigurableInterface $obj The ConfigurableInterface implementation to test.

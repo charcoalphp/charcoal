@@ -10,14 +10,21 @@ use DateTimeInterface;
 use Charcoal\Tests\AbstractTestCase;
 use Charcoal\Tests\Cache\CachePoolTrait;
 use Charcoal\Cache\Facade\CachePoolFacade;
-use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversMethod;
 
 /**
  * Test CachePoolFacade
  *
  * This class is based on {@see \Stash\Test\AbstractPoolTest}.
  */
-#[CoversClass(CachePoolFacade::class)]
+#[CoversMethod(CachePoolFacade::class, '__construct')]
+#[CoversMethod(CachePoolFacade::class, 'get')]
+#[CoversMethod(CachePoolFacade::class, 'save')]
+#[CoversMethod(CachePoolFacade::class, 'has')]
+#[CoversMethod(CachePoolFacade::class, 'set')]
+#[CoversMethod(CachePoolFacade::class, 'delete')]
+#[CoversMethod(CachePoolFacade::class, 'defaultTtl')]
+#[CoversMethod(CachePoolFacade::class, 'setDefaultTtl')]
 class CachePoolFacadeTest extends AbstractTestCase
 {
     use CachePoolTrait;
@@ -68,9 +75,6 @@ class CachePoolFacadeTest extends AbstractTestCase
         return new CachePoolFacade($args);
     }
 
-    /**
-     * @covers CachePoolFacade::__construct
-     */
     public function testConstruct()
     {
         $facade = $this->facadeFactory([
@@ -80,12 +84,6 @@ class CachePoolFacadeTest extends AbstractTestCase
         $this->assertInstanceOf(CachePoolFacade::class, $facade);
     }
 
-    /**
-     * @covers CachePoolFacade::get
-     * @covers CachePoolFacade::save
-     *
-     * @return void
-     */
     public function testGet()
     {
         $facade = $this->facadeFactory();
@@ -104,11 +102,6 @@ class CachePoolFacadeTest extends AbstractTestCase
         $this->assertEquals($this->data, $data);
     }
 
-    /**
-     * @covers CachePoolFacade::has
-     *
-     * @return void
-     */
     public function testHas()
     {
         $facade = $this->facadeFactory();
@@ -120,9 +113,6 @@ class CachePoolFacadeTest extends AbstractTestCase
     }
 
     /**
-     * @covers CachePoolFacade::set
-     * @covers CachePoolFacade::save
-     *
      * @return CachePoolFacade To use the same cache pool facade for the next test.
      */
     public function testSet()
@@ -143,7 +133,6 @@ class CachePoolFacadeTest extends AbstractTestCase
 
     /**
      * @depends testSet
-     * @covers  ::delete
      *
      * @param  CachePoolFacade $facade The cache pool facade from the previous test.
      * @return void
@@ -161,8 +150,6 @@ class CachePoolFacadeTest extends AbstractTestCase
 
     /**
      * Test a numeric expiration time for this cache item.
-     *
-     * @covers CachePoolFacade::save
      *
      * @dataProvider provideTtlOnSave
      *
@@ -223,12 +210,6 @@ class CachePoolFacadeTest extends AbstractTestCase
         return $data;
     }
 
-    /**
-     * @covers CachePoolFacade::defaultTtl
-     * @covers CachePoolFacade::setDefaultTtl
-     *
-     * @return void
-     */
     public function testSetDefaultTtl()
     {
         $time = new \DateInterval('P1D');

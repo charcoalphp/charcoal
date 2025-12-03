@@ -13,12 +13,12 @@ use Nyholm\Psr7\Stream;
 use Charcoal\Tests\AbstractTestCase;
 use Charcoal\Tests\Cache\CachePoolTrait;
 use Charcoal\Tests\Mocks\DefaultsAwareCacheMiddlewares as CacheMiddleware;
-use PHPUnit\Framework\Attributes\CoversClass;
 use Nyholm\Psr7\Uri;
 use Psr\Http\Server\RequestHandlerInterface;
-use \Charcoal\Cache\Middleware\CacheMiddleware as CharcoalCacheMiddleware;
+use Charcoal\Cache\Middleware\CacheMiddleware as CharcoalCacheMiddleware;
+use PHPUnit\Framework\Attributes\CoversMethod;
 
-#[CoversClass(CharcoalCacheMiddleware::class)]
+#[CoversMethod(CharcoalCacheMiddleware::class, 'disableCacheHeadersOnResponse')]
 abstract class AbstractCacheMiddlewareTestCase extends AbstractTestCase
 {
     use CachePoolTrait;
@@ -172,8 +172,6 @@ abstract class AbstractCacheMiddlewareTestCase extends AbstractTestCase
 
     /**
      * Reports an error if the HTTP response headers does not have disabled cache headers.
-     *
-     * @covers CharcoalCacheMiddleware::disableCacheHeadersOnResponse
      *
      * @param  array $headers The HTTP response headers to test.
      * @return void

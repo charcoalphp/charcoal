@@ -8,15 +8,12 @@ use Stash\Pool;
 use Charcoal\Tests\AbstractTestCase;
 use Charcoal\Tests\Mocks\CachePoolAware;
 use Charcoal\Cache\CachePoolAwareTrait;
-use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversMethod;
 
-#[CoversClass(CachePoolAwareTrait::class)]
+#[CoversMethod(CachePoolAwareTrait::class, 'setCachePool')]
+#[CoversMethod(CachePoolAwareTrait::class, 'cachePool')]
 class CachePoolAwareTest extends AbstractTestCase
 {
-    /**
-     * @covers CachePoolAwareTrait::setCachePool
-     * @covers CachePoolAwareTrait::cachePool
-     */
     public function testCachePool()
     {
         $obj  = new CachePoolAware();
@@ -28,7 +25,6 @@ class CachePoolAwareTest extends AbstractTestCase
 
     /**
      * testSetPrefixOnInvalidValue
-     * @covers CachePoolAwareTrait::cachePool
      */
     public function testMissingPool()
     {

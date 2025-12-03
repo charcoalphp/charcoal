@@ -6,9 +6,21 @@ use InvalidArgumentException;
 // From 'charcoal-cache'
 use Charcoal\Tests\AbstractTestCase;
 use Charcoal\Cache\CacheConfig;
-use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversMethod;
 
-#[CoversClass(CacheConfig::class)]
+#[CoversMethod(CacheConfig::class, 'defaults')]
+#[CoversMethod(CacheConfig::class, 'active')]
+#[CoversMethod(CacheConfig::class, 'types')]
+#[CoversMethod(CacheConfig::class, 'defaultTypes')]
+#[CoversMethod(CacheConfig::class, 'defaultTtl')]
+#[CoversMethod(CacheConfig::class, 'prefix')]
+#[CoversMethod(CacheConfig::class, 'setActive')]
+#[CoversMethod(CacheConfig::class, 'setTypes')]
+#[CoversMethod(CacheConfig::class, 'addTypes')]
+#[CoversMethod(CacheConfig::class, 'addType')]
+#[CoversMethod(CacheConfig::class, 'validTypes')]
+#[CoversMethod(CacheConfig::class, 'setDefaultTtl')]
+#[CoversMethod(CacheConfig::class, 'setPrefix')]
 class CacheConfigTest extends AbstractTestCase
 {
     /**
@@ -35,14 +47,6 @@ class CacheConfigTest extends AbstractTestCase
         return new CacheConfig($args);
     }
 
-    /**
-     * @covers CacheConfig::defaults
-     * @covers CacheConfig::active
-     * @covers CacheConfig::types
-     * @covers CacheConfig::defaultTypes
-     * @covers CacheConfig::defaultTtl
-     * @covers CacheConfig::prefix
-     */
     public function testDefaults()
     {
         $this->assertEquals('charcoal', CacheConfig::DEFAULT_NAMESPACE);
@@ -66,10 +70,6 @@ class CacheConfigTest extends AbstractTestCase
         $this->assertEquals($defaults['prefix'], $this->cfg->prefix());
     }
 
-    /**
-     * @covers CacheConfig::setActive
-     * @covers CacheConfig::active
-     */
     public function testActive()
     {
         // Chainable
@@ -80,10 +80,6 @@ class CacheConfigTest extends AbstractTestCase
         $this->assertFalse($this->cfg->active());
     }
 
-    /**
-     * @covers CacheConfig::setTypes
-     * @covers CacheConfig::types
-     */
     public function testReplaceDrivers()
     {
         // Chainable
@@ -95,9 +91,6 @@ class CacheConfigTest extends AbstractTestCase
         $this->assertEquals([ 'memcache', 'noop', 'memory' ], $types);
     }
 
-    /**
-     * @covers CacheConfig::types
-     */
     public function testUniqueDrivers()
     {
         $this->cfg->setTypes([ 'memcache', 'memory', 'file', 'memcache' ]);
@@ -106,11 +99,6 @@ class CacheConfigTest extends AbstractTestCase
         $this->assertEquals([ 'memcache', 'memory', 'file' ], $types);
     }
 
-    /**
-     * @covers CacheConfig::addTypes
-     * @covers CacheConfig::addType
-     * @covers CacheConfig::types
-     */
     public function testAddDrivers()
     {
         // Chainable
@@ -124,10 +112,6 @@ class CacheConfigTest extends AbstractTestCase
         $this->assertContains('noop', $types);
     }
 
-    /**
-     * @covers CacheConfig::validTypes
-     * @covers CacheConfig::addType
-     */
     public function testAddDriverOnInvalidType()
     {
         $this->expectExceptionMessage('Invalid cache type: "foobar"');
@@ -135,10 +119,6 @@ class CacheConfigTest extends AbstractTestCase
         $this->cfg->addType('foobar');
     }
 
-    /**
-     * @covers CacheConfig::setDefaultTtl
-     * @covers CacheConfig::defaultTtl
-     */
     public function testDefaultTtl()
     {
         // Chainable
@@ -149,9 +129,6 @@ class CacheConfigTest extends AbstractTestCase
         $this->assertEquals(42, $this->cfg->defaultTtl());
     }
 
-    /**
-     * @covers CacheConfig::setDefaultTtl
-     */
     public function testSetDefaultTtlOnInvalidType()
     {
         $this->expectException(InvalidArgumentException::class);
@@ -159,10 +136,6 @@ class CacheConfigTest extends AbstractTestCase
         $this->cfg->setDefaultTtl('foo');
     }
 
-    /**
-     * @covers CacheConfig::setPrefix
-     * @covers CacheConfig::prefix
-     */
     public function testPrefix()
     {
         // Chainable
@@ -173,9 +146,6 @@ class CacheConfigTest extends AbstractTestCase
         $this->assertEquals('foo', $this->cfg->prefix());
     }
 
-    /**
-     * @covers CacheConfig::setPrefix
-     */
     public function testSetPrefixOnInvalidType()
     {
         $this->expectException(InvalidArgumentException::class);
@@ -183,9 +153,6 @@ class CacheConfigTest extends AbstractTestCase
         $this->cfg->setPrefix(false);
     }
 
-    /**
-     * @covers CacheConfig::setPrefix
-     */
     public function testSetPrefixOnInvalidValue()
     {
         $this->expectExceptionMessage('Prefix must be alphanumeric');

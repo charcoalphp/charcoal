@@ -3,15 +3,20 @@
 namespace Charcoal\Tests\Config\Entity;
 
 use ArrayAccess;
-
 // From 'charcoal-config'
 use Charcoal\Tests\Config\Entity\AbstractEntityTestCase;
 use Charcoal\Tests\Config\Mixin\ArrayAccessTestTrait;
 use Charcoal\Tests\Config\Mock\MacroEntity;
 use Charcoal\Config\AbstractEntity;
-use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversMethod;
 
-#[CoversClass(AbstractEntity::class)]
+#[CoversMethod(AbstractEntity::class, 'offsetExists')]
+#[CoversMethod(AbstractEntity::class, 'offsetGet')]
+#[CoversMethod(AbstractEntity::class, 'offsetSet')]
+#[CoversMethod(AbstractEntity::class, 'offsetUnset')]
+#[CoversMethod(AbstractEntity::class, 'has')]
+#[CoversMethod(AbstractEntity::class, 'get')]
+#[CoversMethod(AbstractEntity::class, 'set')]
 class EntityArrayAccessTest extends AbstractEntityTestCase
 {
     use ArrayAccessTestTrait;
@@ -52,10 +57,6 @@ class EntityArrayAccessTest extends AbstractEntityTestCase
     // Test ArrayAccess on non-private properties
     // =========================================================================
 
-    /**
-     * @covers AbstractEntity::offsetExists()
-     * @return void
-     */
     public function testOffsetExists()
     {
         $obj = $this->obj;
@@ -71,10 +72,6 @@ class EntityArrayAccessTest extends AbstractEntityTestCase
         $this->assertTrue(isset($obj['erd']));
     }
 
-    /**
-     * @covers AbstractEntity::offsetGet()
-     * @return void
-     */
     public function testOffsetGet()
     {
         $obj = $this->obj;
@@ -89,10 +86,6 @@ class EntityArrayAccessTest extends AbstractEntityTestCase
         $this->assertEquals(true, $obj['erd']);
     }
 
-    /**
-     * @covers AbstractEntity::offsetSet()
-     * @return void
-     */
     public function testOffsetSet()
     {
         $obj = $this->obj;
@@ -102,10 +95,6 @@ class EntityArrayAccessTest extends AbstractEntityTestCase
         $this->assertEquals('waldo', $obj['baz']);
     }
 
-    /**
-     * @covers AbstractEntity::offsetUnset()
-     * @return void
-     */
     public function testOffsetUnset()
     {
         $obj = $this->obj;
@@ -120,11 +109,6 @@ class EntityArrayAccessTest extends AbstractEntityTestCase
     // Test ArrayAccess on encapsulated properties
     // =========================================================================
 
-    /**
-     * @covers \Charcoal\Tests\Config\Mock\MacroEntity::foo()
-     * @covers AbstractEntity::offsetExists()
-     * @return void
-     */
     public function testOffsetExistsOnEncapsulatedMethod()
     {
         $obj = $this->obj;
@@ -133,11 +117,6 @@ class EntityArrayAccessTest extends AbstractEntityTestCase
         $this->assertTrue(isset($obj['foo']));
     }
 
-    /**
-     * @covers \Charcoal\Tests\Config\Mock\MacroEntity::foo()
-     * @covers AbstractEntity::offsetGet()
-     * @return void
-     */
     public function testOffsetGetOnEncapsulatedMethod()
     {
         $obj = $this->obj;
@@ -145,11 +124,6 @@ class EntityArrayAccessTest extends AbstractEntityTestCase
         $this->assertEquals('foo is 20', $obj['foo']);
     }
 
-    /**
-     * @covers \Charcoal\Tests\Config\Mock\MacroEntity::setFoo()
-     * @covers AbstractEntity::offsetSet()
-     * @return void
-     */
     public function testOffsetSetOnEncapsulatedMethod()
     {
         $obj = $this->obj;
@@ -158,11 +132,6 @@ class EntityArrayAccessTest extends AbstractEntityTestCase
         $this->assertEquals('foo is 42', $obj['foo']);
     }
 
-    /**
-     * @covers \Charcoal\Tests\Config\Mock\MacroEntity::setFoo()
-     * @covers AbstractEntity::offsetUnset()
-     * @return void
-     */
     public function testOffsetUnsetOnEncapsulatedMethod()
     {
         $obj = $this->obj;
@@ -177,10 +146,6 @@ class EntityArrayAccessTest extends AbstractEntityTestCase
     // Test ArrayAccess via aliases
     // =========================================================================
 
-    /**
-     * @covers AbstractEntity::has()
-     * @return void
-     */
     public function testHas()
     {
         $obj = $this->obj;
@@ -192,10 +157,6 @@ class EntityArrayAccessTest extends AbstractEntityTestCase
         $this->assertFalse($obj->has('name'));
     }
 
-    /**
-     * @covers AbstractEntity::get()
-     * @return void
-     */
     public function testGet()
     {
         $obj = $this->obj;
@@ -203,10 +164,6 @@ class EntityArrayAccessTest extends AbstractEntityTestCase
         $this->assertEquals('Charcoal', $obj->get('name'));
     }
 
-    /**
-     * @covers AbstractEntity::set()
-     * @return void
-     */
     public function testSet()
     {
         $obj = $this->obj;
