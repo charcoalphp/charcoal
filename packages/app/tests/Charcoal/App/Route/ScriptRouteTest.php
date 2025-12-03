@@ -2,10 +2,10 @@
 
 namespace Charcoal\Tests\App\Route;
 
-// From PSR-7
-use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\ResponseInterface;
 use DI\Container;
+// From PSR-7
+use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Message\ResponseInterface;
 // From 'charcoal-factory'
 use Charcoal\Factory\GenericFactory as Factory;
 // From 'charcoal-app'
@@ -40,7 +40,8 @@ class ScriptRouteTest extends AbstractTestCase
         $this->obj = new ScriptRoute([
             'config' => new ScriptRouteConfig([
                 'controller' => 'foo/bar'
-            ])
+            ]),
+            'container' => $this->container(),
         ]);
     }
 
@@ -48,16 +49,16 @@ class ScriptRouteTest extends AbstractTestCase
     {
         $container = $this->container();
 
-        $container->set('script/factory', function($c) {
+        $container->set('script/factory', function ($c) {
             return new Factory();
         });
 
-        $request  = $this->createMock(RequestInterface::class);
+        $request  = $this->createMock(ServerRequestInterface::class);
         $response = $this->createMock(ResponseInterface::class);
 
         // Invalid because "foo/bar" is not a valid script controller
         $this->expectException('\Exception');
-        $ret = call_user_func([$this->obj, '__invoke'], $container, $request, $response);
+        $ret = call_user_func([$this->obj, '__invoke'], $request, $response);
     }
 
     /**
@@ -67,7 +68,7 @@ class ScriptRouteTest extends AbstractTestCase
      */
     private function container()
     {
-        if ($this->container === null) {
+        if (!isset($this->container)) {
             $container = new Container();
             $containerProvider = new ContainerProvider();
             $containerProvider->registerLogger($container);

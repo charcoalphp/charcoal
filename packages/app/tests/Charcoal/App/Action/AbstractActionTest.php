@@ -2,11 +2,10 @@
 
 namespace Charcoal\Tests\App\Action;
 
-// From PSR-7
-use Psr\Http\Message\RequestInterface;
-// From Slim
-use Slim\Http\Response;
 use DI\Container;
+// From PSR-7
+use Psr\Http\Message\ServerRequestInterface;
+use Nyholm\Psr7\Response;
 // From 'charcoal-app'
 use Charcoal\App\Action\AbstractAction;
 use Charcoal\Tests\App\ContainerProvider;
@@ -16,19 +15,8 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(AbstractAction::class)]
 class AbstractActionTest extends AbstractTestCase
 {
-    /**
-     * Tested Class.
-     *
-     * @var AbstractAction
-     */
-    private $obj;
-
-    /**
-     * Store the service container.
-     *
-     * @var Container
-     */
-    private $container;
+    private AbstractAction $obj;
+    private Container $container;
 
     /**
      * Set up the test.
@@ -127,7 +115,7 @@ class AbstractActionTest extends AbstractTestCase
      */
     public function testInvokable()
     {
-        $request = $this->createMock(RequestInterface::class);
+        $request = $this->createMock(ServerRequestInterface::class);
         $response = new Response();
 
         $this->obj->expects($this->any())
@@ -142,7 +130,7 @@ class AbstractActionTest extends AbstractTestCase
 
     public function testDefaultModeisJson()
     {
-        $request = $this->createMock(RequestInterface::class);
+        $request = $this->createMock(ServerRequestInterface::class);
         $response = new Response();
 
         $this->obj->expects($this->any())
@@ -158,7 +146,7 @@ class AbstractActionTest extends AbstractTestCase
 
     public function testInvokeModeJson()
     {
-        $request = $this->createMock(RequestInterface::class);
+        $request = $this->createMock(ServerRequestInterface::class);
         $response = new Response();
 
         $this->obj->expects($this->any())
@@ -175,7 +163,7 @@ class AbstractActionTest extends AbstractTestCase
 
     public function testInvokeModeXml()
     {
-        $request = $this->createMock(RequestInterface::class);
+        $request = $this->createMock(ServerRequestInterface::class);
         $response = new Response();
 
         $this->obj->expects($this->any())
@@ -192,7 +180,7 @@ class AbstractActionTest extends AbstractTestCase
 
     public function testInvokeModeRedirect()
     {
-        $request = $this->createMock(RequestInterface::class);
+        $request = $this->createMock(ServerRequestInterface::class);
         $response = new Response();
 
         $this->obj->expects($this->any())
@@ -212,7 +200,7 @@ class AbstractActionTest extends AbstractTestCase
 
     public function testInitIsTrue()
     {
-        $request = $this->createMock(RequestInterface::class);
+        $request = $this->createMock(ServerRequestInterface::class);
         $this->assertTrue($this->obj->init($request));
     }
 
@@ -223,7 +211,7 @@ class AbstractActionTest extends AbstractTestCase
      */
     private function container()
     {
-        if ($this->container === null) {
+        if (!isset($this->container)) {
             $container = new Container();
             $containerProvider = new ContainerProvider();
             $containerProvider->registerLogger($container);

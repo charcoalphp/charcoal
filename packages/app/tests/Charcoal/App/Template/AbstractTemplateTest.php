@@ -2,9 +2,9 @@
 
 namespace Charcoal\Tests\App\Template;
 
-// From PSR-7
-use Psr\Http\Message\RequestInterface;
 use DI\Container;
+// From PSR-7
+use Psr\Http\Message\ServerRequestInterface;
 // From 'charcoal-app'
 use Charcoal\App\Template\AbstractTemplate;
 use Charcoal\Tests\AbstractTestCase;
@@ -43,7 +43,7 @@ class AbstractTemplateTest extends AbstractTestCase
 
     public function testInitIsTrue()
     {
-        $request = $this->createMock(RequestInterface::class);
+        $request = $this->createMock(ServerRequestInterface::class);
         $this->assertTrue($this->obj->init($request));
     }
 

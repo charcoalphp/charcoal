@@ -36,6 +36,7 @@ use Charcoal\View\Mustache\MustacheLoader;
 // From 'charcoal-translator'
 use Charcoal\Translator\LocalesManager;
 use Charcoal\Translator\Translator;
+use Psr\Container\ContainerInterface;
 
 /**
  *
@@ -216,9 +217,9 @@ class ContainerProvider
      * @param  Container $container A DI container.
      * @return void
      */
-    public function registerLogger(Container $container)
+    public function registerLogger(ContainerInterface $container)
     {
-        $container->set('logger', function (Container $container) {
+        $container->set('logger', function (ContainerInterface $container) {
             return new NullLogger();
         });
     }

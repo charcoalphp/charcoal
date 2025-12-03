@@ -47,11 +47,13 @@ class FilesystemServiceProviderTest extends AbstractTestCase
             ])
         ]);
 
-        $this->assertTrue(isset($container->get('filesystems')['private']));
-        $this->assertTrue(isset($container->get('filesystems')['public']));
+        $filesystem = $container->get('filesystems');
 
-        $this->assertInstanceOf(Filesystem::class, $container->get('filesystems')['private']);
-        $this->assertInstanceOf(Filesystem::class, $container->get('filesystems')['public']);
+        $this->assertTrue($filesystem->has('private'));
+        $this->assertTrue($filesystem->has('public'));
+
+        $this->assertInstanceOf(Filesystem::class, $filesystem->get('private'));
+        $this->assertInstanceOf(Filesystem::class, $filesystem->get('public'));
     }
 
     public function testProviderLocalAdapter()
@@ -69,8 +71,10 @@ class FilesystemServiceProviderTest extends AbstractTestCase
             ])
         ]);
 
-        $this->assertTrue(isset($container->get('filesystems')['local']));
-        $this->assertInstanceOf(Filesystem::class, $container->get('filesystems')['local']);
+        $filesystem = $container->get('filesystems');
+
+        $this->assertTrue($filesystem->has('local'));
+        $this->assertInstanceOf(Filesystem::class, $filesystem->get('local'));
     }
 
     public function testProviderS3Adapter()
@@ -91,8 +95,10 @@ class FilesystemServiceProviderTest extends AbstractTestCase
             ]),
         ]);
 
-        $this->assertTrue(isset($container->get('filesystems')['s3']));
-        $this->assertInstanceOf(Filesystem::class, $container->get('filesystems')['s3']);
+        $filesystem = $container->get('filesystems');
+
+        $this->assertTrue($filesystem->has('s3'));
+        $this->assertInstanceOf(Filesystem::class, $filesystem->get('s3'));
     }
 
     public function testProviderFtpAdapter()
@@ -112,8 +118,10 @@ class FilesystemServiceProviderTest extends AbstractTestCase
             ])
         ]);
 
-        $this->assertTrue(isset($container->get('filesystems')['ftp']));
-        $this->assertInstanceOf(Filesystem::class, $container->get('filesystems')['ftp']);
+        $filesystem = $container->get('filesystems');
+
+        $this->assertTrue($filesystem->has('ftp'));
+        $this->assertInstanceOf(Filesystem::class, $filesystem->get('ftp'));
     }
 
     public function testProviderSftpAdapter()
@@ -133,8 +141,10 @@ class FilesystemServiceProviderTest extends AbstractTestCase
             ])
         ]);
 
-        $this->assertTrue(isset($container->get('filesystems')['sftp']));
-        $this->assertInstanceOf(Filesystem::class, $container->get('filesystems')['sftp']);
+        $filesystem = $container->get('filesystems');
+
+        $this->assertTrue($filesystem->has('sftp'));
+        $this->assertInstanceOf(Filesystem::class, $filesystem->get('sftp'));
     }
 
     public function testProviderMemorypAdapter()
@@ -152,8 +162,10 @@ class FilesystemServiceProviderTest extends AbstractTestCase
         ]);
 
 
-        $this->assertTrue(isset($container->get('filesystems')['memory']));
-        $this->assertInstanceOf(Filesystem::class, $container->get('filesystems')['memory']);
+        $filesystem = $container->get('filesystems');
+
+        $this->assertTrue($filesystem->has('memory'));
+        $this->assertInstanceOf(Filesystem::class, $filesystem->get('memory'));
     }
 
     public function testProviderNullAdapter()
@@ -170,8 +182,10 @@ class FilesystemServiceProviderTest extends AbstractTestCase
             ])
         ]);
 
-        $this->assertTrue(isset($container->get('filesystems')['test']));
-        $this->assertInstanceOf(Filesystem::class, $container->get('filesystems')['test']);
+        $filesystem = $container->get('filesystems');
+
+        $this->assertTrue($filesystem->has('test'));
+        $this->assertInstanceOf(Filesystem::class, $filesystem->get('test'));
     }
 
     public function testConfigWithoutTypeThrowsException()

@@ -34,8 +34,9 @@ class ActionRouteTest extends AbstractTestCase
         $container = $this->container();
 
         $this->obj = new ActionRoute([
-            'logger' => $container->get('logger'),
-            'config' => []
+            'logger'    => $container->get('logger'),
+            'config'    => [],
+            'container' => $this->container(),
         ]);
     }
 
@@ -51,7 +52,7 @@ class ActionRouteTest extends AbstractTestCase
      */
     private function container()
     {
-        if ($this->container === null) {
+        if (!isset($this->container)) {
             $container = new Container();
             $containerProvider = new ContainerProvider();
             $containerProvider->registerLogger($container);
