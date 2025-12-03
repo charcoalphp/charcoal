@@ -4,16 +4,14 @@ namespace Charcoal\Cms\Tests;
 
 // From 'charcoal-object'
 use Charcoal\Object\ObjectRoute;
-
 // From 'charcoal-cms'
 use Charcoal\Cms\Section;
-use Charcoal\Tests\AbstractTestCase;
 use Charcoal\Tests\Cms\ContainerIntegrationTrait;
+use PHPUnit\Framework\Attributes\CoversClass;
+use Charcoal\Tests\Cms\AbstractCmsTestCase;
 
-/**
- *
- */
-class SectionTest extends AbstractTestCase
+#[CoversClass(Section::class)]
+class SectionTest extends AbstractCmsTestCase
 {
     use ContainerIntegrationTrait;
 
@@ -29,9 +27,12 @@ class SectionTest extends AbstractTestCase
      *
      * @return void
      */
-    protected function setUp():void
+    protected function setUp(): void
     {
         $container = $this->getContainer();
+        $provider = $this->getContainerProvider();
+
+        $provider->registerModelDependencies($container);
 
         $route = $container->get('model/factory')->get(ObjectRoute::class);
         if ($route->source()->tableExists() === false) {

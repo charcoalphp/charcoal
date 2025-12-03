@@ -3,14 +3,12 @@
 namespace Charcoal\Tests\Cms\Route;
 
 use InvalidArgumentException;
-
 // From 'charcoal-cms'
 use Charcoal\Cms\News;
 use Charcoal\Cms\Route\NewsRoute;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * Test NewsRoute
- */
+#[CoversClass(NewsRoute::class)]
 class NewsRouteTest extends AbstractRouteTestCase
 {
     /**
@@ -22,6 +20,10 @@ class NewsRouteTest extends AbstractRouteTestCase
     public function testInvokeOnNonexistentModel()
     {
         $container = $this->getContainer();
+        $provider = $this->getContainerProvider();
+
+        $provider->registerModelDependencies($container);
+
         $router    = $this->createRouter([
             'path' => '/en/news/nonexistent',
         ]);
@@ -32,7 +34,7 @@ class NewsRouteTest extends AbstractRouteTestCase
         $request   = $this->createHttpRequest();
         $response  = $this->createHttpResponse();
 
-        $response = $router($container, $request, $response);
+        $response = $router($request, $response);
         $this->assertEquals(404, $response->getStatusCode());
     }
 
@@ -62,7 +64,7 @@ class NewsRouteTest extends AbstractRouteTestCase
         $response  = $this->createHttpResponse();
 
         $this->expectException(InvalidArgumentException::class);
-        $response = $router($container, $request, $response);
+        $response = $router($request, $response);
     }
 
     /**
@@ -88,7 +90,7 @@ class NewsRouteTest extends AbstractRouteTestCase
         $request   = $this->createHttpRequest();
         $response  = $this->createHttpResponse();
 
-        $response = $router($container, $request, $response);
+        $response = $router($request, $response);
         $this->assertEquals(500, $response->getStatusCode());
     }
 
@@ -115,7 +117,7 @@ class NewsRouteTest extends AbstractRouteTestCase
         $request   = $this->createHttpRequest();
         $response  = $this->createHttpResponse();
 
-        $response = $router($container, $request, $response);
+        $response = $router($request, $response);
         $this->assertEquals(500, $response->getStatusCode());
     }
 
@@ -142,7 +144,7 @@ class NewsRouteTest extends AbstractRouteTestCase
         $request   = $this->createHttpRequest();
         $response  = $this->createHttpResponse();
 
-        $response = $router($container, $request, $response);
+        $response = $router($request, $response);
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertEquals('<h1>News</h1>', (string)$response->getBody());
     }
@@ -155,10 +157,11 @@ class NewsRouteTest extends AbstractRouteTestCase
      */
     protected function createRouter(array $data = [])
     {
-        return new NewsRoute($data + [
+        return new NewsRoute(($data + [
             'config' => [],
             'path'   => '',
-        ]);
+            'container' => $this->getContainer(),
+        ]));
     }
 
     /**

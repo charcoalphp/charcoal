@@ -2,11 +2,8 @@
 
 namespace Charcoal\Tests\Cms;
 
-// From 'charcoal-app'
-use Charcoal\App\AppContainer as Container;
-
-// From 'charcoal-cms/tests'
 use Charcoal\Tests\Cms\ContainerProvider;
+use DI\Container;
 
 /**
  * Integrates Charcoal's service container into PHPUnit.
@@ -106,6 +103,7 @@ trait ContainerIntegrationTrait
 
         $provider->registerBaseServices($container);
         $provider->registerModelDependencies($container);
+        $provider->registerTemplateFactory($container);
 
         $this->container = $container;
         $this->containerProvider = $provider;

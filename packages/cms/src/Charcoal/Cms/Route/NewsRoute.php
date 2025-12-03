@@ -4,6 +4,7 @@ namespace Charcoal\Cms\Route;
 
 use Exception;
 use DI\Container;
+use Nyholm\Psr7\Stream;
 // From PSR-7
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -66,17 +67,16 @@ class NewsRoute extends TemplateRoute
     }
 
     /**
-     * @param  Container         $container A DI (DI) container.
      * @param  RequestInterface  $request   A PSR-7 compatible Request instance.
      * @param  ResponseInterface $response  A PSR-7 compatible Response instance.
      * @return ResponseInterface
      */
     public function __invoke(
-        Container $container,
         RequestInterface $request,
         ResponseInterface $response
     ) {
         $config = $this->config();
+        $container = $this->container;
 
         $news = $this->loadNewsFromPath($container);
         if ($news === null) {
@@ -104,8 +104,8 @@ class NewsRoute extends TemplateRoute
         // Set custom data from config.
         $template->setData($config['template_data']);
         $template->setNews($news);
-
         $templateContent = $container->get('view')->render($templateIdent, $template);
+
         if ($templateContent === $templateIdent || $templateContent === '') {
             $container->get('logger')->warning(sprintf(
                 '[%s] Missing or bad template identifier on model [%s] for ID [%s]',
@@ -116,7 +116,8 @@ class NewsRoute extends TemplateRoute
             return $response->withStatus(500);
         }
 
-        $response->write($templateContent);
+        $stream = Stream::create($templateContent);
+        $response = $response->withBody($stream);
 
         return $response;
     }

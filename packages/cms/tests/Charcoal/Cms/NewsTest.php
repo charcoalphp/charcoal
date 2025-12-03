@@ -3,20 +3,17 @@
 namespace Charcoal\Cms\Tests;
 
 use DateTime;
-
 // From 'charcoal-object'
 use Charcoal\Object\ObjectRoute;
-
 // From 'charcoal-cms'
 use Charcoal\Cms\News;
 use Charcoal\Cms\NewsCategory;
-use Charcoal\Tests\AbstractTestCase;
 use Charcoal\Tests\Cms\ContainerIntegrationTrait;
+use PHPUnit\Framework\Attributes\CoversClass;
+use Charcoal\Tests\Cms\AbstractCmsTestCase;
 
-/**
- *
- */
-class NewsTest extends AbstractTestCase
+#[CoversClass(News::class)]
+class NewsTest extends AbstractCmsTestCase
 {
     use ContainerIntegrationTrait;
 

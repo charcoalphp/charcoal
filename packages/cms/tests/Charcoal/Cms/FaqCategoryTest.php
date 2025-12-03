@@ -5,13 +5,12 @@ namespace Charcoal\Cms\Tests;
 // From 'charcoal-cms'
 use Charcoal\Cms\FaqCategory;
 use Charcoal\Cms\Faq;
-use Charcoal\Tests\AbstractTestCase;
 use Charcoal\Tests\Cms\ContainerIntegrationTrait;
+use PHPUnit\Framework\Attributes\CoversClass;
+use Charcoal\Tests\Cms\AbstractCmsTestCase;
 
-/**
- *
- */
-class FaqCategoryTest extends AbstractTestCase
+#[CoversClass(FaqCategory::class)]
+class FaqCategoryTest extends AbstractCmsTestCase
 {
     use ContainerIntegrationTrait;
 

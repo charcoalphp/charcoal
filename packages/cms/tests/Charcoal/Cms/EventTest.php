@@ -3,20 +3,17 @@
 namespace Charcoal\Cms\Tests;
 
 use DateTime;
-
 // From 'charcoal-object'
 use Charcoal\Object\ObjectRoute;
-
 // From 'charcoal-cms'
 use Charcoal\Cms\Event;
 use Charcoal\Cms\EventCategory;
-use Charcoal\Tests\AbstractTestCase;
 use Charcoal\Tests\Cms\ContainerIntegrationTrait;
+use PHPUnit\Framework\Attributes\CoversClass;
+use Charcoal\Tests\Cms\AbstractCmsTestCase;
 
-/**
- *
- */
-class EventTest extends AbstractTestCase
+#[CoversClass(Event::class)]
+class EventTest extends AbstractCmsTestCase
 {
     use ContainerIntegrationTrait;
 

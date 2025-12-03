@@ -3,16 +3,18 @@
 namespace Charcoal\Tests\Cms\Route;
 
 use InvalidArgumentException;
-
 // From 'charcoal-cms'
 use Charcoal\Cms\Event;
 use Charcoal\Cms\Route\EventRoute;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * Test EventRoute
- */
+#[CoversClass(EventRoute::class)]
 class EventRouteTest extends AbstractRouteTestCase
 {
+    protected function setUp(): void
+    {
+        parent::setUp();
+    }
     /**
      * Asserts that `EventRoute::__invoke()` method returns an HTTP Response object
      * with a 404 status code if the path does not resolve to any routable model.
@@ -22,6 +24,7 @@ class EventRouteTest extends AbstractRouteTestCase
     public function testInvokeOnNonexistentModel()
     {
         $container = $this->getContainer();
+
         $router    = $this->createRouter([
             'path' => '/en/events/nonexistent',
         ]);
@@ -32,7 +35,7 @@ class EventRouteTest extends AbstractRouteTestCase
         $request   = $this->createHttpRequest();
         $response  = $this->createHttpResponse();
 
-        $response = $router($container, $request, $response);
+        $response = $router($request, $response);
         $this->assertEquals(404, $response->getStatusCode());
     }
 
@@ -62,7 +65,7 @@ class EventRouteTest extends AbstractRouteTestCase
         $response  = $this->createHttpResponse();
 
         $this->expectException(InvalidArgumentException::class);
-        $response = $router($container, $request, $response);
+        $response = $router($request, $response);
     }
 
     /**
@@ -88,7 +91,7 @@ class EventRouteTest extends AbstractRouteTestCase
         $request   = $this->createHttpRequest();
         $response  = $this->createHttpResponse();
 
-        $response = $router($container, $request, $response);
+        $response = $router($request, $response);
         $this->assertEquals(500, $response->getStatusCode());
     }
 
@@ -115,7 +118,7 @@ class EventRouteTest extends AbstractRouteTestCase
         $request   = $this->createHttpRequest();
         $response  = $this->createHttpResponse();
 
-        $response = $router($container, $request, $response);
+        $response = $router($request, $response);
         $this->assertEquals(500, $response->getStatusCode());
     }
 
@@ -142,7 +145,7 @@ class EventRouteTest extends AbstractRouteTestCase
         $request   = $this->createHttpRequest();
         $response  = $this->createHttpResponse();
 
-        $response = $router($container, $request, $response);
+        $response = $router($request, $response);
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertEquals('<h1>Event</h1>', (string)$response->getBody());
     }
@@ -155,10 +158,11 @@ class EventRouteTest extends AbstractRouteTestCase
      */
     protected function createRouter(array $data = [])
     {
-        return new EventRoute($data + [
+        return new EventRoute(($data + [
             'config' => [],
             'path'   => '',
-        ]);
+            'container' => $this->getContainer(),
+        ]));
     }
 
     /**

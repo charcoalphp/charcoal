@@ -2,15 +2,12 @@
 
 namespace Charcoal\Tests\Cms\Route;
 
-use InvalidArgumentException;
-
 // From 'charcoal-cms'
 use Charcoal\Cms\Section;
 use Charcoal\Cms\Route\SectionRoute;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * Test SectionRoute
- */
+#[CoversClass(SectionRoute::class)]
 class SectionRouteTest extends AbstractRouteTestCase
 {
     /**
@@ -32,7 +29,7 @@ class SectionRouteTest extends AbstractRouteTestCase
         $request   = $this->createHttpRequest();
         $response  = $this->createHttpResponse();
 
-        $response = $router($container, $request, $response);
+        $response = $router($request, $response);
         $this->assertEquals(404, $response->getStatusCode());
     }
 
@@ -63,7 +60,7 @@ class SectionRouteTest extends AbstractRouteTestCase
         $request   = $this->createHttpRequest();
         $response  = $this->createHttpResponse();
 
-        $response = $router($container, $request, $response);
+        $response = $router($request, $response);
         $this->assertEquals(500, $response->getStatusCode());
     }
 
@@ -90,7 +87,7 @@ class SectionRouteTest extends AbstractRouteTestCase
         $request   = $this->createHttpRequest();
         $response  = $this->createHttpResponse();
 
-        $response = $router($container, $request, $response);
+        $response = $router($request, $response);
         $this->assertEquals(500, $response->getStatusCode());
     }
 
@@ -117,7 +114,7 @@ class SectionRouteTest extends AbstractRouteTestCase
         $request   = $this->createHttpRequest();
         $response  = $this->createHttpResponse();
 
-        $response = $router($container, $request, $response);
+        $response = $router($request, $response);
         $this->assertEquals(500, $response->getStatusCode());
     }
 
@@ -144,7 +141,7 @@ class SectionRouteTest extends AbstractRouteTestCase
         $request   = $this->createHttpRequest();
         $response  = $this->createHttpResponse();
 
-        $response = $router($container, $request, $response);
+        $response = $router($request, $response);
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertEquals('<h1>Home</h1>', (string)$response->getBody());
     }
@@ -157,10 +154,11 @@ class SectionRouteTest extends AbstractRouteTestCase
      */
     protected function createRouter(array $data = [])
     {
-        return new SectionRoute($data + [
+        return new SectionRoute(($data + [
             'config' => [],
             'path'   => '',
-        ]);
+            'container' => $this->getContainer(),
+        ]));
     }
 
     /**

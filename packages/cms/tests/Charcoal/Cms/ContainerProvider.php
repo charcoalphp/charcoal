@@ -3,40 +3,29 @@
 namespace Charcoal\Tests\Cms;
 
 use PDO;
-
+use DI\Container;
 // From PSR-3
 use Psr\Log\NullLogger;
-
 // From 'tedivm/stash' (PSR-6)
 use Stash\Pool;
-
 // From 'charcoal-factory'
 use Charcoal\Factory\GenericFactory as Factory;
-
 // From 'charcoal-core'
-use Charcoal\Model\Service\MetadataLoader;
-use Charcoal\Loader\CollectionLoader;
-use Charcoal\Source\DatabaseSource;
 use Charcoal\Model\ServiceProvider\ModelServiceProvider;
-
 // From 'charcoal-user'
 use Charcoal\User\ServiceProvider\AuthServiceProvider;
-
 // From 'charcoal-translator'
 use Charcoal\Translator\ServiceProvider\TranslatorServiceProvider;
-
 // From 'charcoal-view'
 use Charcoal\View\ViewServiceProvider;
-
 // From 'charcoal-app'
 use Charcoal\App\AppConfig;
-use Charcoal\App\AppContainer as Container;
 use Charcoal\App\Template\TemplateInterface;
-
 // From 'charcoal-cms'
 use Charcoal\Cms\Config\CmsConfig;
 use Charcoal\Cms\Support\Helpers\DateHelper;
 use Charcoal\Tests\Cms\Mock\GenericTemplate;
+use Nyholm\Psr7\Uri;
 
 /**
  * Service Container for Unit Tests
@@ -49,12 +38,27 @@ class ContainerProvider
      */
     public function registerBaseServices(Container $container)
     {
+        $this->registerDebug($container);
+        $this->registerCmsConfig($container);
+        $this->registerConfig($container);
+        $this->registerBaseUrl($container);
+        $this->registerDateHelper($container);
+        $this->withUnilingualConfig($container);
         $this->registerLogger($container);
         $this->registerCache($container);
-        $this->registerCmsConfig($container);
-        $this->registerDateHelper($container);
-        $this->registerConfig($container);
-        $this->withUnilingualConfig($container);
+    }
+
+    /**
+     * Setup the application's base URI.
+     *
+     * @param  Container $container A DI container.
+     * @return void
+     */
+    public function registerBaseUrl(Container $container)
+    {
+        $container->set('base-url', function () {
+            return (new Uri('https://example.com:8080/foo/bar?abc=123'));
+        });
     }
 
     /**
@@ -64,8 +68,22 @@ class ContainerProvider
     public function registerModelDependencies(Container $container)
     {
         $this->registerDatabase($container);
+        $this->registerTranslatorServices($container);
         $this->registerViewServices($container);
         $this->registerModelServices($container);
+    }
+
+    /**
+     * Register the unit tests required services.
+     *
+     * @param  Container $container A DI container.
+     * @return void
+     */
+    public function registerDebug(Container $container)
+    {
+        if (!($container->has('debug'))) {
+            $container->set('debug', false);
+        }
     }
 
     /**
@@ -107,26 +125,25 @@ class ContainerProvider
      */
     public function withUnilingualConfig(Container $container)
     {
-        $container->extend('config', function (AppConfig $config) {
-            $config['locales'] = [
-                'languages' => [
-                    'en' => [
-                        'locale' => 'en-US',
-                    ],
+        $config = $container->get('config');
+        $config['locales'] = [
+            'languages' => [
+                'en' => [
+                    'locale' => 'en-US',
                 ],
-                'default_language'   => 'en',
-                'fallback_languages' => [ 'en' ],
-            ];
+            ],
+            'default_language'   => 'en',
+            'fallback_languages' => [ 'en' ],
+        ];
 
-            $config['translator'] = [
-                'translations' => [
-                    'messages' => [
-                    ],
+        $config['translator'] = [
+            'translations' => [
+                'messages' => [
                 ],
-            ];
+            ],
+        ];
 
-            return $config;
-        });
+        $container->set('config', $config);
     }
 
     /**
@@ -137,57 +154,56 @@ class ContainerProvider
      */
     public function withMultilingualConfig(Container $container)
     {
-        $container->extend('config', function (AppConfig $config) {
-            $config['locales'] = [
-                'languages' => [
-                    'en'  => [
-                        'locale' => 'en-US',
-                        'name'   => [
-                            'en' => 'English',
-                            'fr' => 'Anglais',
-                            'es' => 'Inglés',
-                        ],
+        $config = $container->get('config');
+        $config['locales'] = [
+            'languages' => [
+                'en'  => [
+                    'locale' => 'en-US',
+                    'name'   => [
+                        'en' => 'English',
+                        'fr' => 'Anglais',
+                        'es' => 'Inglés',
+                    ],
+                ],
+                'fr' => [
+                    'locale' => 'fr-CA',
+                    'name'   => [
+                        'en' => 'French',
+                        'fr' => 'Français',
+                        'es' => 'Francés',
+                    ],
+                ],
+                'de' => [
+                    'locale' => 'de-DE',
+                ],
+                'es' => [
+                    'locale' => 'es-MX',
+                ],
+            ],
+            'default_language'   => 'en',
+            'fallback_languages' => [ 'en' ],
+        ];
+
+        $config['translator'] = [
+            'translations' => [
+                'messages' => [
+                    'en' => [
+                        'locale.de' => 'German',
                     ],
                     'fr' => [
-                        'locale' => 'fr-CA',
-                        'name'   => [
-                            'en' => 'French',
-                            'fr' => 'Français',
-                            'es' => 'Francés',
-                        ],
-                    ],
-                    'de' => [
-                        'locale' => 'de-DE',
+                        'locale.de' => 'Allemand',
                     ],
                     'es' => [
-                        'locale' => 'es-MX',
+                        'locale.de' => 'Deutsch',
+                    ],
+                    'de' => [
+                        'locale.de' => 'Alemán',
                     ],
                 ],
-                'default_language'   => 'en',
-                'fallback_languages' => [ 'en' ],
-            ];
+            ],
+        ];
 
-            $config['translator'] = [
-                'translations' => [
-                    'messages' => [
-                        'en' => [
-                            'locale.de' => 'German',
-                        ],
-                        'fr' => [
-                            'locale.de' => 'Allemand',
-                        ],
-                        'es' => [
-                            'locale.de' => 'Deutsch',
-                        ],
-                        'de' => [
-                            'locale.de' => 'Alemán',
-                        ],
-                    ],
-                ],
-            ];
-
-            return $config;
-        });
+        $container->set('config', $config);
     }
 
     /**
@@ -198,43 +214,41 @@ class ContainerProvider
      */
     public function withTemplatesConfig(Container $container)
     {
-        $container->extend('config', function (AppConfig $config) {
-            $config['templates'] = [
-                [
-                    'value'  => 'foo',
-                    'label'  => [
-                        'en' => 'Foofoo',
-                        'fr' => 'Oofoof',
-                    ],
-                    'controller' => 'templateable/foo',
+        $config = $container->get('config');
+        $config['templates'] = [
+            [
+                'value'  => 'foo',
+                'label'  => [
+                    'en' => 'Foofoo',
+                    'fr' => 'Oofoof',
                 ],
-                [
-                    'value'  => 'baz',
-                    'label'  => [
-                        'en' => 'Bazbaz',
-                        'fr' => 'Zabzab',
-                    ],
-                    'template' => 'templateable/baz',
+                'controller' => 'templateable/foo',
+            ],
+            [
+                'value'  => 'baz',
+                'label'  => [
+                    'en' => 'Bazbaz',
+                    'fr' => 'Zabzab',
                 ],
-                [
-                    'value'  => 'qux',
-                    'label'  => [
-                        'en' => 'Quxqux',
-                        'fr' => 'Xuqxuq',
-                    ],
-                    'class' => 'templateable/qux',
+                'template' => 'templateable/baz',
+            ],
+            [
+                'value'  => 'qux',
+                'label'  => [
+                    'en' => 'Quxqux',
+                    'fr' => 'Xuqxuq',
                 ],
-                [
-                    'value'  => 'xyz',
-                    'label'  => [
-                        'en' => 'Xyzzy',
-                        'fr' => 'YzzyX',
-                    ],
+                'class' => 'templateable/qux',
+            ],
+            [
+                'value'  => 'xyz',
+                'label'  => [
+                    'en' => 'Xyzzy',
+                    'fr' => 'YzzyX',
                 ],
-            ];
-
-            return $config;
-        });
+            ],
+        ];
+        $container->set('config', $config);
     }
 
     /**

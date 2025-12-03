@@ -3,17 +3,15 @@
 namespace Charcoal\Tests\Property;
 
 use InvalidArgumentException;
-
 // From 'charcoal-cms'
 use Charcoal\Property\TemplateProperty;
 use Charcoal\Property\TemplateOptionsProperty;
-use Charcoal\Tests\AbstractTestCase;
 use Charcoal\Tests\Cms\ContainerIntegrationTrait;
+use PHPUnit\Framework\Attributes\CoversClass;
+use Charcoal\Tests\Cms\AbstractCmsTestCase;
 
-/**
- * Template Property Test
- */
-class TemplateOptionsPropertyTest extends AbstractTestCase
+#[CoversClass(TemplateOptionsProperty::class)]
+class TemplateOptionsPropertyTest extends AbstractCmsTestCase
 {
     use ContainerIntegrationTrait;
 

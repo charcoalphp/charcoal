@@ -5,22 +5,20 @@ namespace Charcoal\Tests\Cms\Route;
 // From PSR-7
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
-
 // From Slim
-use Slim\Http\Response;
-
+use Nyholm\Psr7\Response;
 // From 'charcoal-object'
 use Charcoal\Object\ObjectRoute;
-
 // From 'charcoal-cms'
 use Charcoal\App\App;
-use Charcoal\Tests\AbstractTestCase;
 use Charcoal\Tests\Cms\ContainerIntegrationTrait;
+use Charcoal\Tests\Cms\AbstractCmsTestCase;
+use Nyholm\Psr7\ServerRequest;
 
 /**
  * Basic Dynamic Route Test
  */
-abstract class AbstractRouteTestCase extends AbstractTestCase
+abstract class AbstractRouteTestCase extends AbstractCmsTestCase
 {
     use ContainerIntegrationTrait;
 
@@ -34,6 +32,7 @@ abstract class AbstractRouteTestCase extends AbstractTestCase
         $container = $this->getContainer();
         $provider  = $this->getContainerProvider();
 
+        $provider->registerModelDependencies($container);
         $provider->registerTemplateFactory($container);
 
         /**
@@ -71,7 +70,7 @@ abstract class AbstractRouteTestCase extends AbstractTestCase
      */
     protected function createHttpRequest()
     {
-        return $this->createMock(RequestInterface::class);
+        return $this->createMock(ServerRequest::class);
     }
 
     /**

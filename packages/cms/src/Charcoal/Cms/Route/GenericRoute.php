@@ -169,10 +169,14 @@ class GenericRoute extends TemplateRoute
                 return $response->withStatus(404);
             }
 
-            $templateContent = $this->templateContent($container, $request);
-
             $config = $this->config();
             $templateIdent = $config['template'];
+
+            try {
+                $templateContent = $this->templateContent($container, $request);
+            } catch (\Throwable $th) {
+                $templateContent = '';
+            }
 
             if ($templateContent === $templateIdent || $templateContent === '') {
                 $container->get('logger')->warning(sprintf(

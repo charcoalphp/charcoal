@@ -4,6 +4,7 @@ namespace Charcoal\Cms\Route;
 
 use Exception;
 use DI\Container;
+use Nyholm\Psr7\Stream;
 // From PSR-7
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -67,17 +68,16 @@ class SectionRoute extends TemplateRoute
     }
 
     /**
-     * @param  Container         $container A DI (DI) container.
      * @param  RequestInterface  $request   A PSR-7 compatible Request instance.
      * @param  ResponseInterface $response  A PSR-7 compatible Response instance.
      * @return ResponseInterface
      */
     public function __invoke(
-        Container $container,
         RequestInterface $request,
         ResponseInterface $response
     ) {
         $config = $this->config();
+        $container = $this->container;
 
         $section = $this->loadSectionFromPath($container);
         if ($section === null) {
@@ -98,16 +98,22 @@ class SectionRoute extends TemplateRoute
         }
 
         $templateFactory = $container->get('template/factory');
-        $templateFactory->setDefaultClass($config['default_controller']);
+        if ($config['default_controller'] !== null) {
+            $templateFactory->setDefaultClass($config['default_controller']);
+        }
 
-        $template = $templateFactory->create($templateController);
-        $template->init($request);
+        try {
+            $template = $templateFactory->create($templateController);
+            $template->init($request);
 
-        // Set custom data from config.
-        $template->setData($config['template_data']);
-        $template->setSection($section);
+            // Set custom data from config.
+            $template->setData($config['template_data']);
+            $template->setSection($section);
+            $templateContent = $container->get('view')->render($templateIdent, $template);
+        } catch (\Throwable $th) {
+            $templateContent = '';
+        }
 
-        $templateContent = $container->get('view')->render($templateIdent, $template);
         if ($templateContent === $templateIdent || $templateContent === '') {
             $container->get('logger')->warning(sprintf(
                 '[%s] Missing or bad template identifier on model [%s] for ID [%s]',
@@ -118,7 +124,8 @@ class SectionRoute extends TemplateRoute
             return $response->withStatus(500);
         }
 
-        $response->write($templateContent);
+        $stream = Stream::create($templateContent);
+        $response = $response->withBody($stream);
 
         return $response;
     }

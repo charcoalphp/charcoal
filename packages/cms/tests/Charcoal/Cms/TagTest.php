@@ -4,14 +4,12 @@ namespace Charcoal\Cms\Tests;
 
 // From 'charcoal-cms'
 use Charcoal\Cms\Tag;
-
-use Charcoal\Tests\AbstractTestCase;
 use Charcoal\Tests\Cms\ContainerIntegrationTrait;
+use PHPUnit\Framework\Attributes\CoversClass;
+use Charcoal\Tests\Cms\AbstractCmsTestCase;
 
-/**
- *
- */
-class TagTest extends AbstractTestCase
+#[CoversClass(Tag::class)]
+class TagTest extends AbstractCmsTestCase
 {
     use ContainerIntegrationTrait;
 

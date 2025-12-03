@@ -3,27 +3,20 @@
 namespace Charcoal\Tests\Property;
 
 use PDO;
-use ReflectionClass;
 use InvalidArgumentException;
-
 // From 'charcoal-cms'
 use Charcoal\Property\TemplateProperty;
-use Charcoal\Tests\AbstractTestCase;
+use Charcoal\Tests\Cms\AbstractCmsTestCase;
 use Charcoal\Tests\Cms\ContainerIntegrationTrait;
+use PHPUnit\Framework\Attributes\CoversClass;
+use Charcoal\Translator\Translator;
 
-/**
- * Template Property Test
- */
-class TemplatePropertyTest extends AbstractTestCase
+#[CoversClass(TemplateProperty::class)]
+class TemplatePropertyTest extends AbstractCmsTestCase
 {
     use ContainerIntegrationTrait;
 
-    /**
-     * Tested Class.
-     *
-     * @var TemplateProperty
-     */
-    public $obj;
+    public TemplateProperty $obj;
 
     /**
      * Set up the test.
@@ -37,6 +30,7 @@ class TemplatePropertyTest extends AbstractTestCase
 
         $provider->withMultilingualConfig($container);
         $provider->withTemplatesConfig($container);
+        $provider->registerModelDependencies($container);
 
         $dependencies = $this->getPropertyDependenciesWithContainer();
 
@@ -160,6 +154,8 @@ class TemplatePropertyTest extends AbstractTestCase
     public function testDisplayVal()
     {
         $container  = $this->getContainer();
+
+        /** @var Translator $translator */
         $translator = $container->get('translator');
         $templates  = $container->get('config')['templates'];
 

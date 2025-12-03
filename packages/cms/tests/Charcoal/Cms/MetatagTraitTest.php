@@ -4,17 +4,16 @@ namespace Charcoal\Tests\Cms;
 
 // From 'charcoal-object'
 use Charcoal\Object\ObjectRoute;
-
 // From 'charcoal-object'
 use Charcoal\Cms\MetatagInterface;
-use Charcoal\Tests\AbstractTestCase;
+use Charcoal\Cms\MetatagTrait;
 use Charcoal\Tests\Cms\ContainerIntegrationTrait;
 use Charcoal\Tests\Cms\Mock\WebPage;
+use PHPUnit\Framework\Attributes\CoversClass;
+use Charcoal\Tests\Cms\AbstractCmsTestCase;
 
-/**
- *
- */
-class MetatagTraitTest extends AbstractTestCase
+#[CoversClass(MetatagTrait::class)]
+class MetatagTraitTest extends AbstractCmsTestCase
 {
     use ContainerIntegrationTrait;
 

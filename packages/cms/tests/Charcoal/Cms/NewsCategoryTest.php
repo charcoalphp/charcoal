@@ -5,13 +5,12 @@ namespace Charcoal\Cms\Tests;
 // From 'charcoal-cms'
 use Charcoal\Cms\NewsCategory;
 use Charcoal\Cms\News;
-use Charcoal\Tests\AbstractTestCase;
 use Charcoal\Tests\Cms\ContainerIntegrationTrait;
+use PHPUnit\Framework\Attributes\CoversClass;
+use Charcoal\Tests\Cms\AbstractCmsTestCase;
 
-/**
- *
- */
-class NewsCategoryTest extends AbstractTestCase
+#[CoversClass(NewsCategory::class)]
+class NewsCategoryTest extends AbstractCmsTestCase
 {
     use ContainerIntegrationTrait;
 

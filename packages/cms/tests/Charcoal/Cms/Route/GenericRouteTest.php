@@ -3,17 +3,14 @@
 namespace Charcoal\Tests\Cms\Route;
 
 use InvalidArgumentException;
-
 // From 'charcoal-object'
 use Charcoal\Object\ObjectRoute;
-
 // From 'charcoal-cms'
 use Charcoal\Cms\Section;
 use Charcoal\Cms\Route\GenericRoute;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * Test GenericRoute
- */
+#[CoversClass(GenericRoute::class)]
 class GenericRouteTest extends SectionRouteTest
 {
     /**
@@ -31,6 +28,10 @@ class GenericRouteTest extends SectionRouteTest
         ]);
 
         $container = $this->getContainer();
+        $provider = $this->getContainerProvider();
+
+        $provider->registerModelDependencies($container);
+
         $router    = $this->createRouter([
             'path' => '/en/charcoal',
         ]);
@@ -43,7 +44,7 @@ class GenericRouteTest extends SectionRouteTest
 
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Route view controller must be a string.');
-        $response = $router($container, $request, $response);
+        $response = $router($request, $response);
     }
 
     /**
@@ -75,7 +76,7 @@ class GenericRouteTest extends SectionRouteTest
         $request   = $this->createHttpRequest();
         $response  = $this->createHttpResponse();
 
-        $response = $router($container, $request, $response);
+        $response = $router($request, $response);
         $this->assertEquals(404, $response->getStatusCode());
     }
 
@@ -87,9 +88,10 @@ class GenericRouteTest extends SectionRouteTest
      */
     protected function createRouter(array $data = [])
     {
-        return new GenericRoute($data + [
+        return new GenericRoute(($data + [
             'config' => [],
             'path'   => '',
-        ]);
+            'container' => $this->getContainer(),
+        ]));
     }
 }

@@ -3,20 +3,17 @@
 namespace Charcoal\Tests\Property;
 
 use RuntimeException;
-
 // From 'charcoal-property'
 use Charcoal\Property\Structure\StructureModel;
-
 // From 'charcoal-cms'
 use Charcoal\Cms\TemplateableTrait;
-use Charcoal\Tests\AbstractTestCase;
 use Charcoal\Tests\Cms\ContainerIntegrationTrait;
 use Charcoal\Tests\Cms\Mock\TemplateableModel;
+use PHPUnit\Framework\Attributes\CoversClass;
+use Charcoal\Tests\Cms\AbstractCmsTestCase;
 
-/**
- * Template Property Test
- */
-class TemplateableTraitTest extends AbstractTestCase
+#[CoversClass(TemplateableTrait::class)]
+class TemplateableTraitTest extends AbstractCmsTestCase
 {
     use ContainerIntegrationTrait;
 
@@ -220,8 +217,8 @@ class TemplateableTraitTest extends AbstractTestCase
     public function testTemplateOptionsStructure()
     {
         $templateData         = [ 'foo' => 'Huxley' ];
-        $basePath = $this->getContainer()['config']['base_path'];
-        $templateMetadataFile = realpath($basePath.'/tests/Charcoal/Cms/Fixture/metadata/templateable/foo-template.json');
+        $basePath = $this->getContainer()->get('config')['base_path'];
+        $templateMetadataFile = realpath($basePath . '/tests/Charcoal/Cms/Fixture/metadata/templateable/foo-template.json');
         $templateMetadata     = json_decode(file_get_contents($templateMetadataFile), true);
 
         $obj = $this->obj;
