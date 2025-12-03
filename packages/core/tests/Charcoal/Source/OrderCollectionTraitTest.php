@@ -3,23 +3,28 @@
 namespace Charcoal\Tests\Source;
 
 use InvalidArgumentException;
-
 // From 'charcoal-core'
 use Charcoal\Source\ExpressionInterface;
 use Charcoal\Source\Order;
 use Charcoal\Source\OrderInterface;
 use Charcoal\Source\OrderCollectionTrait;
 use Charcoal\Source\OrderCollectionInterface;
-
 use Charcoal\Tests\AbstractTestCase;
 use Charcoal\Tests\AssertionsTrait;
 use Charcoal\Tests\ReflectionsTrait;
 use Charcoal\Tests\Mock\OrderCollectionClass;
 use Charcoal\Tests\Mock\OrderTree;
 use Charcoal\Tests\Source\ExpressionCollectionTestTrait;
-use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversMethod;
 
-#[CoversClass(OrderCollectionTrait::class)]
+#[CoversMethod(OrderCollectionTrait::class, 'createOrder')]
+#[CoversMethod(OrderCollectionTrait::class, 'orders')]
+#[CoversMethod(OrderCollectionTrait::class, 'hasOrders')]
+#[CoversMethod(OrderCollectionTrait::class, 'setOrders')]
+#[CoversMethod(OrderCollectionTrait::class, 'addOrders')]
+#[CoversMethod(OrderCollectionTrait::class, 'addOrder')]
+#[CoversMethod(OrderCollectionTrait::class, 'processOrder')]
+#[CoversMethod(OrderCollectionTrait::class, 'traverseOrders')]
 class OrderCollectionTraitTest extends AbstractTestCase
 {
     use AssertionsTrait;
@@ -58,8 +63,6 @@ class OrderCollectionTraitTest extends AbstractTestCase
      * 1. Instance of {@see ExpressionInterface}
      * 2. Instance of {@see OrderInterface}
      *
-     * @covers \Charcoal\Source\OrderCollectionTrait::createOrder
-     *
      * @return void
      */
     public function testCreateExpression()
@@ -77,8 +80,6 @@ class OrderCollectionTraitTest extends AbstractTestCase
      * Assertions:
      * 1. Empty; Default state
      * 2. Populated; Mutated state
-     *
-     * @covers \Charcoal\Source\OrderCollectionTrait::orders
      *
      * @return void
      */
@@ -103,8 +104,6 @@ class OrderCollectionTraitTest extends AbstractTestCase
      * 1. Empty; Default state
      * 2. Populated; Mutated state
      *
-     * @covers \Charcoal\Source\OrderCollectionTrait::hasOrders
-     *
      * @return void
      */
     public function testHasExpressions()
@@ -125,8 +124,6 @@ class OrderCollectionTraitTest extends AbstractTestCase
      * Assertions:
      * 1. Replaces expressions with a new collection
      * 2. Chainable method
-     *
-     * @covers \Charcoal\Source\OrderCollectionTrait::setOrders
      *
      * @return void
      */
@@ -157,8 +154,6 @@ class OrderCollectionTraitTest extends AbstractTestCase
      * 1. Appends an array of items to the internal collection
      * 2. Chainable method
      *
-     * @covers \Charcoal\Source\OrderCollectionTrait::addOrders
-     *
      * @return void
      */
     public function testAddExpressions()
@@ -183,8 +178,6 @@ class OrderCollectionTraitTest extends AbstractTestCase
 
     /**
      * Test the mass addition of expressions with names.
-     *
-     * @covers \Charcoal\Source\OrderCollectionTrait::addOrders
      *
      * @return void
      */
@@ -215,8 +208,6 @@ class OrderCollectionTraitTest extends AbstractTestCase
      * Assertions:
      * 1. Appends one item to the internal collection
      * 2. Chainable method
-     *
-     * @covers \Charcoal\Source\OrderCollectionTrait::addOrder
      *
      * @return void
      */
@@ -250,8 +241,6 @@ class OrderCollectionTraitTest extends AbstractTestCase
      *    an Expression object is created with the collector's context.
      * 4. If an instance of {@see OrderInterface} is provided,
      *    the Expression object is used as is.
-     *
-     * @covers \Charcoal\Source\OrderCollectionTrait::processOrder
      *
      * @return void
      */
@@ -291,8 +280,6 @@ class OrderCollectionTraitTest extends AbstractTestCase
     /**
      * Test the failure when parsing an invalid expression.
      *
-     * @covers \Charcoal\Source\OrderCollectionTrait::processOrder
-     *
      * @return void
      */
     public function testProcessExpressionWithInvalidValue()
@@ -309,8 +296,6 @@ class OrderCollectionTraitTest extends AbstractTestCase
      * Assertions:
      * 1. Replaces expressions with a new collection
      * 2. Chainable method
-     *
-     * @covers \Charcoal\Source\OrderCollectionTrait::traverseOrders
      *
      * @return void
      */

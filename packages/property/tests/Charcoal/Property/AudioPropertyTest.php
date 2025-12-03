@@ -4,9 +4,11 @@ namespace Charcoal\Tests\Property;
 
 // From 'charcoal-property'
 use Charcoal\Property\AudioProperty;
-use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversMethod;
 
-#[CoversClass(AudioProperty::class)]
+#[CoversMethod(AudioProperty::class, 'type')]
+#[CoversMethod(AudioProperty::class, 'getDefaultAcceptedMimetypes')]
+#[CoversMethod(AudioProperty::class, 'hasAcceptedMimetypes')]
 class AudioPropertyTest extends AbstractFilePropertyTestCase
 {
     /**
@@ -29,7 +31,6 @@ class AudioPropertyTest extends AbstractFilePropertyTestCase
     /**
      * Asserts that the `type()` method is "file".
      *
-     * @covers \Charcoal\Property\AudioProperty::type()
      * @return void
      */
     public function testPropertyType()
@@ -53,7 +54,6 @@ class AudioPropertyTest extends AbstractFilePropertyTestCase
     /**
      * Asserts that the property adheres to file property defaults.
      *
-     * @covers \Charcoal\Property\AudioProperty::getDefaultAcceptedMimetypes()
      * @return void
      */
     public function testDefaulAcceptedMimeTypes()
@@ -66,7 +66,6 @@ class AudioPropertyTest extends AbstractFilePropertyTestCase
      * Asserts that the property properly checks if
      * any acceptable MIME types are available.
      *
-     * @covers \Charcoal\Property\AudioProperty::hasAcceptedMimetypes()
      * @return void
      */
     public function testHasAcceptedMimeTypes()

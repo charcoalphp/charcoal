@@ -3,7 +3,6 @@
 namespace Charcoal\Tests\Source;
 
 use InvalidArgumentException;
-
 // From 'charcoal-core'
 use Charcoal\Source\ExpressionInterface;
 use Charcoal\Source\Filter;
@@ -13,9 +12,11 @@ use Charcoal\Tests\CoreContainerIntegrationTrait;
 use Charcoal\Tests\ReflectionsTrait;
 use Charcoal\Tests\Source\ExpressionTestFieldTrait;
 use Charcoal\Tests\Source\ExpressionTestTrait;
-use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversMethod;
 
-#[CoversClass(Filter::class)]
+#[CoversMethod(Filter::class, '__clone')]
+#[CoversMethod(Filter::class, 'count')]
+#[CoversMethod(Filter::class, 'createFilter')]
 class FilterTest extends AbstractTestCase
 {
     use CoreContainerIntegrationTrait;
@@ -51,8 +52,6 @@ class FilterTest extends AbstractTestCase
 
     /**
      * Test deep cloning of expression trees.
-     *
-     * @covers \Charcoal\Source\Filter::__clone
      *
      * @return void
      */
@@ -356,8 +355,6 @@ class FilterTest extends AbstractTestCase
      * 1. Default state
      * 2. Mutated state
      *
-     * @covers \Charcoal\Source\Filter::count
-     *
      * @return void
      */
     public function testCount()
@@ -380,7 +377,6 @@ class FilterTest extends AbstractTestCase
      * 2. Instance of {@see Filter}
      *
      * @see    \Charcoal\Tests\Source\AbstractSourceTest::testCreateFilter
-     * @covers \Charcoal\Source\Filter::createFilter
      *
      * @return void
      */

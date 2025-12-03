@@ -21,9 +21,26 @@ use Charcoal\Tests\Mock\StorableMock;
 use Charcoal\Tests\Mock\SourceMock;
 use Charcoal\Tests\AbstractTestCase;
 use Charcoal\Tests\ReflectionsTrait;
-use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversMethod;
 
-#[CoversClass(StorableTrait::class)]
+#[CoversMethod(StorableTrait::class, 'setKey')]
+#[CoversMethod(StorableTrait::class, 'key')]
+#[CoversMethod(StorableTrait::class, 'setId')]
+#[CoversMethod(StorableTrait::class, 'id')]
+#[CoversMethod(StorableTrait::class, 'setSourceFactory')]
+#[CoversMethod(StorableTrait::class, 'sourceFactory')]
+#[CoversMethod(StorableTrait::class, 'createSource')]
+#[CoversMethod(StorableTrait::class, 'setSource')]
+#[CoversMethod(StorableTrait::class, 'source')]
+#[CoversMethod(StorableTrait::class, 'save')]
+#[CoversMethod(StorableTrait::class, 'preSave')]
+#[CoversMethod(StorableTrait::class, 'postSave')]
+#[CoversMethod(StorableTrait::class, 'update')]
+#[CoversMethod(StorableTrait::class, 'preUpdate')]
+#[CoversMethod(StorableTrait::class, 'postUpdate')]
+#[CoversMethod(StorableTrait::class, 'delete')]
+#[CoversMethod(StorableTrait::class, 'preDelete')]
+#[CoversMethod(StorableTrait::class, 'postDelete')]
 class StorableTraitTest extends AbstractTestCase
 {
     use ReflectionsTrait;
@@ -65,9 +82,6 @@ class StorableTraitTest extends AbstractTestCase
      * 2. Mutated state
      * 3. Chainable method
      *
-     * @covers \Charcoal\Source\StorableTrait::setKey
-     * @covers \Charcoal\Source\StorableTrait::key
-     *
      * @return void
      */
     public function testKey()
@@ -88,8 +102,6 @@ class StorableTraitTest extends AbstractTestCase
     /**
      * Test for invalid data type when assigning a primary object key.
      *
-     * @covers \Charcoal\Source\StorableTrait::setKey
-     *
      * @return void
      */
     public function testKeyWithInvalidDataType()
@@ -100,8 +112,6 @@ class StorableTraitTest extends AbstractTestCase
 
     /**
      * Test for invalid character set when assigning a primary object key.
-     *
-     * @covers \Charcoal\Source\StorableTrait::setKey
      *
      * @return void
      */
@@ -118,9 +128,6 @@ class StorableTraitTest extends AbstractTestCase
      * 1. Default state
      * 2. Mutated state
      * 3. Chainable method
-     *
-     * @covers \Charcoal\Source\StorableTrait::setId
-     * @covers \Charcoal\Source\StorableTrait::id
      *
      * @return void
      */
@@ -148,8 +155,6 @@ class StorableTraitTest extends AbstractTestCase
     /**
      * Test for invalid data type when assigning a unique object ID.
      *
-     * @covers \Charcoal\Source\StorableTrait::setId
-     *
      * @return void
      */
     public function testIdWithInvalidDataType()
@@ -160,9 +165,6 @@ class StorableTraitTest extends AbstractTestCase
 
     /**
      * Test the unique object ID with an alternate primary key.
-     *
-     * @covers \Charcoal\Source\StorableTrait::setId
-     * @covers \Charcoal\Source\StorableTrait::id
      *
      * @return void
      */
@@ -178,9 +180,6 @@ class StorableTraitTest extends AbstractTestCase
 
     /**
      * Test repository factory.
-     *
-     * @covers \Charcoal\Source\StorableTrait::setSourceFactory
-     * @covers \Charcoal\Source\StorableTrait::sourceFactory
      *
      * @return void
      */
@@ -202,8 +201,6 @@ class StorableTraitTest extends AbstractTestCase
     /**
      * Test for missing repository factory.
      *
-     * @covers \Charcoal\Source\StorableTrait::sourceFactory
-     *
      * @return void
      */
     public function testMissingSourceFactory()
@@ -221,10 +218,6 @@ class StorableTraitTest extends AbstractTestCase
      * 3. Mutated state
      * 4. Storable can create a repository
      * 5. Chainable method
-     *
-     * @covers \Charcoal\Source\StorableTrait::createSource
-     * @covers \Charcoal\Source\StorableTrait::setSource
-     * @covers \Charcoal\Source\StorableTrait::source
      *
      * @return void
      */
@@ -261,10 +254,6 @@ class StorableTraitTest extends AbstractTestCase
      * 2. Fail Early
      * 3. Fail Late
      *
-     * @covers \Charcoal\Source\StorableTrait::save
-     * @covers \Charcoal\Source\StorableTrait::preSave
-     * @covers \Charcoal\Source\StorableTrait::postSave
-     *
      * @return void
      */
     public function testSave()
@@ -295,10 +284,6 @@ class StorableTraitTest extends AbstractTestCase
      * 2. Fail Early
      * 3. Fail Late
      *
-     * @covers \Charcoal\Source\StorableTrait::update
-     * @covers \Charcoal\Source\StorableTrait::preUpdate
-     * @covers \Charcoal\Source\StorableTrait::postUpdate
-     *
      * @return void
      */
     public function testUpdate()
@@ -328,10 +313,6 @@ class StorableTraitTest extends AbstractTestCase
      * 1. Success
      * 2. Fail Early
      * 3. Fail Late
-     *
-     * @covers \Charcoal\Source\StorableTrait::delete
-     * @covers \Charcoal\Source\StorableTrait::preDelete
-     * @covers \Charcoal\Source\StorableTrait::postDelete
      *
      * @return void
      */

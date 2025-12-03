@@ -36,9 +36,6 @@ class CacheMiddlewareResponseTest extends AbstractCacheMiddlewareTestCase
     /**
      * Test the initial state.
      *
-     * @covers CacheMiddleware::__invoke
-     * @covers CacheMiddleware::cacheKeyFromRequest
-     *
      * @return CacheMiddleware To use the same cache middleware for the next test.
      */
     public function testInitialState()
@@ -85,8 +82,6 @@ class CacheMiddlewareResponseTest extends AbstractCacheMiddlewareTestCase
     /**
      * Test the cached state.
      *
-     * @covers  ::__invoke
-     * @covers  ::cacheKeyFromRequest
      * @depends testInitialState
      *
      * @param  CacheMiddleware $middleware The cache middleware from the previous test.

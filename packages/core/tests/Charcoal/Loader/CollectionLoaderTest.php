@@ -5,23 +5,22 @@ namespace Charcoal\Tests\Loader;
 use ArrayIterator;
 use InvalidArgumentException;
 use RuntimeException;
-
 // From 'charcoal-factory'
 use Charcoal\Factory\GenericFactory as Factory;
-
 // From 'charcoal-core'
 use Charcoal\Loader\CollectionLoader;
 use Charcoal\Model\Model;
 use Charcoal\Model\Collection;
 use Charcoal\Model\Service\MetadataLoader;
 use Charcoal\Source\DatabaseSource;
-
 use Charcoal\Tests\AbstractTestCase;
 use Charcoal\Tests\CoreContainerIntegrationTrait;
 use Charcoal\Tests\ReflectionsTrait;
-use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversMethod;
 
-#[CoversClass(CollectionLoader::class)]
+#[CoversMethod(CollectionLoader::class, 'camelize')]
+#[CoversMethod(CollectionLoader::class, 'getter')]
+#[CoversMethod(CollectionLoader::class, 'setter')]
 class CollectionLoaderTest extends AbstractTestCase
 {
     use CoreContainerIntegrationTrait;
@@ -202,10 +201,6 @@ class CollectionLoaderTest extends AbstractTestCase
 
     /**
      * Test camelization.
-     *
-     * @covers \Charcoal\Loader\CollectionLoader::camelize
-     * @covers \Charcoal\Loader\CollectionLoader::getter
-     * @covers \Charcoal\Loader\CollectionLoader::setter
      *
      * @return void
      */

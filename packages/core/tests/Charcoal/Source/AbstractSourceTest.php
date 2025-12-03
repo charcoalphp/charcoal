@@ -4,35 +4,44 @@ namespace Charcoal\Tests\Source;
 
 use RuntimeException;
 use InvalidArgumentException;
-
 // From 'charcoal-property'
-use Charcoal\Property\GenericProperty;
 use Charcoal\Property\PropertyInterface;
-
 // From 'charcoal-core'
 use Charcoal\Model\Model;
 use Charcoal\Model\Service\MetadataLoader;
 use Charcoal\Source\AbstractSource;
 use Charcoal\Source\ExpressionInterface;
 use Charcoal\Source\Filter;
-use Charcoal\Source\FilterInterface;
-use Charcoal\Source\FilterCollectionInterface;
 use Charcoal\Source\Order;
-use Charcoal\Source\OrderInterface;
-use Charcoal\Source\OrderCollectionInterface;
 use Charcoal\Source\Pagination;
 use Charcoal\Source\PaginationInterface;
 use Charcoal\Source\SourceConfig;
-use Charcoal\Source\SourceInterface;
-
 use Charcoal\Tests\AbstractTestCase;
 use Charcoal\Tests\AssertionsTrait;
 use Charcoal\Tests\CoreContainerIntegrationTrait;
 use Charcoal\Tests\Mock\OrderTree;
 use Charcoal\Tests\ReflectionsTrait;
-use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversMethod;
 
-#[CoversClass(AbstractSource::class)]
+#[CoversMethod(AbstractSource::class, 'setProperties')]
+#[CoversMethod(AbstractSource::class, 'addProperties')]
+#[CoversMethod(AbstractSource::class, 'resolvePropertyName')]
+#[CoversMethod(AbstractSource::class, 'hasProperties')]
+#[CoversMethod(AbstractSource::class, 'addProperty')]
+#[CoversMethod(AbstractSource::class, 'removeProperty')]
+#[CoversMethod(AbstractSource::class, 'addFilter')]
+#[CoversMethod(AbstractSource::class, 'parseFilterWithModel')]
+#[CoversMethod(AbstractSource::class, 'createFilter')]
+#[CoversMethod(AbstractSource::class, 'addOrder')]
+#[CoversMethod(AbstractSource::class, 'parseOrderWithModel')]
+#[CoversMethod(AbstractSource::class, 'createOrder')]
+#[CoversMethod(AbstractSource::class, 'pagination')]
+#[CoversMethod(AbstractSource::class, 'hasPagination')]
+#[CoversMethod(AbstractSource::class, 'setPagination')]
+#[CoversMethod(AbstractSource::class, 'createPagination')]
+#[CoversMethod(AbstractSource::class, 'camelize')]
+#[CoversMethod(AbstractSource::class, 'getter')]
+#[CoversMethod(AbstractSource::class, 'setter')]
 class AbstractSourceTest extends AbstractTestCase
 {
     use AssertionsTrait;
@@ -174,10 +183,6 @@ class AbstractSourceTest extends AbstractTestCase
      * - set the properties
      * - reset the properties, when called again
      *
-     * @covers \Charcoal\Source\AbstractSource::setProperties
-     * @covers \Charcoal\Source\AbstractSource::addProperties
-     * @covers \Charcoal\Source\AbstractSource::resolvePropertyName
-     *
      * @return void
      */
     public function testSetProperties()
@@ -198,8 +203,6 @@ class AbstractSourceTest extends AbstractTestCase
      * 1. Empty; Default state
      * 2. Populated; Mutated state
      *
-     * @covers \Charcoal\Source\AbstractSource::hasProperties
-     *
      * @return void
      */
     public function testHasProperties()
@@ -216,9 +219,6 @@ class AbstractSourceTest extends AbstractTestCase
 
     /**
      * Test property collection appending.
-     *
-     * @covers \Charcoal\Source\AbstractSource::addProperty
-     * @covers \Charcoal\Source\AbstractSource::resolvePropertyName
      *
      * @return void
      */
@@ -237,9 +237,6 @@ class AbstractSourceTest extends AbstractTestCase
     /**
      * Test property collection appending.
      *
-     * @covers \Charcoal\Source\AbstractSource::removeProperty
-     * @covers \Charcoal\Source\AbstractSource::resolvePropertyName
-     *
      * @return void
      */
     public function testRemoveProperty()
@@ -255,8 +252,6 @@ class AbstractSourceTest extends AbstractTestCase
     /**
      * Test failure when appending an invalid property name.
      *
-     * @covers \Charcoal\Source\AbstractSource::resolvePropertyName
-     *
      * @return void
      */
     public function testInvalidPropertyNameResolution()
@@ -268,8 +263,6 @@ class AbstractSourceTest extends AbstractTestCase
 
     /**
      * Test failure when appending an blank property name.
-     *
-     * @covers \Charcoal\Source\AbstractSource::resolvePropertyName
      *
      * @return void
      */
@@ -283,8 +276,6 @@ class AbstractSourceTest extends AbstractTestCase
     /**
      * Test failure when appending a unnamed property object.
      *
-     * @covers \Charcoal\Source\AbstractSource::resolvePropertyName
-     *
      * @return void
      */
     public function testAnonymousPropertyNameResolution()
@@ -297,8 +288,6 @@ class AbstractSourceTest extends AbstractTestCase
 
     /**
      * Test appending a named property object.
-     *
-     * @covers \Charcoal\Source\AbstractSource::resolvePropertyName
      *
      * @return void
      */
@@ -327,8 +316,6 @@ class AbstractSourceTest extends AbstractTestCase
      * 5. If a third argument is provided,
      *    an Expression object with given extra data is returned
      * 6. Chainable method
-     *
-     * @covers \Charcoal\Source\AbstractSource::addFilter
      *
      * @return void
      */
@@ -393,8 +380,6 @@ class AbstractSourceTest extends AbstractTestCase
      * 3. If a tree of expressions is passed, the source will traverse
      *    all expressions.
      *
-     * @covers \Charcoal\Source\AbstractSource::parseFilterWithModel
-     *
      * @return void
      */
     public function testParseFilterWithModel()
@@ -437,7 +422,6 @@ class AbstractSourceTest extends AbstractTestCase
      * 2. Instance of {@see Filter}
      *
      * @see    \Charcoal\Tests\Source\FilterTest::testCreateFilter
-     * @covers \Charcoal\Source\AbstractSource::createFilter
      *
      * @return void
      */
@@ -465,8 +449,6 @@ class AbstractSourceTest extends AbstractTestCase
      * 5. If a third argument is provided,
      *    an Expression object with given extra data is returned
      * 6. Chainable method
-     *
-     * @covers \Charcoal\Source\AbstractSource::addOrder
      *
      * @return void
      */
@@ -529,8 +511,6 @@ class AbstractSourceTest extends AbstractTestCase
      * 2. If a tree of expressions is passed, the source will traverse
      *    all expressions.
      *
-     * @covers \Charcoal\Source\AbstractSource::parseOrderWithModel
-     *
      * @return void
      */
     public function testParseOrderWithModel()
@@ -566,8 +546,6 @@ class AbstractSourceTest extends AbstractTestCase
      * 1. Instance of {@see ExpressionInterface}
      * 2. Instance of {@see Order}
      *
-     * @covers \Charcoal\Source\AbstractSource::createOrder
-     *
      * @return void
      */
     public function testCreateOrder()
@@ -584,9 +562,6 @@ class AbstractSourceTest extends AbstractTestCase
      * Assertions:
      * 1. Default state is NULL
      * 2. Create paginator if state is NULL
-     *
-     * @covers \Charcoal\Source\AbstractSource::pagination
-     * @covers \Charcoal\Source\AbstractSource::hasPagination
      *
      * @return void
      */
@@ -610,8 +585,6 @@ class AbstractSourceTest extends AbstractTestCase
      * 3. Accepts an array structure
      * 4. Accepts up to two numeric arguments
      * 5. Chainable method
-     *
-     * @covers \Charcoal\Source\AbstractSource::setPagination
      *
      * @return void
      */
@@ -652,8 +625,6 @@ class AbstractSourceTest extends AbstractTestCase
     /**
      * Test the failure when assigning an invalid pagination expression.
      *
-     * @covers \Charcoal\Source\AbstractSource::setPagination
-     *
      * @return void
      */
     public function testProcessExpressionWithInvalidValue()
@@ -668,8 +639,6 @@ class AbstractSourceTest extends AbstractTestCase
      * Assertions:
      * 1. Instance of {@see ExpressionInterface}
      * 2. Instance of {@see PaginationInterface}
-     *
-     * @covers \Charcoal\Source\AbstractSource::createPagination
      *
      * @return void
      */
@@ -725,10 +694,6 @@ class AbstractSourceTest extends AbstractTestCase
 
     /**
      * Test camelization.
-     *
-     * @covers \Charcoal\Source\AbstractSource::camelize
-     * @covers \Charcoal\Source\AbstractSource::getter
-     * @covers \Charcoal\Source\AbstractSource::setter
      *
      * @return void
      */

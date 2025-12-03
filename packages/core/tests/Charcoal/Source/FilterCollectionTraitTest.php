@@ -3,22 +3,27 @@
 namespace Charcoal\Tests\Source;
 
 use InvalidArgumentException;
-
 // From 'charcoal-core'
 use Charcoal\Source\ExpressionInterface;
 use Charcoal\Source\Filter;
 use Charcoal\Source\FilterInterface;
 use Charcoal\Source\FilterCollectionTrait;
 use Charcoal\Source\FilterCollectionInterface;
-
 use Charcoal\Tests\AbstractTestCase;
 use Charcoal\Tests\AssertionsTrait;
 use Charcoal\Tests\ReflectionsTrait;
 use Charcoal\Tests\Mock\FilterCollectionClass;
 use Charcoal\Tests\Source\ExpressionCollectionTestTrait;
-use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversMethod;
 
-#[CoversClass(FilterCollectionTrait::class)]
+#[CoversMethod(FilterCollectionTrait::class, 'createFilter')]
+#[CoversMethod(FilterCollectionTrait::class, 'filters')]
+#[CoversMethod(FilterCollectionTrait::class, 'hasFilters')]
+#[CoversMethod(FilterCollectionTrait::class, 'setFilters')]
+#[CoversMethod(FilterCollectionTrait::class, 'addFilters')]
+#[CoversMethod(FilterCollectionTrait::class, 'addFilter')]
+#[CoversMethod(FilterCollectionTrait::class, 'processFilter')]
+#[CoversMethod(FilterCollectionTrait::class, 'traverseFilters')]
 class FilterCollectionTraitTest extends AbstractTestCase
 {
     use AssertionsTrait;
@@ -57,8 +62,6 @@ class FilterCollectionTraitTest extends AbstractTestCase
      * 1. Instance of {@see ExpressionInterface}
      * 2. Instance of {@see FilterInterface}
      *
-     * @covers \Charcoal\Source\FilterCollectionTrait::createFilter
-     *
      * @return void
      */
     public function testCreateExpression()
@@ -76,8 +79,6 @@ class FilterCollectionTraitTest extends AbstractTestCase
      * Assertions:
      * 1. Empty; Default state
      * 2. Populated; Mutated state
-     *
-     * @covers \Charcoal\Source\FilterCollectionTrait::filters
      *
      * @return void
      */
@@ -102,8 +103,6 @@ class FilterCollectionTraitTest extends AbstractTestCase
      * 1. Empty; Default state
      * 2. Populated; Mutated state
      *
-     * @covers \Charcoal\Source\FilterCollectionTrait::hasFilters
-     *
      * @return void
      */
     public function testHasExpressions()
@@ -124,8 +123,6 @@ class FilterCollectionTraitTest extends AbstractTestCase
      * Assertions:
      * 1. Replaces expressions with a new collection
      * 2. Chainable method
-     *
-     * @covers \Charcoal\Source\FilterCollectionTrait::setFilters
      *
      * @return void
      */
@@ -156,8 +153,6 @@ class FilterCollectionTraitTest extends AbstractTestCase
      * 1. Appends an array of items to the internal collection
      * 2. Chainable method
      *
-     * @covers \Charcoal\Source\FilterCollectionTrait::addFilters
-     *
      * @return void
      */
     public function testAddExpressions()
@@ -182,8 +177,6 @@ class FilterCollectionTraitTest extends AbstractTestCase
 
     /**
      * Test the mass addition of expressions with names.
-     *
-     * @covers \Charcoal\Source\FilterCollectionTrait::addFilters
      *
      * @return void
      */
@@ -214,8 +207,6 @@ class FilterCollectionTraitTest extends AbstractTestCase
      * Assertions:
      * 1. Appends one item to the internal collection
      * 2. Chainable method
-     *
-     * @covers \Charcoal\Source\FilterCollectionTrait::addFilter
      *
      * @return void
      */
@@ -249,8 +240,6 @@ class FilterCollectionTraitTest extends AbstractTestCase
      *    an Expression object is created with the collector's context.
      * 4. If an instance of {@see FilterInterface} is provided,
      *    the Expression object is used as is.
-     *
-     * @covers \Charcoal\Source\FilterCollectionTrait::processFilter
      *
      * @return void
      */
@@ -290,8 +279,6 @@ class FilterCollectionTraitTest extends AbstractTestCase
     /**
      * Test the failure when parsing an invalid expression.
      *
-     * @covers \Charcoal\Source\FilterCollectionTrait::processFilter
-     *
      * @return void
      */
     public function testProcessExpressionWithInvalidValue()
@@ -308,8 +295,6 @@ class FilterCollectionTraitTest extends AbstractTestCase
      * Assertions:
      * 1. Applies callback to internal collection
      * 2. Chainable method
-     *
-     * @covers \Charcoal\Source\FilterCollectionTrait::traverseFilters
      *
      * @return void
      */

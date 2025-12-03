@@ -3,17 +3,26 @@
 namespace Charcoal\Tests\Property;
 
 use InvalidArgumentException;
-
 // From 'charcoal-property'
 use Charcoal\Property\FileProperty;
 use Charcoal\Tests\AbstractTestCase;
 use Charcoal\Tests\Property\FixturesTrait;
 use Charcoal\Tests\ReflectionsTrait;
 use Charcoal\Tests\Property\ContainerIntegrationTrait;
+use PHPUnit\Framework\Attributes\CoversMethod;
 
 /**
  * Test common file property features
  */
+#[CoversMethod(FileProperty::class, 'setFilesize')]
+#[CoversMethod(FileProperty::class, 'getFilesize')]
+#[CoversMethod(FileProperty::class, 'setMimetype')]
+#[CoversMethod(FileProperty::class, 'getMimetype')]
+#[CoversMethod(FileProperty::class, 'setAcceptedMimetypes')]
+#[CoversMethod(FileProperty::class, 'getAcceptedMimetypes')]
+#[CoversMethod(FileProperty::class, 'getDefaultAcceptedMimetypes')]
+#[CoversMethod(FileProperty::class, 'hasAcceptedMimetypes')]
+#[CoversMethod(FileProperty::class, 'type')]
 abstract class AbstractFilePropertyTestCase extends AbstractTestCase
 {
     use ContainerIntegrationTrait;
@@ -194,8 +203,6 @@ abstract class AbstractFilePropertyTestCase extends AbstractTestCase
     /**
      * Asserts that the property can store a filesize.
      *
-     * @covers \Charcoal\Property\FileProperty::setFilesize()
-     * @covers \Charcoal\Property\FileProperty::getFilesize()
      * @return void
      */
     public function testFilesize()
@@ -214,7 +221,6 @@ abstract class AbstractFilePropertyTestCase extends AbstractTestCase
     /**
      * Asserts that the property returns NULL if it can not resolve the filesize from its value.
      *
-     * @covers \Charcoal\Property\FileProperty::getFilesize()
      * @return void
      */
     public function testFilesizeFromBadVal()
@@ -230,8 +236,6 @@ abstract class AbstractFilePropertyTestCase extends AbstractTestCase
     /**
      * Asserts that the property can store a MIME type.
      *
-     * @covers \Charcoal\Property\FileProperty::setMimetype()
-     * @covers \Charcoal\Property\FileProperty::getMimetype()
      * @return void
      */
     public function testMimetype()
@@ -253,7 +257,6 @@ abstract class AbstractFilePropertyTestCase extends AbstractTestCase
     /**
      * Asserts that the property returns NULL if it can not resolve the MIME type from its value.
      *
-     * @covers \Charcoal\Property\FileProperty::getMimetype()
      * @return void
      */
     public function testMimetypeFromBadVal()
@@ -269,7 +272,6 @@ abstract class AbstractFilePropertyTestCase extends AbstractTestCase
     /**
      * Asserts that the property returns x-empty the file is empty.
      *
-     * @covers \Charcoal\Property\FileProperty::getMimetype()
      * @return void
      */
     public function testMimetypeFromEmptyFile()
@@ -285,8 +287,6 @@ abstract class AbstractFilePropertyTestCase extends AbstractTestCase
     /**
      * Asserts that the property supports accepted MIME types.
      *
-     * @covers \Charcoal\Property\FileProperty::setAcceptedMimetypes()
-     * @covers \Charcoal\Property\FileProperty::getAcceptedMimetypes()
      * @return void
      */
     public function testAcceptedMimeTypes()
@@ -321,7 +321,6 @@ abstract class AbstractFilePropertyTestCase extends AbstractTestCase
     /**
      * Asserts that the property adheres to file property defaults.
      *
-     * @covers \Charcoal\Property\FileProperty::getDefaultAcceptedMimetypes()
      * @return void
      */
     abstract public function testDefaulAcceptedMimeTypes();
@@ -330,7 +329,6 @@ abstract class AbstractFilePropertyTestCase extends AbstractTestCase
      * Asserts that the property properly checks if
      * any acceptable MIME types are available.
      *
-     * @covers \Charcoal\Property\FileProperty::hasAcceptedMimetypes()
      * @return void
      */
     abstract public function testHasAcceptedMimeTypes();
@@ -352,7 +350,6 @@ abstract class AbstractFilePropertyTestCase extends AbstractTestCase
     /**
      * Asserts that the `type()` method is "file".
      *
-     * @covers \Charcoal\Property\FileProperty::type()
      * @return void
      */
     abstract public function testPropertyType();

@@ -93,8 +93,6 @@ class DatabaseFilterTest extends AbstractTestCase
      * 2. Negatable Operators
      * 3. Ignored Operators
      *
-     * @covers \Charcoal\Source\Database\DatabaseFilter::isNegating
-     *
      * @return void
      */
     public function testNegation()

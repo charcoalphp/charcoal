@@ -3,12 +3,13 @@
 namespace Charcoal\Tests\Property;
 
 use InvalidArgumentException;
-
 // From 'charcoal-property'
 use Charcoal\Property\ImageProperty;
-use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversMethod;
 
-#[CoversClass(ImageProperty::class)]
+#[CoversMethod(ImageProperty::class, 'type')]
+#[CoversMethod(ImageProperty::class, 'getDefaultAcceptedMimetypes')]
+#[CoversMethod(ImageProperty::class, 'hasAcceptedMimetypes')]
 class ImagePropertyTest extends AbstractFilePropertyTestCase
 {
     /**
@@ -31,7 +32,6 @@ class ImagePropertyTest extends AbstractFilePropertyTestCase
     /**
      * Asserts that the `type()` method is "file".
      *
-     * @covers \Charcoal\Property\ImageProperty::type()
      * @return void
      */
     public function testPropertyType()
@@ -58,7 +58,6 @@ class ImagePropertyTest extends AbstractFilePropertyTestCase
     /**
      * Asserts that the property adheres to file property defaults.
      *
-     * @covers \Charcoal\Property\ImageProperty::getDefaultAcceptedMimetypes()
      * @return void
      */
     public function testDefaulAcceptedMimeTypes()
@@ -71,7 +70,6 @@ class ImagePropertyTest extends AbstractFilePropertyTestCase
      * Asserts that the property properly checks if
      * any acceptable MIME types are available.
      *
-     * @covers \Charcoal\Property\ImageProperty::hasAcceptedMimetypes()
      * @return void
      */
     public function testHasAcceptedMimeTypes()

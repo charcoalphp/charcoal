@@ -3,17 +3,15 @@
 namespace Charcoal\Tests\Property;
 
 use PDO;
-use InvalidArgumentException;
-use ReflectionClass;
-
 // From 'charcoal-core'
 use Charcoal\Validator\ValidatorInterface as Validator;
-
 // From 'charcoal-property'
 use Charcoal\Property\FileProperty;
-use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversMethod;
 
-#[CoversClass(FileProperty::class)]
+#[CoversMethod(FileProperty::class, 'type')]
+#[CoversMethod(FileProperty::class, 'getDefaultAcceptedMimetypes')]
+#[CoversMethod(FileProperty::class, 'hasAcceptedMimetypes')]
 class FilePropertyTest extends AbstractFilePropertyTestCase
 {
     /**
@@ -36,7 +34,6 @@ class FilePropertyTest extends AbstractFilePropertyTestCase
     /**
      * Asserts that the `type()` method is "file".
      *
-     * @covers \Charcoal\Property\FileProperty::type()
      * @return void
      */
     public function testPropertyType()
@@ -47,7 +44,6 @@ class FilePropertyTest extends AbstractFilePropertyTestCase
     /**
      * Asserts that the property adheres to file property defaults.
      *
-     * @covers \Charcoal\Property\FileProperty::getDefaultAcceptedMimetypes()
      * @return void
      */
     public function testDefaulAcceptedMimeTypes()
@@ -60,7 +56,6 @@ class FilePropertyTest extends AbstractFilePropertyTestCase
      * Asserts that the property properly checks if
      * any acceptable MIME types are available.
      *
-     * @covers \Charcoal\Property\FileProperty::hasAcceptedMimetypes()
      * @return void
      */
     public function testHasAcceptedMimeTypes()
