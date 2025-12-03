@@ -5,10 +5,9 @@ namespace Charcoal\Tests\App\ServiceProvider;
 use DI\Container;
 use Charcoal\App\ServiceProvider\ScriptServiceProvider;
 use Charcoal\Tests\AbstractTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- *
- */
+#[CoversClass(ScriptServiceProvider::class)]
 class ScriptServiceProviderTest extends AbstractTestCase
 {
     public function testProvider()

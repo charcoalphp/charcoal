@@ -5,10 +5,9 @@ namespace Charcoal\Tests\App\ServiceProvider;
 use DI\Container;
 use Charcoal\App\ServiceProvider\DatabaseServiceProvider;
 use Charcoal\Tests\AbstractTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- *
- */
+#[CoversClass(DatabaseServiceProvider::class)]
 class DatabaseServiceProviderTest extends AbstractTestCase
 {
     public function testProvider()

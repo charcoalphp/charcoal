@@ -4,10 +4,9 @@ namespace Charcoal\Tests\App\Config;
 
 use Charcoal\App\Config\FilesystemConfig;
 use Charcoal\Tests\AbstractTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- *
- */
+#[CoversClass(FilesystemConfig::class)]
 class FilesystemConfigTest extends AbstractTestCase
 {
     public $obj;

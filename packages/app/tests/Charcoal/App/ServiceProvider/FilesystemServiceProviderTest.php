@@ -10,10 +10,9 @@ use League\Flysystem\Filesystem;
 use Charcoal\App\Config\FilesystemConfig;
 use Charcoal\App\ServiceProvider\FilesystemServiceProvider;
 use Charcoal\Tests\AbstractTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- *
- */
+#[CoversClass(FilesystemServiceProvider::class)]
 class FilesystemServiceProviderTest extends AbstractTestCase
 {
     private $obj;

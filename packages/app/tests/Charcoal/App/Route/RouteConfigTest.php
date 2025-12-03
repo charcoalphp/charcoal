@@ -3,10 +3,11 @@
 namespace Charcoal\Tests\App\Route;
 
 use InvalidArgumentException;
-
 use Charcoal\App\Route\RouteConfig;
 use Charcoal\Tests\AbstractTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
+#[CoversClass(RouteConfig::class)]
 class RouteConfigTest extends AbstractTestCase
 {
     public $obj;

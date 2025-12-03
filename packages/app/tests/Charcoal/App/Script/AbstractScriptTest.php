@@ -7,10 +7,9 @@ use DI\Container;
 use Charcoal\App\Script\AbstractScript;
 use Charcoal\Tests\AbstractTestCase;
 use Charcoal\Tests\App\ContainerProvider;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- *
- */
+#[CoversClass(AbstractScript::class)]
 class AbstractScriptTest extends AbstractTestCase
 {
     /**

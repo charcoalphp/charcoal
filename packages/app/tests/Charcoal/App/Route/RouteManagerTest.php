@@ -2,17 +2,14 @@
 
 namespace Charcoal\Tests\App\Route;
 
-
 use Slim\Interfaces\RouteInterface;
-
 // From 'charcoal-app'
 use Charcoal\App\App;
 use Charcoal\App\Route\RouteManager;
 use Charcoal\Tests\AbstractTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- *
- */
+#[CoversClass(RouteManager::class)]
 class RouteManagerTest extends AbstractTestCase
 {
     /**

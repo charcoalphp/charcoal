@@ -13,10 +13,9 @@ use Charcoal\App\Route\ScriptRoute;
 use Charcoal\App\Route\ScriptRouteConfig;
 use Charcoal\Tests\AbstractTestCase;
 use Charcoal\Tests\App\ContainerProvider;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- *
- */
+#[CoversClass(ScriptRoute::class)]
 class ScriptRouteTest extends AbstractTestCase
 {
     /**

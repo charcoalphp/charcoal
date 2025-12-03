@@ -4,7 +4,9 @@ namespace Charcoal\Tests\App\Route;
 
 use Charcoal\App\Route\ActionRouteConfig;
 use Charcoal\Tests\AbstractTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
+#[CoversClass(ActionRouteConfig::class)]
 class ActionRouteConfigTest extends AbstractTestCase
 {
     public $obj;

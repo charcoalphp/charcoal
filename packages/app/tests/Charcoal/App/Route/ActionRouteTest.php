@@ -7,7 +7,9 @@ use DI\Container;
 use Charcoal\App\Route\ActionRoute;
 use Charcoal\Tests\App\ContainerProvider;
 use Charcoal\Tests\AbstractTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
+#[CoversClass(ActionRoute::class)]
 class ActionRouteTest extends AbstractTestCase
 {
     /**

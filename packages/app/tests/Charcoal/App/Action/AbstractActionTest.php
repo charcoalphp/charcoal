@@ -11,10 +11,9 @@ use DI\Container;
 use Charcoal\App\Action\AbstractAction;
 use Charcoal\Tests\App\ContainerProvider;
 use Charcoal\Tests\AbstractTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- *
- */
+#[CoversClass(AbstractAction::class)]
 class AbstractActionTest extends AbstractTestCase
 {
     /**

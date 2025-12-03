@@ -2,18 +2,14 @@
 
 namespace Charcoal\Tests\App\Config;
 
-use Exception;
-use TypeError;
 use InvalidArgumentException;
-
 // From 'charcoal-app'
 use Charcoal\App\Config\LoggerConfig;
 use Charcoal\Tests\AbstractTestCase;
 use Charcoal\Tests\AssertionsTrait;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- *
- */
+#[CoversClass(LoggerConfig::class)]
 class LoggerConfigTest extends AbstractTestCase
 {
     use AssertionsTrait;

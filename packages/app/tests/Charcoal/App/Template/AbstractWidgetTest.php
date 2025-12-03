@@ -7,10 +7,9 @@ use DI\Container;
 use Charcoal\App\Template\AbstractWidget;
 use Charcoal\Tests\AbstractTestCase;
 use Charcoal\Tests\App\ContainerProvider;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- *
- */
+#[CoversClass(AbstractWidget::class)]
 class AbstractWidgetTest extends AbstractTestCase
 {
     /**

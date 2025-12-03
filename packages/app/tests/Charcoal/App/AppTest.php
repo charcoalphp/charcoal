@@ -4,16 +4,14 @@ namespace Charcoal\Tests\App;
 
 // From PSR-7
 use Psr\Http\Message\ResponseInterface;
-
 // From 'charcoal-app'
 use Charcoal\App\App;
 use Charcoal\App\AppConfig;
 use Charcoal\App\AppContainer;
 use Charcoal\Tests\AbstractTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- *
- */
+#[CoversClass(App::class)]
 class AppTest extends AbstractTestCase
 {
     /**

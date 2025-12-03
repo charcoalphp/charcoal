@@ -4,10 +4,9 @@ namespace Charcoal\Tests\App\Config;
 
 use Charcoal\App\Config\DatabaseConfig;
 use Charcoal\Tests\AbstractTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- *
- */
+#[CoversClass(DatabaseConfig::class)]
 class DatabaseConfigTest extends AbstractTestCase
 {
     public $obj;
