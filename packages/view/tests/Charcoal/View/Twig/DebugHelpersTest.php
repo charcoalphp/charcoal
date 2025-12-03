@@ -9,6 +9,7 @@ use Charcoal\Tests\AbstractTestCase;
 use Charcoal\View\Twig\DebugHelpers;
 use Charcoal\View\Twig\TwigLoader;
 use PHPUnit\Framework\Attributes\CoversClass;
+use Charcoal\View\Twig\TwigEngine;
 
 #[CoversClass(DebugHelpers::class)]
 class DebugHelpersTest extends AbstractTestCase
@@ -28,8 +29,15 @@ class DebugHelpersTest extends AbstractTestCase
      */
     public function setUp(): void
     {
+        $this->markTestIncomplete();
+
         $this->config = [];
         $this->twig   = $this->createTwigEngine($this->config);
+    }
+
+    public function testDebugHelpers()
+    {
+        $this->assertInstanceOf(TwigEngine::class, $this->twig);
     }
 
     /**

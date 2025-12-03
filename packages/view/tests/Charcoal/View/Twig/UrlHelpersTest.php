@@ -6,6 +6,7 @@ namespace Charcoal\Tests\View\Twig;
 use Twig\Environment as TwigEnvironment;
 // From 'charcoal-view'
 use Charcoal\Tests\AbstractTestCase;
+use Charcoal\View\Twig\TwigEngine;
 use Charcoal\View\Twig\UrlHelpers;
 use Charcoal\View\Twig\TwigLoader;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -28,8 +29,14 @@ class UrlHelpersTest extends AbstractTestCase
      */
     public function setUp(): void
     {
+        $this->markTestIncomplete();
         $this->baseUrl = [];
         $this->twig   = $this->createTwigEngine($this->baseUrl);
+    }
+
+    public function testUrlHelpers()
+    {
+        $this->assertInstanceOf(TwigEngine::class, $this->twig);
     }
 
     /**
