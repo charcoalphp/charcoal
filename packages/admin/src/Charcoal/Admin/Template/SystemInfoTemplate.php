@@ -159,14 +159,14 @@ class SystemInfoTemplate extends AdminTemplate
         $extensions['pdo_drivers'] = $pdoDrivers;
 
         $data = [
-            'Charcoal version'          => InstalledVersions::getPrettyVersion('charcoal/charcoal') ?? InstalledVersions::getVersion('charcoal/charcoal'),
+            'Charcoal version'          => (InstalledVersions::getPrettyVersion('charcoal/charcoal') ?? InstalledVersions::getVersion('charcoal/charcoal')),
             'PHP version'               => PHP_MAJOR_VERSION . '.' . PHP_MINOR_VERSION . '.' . PHP_RELEASE_VERSION,
-            'PHP server api'            => php_sapi_name(),
-            'Web server'                => $_SERVER['SERVER_SOFTWARE'] ?? null,
+            'PHP server api'            => PHP_SAPI,
+            'Web server'                => ($_SERVER['SERVER_SOFTWARE'] ?? null),
             'OS version'                => PHP_OS . ' ' . php_uname('r'),
             'Database driver & version' => $this->getDatabaseDriver(),
-            'Twig version'              => InstalledVersions::getPrettyVersion('twig/twig') ?? InstalledVersions::getVersion('twig/twig'),
-            'Mustache version'          => InstalledVersions::getPrettyVersion('mustache/mustache') ?? InstalledVersions::getVersion('mustache/mustache'),
+            'Twig version'              => (InstalledVersions::getPrettyVersion('twig/twig') ?? InstalledVersions::getVersion('twig/twig')),
+            'Mustache version'          => (InstalledVersions::getPrettyVersion('mustache/mustache') ?? InstalledVersions::getVersion('mustache/mustache')),
             'Image driver & version'    => self::getImageDriver(),
             'Project directory'         => getcwd(),
             'Timezone'                  => date_default_timezone_get(),

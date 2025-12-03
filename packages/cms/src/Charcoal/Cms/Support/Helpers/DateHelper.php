@@ -4,7 +4,6 @@ namespace Charcoal\Cms\Support\Helpers;
 
 use DateTime;
 use Exception;
-// From 'charcoal-translator'
 use Charcoal\Translator\TranslatorAwareTrait;
 
 /**
@@ -204,14 +203,14 @@ class DateHelper
         if (!$this->to || !$formats['to']) {
             return sprintf(
                 (string)$content,
-                strftime($formats['from'], $this->from->getTimestamp())
+                \PHP81_BC\strftime($formats['from'], $this->from->getTimestamp())
             );
         }
 
         return sprintf(
             (string)$content,
-            strftime($formats['from'], $this->from->getTimestamp()),
-            strftime($formats['to'], $this->to->getTimestamp())
+            \PHP81_BC\strftime($formats['from'], $this->from->getTimestamp()),
+            \PHP81_BC\strftime($formats['to'], $this->to->getTimestamp())
         );
     }
 
@@ -235,14 +234,14 @@ class DateHelper
         if (!$this->to || !$formats['to']) {
             return sprintf(
                 (string)$content,
-                strftime($formats['from'], $this->from->getTimestamp())
+                \PHP81_BC\strftime($formats['from'], $this->from->getTimestamp())
             );
         }
 
         return sprintf(
             (string)$content,
-            strftime($formats['from'], $this->from->getTimestamp()),
-            strftime($formats['to'], $this->to->getTimestamp())
+            \PHP81_BC\strftime($formats['from'], $this->from->getTimestamp()),
+            \PHP81_BC\strftime($formats['to'], $this->to->getTimestamp()),
         );
     }
 

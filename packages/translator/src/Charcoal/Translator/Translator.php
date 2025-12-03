@@ -46,7 +46,7 @@ class Translator extends SymfonyTranslator
 
         // Ensure Charcoal has control of the message formatter.
         if (!isset($data['message_formatter'])) {
-            $data['message_formatter'] = new MessageFormatter($data['message_selector'] ?? null);
+            $data['message_formatter'] = new MessageFormatter(($data['message_selector'] ?? null));
         }
         $this->setFormatter($data['message_formatter']);
 
@@ -229,7 +229,7 @@ class Translator extends SymfonyTranslator
                 if ($hasTranslation) {
                     $translation[$lang] = $this->translationRaw($localized, ($domain ?? null))[$lang];
                     $translation[$lang] = $this->convertLegacyChoiceFormat((string)$translation[$lang], $parameters);
-                } else if (isset($translation[$lang])) {
+                } elseif (isset($translation[$lang])) {
                     $translation[$lang] = $this->convertLegacyChoiceFormat((string)$val, $parameters);
                 } else {
                     continue;
@@ -280,12 +280,12 @@ class Translator extends SymfonyTranslator
 
         if ($val instanceof Translation) {
             // Convert any legacy patterns inside the Translation for all locales
-            $val->sanitize(function($string) use ($parameters) {
+            $val->sanitize(function ($string) use ($parameters) {
                 return $this->convertLegacyChoiceFormat((string)$string, $parameters);
             });
 
             // Prefer the locale-specific pattern if present
-            $pattern = $val[$locale] ?? (string)$val;
+            $pattern = ($val[$locale] ?? (string)$val);
 
             return $this->formatMessage($locale, (string)$pattern, $parameters);
         }
@@ -373,12 +373,12 @@ class Translator extends SymfonyTranslator
                                 continue;
                             }
                             if (preg_match('/^\{(.+)\}$/', $ok, $m)) {
-                                $res = str_replace('{'.$m[1].'}', (string)$ov, $res);
+                                $res = str_replace('{' . $m[1] . '}', (string)$ov, $res);
                             } elseif (preg_match('/^%(.+)%$/', $ok, $m)) {
-                                $res = str_replace('%'.$m[1].'%', (string)$ov, $res);
+                                $res = str_replace('%' . $m[1] . '%', (string)$ov, $res);
                             } else {
-                                $res = str_replace('{'.$ok.'}', (string)$ov, $res);
-                                $res = str_replace('%'.$ok.'%', (string)$ov, $res);
+                                $res = str_replace('{' . $ok . '}', (string)$ov, $res);
+                                $res = str_replace('%' . $ok . '%', (string)$ov, $res);
                             }
                         }
 
@@ -395,7 +395,7 @@ class Translator extends SymfonyTranslator
         foreach ($normalized as $k => $v) {
             $placeholder = preg_quote($k, '/');
             $out = preg_replace_callback(
-                ['/\\{'.$placeholder.'\\}(?!\\s*,\\s*(plural|select|selectordinal))/i', '/%'.$placeholder.'%/'],
+                ['/\\{' . $placeholder . '\\}(?!\\s*,\\s*(plural|select|selectordinal))/i', '/%' . $placeholder . '%/'],
                 function ($m) use ($v) {
                     return (string)$v;
                 },
@@ -409,12 +409,12 @@ class Translator extends SymfonyTranslator
                 continue;
             }
             if (preg_match('/^\{(.+)\}$/', $ok, $m)) {
-                $out = str_replace('{'.$m[1].'}', (string)$ov, $out);
+                $out = str_replace('{' . $m[1] . '}', (string)$ov, $out);
             } elseif (preg_match('/^%(.+)%$/', $ok, $m)) {
-                $out = str_replace('%'.$m[1].'%', (string)$ov, $out);
+                $out = str_replace('%' . $m[1] . '%', (string)$ov, $out);
             } else {
-                $out = str_replace('{'.$ok.'}', (string)$ov, $out);
-                $out = str_replace('%'.$ok.'%', (string)$ov, $out);
+                $out = str_replace('{' . $ok . '}', (string)$ov, $out);
+                $out = str_replace('%' . $ok . '%', (string)$ov, $out);
             }
         }
 
@@ -445,7 +445,7 @@ class Translator extends SymfonyTranslator
                 $num  = (int)$m[1];
                 $text = str_replace('{count}', '#', $m[2]);
                 $text = str_replace('%count%', '%count%', $text); // keep %count% for post-replace
-                $rules["=".$num] = $text;
+                $rules["=" . $num] = $text;
                 continue;
             }
 
@@ -458,9 +458,9 @@ class Translator extends SymfonyTranslator
                 $low  = ($lowRaw === '-Inf') ? null : (is_numeric($lowRaw) ? (int)$lowRaw : null);
                 $high = ($highRaw === 'Inf') ? null : (is_numeric($highRaw) ? (int)$highRaw : null);
 
-                if ($low !== null && $high !== null && $high - $low <= 50) {
+                if ($low !== null && $high !== null && ($high - $low) <= 50) {
                     for ($n = $low; $n <= $high; $n++) {
-                        $rules["=".$n] = $text;
+                        $rules["=" . $n] = $text;
                     }
                 } else {
                     if ($low === 0 && $high === 1) {
@@ -515,20 +515,28 @@ class Translator extends SymfonyTranslator
             $pa = ($a[0] === '=') ? 0 : 1;
             $pb = ($b[0] === '=') ? 0 : 1;
             if ($pa !== $pb) {
-                return $pa - $pb;
+                return ($pa - $pb);
             }
-            if ($a === 'one') return -1;
-            if ($b === 'one') return 1;
-            if ($a === 'other') return 1;
-            if ($b === 'other') return -1;
+            if ($a === 'one') {
+                return -1;
+            }
+            if ($b === 'one') {
+                return 1;
+            }
+            if ($a === 'other') {
+                return 1;
+            }
+            if ($b === 'other') {
+                return -1;
+            }
             return strcmp($a, $b);
         });
 
         foreach ($rules as $selector => $text) {
-            $pieces[] = $selector.' {'.trim($text).'}';
+            $pieces[] = $selector . ' {' . trim($text) . '}';
         }
 
-        $result = '{count, plural, '.implode(' ', $pieces).'}';
+        $result = '{count, plural, ' . implode(' ', $pieces) . '}';
 
         return $result;
     }
