@@ -32,15 +32,15 @@ class CacheMiddlewareRequestTest extends AbstractCacheMiddlewareTestCase
     /**
      * Test middleware with an invalid HTTP request method.
      *
-     * @covers ::__invoke
-     * @covers ::isRequestMethodValid
-     * @covers ::isResponseStatusValid
-     * @covers ::isPathIncluded
-     * @covers ::isPathExcluded
-     * @covers ::isQueryIncluded
-     * @covers ::isQueryExcluded
-     * @covers ::parseIgnoredParams
-     * @covers ::disableCacheHeadersOnResponse
+     * @covers CacheMiddleware::__invoke
+     * @covers CacheMiddleware::isRequestMethodValid
+     * @covers CacheMiddleware::isResponseStatusValid
+     * @covers CacheMiddleware::isPathIncluded
+     * @covers CacheMiddleware::isPathExcluded
+     * @covers CacheMiddleware::isQueryIncluded
+     * @covers CacheMiddleware::isQueryExcluded
+     * @covers CacheMiddleware::parseIgnoredParams
+     * @covers CacheMiddleware::disableCacheHeadersOnResponse
      *
      * @dataProvider provideInvokableSituations
      *

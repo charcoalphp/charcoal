@@ -69,7 +69,7 @@ class CachePoolFacadeTest extends AbstractTestCase
     }
 
     /**
-     * @covers ::__construct
+     * @covers CachePoolFacade::__construct
      */
     public function testConstruct()
     {
@@ -81,8 +81,8 @@ class CachePoolFacadeTest extends AbstractTestCase
     }
 
     /**
-     * @covers ::get
-     * @covers ::save
+     * @covers CachePoolFacade::get
+     * @covers CachePoolFacade::save
      *
      * @return void
      */
@@ -105,7 +105,7 @@ class CachePoolFacadeTest extends AbstractTestCase
     }
 
     /**
-     * @covers ::has
+     * @covers CachePoolFacade::has
      *
      * @return void
      */
@@ -120,8 +120,8 @@ class CachePoolFacadeTest extends AbstractTestCase
     }
 
     /**
-     * @covers ::set
-     * @covers ::save
+     * @covers CachePoolFacade::set
+     * @covers CachePoolFacade::save
      *
      * @return CachePoolFacade To use the same cache pool facade for the next test.
      */
@@ -162,7 +162,7 @@ class CachePoolFacadeTest extends AbstractTestCase
     /**
      * Test a numeric expiration time for this cache item.
      *
-     * @covers ::save
+     * @covers CachePoolFacade::save
      *
      * @dataProvider provideTtlOnSave
      *
@@ -224,8 +224,8 @@ class CachePoolFacadeTest extends AbstractTestCase
     }
 
     /**
-     * @covers ::defaultTtl
-     * @covers ::setDefaultTtl
+     * @covers CachePoolFacade::defaultTtl
+     * @covers CachePoolFacade::setDefaultTtl
      *
      * @return void
      */

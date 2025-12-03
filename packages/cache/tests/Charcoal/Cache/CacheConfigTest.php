@@ -36,12 +36,12 @@ class CacheConfigTest extends AbstractTestCase
     }
 
     /**
-     * @covers ::defaults
-     * @covers ::active
-     * @covers ::types
-     * @covers ::defaultTypes
-     * @covers ::defaultTtl
-     * @covers ::prefix
+     * @covers CacheConfig::defaults
+     * @covers CacheConfig::active
+     * @covers CacheConfig::types
+     * @covers CacheConfig::defaultTypes
+     * @covers CacheConfig::defaultTtl
+     * @covers CacheConfig::prefix
      */
     public function testDefaults()
     {
@@ -67,8 +67,8 @@ class CacheConfigTest extends AbstractTestCase
     }
 
     /**
-     * @covers ::setActive
-     * @covers ::active
+     * @covers CacheConfig::setActive
+     * @covers CacheConfig::active
      */
     public function testActive()
     {
@@ -81,8 +81,8 @@ class CacheConfigTest extends AbstractTestCase
     }
 
     /**
-     * @covers ::setTypes
-     * @covers ::types
+     * @covers CacheConfig::setTypes
+     * @covers CacheConfig::types
      */
     public function testReplaceDrivers()
     {
@@ -96,7 +96,7 @@ class CacheConfigTest extends AbstractTestCase
     }
 
     /**
-     * @covers ::types
+     * @covers CacheConfig::types
      */
     public function testUniqueDrivers()
     {
@@ -107,9 +107,9 @@ class CacheConfigTest extends AbstractTestCase
     }
 
     /**
-     * @covers ::addTypes
-     * @covers ::addType
-     * @covers ::types
+     * @covers CacheConfig::addTypes
+     * @covers CacheConfig::addType
+     * @covers CacheConfig::types
      */
     public function testAddDrivers()
     {
@@ -125,8 +125,8 @@ class CacheConfigTest extends AbstractTestCase
     }
 
     /**
-     * @covers ::validTypes
-     * @covers ::addType
+     * @covers CacheConfig::validTypes
+     * @covers CacheConfig::addType
      */
     public function testAddDriverOnInvalidType()
     {
@@ -136,8 +136,8 @@ class CacheConfigTest extends AbstractTestCase
     }
 
     /**
-     * @covers ::setDefaultTtl
-     * @covers ::defaultTtl
+     * @covers CacheConfig::setDefaultTtl
+     * @covers CacheConfig::defaultTtl
      */
     public function testDefaultTtl()
     {
@@ -150,7 +150,7 @@ class CacheConfigTest extends AbstractTestCase
     }
 
     /**
-     * @covers ::setDefaultTtl
+     * @covers CacheConfig::setDefaultTtl
      */
     public function testSetDefaultTtlOnInvalidType()
     {
@@ -160,8 +160,8 @@ class CacheConfigTest extends AbstractTestCase
     }
 
     /**
-     * @covers ::setPrefix
-     * @covers ::prefix
+     * @covers CacheConfig::setPrefix
+     * @covers CacheConfig::prefix
      */
     public function testPrefix()
     {
@@ -174,7 +174,7 @@ class CacheConfigTest extends AbstractTestCase
     }
 
     /**
-     * @covers ::setPrefix
+     * @covers CacheConfig::setPrefix
      */
     public function testSetPrefixOnInvalidType()
     {
@@ -184,7 +184,7 @@ class CacheConfigTest extends AbstractTestCase
     }
 
     /**
-     * @covers ::setPrefix
+     * @covers CacheConfig::setPrefix
      */
     public function testSetPrefixOnInvalidValue()
     {

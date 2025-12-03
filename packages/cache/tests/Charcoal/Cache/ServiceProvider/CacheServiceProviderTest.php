@@ -25,10 +25,10 @@ use PHPUnit\Framework\Attributes\CoversClass;
 class CacheServiceProviderTest extends AbstractTestCase
 {
     /**
-     * @covers ::register
-     * @covers ::registerDrivers
-     * @covers ::registerService
-     * @covers ::registerMiddleware
+     * @covers CacheServiceProvider::register
+     * @covers CacheServiceProvider::registerDrivers
+     * @covers CacheServiceProvider::registerService
+     * @covers CacheServiceProvider::registerMiddleware
      */
     public function testProvider()
     {
@@ -62,7 +62,7 @@ class CacheServiceProviderTest extends AbstractTestCase
     /**
      * Test "middlewares/charcoal/cache/middleware/cache" with a user-preferences.
      *
-     * @covers ::registerMiddleware
+     * @covers CacheServiceProvider::registerMiddleware
      */
     public function testCustomizedMiddleware()
     {
@@ -87,7 +87,7 @@ class CacheServiceProviderTest extends AbstractTestCase
     /**
      * Test "cache/drivers"; basic drivers are instances of {@see DriverInterface}.
      *
-     * @covers ::registerDrivers
+     * @covers CacheServiceProvider::registerDrivers
      */
     public function testBasicDriverInstances()
     {
@@ -114,7 +114,7 @@ class CacheServiceProviderTest extends AbstractTestCase
     /**
      * Test "cache/drivers"; vendor drivers are instances of {@see DriverInterface}.
      *
-     * @covers ::registerDrivers
+     * @covers CacheServiceProvider::registerDrivers
      */
     public function testAvailableVendorDriverInstances()
     {
@@ -153,7 +153,7 @@ class CacheServiceProviderTest extends AbstractTestCase
     /**
      * Test "cache/drivers"; unavailable vendor drivers return NULL.
      *
-     * @covers ::registerDrivers
+     * @covers CacheServiceProvider::registerDrivers
      */
     public function testUnavailableVendorDriverInstances()
     {
@@ -183,8 +183,8 @@ class CacheServiceProviderTest extends AbstractTestCase
     /**
      * Assert "cache/driver" resolves as expected.
      *
-     * @covers ::registerDrivers
-     * @covers ::registerService
+     * @covers CacheServiceProvider::registerDrivers
+     * @covers CacheServiceProvider::registerService
      *
      * @dataProvider provideConfigsForMainDriver
      *

@@ -37,7 +37,7 @@ class EntityTest extends AbstractEntityTestCase
      * - Keys are added automatically when setting a value via {@see ArrayAccess::offsetSet()}
      * - Keys are removed automatically when unsetting a value via {@see ArrayAccess::offsetUnset()}
      *
-     * @covers ::keys()
+     * @covers AbstractEntity::keys()
      * @return void
      */
     public function testKeys()
@@ -94,8 +94,8 @@ class EntityTest extends AbstractEntityTestCase
      *   to prevent recursion calls.
      * - The key-value pair "foo" will be passed to {@see MacroEntity::setFoo()}
      *
-     * @covers ::setData()
-     * @covers ::data()
+     * @covers AbstractEntity::setData()
+     * @covers AbstractEntity::data()
      * @return void
      */
     public function testSetData()
@@ -127,7 +127,7 @@ class EntityTest extends AbstractEntityTestCase
      * - The entity will accept "name", "type", "foo", "baz"
      * - The entity will pass "foo" to {@see MacroEntity::setFoo()}
      *
-     * @covers ::data()
+     * @covers AbstractEntity::data()
      * @return void
      */
     public function testGetDataSubset()
@@ -148,10 +148,10 @@ class EntityTest extends AbstractEntityTestCase
     /**
      * Test {@see AbstractEntity::setData()} via {@see \ArrayAccess::offsetSet()}.
      *
-     * @covers ::offsetSet()
-     * @covers ::offsetGet()
-     * @covers ::setData()
-     * @covers ::data()
+     * @covers AbstractEntity::offsetSet()
+     * @covers AbstractEntity::offsetGet()
+     * @covers AbstractEntity::setData()
+     * @covers AbstractEntity::data()
      * @return void
      */
     public function testSetDataViaArrayAccess()
@@ -183,7 +183,7 @@ class EntityTest extends AbstractEntityTestCase
      * - Keys are converted to "camelCase" for method calls or property assignments
      * - Keys are memorized as "camelCase"
      *
-     * @covers ::camelize()
+     * @covers AbstractEntity::camelize()
      * @return void
      */
     public function testCamelize()
@@ -204,7 +204,7 @@ class EntityTest extends AbstractEntityTestCase
      * 1. Serialization from default state
      * 2. Serialization from mutated state
      *
-     * @covers ::jsonSerialize()
+     * @covers AbstractEntity::jsonSerialize()
      * @return void
      */
     public function testJsonSerializable()
@@ -235,8 +235,8 @@ class EntityTest extends AbstractEntityTestCase
      * 1. Serialization from default state
      * 2. Serialization from mutated state
      *
-     * @covers ::serialize()
-     * @covers ::unserialize()
+     * @covers AbstractEntity::serialize()
+     * @covers AbstractEntity::unserialize()
      * @return void
      */
     public function testSerializable()

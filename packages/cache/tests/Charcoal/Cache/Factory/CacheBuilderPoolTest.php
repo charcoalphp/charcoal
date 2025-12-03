@@ -21,7 +21,7 @@ class CacheBuilderPoolTest extends AbstractCacheBuilderTestCase
     /**
      * Asserts that the CacheBuilder is invokable.
      *
-     * @covers ::__invoke
+     * @covers CacheBuilder::__invoke
      */
     public function testBuildIsInvokable()
     {
@@ -35,8 +35,8 @@ class CacheBuilderPoolTest extends AbstractCacheBuilderTestCase
     /**
      * Asserts that the Pool logger can be assigned from build options.
      *
-     * @covers ::parsePoolOptions
-     * @covers ::applyPoolOptions
+     * @covers CacheBuilder::parsePoolOptions
+     * @covers CacheBuilder::applyPoolOptions
      */
     public function testBuildWithLoggerOnOptions()
     {
@@ -54,8 +54,8 @@ class CacheBuilderPoolTest extends AbstractCacheBuilderTestCase
     /**
      * Asserts that the Pool namespace can be customized from build options.
      *
-     * @covers ::parsePoolOptions
-     * @covers ::applyPoolOptions
+     * @covers CacheBuilder::parsePoolOptions
+     * @covers CacheBuilder::applyPoolOptions
      */
     public function testBuildWithNamespaceOnOptions()
     {
@@ -76,8 +76,8 @@ class CacheBuilderPoolTest extends AbstractCacheBuilderTestCase
     /**
      * Asserts that the Item class can be customized from build options.
      *
-     * @covers ::parsePoolOptions
-     * @covers ::applyPoolOptions
+     * @covers CacheBuilder::parsePoolOptions
+     * @covers CacheBuilder::applyPoolOptions
      */
     public function testBuildWithItemClassOnOptions()
     {
@@ -97,8 +97,8 @@ class CacheBuilderPoolTest extends AbstractCacheBuilderTestCase
     /**
      * Asserts that the Pool class can be customized from build options.
      *
-     * @covers ::parsePoolOptions
-     * @covers ::applyPoolOptions
+     * @covers CacheBuilder::parsePoolOptions
+     * @covers CacheBuilder::applyPoolOptions
      */
     public function testBuildWithPoolClassOnOptions()
     {
@@ -118,7 +118,7 @@ class CacheBuilderPoolTest extends AbstractCacheBuilderTestCase
     /**
      * Asserts that the CacheBuilder uses default options when given NULL.
      *
-     * @covers ::parsePoolOptions
+     * @covers CacheBuilder::parsePoolOptions
      */
     public function testBuildWithNullOnOptions()
     {
@@ -134,7 +134,7 @@ class CacheBuilderPoolTest extends AbstractCacheBuilderTestCase
     /**
      * Asserts that the CacheBuilder uses default options when given NULL.
      *
-     * @covers ::parsePoolOptions
+     * @covers CacheBuilder::parsePoolOptions
      */
     public function testBuildWithInvalidTypeOnOptions()
     {

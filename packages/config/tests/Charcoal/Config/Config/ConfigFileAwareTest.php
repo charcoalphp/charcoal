@@ -62,8 +62,8 @@ class ConfigFileAwareTest extends AbstractConfigTestCase
     }
 
     /**
-     * @covers ::__construct()
-     * @covers ::addFile()
+     * @covers AbstractConfig::__construct()
+     * @covers AbstractConfig::addFile()
      *
      * @return void
      */
@@ -127,7 +127,7 @@ class ConfigFileAwareTest extends AbstractConfigTestCase
     /**
      * INI: Asserts that an ordered list is NOT ignored.
      *
-     * @covers ::addFile()
+     * @covers AbstractConfig::addFile()
      * @return void
      */
     public function testAddIniFileWithInvalidArray()
@@ -142,7 +142,7 @@ class ConfigFileAwareTest extends AbstractConfigTestCase
     /**
      * INI: Asserts that an unparsable file is silently ignored.
      *
-     * @covers ::addFile()
+     * @covers AbstractConfig::addFile()
      * @return void
      */
     public function testAddUnparsableIniFile()
@@ -186,7 +186,7 @@ class ConfigFileAwareTest extends AbstractConfigTestCase
     /**
      * JSON: Asserts that an ordered list is NOT ignored.
      *
-     * @covers ::addFile()
+     * @covers AbstractConfig::addFile()
      * @return void
      */
     public function testAddJsonFileWithInvalidArray()
@@ -201,7 +201,7 @@ class ConfigFileAwareTest extends AbstractConfigTestCase
     /**
      * JSON: Asserts that an invalid file is silently ignored.
      *
-     * @covers ::addFile()
+     * @covers AbstractConfig::addFile()
      * @return void
      */
     public function testAddJsonFileWithInvalidType()
@@ -266,7 +266,7 @@ class ConfigFileAwareTest extends AbstractConfigTestCase
     /**
      * PHP: Asserts that an ordered list is NOT ignored.
      *
-     * @covers ::addFile()
+     * @covers AbstractConfig::addFile()
      * @return void
      */
     public function testAddPhpFileWithInvalidArray()
@@ -281,7 +281,7 @@ class ConfigFileAwareTest extends AbstractConfigTestCase
     /**
      * PHP: Asserts that an invalid file is silently ignored.
      *
-     * @covers ::addFile()
+     * @covers AbstractConfig::addFile()
      * @return void
      */
     public function testAddPhpFileWithInvalidType()
@@ -323,7 +323,7 @@ class ConfigFileAwareTest extends AbstractConfigTestCase
     /**
      * YAML: Asserts that an ordered list is NOT ignored.
      *
-     * @covers ::addFile()
+     * @covers AbstractConfig::addFile()
      * @return void
      */
     public function testAddYamlFileWithInvalidArray()
@@ -338,7 +338,7 @@ class ConfigFileAwareTest extends AbstractConfigTestCase
     /**
      * YAML: Asserts that an invalid file is silently ignored.
      *
-     * @covers ::addFile()
+     * @covers AbstractConfig::addFile()
      * @return void
      */
     public function testAddYamlFileWithInvalidType()

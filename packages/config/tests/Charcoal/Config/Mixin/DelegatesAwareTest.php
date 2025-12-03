@@ -104,9 +104,9 @@ class DelegatesAwareTest extends AbstractTestCase
     }
 
     /**
-     * @covers ::setDelegates()
-     * @covers ::addDelegate()
-     * @covers ::prependDelegate()
+     * @covers DelegatesAwareTrait::setDelegates()
+     * @covers DelegatesAwareTrait::addDelegate()
+     * @covers DelegatesAwareTrait::prependDelegate()
      * @return void
      */
     public function testSetDelegates()

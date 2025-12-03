@@ -62,7 +62,7 @@ class ConfigTest extends AbstractConfigTestCase
     /**
      * Asserts that the object implements IteratorAggregate.
      *
-     * @covers ::getIterator()
+     * @covers AbstractConfig::getIterator()
      * @return void
      */
     public function testIteratorAggregate()
@@ -72,8 +72,8 @@ class ConfigTest extends AbstractConfigTestCase
     }
 
     /**
-     * @covers ::__construct
-     * @covers ::merge
+     * @covers AbstractConfig::__construct
+     * @covers AbstractConfig::merge
      * @return void
      */
     public function testConstructWithArray()
@@ -85,8 +85,8 @@ class ConfigTest extends AbstractConfigTestCase
     }
 
     /**
-     * @covers ::__construct
-     * @covers ::merge
+     * @covers AbstractConfig::__construct
+     * @covers AbstractConfig::merge
      * @return void
      */
     public function testConstructWithConfigInstance()
@@ -96,8 +96,8 @@ class ConfigTest extends AbstractConfigTestCase
     }
 
     /**
-     * @covers ::__construct
-     * @covers ::merge
+     * @covers AbstractConfig::__construct
+     * @covers AbstractConfig::merge
      * @return void
      */
     public function testConstructWithTraversableInstance()
@@ -111,8 +111,8 @@ class ConfigTest extends AbstractConfigTestCase
 
     /**
      *
-     * @covers ::__construct
-     * @covers ::merge
+     * @covers AbstractConfig::__construct
+     * @covers AbstractConfig::merge
      * @return void
      */
     public function testConstructWithInvalidData()
@@ -132,9 +132,9 @@ class ConfigTest extends AbstractConfigTestCase
     /**
      * Asserts that, when defined, a Config will apply the class' default data.
      *
-     * @covers ::__construct
-     * @covers ::setData
-     * @covers ::defaults
+     * @covers AbstractConfig::__construct
+     * @covers AbstractConfig::setData
+     * @covers AbstractConfig::defaults
      * @return void
      */
     public function testConstructWithDefaults()
@@ -174,7 +174,7 @@ class ConfigTest extends AbstractConfigTestCase
     /**
      * Asserts that, by default, a Config has no default data.
      *
-     * @covers ::defaults
+     * @covers AbstractConfig::defaults
      * @return void
      */
     public function testEmptyDefaults()

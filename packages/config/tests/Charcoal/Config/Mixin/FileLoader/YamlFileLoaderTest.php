@@ -17,8 +17,8 @@ class YamlFileLoaderTest extends AbstractFileLoaderTestCase
     /**
      * Asserts that the File Loader supports '.yml' YAML config files.
      *
-     * @covers ::loadYamlFile()
-     * @covers ::loadFile()
+     * @covers FileAwareTrait::loadYamlFile()
+     * @covers FileAwareTrait::loadFile()
      * @return void
      */
     public function testLoadFileWithYmlExtension()
@@ -41,8 +41,8 @@ class YamlFileLoaderTest extends AbstractFileLoaderTestCase
     /**
      * Asserts that the File Loader supports '.yaml' YAML config files.
      *
-     * @covers ::loadYamlFile()
-     * @covers ::loadFile()
+     * @covers FileAwareTrait::loadYamlFile()
+     * @covers FileAwareTrait::loadFile()
      * @return void
      */
     public function testLoadFileWithYamlExtension()
@@ -67,7 +67,7 @@ class YamlFileLoaderTest extends AbstractFileLoaderTestCase
      *
      * @runInSeparateProcess
      * @preserveGlobalState disabled
-     * @covers ::loadYamlFile()
+     * @covers FileAwareTrait::loadYamlFile()
      * @return void
      */
     public function testLoadFileWithNoYamlParser()
@@ -91,7 +91,7 @@ class YamlFileLoaderTest extends AbstractFileLoaderTestCase
     /**
      * Asserts that an empty file is silently ignored.
      *
-     * @covers ::loadYamlFile()
+     * @covers FileAwareTrait::loadYamlFile()
      * @return void
      */
     public function testLoadEmptyFile()
@@ -105,7 +105,7 @@ class YamlFileLoaderTest extends AbstractFileLoaderTestCase
     /**
      * Asserts that a broken file is NOT ignored.
      *
-     * @covers ::loadYamlFile()
+     * @covers FileAwareTrait::loadYamlFile()
      * @return void
      */
     public function testLoadMalformedFile()

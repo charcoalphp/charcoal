@@ -21,25 +21,21 @@ trait ArrayAccessTestTrait
     abstract public function testArrayAccess();
 
     /**
-     * @covers ::offsetGet()
      * @return void
      */
     abstract public function testOffsetGet();
 
     /**
-     * @covers ::offsetExists()
      * @return void
      */
     abstract public function testOffsetExists();
 
     /**
-     * @covers ::offsetSet()
      * @return void
      */
     abstract public function testOffsetSet();
 
     /**
-     * @covers ::offsetUnset()
      * @return void
      */
     abstract public function testOffsetUnset();

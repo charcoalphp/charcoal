@@ -54,8 +54,8 @@ class ConfigArrayMergeTest extends AbstractConfigTestCase
     /**
      * Test {@see AbstractEntity::merge()} with array.
      *
-     * @covers ::offsetReplace()
-     * @covers ::merge()
+     * @covers AbstractConfig::offsetReplace()
+     * @covers AbstractConfig::merge()
      * @return void
      */
     public function testMergeDataWithArray()
@@ -76,8 +76,8 @@ class ConfigArrayMergeTest extends AbstractConfigTestCase
     /**
      * Test {@see AbstractEntity::merge()} with another Config instance.
      *
-     * @covers ::offsetReplace()
-     * @covers ::merge()
+     * @covers AbstractConfig::offsetReplace()
+     * @covers AbstractConfig::merge()
      * @return void
      */
     public function testMergeDataWithConfigInstance()
@@ -165,7 +165,7 @@ class ConfigArrayMergeTest extends AbstractConfigTestCase
      * Asserts that the container assigns a value to the endpoint
      * {@see SeparatorAwareTrait::setWithSeparator() of the keypath}.
      *
-     * @covers ::offsetReplace()
+     * @covers AbstractConfig::offsetReplace()
      * @return void
      */
     public function testOffsetMergeOnEndKeyPath()
@@ -187,7 +187,7 @@ class ConfigArrayMergeTest extends AbstractConfigTestCase
      * Asserts that the container assigns a value to the endpoint of a nonexistent midpoint
      * {@see SeparatorAwareTrait::setWithSeparator() in the keypath}.
      *
-     * @covers ::offsetReplace()
+     * @covers AbstractConfig::offsetReplace()
      * @return void
      */
     public function testOffsetMergeOnNonexistentMidKeyPath()
@@ -209,7 +209,7 @@ class ConfigArrayMergeTest extends AbstractConfigTestCase
     // =========================================================================
 
     /**
-     * @covers ::offsetReplace()
+     * @covers AbstractConfig::offsetReplace()
      * @return void
      */
     public function testOffsetMergeIgnoredOnZeroLengthKey()
@@ -219,7 +219,7 @@ class ConfigArrayMergeTest extends AbstractConfigTestCase
     }
 
     /**
-     * @covers ::offsetReplace()
+     * @covers AbstractConfig::offsetReplace()
      * @return void
      */
     public function testOffsetMergeIgnoredOnUnderscoreKey()
@@ -231,7 +231,7 @@ class ConfigArrayMergeTest extends AbstractConfigTestCase
     /**
      * Asserts that a numeric key throws an exception, when merging a value.
      *
-     * @covers ::offsetReplace()
+     * @covers AbstractConfig::offsetReplace()
      * @return void
      */
     public function testOffsetMergeThrowsExceptionOnNumericKey()

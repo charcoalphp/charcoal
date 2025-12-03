@@ -53,7 +53,7 @@ class EntityArrayAccessTest extends AbstractEntityTestCase
     // =========================================================================
 
     /**
-     * @covers ::offsetExists()
+     * @covers AbstractEntity::offsetExists()
      * @return void
      */
     public function testOffsetExists()
@@ -72,7 +72,7 @@ class EntityArrayAccessTest extends AbstractEntityTestCase
     }
 
     /**
-     * @covers ::offsetGet()
+     * @covers AbstractEntity::offsetGet()
      * @return void
      */
     public function testOffsetGet()
@@ -90,7 +90,7 @@ class EntityArrayAccessTest extends AbstractEntityTestCase
     }
 
     /**
-     * @covers ::offsetSet()
+     * @covers AbstractEntity::offsetSet()
      * @return void
      */
     public function testOffsetSet()
@@ -103,7 +103,7 @@ class EntityArrayAccessTest extends AbstractEntityTestCase
     }
 
     /**
-     * @covers ::offsetUnset()
+     * @covers AbstractEntity::offsetUnset()
      * @return void
      */
     public function testOffsetUnset()
@@ -122,7 +122,7 @@ class EntityArrayAccessTest extends AbstractEntityTestCase
 
     /**
      * @covers \Charcoal\Tests\Config\Mock\MacroEntity::foo()
-     * @covers ::offsetExists()
+     * @covers AbstractEntity::offsetExists()
      * @return void
      */
     public function testOffsetExistsOnEncapsulatedMethod()
@@ -135,7 +135,7 @@ class EntityArrayAccessTest extends AbstractEntityTestCase
 
     /**
      * @covers \Charcoal\Tests\Config\Mock\MacroEntity::foo()
-     * @covers ::offsetGet()
+     * @covers AbstractEntity::offsetGet()
      * @return void
      */
     public function testOffsetGetOnEncapsulatedMethod()
@@ -147,7 +147,7 @@ class EntityArrayAccessTest extends AbstractEntityTestCase
 
     /**
      * @covers \Charcoal\Tests\Config\Mock\MacroEntity::setFoo()
-     * @covers ::offsetSet()
+     * @covers AbstractEntity::offsetSet()
      * @return void
      */
     public function testOffsetSetOnEncapsulatedMethod()
@@ -160,7 +160,7 @@ class EntityArrayAccessTest extends AbstractEntityTestCase
 
     /**
      * @covers \Charcoal\Tests\Config\Mock\MacroEntity::setFoo()
-     * @covers ::offsetUnset()
+     * @covers AbstractEntity::offsetUnset()
      * @return void
      */
     public function testOffsetUnsetOnEncapsulatedMethod()
@@ -178,7 +178,7 @@ class EntityArrayAccessTest extends AbstractEntityTestCase
     // =========================================================================
 
     /**
-     * @covers ::has()
+     * @covers AbstractEntity::has()
      * @return void
      */
     public function testHas()
@@ -193,7 +193,7 @@ class EntityArrayAccessTest extends AbstractEntityTestCase
     }
 
     /**
-     * @covers ::get()
+     * @covers AbstractEntity::get()
      * @return void
      */
     public function testGet()
@@ -204,7 +204,7 @@ class EntityArrayAccessTest extends AbstractEntityTestCase
     }
 
     /**
-     * @covers ::set()
+     * @covers AbstractEntity::set()
      * @return void
      */
     public function testSet()

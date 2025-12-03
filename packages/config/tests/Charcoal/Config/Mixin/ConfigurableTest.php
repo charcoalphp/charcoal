@@ -92,8 +92,8 @@ class ConfigurableTest extends AbstractTestCase
     // =========================================================================
 
     /**
-     * @covers ::createConfig()
-     * @covers ::setConfig()
+     * @covers ConfigurableTrait::createConfig()
+     * @covers ConfigurableTrait::setConfig()
      * @return void
      */
     public function testSetConfigWithString()
@@ -108,8 +108,8 @@ class ConfigurableTest extends AbstractTestCase
     }
 
     /**
-     * @covers ::createConfig()
-     * @covers ::setConfig()
+     * @covers ConfigurableTrait::createConfig()
+     * @covers ConfigurableTrait::setConfig()
      * @return ConfigurableInterface
      */
     public function testSetConfigWithArray()
@@ -124,8 +124,8 @@ class ConfigurableTest extends AbstractTestCase
     }
 
     /**
-     * @covers ::createConfig()
-     * @covers ::setConfig()
+     * @covers ConfigurableTrait::createConfig()
+     * @covers ConfigurableTrait::setConfig()
      * @return void
      */
     public function testSetConfigWithConfigInstance()
@@ -138,7 +138,7 @@ class ConfigurableTest extends AbstractTestCase
     }
 
     /**
-     * @covers ::setConfig()
+     * @covers ConfigurableTrait::setConfig()
      * @return void
      */
     public function testSetConfigWithInvalidData()
@@ -159,8 +159,8 @@ class ConfigurableTest extends AbstractTestCase
      * Asserts that the object will create a new Config
      * if one has not been assigned to object.
      *
-     * @covers ::createConfig()
-     * @covers ::config()
+     * @covers ConfigurableTrait::createConfig()
+     * @covers ConfigurableTrait::config()
      * @return void
      */
     public function testGetConfigCreatesConfig()

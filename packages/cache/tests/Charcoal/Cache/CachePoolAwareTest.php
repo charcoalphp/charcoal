@@ -14,8 +14,8 @@ use PHPUnit\Framework\Attributes\CoversClass;
 class CachePoolAwareTest extends AbstractTestCase
 {
     /**
-     * @covers ::setCachePool
-     * @covers ::cachePool
+     * @covers CachePoolAwareTrait::setCachePool
+     * @covers CachePoolAwareTrait::cachePool
      */
     public function testCachePool()
     {
@@ -28,7 +28,7 @@ class CachePoolAwareTest extends AbstractTestCase
 
     /**
      * testSetPrefixOnInvalidValue
-     * @covers ::cachePool
+     * @covers CachePoolAwareTrait::cachePool
      */
     public function testMissingPool()
     {

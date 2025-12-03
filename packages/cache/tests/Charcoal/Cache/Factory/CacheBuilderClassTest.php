@@ -16,9 +16,9 @@ use PHPUnit\Framework\Attributes\CoversClass;
 class CacheBuilderClassTest extends AbstractCacheBuilderTestCase
 {
     /**
-     * @covers ::__construct
-     * @covers ::setDrivers
-     * @covers ::isAccessible
+     * @covers CacheBuilder::__construct
+     * @covers CacheBuilder::setDrivers
+     * @covers CacheBuilder::isAccessible
      */
     public function testSetDriversWithInvalidType()
     {
@@ -30,7 +30,7 @@ class CacheBuilderClassTest extends AbstractCacheBuilderTestCase
     }
 
     /**
-     * @covers ::setLogger
+     * @covers CacheBuilder::setLogger
      */
     public function testSetLoggerWithInvalidType()
     {
@@ -42,8 +42,8 @@ class CacheBuilderClassTest extends AbstractCacheBuilderTestCase
     }
 
     /**
-     * @covers ::__construct
-     * @covers ::setNamespace
+     * @covers CacheBuilder::__construct
+     * @covers CacheBuilder::setNamespace
      */
     public function testSetNamespace()
     {
@@ -62,7 +62,7 @@ class CacheBuilderClassTest extends AbstractCacheBuilderTestCase
     }
 
     /**
-     * @covers ::setNamespace
+     * @covers CacheBuilder::setNamespace
      */
     public function testSetInvalidNamespace()
     {
@@ -74,8 +74,8 @@ class CacheBuilderClassTest extends AbstractCacheBuilderTestCase
     }
 
     /**
-     * @covers ::__construct
-     * @covers ::setItemClass
+     * @covers CacheBuilder::__construct
+     * @covers CacheBuilder::setItemClass
      */
     public function testSetItemClass()
     {
@@ -94,7 +94,7 @@ class CacheBuilderClassTest extends AbstractCacheBuilderTestCase
 
     /**
      *
-     * @covers ::setItemClass
+     * @covers CacheBuilder::setItemClass
      */
     public function testSetFakeItemClass()
     {
@@ -107,7 +107,7 @@ class CacheBuilderClassTest extends AbstractCacheBuilderTestCase
 
     /**
      *
-     * @covers ::setItemClass
+     * @covers CacheBuilder::setItemClass
      */
     public function testSetInvalidItemClass()
     {
@@ -119,8 +119,8 @@ class CacheBuilderClassTest extends AbstractCacheBuilderTestCase
     }
 
     /**
-     * @covers ::__construct
-     * @covers ::setPoolClass
+     * @covers CacheBuilder::__construct
+     * @covers CacheBuilder::setPoolClass
      */
     public function testSetPoolClass()
     {
@@ -138,7 +138,7 @@ class CacheBuilderClassTest extends AbstractCacheBuilderTestCase
     }
 
     /**
-     * @covers ::setPoolClass
+     * @covers CacheBuilder::setPoolClass
      */
     public function testSetFakePoolClass()
     {
@@ -150,7 +150,7 @@ class CacheBuilderClassTest extends AbstractCacheBuilderTestCase
     }
 
     /**
-     * @covers ::setPoolClass
+     * @covers CacheBuilder::setPoolClass
      */
     public function testSetInvalidPoolClass()
     {

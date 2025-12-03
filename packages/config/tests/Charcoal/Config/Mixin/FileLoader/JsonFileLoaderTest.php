@@ -14,8 +14,8 @@ class JsonFileLoaderTest extends AbstractFileLoaderTestCase
     /**
      * Asserts that the File Loader supports JSON config files.
      *
-     * @covers ::loadJsonFile()
-     * @covers ::loadFile()
+     * @covers FileAwareTrait::loadJsonFile()
+     * @covers FileAwareTrait::loadFile()
      * @return void
      */
     public function testLoadFile()
@@ -38,7 +38,7 @@ class JsonFileLoaderTest extends AbstractFileLoaderTestCase
     /**
      * Asserts that an empty file is silently ignored.
      *
-     * @covers ::loadJsonFile()
+     * @covers FileAwareTrait::loadJsonFile()
      * @return void
      */
     public function testLoadEmptyFile()
@@ -52,7 +52,7 @@ class JsonFileLoaderTest extends AbstractFileLoaderTestCase
     /**
      * Asserts that a broken file is NOT ignored.
      *
-     * @covers ::loadJsonFile()
+     * @covers FileAwareTrait::loadJsonFile()
      * @return void
      */
     public function testLoadMalformedFile()

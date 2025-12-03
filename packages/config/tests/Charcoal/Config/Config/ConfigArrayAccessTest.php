@@ -56,7 +56,7 @@ class ConfigArrayAccessTest extends AbstractConfigTestCase
     // =========================================================================
 
     /**
-     * @covers ::offsetExists()
+     * @covers AbstractConfig::offsetExists()
      * @return void
      */
     public function testOffsetExists()
@@ -75,7 +75,7 @@ class ConfigArrayAccessTest extends AbstractConfigTestCase
     }
 
     /**
-     * @covers ::offsetGet()
+     * @covers AbstractConfig::offsetGet()
      * @return void
      */
     public function testOffsetGet()
@@ -93,7 +93,7 @@ class ConfigArrayAccessTest extends AbstractConfigTestCase
     }
 
     /**
-     * @covers ::offsetSet()
+     * @covers AbstractConfig::offsetSet()
      * @return void
      */
     public function testOffsetSet()
@@ -106,7 +106,7 @@ class ConfigArrayAccessTest extends AbstractConfigTestCase
     }
 
     /**
-     * @covers ::offsetUnset()
+     * @covers AbstractConfig::offsetUnset()
      * @return void
      */
     public function testOffsetUnset()
@@ -125,7 +125,7 @@ class ConfigArrayAccessTest extends AbstractConfigTestCase
 
     /**
      * @covers \Charcoal\Tests\Config\Mock\MacroConfig::foo()
-     * @covers ::offsetExists()
+     * @covers AbstractConfig::offsetExists()
      * @return void
      */
     public function testOffsetExistsOnEncapsulatedMethod()
@@ -138,7 +138,7 @@ class ConfigArrayAccessTest extends AbstractConfigTestCase
 
     /**
      * @covers \Charcoal\Tests\Config\Mock\MacroConfig::foo()
-     * @covers ::offsetGet()
+     * @covers AbstractConfig::offsetGet()
      * @return void
      */
     public function testOffsetGetOnEncapsulatedMethod()
@@ -150,7 +150,7 @@ class ConfigArrayAccessTest extends AbstractConfigTestCase
 
     /**
      * @covers \Charcoal\Tests\Config\Mock\MacroConfig::setFoo()
-     * @covers ::offsetSet()
+     * @covers AbstractConfig::offsetSet()
      * @return void
      */
     public function testOffsetSetOnEncapsulatedMethod()
@@ -163,7 +163,7 @@ class ConfigArrayAccessTest extends AbstractConfigTestCase
 
     /**
      * @covers \Charcoal\Tests\Config\Mock\MacroConfig::setFoo()
-     * @covers ::offsetUnset()
+     * @covers AbstractConfig::offsetUnset()
      * @return void
      */
     public function testOffsetUnsetOnEncapsulatedMethod()

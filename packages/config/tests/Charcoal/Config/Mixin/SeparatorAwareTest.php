@@ -90,7 +90,7 @@ class SeparatorAwareTest extends AbstractTestCase
     /**
      * Asserts that the separator is disabled by default.
      *
-     * @covers ::separator()
+     * @covers SeparatorAwareTrait::separator()
      * @return void
      */
     public function testDefaultSeparatorIsEmptyString()
@@ -99,8 +99,8 @@ class SeparatorAwareTest extends AbstractTestCase
     }
 
     /**
-     * @covers ::setSeparator()
-     * @covers ::separator()
+     * @covers SeparatorAwareTrait::setSeparator()
+     * @covers SeparatorAwareTrait::separator()
      * @return TreeEntity
      */
     public function testSetSeparator()
@@ -115,8 +115,8 @@ class SeparatorAwareTest extends AbstractTestCase
     }
 
     /**
-     * @covers ::setSeparator()
-     * @covers ::separator()
+     * @covers SeparatorAwareTrait::setSeparator()
+     * @covers SeparatorAwareTrait::separator()
      * @return void
      */
     public function testMutatedSeparator()
@@ -131,8 +131,8 @@ class SeparatorAwareTest extends AbstractTestCase
     }
 
     /**
-     * @covers ::setSeparator()
-     * @covers ::separator()
+     * @covers SeparatorAwareTrait::setSeparator()
+     * @covers SeparatorAwareTrait::separator()
      * @return void
      */
     public function testEmptySeparator()
@@ -144,7 +144,7 @@ class SeparatorAwareTest extends AbstractTestCase
     }
 
     /**
-     * @covers ::setSeparator()
+     * @covers SeparatorAwareTrait::setSeparator()
      * @return void
      */
     public function testSetSeparatorWithInvalidType()
@@ -156,7 +156,7 @@ class SeparatorAwareTest extends AbstractTestCase
     }
 
     /**
-     * @covers ::setSeparator()
+     * @covers SeparatorAwareTrait::setSeparator()
      * @return void
      */
     public function testSetSeparatorWithInvalidToken()
@@ -260,7 +260,7 @@ class SeparatorAwareTest extends AbstractTestCase
      * @used-by self::testHasWithSeparatorWithoutDelimiterInPhp7()
      * @used-by self::testHasWithSeparatorWithoutDelimiterInPhp5()
      *
-     * @covers ::hasWithSeparator()
+     * @covers SeparatorAwareTrait::hasWithSeparator()
      * @return void
      */
     public function delegatedTestHasWithSeparatorWithoutDelimiter()
@@ -380,7 +380,7 @@ class SeparatorAwareTest extends AbstractTestCase
      * @used-by self::testGetWithSeparatorWithoutDelimiterInPhp7()
      * @used-by self::testGetWithSeparatorWithoutDelimiterInPhp5()
      *
-     * @covers ::getWithSeparator()
+     * @covers SeparatorAwareTrait::getWithSeparator()
      * @return void
      */
     public function delegatedTestGetWithSeparatorWithoutDelimiter()
@@ -512,7 +512,7 @@ class SeparatorAwareTest extends AbstractTestCase
      * @used-by self::testSetWithSeparatorWithoutDelimiterInPhp7()
      * @used-by self::testSetWithSeparatorWithoutDelimiterInPhp5()
      *
-     * @covers ::setWithSeparator()
+     * @covers SeparatorAwareTrait::setWithSeparator()
      * @return void
      */
     public function delegatedTestSetWithSeparatorWithoutDelimiter()

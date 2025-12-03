@@ -24,7 +24,7 @@ class FileAwareTest extends AbstractFileLoaderTestCase
     }
 
     /**
-     * @covers ::loadFile()
+     * @covers FileAwareTrait::loadFile()
      * @return void
      */
     public function testLoadWithUnsupportedFormat()
@@ -37,7 +37,7 @@ class FileAwareTest extends AbstractFileLoaderTestCase
     }
 
     /**
-     * @covers ::loadFile()
+     * @covers FileAwareTrait::loadFile()
      * @return void
      */
     public function testLoadWithInvalidPath()
@@ -50,7 +50,7 @@ class FileAwareTest extends AbstractFileLoaderTestCase
     }
 
     /**
-     * @covers ::loadFile()
+     * @covers FileAwareTrait::loadFile()
      * @return void
      */
     public function testLoadWithInvalidType()

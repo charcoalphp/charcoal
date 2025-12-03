@@ -77,10 +77,10 @@ class ConfigDelegatesAwareTest extends AbstractConfigTestCase
     // =========================================================================
 
     /**
-     * @covers ::__construct()
-     * @covers ::setDelegates()
-     * @covers ::addDelegate()
-     * @covers ::prependDelegate()
+     * @covers AbstractConfig::__construct()
+     * @covers AbstractConfig::setDelegates()
+     * @covers AbstractConfig::addDelegate()
+     * @covers AbstractConfig::prependDelegate()
      * @return void
      */
     public function testSetDelegates()
@@ -104,7 +104,7 @@ class ConfigDelegatesAwareTest extends AbstractConfigTestCase
      * Asserts that the delegate container returns TRUE if a data key is found
      * {@see DelegatesAwareTrait::hasInDelegates() among its delegates}.
      *
-     * @covers ::offsetExists()
+     * @covers AbstractConfig::offsetExists()
      * @return void
      */
     public function testOffsetExistsInDelegates()
@@ -120,7 +120,7 @@ class ConfigDelegatesAwareTest extends AbstractConfigTestCase
      * Asserts that the delegate container returns FALSE if a data key is nonexistent
      * {@see DelegatesAwareTrait::hasInDelegates() among its delegates}.
      *
-     * @covers ::offsetExists()
+     * @covers AbstractConfig::offsetExists()
      * @return void
      */
     public function testOffsetExistsReturnsFalseOnNonexistentKeyInDelegates()
@@ -135,7 +135,7 @@ class ConfigDelegatesAwareTest extends AbstractConfigTestCase
      * Asserts that the delegate container returns the value of a data key found
      * {@see DelegatesAwareTrait::getInDelegates() among its delegates}.
      *
-     * @covers ::offsetGet()
+     * @covers AbstractConfig::offsetGet()
      * @return void
      */
     public function testOffsetGetInDelegates()
@@ -151,7 +151,7 @@ class ConfigDelegatesAwareTest extends AbstractConfigTestCase
      * Asserts that the delegate container returns NULL if a data key is nonexistent
      * {@see DelegatesAwareTrait::getInDelegates() among its delegates}.
      *
-     * @covers ::offsetExists()
+     * @covers AbstractConfig::offsetExists()
      * @return void
      */
     public function testOffsetGetReturnsNullOnNonexistentKeyInDelegates()

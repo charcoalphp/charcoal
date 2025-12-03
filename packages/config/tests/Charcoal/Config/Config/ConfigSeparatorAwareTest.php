@@ -72,9 +72,9 @@ class ConfigSeparatorAwareTest extends AbstractConfigTestCase
     }
 
     /**
-     * @covers ::__construct()
-     * @covers ::setSeparator()
-     * @covers ::separator()
+     * @covers AbstractConfig::__construct()
+     * @covers AbstractConfig::setSeparator()
+     * @covers AbstractConfig::separator()
      * @return void
      */
     public function testDefaultSeparator()
@@ -92,7 +92,7 @@ class ConfigSeparatorAwareTest extends AbstractConfigTestCase
      * Asserts that the container returns TRUE if an endpoint is found
      * {@see SeparatorAwareTrait::hasWithSeparator() in a keypath}.
      *
-     * @covers ::offsetExists()
+     * @covers AbstractConfig::offsetExists()
      * @return void
      */
     public function testOffsetExistsOnEndKeyPath()
@@ -107,7 +107,7 @@ class ConfigSeparatorAwareTest extends AbstractConfigTestCase
      * Asserts that the container returns TRUE if a midpoint is found
      * {@see SeparatorAwareTrait::hasWithSeparator() in a keypath}.
      *
-     * @covers ::offsetExists()
+     * @covers AbstractConfig::offsetExists()
      * @return void
      */
     public function testOffsetExistsOnMidKeyPath()
@@ -122,7 +122,7 @@ class ConfigSeparatorAwareTest extends AbstractConfigTestCase
      * Asserts that the container returns FALSE if an endpoint is nonexistent
      * {@see SeparatorAwareTrait::hasWithSeparator() in a keypath}.
      *
-     * @covers ::offsetExists()
+     * @covers AbstractConfig::offsetExists()
      * @return void
      */
     public function testOffsetExistsReturnsFalseOnNonexistentEndKeyPath()
@@ -136,7 +136,7 @@ class ConfigSeparatorAwareTest extends AbstractConfigTestCase
      * Asserts that the container returns FALSE if a midpoint is nonexistent
      * {@see SeparatorAwareTrait::hasWithSeparator() in a keypath}.
      *
-     * @covers ::offsetExists()
+     * @covers AbstractConfig::offsetExists()
      * @return void
      */
     public function testOffsetExistsReturnsFalseOnNonexistentMidKeyPath()
@@ -150,7 +150,7 @@ class ConfigSeparatorAwareTest extends AbstractConfigTestCase
      * Asserts that the container returns the value of the endpoint found
      * {@see SeparatorAwareTrait::getWithSeparator() in a keypath}.
      *
-     * @covers ::offsetGet()
+     * @covers AbstractConfig::offsetGet()
      * @return void
      */
     public function testOffsetGetOnEndKeyPath()
@@ -167,7 +167,7 @@ class ConfigSeparatorAwareTest extends AbstractConfigTestCase
      * Asserts that the container returns the value of the midpoint found
      * {@see SeparatorAwareTrait::getWithSeparator() in a keypath}.
      *
-     * @covers ::offsetGet()
+     * @covers AbstractConfig::offsetGet()
      * @return void
      */
     public function testOffsetGetOnMidKeyPath()
@@ -184,7 +184,7 @@ class ConfigSeparatorAwareTest extends AbstractConfigTestCase
      * Asserts that the container returns NULL if the endpoint is nonexistent
      * {@see SeparatorAwareTrait::getWithSeparator() in a keypath}.
      *
-     * @covers ::offsetGet()
+     * @covers AbstractConfig::offsetGet()
      * @return void
      */
     public function testOffsetGetReturnsNullOnNonexistentEndKeyPath()
@@ -198,7 +198,7 @@ class ConfigSeparatorAwareTest extends AbstractConfigTestCase
      * Asserts that the container returns NULL if the midpoint is nonexistent
      * {@see SeparatorAwareTrait::getWithSeparator() in a keypath}.
      *
-     * @covers ::offsetGet()
+     * @covers AbstractConfig::offsetGet()
      * @return void
      */
     public function testOffsetGetReturnsNullOnNonexistentMidKeyPath()
@@ -212,7 +212,7 @@ class ConfigSeparatorAwareTest extends AbstractConfigTestCase
      * Asserts that the container assigns a value to the endpoint
      * {@see SeparatorAwareTrait::setWithSeparator() of the keypath}.
      *
-     * @covers ::offsetSet()
+     * @covers AbstractConfig::offsetSet()
      * @return void
      */
     public function testOffsetSetOnEndKeyPath()
@@ -227,7 +227,7 @@ class ConfigSeparatorAwareTest extends AbstractConfigTestCase
      * Asserts that the container assigns a value to the endpoint of a nonexistent midpoint
      * {@see SeparatorAwareTrait::setWithSeparator() in the keypath}.
      *
-     * @covers ::offsetSet()
+     * @covers AbstractConfig::offsetSet()
      * @return void
      */
     public function testOffsetSetOnNonexistentMidKeyPath()

@@ -14,8 +14,8 @@ class PhpFileLoaderTest extends AbstractFileLoaderTestCase
     /**
      * Asserts that the File Loader supports PHP config files.
      *
-     * @covers ::loadPhpFile()
-     * @covers ::loadFile()
+     * @covers FileAwareTrait::loadPhpFile()
+     * @covers FileAwareTrait::loadFile()
      * @return void
      */
     public function testLoadFile()
@@ -38,7 +38,7 @@ class PhpFileLoaderTest extends AbstractFileLoaderTestCase
     /**
      * Asserts that the scope of PHP config files is bound to the File Loader.
      *
-     * @covers ::loadPhpFile()
+     * @covers FileAwareTrait::loadPhpFile()
      * @return void
      */
     public function testLoadFileThatMutatesContext()
@@ -53,7 +53,7 @@ class PhpFileLoaderTest extends AbstractFileLoaderTestCase
     /**
      * Asserts that an empty file is silently ignored.
      *
-     * @covers ::loadPhpFile()
+     * @covers FileAwareTrait::loadPhpFile()
      * @return void
      */
     public function testLoadEmptyFile()
@@ -85,7 +85,7 @@ class PhpFileLoaderTest extends AbstractFileLoaderTestCase
     /**
      * Asserts that an exception thrown within the file is caught.
      *
-     * @covers ::loadPhpFile()
+     * @covers FileAwareTrait::loadPhpFile()
      * @return void
      */
     public function testLoadExceptionalFile()
