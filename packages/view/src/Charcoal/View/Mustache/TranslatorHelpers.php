@@ -107,7 +107,7 @@ class TranslatorHelpers implements HelpersInterface
      * @param  LambdaHelper|null $helper For rendering strings in the current context.
      * @return string
      */
-    public function __invoke(string $text, ?LambdaHelper $helper = null): Stringable
+    public function __invoke(string $text, ?LambdaHelper $helper = null): string|Stringable
     {
         if ($this->translator) {
             if ($this->number === null) {
