@@ -1,27 +1,15 @@
-# Package Managers
-
-composer.phar
-composer.lock
-/vendor/
+/.idea/
+/.vscode/
 /node_modules/
-
-# Logging
-
+/vendor/
 *.log
-/logs/
-
-# Caching
-
-/.phplint-cache/
-/cache/
-
-# Testing
-
+.DS_store
+.phpunit.cache
+.phpunit.result.cache
+composer.lock
+composer.phar
 phpcs.xml
+phpstan.neon
 phpunit.xml
-
-# Codebase
-
-/build/docs/
-/build/logs/
-/build/report/
+psalm.xml
+Thumbs.db

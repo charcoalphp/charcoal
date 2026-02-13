@@ -1,21 +1,15 @@
-# Package Managers
-
+/.idea/
+/.vscode/
+/node_modules/
+/vendor/
+*.log
+.DS_store
+.phpunit.cache
+.phpunit.result.cache
 composer.lock
 composer.phar
-vendor/
-node_modules/
-
-# Documentation
-
-phpdoc/
-
-# Logging
-
-*.log
-logs/
-
-# Caches
-
-build/docs/
-build/logs/
-tmp/
+phpcs.xml
+phpstan.neon
+phpunit.xml
+psalm.xml
+Thumbs.db

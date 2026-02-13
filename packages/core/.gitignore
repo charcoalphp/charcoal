@@ -1,25 +1,15 @@
-# Charcoal
-
-config/config.*.json
-!config/config.default.json
-
-# Package Managers
-
-composer.phar
-composer.lock
+/.idea/
+/.vscode/
+/node_modules/
 /vendor/
-
-# Logging
-
 *.log
-/logs/
-
-# Caching
-
-/cache/
-
-# Codebase
-
-/build/docs/
-/build/logs/
-/build/report/
+.DS_store
+.phpunit.cache
+.phpunit.result.cache
+composer.lock
+composer.phar
+phpcs.xml
+phpstan.neon
+phpunit.xml
+psalm.xml
+Thumbs.db
