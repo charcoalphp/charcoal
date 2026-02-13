@@ -173,7 +173,7 @@
         }
     },
     "bin": [
-        "bin/charcoal"
+        "packages/app/bin/charcoal"
     ],
     "scripts": {
         "test": [

@@ -1,25 +1,35 @@
 #!/usr/bin/env php
 <?php
 
-use Slim\Http\Environment as SlimEnvironment;
+declare(strict_types=1);
 
 use Charcoal\App\App;
 use Charcoal\App\AppConfig;
 use Charcoal\App\AppContainer;
+use Nyholm\Psr7\Factory\Psr17Factory;
+use Psr\Http\Message\ServerRequestInterface;
+use Slim\Factory\ServerRequestCreatorFactory;
 
-// Ensure CLI mode
+// Ensure this is being used via a CLI
 if (PHP_SAPI !== 'cli') {
-    die('This program can only be executed from a terminal / Command Line Interface'."\n");
+    die('This program can only be executed from a command line interface' . "\n");
 }
 
-$autoloaderPath = [
-    __DIR__.'/../../../../vendor/autoload.php',
-    __DIR__.'/../vendor/autoload.php',
-    __DIR__.'/../autoload.php'
+// Find Composer autoloader
+$autoloaderPaths = [
+    __DIR__ . '/../../../../vendor/autoload.php',
+    __DIR__ . '/../vendor/autoload.php',
+    __DIR__ . '/../autoload.php',
 ];
 
+$cwd = getcwd();
+if (is_string($cwd)) {
+    // Check the current working directory.
+    array_unshift($autoloaderPaths, $cwd . '/vendor/autoload.php');
+}
+
 $autoloaderFound = false;
-foreach ($autoloaderPath as $file) {
+foreach ($autoloaderPaths as $file) {
     if (file_exists($file)) {
         $autoloaderFound = true;
         include $file;
@@ -27,63 +37,75 @@ foreach ($autoloaderPath as $file) {
     }
 }
 if (!$autoloaderFound) {
-    die('Composer autoloader not found.'."\n");
+    die('Composer autoloader not found.' . "\n");
 }
 
-$baseDir = dirname(dirname(realpath($file)));
+// Resolve the appllication's base path from the Composer autoloader path
+$baseDir = dirname(realpath($file), 2);
 
-global $argv;
-// Convert command line arguments into a URL (for Slim)
-$argv = $GLOBALS['argv'];
-if (!isset($argv[1])) {
-    die('This script requires at least one parameter: the script action name / ident.'."\n");
+// Extract first CLI argument to act as a URI path (for Slim)
+if (!isset($_SERVER['argv'][1])) {
+    die('This script requires at least one parameter: the script name.' . "\n");
 }
-$path = '/'.ltrim($argv[1], '/');
 
-$config = new AppConfig();
-$config->addFile($baseDir.'/config/config.php');
-$config->set('base_path', $baseDir . '/');
+$path = '/' . ltrim($_SERVER['argv'][1], '/');
 
-// Serve the application from the web directory.
-chdir($config['public_path']);
+// Set up fake HTTP environment for CLI
+$_SERVER['PATH_INFO'] = $path;
+$_SERVER['REQUEST_URI'] = $path;
+
+// Default file path
+$confFile = $baseDir . '/config/config.php';
+if (!file_exists($confFile)) {
+    die('Charcoal configuration file not found.' . "\n");
+}
+
+$config = new AppConfig([
+    'base_path' => $baseDir,
+]);
+$config->addFile($confFile);
+
+$serverRequestCreator = ServerRequestCreatorFactory::create();
+$request = $serverRequestCreator->createServerRequestFromGlobals();
 
 // Create container and configure it (with charcoal-config)
 $container = new AppContainer([
-    'config'   => $config
+    'config'  => $config,
+    'request' => $request,
 ]);
 
-// Handle "404 Not Found"
-$container->set('notFoundHandler', function ($container)
-{
-    return function ($request, $response) use ($container)
-    {
-        return $container->get('response')
-            ->withStatus(404)
-            ->write(sprintf('Script "%s" not found', $container->get('request')->getUri()->getPath())."\n");
+// Set legacy 'environment' container item for compatibility
+$container->set('environment', [
+    'PATH_INFO'   => $path,
+    'REQUEST_URI' => $path,
+]);
+
+// Convert HTTP 404 Not Found to CLI-friendly error
+$container->set('notFoundHandler', function ($container) {
+    return function (ServerRequestInterface $request, Throwable $exception) {
+        $response = (new Psr17Factory())->createResponse(404, sprintf(
+            'Script "%s" not found' . "\n",
+            $exception->getMessage()
+        ));
+        echo $response->getBody();
+        return $response;
     };
 });
 
-// Handle "500 Server Error"
-$container->set('errorHandler', function ($container)
-{
-    return function ($request, $response, $exception) use ($container)
-    {
-        return $container->get('response')
-            ->withStatus(500)
-            ->write(
-                sprintf('Something went wrong! [%s]'."\n", $exception->getMessage())
-            );
+// Convert HTTP 500 Server Error to CLI-friendly error
+$container->set('errorHandler', function ($container) {
+    return function (ServerRequestInterface $request, Throwable $exception) {
+        $response = (new Psr17Factory())->createResponse(500, sprintf(
+            'Something went wrong! [%s]' . "\n",
+            $exception->getMessage()
+        ));
+        echo $response->getBody();
+        return $response;
     };
-});
-
-// Fake environment (for CLI) with path
-$container->set('environment', function($container) use ($path) {
-    return SlimEnvironment::mock([
-        'PATH_INFO'   => $path,
-        'REQUEST_URI' => $path
-    ]);
 });
 
 // Charcoal / Slim is the main app
 $app = App::instance($container);
-$app->run();
+$app->setConfig($config);
+$app->setBasePath('');
+$app->run($request);
