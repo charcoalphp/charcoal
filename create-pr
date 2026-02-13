@@ -23,7 +23,7 @@ ${Yellow}Description${NC}
     Default branch: main
 
 ${Yellow}Usage${NC}
-    ./create-pull-request
+    ./create-pr
 
 ${Yellow}Options${NC}
     ${Green}-b, --base${NC}          The base branch to merge into for the pull request. ${Yellow}[Default: main]
