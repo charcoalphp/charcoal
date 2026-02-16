@@ -1,12 +1,12 @@
 /.idea/
 /.vscode/
 /node_modules/
-/packages/**/composer.lock
 /vendor/
 *.log
 .DS_store
 .phpunit.cache
 .phpunit.result.cache
+composer.lock
 composer.phar
 phpcs.xml
 phpstan.neon
