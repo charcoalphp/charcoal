@@ -1,0 +1,95 @@
+#!/usr/bin/env bash
+#
+# Retrieve the name of all Charcoal packages.
+#
+
+#
+# Configure a strict script.
+#
+# * `-e` — Exit immediately if a pipeline returns a non-zero status.
+# * `-u` — Treat unset variables and parameters as an error.
+# * `-o pipefail` — The return value of a pipeline is the value of
+#   the last (rightmost) command to exit with a non-zero status,
+#   or zero, if all commands in the pipeline exit successfully.
+#
+set -eu -o pipefail
+
+find_packages() {
+    #
+    # Note that `\( -exec test -f '{}/composer.json' \; \)`
+    # would be ideal but it's considerably slower.
+    #
+    # 1. `find` — Searches for directories containing
+    #    a `composer.json` file.
+    # 2. `sort` — Sorts packages and removes duplicates (`-u`).
+    # 3. `xargs basename` — Returns only the directory's names.
+    #
+    find ./packages -type f -name 'composer.json' \
+        -maxdepth 2 -exec dirname {} + \
+        | sort -u \
+        | xargs basename
+}
+
+show_usage() {
+    echo "USAGE:"
+    echo "  $0 [--json]"
+    echo "  $0 --has <package>"
+}
+
+if [ $# -eq 0 ]; then
+    find_packages
+    exit 0
+fi
+
+OPTION="${1:-noop}"
+
+if [ "$OPTION" == "--help" ]; then
+    show_usage
+    exit 0
+fi
+
+if [ "$OPTION" == "--json" ]; then
+    if ! which jq; then
+        echo "$0 requires jq for JSON output"
+        exit 1
+    fi
+
+    #
+    # `jq` options:
+    #
+    # * `-c` — Outputs JSON as a compact string.
+    # * `-n` — Prevents any input from being read implicitly.
+    # * `-R` — Passes each line of input to the filter as a string.
+    # * `[inputs]` — Outputs inputs, one by one, in an array.
+    #
+    find_packages | jq -cnR '[inputs]'
+    exit 0
+fi
+
+if [ "$OPTION" == "--has" ]; then
+    if [ -z "${2+x}" ]; then
+        echo "$0 --has requires an argument"
+        exit 1
+    fi
+
+    #
+    # `grep` options:
+    #
+    # * `-F` — Interpret PATTERNS as fixed strings, not regular expressions.
+    # * `-q` — Quiet; do not write anything to standard output.
+    # * `-x` — Select only those matches that exactly match the whole line.
+    #
+    find_packages | grep -Fqx -- "$2"
+    exit 0
+fi
+
+if [ $# -gt 1 ]; then
+    echo "Unrecognized arguments"
+else
+    echo "Unrecognized argument"
+fi
+
+echo
+
+show_usage
+exit 1

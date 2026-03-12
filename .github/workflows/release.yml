@@ -1,44 +1,67 @@
-name: Release
+name: "Release"
 
 on:
   workflow_run:
-    workflows: [ PHP Testing ]
-    types: [ completed ]
-    branches: [ main ]
+    workflows:
+      - "PHP Testing"
+    types:
+      - completed
+    branches:
+      - main
+
+concurrency:
+    group: ${{ github.workflow }}-${{ github.ref }}
+
+permissions:
+  contents: write
+  issues: write
+  pull-requests: write
+
+defaults:
+  run:
+    shell: bash
 
 jobs:
   release:
-    runs-on: ubuntu-latest
-
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
 
+    runs-on: ubuntu-latest
+
     steps:
-      - name: Get Token
+      - name: "Get Token"
         id: get_workflow_token
-        uses: peter-murray/workflow-application-token-action@v2
+        uses: "peter-murray/workflow-application-token-action@d17e3a9a36850ea89f35db16c1067dd2b68ee343" # v4.0.1
         with:
           application_id: ${{ secrets.APPLICATION_ID }}
           application_private_key: ${{ secrets.APPLICATION_PRIVATE_KEY }}
 
-      - name: Checkout project
-        uses: actions/checkout@v4
+      - name: "Checkout"
+        uses: "actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd" # v6.0.2
         with:
           persist-credentials: false
 
-      - uses: bahmutov/npm-install@v1
+      - name: "Setup Node"
+        uses: "actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238" # v6.2.0
+        with:
+          node-version-file: ".nvmrc"
 
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
+      # Releases and changelogs are handled by the NPM package semantic-release.
+      - name: "Install NPM dependencies"
+        uses: "bahmutov/npm-install@3e063b974f0d209807684aa23e534b3dde517fd9" # v1.11.2
+
+      - name: "Setup PHP"
+        uses: "shivammathur/setup-php@44454db4f0199b8b9685a5d763dc37cbf79108e1" # v2.36.0
         with:
           php-version: 8.4
           coverage: none
 
-      # semantic release local configuration needs to call ./vendor/bin/monorepo-builder
-      - name: Install Dependencies
-        uses: ramsey/composer-install@v2
+      # The NPM package @semantic-release/exec calls a local script
+      # that requires the Composer package symplify/monorepo-builder.
+      - name: "Install Composer dependencies"
+        uses: "ramsey/composer-install@3cf229dc2919194e9e36783941438d17239e8520" # v3.1.1
 
       - name: Semantic Release
-        uses: cycjimmy/semantic-release-action@v4
+        uses: "cycjimmy/semantic-release-action@b12c8f6015dc215fe37bc154d4ad456dd3833c90" # v6.0.0
         env:
           GITHUB_TOKEN: ${{ steps.get_workflow_token.outputs.token }}
         with:

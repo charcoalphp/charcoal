@@ -11,7 +11,8 @@ use Symplify\MonorepoBuilder\Release\Contract\ReleaseWorker\ReleaseWorkerInterfa
 use Symplify\MonorepoBuilder\Utils\VersionUtils;
 
 /**
- * Custom Release Worker to set branch alias for all packages and the root composer.json file.
+ * Custom Release Worker to set branch alias for all packages
+ * including the root composer.json file.
  */
 final class UpdateBranchAliasReleaseWorker implements ReleaseWorkerInterface
 {

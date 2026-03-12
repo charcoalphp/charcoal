@@ -3,28 +3,19 @@
 declare(strict_types=1);
 
 use Charcoal\MonorepoBuilder\Release\ReleaseWorker\UpdateBranchAliasReleaseWorker;
-use Symplify\ComposerJsonManipulator\ValueObject\ComposerJsonSection;
 use Symplify\MonorepoBuilder\Config\MBConfig;
 use Symplify\MonorepoBuilder\Release\ReleaseWorker\SetCurrentMutualDependenciesReleaseWorker;
 
 return static function (MBConfig $mbConfig): void {
-    // where are the packages located?
     $mbConfig->packageDirectories([
-        // default value
         __DIR__ . '/packages',
     ]);
 
-    // for "merge" command.
-    $mbConfig->dataToAppend([
-        ComposerJsonSection::REQUIRE_DEV => [
-            'phpunit/phpunit' => '^11.0',
-        ],
-    ]);
-
+    // Change only the major version of the branch-alias.
     $mbConfig->packageAliasFormat('<major>.x-dev');
     $mbConfig->defaultBranch('main');
 
-    # release workers - in order to execute
+    // Release workers are executed consecutively.
     $mbConfig->workers([
         SetCurrentMutualDependenciesReleaseWorker::class,
         UpdateBranchAliasReleaseWorker::class,

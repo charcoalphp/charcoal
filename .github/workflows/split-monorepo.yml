@@ -1,77 +1,123 @@
-name: Split Monorepo
+name: "Split Monorepo"
 
 on:
-  release:
-    types: [ released ]
+  push:
+    branches:
+      - "[0-9]+.x"
+      - main
+      - canary
+      - alpha
+      - beta
+    paths:
+      - "packages/**"
+    tags:
+      - "v*"
+  workflow_dispatch:
 
+concurrency:
+    group: ${{ github.workflow }}-${{ github.ref }}
 
 env:
   GITHUB_TOKEN: ${{ secrets.BUTLER_TOKEN }}
 
+permissions:
+  contents: write
+
+defaults:
+  run:
+    shell: bash
+
 jobs:
-  provide_packages_json:
-    # see json juggling: https://docs.github.com/en/free-pro-team@latest/actions/reference/context-and-expression-syntax-for-github-actions#example-6
-    # see https://stackoverflow.com/a/62953566/1348344
-
-    runs-on: ubuntu-latest
-
-    if: "github.event.release.target_commitish == 'main'"
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: 8.4
-          coverage: none
-
-      - name: Install Dependencies
-        uses: ramsey/composer-install@v2
-
-      # get package json list
-      - name: Output list packages as JSON
-        id: output_data
-        run: echo "matrix=$(find ./packages -maxdepth 1 -type d -not -name 'packages' | jq -Rsc '[. | split("\n") | .[] | select(length > 0) | ltrimstr("./packages/")]')" >> $GITHUB_OUTPUT
-
-    # this step is needed, so the output gets to the next defined job
-    outputs:
-      matrix: ${{ steps.output_data.outputs.matrix }}
+  monorepo_packages:
+    name: "Get packages"
+    uses: ./.github/workflows/get-monorepo-packages.yml
 
   split_monorepo:
-    needs: provide_packages_json
-
+    name: "Split package ${{ matrix.package }}"
+    needs: monorepo_packages
     runs-on: ubuntu-latest
 
     strategy:
       fail-fast: false
-
       matrix:
-        # define package to repository map
-        package: ${{fromJson(needs.provide_packages_json.outputs.matrix)}}
+        package: ${{ fromJson(needs.monorepo_packages.outputs.packages_json) }}
 
     steps:
-      - uses: actions/checkout@v4
+      - name: "Checkout"
+        uses: "actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd" # v6.0.2
+
+      # If the workflow was triggered by a tag,
+      # attempt to find its corresponding branch.
+      #
+      # Based on: https://www.codegenes.net/blog/how-to-get-a-branch-name-on-github-action-when-push-on-a-tag/
+      #
+      # This step is necessary for danharrin/monorepo-split-github-action
+      # that squashes the latest changes into a new commit which is then tagged.
+      # By default, it applies this change to the `main` branch which might
+      # not be where that commit originated from.
+      - if: ${{ github.ref_type == "tag" }}
+        name: "Extract branch name from tag"
+        id: extract_branch
+        env:
+          TAG_NAME="${{ github.ref_name }}"
+          COMMIT_HASH="${{ github.sha }}"
+        run: |
+          # Fetch the last commit from all branches.
+          #
+          # See: https://stackoverflow.com/a/27393574
+          #
+          # If the tag's commit SHA is not among
+          # the latest commits we can presume
+          # something is wrong.
+          git remote set-branches origin '*'
+          git fetch -v --depth=1
+
+          # Find remote branches containing the commit.
+          # Only the latest commits of each branch are checked.
+          BRANCHES=$(git branch --contains "$COMMIT_HASH" --remotes | sed 's/^[ \t]*//' | sed 's/origin\///' | grep -v 'HEAD ->')
+          echo "Branches containing the commit: $BRANCHES"
+
+          # Extract the major and minor versions from the tag.
+          read MAJOR MINOR <<< $(echo "$VERSION_STRING" | sed -E 's/.*([0-9]+)\.([0-9]+)\.[0-9]+.*/\1 \2/')
+
+          # Match the first branch based on priority.
+          PRIORITY_BRANCHES=("MAJOR\.MINOR" "MAJOR\.x" "main" "beta" "alpha" "canary")
+
+          for BRANCH in "${PRIORITY_BRANCHES[@]}"; do
+            if echo "$BRANCHES" | grep -q "^$BRANCH$"; then
+              echo "branch_name=$BRANCH" >> "$GITHUB_OUTPUT"
+              exit 0
+            fi
+          done
+
+          echo "::error ::The commit SHA of the tag did not match the latest commit of remote branches."
+          exit 1
+
+      - if: ${{ github.ref_type == "tag" }}
+        name: "Split tag (${{ github.ref_type }})"
+        uses: "danharrin/monorepo-split-github-action@f10477258c88013cc5902388ec47fe9457837041" # v2.4.4
         with:
-          persist-credentials: false
+          branch: "${{ steps.extract_branch.outputs.branch_name }}"
+          tag: "${{ github.ref_name }}"
 
-      # with tag
-      - uses: danharrin/monorepo-split-github-action@v2.3.0
-        name: Monorepo Tagged Split of ${{ matrix.package }}
-        with:
-          tag: ${{ github.event.release.tag_name }}
+          package_directory: "packages/${{ matrix.package }}"
 
-          # ↓ split "packages/[local_path]" directory
-          package_directory: 'packages/${{ matrix.package }}'
+          repository_organization: "charcoalphp"
+          repository_name: "${{ matrix.package }}"
 
-          # ↓ into charcoalphp/[split_repository] repository
-          repository_organization: 'charcoalphp'
-          repository_name: '${{ matrix.package }}'
-
-          # [optional, with "github.com" as default]
-          #repository_host: git.private.com:1234
-
-          # ↓ the user signed under the split commit
           user_name: "GitHub Action"
           user_email: "action@github.com"
-          branch: "main"
+
+      - if: ${{ github.ref_type == "branch" }}
+        name: "Split branch (${{ github.ref_type }})"
+        uses: "danharrin/monorepo-split-github-action@f10477258c88013cc5902388ec47fe9457837041" # v2.4.4
+        with:
+          branch: "${{ github.ref_name }}"
+
+          package_directory: "packages/${{ matrix.package }}"
+
+          repository_organization: "charcoalphp"
+          repository_name: "${{ matrix.package }}"
+
+          user_name: "GitHub Action"
+          user_email: "action@github.com"

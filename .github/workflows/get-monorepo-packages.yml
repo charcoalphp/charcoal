@@ -1,0 +1,27 @@
+name: "Get monorepo packages"
+
+on:
+  workflow_call:
+    outputs:
+      packages_json:
+        description: "JSON list of packages."
+        value: ${{ jobs.get_monorepo_packages.outputs.packages_json }}
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  get_monorepo_packages:
+    runs-on: ubuntu-latest
+
+    outputs:
+      packages_json: ${{ steps.get_packages.outputs.packages_json }}
+
+    steps:
+      - name: "Checkout"
+        uses: "actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd" # v6.0.2
+
+      - name: "Compile list of packages as JSON"
+        id: get_packages
+        run: echo "packages_json=$(./bin/monorepo-packages --json)" >> $GITHUB_OUTPUT

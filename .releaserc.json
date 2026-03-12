@@ -11,6 +11,10 @@
         {
             "name": "alpha",
             "prerelease": true
+        },
+        {
+            "name": "canary",
+            "prerelease": true
         }
     ],
     "plugins": [

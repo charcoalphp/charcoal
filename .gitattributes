@@ -1,3 +1,5 @@
+*.neon.dist linguist-language=neon
+
 /.github/             export-ignore
 /tests/               export-ignore
 .editorconfig         export-ignore

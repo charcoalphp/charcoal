@@ -1,27 +1,25 @@
 #!/bin/sh
 
 # Migrate a charcoal project to the monorepo version
-cd $(dirname $0)
+cd "$(dirname "$0")" || exit
 
 CHARCOAL_BASE=../../
 PROJECT_BASE=../../../
 
-echo navigating to charcoal directory
+echo "Navigating to Charcoal directory"
 
-cd $CHARCOAL_BASE
+cd $CHARCOAL_BASE || exit
 
-echo Fetching and parsing charcoal packages
+echo "Fetching and parsing charcoal packages"
 
-PACKAGES="$(find ./packages -maxdepth 1 -type d -not -name 'packages' | jq -Rsc '[. | split("\n") | .[] | select(length > 0) | ltrimstr("./packages/")]')"
+PACKAGES=$(./bin/monorepo-packages)
+PACKAGES=$(echo "$PACKAGES" | sed -Ee "s/[[:space:]]/\|/g")
 
-PACKAGES=$(sed -Ee 's/(\[|\]|")//g' <<< $PACKAGES)
-PACKAGES=$(sed -Ee 's/,/|/g' <<< $PACKAGES)
-
-echo Replacing these packages $PACKAGES
+echo "Replacing these packages $PACKAGES"
 
 FILE=config/config.json
 
-echo Replacing metadata paths in ${FILE}
+echo "Replacing metadata paths in $FILE"
 
 NEW_CONTENT=$(sed -Ee "s#vendor/locomotivemtl/charcoal-($PACKAGES)#%packages.path%/\1#g" ${PROJECT_BASE}${FILE})
 
@@ -29,11 +27,11 @@ echo "$NEW_CONTENT" > ${PROJECT_BASE}${FILE}
 
 FILE=config/admin.php
 
-echo Replacing metadata paths in ${FILE}
+echo "Replacing metadata paths in $FILE"
 
 NEW_CONTENT=$(sed -Ee "s#/vendor/locomotivemtl/charcoal-($PACKAGES)#/%packages.path%/\1#g" ${PROJECT_BASE}${FILE})
 
 echo "$NEW_CONTENT" > ${PROJECT_BASE}${FILE}
 
-echo Adding 'MONOREPO' key to '.env'
-echo PACKAGES_PATH=vendor/charcoal/charcoal/packages >> ${PROJECT_BASE}.env
+echo "Adding 'MONOREPO' key to '.env'"
+echo "PACKAGES_PATH=vendor/charcoal/charcoal/packages >> ${PROJECT_BASE}.env"

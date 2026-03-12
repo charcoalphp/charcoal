@@ -1,85 +1,96 @@
-name: PHP Testing
+name: "PHP Testing"
 
 on:
   push:
-    branches: [ main ]
+    branches:
+      - "[0-9]+.x"
+      - main
+      - canary
+      - alpha
+      - beta
+    paths:
+      - "bin/charcoal"
+      - "composer.*"
+      - "packages/**"
   pull_request:
-    branches: [ main ]
+    branches:
+      - "[0-9]+.x"
+      - main
+      - canary
+      - alpha
+      - beta
+    paths:
+      - "bin/charcoal"
+      - "composer.*"
+      - "packages/**"
+
+concurrency:
+    group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
+    cancel-in-progress: true
 
 permissions:
   contents: read
 
+defaults:
+  run:
+    shell: bash
+
 jobs:
-  provide_packages_json:
-    # Provides package paths in JSON format for
-    # use in the matrix strategy of other jobs.
-    #
-    # The paths will be passed as arguments
-    # to linting and testing tools.
-    #
-    # * https://docs.github.com/en/actions/learn-github-actions/expressions#fromjson
-    # * https://stackoverflow.com/a/62953566/1348344
-
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: 8.4
-          coverage: none
-
-      - name: Install Composer dependencies
-        uses: ramsey/composer-install@v2
-
-      - name: Output list of packages as JSON
-        id: output_data
-        run: echo "matrix=$(find ./packages -maxdepth 1 -type d -not -name 'packages' | jq -Rsc '[. | split("\n") | .[] | select(length > 0) | ltrimstr("./packages/")]')" >> $GITHUB_OUTPUT
-
-    outputs:
-      matrix: ${{ steps.output_data.outputs.matrix }}
+  monorepo_packages:
+    name: "Get packages"
+    uses: ./.github/workflows/get-monorepo-packages.yml
 
   test:
-    needs: provide_packages_json
-
+    name: "Test package ${{ matrix.package }} / PHP ${{ matrix.php-version }}"
+    needs: monorepo_packages
     runs-on: ubuntu-latest
 
     strategy:
+      fail-fast: false
       matrix:
-        php-versions: ['8.3', '8.4', '8.5']
-        package: ${{fromJson(needs.provide_packages_json.outputs.matrix)}}
+        package: ${{ fromJson(needs.monorepo_packages.outputs.packages_json) }}
+        php-version:
+          - "7.4" # Support ended 2022-11-28.
+          - "8.0" # Support ended 2023-11-26.
+          - "8.1" # Support ended 2025-12-31.
+          - "8.2" # Support ended 2026-12-31.
+          - "8.3" # Security support until 2027-12-31.
+          - "8.4" # Active support until 2026-12-31.
+          - "8.5" # Active support until 2027-12-31.
+          - "8.6" # Upcoming release 2026–11/12.
 
     steps:
-      - uses: actions/checkout@v4
-
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
+      - name: "Checkout"
+        uses: "actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd" # v6.0.2
         with:
-          php-version: ${{ matrix.php-versions }}
-          extensions: json, mbstring, pdo, redis
-          coverage: xdebug
-          tools: composer, phpcs, phpstan, phpunit
+          persist-credentials: false
 
-      - name: Validate composer.json and composer.lock
+      - name: "Setup PHP"
+        uses: "shivammathur/setup-php@44454db4f0199b8b9685a5d763dc37cbf79108e1" # v2.36.0
+        with:
+          coverage: xdebug
+          extensions: json, mbstring, pdo, redis
+          php-version: ${{ matrix.php-version }}
+          tools: phpcs, phpstan, phpunit
+
+      - name: "Validate Composer manifest and lock files"
         run: composer validate --no-check-all
 
-      - name: Install Composer dependencies
-        uses: ramsey/composer-install@v2
+      - name: "Install Composer dependencies"
+        uses: "ramsey/composer-install@3cf229dc2919194e9e36783941438d17239e8520" # v3.1.1
 
-      - name: Install ImageMagick
+      - name: "Install ImageMagick for image package"
         if: ${{ matrix.package == 'image' }}
         run: sudo apt-get update && sudo apt-get install -y imagemagick
 
-      - name: Start Redis
+      - name: "Start Redis server for cache package"
         if: ${{ matrix.package == 'cache' }}
-        uses: supercharge/redis-github-action@1.8.0
+        uses: "supercharge/redis-github-action@bc274cb7238cd63a45029db04ee48c07a72609fd" # v1.8.1
         with:
           redis-version: 6
 
-      - name: Run PHPCS for all packages
+      - name: "Run PHPCS for all packages"
         run: tests/script/phpcs --ci ${{ matrix.package }}
 
-      - name: Run PHPunit for all packages
+      - name: "Run PHPunit for all packages"
         run: tests/script/phpunit --ci ${{ matrix.package }}

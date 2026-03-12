@@ -1,0 +1,59 @@
+# yaml-language-server: $schema=https://json.schemastore.org/github-action
+
+name: "File exists"
+description: "Checks if any one file or all files exists."
+
+inputs:
+  files:
+    description: "One or more files to check."
+    required: true
+  operand:
+    description: "Whether to check for 'any' or 'all' files. Defaults to 'any'."
+    required: false
+    default: "any"
+
+outputs:
+  exists:
+    description: "Whether a file exists or not."
+    value: ${{ steps.check-files.outputs.exists }}
+
+runs:
+  using: composite
+  steps:
+    - name: "Check if files exist"
+      id: check-files
+      shell: bash
+      env:
+        INPUT_FILES: ${{ inputs.files }}
+        INPUT_OPERAND: ${{ inputs.operand }}
+      run: |
+        case $INPUT_OPERAND in
+          "all")
+            for file in $INPUT_FILES; do
+              if [ ! -f "$file" ]; then
+                echo "exists=false" >> $GITHUB_OUTPUT
+                exit 0
+              fi
+            done
+
+            echo "exists=true" >> $GITHUB_OUTPUT
+            exit 0
+            ;;
+
+          "any")
+            for file in $INPUT_FILES; do
+              if [ -f "$file" ]; then
+                echo "exists=true" >> $GITHUB_OUTPUT
+                exit 0
+              fi
+            done
+
+            echo "exists=false" >> $GITHUB_OUTPUT
+            exit 0
+            ;;
+
+          *)
+            echo "::error ::Expected operand to be either 'any' or 'all'."
+            exit 1
+            ;;
+        esac

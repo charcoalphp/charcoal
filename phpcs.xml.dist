@@ -4,15 +4,20 @@
 
     <arg name="encoding" value="utf-8" />
 
-    <config name="show_progress" value="1" />
     <config name="ignore_warnings_on_exit" value="1" />
+
+    <file>./src/</file>
+    <file>./tests/</file>
 
     <rule ref="PSR12" />
 
     <rule ref="Generic.Arrays.DisallowLongArraySyntax" />
     <rule ref="Generic.Classes.DuplicateClassName" />
-    <rule ref="Generic.Formatting.NoSpaceAfterCast" />
-    <rule ref="Generic.Functions.CallTimePassByReference" />
+    <rule ref="Generic.Formatting.SpaceAfterCast">
+        <properties>
+            <property name="spacing" value="0" />
+        </properties>
+    </rule>
     <rule ref="Generic.PHP.DeprecatedFunctions" />
     <rule ref="Generic.PHP.ForbiddenFunctions" />
     <rule ref="Generic.PHP.NoSilencedErrors" />
@@ -21,6 +26,16 @@
     <rule ref="PEAR.Classes.ClassDeclaration" />
 
     <rule ref="Squiz.Arrays.ArrayBracketSpacing" />
+    <rule ref="Squiz.Arrays.ArrayDeclaration" />
+    <rule ref="Squiz.Arrays.ArrayDeclaration.CloseBraceNotAligned">
+        <severity>0</severity>
+    </rule>
+    <rule ref="Squiz.Arrays.ArrayDeclaration.KeyNotAligned">
+        <severity>0</severity>
+    </rule>
+    <rule ref="Squiz.Arrays.ArrayDeclaration.ValueNotAligned">
+        <severity>0</severity>
+    </rule>
     <rule ref="Squiz.Classes.ClassDeclaration" />
     <rule ref="Squiz.Classes.ClassFileName" />
     <rule ref="Squiz.Formatting.OperatorBracket" />

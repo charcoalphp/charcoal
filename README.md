@@ -254,6 +254,12 @@ This monorepo was created with a many to mono aproach using this guide and tool:
 | [Split Monorepo](.github/workflows/split_monorepo.yml)            | Release on `main`              | The split action splits the packages into individual repositories. Only triggered when a tag is pushed. Based on [symplify/monorepo-split-github-action](https://github.com/symplify/monorepo-split-github-action) |
 | [Update Changelog](.github/workflows/update-changelog.yml)        | Release on `main`              | Uses [changelog-updater-action](https://github.com/stefanzweifel/changelog-updater-action) to update the changelog of the `main` branch                                                                            |
 
+#### Re-usable workflows
+
+The following re-usable workflow is available:
+
+* [`reusable-tests.yml`](.github/workflows/reusable-tests.yml) which runs various tools across latest supported versions of PHP: validates the Composer manifest and lock files, lints any JSON and PHP files, and runs PHPCS, PHPStan, and PHPUnit, if configured.
+
 ### Scripts
 
 #### __create-pr__

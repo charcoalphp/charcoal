@@ -1,0 +1,109 @@
+# yaml-language-server: $schema=https://json.schemastore.org/github-workflow
+
+#
+# Generic Charcoal linting and testing.
+#
+# - Tests latest supported major versions of PHP.
+# - Validates the Composer manifest and lock files.
+# - Lints any JSON and PHP files.
+# - Runs PHPCS, PHPStan, and PHPUnit, if configured.
+#
+
+name: "Tests"
+
+on:
+  workflow_call:
+
+jobs:
+  tests:
+    name: "PHP ${{ matrix.php-version }}"
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        php-version:
+          - "8.3" # Security support until 2027-12-31.
+          - "8.4" # Active support until 2026-12-31.
+          - "8.5" # Active support until 2027-12-31.
+          - "8.6" # Upcoming release 2026–11/12.
+
+    continue-on-error: ${{ matrix.php == '8.6' }}
+
+    steps:
+      - name: "Checkout"
+        uses: "actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd" # v6.0.2
+
+      - name: "Setup PHP"
+        uses: "shivammathur/setup-php@44454db4f0199b8b9685a5d763dc37cbf79108e1" # v2.36.0
+        with:
+          coverage: "xdebug"
+          php-version: "${{ matrix.php-version }}"
+          tools: cs2pr, phpcs, phpstan, phpunit-bridge, seld/jsonlint
+
+      - name: "Setup problem matchers"
+        run: |
+          echo "::add-matcher::${{ runner.tool_cache }}/php.json"
+          echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
+
+      - name: "Install Composer dependencies"
+        uses: "ramsey/composer-install@3cf229dc2919194e9e36783941438d17239e8520" # v3.1.1
+        with:
+          # Ignore the upper-bound of the PHP requirement.
+          composer-options: ${{ matrix.php == '8.6' && '--ignore-platform-req=php+' || '' }}
+
+      # Validate once on earliest PHP version.
+      - if: ${{ matrix.php-version == "8.3" }}
+        name: "Validate composer.json"
+        run: "composer validate --strict"
+
+      # Validate once on earliest PHP version.
+      - if: ${{ matrix.php-version == "8.3" }}
+        name: "Lint JSON files"
+        run: |
+          find {config,metadata} -type f -iname '*.json' -print0 2> /dev/null | \
+          xargs -0 jsonlint -q
+
+      - name: "Lint PHP files"
+        run: |
+          find {src,tests} -type f -name '*.php' -print0 2> /dev/null | \
+            xargs -0 -n1 -P8 php -l | \
+            grep -v '^No syntax errors detected'; test $? -eq 1
+
+      - name: "Install PHPUnit"
+        run: "simple-phpunit install"
+
+      - name: "Check if PHPCS is configured"
+        id: phpcs-xml
+        uses: ./.github/actions/file-exists
+        with:
+          files: phpcs.xml.dist phpcs.xml
+
+      - if: ${{ steps.phpcs-xml.outputs.exists == 'true' }}
+        name: "Run PHPCS"
+        id: phpcs
+        run: "phpcs -s --report-full --report-checkstyle=./phpcs-report.xml"
+
+      - if: ${{ always() && steps.phpcs-xml.outputs.exists == 'true' && steps.phpcs.outcome == 'failure' }}
+        name: "Show PHPCS results in PR"
+        run: "cs2pr ./phpcs-report.xml"
+
+      - name: "Check if PHPStan is configured"
+        id: phpstan-neon
+        uses: ./.github/actions/file-exists
+        with:
+          files: phpstan.neon.dist phpstan.neon
+
+      - if: ${{ steps.phpstan-neon.outputs.exists == 'true' }}
+        name: "Run PHPStan"
+        run: "phpstan analyse"
+
+      - name: "Check if PHPUnit is configured"
+        id: phpunit-xml
+        uses: ./.github/actions/file-exists
+        with:
+          files: phpunit.xml.dist phpunit.xml
+
+      - if: ${{ steps.phpunit-xml.outputs.exists == 'true' }}
+        name: "Run PHPUnit"
+        run: "simple-phpunit"
