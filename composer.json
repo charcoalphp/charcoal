@@ -32,7 +32,7 @@
         }
     ],
     "require": {
-        "php": "^8.5",
+        "php": "^8.3",
         "ext-fileinfo": "*",
         "ext-json": "*",
         "ext-mbstring": "*",
