@@ -1,0 +1,88 @@
+#!/bin/sh
+
+# Monorepo utility toolbox - Helper script for managing monorepo packages
+
+# Function to list all monorepo packages in pretty format
+packages_pretty() {
+    echo "Monorepo packages:"
+    find packages -maxdepth 2 -name "composer.json" -type f | while read -r composer_file; do
+        package_dir=$(dirname "$composer_file")
+        package_name=$(basename "$package_dir")
+        echo "  - $package_name"
+    done
+}
+
+# Function to list packages as JSON array
+packages_json() {
+    packages=$(find packages -maxdepth 2 -name "composer.json" -type f | while read -r composer_file; do
+        package_dir=$(dirname "$composer_file")
+        basename "$package_dir"
+    done | awk 'BEGIN{printf "["} {printf "%s\"%s\"", (NR>1?",":""), $0} END{printf "]\n"}')
+    echo "$packages"
+}
+
+# Function to list package names only (space-separated) - default
+packages_default() {
+    find packages -maxdepth 2 -name "composer.json" -type f | while read -r composer_file; do
+        package_dir=$(dirname "$composer_file")
+        basename "$package_dir"
+    done | tr '\n' ' ' | sed 's/ $/\n/'
+}
+
+# Parse command and options
+command="${1:-}"
+type_flag=""
+
+# Parse flags for packages command
+if [ "$command" = "packages" ]; then
+    shift
+    while [ $# -gt 0 ]; do
+        case "$1" in
+            --type=*)
+                type_flag="${1#*=}"
+                shift
+                ;;
+            -t)
+                type_flag="$2"
+                shift 2
+                ;;
+            *)
+                echo "Unknown option: $1"
+                exit 1
+                ;;
+        esac
+    done
+fi
+
+# Execute command
+case "$command" in
+    packages)
+        case "$type_flag" in
+            json)
+                packages_json
+                ;;
+            pretty)
+                packages_pretty
+                ;;
+            "")
+                packages_default
+                ;;
+            *)
+                echo "Unknown type: $type_flag"
+                echo "Valid types: json, pretty"
+                exit 1
+                ;;
+        esac
+        ;;
+    *)
+        echo "Monorepo utility toolbox - Helper script for managing monorepo packages"
+        echo ""
+        echo "Usage: $0 packages [--type=TYPE|-t TYPE]"
+        echo "Commands:"
+        echo "  packages              List package names (space-separated, default)"
+        echo "  packages -t json      List packages as JSON array"
+        echo "  packages -t pretty    List all monorepo packages in pretty format"
+        exit 1
+        ;;
+esac
+
