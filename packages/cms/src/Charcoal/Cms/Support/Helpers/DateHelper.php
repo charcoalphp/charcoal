@@ -4,6 +4,7 @@ namespace Charcoal\Cms\Support\Helpers;
 
 use DateTime;
 use Exception;
+use IntlDateFormatter;
 // From 'charcoal-translator'
 use Charcoal\Translator\TranslatorAwareTrait;
 
@@ -45,6 +46,11 @@ class DateHelper
     protected $timeFormat;
 
     /**
+     * @var string $locale The current locale for date formatting
+     */
+    protected $locale;
+
+    /**
      * DateHelper constructor.
      * @param array $data DateHelper data.
      * @throws Exception When constructor's data missing.
@@ -64,6 +70,7 @@ class DateHelper
         $this->setTranslator($data['translator']);
         $this->dateFormats = $data['date_formats'];
         $this->timeFormats = $data['time_formats'];
+        $this->locale = $this->translator()->getLocale();
     }
 
     /**
@@ -202,16 +209,40 @@ class DateHelper
         $formats['to']   = $this->crossPlatformFormat((string)$formats['to']);
 
         if (!$this->to || !$formats['to']) {
+            $formatter = new IntlDateFormatter(
+                $this->locale,
+                IntlDateFormatter::FULL,
+                IntlDateFormatter::FULL,
+                null,
+                null,
+                $formats['from']
+            );
             return sprintf(
                 (string)$content,
-                strftime($formats['from'], $this->from->getTimestamp())
+                $formatter->format($this->from)
             );
         }
 
+        $formatterFrom = new IntlDateFormatter(
+            $this->locale,
+            IntlDateFormatter::FULL,
+            IntlDateFormatter::FULL,
+            null,
+            null,
+            $formats['from']
+        );
+        $formatterTo = new IntlDateFormatter(
+            $this->locale,
+            IntlDateFormatter::FULL,
+            IntlDateFormatter::FULL,
+            null,
+            null,
+            $formats['to']
+        );
         return sprintf(
             (string)$content,
-            strftime($formats['from'], $this->from->getTimestamp()),
-            strftime($formats['to'], $this->to->getTimestamp())
+            $formatterFrom->format($this->from),
+            $formatterTo->format($this->to)
         );
     }
 
@@ -233,16 +264,40 @@ class DateHelper
         $formats['to'] = $this->translator()->translation($formats['to']);
 
         if (!$this->to || !$formats['to']) {
+            $formatter = new IntlDateFormatter(
+                $this->locale,
+                IntlDateFormatter::FULL,
+                IntlDateFormatter::FULL,
+                null,
+                null,
+                $formats['from']
+            );
             return sprintf(
                 (string)$content,
-                strftime($formats['from'], $this->from->getTimestamp())
+                $formatter->format($this->from)
             );
         }
 
+        $formatterFrom = new IntlDateFormatter(
+            $this->locale,
+            IntlDateFormatter::FULL,
+            IntlDateFormatter::FULL,
+            null,
+            null,
+            $formats['from']
+        );
+        $formatterTo = new IntlDateFormatter(
+            $this->locale,
+            IntlDateFormatter::FULL,
+            IntlDateFormatter::FULL,
+            null,
+            null,
+            $formats['to']
+        );
         return sprintf(
             (string)$content,
-            strftime($formats['from'], $this->from->getTimestamp()),
-            strftime($formats['to'], $this->to->getTimestamp())
+            $formatterFrom->format($this->from),
+            $formatterTo->format($this->to)
         );
     }
 
@@ -257,18 +312,5 @@ class DateHelper
         }
 
         return new DateTime($date);
-    }
-
-    /**
-     * @param mixed $format DateTime to be formatted.
-     * @return mixed
-     */
-    private function crossPlatformFormat($format)
-    {
-        if (strtoupper(substr(PHP_OS, 0, 3)) == 'WIN') {
-            $format = preg_replace('#(?<!%)((?:%%)*)%e#', '\1%#d', $format);
-        }
-
-        return $format;
     }
 }
