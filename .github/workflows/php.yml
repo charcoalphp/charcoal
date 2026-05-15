@@ -28,7 +28,7 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: 8.0
+          php-version: 8.4
           coverage: none
 
       - name: Install Composer dependencies
@@ -36,7 +36,7 @@ jobs:
 
       - name: Output list of packages as JSON
         id: output_data
-        run: echo "matrix=$(vendor/bin/monorepo-builder packages-json)" >> $GITHUB_OUTPUT
+        run: echo "matrix=$(./monorepo packages -t json)" >> $GITHUB_OUTPUT
 
     outputs:
       matrix: ${{ steps.output_data.outputs.matrix }}
@@ -48,7 +48,7 @@ jobs:
 
     strategy:
       matrix:
-        php-versions: ['7.4', '8.0']
+        php-versions: ['8.3', '8.4', '8.5']
         package: ${{fromJson(needs.provide_packages_json.outputs.matrix)}}
 
     steps:
