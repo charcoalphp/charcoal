@@ -66,7 +66,7 @@ class Translation implements
      * @see    ArrayAccess::offsetExists()
      * @throws InvalidArgumentException If array key isn't a string.
      */
-    public function offsetExists($lang)
+    public function offsetExists($lang): bool
     {
         if (!is_string($lang)) {
             throw new InvalidArgumentException(sprintf(
@@ -85,7 +85,7 @@ class Translation implements
      * @throws InvalidArgumentException If array key isn't a string.
      * @throws DomainException If the array key is not found.
      */
-    public function offsetGet($lang)
+    public function offsetGet($lang): string
     {
         if (!is_string($lang)) {
             throw new InvalidArgumentException(sprintf(
@@ -152,7 +152,7 @@ class Translation implements
      * @return string[]
      * @see    JsonSerializable::jsonSerialize()
      */
-    public function jsonSerialize()
+    public function jsonSerialize(): array
     {
         return $this->data();
     }

@@ -29,6 +29,7 @@ use Charcoal\Source\PaginationInterface;
 /**
  * Data Storage Source Handler.
  */
+#[\AllowDynamicProperties]
 abstract class AbstractSource implements
     SourceInterface,
     ConfigurableInterface,
