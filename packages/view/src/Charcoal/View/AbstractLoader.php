@@ -41,7 +41,7 @@ abstract class AbstractLoader implements LoaderInterface
     public function load($ident)
     {
         // Handle dynamic template
-        if (substr($ident, 0, 1) === '$') {
+        if (str_starts_with($ident, '$')) {
             $ident = $this->dynamicTemplate(substr($ident, 1));
         }
 
@@ -63,7 +63,6 @@ abstract class AbstractLoader implements LoaderInterface
 
     /**
      * @param  string $varName The name of the variable to get template ident from.
-     * @return string
      */
     public function dynamicTemplate(string $varName): string
     {
@@ -78,7 +77,6 @@ abstract class AbstractLoader implements LoaderInterface
      * @param  string      $varName       The name of the variable to set this template unto.
      * @param  string|null $templateIdent The "dynamic template" to set or NULL to clear.
      *     or if the template is not a string (and not null).
-     * @return void
      */
     public function setDynamicTemplate(string $varName, ?string $templateIdent): void
     {
@@ -92,24 +90,17 @@ abstract class AbstractLoader implements LoaderInterface
 
     /**
      * @param  string $varName The name of the variable to remove.
-     * @return void
      */
     public function removeDynamicTemplate(string $varName): void
     {
         unset($this->dynamicTemplates[$varName]);
     }
 
-    /**
-     * @return void
-     */
     public function clearDynamicTemplates(): void
     {
         $this->dynamicTemplates = [];
     }
 
-    /**
-     * @return string
-     */
     protected function basePath(): string
     {
         return $this->basePath;
@@ -117,9 +108,8 @@ abstract class AbstractLoader implements LoaderInterface
 
     /**
      * @param  string $basePath The base path to set.
-     * @return self
      */
-    private function setBasePath(string $basePath)
+    private function setBasePath(string $basePath): static
     {
         $basePath = realpath($basePath);
         $this->basePath = rtrim($basePath, '/\\') . DIRECTORY_SEPARATOR;
@@ -136,9 +126,8 @@ abstract class AbstractLoader implements LoaderInterface
 
     /**
      * @param  string[] $paths The list of path to add.
-     * @return self
      */
-    private function setPaths(array $paths)
+    private function setPaths(array $paths): static
     {
         $this->paths = [];
 
@@ -151,9 +140,8 @@ abstract class AbstractLoader implements LoaderInterface
 
     /**
      * @param  string $path The path to add to the load.
-     * @return self
      */
-    private function addPath(string $path)
+    private function addPath(string $path): static
     {
         $this->paths[] = $this->resolvePath($path);
 
@@ -162,13 +150,12 @@ abstract class AbstractLoader implements LoaderInterface
 
     /**
      * @param  string $path The path to resolve.
-     * @return string
      */
     private function resolvePath(string $path): string
     {
         $basePath = $this->basePath();
         $path = rtrim($path, '/\\') . DIRECTORY_SEPARATOR;
-        if ($basePath && strpos($path, $basePath) === false) {
+        if ($basePath && !str_contains($path, $basePath)) {
             $path = $basePath . DIRECTORY_SEPARATOR . $path;
         }
 
@@ -187,7 +174,7 @@ abstract class AbstractLoader implements LoaderInterface
      */
     protected function isTemplateString(string $ident): bool
     {
-        return strpos($ident, PHP_EOL) !== false;
+        return str_contains($ident, PHP_EOL);
     }
 
     /**
@@ -223,7 +210,6 @@ abstract class AbstractLoader implements LoaderInterface
 
     /**
      * @param  string $ident The template identifier to convert to a filename.
-     * @return string
      */
     abstract protected function filenameFromIdent(string $ident): string;
 }

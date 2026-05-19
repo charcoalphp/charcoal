@@ -22,24 +22,18 @@ class Translator extends SymfonyTranslator
 {
     /**
      * The locales manager.
-     *
-     * @var LocalesManager
      */
-    private $manager;
+    private \Charcoal\Translator\LocalesManager $manager;
 
     /**
      * The message selector.
-     *
-     * @var MessageSelector
      */
-    private $selector;
+    private \Symfony\Component\Translation\MessageSelector $selector;
 
     /**
      * The message formatter.
-     *
-     * @var MessageFormatterInterface
      */
-    private $formatter;
+    private \Symfony\Component\Translation\Formatter\MessageFormatterInterface $formatter;
 
     /**
      * The loaded domains.
@@ -75,7 +69,7 @@ class Translator extends SymfonyTranslator
         $data = array_merge($defaults, $data);
 
         // If 'symfony/config' is not installed, DON'T use cache.
-        if (!class_exists('\Symfony\Component\Config\ConfigCacheFactory', false)) {
+        if (!class_exists(\Symfony\Component\Config\ConfigCacheFactory::class, false)) {
             $data['cache_dir'] = null;
         }
 
@@ -95,9 +89,9 @@ class Translator extends SymfonyTranslator
      * @param  mixed       $resource The resource name.
      * @param  string      $locale   The locale.
      * @param  string|null $domain   The domain.
-     * @return void
      */
-    public function addResource($format, $resource, $locale, $domain = null)
+    #[\Override]
+    public function addResource($format, $resource, $locale, $domain = null): void
     {
         if (null !== $domain) {
             $this->domains[] = $domain;
@@ -125,7 +119,7 @@ class Translator extends SymfonyTranslator
      * @param  string|null $domain     The domain for the message or NULL to use the default.
      * @return Translation|null The translation object or NULL if the value is not translatable.
      */
-    public function translation($val, array $parameters = [], $domain = null)
+    public function translation($val, array $parameters = [], $domain = null): ?\Charcoal\Translator\Translation
     {
         if ($this->isValidTranslation($val) === false) {
             return null;
@@ -198,7 +192,7 @@ class Translator extends SymfonyTranslator
      * @param  string|null $domain     The domain for the message or NULL to use the default.
      * @return Translation|null The translation object or NULL if the value is not translatable.
      */
-    public function translationChoice($val, $number, array $parameters = [], $domain = null)
+    public function translationChoice($val, $number, array $parameters = [], $domain = null): ?\Charcoal\Translator\Translation
     {
         if ($this->isValidTranslation($val) === false) {
             return null;
@@ -288,7 +282,7 @@ class Translator extends SymfonyTranslator
      *
      * @return string[]
      */
-    public function availableLocales()
+    public function availableLocales(): array
     {
         return $this->manager()->availableLocales();
     }
@@ -298,9 +292,9 @@ class Translator extends SymfonyTranslator
      *
      * @see    SymfonyTranslator::setLocale() Ensure that the method also changes the locales manager's language.
      * @param  string $locale The locale.
-     * @return void
      */
-    public function setLocale($locale)
+    #[\Override]
+    public function setLocale($locale): void
     {
         parent::setLocale($locale);
 
@@ -311,19 +305,16 @@ class Translator extends SymfonyTranslator
      * Set the locales manager.
      *
      * @param  LocalesManager $manager The locales manager.
-     * @return void
      */
-    private function setManager(LocalesManager $manager)
+    private function setManager(LocalesManager $manager): void
     {
         $this->manager = $manager;
     }
 
     /**
      * Retrieve the locales manager.
-     *
-     * @return LocalesManager
      */
-    protected function manager()
+    protected function manager(): \Charcoal\Translator\LocalesManager
     {
         return $this->manager;
     }
@@ -335,19 +326,16 @@ class Translator extends SymfonyTranslator
      * thus we must explicitly require it in this class to guarantee access.
      *
      * @param  MessageSelector $selector The selector.
-     * @return void
      */
-    public function setSelector(MessageSelector $selector)
+    public function setSelector(MessageSelector $selector): void
     {
         $this->selector = $selector;
     }
 
     /**
      * Retrieve the message selector.
-     *
-     * @return MessageSelector
      */
-    protected function selector()
+    protected function selector(): \Symfony\Component\Translation\MessageSelector
     {
         return $this->selector;
     }
@@ -359,19 +347,16 @@ class Translator extends SymfonyTranslator
      * thus we must explicitly require it in this class to guarantee access.
      *
      * @param  MessageFormatterInterface $formatter The formatter.
-     * @return void
      */
-    public function setFormatter(MessageFormatterInterface $formatter)
+    public function setFormatter(MessageFormatterInterface $formatter): void
     {
         $this->formatter = $formatter;
     }
 
     /**
      * Retrieve the message formatter.
-     *
-     * @return MessageFormatterInterface
      */
-    protected function formatter()
+    protected function formatter(): \Symfony\Component\Translation\Formatter\MessageFormatterInterface
     {
         return $this->formatter;
     }
@@ -423,7 +408,7 @@ class Translator extends SymfonyTranslator
         }
 
         if (is_string($val)) {
-            return !empty(trim($val));
+            return !in_array(trim($val), ['', '0'], true);
         }
 
         if ($val instanceof Translation) {
@@ -431,17 +416,9 @@ class Translator extends SymfonyTranslator
         }
 
         if (is_array($val)) {
-            return !!array_filter(
+            return (bool) array_filter(
                 $val,
-                function ($v, $k) {
-                    if (is_string($k) && strlen($k) > 0) {
-                        if (is_string($v) && strlen($v) > 0) {
-                            return true;
-                        }
-                    }
-
-                    return false;
-                },
+                fn($v, $k): bool => is_string($k) && $k !== '' && (is_string($v) && $v !== ''),
                 ARRAY_FILTER_USE_BOTH
             );
         }

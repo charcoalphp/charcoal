@@ -53,7 +53,7 @@ class ExportAction extends AdminAction
         set_time_limit(0);
 
         $failMessage = $this->translator()->translation('Failed to export object(s)');
-        $errorThrown = strtr($this->translator()->translation('{{ errorMessage }}: {{ errorThrown }}'), [
+        strtr($this->translator()->translation('{{ errorMessage }}: {{ errorThrown }}'), [
             '{{ errorMessage }}' => $failMessage
         ]);
         $reqMessage  = $this->translator()->translation(
@@ -67,7 +67,7 @@ class ExportAction extends AdminAction
         $exportIdent = $request->getParam('ident');
 
         if (!$objType) {
-            $actualType = is_object($objType) ? get_class($objType) : gettype($objType);
+            $actualType = get_debug_type($objType);
             $this->addFeedback('error', strtr($reqMessage, [
                 '{{ parameter }}'    => '"obj_type"',
                 '{{ expectedType }}' => 'string',
@@ -91,7 +91,7 @@ class ExportAction extends AdminAction
 
         if (isset($exportIdent)) {
             if (!is_string($exportIdent)) {
-                $actualType = is_object($exportIdent) ? get_class($exportIdent) : gettype($exportIdent);
+                $actualType = get_debug_type($exportIdent);
                 $this->addFeedback('error', strtr($typeMessage, [
                     '{{ parameter }}'    => 'Export "ident"',
                     '{{ expectedType }}' => 'string',
@@ -113,10 +113,8 @@ class ExportAction extends AdminAction
         return $response;
     }
 
-    /**
-     * @return array
-     */
-    public function results()
+    #[\Override]
+    public function results(): array
     {
         return [
             'success'   => $this->success(),
@@ -130,6 +128,7 @@ class ExportAction extends AdminAction
      * @param  Container $container A dependencies container instance.
      * @return void
      */
+    #[\Override]
     protected function setDependencies(Container $container)
     {
         parent::setDependencies($container);

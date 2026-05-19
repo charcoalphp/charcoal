@@ -31,7 +31,7 @@ class LocalesManager
      *
      * @var string[]
      */
-    private $languages;
+    private array $languages;
 
     /**
      * Language code for the default locale.
@@ -66,10 +66,10 @@ class LocalesManager
     {
         $this->setLocales($data['locales']);
 
-        $default = isset($data['default_language']) ? $data['default_language'] : null;
+        $default = $data['default_language'] ?? null;
         $this->setDefaultLocale($default);
 
-        $current = isset($data['current_language']) ? $data['current_language'] : null;
+        $current = $data['current_language'] ?? null;
         $this->setCurrentLocale($current);
     }
 
@@ -88,7 +88,7 @@ class LocalesManager
      *
      * @return string[]
      */
-    public function availableLocales()
+    public function availableLocales(): array
     {
         return $this->languages;
     }
@@ -99,9 +99,8 @@ class LocalesManager
      * @param  string|null $lang The default language code.
      *    If NULL, the first language is assigned.
      * @throws InvalidArgumentException If the language is invalid.
-     * @return void
      */
-    private function setDefaultLocale($lang)
+    private function setDefaultLocale($lang): void
     {
         if ($lang === null) {
             $this->defaultLanguage = $this->languages[0];
@@ -110,7 +109,7 @@ class LocalesManager
 
         if (!$this->hasLocale($lang)) {
             if (!is_string($lang)) {
-                $lang = is_object($lang) ? get_class($lang) : gettype($lang);
+                $lang = get_debug_type($lang);
             }
 
             throw new InvalidArgumentException(sprintf(
@@ -139,9 +138,8 @@ class LocalesManager
      * @param  string|null $lang The current language code.
      *    If NULL, the current language is unset.
      * @throws InvalidArgumentException If the language is invalid.
-     * @return void
      */
-    public function setCurrentLocale($lang)
+    public function setCurrentLocale($lang): void
     {
         if ($lang === null) {
             $this->currentLanguage = null;
@@ -150,7 +148,7 @@ class LocalesManager
 
         if (!$this->hasLocale($lang)) {
             if (!is_string($lang)) {
-                $lang = is_object($lang) ? get_class($lang) : gettype($lang);
+                $lang = get_debug_type($lang);
             }
 
             throw new InvalidArgumentException(sprintf(
@@ -180,9 +178,8 @@ class LocalesManager
      * Determine if a locale is available.
      *
      * @param  string $lang The language code to check.
-     * @return boolean
      */
-    public function hasLocale($lang)
+    public function hasLocale($lang): bool
     {
         return isset($this->locales[$lang]);
     }
@@ -197,12 +194,11 @@ class LocalesManager
      *
      * @param  array $locales The locales configuration structure.
      * @throws InvalidArgumentException If there are no active locales.
-     * @return void
      */
-    private function setLocales(array $locales)
+    private function setLocales(array $locales): void
     {
         $locales = $this->filterLocales($locales);
-        uasort($locales, [ $this, 'sortLocalesByPriority' ]);
+        uasort($locales, $this->sortLocalesByPriority(...));
 
         $this->locales   = [];
         $this->languages = [];
@@ -211,7 +207,7 @@ class LocalesManager
             $this->languages[] = $langCode;
         }
 
-        if (empty($this->locales)) {
+        if ($this->locales === []) {
             throw new InvalidArgumentException(
                 'Locales can not be empty.'
             );
@@ -229,7 +225,7 @@ class LocalesManager
      * @param  array $locales The locales configuration structure.
      * @return array The parsed language structures.
      */
-    private function filterLocales(array $locales)
+    private function filterLocales(array $locales): array
     {
         $z = self::DEFAULT_SORT_PRIORITY;
 
@@ -258,16 +254,11 @@ class LocalesManager
      *
      * @param  array $a Sortable action A.
      * @param  array $b Sortable action B.
-     * @return integer
      */
-    private function sortLocalesByPriority(array $a, array $b)
+    private function sortLocalesByPriority(array $a, array $b): int
     {
-        $a = isset($a['priority']) ? $a['priority'] : 0;
-        $b = isset($b['priority']) ? $b['priority'] : 0;
-
-        if ($a === $b) {
-            return 0;
-        }
-        return ($a < $b) ? (-1) : 1;
+        $a = $a['priority'] ?? 0;
+        $b = $b['priority'] ?? 0;
+        return $a <=> $b;
     }
 }

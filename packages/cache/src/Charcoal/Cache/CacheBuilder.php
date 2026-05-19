@@ -27,31 +27,23 @@ final class CacheBuilder
 
     /**
      * Default logger instance.
-     *
-     * @var \Psr\Log\LoggerInterface|null
      */
-    private $logger;
+    private ?\Psr\Log\LoggerInterface $logger = null;
 
     /**
      * Default namespace for new pools.
-     *
-     * @var string|null
      */
-    private $namespace;
+    private ?string $namespace = null;
 
     /**
      * Default "Pool" class to use for making new pools.
-     *
-     * @var string
      */
-    private $poolClass = Pool::class;
+    private string $poolClass = Pool::class;
 
     /**
      * Default "Item" class to use for making new items.
-     *
-     * @var string|null
      */
-    private $itemClass;
+    private ?string $itemClass = null;
 
     /**
      * Create a cache pool builder.
@@ -88,7 +80,7 @@ final class CacheBuilder
      * @param  mixed $poolOptions Optional settings for the new pool.
      * @return PoolInterface
      */
-    public function __invoke($cacheDriver, $poolOptions = null)
+    public function __invoke($cacheDriver, $poolOptions = null): object
     {
         return $this->build($cacheDriver, $poolOptions);
     }
@@ -105,7 +97,7 @@ final class CacheBuilder
      *     Otherwise, the default settings are used.
      * @return PoolInterface
      */
-    public function build($cacheDriver, $poolOptions = null)
+    public function build($cacheDriver, $poolOptions = null): object
     {
         if (!($cacheDriver instanceof DriverInterface)) {
             $cacheDriver = $this->resolveDriver($cacheDriver);
@@ -123,9 +115,8 @@ final class CacheBuilder
      * Prepare any pool options for the new pool object.
      *
      * @param  mixed $options Settings for the new pool.
-     * @return array
      */
-    private function parsePoolOptions($options)
+    private function parsePoolOptions($options): array
     {
         $defaults = [
             'pool_class' => $this->poolClass,
@@ -156,9 +147,8 @@ final class CacheBuilder
      *
      * @param  PoolInterface $pool    The new pool.
      * @param  array         $options Settings for the new pool.
-     * @return void
      */
-    private function applyPoolOptions(PoolInterface $pool, array $options)
+    private function applyPoolOptions(PoolInterface $pool, array $options): void
     {
         if (isset($options['logger'])) {
             $pool->setLogger($options['logger']);
@@ -188,7 +178,7 @@ final class CacheBuilder
             foreach ($driver as $drv) {
                 try {
                     return $this->resolveOneDriver($drv);
-                } catch (InvalidArgumentException $e) {
+                } catch (InvalidArgumentException) {
                     continue;
                 }
             }
@@ -223,7 +213,7 @@ final class CacheBuilder
             } else {
                 throw new InvalidArgumentException(sprintf(
                     'Driver class %s must implement %s',
-                    get_class($driver),
+                    $driver::class,
                     DriverInterface::class
                 ));
             }
@@ -246,7 +236,7 @@ final class CacheBuilder
                     throw new InvalidArgumentException(sprintf(
                         'Driver "%s": Class %s must implement %s',
                         $name,
-                        get_class($driver),
+                        $driver::class,
                         DriverInterface::class
                     ));
                 }
@@ -267,9 +257,8 @@ final class CacheBuilder
      *
      * @param  ArrayAccess|array $drivers The driver list used to create cache drivers.
      * @throws InvalidArgumentException If the drivers list is invalid.
-     * @return void
      */
-    private function setDrivers($drivers)
+    private function setDrivers($drivers): void
     {
         if ($this->isAccessible($drivers)) {
             $this->drivers = $drivers;
@@ -285,12 +274,11 @@ final class CacheBuilder
      *
      * @param  \Psr\Log\LoggerInterface $logger A PSR-3 logger.
      * @throws InvalidArgumentException If the logger is invalid PSR-3 client.
-     * @return void
      */
-    private function setLogger($logger)
+    private function setLogger($logger): void
     {
-        $psr = 'Psr\\Log\\LoggerInterface';
-        if (!is_a($logger, $psr)) {
+        $psr = \Psr\Log\LoggerInterface::class;
+        if (!$logger instanceof $psr) {
             throw new InvalidArgumentException(
                 sprintf('Expected an instance of %s', $psr)
             );
@@ -306,9 +294,8 @@ final class CacheBuilder
      *
      * @param  string $namespace The pool namespace.
      * @throws InvalidArgumentException If the namespaces is invalid.
-     * @return void
      */
-    private function setNamespace($namespace)
+    private function setNamespace($namespace): void
     {
         if (!ctype_alnum($namespace)) {
             throw new InvalidArgumentException(
@@ -326,9 +313,8 @@ final class CacheBuilder
      *
      * @param  string $class The pool class name.
      * @throws InvalidArgumentException When passed an invalid or nonexistant class.
-     * @return void
      */
-    private function setPoolClass($class)
+    private function setPoolClass($class): void
     {
         if (!class_exists($class)) {
             throw new InvalidArgumentException(
@@ -356,9 +342,8 @@ final class CacheBuilder
      *
      * @param  string $class The item class name.
      * @throws InvalidArgumentException When passed an invalid or nonexistant class.
-     * @return void
      */
-    private function setItemClass($class)
+    private function setItemClass($class): void
     {
         if (!class_exists($class)) {
             throw new InvalidArgumentException(
@@ -385,9 +370,9 @@ final class CacheBuilder
      * @param  mixed $var The value to check
      * @return boolean TRUE if $var is iterable, FALSE otherwise.
      */
-    private function isIterable($var)
+    private function isIterable($var): bool
     {
-        return is_array($var) || ($var instanceof Traversable);
+        return is_iterable($var);
     }
 
     /**
@@ -396,7 +381,7 @@ final class CacheBuilder
      * @param  mixed $var The value to check
      * @return boolean TRUE if $var is an array or accessible like an array, FALSE otherwise.
      */
-    private function isAccessible($var)
+    private function isAccessible($var): bool
     {
         return is_array($var) || ($var instanceof ArrayAccess);
     }

@@ -40,7 +40,7 @@ trait AclAwareTrait
         if (!$this->acl) {
             throw new RuntimeException(sprintf(
                 'ACL service is not defined for "%s"',
-                get_class($this)
+                $this::class
             ));
         }
 

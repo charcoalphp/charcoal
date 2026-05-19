@@ -1,8 +1,11 @@
 {
-    "type": "library",
     "name": "charcoal/admin",
     "description": "The Charcoal Administration Dashboard",
-    "keywords": ["charcoal", "admin", "cms"],
+    "keywords": [
+        "charcoal",
+        "admin",
+        "cms"
+    ],
     "homepage": "https://charcoal.locomotive.ca",
     "license": "MIT",
     "authors": [
@@ -15,20 +18,10 @@
             "homepage": "https://locomotive.ca"
         }
     ],
-    "config": {
-        "sort-packages": true
-    },
-    "extra": {
-        "branch-alias": {
-            "dev-main": "5.x-dev"
-        }
-    },
+    "type": "library",
     "require": {
-        "php": "^7.4 || ^8.0",
+        "php": "^8.3",
         "barryvdh/elfinder-flysystem-driver": "^0.3",
-        "guzzlehttp/guzzle": "^6.0 || ^7.0",
-        "kriswallsmith/assetic": "^1.4",
-        "laminas/laminas-permissions-acl": "^2.8",
         "charcoal/app": "^5.1",
         "charcoal/cache": "^5.1",
         "charcoal/cms": "^5.1",
@@ -38,25 +31,24 @@
         "charcoal/translator": "^5.1",
         "charcoal/ui": "^5.1",
         "charcoal/user": "^5.1",
+        "guzzlehttp/guzzle": "^6.0 || ^7.0",
+        "kriswallsmith/assetic": "^1.4",
+        "laminas/laminas-permissions-acl": "^2.8",
         "mcaskill/php-html-build-attributes": "^1.0",
         "psr/cache": "^1.0",
         "psr/http-message": "^1.0",
         "psr/log": "^1.0",
-        "studio-42/elfinder": "2.1.64"
+        "studio-42/elfinder": "^2.1.64"
     },
     "require-dev": {
         "league/csv": "^9.5",
         "mockery/mockery": "^1.0",
         "mustache/mustache": "^2.11",
         "php-coveralls/php-coveralls": "^2.2",
-        "phpunit/phpunit": "^9.5",
+        "phpunit/phpunit": "^12.5",
         "seld/jsonlint": "^1.9",
         "squizlabs/php_codesniffer": "^3.5",
         "tedivm/stash": "~0.16"
-    },
-    "suggest": {
-        "league/csv": "To use the exporter (to CSV).",
-        "fabpot/goutte": "To use the various crawler-based tools."
     },
     "autoload": {
         "psr-4": {
@@ -68,8 +60,10 @@
             "Charcoal\\Tests\\": "tests/Charcoal/"
         }
     },
-    "replace": {
-        "locomotivemtl/charcoal-admin": "*"
+    "extra": {
+        "branch-alias": {
+            "dev-main": "5.x-dev"
+        }
     },
     "scripts": {
         "test": [
@@ -86,6 +80,16 @@
         "phpcs": "php vendor/bin/phpcs -ps --colors src/",
         "phpcbf": "php vendor/bin/phpcbf -ps --colors src/ tests/",
         "phpunit": "php vendor/bin/phpunit --coverage-text"
+    },
+    "suggest": {
+        "league/csv": "To use the exporter (to CSV).",
+        "fabpot/goutte": "To use the various crawler-based tools."
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "replace": {
+        "locomotivemtl/charcoal-admin": "*"
     },
     "minimum-stability": "dev",
     "prefer-stable": true

@@ -8,12 +8,12 @@ class AbstractTintEffectTest extends \PHPUnit\Framework\TestCase
 
     protected function setUp(): void
     {
-        $img = $this->getMockForAbstractClass('\Charcoal\Image\AbstractImage');
-        $this->obj = $this->getMockForAbstractClass('\Charcoal\Image\Effect\AbstractTintEffect');
+        $img = $this->getMockForAbstractClass(\Charcoal\Image\AbstractImage::class);
+        $this->obj = $this->getMockForAbstractClass(\Charcoal\Image\Effect\AbstractTintEffect::class);
         $this->obj->setImage($img);
     }
 
-    public function testDefaults()
+    public function testDefaults(): void
     {
         $obj = $this->obj;
 
@@ -22,7 +22,7 @@ class AbstractTintEffectTest extends \PHPUnit\Framework\TestCase
         $this->assertTrue($obj->midtone());
     }
 
-    public function testSetData()
+    public function testSetData(): void
     {
         $obj = $this->obj;
         $ret = $obj->setData(
@@ -39,7 +39,7 @@ class AbstractTintEffectTest extends \PHPUnit\Framework\TestCase
         $this->assertFalse($obj->midtone());
     }
 
-    public function testSetColor()
+    public function testSetColor(): void
     {
         $obj = $this->obj;
         $ret = $obj->setColor('#ff00ff');
@@ -50,7 +50,7 @@ class AbstractTintEffectTest extends \PHPUnit\Framework\TestCase
         $obj->setColor(false);
     }
 
-    public function testSetOpacity()
+    public function testSetOpacity(): void
     {
         $obj = $this->obj;
         $ret = $obj->setOpacity(0.42);
@@ -61,7 +61,7 @@ class AbstractTintEffectTest extends \PHPUnit\Framework\TestCase
         $obj->setOpacity(false);
     }
 
-    public function testSetMidtone()
+    public function testSetMidtone(): void
     {
         $obj = $this->obj;
         $ret = $obj->setMidtone(false);

@@ -12,7 +12,7 @@ use Charcoal\Tests\AbstractTestCase;
  */
 class ScriptServiceProviderTest extends AbstractTestCase
 {
-    public function testProvider()
+    public function testProvider(): void
     {
         $container = new Container();
         $provider  = new ScriptServiceProvider();

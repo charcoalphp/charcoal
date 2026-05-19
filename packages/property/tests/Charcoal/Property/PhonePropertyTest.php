@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Charcoal\Tests\Property;
 
 // From 'charcoal-property'
@@ -18,9 +20,6 @@ class PhonePropertyTest extends AbstractTestCase
      */
     public $obj;
 
-    /**
-     * @return void
-     */
     protected function setUp(): void
     {
         $container = $this->getContainer();
@@ -34,35 +33,24 @@ class PhonePropertyTest extends AbstractTestCase
 
     /**
      * Hello world
-     *
-     * @return void
      */
-    public function testDefaultValues()
+    public function testDefaultValues(): void
     {
         $this->assertEquals(0, $this->obj['minLength']);
         $this->assertEquals(16, $this->obj['maxLength']);
     }
 
-    /**
-     * @return void
-     */
-    public function testType()
+    public function testType(): void
     {
         $this->assertEquals('phone', $this->obj->type());
     }
 
-    /**
-     * @return void
-     */
-    public function testSanitize()
+    public function testSanitize(): void
     {
         $this->assertEquals('5145551234', $this->obj->sanitize('(514) 555-1234'));
     }
 
-    /**
-     * @return void
-     */
-    public function testDisplayVal()
+    public function testDisplayVal(): void
     {
         $this->assertEquals('(514) 555-1234', $this->obj->displayVal('5145551234'));
         $this->assertEquals('(514) 555-1234', $this->obj->displayVal('514-555-1234'));

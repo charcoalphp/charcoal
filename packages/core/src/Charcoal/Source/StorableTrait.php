@@ -58,8 +58,8 @@ trait StorableTrait
         if (!is_scalar($id)) {
             throw new InvalidArgumentException(sprintf(
                 'ID for "%s" must be a scalar (integer, float, string, or boolean); received %s',
-                get_class($this),
-                (is_object($id) ? get_class($id) : gettype($id))
+                $this::class,
+                (get_debug_type($id))
             ));
         }
 
@@ -117,11 +117,11 @@ trait StorableTrait
         if (!is_string($key)) {
             throw new InvalidArgumentException(sprintf(
                 'Key must be a string; received %s',
-                (is_object($key) ? get_class($key) : gettype($key))
+                (get_debug_type($key))
             ));
         }
 
-        if (!preg_match_all('/^[A-Za-z0-9_]+$/', $key)) {
+        if (!preg_match_all('/^\w+$/', $key)) {
             throw new InvalidArgumentException(
                 sprintf('Key "%s" is invalid: must be alphanumeric / underscore.', $key)
             );
@@ -221,7 +221,7 @@ trait StorableTrait
      *
      * @return boolean TRUE on success.
      */
-    final public function save()
+    final public function save(): bool
     {
         $pre = $this->preSave();
         if ($pre === false) {
@@ -229,7 +229,7 @@ trait StorableTrait
                 'Can not save object "%s:%s"; cancelled by %s::preSave()',
                 $this->objType(),
                 $this->id(),
-                get_called_class()
+                static::class
             ));
             return false;
         }
@@ -240,7 +240,7 @@ trait StorableTrait
                 'Can not save object "%s:%s"; repository failed for %s',
                 $this->objType(),
                 $this->id(),
-                get_called_class()
+                static::class
             ));
             return false;
         } else {
@@ -253,7 +253,7 @@ trait StorableTrait
                 'Saved object "%s:%s" but %s::postSave() failed',
                 $this->objType(),
                 $this->id(),
-                get_called_class()
+                static::class
             ));
             return false;
         }
@@ -267,7 +267,7 @@ trait StorableTrait
      * @param  string[] $keys If provided, only update the properties specified.
      * @return boolean TRUE on success.
      */
-    final public function update(array $keys = null)
+    final public function update(?array $keys = null): bool
     {
         $pre = $this->preUpdate($keys);
         if ($pre === false) {
@@ -275,7 +275,7 @@ trait StorableTrait
                 'Can not update object "%s:%s"; cancelled by %s::preUpdate()',
                 $this->objType(),
                 $this->id(),
-                get_called_class()
+                static::class
             ));
             return false;
         }
@@ -286,7 +286,7 @@ trait StorableTrait
                 'Can not update object "%s:%s"; repository failed for %s',
                 $this->objType(),
                 $this->id(),
-                get_called_class()
+                static::class
             ));
             return false;
         }
@@ -297,7 +297,7 @@ trait StorableTrait
                 'Updated object "%s:%s" but %s::postUpdate() failed',
                 $this->objType(),
                 $this->id(),
-                get_called_class()
+                static::class
             ));
             return false;
         }
@@ -310,7 +310,7 @@ trait StorableTrait
      *
      * @return boolean TRUE on success.
      */
-    final public function delete()
+    final public function delete(): bool
     {
         $pre = $this->preDelete();
         if ($pre === false) {
@@ -318,7 +318,7 @@ trait StorableTrait
                 'Can not delete object "%s:%s"; cancelled by %s::preDelete()',
                 $this->objType(),
                 $this->id(),
-                get_called_class()
+                static::class
             ));
             return false;
         }
@@ -329,7 +329,7 @@ trait StorableTrait
                 'Can not delete object "%s:%s"; repository failed for %s',
                 $this->objType(),
                 $this->id(),
-                get_called_class()
+                static::class
             ));
             return false;
         }
@@ -340,7 +340,7 @@ trait StorableTrait
                 'Deleted object "%s:%s" but %s::postDelete() failed',
                 $this->objType(),
                 $this->id(),
-                get_called_class()
+                static::class
             ));
             return false;
         }
@@ -370,7 +370,7 @@ trait StorableTrait
     {
         if (!isset($this->sourceFactory)) {
             throw new RuntimeException(
-                sprintf('Source factory is not set for "%s"', get_class($this))
+                sprintf('Source factory is not set for "%s"', $this::class)
             );
         }
         return $this->sourceFactory;
@@ -381,7 +381,7 @@ trait StorableTrait
      *
      * @return boolean TRUE to proceed with creation; FALSE to stop creation.
      */
-    protected function preSave()
+    protected function preSave(): bool
     {
         return true;
     }
@@ -391,7 +391,7 @@ trait StorableTrait
      *
      * @return boolean TRUE to indicate object was created.
      */
-    protected function postSave()
+    protected function postSave(): bool
     {
         return true;
     }
@@ -402,7 +402,7 @@ trait StorableTrait
      * @param  string[] $keys Optional list of properties to update.
      * @return boolean TRUE to proceed with update; FALSE to stop update.
      */
-    protected function preUpdate(array $keys = null)
+    protected function preUpdate(?array $keys = null): bool
     {
         return true;
     }
@@ -413,7 +413,7 @@ trait StorableTrait
      * @param  string[] $keys Optional list of properties to update.
      * @return boolean TRUE to indicate object was updated.
      */
-    protected function postUpdate(array $keys = null)
+    protected function postUpdate(?array $keys = null): bool
     {
         return true;
     }
@@ -423,7 +423,7 @@ trait StorableTrait
      *
      * @return boolean TRUE to proceed with deletion; FALSE to stop deletion.
      */
-    protected function preDelete()
+    protected function preDelete(): bool
     {
         return true;
     }
@@ -433,7 +433,7 @@ trait StorableTrait
      *
      * @return boolean TRUE to indicate object was deleted.
      */
-    protected function postDelete()
+    protected function postDelete(): bool
     {
         return true;
     }

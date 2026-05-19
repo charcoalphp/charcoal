@@ -48,10 +48,8 @@ class InlineMultiAction extends AdminAction
 
     /**
      * Store the widget factory.
-     *
-     * @var FactoryInterface
      */
-    private $widgetFactory;
+    private ?\Charcoal\Factory\FactoryInterface $widgetFactory = null;
 
     /**
      * @param  RequestInterface  $request  A PSR-7 compatible Request instance.
@@ -68,7 +66,7 @@ class InlineMultiAction extends AdminAction
         $reqMessage  = $this->translator()->translation(
             '{{ parameter }} required, must be a {{ expectedType }}, received {{ actualType }}'
         );
-        $typeMessage = $this->translator()->translation(
+        $this->translator()->translation(
             '{{ parameter }} must be a {{ expectedType }}, received {{ actualType }}'
         );
 
@@ -76,7 +74,7 @@ class InlineMultiAction extends AdminAction
         $objIds  = $request->getParam('obj_ids');
 
         if (!$objType) {
-            $actualType = is_object($objType) ? get_class($objType) : gettype($objType);
+            $actualType = get_debug_type($objType);
             $this->addFeedback('error', strtr($reqMessage, [
                 '{{ parameter }}'    => '"obj_type"',
                 '{{ expectedType }}' => 'string',
@@ -88,7 +86,7 @@ class InlineMultiAction extends AdminAction
         }
 
         if (!$objIds || !is_array($objIds)) {
-            $actualType = is_object($objIds) ? get_class($objIds) : gettype($objIds);
+            $actualType = get_debug_type($objIds);
             $this->addFeedback('error', strtr($reqMessage, [
                 '{{ parameter }}'    => '"obj_ids"',
                 '{{ expectedType }}' => 'array of object IDs',
@@ -153,10 +151,8 @@ class InlineMultiAction extends AdminAction
         }
     }
 
-    /**
-     * @return array
-     */
-    public function results()
+    #[\Override]
+    public function results(): array
     {
         return [
             'success'   => $this->success(),
@@ -169,6 +165,7 @@ class InlineMultiAction extends AdminAction
      * @param Container $container DI container.
      * @return void
      */
+    #[\Override]
     protected function setDependencies(Container $container)
     {
         parent::setDependencies($container);
@@ -180,11 +177,10 @@ class InlineMultiAction extends AdminAction
      * Retrieve the widget factory.
      *
      * @throws RuntimeException If the widget factory was not previously set.
-     * @return FactoryInterface
      */
-    protected function widgetFactory()
+    protected function widgetFactory(): \Charcoal\Factory\FactoryInterface
     {
-        if (!isset($this->widgetFactory)) {
+        if (!$this->widgetFactory instanceof \Charcoal\Factory\FactoryInterface) {
             throw new RuntimeException('Widget Factory is not defined');
         }
 
@@ -195,9 +191,8 @@ class InlineMultiAction extends AdminAction
      * Set the widget factory.
      *
      * @param  FactoryInterface $factory The factory to create widgets.
-     * @return void
      */
-    private function setWidgetFactory(FactoryInterface $factory)
+    private function setWidgetFactory(FactoryInterface $factory): void
     {
         $this->widgetFactory = $factory;
     }

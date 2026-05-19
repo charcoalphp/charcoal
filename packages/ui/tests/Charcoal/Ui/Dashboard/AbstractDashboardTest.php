@@ -23,9 +23,6 @@ class AbstractDashboardTest extends AbstractTestCase
      */
     public $obj;
 
-    /**
-     * @return void
-     */
     protected function setUp(): void
     {
         $container = $this->getContainer();
@@ -45,10 +42,8 @@ class AbstractDashboardTest extends AbstractTestCase
 
     /**
      * Helper method, example layout for tests.
-     *
-     * @return array
      */
-    protected function exampleLayout()
+    protected function exampleLayout(): array
     {
         return [
             'structure' => [
@@ -57,15 +52,10 @@ class AbstractDashboardTest extends AbstractTestCase
         ];
     }
 
-    /**
-     * @return void
-     */
-    public function testSetWidgetCallback()
+    public function testSetWidgetCallback(): void
     {
         $obj = $this->obj;
-        $cb = function($o) {
-            return 'foo';
-        };
+        $cb = (fn($o): string => 'foo');
         $ret = $obj->setWidgetCallback($cb);
         $this->assertSame($ret, $obj);
     }
@@ -77,10 +67,8 @@ class AbstractDashboardTest extends AbstractTestCase
      * - calling `setLayout()` with an Layout objects set the layout
      * - calling `setLayout()` with an array sets the same layout
      * - `setLayout()` throws an exception if not an array / Layout object
-     *
-     * @return void
      */
-    public function testSetLayout()
+    public function testSetLayout(): void
     {
         $container = $this->getContainer();
 
@@ -101,10 +89,7 @@ class AbstractDashboardTest extends AbstractTestCase
         $obj->setLayout('foobar');
     }
 
-    /**
-     * @return void
-     */
-    public function testSetWidgets()
+    public function testSetWidgets(): void
     {
         $obj = $this->obj;
         $ret = $obj->setWidgets([
@@ -113,10 +98,7 @@ class AbstractDashboardTest extends AbstractTestCase
         $this->assertSame($ret, $obj);
     }
 
-    /**
-     * @return void
-     */
-    public function testAddWidgetInvalidIdentThrowsException()
+    public function testAddWidgetInvalidIdentThrowsException(): void
     {
         $obj = $this->obj;
 
@@ -124,10 +106,7 @@ class AbstractDashboardTest extends AbstractTestCase
         $obj->addWidget([], []);
     }
 
-    /**
-     * @return void
-     */
-    public function testAddWidgetInvalidWidgetThrowsException()
+    public function testAddWidgetInvalidWidgetThrowsException(): void
     {
         $obj = $this->obj;
 
@@ -135,36 +114,29 @@ class AbstractDashboardTest extends AbstractTestCase
         $obj->addWidget('foo', false);
     }
 
-    /**
-     * @return void
-     */
-    public function testWidgets()
+    public function testWidgets(): void
     {
         $obj = $this->obj;
 
-        $ret = $obj->setWidgets([
+        $obj->setWidgets([
             'test' => []
         ]);
 
 
         $widgets = $obj->widgets();
-        $num = 0;
         foreach ($widgets as $w) {
             $this->assertInstanceOf(UiItemInterface::class, $w);
         }
     }
 
-    /**
-     * @return void
-     */
-    public function testWidgetsCallback()
+    public function testWidgetsCallback(): void
     {
         $obj = $this->obj;
         $obj->setWidgets([
             'test' => []
         ]);
 
-        $cb = function(UiItemInterface $widget) {
+        $cb = function(UiItemInterface $widget): void {
             $widget['foo'] = 'bar';
         };
 
@@ -175,30 +147,24 @@ class AbstractDashboardTest extends AbstractTestCase
         }
     }
 
-    /**
-     * @return void
-     */
-    public function testHasWidgets()
+    public function testHasWidgets(): void
     {
         $obj = $this->obj;
         $this->assertFalse($obj->hasWidgets());
 
-        $ret = $obj->setWidgets([
+        $obj->setWidgets([
             'test'=>[]
         ]);
 
         $this->assertTrue($obj->hasWidgets());
     }
 
-    /**
-     * @return void
-     */
-    public function testNumWidgets()
+    public function testNumWidgets(): void
     {
         $obj = $this->obj;
         $this->assertEquals(0, $obj->numWidgets());
 
-        $ret = $obj->setWidgets([
+        $obj->setWidgets([
             'test'=>[],
             'foobar'=>[]
         ]);

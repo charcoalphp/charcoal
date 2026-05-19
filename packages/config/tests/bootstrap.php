@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 if (($_ENV['TEST_MODE'] ?? '') === 'PACKAGE') {
     require getcwd().'/tests/bootstrap.php';
 } else {
@@ -9,8 +11,6 @@ if (($_ENV['TEST_MODE'] ?? '') === 'PACKAGE') {
      * @see \Charcoal\Tests\Config\Mixin\FileLoader\YamlFileLoaderTest::testAddFileWithNoYamlParser()
      *     The autoloader is needed to temporarily remove the "symfony/yaml" package
      *     in order to test the Config's behaviour when faced with a missiong YAML parser.
-     *
-     * @var \Composer\Autoload\ClassLoader $autoloader
      */
     $GLOBALS['autoloader'] = require dirname(__DIR__).'/vendor/autoload.php';
 }

@@ -74,9 +74,8 @@ class ContainerProvider
      * Register the unit tests required services.
      *
      * @param  Container $container A DI container.
-     * @return void
      */
-    public function registerDebug(Container $container)
+    public function registerDebug(Container $container): void
     {
         if (!isset($container['debug'])) {
             $container['debug'] = false;
@@ -87,9 +86,8 @@ class ContainerProvider
      * Register the unit tests required services.
      *
      * @param  Container $container A DI container.
-     * @return void
      */
-    public function registerBaseServices(Container $container)
+    public function registerBaseServices(Container $container): void
     {
         $this->registerDebug($container);
         $this->registerConfig($container);
@@ -102,9 +100,8 @@ class ContainerProvider
      * Register the admin services.
      *
      * @param  Container $container A DI container.
-     * @return void
      */
-    public function registerAdminServices(Container $container)
+    public function registerAdminServices(Container $container): void
     {
         $this->registerBaseServices($container);
         $this->registerBaseUrl($container);
@@ -115,67 +112,57 @@ class ContainerProvider
      * Setup the application's base URI.
      *
      * @param  Container $container A DI container.
-     * @return void
      */
-    public function registerBaseUrl(Container $container)
+    public function registerBaseUrl(Container $container): void
     {
-        $container['base-url'] = function () {
-            return Uri::createFromString('');
-        };
+        $container['base-url'] = (fn() => Uri::createFromString(''));
 
-        $container['admin/base-url'] = function () {
-            return Uri::createFromString('admin');
-        };
+        $container['admin/base-url'] = (fn() => Uri::createFromString('admin'));
     }
 
     /**
      * Setup the application configset.
      *
      * @param  Container $container A DI container.
-     * @return void
      */
-    public function registerConfig(Container $container)
+    public function registerConfig(Container $container): void
     {
-        $container['config'] = function () {
-            return new AppConfig([
-                'base_path'  => realpath(__DIR__.'/../../..'),
-                'apis'       => [
-                    'google' => [
-                        'recaptcha' => [
-                            'public_key'  => 'foobar',
-                            'private_key' => 'bazqux',
-                        ],
+        $container['config'] = (fn(): \Charcoal\App\AppConfig => new AppConfig([
+            'base_path'  => realpath(__DIR__.'/../../..'),
+            'apis'       => [
+                'google' => [
+                    'recaptcha' => [
+                        'public_key'  => 'foobar',
+                        'private_key' => 'bazqux',
                     ],
                 ],
-                'locales'    => [
-                    'en' => [
-                        'locale' => 'en-US',
-                    ],
+            ],
+            'locales'    => [
+                'en' => [
+                    'locale' => 'en-US',
                 ],
-                'translator' => [
-                    'paths' => [],
+            ],
+            'translator' => [
+                'paths' => [],
+            ],
+            'metadata'   => [
+                'paths'  => [
+                    'metadata',
+                    // Standalone
+                    'vendor/charcoal/object/metadata',
+                    'vendor/charcoal/user/metadata',
+                    // Monorepo
+                    '/../object/metadata',
+                    '/../user/metadata',
                 ],
-                'metadata'   => [
-                    'paths'  => [
-                        'metadata',
-                        // Standalone
-                        'vendor/charcoal/object/metadata',
-                        'vendor/charcoal/user/metadata',
-                        // Monorepo
-                        '/../object/metadata',
-                        '/../user/metadata',
-                    ],
-                ],
-            ]);
-        };
+            ],
+        ]));
 
         /**
          * List of Charcoal module classes.
          *
          * Explicitly defined in case of a version mismatch with dependencies. This parameter
          * is normally defined by {@see \Charcoal\App\ServiceProvider\AppServiceProvider}.
-         *
-         * @var array
          */
         $container['module/classes'] = [];
     }
@@ -184,134 +171,110 @@ class ContainerProvider
      * Setup the admin module configset.
      *
      * @param  Container $container A DI container.
-     * @return void
      */
-    public function registerAdminConfig(Container $container)
+    public function registerAdminConfig(Container $container): void
     {
         $this->registerConfig($container);
 
-        $container['admin/config'] = function () {
-            return new AdminConfig();
-        };
+        $container['admin/config'] = (fn(): \Charcoal\Admin\Config => new AdminConfig());
     }
 
     /**
      * @param  Container $container A DI container.
-     * @return void
      */
-    public function registerElfinderConfig(Container $container)
+    public function registerElfinderConfig(Container $container): void
     {
-        $container['elfinder/config'] = function () {
-            return [];
-        };
+        $container['elfinder/config'] = (fn(): array => []);
     }
 
     /**
      * @param  Container $container A DI container.
-     * @return void
      */
-    public function registerLayoutFactory(Container $container)
+    public function registerLayoutFactory(Container $container): void
     {
-        $container['layout/factory'] = function () {
-            $layoutFactory = new LayoutFactory();
-            return $layoutFactory;
-        };
+        $container['layout/factory'] = (fn(): \Charcoal\Ui\Layout\LayoutFactory => new LayoutFactory());
     }
 
     /**
      * @param  Container $container A DI container.
-     * @return void
      */
-    public function registerLayoutBuilder(Container $container)
+    public function registerLayoutBuilder(Container $container): void
     {
         $this->registerLayoutFactory($container);
 
-        $container['layout/builder'] = function (Container $container) {
+        $container['layout/builder'] = function (Container $container): \Charcoal\Ui\Layout\LayoutBuilder {
             $layoutFactory = $container['layout/factory'];
-            $layoutBuilder = new LayoutBuilder($layoutFactory, $container);
-            return $layoutBuilder;
+            return new LayoutBuilder($layoutFactory, $container);
         };
     }
 
     /**
      * @param  Container $container A DI container.
-     * @return void
      */
-    public function registerDashboardFactory(Container $container)
+    public function registerDashboardFactory(Container $container): void
     {
         $this->registerLogger($container);
         $this->registerWidgetBuilder($container);
         $this->registerLayoutBuilder($container);
 
-        $container['dashboard/factory'] = function (Container $container) {
-            return new Factory([
-                'arguments'          => [[
-                    'container'      => $container,
-                    'logger'         => $container['logger'],
-                    'widget_builder' => $container['widget/builder'],
-                    'layout_builder' => $container['layout/builder']
-                ]],
-                'resolver_options' => [
-                    'suffix' => 'Dashboard'
-                ]
-            ]);
-        };
+        $container['dashboard/factory'] = (fn(Container $container): \Charcoal\Factory\GenericFactory => new Factory([
+            'arguments'          => [[
+                'container'      => $container,
+                'logger'         => $container['logger'],
+                'widget_builder' => $container['widget/builder'],
+                'layout_builder' => $container['layout/builder']
+            ]],
+            'resolver_options' => [
+                'suffix' => 'Dashboard'
+            ]
+        ]));
     }
 
     /**
      * @param  Container $container A DI container.
-     * @return void
      */
-    public function registerDashboardBuilder(Container $container)
+    public function registerDashboardBuilder(Container $container): void
     {
         $this->registerDashboardFactory($container);
 
-        $container['dashboard/builder'] = function (Container $container) {
+        $container['dashboard/builder'] = function (Container $container): \Charcoal\Ui\Dashboard\DashboardBuilder {
             $dashboardFactory = $container['dashboard/factory'];
-            $dashboardBuilder = new DashboardBuilder($dashboardFactory, $container);
-            return $dashboardBuilder;
+            return new DashboardBuilder($dashboardFactory, $container);
         };
     }
 
     /**
      * @param  Container $container A DI container.
-     * @return void
      */
-    public function registerWidgetFactory(Container $container)
+    public function registerWidgetFactory(Container $container): void
     {
         $this->registerLogger($container);
 
-        $container['widget/factory'] = function (Container $container) {
-            return new Factory([
-                'resolver_options' => [
-                    'suffix' => 'Widget'
-                ],
-                'arguments' => [[
-                    'container' => $container,
-                    'logger'    => $container['logger']
-                ]]
-            ]);
-        };
+        $container['widget/factory'] = (fn(Container $container): \Charcoal\Factory\GenericFactory => new Factory([
+            'resolver_options' => [
+                'suffix' => 'Widget'
+            ],
+            'arguments' => [[
+                'container' => $container,
+                'logger'    => $container['logger']
+            ]]
+        ]));
     }
 
     /**
      * @param  Container $container A DI container.
-     * @return void
      */
-    public function registerWidgetBuilder(Container $container)
+    public function registerWidgetBuilder(Container $container): void
     {
         $this->registerWidgetFactory($container);
 
-        $container['widget/builder'] = function (Container $container) {
-            return new WidgetBuilder($container['widget/factory'], $container);
-        };
+        $container['widget/builder'] = (fn(Container $container): \Charcoal\App\Template\WidgetBuilder => new WidgetBuilder($container['widget/factory'], $container));
     }
 
     /**
      * @param  Container $container A DI container.
-     * @return void
      */
-    public function registerClimate(Container $container)
+    public function registerClimate(Container $container): void
     {
         $container['climate/system'] = function () {
             $system = Mockery::mock(Linux::class);
@@ -338,11 +301,9 @@ class ContainerProvider
             return $reader;
         };
 
-        $container['climate/util'] = function (Container $container) {
-            return new UtilFactory($container['climate/system']);
-        };
+        $container['climate/util'] = (fn(Container $container): \League\CLImate\Util\UtilFactory => new UtilFactory($container['climate/system']));
 
-        $container['climate'] = function (Container $container) {
+        $container['climate'] = function (Container $container): \League\CLImate\CLImate {
             $climate = new CLImate();
 
             $climate->setOutput($container['climate/output']);
@@ -357,35 +318,28 @@ class ContainerProvider
      * Setup the application's logging interface.
      *
      * @param  Container $container A DI container.
-     * @return void
      */
-    public function registerLogger(Container $container)
+    public function registerLogger(Container $container): void
     {
-        $container['logger'] = function () {
-            return new NullLogger();
-        };
+        $container['logger'] = (fn(): \Psr\Log\NullLogger => new NullLogger());
     }
 
     /**
      * Setup the application's caching interface.
      *
      * @param  Container $container A DI container.
-     * @return void
      */
-    public function registerCache(Container $container)
+    public function registerCache(Container $container): void
     {
-        $container['cache'] = function () {
-            return new Pool();
-        };
+        $container['cache'] = (fn(): \Stash\Pool => new Pool());
     }
 
     /**
      * @param  Container $container A DI container.
-     * @return void
      */
-    public function registerDatabase(Container $container)
+    public function registerDatabase(Container $container): void
     {
-        $container['database'] = function () {
+        $container['database'] = function (): \PDO {
             $pdo = new PDO('sqlite::memory:');
             $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             return $pdo;
@@ -394,9 +348,8 @@ class ContainerProvider
 
     /**
      * @param  Container $container A DI container.
-     * @return void
      */
-    public function registerModelServiceProvider(Container $container)
+    public function registerModelServiceProvider(Container $container): void
     {
         static $provider = null;
 
@@ -409,9 +362,8 @@ class ContainerProvider
 
     /**
      * @param  Container $container A DI container.
-     * @return void
      */
-    public function registerTranslatorServiceProvider(Container $container)
+    public function registerTranslatorServiceProvider(Container $container): void
     {
         static $provider = null;
 
@@ -424,9 +376,8 @@ class ContainerProvider
 
     /**
      * @param  Container $container A DI container.
-     * @return void
      */
-    public function registerViewServiceProvider(Container $container)
+    public function registerViewServiceProvider(Container $container): void
     {
         static $provider = null;
 
@@ -439,107 +390,85 @@ class ContainerProvider
 
     /**
      * @param  Container $container A DI container.
-     * @return void
      */
-    public function registerAcl(Container $container)
+    public function registerAcl(Container $container): void
     {
-        $container['admin/acl'] = function () {
-            return new Acl();
-        };
+        $container['admin/acl'] = (fn(): \Laminas\Permissions\Acl\Acl => new Acl());
 
-        $container['authorizer/acl'] = function ($container) {
-            return $container['admin/acl'];
-        };
+        $container['authorizer/acl'] = (fn($container) => $container['admin/acl']);
     }
 
     /**
      * @param  Container $container A DI container.
-     * @return void
      */
-    public function registerAuthenticator(Container $container)
+    public function registerAuthenticator(Container $container): void
     {
         $this->registerLogger($container);
         $this->registerModelServiceProvider($container);
 
-        $container['admin/authenticator'] = function (Container $container) {
-            return new Authenticator([
-                'logger'        => $container['logger'],
-                'user_type'     => AdminUser::class,
-                'user_factory'  => $container['model/factory'],
-                'token_type'    => AdminAuthToken::class,
-                'token_factory' => $container['model/factory'],
-            ]);
-        };
+        $container['admin/authenticator'] = (fn(Container $container): \Charcoal\User\Authenticator => new Authenticator([
+            'logger'        => $container['logger'],
+            'user_type'     => AdminUser::class,
+            'user_factory'  => $container['model/factory'],
+            'token_type'    => AdminAuthToken::class,
+            'token_factory' => $container['model/factory'],
+        ]));
 
-        $container['authenticator'] = function (Container $container) {
-            return $container['admin/authenticator'];
-        };
+        $container['authenticator'] = (fn(Container $container): mixed => $container['admin/authenticator']);
     }
 
     /**
      * @param  Container $container A DI container.
-     * @return void
      */
-    public function registerAuthorizer(Container $container)
+    public function registerAuthorizer(Container $container): void
     {
         $this->registerLogger($container);
         $this->registerAcl($container);
 
-        $container['admin/authorizer'] = function (Container $container) {
-            return new Authorizer([
-                'logger'    => $container['logger'],
-                'acl'       => $container['admin/acl'],
-                'resource'  => 'admin',
-            ]);
-        };
+        $container['admin/authorizer'] = (fn(Container $container): \Charcoal\User\Authorizer => new Authorizer([
+            'logger'    => $container['logger'],
+            'acl'       => $container['admin/acl'],
+            'resource'  => 'admin',
+        ]));
 
-        $container['authorizer'] = function (Container $container) {
-            return $container['admin/authorizer'];
-        };
+        $container['authorizer'] = (fn(Container $container): mixed => $container['admin/authorizer']);
     }
 
     /**
      * @param  Container $container A DI container.
-     * @return void
      */
-    public function registerPropertyDisplayFactory(Container $container)
+    public function registerPropertyDisplayFactory(Container $container): void
     {
         $this->registerDatabase($container);
         $this->registerLogger($container);
 
-        $container['property/display/factory'] = function (Container $container) {
-            return new Factory([
-                'resolver_options' => [
-                    'suffix' => 'Display'
-                ],
-                'arguments' => [[
-                    'container' => $container,
-                    'logger'    => $container['logger']
-                ]]
-            ]);
-        };
+        $container['property/display/factory'] = (fn(Container $container): \Charcoal\Factory\GenericFactory => new Factory([
+            'resolver_options' => [
+                'suffix' => 'Display'
+            ],
+            'arguments' => [[
+                'container' => $container,
+                'logger'    => $container['logger']
+            ]]
+        ]));
     }
 
     /**
      * @param  Container $container A DI container.
-     * @return void
      */
-    public function registerEmailFactory(Container $container)
+    public function registerEmailFactory(Container $container): void
     {
-        $container['email/factory'] = function () {
-            return new Factory([
-                'map' => [
-                    'email' => Email::class,
-                ],
-            ]);
-        };
+        $container['email/factory'] = (fn(): \Charcoal\Factory\GenericFactory => new Factory([
+            'map' => [
+                'email' => Email::class,
+            ],
+        ]));
     }
 
     /**
      * @param  Container $container A DI container.
-     * @return void
      */
-    public function registerActionDependencies(Container $container)
+    public function registerActionDependencies(Container $container): void
     {
         $this->registerDebug($container);
         $this->registerLogger($container);
@@ -559,9 +488,8 @@ class ContainerProvider
 
     /**
      * @param  Container $container A DI container.
-     * @return void
      */
-    public function registerTemplateDependencies(Container $container)
+    public function registerTemplateDependencies(Container $container): void
     {
         $this->registerDebug($container);
         $this->registerLogger($container);
@@ -584,9 +512,8 @@ class ContainerProvider
 
     /**
      * @param  Container $container A DI container.
-     * @return void
      */
-    public function registerWidgetDependencies(Container $container)
+    public function registerWidgetDependencies(Container $container): void
     {
         $this->registerDebug($container);
         $this->registerLogger($container);
@@ -606,9 +533,8 @@ class ContainerProvider
 
     /**
      * @param  Container $container A DI container.
-     * @return void
      */
-    public function registerInputDependencies(Container $container)
+    public function registerInputDependencies(Container $container): void
     {
         $this->registerDebug($container);
         $this->registerLogger($container);
@@ -628,9 +554,8 @@ class ContainerProvider
 
     /**
      * @param  Container $container A DI container.
-     * @return void
      */
-    public function registerScriptDependencies(Container $container)
+    public function registerScriptDependencies(Container $container): void
     {
         $this->registerDebug($container);
         $this->registerLogger($container);

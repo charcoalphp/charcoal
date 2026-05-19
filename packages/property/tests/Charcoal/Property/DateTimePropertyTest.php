@@ -22,9 +22,6 @@ class DateTimePropertyTest extends AbstractTestCase
      */
     public $obj;
 
-    /**
-     * @return void
-     */
     protected function setUp(): void
     {
         $container = $this->getContainer();
@@ -39,10 +36,8 @@ class DateTimePropertyTest extends AbstractTestCase
     /**
      * Assert that the `type` method:
      * - returns "date-time"
-     *
-     * @return void
      */
-    public function testType()
+    public function testType(): void
     {
         $this->assertEquals('date-time', $this->obj->type());
     }
@@ -51,10 +46,8 @@ class DateTimePropertyTest extends AbstractTestCase
      * Assert that the `setData` method:
      * - is chainable
      * - sets the data
-     *
-     * @return void
      */
-    public function testSetData()
+    public function testSetData(): void
     {
         $ret = $this->obj->setData([
             'min'    => '2015-01-01 00:00:00',
@@ -77,10 +70,8 @@ class DateTimePropertyTest extends AbstractTestCase
      * - Is chainable
      * - Set the value to null if "allowNull" is true
      * - Throw an exception if "allowNull" is false
-     *
-     * @return void
      */
-    public function testSetValWithNullValue()
+    public function testSetValWithNullValue(): void
     {
         $this->obj->setAllowNull(true);
 
@@ -98,10 +89,8 @@ class DateTimePropertyTest extends AbstractTestCase
      * - Is chainable
      * - Sets the value when the parameter is a string or a DateTime object
      * - Throws an exception otherwise
-     *
-     * @return void
      */
-    public function testSetVal()
+    public function testSetVal(): void
     {
         $ret = $this->obj->setVal('2000-01-01 00:00:00');
         $this->assertSame($ret, $this->obj);
@@ -115,10 +104,7 @@ class DateTimePropertyTest extends AbstractTestCase
         $this->assertEquals($dt, $this->obj->val());
     }
 
-    /**
-     * @return void
-     */
-    public function testStorageVal()
+    public function testStorageVal(): void
     {
         $this->assertEquals('1984-10-01 00:00:00', $this->obj->storageVal('October 1st, 1984'));
 
@@ -131,10 +117,7 @@ class DateTimePropertyTest extends AbstractTestCase
         $this->obj->storageVal(null);
     }
 
-    /**
-     * @return void
-     */
-    public function testDisplayVal()
+    public function testDisplayVal(): void
     {
         // Test default format
         $this->assertEquals('2015-10-01 15:00:00', $this->obj->displayVal('October 1st, 2015 15:00:00'));
@@ -150,7 +133,7 @@ class DateTimePropertyTest extends AbstractTestCase
         $this->assertEquals('', $this->obj->displayVal(null));
     }
 
-    public function testInputVal()
+    public function testInputVal(): void
     {
         // Test default format
         $this->assertEquals('2015-10-01 15:00:00', $this->obj->inputVal('October 1st, 2015 15:00:00'));
@@ -167,10 +150,8 @@ class DateTimePropertyTest extends AbstractTestCase
      * - set the multiple to false, if false or falsish value
      * - throws exception otherwise (truthish or invalid value)
      * - is chainable
-     *
-     * @return void
      */
-    public function testSetMultiple()
+    public function testSetMultiple(): void
     {
         $ret = $this->obj->setMultiple(0);
         $this->assertSame($ret, $this->obj);
@@ -180,10 +161,7 @@ class DateTimePropertyTest extends AbstractTestCase
         $this->obj->setMultiple(1);
     }
 
-    /**
-     * @return void
-     */
-    public function testMultiple()
+    public function testMultiple(): void
     {
         $this->assertSame(false, $this->obj['multiple']);
     }
@@ -194,10 +172,8 @@ class DateTimePropertyTest extends AbstractTestCase
      * - sets the min value from a string or DateTime object
      * - accepts null as parameter
      * - throws exception when the argument is invalid
-     *
-     * @return void
      */
-    public function testSetMin()
+    public function testSetMin(): void
     {
         // Setting by string
         $ret = $this->obj->setMin('2020-01-01 01:02:03');
@@ -225,7 +201,7 @@ class DateTimePropertyTest extends AbstractTestCase
         $this->obj->setMin('foo');
     }
 
-    public function testSetMinInvalidObjectThrowsException()
+    public function testSetMinInvalidObjectThrowsException(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->obj->setMin(new \StdClass());
@@ -237,10 +213,8 @@ class DateTimePropertyTest extends AbstractTestCase
      * - sets the max value
      * - accepts null as a parameter
      * - throws exception when the argument is invalid
-     *
-     * @return void
      */
-    public function testSetMax()
+    public function testSetMax(): void
     {
         $ret = $this->obj->setMax('2020-01-01 01:02:03');
         $this->assertSame($ret, $this->obj);
@@ -267,7 +241,7 @@ class DateTimePropertyTest extends AbstractTestCase
         $this->obj->setMax('foo');
     }
 
-    public function testSetMaxInvalidObjectThrowsException()
+    public function testSetMaxInvalidObjectThrowsException(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->obj->setMax(new \StdClass());
@@ -282,10 +256,8 @@ class DateTimePropertyTest extends AbstractTestCase
      * - accepts empty string
      * - accepts null as a parameter (convert to empty string)
      * - throws an exception if not a string
-     *
-     * @return void
      */
-    public function testSetFormat()
+    public function testSetFormat(): void
     {
         $this->assertEquals('Y-m-d H:i:s', $this->obj['format']);
 
@@ -309,10 +281,7 @@ class DateTimePropertyTest extends AbstractTestCase
         $this->obj->setFormat(false);
     }
 
-    /**
-     * @return void
-     */
-    public function testSave()
+    public function testSave(): void
     {
         $this->assertEquals(null, $this->obj->save(null));
 
@@ -320,7 +289,7 @@ class DateTimePropertyTest extends AbstractTestCase
         $this->assertEquals($expected, $this->obj->save('2015-01-01'));
     }
 
-    public function testValidationMethods()
+    public function testValidationMethods(): void
     {
         $this->assertContains('min', $this->obj->validationMethods());
         $this->assertContains('max', $this->obj->validationMethods());
@@ -331,10 +300,8 @@ class DateTimePropertyTest extends AbstractTestCase
      * - Returns true if no "min" is set
      * - Returns true when the value is equal or bigger
      * - Returns false when the value is smaller
-     *
-     * @return void
      */
-    public function testValidateMin()
+    public function testValidateMin(): void
     {
         $this->assertTrue($this->obj->validateMin());
 
@@ -358,10 +325,8 @@ class DateTimePropertyTest extends AbstractTestCase
      * - Returns true if no "max" is set
      * - Returns true when the value is equal or smaller
      * - Returns false when the value is bigger
-     *
-     * @return void
      */
-    public function testValidateMax()
+    public function testValidateMax(): void
     {
         $this->assertTrue($this->obj->validateMax());
 
@@ -380,26 +345,17 @@ class DateTimePropertyTest extends AbstractTestCase
         $this->assertNotTrue($this->obj->validateMax());
     }
 
-    /**
-     * @return void
-     */
-    public function testSqlExtra()
+    public function testSqlExtra(): void
     {
         $this->assertSame(null, $this->obj->sqlExtra());
     }
 
-    /**
-     * @return void
-     */
-    public function testSqlType()
+    public function testSqlType(): void
     {
         $this->assertEquals('DATETIME', $this->obj->sqlType());
     }
 
-    /**
-     * @return void
-     */
-    public function testSqlPdoType()
+    public function testSqlPdoType(): void
     {
         $this->assertEquals(PDO::PARAM_STR, $this->obj->sqlPdoType());
     }

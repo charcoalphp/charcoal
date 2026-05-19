@@ -79,21 +79,20 @@ class DateHelper
      *                       DateTimeInterface
      *                       string.
      * @param string $format The format to use.
-     * @return string
      */
-    public function formatDate($date, $format = 'default')
+    public function formatDate($date, $format = 'default'): string
     {
         $this->dateFormat = $format;
 
         if (is_array($date)) {
             $this->from = $this->parseAsDate($date[0]);
-            $this->to = !!($date[1]) ? $this->parseAsDate($date[1]) : null;
+            $this->to = $date[1] ? $this->parseAsDate($date[1]) : null;
         } else {
             $this->from = $this->parseAsDate($date);
             $this->to = null;
         }
 
-        return (string)$this->formatDateFromCase($this->getDateCase());
+        return $this->formatDateFromCase($this->getDateCase());
     }
 
     /**
@@ -102,9 +101,8 @@ class DateHelper
      *                       DateTimeInterface
      *                       string.
      * @param string $format The format to use.
-     * @return string
      */
-    public function formatTime($date, $format = 'default')
+    public function formatTime($date, $format = 'default'): string
     {
         $this->timeFormat = $format;
 
@@ -123,7 +121,7 @@ class DateHelper
      * Get the usage case by comparing two dates.
      * @return string
      */
-    private function getDateCase()
+    private function getDateCase(): ?string
     {
         $from = $this->from;
         $to = $this->to;
@@ -148,16 +146,15 @@ class DateHelper
         $case = null;
         $case = $fromDate['day'] !== $toDate['day'] ? 'different_day' : $case;
         $case = $fromDate['month'] !== $toDate['month'] ? 'different_month' : $case;
-        $case = $fromDate['year'] !== $toDate['year'] ? 'different_year' : $case;
 
-        return $case;
+        return $fromDate['year'] !== $toDate['year'] ? 'different_year' : $case;
     }
 
     /**
      * Get the usage case by comparing two hours.
      * @return string
      */
-    private function getTimeCase()
+    private function getTimeCase(): ?string
     {
         $from = $this->from;
         $to = $this->to;
@@ -184,16 +181,14 @@ class DateHelper
         $case = null;
         $case = $fromTime['hour'] !== $toTime['hour'] ? 'different_time' : $case;
         $case = $fromTime['minute'] == 0 ? 'different_time_round' : $case;
-        $case = $fromTime['minute'] != $toTime['minute'] ? 'different_time' : $case;
 
-        return $case;
+        return $fromTime['minute'] != $toTime['minute'] ? 'different_time' : $case;
     }
 
     /**
      * @param string $case The use case.
-     * @return string
      */
-    private function formatDateFromCase($case)
+    private function formatDateFromCase(array $case): string
     {
         $dateFormats = $this->dateFormats;
         $case = $dateFormats[$this->dateFormat][$case];
@@ -248,9 +243,8 @@ class DateHelper
 
     /**
      * @param string $case The use case.
-     * @return string
      */
-    private function formatTimeFromCase($case)
+    private function formatTimeFromCase(array $case): string
     {
         $timeFormats = $this->timeFormats;
         $case = $timeFormats[$this->timeFormat][$case];
@@ -258,7 +252,7 @@ class DateHelper
         $content = $this->translator()->translation($case['content']);
 
         $formats['from'] = $case['formats']['from'];
-        $formats['to'] = isset($case['formats']['to']) ? $case['formats']['to'] : null;
+        $formats['to'] = $case['formats']['to'] ?? null;
 
         $formats['from'] = $this->translator()->translation($formats['from']);
         $formats['to'] = $this->translator()->translation($formats['to']);
@@ -305,7 +299,7 @@ class DateHelper
      * @param mixed $date The date to convert.
      * @return DateTime
      */
-    private function parseAsDate($date)
+    private function parseAsDate($date): \DateTimeInterface|\DateTime
     {
         if ($date instanceof \DateTimeInterface) {
             return $date;

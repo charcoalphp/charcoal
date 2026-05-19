@@ -33,6 +33,7 @@ class Container extends Attachment implements
      * @param  ServiceContainer $container A dependencies container instance.
      * @return void
      */
+    #[\Override]
     protected function setDependencies(ServiceContainer $container)
     {
         parent::setDependencies($container);
@@ -54,14 +55,10 @@ class Container extends Attachment implements
     public function attachments(...$args)
     {
         $attachables = $this->attachableObjects();
-        $attachments = call_user_func_array([ $this, 'getAttachments' ], $args);
+        $attachments = call_user_func_array($this->getAttachments(...), $args);
 
         foreach ($attachments as $attachment) {
-            if (isset($attachables[$attachment->objType()])) {
-                $attachment->attachmentType = $attachables[$attachment->objType()];
-            } else {
-                $attachment->attachmentType = [];
-            }
+            $attachment->attachmentType = $attachables[$attachment->objType()] ?? [];
         }
 
         return $attachments;
@@ -70,14 +67,14 @@ class Container extends Attachment implements
     /**
      * Event called before _deleting_ the attachment.
      *
-     * @return boolean
      * @see    Charcoal\Attachment\Traits\AttachmentAwareTrait::removeJoins
      * @see    Charcoal\Source\StorableTrait::preDelete() For the "create" Event.
      */
-    public function preDelete()
+    #[\Override]
+    public function preDelete(): bool
     {
         // Delete nested attachments
-        array_map(function ($attachment) {
+        array_map(function ($attachment): void {
             $attachment->delete();
         }, $this->attachments()->values());
 

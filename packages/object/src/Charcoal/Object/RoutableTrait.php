@@ -116,7 +116,7 @@ trait RoutableTrait
             } else {
                 throw new Exception(sprintf(
                     'Undefined route pattern (slug) for %s',
-                    get_called_class()
+                    static::class
                 ));
             }
         }
@@ -170,11 +170,7 @@ trait RoutableTrait
         if ($this->isSlugEditable === null) {
             $metadata = $this->metadata();
 
-            if (isset($metadata['routable']['editable'])) {
-                $this->isSlugEditable = !!$metadata['routable']['editable'];
-            } else {
-                $this->isSlugEditable = false;
-            }
+            $this->isSlugEditable = isset($metadata['routable']['editable']) && (bool) $metadata['routable']['editable'];
         }
 
         return $this->isSlugEditable;
@@ -191,18 +187,15 @@ trait RoutableTrait
         $slug = $this->translator()->translation($slug);
         if ($slug !== null) {
             $this->slug = $slug;
-
             $values = $this->slug->data();
             foreach ($values as $lang => $val) {
                 $this->slug[$lang] = $this->slugify($val);
             }
-        } else {
+        } elseif (isset($_POST['slug'])) {
             /** @todo Hack used for regenerating route */
-            if (isset($_POST['slug'])) {
-                $this->slug = [];
-            } else {
-                $this->slug = null;
-            }
+            $this->slug = [];
+        } else {
+            $this->slug = null;
         }
 
         return $this;
@@ -240,7 +233,7 @@ trait RoutableTrait
                 $newSlug[$lang] = $curSlug[$lang];
             } else {
                 $newSlug[$lang] = $this->generateRoutePattern($pattern);
-                if (!strlen($newSlug[$lang])) {
+                if ((string) $newSlug[$lang] === '') {
                     throw new UnexpectedValueException(sprintf(
                         'The slug is empty. The pattern is "%s"',
                         $pattern
@@ -274,9 +267,9 @@ trait RoutableTrait
      * @param  string $pattern The slug pattern.
      * @return string Returns the generated route.
      */
-    protected function generateRoutePattern($pattern)
+    protected function generateRoutePattern(string $pattern)
     {
-        if ($this instanceof ViewableInterface && $this->view() !== null) {
+        if ($this instanceof ViewableInterface && $this->view() instanceof \Charcoal\View\ViewInterface) {
             $route = $this->view()->renderTemplate($pattern, $this->viewController());
         } else {
             $route = preg_replace_callback('~\{\{\s*(.*?)\s*\}\}~i', [ $this, 'parseRouteToken' ], $pattern);
@@ -294,14 +287,14 @@ trait RoutableTrait
      * @throws  InvalidArgumentException If a route token is not a string.
      * @return  string
      */
-    protected function parseRouteToken($token)
+    protected function parseRouteToken($token): string|float|int
     {
         // Processes matches from a regular expression operation
         if (is_array($token) && isset($token[1])) {
             $token = $token[1];
         }
 
-        $token = trim($token);
+        $token = trim((string) $token);
         $method = [ $this, $token ];
 
         if (is_callable($method)) {
@@ -318,8 +311,8 @@ trait RoutableTrait
             throw new InvalidArgumentException(sprintf(
                 'Route token "%1$s" must be a string with %2$s; received %3$s',
                 $token,
-                get_called_class(),
-                (is_object($value) ? get_class($value) : gettype($value))
+                static::class,
+                (get_debug_type($value))
             ));
         }
 
@@ -374,9 +367,9 @@ trait RoutableTrait
         } else {
             throw new InvalidArgumentException(sprintf(
                 '[%s] slug parameter must be an instance of %s, received %s',
-                get_called_class() . '::' . __FUNCTION__,
+                static::class . '::' . __FUNCTION__,
                 Translation::class,
-                is_object($slug) ? get_class($slug) : gettype($slug)
+                get_debug_type($slug)
             ));
         }
 
@@ -453,7 +446,7 @@ trait RoutableTrait
         } elseif (!in_array($lang, $this->translator()->availableLocales())) {
             throw new InvalidArgumentException(sprintf(
                 'Invalid language, received %s',
-                (is_object($lang) ? get_class($lang) : gettype($lang))
+                (get_debug_type($lang))
             ));
         }
 
@@ -491,7 +484,7 @@ trait RoutableTrait
 
         $collection = $loader->load()->objects();
 
-        if (!count($collection)) {
+        if (count($collection) === 0) {
             return $this->createRouteObject();
         }
 
@@ -515,9 +508,7 @@ trait RoutableTrait
         if ($slug) {
             return $slug;
         }
-
-        $url = (string)$this->getLatestObjectRoute($lang)->getSlug();
-        return $url;
+        return (string)$this->getLatestObjectRoute($lang)->getSlug();
     }
 
     /**
@@ -535,7 +526,7 @@ trait RoutableTrait
         }
 
         $metadata    = $this->metadata();
-        $separator   = isset($metadata['routable']['separator']) ? $metadata['routable']['separator'] : '-';
+        $separator   = $metadata['routable']['separator'] ?? '-';
         $delimiters  = '-_|';
         $pregDelim   = preg_quote($delimiters);
         $directories = '\\/';
@@ -545,41 +536,41 @@ trait RoutableTrait
         $slug = preg_replace('![^(\p{L}|\p{N})(\s|\/)]!u', $separator, $str);
 
         if (!isset($metadata['routable']['lowercase']) || $metadata['routable']['lowercase'] === false) {
-            $slug = mb_strtolower($slug, 'UTF-8');
+            $slug = mb_strtolower((string) $slug, 'UTF-8');
         }
 
         // Strip HTML
-        $slug = strip_tags($slug);
+        $slug = strip_tags((string) $slug);
 
         // Remove diacritics
         $slug = htmlentities($slug, ENT_COMPAT, 'UTF-8');
         $slug = preg_replace('!&([a-zA-Z])(uml|acute|grave|circ|tilde|cedil|ring);!', '$1', $slug);
 
         // Simplify ligatures
-        $slug = preg_replace('!&([a-zA-Z]{2})(lig);!', '$1', $slug);
+        $slug = preg_replace('!&([a-zA-Z]{2})(lig);!', '$1', (string) $slug);
 
         // Remove unescaped HTML characters
         $unescaped = '!&(raquo|laquo|rsaquo|lsaquo|rdquo|ldquo|rsquo|lsquo|hellip|amp|nbsp|quot|ordf|ordm);!';
-        $slug = preg_replace($unescaped, '', $slug);
+        $slug = preg_replace($unescaped, '', (string) $slug);
 
         // Unify all dashes/underscores as one separator character
         $flip = ($separator === '-') ? '_' : '-';
-        $slug = preg_replace('![' . preg_quote($flip) . ']+!u', $separator, $slug);
+        $slug = preg_replace('![' . preg_quote($flip) . ']+!u', $separator, (string) $slug);
 
         // Remove all whitespace and normalize delimiters
-        $slug = preg_replace('![_\|\s|\(\)]+!', $separator, $slug);
+        $slug = preg_replace('![_\|\s|\(\)]+!', $separator, (string) $slug);
 
         // Squeeze multiple delimiters and whitespace with a single separator
-        $slug = preg_replace('![' . $pregDelim . '\s]{2,}!', $separator, $slug);
+        $slug = preg_replace('![' . $pregDelim . '\s]{2,}!', $separator, (string) $slug);
 
         // Squeeze multiple URI path delimiters
-        $slug = preg_replace('![' . $pregDir . ']{2,}!', $separator, $slug);
+        $slug = preg_replace('![' . $pregDir . ']{2,}!', $separator, (string) $slug);
 
         // Remove delimiters surrouding URI path delimiters
-        $slug = preg_replace('!(?<=[' . $pregDir . '])[' . $pregDelim . ']|[' . $pregDelim . '](?=[' . $pregDir . '])!', '', $slug);
+        $slug = preg_replace('!(?<=[' . $pregDir . '])[' . $pregDelim . ']|[' . $pregDelim . '](?=[' . $pregDir . '])!', '', (string) $slug);
 
         // Strip leading and trailing dashes or underscores
-        $slug = trim($slug, $delimiters);
+        $slug = trim((string) $slug, $delimiters);
 
         // Cache the slugified string
         $sluggedArray[$str] = $slug;
@@ -594,9 +585,8 @@ trait RoutableTrait
      *
      * @param  string $slug A slug.
      * @throws UnexpectedValueException If the slug affixes are invalid.
-     * @return string
      */
-    protected function finalizeSlug($slug)
+    protected function finalizeSlug($slug): string
     {
         $prefix = $this->slugPrefix();
         if ($prefix) {
@@ -604,7 +594,7 @@ trait RoutableTrait
             if ($slug === $prefix) {
                 throw new UnexpectedValueException('The slug is the same as the prefix.');
             }
-            $slug = $prefix . preg_replace('!^' . preg_quote($prefix) . '\b!', '', $slug);
+            $slug = $prefix . preg_replace('!^' . preg_quote((string) $prefix) . '\b!', '', $slug);
         }
 
         $suffix = $this->slugSuffix();
@@ -613,12 +603,10 @@ trait RoutableTrait
             if ($slug === $suffix) {
                 throw new UnexpectedValueException('The slug is the same as the suffix.');
             }
-            $slug = preg_replace('!\b' . preg_quote($suffix) . '$!', '', $slug) . $suffix;
+            $slug = preg_replace('!\b' . preg_quote((string) $suffix) . '$!', '', $slug) . $suffix;
         }
 
-        $slug = rtrim($slug, '/');
-
-        return $slug;
+        return rtrim($slug, '/');
     }
 
     /**
@@ -628,7 +616,7 @@ trait RoutableTrait
      *
      * @return boolean Success or failure.
      */
-    protected function deleteObjectRoutes()
+    protected function deleteObjectRoutes(): bool
     {
         if (!$this->objType()) {
             return false;
@@ -661,18 +649,14 @@ trait RoutableTrait
 
     /**
      * Create a route collection loader.
-     *
-     * @return CollectionLoader
      */
-    public function createRouteObjectCollectionLoader()
+    public function createRouteObjectCollectionLoader(): \Charcoal\Loader\CollectionLoader
     {
-        $loader = new CollectionLoader([
+        return new CollectionLoader([
             'logger'  => $this->logger,
             'factory' => $this->modelFactory(),
             'model'   => $this->getRouteObjectPrototype(),
         ]);
-
-        return $loader;
     }
 
     /**
@@ -682,9 +666,7 @@ trait RoutableTrait
      */
     public function createRouteObject()
     {
-        $route = $this->modelFactory()->create($this->getObjectRouteClass());
-
-        return $route;
+        return $this->modelFactory()->create($this->getObjectRouteClass());
     }
 
     /**
@@ -694,9 +676,7 @@ trait RoutableTrait
      */
     public function getRouteObjectPrototype()
     {
-        $proto = $this->modelFactory()->get($this->getObjectRouteClass());
-
-        return $proto;
+        return $this->modelFactory()->get($this->getObjectRouteClass());
     }
 
     /**
@@ -799,7 +779,7 @@ trait RoutableTrait
     public function isActiveRoute()
     {
         if (isset($this['active'])) {
-            return !!$this['active'];
+            return (bool) $this['active'];
         } else {
             return true;
         }

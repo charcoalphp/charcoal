@@ -44,15 +44,14 @@ class LoggerServiceProvider implements ServiceProviderInterface
      * It should not get services.
      *
      * @param Container $container A service container.
-     * @return void
      */
-    public function register(Container $container)
+    public function register(Container $container): void
     {
         /**
          * @param  Container $container A service container.
          * @return LoggerConfig
          */
-        $container['logger/config'] = function (Container $container) {
+        $container['logger/config'] = function (Container $container): \Charcoal\App\Config\LoggerConfig {
             $loggerConfig = ($container['config']['logger'] ?? null);
             return new LoggerConfig($loggerConfig);
         };
@@ -62,7 +61,7 @@ class LoggerServiceProvider implements ServiceProviderInterface
          * @throws InvalidArgumentException If the path is not defined or invalid.
          * @return StreamHandler|null
          */
-        $container['logger/handler/stream'] = function (Container $container) {
+        $container['logger/handler/stream'] = function (Container $container): ?\Monolog\Handler\StreamHandler {
             $loggerConfig  = $container['logger/config'];
             $handlerConfig = $loggerConfig['handlers.stream'];
 
@@ -77,10 +76,8 @@ class LoggerServiceProvider implements ServiceProviderInterface
             }
 
             $stream = $handlerConfig['stream'];
-            if (is_string($stream)) {
-                if (isset($container['config']) && ($container['config'] instanceof AppConfig)) {
-                    $stream = $container['config']->resolveValue($stream);
-                }
+            if (is_string($stream) && (isset($container['config']) && $container['config'] instanceof AppConfig)) {
+                $stream = $container['config']->resolveValue($stream);
             }
 
             $level = $handlerConfig['level'] ?: $loggerConfig['level'];
@@ -91,7 +88,7 @@ class LoggerServiceProvider implements ServiceProviderInterface
          * @param  Container $container A service container.
          * @return BrowserConsoleHandler|null
          */
-        $container['logger/handler/browser-console'] = function (Container $container) {
+        $container['logger/handler/browser-console'] = function (Container $container): ?\Monolog\Handler\BrowserConsoleHandler {
             $loggerConfig  = $container['logger/config'];
             $handlerConfig = $loggerConfig['handlers.console'];
 
@@ -109,7 +106,7 @@ class LoggerServiceProvider implements ServiceProviderInterface
          * @param  Container $container A service container.
          * @return LoggerInterface
          */
-        $container['logger'] = function (Container $container) {
+        $container['logger'] = function (Container $container): \Psr\Log\NullLogger|\Monolog\Logger {
             $loggerConfig = $container['logger/config'];
 
             if ($loggerConfig['active'] !== true) {

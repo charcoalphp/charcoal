@@ -38,21 +38,18 @@ abstract class AbstractAuthToken extends AbstractModel implements
 
     /**
      * The related user ID.
-     *
-     * @var string
      */
-    private $userId;
+    private ?string $userId = null;
 
     /**
      * The token's expiration date.
-     *
-     * @var DateTimeInterface|null
      */
-    private $expiry;
+    private ?\DateTimeInterface $expiry = null;
 
     /**
      * @return string
      */
+    #[\Override]
     public function key()
     {
         return 'ident';
@@ -238,7 +235,7 @@ abstract class AbstractAuthToken extends AbstractModel implements
         }
 
         // Validate encrypted token
-        if (password_verify($token, $this['token']) !== true) {
+        if (!password_verify($token, (string) $this['token'])) {
             $this->panic();
             $this->delete();
             return null;
@@ -250,10 +247,8 @@ abstract class AbstractAuthToken extends AbstractModel implements
 
     /**
      * Delete all auth tokens from storage for the current user.
-     *
-     * @return void
      */
-    public function deleteUserAuthTokens()
+    public function deleteUserAuthTokens(): void
     {
         $userId = $this['userId'];
         if (isset($userId)) {
@@ -292,6 +287,7 @@ abstract class AbstractAuthToken extends AbstractModel implements
      *
      * @return boolean
      */
+    #[\Override]
     protected function preSave()
     {
         $result = parent::preSave();
@@ -310,7 +306,8 @@ abstract class AbstractAuthToken extends AbstractModel implements
      * @param  array $properties The properties (ident) set for update.
      * @return boolean
      */
-    protected function preUpdate(array $properties = null)
+    #[\Override]
+    protected function preUpdate(?array $properties = null)
     {
         $result = parent::preUpdate($properties);
 
@@ -326,7 +323,7 @@ abstract class AbstractAuthToken extends AbstractModel implements
     {
         $token = $this['token'];
         if (password_needs_rehash($token, PASSWORD_DEFAULT)) {
-            $this['token'] = password_hash($token, PASSWORD_DEFAULT);
+            $this['token'] = password_hash((string) $token, PASSWORD_DEFAULT);
         }
     }
 
@@ -336,7 +333,8 @@ abstract class AbstractAuthToken extends AbstractModel implements
      * @param  array $data Optional metadata to merge on the object.
      * @return AuthTokenMetadata
      */
-    protected function createMetadata(array $data = null)
+    #[\Override]
+    protected function createMetadata(?array $data = null)
     {
         $class = $this->metadataClass();
         return new $class($data);
@@ -347,6 +345,7 @@ abstract class AbstractAuthToken extends AbstractModel implements
      *
      * @return string
      */
+    #[\Override]
     protected function metadataClass()
     {
         return AuthTokenMetadata::class;

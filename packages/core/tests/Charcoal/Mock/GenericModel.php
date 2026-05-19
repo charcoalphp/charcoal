@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Charcoal\Tests\Mock;
 
 // From 'charcoal-translator'
@@ -21,7 +23,7 @@ class GenericModel extends AbstractModel
     /**
      * @param array $data Dependencies.
      */
-    public function __construct(array $data = null)
+    public function __construct(?array $data = null)
     {
         $data['metadata'] = [
             'default_data' => [
@@ -55,9 +57,8 @@ class GenericModel extends AbstractModel
 
     /**
      * @param  mixed $name The name of the model.
-     * @return self
      */
-    public function setName($name)
+    public function setName($name): static
     {
         $this->name = $name;
         return $this;
@@ -71,10 +72,7 @@ class GenericModel extends AbstractModel
         return $this->name;
     }
 
-    /**
-     * @return string
-     */
-    public function icon()
+    public function icon(): string
     {
         return '';
     }

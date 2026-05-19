@@ -23,9 +23,6 @@ class ColorPropertyTest extends AbstractTestCase
      */
     public $obj;
 
-    /**
-     * @return void
-     */
     protected function setUp(): void
     {
         $container = $this->getContainer();
@@ -37,15 +34,12 @@ class ColorPropertyTest extends AbstractTestCase
         ]);
     }
 
-    /**
-     * @return void
-     */
-    public function testType()
+    public function testType(): void
     {
         $this->assertEquals('color', $this->obj->type());
     }
 
-    public function testParseOneNull()
+    public function testParseOneNull(): void
     {
         $this->obj->setAllowNull(true);
         $this->assertNull($this->obj->parseOne(null));
@@ -55,7 +49,7 @@ class ColorPropertyTest extends AbstractTestCase
         $this->obj->parseOne(null);
     }
 
-    public function testParseOneEmpty()
+    public function testParseOneEmpty(): void
     {
         $this->obj->setAllowNull(true);
         $this->assertNull($this->obj->parseOne(''));
@@ -65,13 +59,13 @@ class ColorPropertyTest extends AbstractTestCase
         $this->obj->parseOne('');
     }
 
-    public function parseOneFalse()
+    public function parseOneFalse(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->obj->parseOne(false);
     }
 
-    public function parseOneArray()
+    public function parseOneArray(): void
     {
         $this->assertEquals(['r'=>255, 'g'=>255, 'b'=>255], $this->obj->parseOne([255,255,255]));
         $this->expectException(InvalidArgumentException::class);
@@ -80,18 +74,13 @@ class ColorPropertyTest extends AbstractTestCase
 
     /**
      * Hello world
-     *
-     * @return void
      */
-    public function testDefaults()
+    public function testDefaults(): void
     {
         $this->assertEquals(false, $this->obj['supportAlpha']);
     }
 
-    /**
-     * @return void
-     */
-    public function testSetSupportAlpha()
+    public function testSetSupportAlpha(): void
     {
         $ret = $this->obj->setSupportAlpha(true);
         $this->assertSame($ret, $this->obj);
@@ -108,35 +97,30 @@ class ColorPropertyTest extends AbstractTestCase
     }
 
     /**
-     * @dataProvider colorProviderNoAlpha
      *
      * @param  string $color    A color to test.
      * @param  string $expected The expected mutation of $color.
-     * @return void
      */
-    public function testColorValueNoAlpha($color, $expected)
+    #[\PHPUnit\Framework\Attributes\DataProvider('colorProviderNoAlpha')]
+    public function testColorValueNoAlpha(string|array $color, string $expected): void
     {
         $this->obj->setSupportAlpha(false);
         $this->assertEquals($expected, $this->obj->colorVal($color));
     }
 
     /**
-     * @dataProvider colorProviderAlpha
      *
      * @param  string $color    A color to test.
      * @param  string $expected The expected mutation of $color.
-     * @return void
      */
-    public function testColorValueAlpha($color, $expected)
+    #[\PHPUnit\Framework\Attributes\DataProvider('colorProviderAlpha')]
+    public function testColorValueAlpha(string|array $color, string $expected): void
     {
         $this->obj->setSupportAlpha(true);
         $this->assertEquals($expected, $this->obj->colorVal($color));
     }
 
-    /**
-     * @return void
-     */
-    public function testColorValInvalidThrowsException()
+    public function testColorValInvalidThrowsException(): void
     {
         $this->expectException('\InvalidArgumentException');
         $this->obj->colorVal('invalid');
@@ -144,10 +128,8 @@ class ColorPropertyTest extends AbstractTestCase
 
     /**
      * Provider for hexadcimalValue, in `[$color, $expected]` pairs.
-     *
-     * @return array
      */
-    public function colorProviderNoAlpha()
+    public static function colorProviderNoAlpha(): array
     {
         return [
             ['#FF00FF', '#FF00FF'],
@@ -170,10 +152,8 @@ class ColorPropertyTest extends AbstractTestCase
 
     /**
      * Provider for hexadcimalValue, in `[$color, $result]` pairs.
-     *
-     * @return array
      */
-    public function colorProviderAlpha()
+    public static function colorProviderAlpha(): array
     {
         return [
             ['#FF00FF', 'rgba(255,0,255,0)'],
@@ -193,29 +173,20 @@ class ColorPropertyTest extends AbstractTestCase
         ];
     }
 
-    /**
-     * @return void
-     */
-    public function testSqlExtra()
+    public function testSqlExtra(): void
     {
         $obj = $this->obj;
         $this->assertEquals('', $obj->sqlExtra());
     }
 
-    /**
-     * @return void
-     */
-    public function testSqlTypeMultiple()
+    public function testSqlTypeMultiple(): void
     {
         $obj = $this->obj;
         $obj->setMultiple(true);
         $this->assertEquals('TEXT', $obj->sqlType());
     }
 
-    /**
-     * @return void
-     */
-    public function testSqlType()
+    public function testSqlType(): void
     {
         $obj = $this->obj;
 
@@ -226,7 +197,7 @@ class ColorPropertyTest extends AbstractTestCase
         $this->assertEquals('CHAR(7)', $obj->sqlType());
     }
 
-    public function testSqlPdoType()
+    public function testSqlPdoType(): void
     {
         $this->assertEquals(PDO::PARAM_STR, $this->obj->sqlPdoType());
     }

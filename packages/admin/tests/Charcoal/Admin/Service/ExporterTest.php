@@ -22,50 +22,26 @@ use Charcoal\Tests\Admin\ContainerProvider;
 class ExporterTest extends AbstractTestCase
 {
     /**
-     * @var Exporter
-     */
-    private $obj;
-
-    /**
      * Store the service container.
-     *
-     * @var Container
      */
-    private $container;
+    private ?\Pimple\Container $container = null;
 
-    /**
-     * @return void
-     */
     public function setUp(): void
     {
-        $container = $this->container();
-
-        $this->obj = new Exporter([
-           'logger'          => $container['logger'],
-           'factory'         => $container['model/factory'],
-           'propertyFactory' => $container['property/factory'],
-           'translator'      => $container['translator'],
-           'obj_type'        => 'charcoal/admin/user',
-           'export_ident'    => 'y',
-        ]);
+        $this->container();
     }
 
-    /**
-     * @return void
-     */
-    public function testExport()
+    public function testExport(): void
     {
         $this->assertTrue(true);
     }
 
     /**
      * Set up the service container.
-     *
-     * @return Container
      */
-    protected function container()
+    protected function container(): \Pimple\Container
     {
-        if ($this->container === null) {
+        if (!$this->container instanceof \Pimple\Container) {
             $container = new Container();
             $containerProvider = new ContainerProvider();
             $containerProvider->registerBaseServices($container);
@@ -73,7 +49,7 @@ class ExporterTest extends AbstractTestCase
             $containerProvider->registerModelServiceProvider($container);
             $containerProvider->registerTranslatorServiceProvider($container);
 
-            $container['view'] = $this->createMock('\Charcoal\View\ViewInterface');
+            $container['view'] = $this->createMock(\Charcoal\View\ViewInterface::class);
 
             $this->container = $container;
         }

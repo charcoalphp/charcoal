@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Charcoal\Admin\Property\Display;
 
 use InvalidArgumentException;
@@ -12,30 +14,22 @@ class HierarchicalDisplay extends AbstractPropertyDisplay
 {
     /**
      * Current level for output (of the object).
-     *
-     * @var integer
      */
-    private $currentLevel = 1;
+    private int $currentLevel = 1;
 
     /**
      * The indentation symbol for output.
-     *
-     * @var string
      */
-    private $indentation = '─ ';
+    private string $indentation = '─ ';
 
-    /**
-     * @return string
-     */
-    public function displayType()
+    #[\Override]
+    public function displayType(): string
     {
         return 'charcoal/admin/property/display/text';
     }
 
-    /**
-     * @return string
-     */
-    public function displayVal()
+    #[\Override]
+    public function displayVal(): string
     {
         $prop  = $this->p();
         $pad   = str_repeat($this->indentation(), ($this->currentLevel() - 1));
@@ -51,7 +45,7 @@ class HierarchicalDisplay extends AbstractPropertyDisplay
      * @throws InvalidArgumentException If the indentation is not a string.
      * @return AbstractConfig Chainable
      */
-    public function setIndentation($indent)
+    public function setIndentation($indent): static
     {
         if (!is_string($indent)) {
             throw new InvalidArgumentException(
@@ -66,10 +60,8 @@ class HierarchicalDisplay extends AbstractPropertyDisplay
 
     /**
      * Retrieve the indentation string.
-     *
-     * @return integer
      */
-    public function indentation()
+    public function indentation(): string
     {
         return $this->indentation;
     }
@@ -81,9 +73,8 @@ class HierarchicalDisplay extends AbstractPropertyDisplay
      *
      * @param  integer $level The level of depth.
      * @throws InvalidArgumentException If the level is not an integer.
-     * @return self
      */
-    public function setCurrentLevel($level)
+    public function setCurrentLevel($level): static
     {
         if (!is_int($level)) {
             throw new InvalidArgumentException(
@@ -98,10 +89,8 @@ class HierarchicalDisplay extends AbstractPropertyDisplay
 
     /**
      * Retrieve the current level for output of the associated object.
-     *
-     * @return integer
      */
-    public function currentLevel()
+    public function currentLevel(): int
     {
         return $this->currentLevel;
     }

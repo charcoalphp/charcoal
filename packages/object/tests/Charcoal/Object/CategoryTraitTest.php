@@ -22,10 +22,7 @@ class CategoryTraitTest extends AbstractTestCase
         return $this->getMockForTrait(CategoryTrait::class);
     }
 
-    /**
-     * @return void
-     */
-    public function testUnsetCategoryItemTypeThrowsException()
+    public function testUnsetCategoryItemTypeThrowsException(): void
     {
         $mock = $this->createTrait();
 
@@ -33,10 +30,7 @@ class CategoryTraitTest extends AbstractTestCase
         $mock->getCategoryItemType();
     }
 
-    /**
-     * @return void
-     */
-    public function testSetCategoryItemType()
+    public function testSetCategoryItemType(): void
     {
         $mock = $this->createTrait();
 
@@ -48,10 +42,7 @@ class CategoryTraitTest extends AbstractTestCase
         $mock->setCategoryItemType(false);
     }
 
-    /**
-     * @return void
-     */
-    public function testNumCategoryItems()
+    public function testNumCategoryItems(): void
     {
         $mock = $this->createTrait();
         $mock->expects($this->any())
@@ -68,10 +59,7 @@ class CategoryTraitTest extends AbstractTestCase
         $this->assertEquals(1, $mock->getNumCategoryItems());
     }
 
-    /**
-     * @return void
-     */
-    public function testHasCategoryItems()
+    public function testHasCategoryItems(): void
     {
         $mock = $this->createTrait();
         $mock->expects($this->any())

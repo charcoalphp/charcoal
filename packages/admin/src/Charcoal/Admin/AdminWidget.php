@@ -50,20 +50,11 @@ class AdminWidget extends AbstractWidget implements
      */
     public $widgetId;
 
-    /**
-     * @var string $type
-     */
-    private $type;
+    private ?string $type = null;
 
-    /**
-     * @var string $template
-     */
-    private $template;
+    private ?string $template = null;
 
-    /**
-     * @var string $ident
-     */
-    private $ident = '';
+    private ?string $ident = '';
 
     /**
      * @var Translation|string|null $label
@@ -75,15 +66,9 @@ class AdminWidget extends AbstractWidget implements
      */
     private $lang;
 
-    /**
-     * @var boolean $showLabel
-     */
-    private $showLabel;
+    private ?bool $showLabel = null;
 
-    /**
-     * @var boolean $showActions
-     */
-    private $showActions;
+    private ?bool $showActions = null;
 
     /**
      * The widget's conditional logic.
@@ -101,22 +86,15 @@ class AdminWidget extends AbstractWidget implements
 
     /**
      * Extra data sources to merge when setting data on an entity.
-     *
-     * @var array
      */
-    private $dataSources;
+    private ?array $dataSources = null;
 
     /**
      * Associative array of source identifiers and options to apply when merging.
-     *
-     * @var array
      */
-    private $dataSourceFilters = [];
+    private array $dataSourceFilters = [];
 
-    /**
-     * @var FactoryInterface $modelFactory
-     */
-    private $modelFactory;
+    private ?\Charcoal\Factory\FactoryInterface $modelFactory = null;
 
     /**
      * Enable / Disable the widget.
@@ -126,13 +104,10 @@ class AdminWidget extends AbstractWidget implements
      * @param  mixed $active The active flag or condition.
      * @return self
      */
+    #[\Override]
     public function setActive($active)
     {
-        if (is_callable($active) || is_string($active)) {
-            $condition = $active;
-        } else {
-            $condition = null;
-        }
+        $condition = is_callable($active) || is_string($active) ? $active : null;
 
         $this->activeCondition = $condition;
 
@@ -142,6 +117,7 @@ class AdminWidget extends AbstractWidget implements
     /**
      * @return boolean
      */
+    #[\Override]
     public function active()
     {
         if ($this->activeCondition !== null) {
@@ -154,9 +130,8 @@ class AdminWidget extends AbstractWidget implements
     /**
      * @param string $template The UI item's template (identifier).
      * @throws InvalidArgumentException If the template identifier is not a string.
-     * @return self
      */
-    public function setTemplate($template)
+    public function setTemplate($template): static
     {
         if ($template === null) {
             $this->template = null;
@@ -177,7 +152,7 @@ class AdminWidget extends AbstractWidget implements
     /**
      * @return string
      */
-    public function template()
+    public function template(): ?string
     {
         if ($this->template === null) {
             return $this->type();
@@ -188,9 +163,8 @@ class AdminWidget extends AbstractWidget implements
 
     /**
      * @param string $widgetId The widget identifier.
-     * @return self
      */
-    public function setWidgetId($widgetId)
+    public function setWidgetId($widgetId): static
     {
         $this->widgetId = $widgetId;
 
@@ -212,9 +186,8 @@ class AdminWidget extends AbstractWidget implements
     /**
      * @param string $type The widget type.
      * @throws InvalidArgumentException If the argument is not a string.
-     * @return self
      */
-    public function setType($type)
+    public function setType($type): static
     {
         if ($type === null) {
             $this->type = null;
@@ -235,7 +208,7 @@ class AdminWidget extends AbstractWidget implements
     /**
      * @return string
      */
-    public function type()
+    public function type(): ?string
     {
         return $this->type;
     }
@@ -245,7 +218,7 @@ class AdminWidget extends AbstractWidget implements
      * @throws InvalidArgumentException If the ident is not a string.
      * @return AdminWidget (Chainable)
      */
-    public function setIdent($ident)
+    public function setIdent($ident): static
     {
         if ($ident === null) {
             $this->ident = null;
@@ -266,7 +239,7 @@ class AdminWidget extends AbstractWidget implements
     /**
      * @return string
      */
-    public function ident()
+    public function ident(): ?string
     {
         return $this->ident;
     }
@@ -277,9 +250,8 @@ class AdminWidget extends AbstractWidget implements
      * @param mixed $sources One or more data source identifiers to merge data from.
      *     Pass NULL to reset the entity back to default sources.
      *     Pass FALSE, an empty string or array to disable extra sources.
-     * @return self
      */
-    public function setDataSources($sources)
+    public function setDataSources($sources): static
     {
         if ($sources === null) {
             $this->dataSources = null;
@@ -327,19 +299,13 @@ class AdminWidget extends AbstractWidget implements
 
         $filters = array_merge($this->defaultDataSourceFilters(), $this->dataSourceFilters);
 
-        if (isset($filters[$sourceIdent])) {
-            return $filters[$sourceIdent];
-        }
-
-        return null;
+        return $filters[$sourceIdent] ?? null;
     }
 
     /**
      * Retrieve the widget's data options for JavaScript components.
-     *
-     * @return array
      */
-    public function widgetDataForJs()
+    public function widgetDataForJs(): array
     {
         return [];
     }
@@ -354,7 +320,7 @@ class AdminWidget extends AbstractWidget implements
         $options = (JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 
         if ($this->debug()) {
-            $options = ($options | JSON_PRETTY_PRINT);
+            $options |= JSON_PRETTY_PRINT;
         }
 
         return json_encode($this->widgetDataForJs(), $options);
@@ -365,16 +331,15 @@ class AdminWidget extends AbstractWidget implements
      *
      * @return string Returns a stringified JSON object, protected from Mustache rendering.
      */
-    final public function escapedWidgetDataForJsAsJson()
+    final public function escapedWidgetDataForJsAsJson(): string
     {
         return '{{=<% %>=}}' . $this->widgetDataForJsAsJson() . '<%={{ }}=%>';
     }
 
     /**
      * @param mixed $label The label.
-     * @return self
      */
-    public function setLabel($label)
+    public function setLabel($label): static
     {
         $this->label = $this->translator()->translation($label);
 
@@ -389,21 +354,17 @@ class AdminWidget extends AbstractWidget implements
         return $this->label;
     }
 
-    /**
-     * @return array
-     */
-    public function actions()
+    public function actions(): array
     {
         return [];
     }
 
     /**
      * @param boolean $show The show actions flag.
-     * @return self
      */
-    public function setShowActions($show)
+    public function setShowActions($show): static
     {
-        $this->showActions = !!$show;
+        $this->showActions = (bool) $show;
         return $this;
     }
 
@@ -421,11 +382,10 @@ class AdminWidget extends AbstractWidget implements
 
     /**
      * @param boolean $show The show label flag.
-     * @return self
      */
-    public function setShowLabel($show)
+    public function setShowLabel($show): static
     {
-        $this->showLabel = !!$show;
+        $this->showLabel = (bool) $show;
         return $this;
     }
 
@@ -435,7 +395,7 @@ class AdminWidget extends AbstractWidget implements
     public function showLabel()
     {
         if ($this->showLabel !== false) {
-            return !!strval($this->label());
+            return (bool) strval($this->label());
         } else {
             return false;
         }
@@ -447,6 +407,7 @@ class AdminWidget extends AbstractWidget implements
      * @param  Container $container DI Container.
      * @return void
      */
+    #[\Override]
     protected function setDependencies(Container $container)
     {
         parent::setDependencies($container);
@@ -483,7 +444,7 @@ class AdminWidget extends AbstractWidget implements
     /**
      * @return FactoryInterface The model factory.
      */
-    protected function modelFactory()
+    protected function modelFactory(): ?\Charcoal\Factory\FactoryInterface
     {
         return $this->modelFactory;
     }
@@ -492,19 +453,18 @@ class AdminWidget extends AbstractWidget implements
      * Parse the widget's conditional logic.
      *
      * @param  callable|string $condition The callable or renderable condition.
-     * @return boolean
      */
-    protected function resolveConditionalLogic($condition)
+    protected function resolveConditionalLogic($condition): bool
     {
         if (is_callable([ $this, $condition ])) {
-            return !!$this->{$condition}();
+            return (bool) $this->{$condition}();
         } elseif (is_callable($condition)) {
-            return !!$condition();
-        } elseif ($this->view()) {
-            return !!$this->renderTemplate($condition);
+            return (bool) $condition();
+        } elseif ($this->view() instanceof \Charcoal\View\ViewInterface) {
+            return (bool) $this->renderTemplate($condition);
         }
 
-        return !!$condition;
+        return (bool) $condition;
     }
 
     /**
@@ -513,9 +473,8 @@ class AdminWidget extends AbstractWidget implements
      * @param mixed $sourceIdent  The data source identifier.
      * @param mixed $sourceFilter Optional filter to apply to the source's data.
      * @throws InvalidArgumentException If the data source is invalid.
-     * @return self
      */
-    protected function addDataSources($sourceIdent, $sourceFilter = null)
+    protected function addDataSources($sourceIdent, $sourceFilter = null): static
     {
         $validSources = $this->acceptedDataSources();
 
@@ -552,7 +511,7 @@ class AdminWidget extends AbstractWidget implements
      *
      * @return string[]
      */
-    protected function acceptedDataSources()
+    protected function acceptedDataSources(): array
     {
         return [ static::DATA_SOURCE_REQUEST, static::DATA_SOURCE_OBJECT, static::DATA_SOURCE_METADATA ];
     }
@@ -562,17 +521,15 @@ class AdminWidget extends AbstractWidget implements
      *
      * @return string[]
      */
-    protected function defaultDataSources()
+    protected function defaultDataSources(): array
     {
         return [];
     }
 
     /**
      * Retrieve the default data source filters (when setting data on an entity).
-     *
-     * @return array
      */
-    protected function defaultDataSourceFilters()
+    protected function defaultDataSourceFilters(): array
     {
         return [];
     }
@@ -625,9 +582,8 @@ class AdminWidget extends AbstractWidget implements
      * Retrieve the available data sources (when setting data on an entity).
      *
      * @param array|mixed $dataset The entity data.
-     * @return self
      */
-    protected function mergeDataSources($dataset = null)
+    protected function mergeDataSources($dataset = null): static
     {
         $sources = $this->dataSources();
         foreach ($sources as $sourceIdent) {

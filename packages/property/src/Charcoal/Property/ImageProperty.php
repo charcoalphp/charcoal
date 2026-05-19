@@ -42,34 +42,26 @@ class ImageProperty extends FileProperty
 
     /**
      * The type of image processing engine.
-     *
-     * @var string
      */
-    private $driverType = self::DEFAULT_DRIVER_TYPE;
+    private string $driverType = self::DEFAULT_DRIVER_TYPE;
 
     /**
      * Internal storage of the image factory instance.
-     *
-     * @var ImageFactory
      */
-    private $imageFactory;
+    private ?\Charcoal\Image\ImageFactory $imageFactory = null;
 
-    /**
-     * @return string
-     */
-    public function type()
+    #[\Override]
+    public function type(): string
     {
         return 'image';
     }
 
     /**
      * Retrieve the image factory.
-     *
-     * @return ImageFactory
      */
-    public function imageFactory()
+    public function imageFactory(): \Charcoal\Image\ImageFactory
     {
-        if ($this->imageFactory === null) {
+        if (!$this->imageFactory instanceof \Charcoal\Image\ImageFactory) {
             $this->imageFactory = $this->createImageFactory();
         }
 
@@ -83,12 +75,12 @@ class ImageProperty extends FileProperty
      * @throws InvalidArgumentException If the drive type is not a string.
      * @return ImageProperty Chainable
      */
-    public function setDriverType($type)
+    public function setDriverType($type): static
     {
         if (!is_string($type)) {
             throw new InvalidArgumentException(sprintf(
                 'Image driver type must be a string, received %s',
-                (is_object($type) ? get_class($type) : gettype($type))
+                (get_debug_type($type))
             ));
         }
 
@@ -99,10 +91,8 @@ class ImageProperty extends FileProperty
 
     /**
      * Retrieve the name of the property's image processing driver.
-     *
-     * @return string
      */
-    public function getDriverType()
+    public function getDriverType(): string
     {
         return $this->driverType;
     }
@@ -114,7 +104,7 @@ class ImageProperty extends FileProperty
      * @throws OutOfBoundsException If the effects event does not exist.
      * @return ImageProperty Chainable
      */
-    public function setApplyEffects($event)
+    public function setApplyEffects($event): static
     {
         if ($event === false) {
             $this->applyEffects = self::EFFECTS_EVENT_NEVER;
@@ -128,7 +118,7 @@ class ImageProperty extends FileProperty
 
         if (!in_array($event, $this->acceptedEffectsEvents())) {
             if (!is_string($event)) {
-                $event = (is_object($event) ? get_class($event) : gettype($event));
+                $event = (get_debug_type($event));
             }
             throw new OutOfBoundsException(sprintf(
                 'Unsupported image property event "%s" provided',
@@ -158,11 +148,11 @@ class ImageProperty extends FileProperty
      * @throws OutOfBoundsException If the effects event does not exist.
      * @return mixed Returns TRUE or FALSE if the property applies effects for the given event.
      */
-    public function canApplyEffects($event)
+    public function canApplyEffects($event): bool
     {
         if (!in_array($event, $this->acceptedEffectsEvents())) {
             if (!is_string($event)) {
-                $event = (is_object($event) ? get_class($event) : gettype($event));
+                $event = (get_debug_type($event));
             }
             throw new OutOfBoundsException(sprintf(
                 'Unsupported image property event "%s" provided',
@@ -175,10 +165,8 @@ class ImageProperty extends FileProperty
 
     /**
      * Retrieve the supported events where effects can be applied.
-     *
-     * @return array
      */
-    public function acceptedEffectsEvents()
+    public function acceptedEffectsEvents(): array
     {
         return [
             self::EFFECTS_EVENT_UPLOAD,
@@ -193,7 +181,7 @@ class ImageProperty extends FileProperty
      * @param array $effects The effects to set to the image.
      * @return ImageProperty Chainable
      */
-    public function setEffects(array $effects)
+    public function setEffects(array $effects): static
     {
         $this->effects = [];
         foreach ($effects as $effect) {
@@ -206,7 +194,7 @@ class ImageProperty extends FileProperty
      * @param mixed $effect An image effect.
      * @return ImageProperty Chainable
      */
-    public function addEffect($effect)
+    public function addEffect($effect): static
     {
         $this->effects[] = $effect;
         return $this;
@@ -229,7 +217,7 @@ class ImageProperty extends FileProperty
      * @return mixed Returns the given images. Depending on the effects applied,
      *     certain images might be renamed.
      */
-    public function processEffects($value, array $effects = null, ImageInterface $image = null)
+    public function processEffects($value, ?array $effects = null, ?ImageInterface $image = null)
     {
         $value = $this->parseVal($value);
         if ($value instanceof Translation) {
@@ -240,8 +228,8 @@ class ImageProperty extends FileProperty
             $effects = $this->batchEffects();
         }
 
-        if ($effects) {
-            if ($image === null) {
+        if ($effects !== []) {
+            if (!$image instanceof \Charcoal\Image\ImageInterface) {
                 $image = $this->createImage();
             }
             if (is_array($value)) {
@@ -263,7 +251,8 @@ class ImageProperty extends FileProperty
      *
      * @return string[]
      */
-    public function getDefaultAcceptedMimetypes()
+    #[\Override]
+    public function getDefaultAcceptedMimetypes(): array
     {
         return [
             'image/gif',
@@ -283,35 +272,24 @@ class ImageProperty extends FileProperty
      * @param  string $type The MIME type to resolve.
      * @return string|null The extension based on the MIME type.
      */
-    protected function resolveExtensionFromMimeType($type)
+    #[\Override]
+    protected function resolveExtensionFromMimeType($type): ?string
     {
-        switch ($type) {
-            case 'image/gif':
-                return 'gif';
-
-            case 'image/jpg':
-            case 'image/jpeg':
-            case 'image/pjpeg':
-                return 'jpg';
-
-            case 'image/png':
-                return 'png';
-
-            case 'image/svg+xml':
-            case 'image/svg':
-                return 'svg';
-
-            case 'image/webp':
-                return 'webp';
-        }
-
-        return null;
+        return match ($type) {
+            'image/gif' => 'gif',
+            'image/jpg', 'image/jpeg', 'image/pjpeg' => 'jpg',
+            'image/png' => 'png',
+            'image/svg+xml', 'image/svg' => 'svg',
+            'image/webp' => 'webp',
+            default => null,
+        };
     }
 
     /**
      * @param mixed $val The value, at time of saving.
      * @return mixed
      */
+    #[\Override]
     public function save($val)
     {
         $val = parent::save($val);
@@ -328,9 +306,9 @@ class ImageProperty extends FileProperty
      *
      * @see    FileProperty::fileUpload()
      * @param  string $fileData The file data, raw.
-     * @return string
      */
-    public function dataUpload($fileData)
+    #[\Override]
+    public function dataUpload($fileData): string
     {
         $target = parent::dataUpload($fileData);
 
@@ -346,9 +324,9 @@ class ImageProperty extends FileProperty
      *
      * @see    FileProperty::fileUpload()
      * @param  array $fileData The file data to upload.
-     * @return string
      */
-    public function fileUpload(array $fileData)
+    #[\Override]
+    public function fileUpload(array $fileData): string
     {
         $target = parent::fileUpload($fileData);
 
@@ -363,9 +341,8 @@ class ImageProperty extends FileProperty
      * Set an image factory.
      *
      * @param  ImageFactory $factory The image factory, to manipulate images.
-     * @return self
      */
-    protected function setImageFactory(ImageFactory $factory)
+    protected function setImageFactory(ImageFactory $factory): static
     {
         $this->imageFactory = $factory;
 
@@ -374,10 +351,8 @@ class ImageProperty extends FileProperty
 
     /**
      * Create an image factory.
-     *
-     * @return ImageFactory
      */
-    protected function createImageFactory()
+    protected function createImageFactory(): \Charcoal\Image\ImageFactory
     {
         return new ImageFactory();
     }
@@ -392,10 +367,7 @@ class ImageProperty extends FileProperty
         return $this->imageFactory()->create($this['driverType']);
     }
 
-    /**
-     * @return array
-     */
-    protected function batchEffects()
+    protected function batchEffects(): array
     {
         $effects = $this['effects'];
         $grouped = [];
@@ -438,7 +410,7 @@ class ImageProperty extends FileProperty
                 }
             }
 
-            if (empty($grouped)) {
+            if ($grouped === []) {
                 $grouped[] = $fxGroup;
             }
         }
@@ -455,7 +427,7 @@ class ImageProperty extends FileProperty
      * @throws InvalidArgumentException If the $value is not a string.
      * @return mixed Returns the processed target or NULL.
      */
-    private function processEffectsOne($value, array $effects = null, ImageInterface $image = null)
+    private function processEffectsOne($value, ?array $effects = null, ?ImageInterface $image = null): ?string
     {
         if ($value === null || $value === '') {
             return null;
@@ -464,7 +436,7 @@ class ImageProperty extends FileProperty
         if (!is_string($value)) {
             throw new InvalidArgumentException(sprintf(
                 'Target image must be a string, received %s',
-                (is_object($value) ? get_class($value) : gettype($value))
+                (get_debug_type($value))
             ));
         }
 
@@ -472,7 +444,7 @@ class ImageProperty extends FileProperty
             return $value;
         }
 
-        if ($image === null) {
+        if (!$image instanceof \Charcoal\Image\ImageInterface) {
             $image = $this->createImage();
         }
 
@@ -480,7 +452,7 @@ class ImageProperty extends FileProperty
             $effects = $this->batchEffects();
         }
 
-        if ($effects) {
+        if ($effects !== []) {
             $basePath = $this->basePath() . DIRECTORY_SEPARATOR;
 
             $isAbsolute = false;
@@ -514,18 +486,16 @@ class ImageProperty extends FileProperty
                                 }
                                 break;
                         }
+                    } elseif (is_string($fxGroup['condition'])) {
+                        $this->logger->warning(sprintf(
+                            '[Image Property] Unsupported conditional effect: \'%s\'',
+                            $fxGroup['condition']
+                        ));
                     } else {
-                        if (is_string($fxGroup['condition'])) {
-                            $this->logger->warning(sprintf(
-                                '[Image Property] Unsupported conditional effect: \'%s\'',
-                                $fxGroup['condition']
-                            ));
-                        } else {
-                            $this->logger->warning(sprintf(
-                                '[Image Property] Invalid conditional effect: \'%s\'',
-                                gettype($fxGroup['condition'])
-                            ));
-                        }
+                        $this->logger->warning(sprintf(
+                            '[Image Property] Invalid conditional effect: \'%s\'',
+                            gettype($fxGroup['condition'])
+                        ));
                     }
                 } elseif ($fxGroup['save']) {
                     $rename = $fxGroup['rename'];

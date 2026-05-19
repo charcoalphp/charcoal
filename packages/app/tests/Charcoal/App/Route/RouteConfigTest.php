@@ -16,7 +16,7 @@ class RouteConfigTest extends AbstractTestCase
         $this->obj = new RouteConfig();
     }
 
-    public function testSetIdent()
+    public function testSetIdent(): void
     {
         $this->assertNull($this->obj->ident());
         $ret = $this->obj->setIdent('foobar');
@@ -28,7 +28,7 @@ class RouteConfigTest extends AbstractTestCase
         $this->obj->setIdent(false);
     }
 
-    public function testSetRoute()
+    public function testSetRoute(): void
     {
         $this->assertNull($this->obj->route());
         $ret = $this->obj->setRoute('foobar');
@@ -40,7 +40,7 @@ class RouteConfigTest extends AbstractTestCase
         $this->obj->setRoute(false);
     }
 
-    public function testSetGroups()
+    public function testSetGroups(): void
     {
         $this->assertEquals([], $this->obj->groups());
         $ret = $this->obj->setGroups(['foo', 'bar']);
@@ -49,7 +49,7 @@ class RouteConfigTest extends AbstractTestCase
         $this->assertEquals(['foo', 'bar'], $this->obj->groups());
     }
 
-    public function testAddGroup()
+    public function testAddGroup(): void
     {
         $this->obj->addGroup('foo');
         $this->obj->addGroup('bar');
@@ -60,7 +60,7 @@ class RouteConfigTest extends AbstractTestCase
         $this->obj->addGroup(false);
     }
 
-    public function testSetController()
+    public function testSetController(): void
     {
         $this->assertNull($this->obj->controller());
         $ret = $this->obj->setController('foobar');
@@ -72,7 +72,7 @@ class RouteConfigTest extends AbstractTestCase
         $this->obj->setController(false);
     }
 
-    public function testSetMethods()
+    public function testSetMethods(): void
     {
         $this->assertEquals(['GET'], $this->obj->methods());
         $ret = $this->obj->setMethods(['POST']);
@@ -81,7 +81,7 @@ class RouteConfigTest extends AbstractTestCase
         $this->assertEquals(['POST'], $this->obj->methods());
     }
 
-    public function testAddMethod()
+    public function testAddMethod(): void
     {
         $this->assertEquals(['GET'], $this->obj->methods());
         $ret = $this->obj->addMethod('post');
@@ -93,13 +93,13 @@ class RouteConfigTest extends AbstractTestCase
         $this->obj->addMethod([]);
     }
 
-    public function testAddMethodInvalidMethodThrowsException()
+    public function testAddMethodInvalidMethodThrowsException(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->obj->addMethod('invalid');
     }
 
-    public function testSetHeaders()
+    public function testSetHeaders(): void
     {
         $this->assertEquals([], $this->obj->headers());
         $ret =  $this->obj->setHeaders(['Foo'=>'Bar']);
@@ -110,7 +110,7 @@ class RouteConfigTest extends AbstractTestCase
         $this->assertArrayNotHasKey('Foo', $this->obj->headers());
     }
 
-    public function testAddHeader()
+    public function testAddHeader(): void
     {
         $this->assertEquals([], $this->obj->headers());
         $ret = $this->obj->addHeader('Foo', 'Bar');

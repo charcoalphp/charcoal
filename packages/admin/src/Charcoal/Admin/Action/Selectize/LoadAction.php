@@ -36,7 +36,8 @@ class LoadAction extends BaseLoadAction
      *
      * @return string[]
      */
-    protected function validDataFromRequest()
+    #[\Override]
+    protected function validDataFromRequest(): array
     {
         return array_merge([
             'selectize_prop_ident', 'selectize_property'
@@ -50,6 +51,7 @@ class LoadAction extends BaseLoadAction
      * @throws UnexpectedValueException If "obj_id" is passed as $request option.
      * @todo   Implement obj_id support for load object action
      */
+    #[\Override]
     public function run(RequestInterface $request, ResponseInterface $response)
     {
         unset($request);
@@ -75,14 +77,14 @@ class LoadAction extends BaseLoadAction
                     $searchProperties = (array)$options['searchProperties'];
                 } elseif (
                     !empty($choiceMap['label']) &&
-                    strpos($choiceMap['label'], '{{') === false
+                    !str_contains((string) $choiceMap['label'], '{{')
                 ) {
                     $searchProperties = [ $choiceMap['label'] ];
                 } else {
                     $searchProperties = [];
                 }
 
-                if ($searchProperties) {
+                if ($searchProperties !== []) {
                     $search = [
                         'conjunction' => 'OR',
                         'conditions'  => [],
@@ -97,7 +99,7 @@ class LoadAction extends BaseLoadAction
 
                     $filters = $property->filters();
                     if (is_array($filters)) {
-                        array_push($filters, $search);
+                        $filters[] = $search;
                     } else {
                         $filters = [ $search ];
                     }
@@ -111,21 +113,13 @@ class LoadAction extends BaseLoadAction
             $this->setSelectizeCollection($this->selectizeVal($choices));
 
             $count = count($choices);
-            switch ($count) {
-                case 0:
-                    $doneMessage = $this->translator()->translation('No objects found.');
-                    break;
-
-                case 1:
-                    $doneMessage = $this->translator()->translation('One object found.');
-                    break;
-
-                default:
-                    $doneMessage = strtr($this->translator()->translation('{{ count }} objects found.'), [
-                        '{{ count }}' => $count
-                    ]);
-                    break;
-            }
+            $doneMessage = match ($count) {
+                0 => $this->translator()->translation('No objects found.'),
+                1 => $this->translator()->translation('One object found.'),
+                default => strtr($this->translator()->translation('{{ count }} objects found.'), [
+                    '{{ count }}' => $count
+                ]),
+            };
             $this->addFeedback('success', $doneMessage);
             $this->setSuccess(true);
 
@@ -150,9 +144,8 @@ class LoadAction extends BaseLoadAction
 
     /**
      * @param string $query Query for LoadAction.
-     * @return self
      */
-    public function setQuery($query)
+    public function setQuery($query): static
     {
         $this->query = $query;
 
@@ -169,19 +162,16 @@ class LoadAction extends BaseLoadAction
 
     /**
      * @param array|mixed $selectizeCollection The collection to return.
-     * @return self
      */
-    public function setSelectizeCollection($selectizeCollection)
+    public function setSelectizeCollection($selectizeCollection): static
     {
         $this->selectizeCollection = $selectizeCollection;
 
         return $this;
     }
 
-    /**
-     * @return array
-     */
-    public function results()
+    #[\Override]
+    public function results(): array
     {
         return [
             'success'    => $this->success(),
@@ -195,6 +185,7 @@ class LoadAction extends BaseLoadAction
      * @param Container $container DI Container.
      * @return void
      */
+    #[\Override]
     protected function setDependencies(Container $container)
     {
         parent::setDependencies($container);

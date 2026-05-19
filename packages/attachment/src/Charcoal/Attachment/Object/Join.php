@@ -112,14 +112,12 @@ class Join extends AbstractModel implements
      *
      * @var JoinInterface[]|null
      */
-    private $hierarchy;
+    private ?array $hierarchy = null;
 
     /**
      * Store the factory instance.
-     *
-     * @var FactoryInterface
      */
-    private $modelFactory;
+    private ?\Charcoal\Factory\FactoryInterface $modelFactory = null;
 
     /**
      * Set the model's dependencies.
@@ -127,6 +125,7 @@ class Join extends AbstractModel implements
      * @param  ServiceContainer $container Service container.
      * @return void
      */
+    #[\Override]
     protected function setDependencies(ServiceContainer $container)
     {
         parent::setDependencies($container);
@@ -234,9 +233,8 @@ class Join extends AbstractModel implements
      *
      * @todo   Add support for multiple masters.
      * @throws LogicException If the relationship is broken or incomplete.
-     * @return JoinInterface|null
      */
-    public function getMaster()
+    public function getMaster(): ?\Charcoal\Attachment\Interfaces\JoinInterface
     {
         $hierarchy = $this->invertedHierarchy();
         if (isset($hierarchy[0])) {
@@ -250,10 +248,8 @@ class Join extends AbstractModel implements
      * Reset this relationship's hierarchy.
      *
      * The relationship's hierarchy can be rebuilt with {@see self::hierarchy()}.
-     *
-     * @return self
      */
-    public function resetHierarchy()
+    public function resetHierarchy(): static
     {
         $this->hierarchy = null;
 
@@ -265,7 +261,7 @@ class Join extends AbstractModel implements
      *
      * @return JoinInterface[]
      */
-    public function hierarchy()
+    public function hierarchy(): array
     {
         if ($this->hierarchy === null) {
             $hierarchy = [];
@@ -287,7 +283,7 @@ class Join extends AbstractModel implements
      *
      * @return JoinInterface[]
      */
-    public function invertedHierarchy()
+    public function invertedHierarchy(): array
     {
         return array_reverse($this->hierarchy());
     }
@@ -295,16 +291,14 @@ class Join extends AbstractModel implements
 
 
 // Setters
-// =============================================================================
-
+    // =============================================================================
     /**
      * Set the source object type.
      *
      * @param  string $type The object type identifier.
      * @throws InvalidArgumentException If provided argument is not of type 'string'.
-     * @return self
      */
-    public function setObjectType($type)
+    public function setObjectType($type): static
     {
         if (!is_string($type)) {
             throw new InvalidArgumentException('Object type must be a string.');
@@ -320,9 +314,8 @@ class Join extends AbstractModel implements
      *
      * @param  mixed $id The object ID to join the attachment to.
      * @throws InvalidArgumentException If provided argument is not a string or numerical value.
-     * @return self
      */
-    public function setObjectId($id)
+    public function setObjectId($id): static
     {
         if (!is_scalar($id)) {
             throw new InvalidArgumentException(
@@ -340,9 +333,8 @@ class Join extends AbstractModel implements
      *
      * @param  mixed $id The object ID to attach.
      * @throws InvalidArgumentException If provided argument is not a string or numerical value.
-     * @return self
      */
-    public function setAttachmentId($id)
+    public function setAttachmentId($id): static
     {
         if (!is_scalar($id)) {
             throw new InvalidArgumentException(
@@ -360,9 +352,8 @@ class Join extends AbstractModel implements
      *
      * @param  mixed $id The group ID describing the relationship.
      * @throws InvalidArgumentException If provided argument is not a string.
-     * @return self
      */
-    public function setGroup($id)
+    public function setGroup($id): static
     {
         if (!is_string($id)) {
             throw new InvalidArgumentException(
@@ -383,9 +374,8 @@ class Join extends AbstractModel implements
      *
      * @param  integer $position A position.
      * @throws InvalidArgumentException If the position is not an integer (or numeric integer string).
-     * @return self
      */
-    public function setPosition($position)
+    public function setPosition($position): static
     {
         if ($position === null) {
             $this->position = null;
@@ -407,11 +397,10 @@ class Join extends AbstractModel implements
      * Enable/Disable the relationship.
      *
      * @param  boolean $active The active flag.
-     * @return self
      */
-    public function setActive($active)
+    public function setActive($active): static
     {
-        $this->active = !!$active;
+        $this->active = (bool) $active;
 
         return $this;
     }
@@ -420,9 +409,8 @@ class Join extends AbstractModel implements
      * Set an model factory.
      *
      * @param  FactoryInterface $factory The factory to create models.
-     * @return self
      */
-    protected function setModelFactory(FactoryInterface $factory)
+    protected function setModelFactory(FactoryInterface $factory): static
     {
         $this->modelFactory = $factory;
 
@@ -498,14 +486,13 @@ class Join extends AbstractModel implements
      * Retrieve the model factory.
      *
      * @throws RuntimeException If the model factory is missing.
-     * @return FactoryInterface
      */
-    public function modelFactory()
+    public function modelFactory(): \Charcoal\Factory\FactoryInterface
     {
-        if (!isset($this->modelFactory)) {
+        if (!$this->modelFactory instanceof \Charcoal\Factory\FactoryInterface) {
             throw new RuntimeException(sprintf(
                 'Model Factory is not defined for [%s]',
-                get_class($this)
+                static::class
             ));
         }
 

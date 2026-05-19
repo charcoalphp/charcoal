@@ -20,24 +20,21 @@ class AuthServiceProvider implements ServiceProviderInterface
 {
     /**
      * @param  Container $container A Pimple DI container.
-     * @return void
      */
-    public function register(Container $container)
+    public function register(Container $container): void
     {
         if (!isset($container['authenticator'])) {
             /**
              * @param  Container $container The Pimple DI Container.
              * @return Authenticator
              */
-            $container['authenticator'] = function (Container $container) {
-                return new Authenticator([
-                    'logger'        => $container['logger'],
-                    'user_type'     => User::class,
-                    'user_factory'  => $container['model/factory'],
-                    'token_type'    => AuthToken::class,
-                    'token_factory' => $container['model/factory'],
-                ]);
-            };
+            $container['authenticator'] = (fn(Container $container): \Charcoal\User\Authenticator => new Authenticator([
+                'logger'        => $container['logger'],
+                'user_type'     => User::class,
+                'user_factory'  => $container['model/factory'],
+                'token_type'    => AuthToken::class,
+                'token_factory' => $container['model/factory'],
+            ]));
         }
 
         if (!isset($container['authorizer'])) {
@@ -45,22 +42,18 @@ class AuthServiceProvider implements ServiceProviderInterface
              * @param  Container $container The Pimple DI container.
              * @return Authorizer
              */
-            $container['authorizer'] = function (Container $container) {
-                return new Authorizer([
-                    'logger'    => $container['logger'],
-                    'acl'       => $container['authorizer/acl'],
-                    'resource'  => 'charcoal',
-                ]);
-            };
+            $container['authorizer'] = (fn(Container $container): \Charcoal\User\Authorizer => new Authorizer([
+                'logger'    => $container['logger'],
+                'acl'       => $container['authorizer/acl'],
+                'resource'  => 'charcoal',
+            ]));
         }
 
         if (!isset($container['authorizer/acl'])) {
             /**
              * @return Acl
              */
-            $container['authorizer/acl'] = function () {
-                return new Acl();
-            };
+            $container['authorizer/acl'] = (fn(): \Laminas\Permissions\Acl\Acl => new Acl());
         }
     }
 }

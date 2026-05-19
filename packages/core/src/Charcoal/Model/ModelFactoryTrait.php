@@ -43,7 +43,7 @@ trait ModelFactoryTrait
         if (!isset($this->modelFactory)) {
             throw new RuntimeException(sprintf(
                 'Model Factory is not defined for [%s]',
-                get_class($this)
+                $this::class
             ));
         }
 

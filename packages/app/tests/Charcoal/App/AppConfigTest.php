@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Charcoal\Tests\App;
 
 // From 'charcoal-app'
@@ -10,7 +12,7 @@ class AppConfigTest extends AbstractTestCase
 {
     public $obj;
 
-    public function testConstructor()
+    public function testConstructor(): void
     {
         $obj = new AppConfig();
         $this->assertInstanceOf(AppConfig::class, $obj);

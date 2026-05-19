@@ -12,19 +12,16 @@ use UnexpectedValueException;
 
 /**
  * Test {@see FileAwareTrait::loadYamlFile() YAML File Loading}
- *
- * @coversDefaultClass \Charcoal\Config\FileAwareTrait
  */
+#[\PHPUnit\Framework\Attributes\CoversTrait(\Charcoal\Config\FileAwareTrait::class)]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Config\FileAwareTrait::class, 'loadYamlFile()')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Config\FileAwareTrait::class, 'loadFile()')]
 class YamlFileLoaderTest extends AbstractFileLoaderTestCase
 {
     /**
      * Asserts that the File Loader supports '.yml' YAML config files.
-     *
-     * @covers ::loadYamlFile()
-     * @covers ::loadFile()
-     * @return void
      */
-    public function testLoadFileWithYmlExtension()
+    public function testLoadFileWithYmlExtension(): void
     {
         $path = $this->getPathToFixture('pass/valid1.yml');
         $data = $this->obj->loadFile($path);
@@ -43,12 +40,8 @@ class YamlFileLoaderTest extends AbstractFileLoaderTestCase
 
     /**
      * Asserts that the File Loader supports '.yaml' YAML config files.
-     *
-     * @covers ::loadYamlFile()
-     * @covers ::loadFile()
-     * @return void
      */
-    public function testLoadFileWithYamlExtension()
+    public function testLoadFileWithYamlExtension(): void
     {
         $path = $this->getPathToFixture('pass/valid2.yaml');
         $data = $this->obj->loadFile($path);
@@ -67,15 +60,12 @@ class YamlFileLoaderTest extends AbstractFileLoaderTestCase
 
     /**
      * Asserts that the File Loader throws an exception if the YAML Parser is unavailable.
-     *
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
-     * @covers ::loadYamlFile()
-     * @return void
      */
-    public function testLoadFileWithNoYamlParser()
+    #[\PHPUnit\Framework\Attributes\PreserveGlobalState(false)]
+    #[\PHPUnit\Framework\Attributes\RunInSeparateProcess]
+    public function testLoadFileWithNoYamlParser(): void
     {
-        if (class_exists('Symfony\Component\Yaml\Parser', false)) {
+        if (class_exists(\Symfony\Component\Yaml\Parser::class, false)) {
             $this->markTestSkipped(
               'The Symfony YAML component was loaded before the test could run'
             );
@@ -88,16 +78,13 @@ class YamlFileLoaderTest extends AbstractFileLoaderTestCase
         $this->disableSymfonyYamlComponent();
 
         $path = $this->getPathToFixture('pass/valid1.yml');
-        $data = $this->obj->loadFile($path);
+        $this->obj->loadFile($path);
     }
 
     /**
      * Asserts that an empty file is silently ignored.
-     *
-     * @covers ::loadYamlFile()
-     * @return void
      */
-    public function testLoadEmptyFile()
+    public function testLoadEmptyFile(): void
     {
         $path = $this->getPathToFixture('pass/empty.yml');
         $data = $this->obj->loadFile($path);
@@ -107,25 +94,20 @@ class YamlFileLoaderTest extends AbstractFileLoaderTestCase
 
     /**
      * Asserts that a broken file is NOT ignored.
-     *
-     * @covers ::loadYamlFile()
-     * @return void
      */
-    public function testLoadMalformedFile()
+    public function testLoadMalformedFile(): void
     {
         $this->expectExceptionMessageMatches('/^YAML file ".+?" could not be parsed: .+$/');
         $this->expectException(UnexpectedValueException::class);
 
         $path = $this->getPathToFixture('pass/malformed.yml');
-        $data = $this->obj->loadFile($path);
+        $this->obj->loadFile($path);
     }
 
     /**
      * Remove the "symfony/yaml" package from Composer's search paths.
-     *
-     * @return void
      */
-    public function disableSymfonyYamlComponent()
+    public function disableSymfonyYamlComponent(): void
     {
         // phpcs:disable Squiz.PHP.GlobalKeyword.NotAllowed
         global $autoloader;
@@ -133,18 +115,16 @@ class YamlFileLoaderTest extends AbstractFileLoaderTestCase
 
         // If PSR-0/4 autoloading was optimized
         $classMap = $autoloader->getClassMap();
-        if (isset($classMap['Symfony\\Component\\Yaml\\Parser'])) {
+        if (isset($classMap[\Symfony\Component\Yaml\Parser::class])) {
             $refClassMap = new ReflectionProperty($autoloader, 'classMap');
-            $refClassMap->setAccessible(true);
 
-            unset($classMap['Symfony\\Component\\Yaml\\Parser']);
+            unset($classMap[\Symfony\Component\Yaml\Parser::class]);
             $refClassMap->setValue($autoloader, $classMap);
         }
 
         $prefixesPsr4 = $autoloader->getPrefixesPsr4();
         if (isset($prefixesPsr4['Symfony\\Component\\Yaml\\'])) {
             $refPrefixesPsr4 = new ReflectionProperty($autoloader, 'prefixDirsPsr4');
-            $refPrefixesPsr4->setAccessible(true);
 
             unset($prefixesPsr4['Symfony\\Component\\Yaml\\']);
             $refPrefixesPsr4->setValue($autoloader, $prefixesPsr4);
@@ -153,10 +133,8 @@ class YamlFileLoaderTest extends AbstractFileLoaderTestCase
 
     /**
      * Add the "symfony/yaml" package from Composer's search paths.
-     *
-     * @return void
      */
-    public function enableSymfonyYamlComponent()
+    public function enableSymfonyYamlComponent(): void
     {
         // phpcs:disable Squiz.PHP.GlobalKeyword.NotAllowed
         global $autoloader;
@@ -164,27 +142,25 @@ class YamlFileLoaderTest extends AbstractFileLoaderTestCase
 
         // If PSR-0/4 autoloading was optimized
         $classMap = $autoloader->getClassMap();
-        if (!isset($classMap['Symfony\\Component\\Yaml\\Parser'])) {
+        if (!isset($classMap[\Symfony\Component\Yaml\Parser::class])) {
             $refClassMap = new ReflectionProperty($autoloader, 'classMap');
-            $refClassMap->setAccessible(true);
 
             $refClassLoader  = $refClassMap->getDeclaringClass();
             $classLoaderPath = $refClassLoader->getFileName();
 
-            $vendorDir = dirname(dirname($classLoaderPath));
-            $prefixesPsr4['Symfony\\Component\\Yaml\\Parser'] = [ $vendorDir.'/symfony/yaml/Parser.php' ];
+            $vendorDir = dirname($classLoaderPath, 2);
+            $prefixesPsr4[\Symfony\Component\Yaml\Parser::class] = [ $vendorDir.'/symfony/yaml/Parser.php' ];
             $refClassMap->setValue($autoloader, $prefixesPsr4);
         }
 
         $prefixesPsr4 = $autoloader->getPrefixesPsr4();
         if (!isset($prefixesPsr4['Symfony\\Component\\Yaml\\'])) {
             $refPrefixesPsr4 = new ReflectionProperty($autoloader, 'prefixDirsPsr4');
-            $refPrefixesPsr4->setAccessible(true);
 
             $refClassLoader  = $refPrefixesPsr4->getDeclaringClass();
             $classLoaderPath = $refClassLoader->getFileName();
 
-            $vendorDir = dirname(dirname($classLoaderPath));
+            $vendorDir = dirname($classLoaderPath, 2);
             $prefixesPsr4['Symfony\\Component\\Yaml\\'] = [ $vendorDir.'/symfony/yaml' ];
             $refPrefixesPsr4->setValue($autoloader, $prefixesPsr4);
         }

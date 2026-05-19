@@ -56,6 +56,7 @@ abstract class AbstractPropertyDisplay extends AbstractProperty implements
      * @param  PropertyInterface $property The property.
      * @return self
      */
+    #[\Override]
     public function setProperty(PropertyInterface $property)
     {
         parent::setProperty($property);
@@ -165,11 +166,7 @@ abstract class AbstractPropertyDisplay extends AbstractProperty implements
      */
     public function displayName()
     {
-        if ($this->displayName) {
-            $name = $this->displayName;
-        } else {
-            $name = $this->propertyIdent();
-        }
+        $name = $this->displayName ?: $this->propertyIdent();
 
         if ($this->p()['l10n']) {
             $name .= '[' . $this->lang() . ']';
@@ -206,11 +203,7 @@ abstract class AbstractPropertyDisplay extends AbstractProperty implements
     {
         $options = $this->getDisplayOptions();
 
-        if (isset($options[$key])) {
-            return $options[$key];
-        }
-
-        return $default;
+        return $options[$key] ?? $default;
     }
 
     /**
@@ -291,6 +284,7 @@ abstract class AbstractPropertyDisplay extends AbstractProperty implements
      * @throws InvalidArgumentException If the value to escape is not a string.
      * @return string
      */
+    #[\Override]
     public function escapeVal($val, array $options = [])
     {
         if (!is_string($val)) {
@@ -342,7 +336,7 @@ abstract class AbstractPropertyDisplay extends AbstractProperty implements
         if (!is_scalar($val)) {
             throw new UnexpectedValueException(sprintf(
                 'Property Display Value must be a string, received %s',
-                (is_object($val) ? get_class($val) : gettype($val))
+                (get_debug_type($val))
             ));
         }
 

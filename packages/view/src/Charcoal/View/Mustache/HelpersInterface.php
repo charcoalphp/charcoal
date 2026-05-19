@@ -17,8 +17,6 @@ interface HelpersInterface
 {
     /**
      * Get the collection of helpers as a plain array.
-     *
-     * @return array
      */
     public function toArray(): array;
 }

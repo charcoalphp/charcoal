@@ -10,9 +10,17 @@ use Charcoal\Config\AbstractEntity;
 
 /**
  * Test AbstractEntity
- *
- * @coversDefaultClass \Charcoal\Config\AbstractEntity
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\Charcoal\Config\AbstractEntity::class)]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Config\AbstractEntity::class, 'keys()')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Config\AbstractEntity::class, 'setData()')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Config\AbstractEntity::class, 'data()')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Config\AbstractEntity::class, 'offsetSet()')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Config\AbstractEntity::class, 'offsetGet()')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Config\AbstractEntity::class, 'camelize()')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Config\AbstractEntity::class, 'jsonSerialize()')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Config\AbstractEntity::class, 'serialize()')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Config\AbstractEntity::class, 'unserialize()')]
 class EntityTest extends AbstractEntityTestCase
 {
     use AssertionsTrait;
@@ -24,8 +32,6 @@ class EntityTest extends AbstractEntityTestCase
 
     /**
      * Create a concrete MacroEntity instance.
-     *
-     * @return void
      */
     protected function setUp(): void
     {
@@ -39,11 +45,8 @@ class EntityTest extends AbstractEntityTestCase
      * - Keys are empty by default
      * - Keys are added automatically when setting a value via {@see ArrayAccess::offsetSet()}
      * - Keys are removed automatically when unsetting a value via {@see ArrayAccess::offsetUnset()}
-     *
-     * @covers ::keys()
-     * @return void
      */
-    public function testKeys()
+    public function testKeys(): void
     {
         $obj = $this->obj;
 
@@ -64,15 +67,13 @@ class EntityTest extends AbstractEntityTestCase
 
     // Test Data Methods
     // =========================================================================
-
     /**
      * Retrieve data for {@see AbstractEntity::setData()}.
      *
      * @used-by self::testSetData()
      * @used-by self::testGetDataSubset()
-     * @return  array
      */
-    public function getSetData()
+    public function getSetData(): array
     {
         return [
             'name' => 'Charcoal',
@@ -96,12 +97,8 @@ class EntityTest extends AbstractEntityTestCase
      * - When assigning data, the entity will ignore the key "data"
      *   to prevent recursion calls.
      * - The key-value pair "foo" will be passed to {@see MacroEntity::setFoo()}
-     *
-     * @covers ::setData()
-     * @covers ::data()
-     * @return void
      */
-    public function testSetData()
+    public function testSetData(): void
     {
         $obj = $this->obj;
 
@@ -129,11 +126,8 @@ class EntityTest extends AbstractEntityTestCase
      * - The entity will ignore "data" to prevent recursion calls
      * - The entity will accept "name", "type", "foo", "baz"
      * - The entity will pass "foo" to {@see MacroEntity::setFoo()}
-     *
-     * @covers ::data()
-     * @return void
      */
-    public function testGetDataSubset()
+    public function testGetDataSubset(): void
     {
         $obj = $this->obj;
 
@@ -150,14 +144,8 @@ class EntityTest extends AbstractEntityTestCase
 
     /**
      * Test {@see AbstractEntity::setData()} via {@see \ArrayAccess::offsetSet()}.
-     *
-     * @covers ::offsetSet()
-     * @covers ::offsetGet()
-     * @covers ::setData()
-     * @covers ::data()
-     * @return void
      */
-    public function testSetDataViaArrayAccess()
+    public function testSetDataViaArrayAccess(): void
     {
         $obj = $this->obj;
 
@@ -177,7 +165,6 @@ class EntityTest extends AbstractEntityTestCase
 
     // Test Internals
     // =========================================================================
-
     /**
      * Test camelization of entity keys.
      *
@@ -185,16 +172,13 @@ class EntityTest extends AbstractEntityTestCase
      * - Keys are interchangeable between "snake_case" and "camelCase"
      * - Keys are converted to "camelCase" for method calls or property assignments
      * - Keys are memorized as "camelCase"
-     *
-     * @covers ::camelize()
-     * @return void
      */
-    public function testCamelize()
+    public function testCamelize(): void
     {
         $obj = $this->obj;
 
         $obj->set('foo_bar', 'waldo');
-        $this->assertObjectHasAttribute('fooBar', $obj);
+        $this->assertTrue(property_exists($obj, 'fooBar'));
         $this->assertEquals('waldo', $obj['fooBar']);
         $this->assertEquals('waldo', $obj['foo___bar']);
         $this->assertArrayContains([ 'fooBar' ], $obj->keys());
@@ -206,11 +190,8 @@ class EntityTest extends AbstractEntityTestCase
      * Assertions:
      * 1. Serialization from default state
      * 2. Serialization from mutated state
-     *
-     * @covers ::jsonSerialize()
-     * @return void
      */
-    public function testJsonSerializable()
+    public function testJsonSerializable(): void
     {
         $obj = $this->obj;
 
@@ -237,18 +218,14 @@ class EntityTest extends AbstractEntityTestCase
      * Assertions:
      * 1. Serialization from default state
      * 2. Serialization from mutated state
-     *
-     * @covers ::serialize()
-     * @covers ::unserialize()
-     * @return void
      */
-    public function testSerializable()
+    public function testSerializable(): void
     {
         $obj = $this->obj;
 
         /** 1. Serialization from default state */
         $that = unserialize(serialize($obj));
-        $this->assertInstanceOf(get_class($obj), $that);
+        $this->assertInstanceOf($obj::class, $that);
         $this->assertEquals($obj, $that);
         $this->assertEmpty($that->data());
 
@@ -258,7 +235,7 @@ class EntityTest extends AbstractEntityTestCase
         ];
         $obj->setData($mutation);
         $that = unserialize(serialize($obj));
-        $this->assertInstanceOf(get_class($obj), $that);
+        $this->assertInstanceOf($obj::class, $that);
         $this->assertEquals($obj->data(), $that->data());
         $this->assertEquals('Charcoal', $that['name']);
     }

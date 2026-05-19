@@ -62,7 +62,7 @@ trait DashboardTrait
             throw new InvalidArgumentException(
                 sprintf(
                     'Argument must be a widget builder, %s given',
-                    (is_object($builder) ? get_class($builder) : gettype($builder))
+                    (get_debug_type($builder))
                 )
             );
         }
@@ -92,7 +92,7 @@ trait DashboardTrait
             throw new InvalidArgumentException(
                 sprintf(
                     'Argument must be callable or NULL, %s given',
-                    (is_object($callable) ? get_class($callable) : gettype($callable))
+                    (get_debug_type($callable))
                 )
             );
         }
@@ -160,12 +160,12 @@ trait DashboardTrait
      * @param callable $widgetCallback A callback applied to each widget.
      * @return UiItemInterface[]|Generator
      */
-    public function widgets(callable $widgetCallback = null)
+    public function widgets(?callable $widgetCallback = null)
     {
         $widgets = $this->widgets;
         uasort($widgets, [ $this, 'sortItemsByPriority' ]);
 
-        $widgetCallback = isset($widgetCallback) ? $widgetCallback : $this->widgetCallback;
+        $widgetCallback ??= $this->widgetCallback;
         foreach ($widgets as $widget) {
             if (isset($widget['permissions']) && $this instanceof AuthAwareInterface) {
                 $widget->setActive($this->hasPermissions($widget['permissions']));
@@ -185,20 +185,16 @@ trait DashboardTrait
 
     /**
      * Determine if the dashboard has any widgets.
-     *
-     * @return boolean
      */
-    public function hasWidgets()
+    public function hasWidgets(): bool
     {
         return ($this->numWidgets() > 0);
     }
 
     /**
      * Count the number of widgets attached to the dashboard.
-     *
-     * @return integer
      */
-    public function numWidgets()
+    public function numWidgets(): int
     {
         return count($this->widgets);
     }

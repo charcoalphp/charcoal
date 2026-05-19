@@ -19,9 +19,8 @@ class CallbackStream implements StreamInterface
 
     /**
      * Whether or not the callback has been previously invoked.
-     * @var boolean
      */
-    private $called = false;
+    private bool $called = false;
 
     /**
      * CallbackStream constructor.
@@ -32,12 +31,9 @@ class CallbackStream implements StreamInterface
         $this->callback = $callback;
     }
 
-    /**
-     * @return string
-     */
-    public function __toString()
+    public function __toString(): string
     {
-        return $this->output();
+        return (string) $this->output();
     }
 
     /**

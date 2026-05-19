@@ -20,9 +20,6 @@ class GenericFormTest extends AbstractTestCase
      */
     public $obj;
 
-    /**
-     * @return void
-     */
     protected function setUp(): void
     {
         $container = $this->getContainer();
@@ -37,10 +34,7 @@ class GenericFormTest extends AbstractTestCase
         ]);
     }
 
-    /**
-     * @return void
-     */
-    public function testType()
+    public function testType(): void
     {
         $this->assertEquals('charcoal/ui/form/generic', $this->obj->type());
     }

@@ -42,7 +42,7 @@ trait CollectionLoaderFactoryTrait
         if (!isset($this->collectionLoaderFactory)) {
             throw new RuntimeException(sprintf(
                 'Collection Loader Factory is not defined for [%s]',
-                get_class($this)
+                $this::class
             ));
         }
 
@@ -56,7 +56,7 @@ trait CollectionLoaderFactoryTrait
      * @param  callable|null $callback Optional. Called at creation.
      * @return CollectionLoader
      */
-    public function createCollectionLoaderWith(array $args = null, callable $callback = null)
+    public function createCollectionLoaderWith(?array $args = null, ?callable $callback = null)
     {
         $factory = $this->collectionLoaderFactory();
 

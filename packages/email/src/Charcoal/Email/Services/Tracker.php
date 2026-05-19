@@ -23,29 +23,16 @@ use Charcoal\Email\Objects\OpenLog;
 class Tracker
 {
     /**
-     * @var string
-     */
-    private $baseUrl;
-
-    /**
-     * @var FactoryInterface
-     */
-    private $modelFactory;
-
-    /**
      * @param string           $baseUrl      Base URL.
      * @param FactoryInterface $modelFactory Model factory to create link and log objects.
      */
-    public function __construct(string $baseUrl, FactoryInterface $modelFactory)
+    public function __construct(private readonly string $baseUrl, private readonly FactoryInterface $modelFactory)
     {
-        $this->baseUrl = $baseUrl;
-        $this->modelFactory = $modelFactory;
     }
 
     /**
      * @param Email  $email      Email object to update.
      * @param string $emailLogId Email log ID, to generate image link for.
-     * @return void
      */
     public function addOpenTrackingImage(Email &$email, string $emailLogId): void
     {
@@ -64,7 +51,6 @@ class Tracker
     /**
      * @param Email  $email      Email object to update.
      * @param string $emailLogId Email log ID, to generate links for.
-     * @return void
      */
     public function replaceLinksWithTracker(Email &$email, string $emailLogId): void
     {
@@ -83,7 +69,6 @@ class Tracker
     /**
      * @param string      $emailLogId Email log ID, to track.
      * @param string|null $ip         Client IP address.
-     * @return void
      */
     public function trackOpen(string $emailLogId, ?string $ip): void
     {
@@ -97,7 +82,6 @@ class Tracker
     /**
      * @param string      $linkId Link ID, to track.
      * @param string|null $ip     Client IP address.
-     * @return void
      */
     public function trackLink(string $linkId, ?string $ip): void
     {
@@ -111,7 +95,6 @@ class Tracker
     /**
      * @param string $emailLogId Email log ID, to create link for.
      * @param string $url        URL to redirect to.
-     * @return string
      */
     private function createLink(string $emailLogId, string $url): string
     {

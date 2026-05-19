@@ -18,29 +18,16 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 class OpenAction
 {
     /**
-     * @var string
-     */
-    private $emailId;
-
-    /**
-     * @var Tracker
-     */
-    private $tracker;
-
-    /**
      * @param string  $emailId Email log ID.
      * @param Tracker $tracker Tracker service.
      */
-    public function __construct(string $emailId, Tracker $tracker)
+    public function __construct(private readonly string $emailId, private readonly Tracker $tracker)
     {
-        $this->emailId = $emailId;
-        $this->tracker = $tracker;
     }
 
     /**
      * @param Request  $request  PSR-7 Request.
      * @param Response $response PSR-7 Response.
-     * @return Response
      */
     public function __invoke(Request $request, Response $response): Response
     {
@@ -55,7 +42,7 @@ class OpenAction
     /**
      * @return boolean|false|string
      */
-    private function getBlankPng()
+    private function getBlankPng(): string
     {
         return base64_decode('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABAQMAAAAl21bKAAAAA1BMVEUAAACnej3aAAAAAXRSTlMAQObYZgAAAApJREFUCNdjYAAAAAIAAeIhvDMAAAAASUVORK5CYII=');
     }

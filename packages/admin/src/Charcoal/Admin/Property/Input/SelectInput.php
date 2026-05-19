@@ -16,10 +16,8 @@ class SelectInput extends AbstractSelectableInput
 {
     /**
      * Settings for {@link http://silviomoreto.github.io/bootstrap-select/ Bootstrap Select}.
-     *
-     * @var array
      */
-    private $selectOptions;
+    private ?array $selectOptions = null;
 
     /**
      * Retrieve the selectable options.
@@ -29,6 +27,7 @@ class SelectInput extends AbstractSelectableInput
      * @todo [^1]: With PHP7 we can simply do `yield from $choices;`.
      * @return Generator|array
      */
+    #[\Override]
     public function choices()
     {
         if ($this->p()['allowNull'] && !$this->p()['multiple']) {
@@ -52,6 +51,7 @@ class SelectInput extends AbstractSelectableInput
      * @param  array|object   $choice The choice structure.
      * @return array|null
      */
+    #[\Override]
     protected function parseChoice($ident, $choice)
     {
         $choice = parent::parseChoice($ident, $choice);
@@ -85,7 +85,7 @@ class SelectInput extends AbstractSelectableInput
      * @param  array $settings The select picker options.
      * @return Selectinput Chainable
      */
-    public function setSelectOptions(array $settings)
+    public function setSelectOptions(array $settings): static
     {
         $this->selectOptions = array_merge($this->defaultSelectOptions(), $settings);
 
@@ -98,7 +98,7 @@ class SelectInput extends AbstractSelectableInput
      * @param  array $settings The select picker options.
      * @return Selectinput Chainable
      */
-    public function mergeSelectOptions(array $settings)
+    public function mergeSelectOptions(array $settings): static
     {
         $this->selectOptions = array_merge($this->selectOptions, $settings);
 
@@ -113,7 +113,7 @@ class SelectInput extends AbstractSelectableInput
      * @throws InvalidArgumentException If the identifier is not a string.
      * @return Selectinput Chainable
      */
-    public function addSelectOption($key, $val)
+    public function addSelectOption($key, $val): static
     {
         if (!is_string($key)) {
             throw new InvalidArgumentException(
@@ -133,10 +133,8 @@ class SelectInput extends AbstractSelectableInput
 
     /**
      * Retrieve the select picker's options.
-     *
-     * @return array
      */
-    public function selectOptions()
+    public function selectOptions(): array
     {
         if ($this->selectOptions === null) {
             $this->selectOptions = $this->defaultSelectOptions();
@@ -147,10 +145,8 @@ class SelectInput extends AbstractSelectableInput
 
     /**
      * Retrieve the default select picker options.
-     *
-     * @return array
      */
-    public function defaultSelectOptions()
+    public function defaultSelectOptions(): array
     {
         return [
             'style'    => '',

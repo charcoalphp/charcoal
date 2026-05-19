@@ -105,7 +105,7 @@ abstract class AbstractCacheBuilderTest extends AbstractTestCase
     public function getDefaultPoolAttributes()
     {
         return [
-            'item_class' => '\Stash\Item',
+            'item_class' => \Stash\Item::class,
             'namespace'  => null,
             'logger'     => null,
         ];
@@ -115,9 +115,8 @@ abstract class AbstractCacheBuilderTest extends AbstractTestCase
      * Reports an error if $builder does not use the default options.
      *
      * @param  CacheBuilder $builder The cache builder to test.
-     * @return void
      */
-    public function assertCacheBuilderHasDefaultAttributes(CacheBuilder $builder)
+    public function assertCacheBuilderHasDefaultAttributes(CacheBuilder $builder): void
     {
         $builderDefaults = $this->getDefaultBuilderAttributes();
 
@@ -131,9 +130,8 @@ abstract class AbstractCacheBuilderTest extends AbstractTestCase
      * Reports an error if $pool does not use the default options.
      *
      * @param  PoolInterface $pool The cache pool to test.
-     * @return void
      */
-    public function assertCachePoolHasDefaultAttributes(PoolInterface $pool)
+    public function assertCachePoolHasDefaultAttributes(PoolInterface $pool): void
     {
         $builderDefaults = $this->getDefaultBuilderAttributes();
         $poolDefaults    = $this->getDefaultPoolAttributes();

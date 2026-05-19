@@ -14,9 +14,7 @@ use Charcoal\Tests\AbstractTestCase;
  */
 class SearchWidgetTest extends AbstractTestCase
 {
-    /**
-     * @return void
-     */
+    public $obj;
     public function setUp(): void
     {
         $logger = new NullLogger();
@@ -25,10 +23,7 @@ class SearchWidgetTest extends AbstractTestCase
         ]);
     }
 
-    /**
-     * @return void
-     */
-    public function testConstructor()
+    public function testConstructor(): void
     {
         $this->assertInstanceOf(SearchWidget::class, $this->obj);
     }

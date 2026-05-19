@@ -27,13 +27,14 @@ class EditTemplate extends AdminTemplate implements
      * @param RequestInterface $request PSR-7 HTTP Server Request.
      * @return boolean
      */
+    #[\Override]
     public function init(RequestInterface $request)
     {
         $ret = parent::init($request);
 
         if (!$this->obj()->id()) {
             $path = str_replace('object/edit', 'object/create', $request->getUri()->getPath());
-            header('Location: ' . (string)$request->getUri()->withPath($path));
+            header('Location: ' . $request->getUri()->withPath($path));
             die();
         }
         return $ret;
@@ -44,7 +45,8 @@ class EditTemplate extends AdminTemplate implements
      *
      * @return string[]
      */
-    protected function validDataFromRequest()
+    #[\Override]
+    protected function validDataFromRequest(): array
     {
         return array_merge([
             'obj_type',
@@ -57,6 +59,7 @@ class EditTemplate extends AdminTemplate implements
      *
      * @return \Charcoal\Translator\Translation
      */
+    #[\Override]
     public function title()
     {
         if ($this->title === null) {
@@ -79,7 +82,7 @@ class EditTemplate extends AdminTemplate implements
                 $objType  = $this->objType();
                 $metadata = $obj->metadata();
 
-                if (!$title && isset($metadata['admin']['forms'])) {
+                if (isset($metadata['admin']['forms'])) {
                     $adminMetadata = $metadata['admin'];
 
                     $formIdent = filter_input(INPUT_GET, 'form_ident', FILTER_SANITIZE_STRING);
@@ -128,6 +131,7 @@ class EditTemplate extends AdminTemplate implements
      *
      * @return Translation|string|null
      */
+    #[\Override]
     public function subtitle()
     {
         if ($this->subtitle === null) {
@@ -138,11 +142,7 @@ class EditTemplate extends AdminTemplate implements
                 $config = [];
             }
 
-            if (isset($config['subtitle'])) {
-                $title = $this->translator()->translation($config['subtitle']);
-            } else {
-                $title = '';
-            }
+            $title = isset($config['subtitle']) ? $this->translator()->translation($config['subtitle']) : '';
 
             $this->subtitle = $this->renderTitle($title);
         }
@@ -154,6 +154,7 @@ class EditTemplate extends AdminTemplate implements
      * @param Container $container DI container.
      * @return void
      */
+    #[\Override]
     protected function setDependencies(Container $container)
     {
         parent::setDependencies($container);
@@ -186,7 +187,7 @@ class EditTemplate extends AdminTemplate implements
             } else {
                 throw new Exception(sprintf(
                     'No default edit dashboard defined in admin metadata for %s',
-                    get_class($this->obj())
+                    $this->obj()::class
                 ));
             }
         }
@@ -197,9 +198,7 @@ class EditTemplate extends AdminTemplate implements
             );
         }
 
-        $dashboardConfig = $adminMetadata['dashboards'][$dashboardIdent];
-
-        return $dashboardConfig;
+        return $adminMetadata['dashboards'][$dashboardIdent];
     }
 
     /**
@@ -228,11 +227,11 @@ class EditTemplate extends AdminTemplate implements
 
         $objMetadata = $obj->metadata();
 
-        $adminMetadata = isset($objMetadata['admin']) ? $objMetadata['admin'] : null;
+        $adminMetadata = $objMetadata['admin'] ?? null;
         if ($adminMetadata === null) {
             throw new Exception(sprintf(
                 'The object %s does not have an admin metadata.',
-                get_class($obj)
+                $obj::class
             ));
         }
 

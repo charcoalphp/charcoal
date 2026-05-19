@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Charcoal\Image\Effect;
 
 use InvalidArgumentException;
@@ -19,9 +21,8 @@ abstract class AbstractRotateEffect extends AbstractEffect
     /**
      * The background color, for non-90-multiple rotation
      * Defaults to transparent
-     * @var string $BackgroundColor
      */
-    private $backgroundColor = 'rgb(100%, 100%, 100%, 0)';
+    private string $backgroundColor = 'rgb(100%, 100%, 100%, 0)';
 
     /**
      * @param float $angle The rotation angle.

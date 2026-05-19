@@ -17,7 +17,7 @@ class FilesystemConfigTest extends AbstractTestCase
         $this->obj = new FilesystemConfig();
     }
 
-    public function testDefaultConnections()
+    public function testDefaultConnections(): void
     {
         $this->assertArrayHasKey('private', $this->obj->defaultConnections());
         $this->assertArrayHasKey('public', $this->obj->defaultConnections());
@@ -26,7 +26,7 @@ class FilesystemConfigTest extends AbstractTestCase
         $this->assertArrayHasKey('public', $this->obj->connections());
     }
 
-    public function testConnectionsAlwaysHaveDefaultConnections()
+    public function testConnectionsAlwaysHaveDefaultConnections(): void
     {
         $this->obj->setData([
             'connections' => [

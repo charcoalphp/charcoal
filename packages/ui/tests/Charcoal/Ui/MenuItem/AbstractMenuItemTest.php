@@ -19,9 +19,6 @@ class AbstractMenuItemTest extends AbstractTestCase
      */
     public $obj;
 
-    /**
-     * @return void
-     */
     protected function setUp(): void
     {
         $container = $this->getContainer();
@@ -39,30 +36,24 @@ class AbstractMenuItemTest extends AbstractTestCase
         ]);
     }
 
-    /**
-     * @return void
-     */
-    public function testHasChildren()
+    public function testHasChildren(): void
     {
         $obj = $this->obj;
         $this->assertFalse($obj->hasChildren());
 
-        $ret = $obj->setChildren([
+        $obj->setChildren([
             'test' => []
         ]);
 
         $this->assertTrue($obj->hasChildren());
     }
 
-    /**
-     * @return void
-     */
-    public function testNumChildren()
+    public function testNumChildren(): void
     {
         $obj = $this->obj;
         $this->assertEquals(0, $obj->numChildren());
 
-        $ret = $obj->setChildren([
+        $obj->setChildren([
             'test'   => [],
             'foobar' => []
         ]);

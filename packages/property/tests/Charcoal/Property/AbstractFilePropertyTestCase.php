@@ -14,6 +14,15 @@ use Charcoal\Tests\Property\ContainerIntegrationTrait;
 /**
  * Test common file property features
  */
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Property\FileProperty::class, 'setFilesize()')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Property\FileProperty::class, 'getFilesize()')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Property\FileProperty::class, 'setMimetype()')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Property\FileProperty::class, 'getMimetype()')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Property\FileProperty::class, 'setAcceptedMimetypes()')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Property\FileProperty::class, 'getAcceptedMimetypes()')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Property\FileProperty::class, 'getDefaultAcceptedMimetypes()')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Property\FileProperty::class, 'hasAcceptedMimetypes()')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Property\FileProperty::class, 'type()')]
 abstract class AbstractFilePropertyTestCase extends AbstractTestCase
 {
     use ContainerIntegrationTrait;
@@ -41,11 +50,8 @@ abstract class AbstractFilePropertyTestCase extends AbstractTestCase
     /**
      * @var array<string, string>
      */
-    private $fileMapOfFixtures;
+    private ?array $fileMapOfFixtures = null;
 
-    /**
-     * @return void
-     */
     protected function setUp(): void
     {
         $this->obj = $this->createProperty();
@@ -71,9 +77,8 @@ abstract class AbstractFilePropertyTestCase extends AbstractTestCase
      *
      * @param  array $expected The expected results.
      * @param  array $actual   The actual results.
-     * @return void
      */
-    public function assertValidatorHasResults($expected, $actual)
+    public function assertValidatorHasResults(array|\ArrayAccess $expected, $actual): void
     {
         foreach ($actual as $level => $results) {
             $this->assertArrayHasKey(
@@ -102,21 +107,17 @@ abstract class AbstractFilePropertyTestCase extends AbstractTestCase
 
     /**
      * Asserts that the property implements {@see FileProperty}.
-     *
-     * @coversNothing
-     * @return void
      */
-    public function testFilePropertyInterface()
+    #[\PHPUnit\Framework\Attributes\CoversNothing]
+    public function testFilePropertyInterface(): void
     {
         $this->assertInstanceOf(FileProperty::class, $this->obj);
     }
 
     /**
      * Asserts that the property adheres to file property defaults.
-     *
-     * @return void
      */
-    public function testPropertyDefaults()
+    public function testPropertyDefaults(): void
     {
         $obj = $this->obj;
 
@@ -132,13 +133,12 @@ abstract class AbstractFilePropertyTestCase extends AbstractTestCase
      * Asserts that the file property will generate
      * the expected extension from a given dataset.
      *
-     * @dataProvider provideDataForGenerateExtension
      *
      * @param  string $mime A MIME type.
      * @param  string $ext  The expected file extension.
-     * @return void
      */
-    public function testGenerateExtensionFromDataProvider($mime, $ext)
+    #[\PHPUnit\Framework\Attributes\DataProvider('provideDataForGenerateExtension')]
+    public function testGenerateExtensionFromDataProvider($mime, $ext): void
     {
         $this->obj['mimetype'] = $mime;
         $this->assertEquals($mime, $this->obj['mimetype']);
@@ -148,10 +148,8 @@ abstract class AbstractFilePropertyTestCase extends AbstractTestCase
     /**
      * Asserts that the file property will generate an extension
      * for all default accepted MIME types.
-     *
-     * @return void
      */
-    public function testGenerateExtensionFromDefaultAcceptedMimeTypes()
+    public function testGenerateExtensionFromDefaultAcceptedMimeTypes(): void
     {
         $mimes = $this->obj['defaultAcceptedMimetypes'];
         if (empty($mimes)) {
@@ -174,10 +172,8 @@ abstract class AbstractFilePropertyTestCase extends AbstractTestCase
 
     /**
      * Asserts that the uploadPath always ends with a trailing "/".
-     *
-     * @return void
      */
-    public function testUploadPath()
+    public function testUploadPath(): void
     {
         $obj = $this->obj;
 
@@ -194,12 +190,8 @@ abstract class AbstractFilePropertyTestCase extends AbstractTestCase
 
     /**
      * Asserts that the property can store a filesize.
-     *
-     * @covers \Charcoal\Property\FileProperty::setFilesize()
-     * @covers \Charcoal\Property\FileProperty::getFilesize()
-     * @return void
      */
-    public function testFilesize()
+    public function testFilesize(): void
     {
         $return = $this->obj->setFilesize(1024);
         $this->assertSame($this->obj, $return);
@@ -214,11 +206,8 @@ abstract class AbstractFilePropertyTestCase extends AbstractTestCase
 
     /**
      * Asserts that the property returns NULL if it can not resolve the filesize from its value.
-     *
-     * @covers \Charcoal\Property\FileProperty::getFilesize()
-     * @return void
      */
-    public function testFilesizeFromBadVal()
+    public function testFilesizeFromBadVal(): void
     {
         $obj = $this->obj;
 
@@ -230,12 +219,8 @@ abstract class AbstractFilePropertyTestCase extends AbstractTestCase
 
     /**
      * Asserts that the property can store a MIME type.
-     *
-     * @covers \Charcoal\Property\FileProperty::setMimetype()
-     * @covers \Charcoal\Property\FileProperty::getMimetype()
-     * @return void
      */
-    public function testMimetype()
+    public function testMimetype(): void
     {
         $return = $this->obj->setMimetype('foo');
         $this->assertSame($this->obj, $return);
@@ -253,11 +238,8 @@ abstract class AbstractFilePropertyTestCase extends AbstractTestCase
 
     /**
      * Asserts that the property returns NULL if it can not resolve the MIME type from its value.
-     *
-     * @covers \Charcoal\Property\FileProperty::getMimetype()
-     * @return void
      */
-    public function testMimetypeFromBadVal()
+    public function testMimetypeFromBadVal(): void
     {
         $obj = $this->obj;
 
@@ -269,11 +251,8 @@ abstract class AbstractFilePropertyTestCase extends AbstractTestCase
 
     /**
      * Asserts that the property returns x-empty the file is empty.
-     *
-     * @covers \Charcoal\Property\FileProperty::getMimetype()
-     * @return void
      */
-    public function testMimetypeFromEmptyFile()
+    public function testMimetypeFromEmptyFile(): void
     {
         $obj = $this->obj;
 
@@ -285,12 +264,8 @@ abstract class AbstractFilePropertyTestCase extends AbstractTestCase
 
     /**
      * Asserts that the property supports accepted MIME types.
-     *
-     * @covers \Charcoal\Property\FileProperty::setAcceptedMimetypes()
-     * @covers \Charcoal\Property\FileProperty::getAcceptedMimetypes()
-     * @return void
      */
-    public function testAcceptedMimeTypes()
+    public function testAcceptedMimeTypes(): void
     {
         $obj = $this->obj;
 
@@ -322,7 +297,6 @@ abstract class AbstractFilePropertyTestCase extends AbstractTestCase
     /**
      * Asserts that the property adheres to file property defaults.
      *
-     * @covers \Charcoal\Property\FileProperty::getDefaultAcceptedMimetypes()
      * @return void
      */
     abstract public function testDefaulAcceptedMimeTypes();
@@ -331,7 +305,6 @@ abstract class AbstractFilePropertyTestCase extends AbstractTestCase
      * Asserts that the property properly checks if
      * any acceptable MIME types are available.
      *
-     * @covers \Charcoal\Property\FileProperty::hasAcceptedMimetypes()
      * @return void
      */
     abstract public function testHasAcceptedMimeTypes();
@@ -353,7 +326,6 @@ abstract class AbstractFilePropertyTestCase extends AbstractTestCase
     /**
      * Asserts that the `type()` method is "file".
      *
-     * @covers \Charcoal\Property\FileProperty::type()
      * @return void
      */
     abstract public function testPropertyType();
@@ -371,5 +343,5 @@ abstract class AbstractFilePropertyTestCase extends AbstractTestCase
      * @used-by self::testGenerateExtension()
      * @return  array Format: `[ "mime-type", "extension" ]`
      */
-    abstract public function provideDataForGenerateExtension();
+    abstract public static function provideDataForGenerateExtension();
 }

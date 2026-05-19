@@ -29,15 +29,14 @@ trait HasLanguageSwitcherTrait
      * Retrieve the available languages, formatted for the sidebar language-switcher.
      *
      * @see    FormGroupWidget::languages()
-     * @return array
      */
-    public function languages()
+    public function languages(): array
     {
         $currentLocale = $this->translator()->getLocale();
         $locales = $this->translator()->locales();
         $languages = [];
 
-        uasort($locales, [ 'Charcoal\Admin\Support\Sorter', 'sortByPriority' ]);
+        uasort($locales, \Charcoal\Admin\Support\Sorter::sortByPriority(...));
 
         foreach ($locales as $locale => $localeStruct) {
             /**
@@ -48,11 +47,7 @@ trait HasLanguageSwitcherTrait
                 $label = $this->translator()->translation($localeStruct['name']);
             } else {
                 $trans = 'locale.' . $locale;
-                if ($trans === $this->translator()->trans($trans)) {
-                    $label = strtoupper($locale);
-                } else {
-                    $label = $this->translator()->translation($trans);
-                }
+                $label = $trans === $this->translator()->trans($trans) ? strtoupper((string) $locale) : $this->translator()->translation($trans);
             }
 
             $isCurrent = ($locale === $currentLocale);

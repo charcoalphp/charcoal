@@ -23,8 +23,6 @@ class AbstractViewTest extends AbstractTestCase
 
     /**
      * Set up the test.
-     *
-     * @return void
      */
     public function setUp(): void
     {
@@ -45,28 +43,19 @@ class AbstractViewTest extends AbstractTestCase
         ]);
     }
 
-    /**
-     * @return void
-     */
-    public function testRenderTemplate()
+    public function testRenderTemplate(): void
     {
         $this->assertEquals('Hello', $this->obj->renderTemplate('Hello'));
         $this->assertEquals('Hello Foo!', $this->obj->renderTemplate('Hello {{bar}}', [ 'bar' => 'Foo!' ]));
         $this->assertEquals('Hello ', $this->obj->renderTemplate('Hello {{bar}}', [ 'baz' => 'Foo!' ]));
     }
 
-    /**
-     * @return void
-     */
-    public function testRender()
+    public function testRender(): void
     {
         $this->assertEquals('Hello Charcoal', trim($this->obj->render('foo', [ 'foo' => 'Charcoal' ])));
     }
 
-    /**
-     * @return void
-     */
-    public function testRenderTemplateHelper()
+    public function testRenderTemplateHelper(): void
     {
 
         $expected = trim('
@@ -83,26 +72,17 @@ class AbstractViewTest extends AbstractTestCase
         $this->assertEquals($expected, trim($this->obj->renderTemplate('helpers', [ 'foo' => 'Charcoal' ])));
     }
 
-    /**
-     * @return void
-     */
-    public function testLoadTemplateEmptyStringReturnsEmpty()
+    public function testLoadTemplateEmptyStringReturnsEmpty(): void
     {
         $this->assertEquals('', $this->obj->loadTemplate(''));
     }
 
-    /**
-     * @return void
-     */
-    public function testLoadTemplateFile()
+    public function testLoadTemplateFile(): void
     {
         $this->assertEquals("Hello {{foo}}\n", $this->obj->loadTemplate('foo'));
     }
 
-    /**
-     * @return void
-     */
-    public function testSetDynamicTemplate()
+    public function testSetDynamicTemplate(): void
     {
         $this->obj->setDynamicTemplate('dynamic', 'foo');
         $ret = $this->obj->renderTemplate('{{> $dynamic }}', [ 'foo' => 'Dynamic' ]);

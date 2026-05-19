@@ -21,8 +21,6 @@ abstract class AbstractFileLoaderTestCase extends AbstractTestCase
 
     /**
      * Create a FileLoader instance.
-     *
-     * @return void
      */
     protected function setUp(): void
     {

@@ -80,10 +80,8 @@ trait ExpressionFieldTrait
 
     /**
      * Determine if a model property or source field key is assigned.
-     *
-     * @return boolean
      */
-    public function hasProperty()
+    public function hasProperty(): bool
     {
         return !empty($this->property);
     }
@@ -130,10 +128,8 @@ trait ExpressionFieldTrait
 
     /**
      * Determine if a table is assigned.
-     *
-     * @return boolean
      */
-    public function hasTable()
+    public function hasTable(): bool
     {
         return !empty($this->table);
     }
@@ -212,7 +208,7 @@ trait ExpressionFieldTrait
      *
      * @return string[]
      */
-    public function fieldIdentifiers()
+    public function fieldIdentifiers(): array
     {
         $identifiers = [];
         $tableName   = $this->table();
@@ -243,7 +239,7 @@ trait ExpressionFieldTrait
      * @param  string $value The string to snakeize.
      * @return string The snake_case string.
      */
-    protected function snakeize($value)
+    protected function snakeize($value): string
     {
         $key = $value;
 
@@ -251,7 +247,7 @@ trait ExpressionFieldTrait
             return static::$snakeCache[$key];
         }
 
-        $value = strtolower(preg_replace('/(?<!^)[A-Z]/', '_$0', $value));
+        $value = strtolower((string) preg_replace('/(?<!^)[A-Z]/', '_$0', $value));
 
         static::$snakeCache[$key] = $value;
 

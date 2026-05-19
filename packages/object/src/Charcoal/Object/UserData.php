@@ -27,10 +27,8 @@ class UserData extends AbstractModel implements
 
     /**
      * Client IP address of the end-user.
-     *
-     * @var integer|null
      */
-    private $ip;
+    private ?int $ip = null;
 
     /**
      * Language of the end-user or source URI.
@@ -48,16 +46,15 @@ class UserData extends AbstractModel implements
 
     /**
      * Creation timestamp of submission.
-     *
-     * @var DateTimeInterface|null
      */
-    private $ts;
+    private ?\DateTimeInterface $ts = null;
 
     /**
      * Dependencies
      * @param Container $container DI Container.
      * @return void
      */
+    #[\Override]
     protected function setDependencies(Container $container)
     {
         parent::setDependencies($container);
@@ -69,9 +66,8 @@ class UserData extends AbstractModel implements
      * Set the client IP address.
      *
      * @param  integer|null $ip The remote IP at object creation.
-     * @return self
      */
-    public function setIp($ip)
+    public function setIp($ip): static
     {
         if ($ip === null) {
             $this->ip = null;
@@ -93,10 +89,8 @@ class UserData extends AbstractModel implements
 
     /**
      * Retrieve the client IP address.
-     *
-     * @return integer|null
      */
-    public function getIp()
+    public function getIp(): ?int
     {
         return $this->ip;
     }
@@ -106,16 +100,13 @@ class UserData extends AbstractModel implements
      *
      * @param  string $lang The language code.
      * @throws InvalidArgumentException If the argument is not a string.
-     * @return self
      */
-    public function setLang($lang)
+    public function setLang($lang): static
     {
-        if ($lang !== null) {
-            if (!is_string($lang)) {
-                throw new InvalidArgumentException(
-                    'Language must be a string'
-                );
-            }
+        if ($lang !== null && !is_string($lang)) {
+            throw new InvalidArgumentException(
+                'Language must be a string'
+            );
         }
 
         $this->lang = $lang;
@@ -138,16 +129,13 @@ class UserData extends AbstractModel implements
      *
      * @param  string $origin The source URL or identifier of the submission.
      * @throws InvalidArgumentException If the argument is not a string.
-     * @return self
      */
-    public function setOrigin($origin)
+    public function setOrigin($origin): static
     {
-        if ($origin !== null) {
-            if (!is_string($origin)) {
-                throw new InvalidArgumentException(
-                    'Origin must be a string.'
-                );
-            }
+        if ($origin !== null && !is_string($origin)) {
+            throw new InvalidArgumentException(
+                'Origin must be a string.'
+            );
         }
 
         $this->origin = $origin;
@@ -173,9 +161,8 @@ class UserData extends AbstractModel implements
 
             $uri .= '://' . $host;
         }
-        $uri .= getenv('REQUEST_URI');
 
-        return $uri;
+        return $uri . getenv('REQUEST_URI');
     }
 
     /**
@@ -195,9 +182,8 @@ class UserData extends AbstractModel implements
      *     NULL is accepted and instances of DateTimeInterface are recommended;
      *     any other value will be converted (if possible) into one.
      * @throws InvalidArgumentException If the timestamp is invalid.
-     * @return self
      */
-    public function setTs($timestamp)
+    public function setTs($timestamp): static
     {
         if ($timestamp === null) {
             $this->ts = null;
@@ -228,10 +214,8 @@ class UserData extends AbstractModel implements
 
     /**
      * Retrieve the creation timestamp.
-     *
-     * @return DateTimeInterface|null
      */
-    public function getTs()
+    public function getTs(): ?\DateTimeInterface
     {
         return $this->ts;
     }
@@ -242,6 +226,7 @@ class UserData extends AbstractModel implements
      * @see    Charcoal\Source\StorableTrait::preSave() For the "create" Event.
      * @return boolean
      */
+    #[\Override]
     protected function preSave()
     {
         $result = parent::preSave();
@@ -252,7 +237,7 @@ class UserData extends AbstractModel implements
             $this->setIp(getenv('REMOTE_ADDR'));
         }
 
-        if (!isset($this->origin)) {
+        if ($this->origin === null) {
             $this->setOrigin($this->resolveOrigin());
         }
 

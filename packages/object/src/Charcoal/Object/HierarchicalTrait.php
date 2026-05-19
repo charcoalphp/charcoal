@@ -17,35 +17,35 @@ trait HierarchicalTrait
      *
      * @var string|integer|null
      */
-    protected $master = null;
+    protected $master;
 
     /**
      * Store a copy of the object's ancestry.
      *
      * @var HierarchicalInterface[]|null
      */
-    private $hierarchy = null;
+    private $hierarchy;
 
     /**
      * Store a copy of the object's descendants.
      *
      * @var HierarchicalInterface[]|null
      */
-    private $children = null;
+    private $children;
 
     /**
      * Store a copy of the object's siblings.
      *
      * @var HierarchicalInterface[]|null
      */
-    private $siblings = null;
+    private $siblings;
 
     /**
      * The object's parent object, if any, in the hierarchy.
      *
      * @var HierarchicalInterface|null
      */
-    private $masterObject = null;
+    private $masterObject;
 
     /**
      * A store of cached objects.
@@ -112,13 +112,11 @@ trait HierarchicalTrait
         if (!$this->masterObject && $this->hasMaster()) {
             $master = $this->objFromIdent($this->getMaster());
 
-            if ($master instanceof ModelInterface) {
-                if ($master->id() === $this->id()) {
-                    throw new UnexpectedValueException(sprintf(
-                        'Can not be ones own parent: %s',
-                        $master->id()
-                    ));
-                }
+            if ($master instanceof ModelInterface && $master->id() === $this->id()) {
+                throw new UnexpectedValueException(sprintf(
+                    'Can not be ones own parent: %s',
+                    $master->id()
+                ));
             }
 
             $this->masterObject = $master;
@@ -129,20 +127,16 @@ trait HierarchicalTrait
 
     /**
      * Determine if this object's immediate parent exists.
-     *
-     * @return boolean
      */
-    public function hasMasterObject()
+    public function hasMasterObject(): bool
     {
         return (bool)$this->getMasterObject();
     }
 
     /**
      * Determine if this object has a direct parent.
-     *
-     * @return boolean
      */
-    public function hasMaster()
+    public function hasMaster(): bool
     {
         return (bool)$this->getMaster();
     }
@@ -151,10 +145,8 @@ trait HierarchicalTrait
      * Determine if this object is the head (top-level) of its hierarchy.
      *
      * Top-level objects do not have a parent (master).
-     *
-     * @return boolean
      */
-    public function isTopLevel()
+    public function isTopLevel(): bool
     {
         return !$this->getMaster();
     }
@@ -163,10 +155,8 @@ trait HierarchicalTrait
      * Determine if this object is the tail (last-level) of its hierarchy.
      *
      * Last-level objects do not have a children.
-     *
-     * @return boolean
      */
-    public function isLastLevel()
+    public function isLastLevel(): bool
     {
         return !$this->hasChildren();
     }
@@ -177,15 +167,12 @@ trait HierarchicalTrait
      * Starts at "1" (top-level).
      *
      * The level is calculated by loading all ancestors with {@see self::hierarchy()}.
-     *
-     * @return integer
      */
-    public function hierarchyLevel()
+    public function hierarchyLevel(): int
     {
         $hierarchy = $this->hierarchy();
-        $level     = (count($hierarchy) + 1);
 
-        return $level;
+        return count($hierarchy) + 1;
     }
 
     /**
@@ -205,10 +192,8 @@ trait HierarchicalTrait
 
     /**
      * Determine if this object has any ancestors.
-     *
-     * @return boolean
      */
-    public function hasParents()
+    public function hasParents(): bool
     {
         return count($this->hierarchy()) > 0;
     }
@@ -232,7 +217,7 @@ trait HierarchicalTrait
      *
      * @return HierarchicalInterface[]
      */
-    public function loadHierarchy()
+    public function loadHierarchy(): array
     {
         $hierarchy = [];
         $master    = $this->getMasterObject();
@@ -249,7 +234,7 @@ trait HierarchicalTrait
      *
      * @return HierarchicalInterface[]
      */
-    public function invertedHierarchy()
+    public function invertedHierarchy(): array
     {
         $hierarchy = $this->hierarchy();
 
@@ -260,9 +245,8 @@ trait HierarchicalTrait
      * Determine if the object is the parent of the given object.
      *
      * @param mixed $child The child (or ID) to match against.
-     * @return boolean
      */
-    public function isMasterOf($child)
+    public function isMasterOf($child): bool
     {
         $child = $this->objFromIdent($child);
 
@@ -273,21 +257,19 @@ trait HierarchicalTrait
      * Determine if the object is a parent/ancestor of the given object.
      *
      * @param mixed $child The child (or ID) to match against.
-     * @return boolean
      * @todo Implementation needed.
      */
-    public function recursiveIsMasterOf($child)
+    public function recursiveIsMasterOf($child): bool
     {
-        $child = $this->objFromIdent($child);
+        $this->objFromIdent($child);
 
         return false;
     }
 
     /**
      * Get wether the object has any children at all
-     * @return boolean
      */
-    public function hasChildren()
+    public function hasChildren(): bool
     {
         $numChildren = $this->numChildren();
 
@@ -296,9 +278,8 @@ trait HierarchicalTrait
 
     /**
      * Get the number of children directly under this object.
-     * @return integer
      */
-    public function numChildren()
+    public function numChildren(): int
     {
         $children = $this->children();
 
@@ -308,10 +289,9 @@ trait HierarchicalTrait
     /**
      * Get the total number of children in the entire hierarchy.
      * This method counts all children and sub-children, unlike `numChildren()` which only count 1 level.
-     * @return integer
      * @todo Implementation needed.
      */
-    public function recursiveNumChildren()
+    public function recursiveNumChildren(): int
     {
         return 0;
     }
@@ -339,13 +319,11 @@ trait HierarchicalTrait
     {
         $child = $this->objFromIdent($child);
 
-        if ($child instanceof ModelInterface) {
-            if ($child->id() === $this->id()) {
-                throw new UnexpectedValueException(sprintf(
-                    'Can not be ones own child: %s',
-                    $child->id()
-                ));
-            }
+        if ($child instanceof ModelInterface && $child->id() === $this->id()) {
+            throw new UnexpectedValueException(sprintf(
+                'Can not be ones own child: %s',
+                $child->id()
+            ));
         }
 
         $this->children[] = $child;
@@ -375,9 +353,8 @@ trait HierarchicalTrait
 
     /**
      * @param mixed $master The master object (or ident) to check against.
-     * @return boolean
      */
-    public function isChildOf($master)
+    public function isChildOf($master): bool
     {
         $master = $this->objFromIdent($master);
 
@@ -401,20 +378,14 @@ trait HierarchicalTrait
         return false;
     }
 
-    /**
-     * @return boolean
-     */
-    public function hasSiblings()
+    public function hasSiblings(): bool
     {
         $numSiblings = $this->numSiblings();
 
         return ($numSiblings > 1);
     }
 
-    /**
-     * @return integer
-     */
-    public function numSiblings()
+    public function numSiblings(): int
     {
         $siblings = $this->siblings();
 
@@ -453,9 +424,8 @@ trait HierarchicalTrait
 
     /**
      * @param mixed $sibling The sibling to check.
-     * @return boolean
      */
-    public function isSiblingOf($sibling)
+    public function isSiblingOf($sibling): bool
     {
         $sibling = $this->objFromIdent($sibling);
 
@@ -473,9 +443,9 @@ trait HierarchicalTrait
             return null;
         }
 
-        $class = get_called_class();
+        $class = static::class;
 
-        if (is_object($ident) && ($ident instanceof $class)) {
+        if ($ident instanceof $class) {
             return $ident;
         }
 
@@ -530,11 +500,8 @@ trait HierarchicalTrait
     private function loadObjectFromCache($id)
     {
         $objType = $this->objType();
-        if (isset(static::$objectCache[$objType][$id])) {
-            return static::$objectCache[$objType][$id];
-        }
 
-        return null;
+        return static::$objectCache[$objType][$id] ?? null;
     }
 
     /**

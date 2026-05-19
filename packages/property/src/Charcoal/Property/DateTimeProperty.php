@@ -19,25 +19,13 @@ class DateTimeProperty extends AbstractProperty
     public const DEFAULT_MAX = null;
     public const DEFAULT_FORMAT = 'Y-m-d H:i:s';
 
-    /**
-     * @var DateTimeInterface|null
-     */
-    private $min = self::DEFAULT_MIN;
+    private ?\DateTimeInterface $min = self::DEFAULT_MIN;
 
-    /**
-     * @var DateTimeInterface|null
-     */
-    private $max = self::DEFAULT_MAX;
+    private ?\DateTimeInterface $max = self::DEFAULT_MAX;
 
-    /**
-     * @var string
-     */
-    private $format = self::DEFAULT_FORMAT;
+    private string $format = self::DEFAULT_FORMAT;
 
-    /**
-     * @return string
-     */
-    public function type()
+    public function type(): string
     {
         return 'date-time';
     }
@@ -49,12 +37,12 @@ class DateTimeProperty extends AbstractProperty
      *
      * @param  boolean $multiple Multiple flag.
      * @throws InvalidArgumentException If the multiple argument is true (must be false).
-     * @return self
      */
-    public function setMultiple($multiple)
+    #[\Override]
+    public function setMultiple($multiple): static
     {
-        $multiple = !!$multiple;
-        if ($multiple === true) {
+        $multiple = (bool) $multiple;
+        if ($multiple) {
             throw new InvalidArgumentException(
                 'Multiple can not be TRUE for date/time property.'
             );
@@ -66,10 +54,9 @@ class DateTimeProperty extends AbstractProperty
      * Multiple is always false for DateTime property.
      *
      * @see AbstractProperty::getMultiple()
-     *
-     * @return boolean
      */
-    public function getMultiple()
+    #[\Override]
+    public function getMultiple(): bool
     {
         return false;
     }
@@ -81,9 +68,9 @@ class DateTimeProperty extends AbstractProperty
      * @see AbstractProperty::parseVal()
      *
      * @param  string|DateTimeInterface $val The value to set.
-     * @return DateTimeInterface|null
      */
-    public function parseOne($val)
+    #[\Override]
+    public function parseOne($val): ?\DateTimeInterface
     {
         return $this->dateTimeVal($val);
     }
@@ -96,9 +83,9 @@ class DateTimeProperty extends AbstractProperty
      * @param  mixed $val     The value to to convert for input.
      * @param  array $options Unused, optional options.
      * @throws Exception If the date/time is invalid.
-     * @return string|null
      */
-    public function inputVal($val, array $options = [])
+    #[\Override]
+    public function inputVal($val, array $options = []): string
     {
         unset($options);
         $val = $this->dateTimeVal($val);
@@ -117,9 +104,9 @@ class DateTimeProperty extends AbstractProperty
      *
      * @param  string|DateTime $val Optional. Value to convert to storage format.
      * @throws Exception If the date/time is invalid.
-     * @return string|null
      */
-    public function storageVal($val)
+    #[\Override]
+    public function storageVal($val): ?string
     {
         $val = $this->dateTimeVal($val);
 
@@ -143,20 +130,16 @@ class DateTimeProperty extends AbstractProperty
      *
      * @param  mixed $val     The value to to convert for display.
      * @param  array $options Optional display options.
-     * @return string
      */
-    public function displayVal($val, array $options = [])
+    #[\Override]
+    public function displayVal($val, array $options = []): string
     {
         $val = $this->dateTimeVal($val);
-        if ($val === null) {
+        if (!$val instanceof \DateTimeInterface) {
             return '';
         }
 
-        if (isset($options['format'])) {
-            $format = $options['format'];
-        } else {
-            $format = $this->getFormat();
-        }
+        $format = $options['format'] ?? $this->getFormat();
 
         return $val->format($format);
     }
@@ -164,9 +147,8 @@ class DateTimeProperty extends AbstractProperty
     /**
      * @param  string|DateTime|null $min The minimum allowed value.
      * @throws InvalidArgumentException If the date/time is invalid.
-     * @return self
      */
-    public function setMin($min)
+    public function setMin($min): static
     {
         try {
             $this->min = $this->dateTimeVal($min);
@@ -176,10 +158,7 @@ class DateTimeProperty extends AbstractProperty
         }
     }
 
-    /**
-     * @return DateTimeInterface|null
-     */
-    public function getMin()
+    public function getMin(): ?\DateTimeInterface
     {
         return $this->min;
     }
@@ -187,9 +166,8 @@ class DateTimeProperty extends AbstractProperty
     /**
      * @param  string|DateTime|null $max The maximum allowed value.
      * @throws InvalidArgumentException If the date/time is invalid.
-     * @return self
      */
-    public function setMax($max)
+    public function setMax($max): static
     {
         try {
             $this->max = $this->dateTimeVal($max);
@@ -199,10 +177,7 @@ class DateTimeProperty extends AbstractProperty
         }
     }
 
-    /**
-     * @return DateTimeInterface|null
-     */
-    public function getMax()
+    public function getMax(): ?\DateTimeInterface
     {
         return $this->max;
     }
@@ -212,7 +187,7 @@ class DateTimeProperty extends AbstractProperty
      * @throws InvalidArgumentException If the format is not a string.
      * @return DateTimeProperty Chainable
      */
-    public function setFormat($format)
+    public function setFormat($format): static
     {
         if ($format === null) {
             $format = '';
@@ -226,18 +201,13 @@ class DateTimeProperty extends AbstractProperty
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getFormat()
+    public function getFormat(): string
     {
         return $this->format;
     }
 
-    /**
-     * @return array
-     */
-    public function validationMethods()
+    #[\Override]
+    public function validationMethods(): array
     {
         $parentMethods = parent::validationMethods();
 
@@ -253,7 +223,7 @@ class DateTimeProperty extends AbstractProperty
     public function validateMin()
     {
         $min = $this->getMin();
-        if (!$min) {
+        if (!$min instanceof \DateTimeInterface) {
             return true;
         }
         $valid = ($this->val() >= $min);
@@ -269,7 +239,7 @@ class DateTimeProperty extends AbstractProperty
     public function validateMax()
     {
         $max = $this->getMax();
-        if (!$max) {
+        if (!$max instanceof \DateTimeInterface) {
             return true;
         }
         $valid = ($this->val() <= $max);
@@ -281,18 +251,16 @@ class DateTimeProperty extends AbstractProperty
 
     /**
      * @see StorablePropertyTrait::sqlType()
-     * @return string
      */
-    public function sqlType()
+    public function sqlType(): string
     {
         return 'DATETIME';
     }
 
     /**
      * @see StorablePropertyTrait::sqlPdoType()
-     * @return integer
      */
-    public function sqlPdoType()
+    public function sqlPdoType(): int
     {
         return PDO::PARAM_STR;
     }
@@ -300,14 +268,13 @@ class DateTimeProperty extends AbstractProperty
     /**
      * @param  mixed $val Value to convert to DateTime.
      * @throws InvalidArgumentException If the value is not a valid datetime.
-     * @return DateTimeInterface|null
      */
-    private function dateTimeVal($val)
+    private function dateTimeVal($val): ?\DateTimeInterface
     {
         if (
             $val === null ||
             (is_string($val) && ! strlen(trim($val))) ||
-            (is_array($val) && ! count(array_filter($val, 'strlen')))
+            (is_array($val) && ! count(array_filter($val, strlen(...))))
         ) {
             return null;
         }
@@ -332,9 +299,8 @@ class DateTimeProperty extends AbstractProperty
 
     /**
      * @param  integer|string $timestamp Timestamp.
-     * @return boolean
      */
-    private function isValidTimeStamp($timestamp)
+    private function isValidTimeStamp(int $timestamp): bool
     {
         return (is_int($timestamp))
             && ($timestamp <= PHP_INT_MAX)

@@ -46,38 +46,28 @@ class Email extends AbstractEntity implements
 
     /**
      * The campaign ID.
-     *
-     * @var string
      */
-    private $campaign;
+    private ?string $campaign = null;
 
     /**
      * The recipient email address(es).
-     *
-     * @var array
      */
-    private $to = [];
+    private array $to = [];
 
     /**
      * The CC recipient email address(es).
-     *
-     * @var array
      */
-    private $cc = [];
+    private array $cc = [];
 
     /**
      * The BCC recipient email address(es).
-     *
-     * @var array
      */
-    private $bcc = [];
+    private array $bcc = [];
 
     /**
      * The sender's email address.
-     *
-     * @var string
      */
-    private $from;
+    private ?string $from = null;
 
     /**
      * The email address to reply to the message.
@@ -88,24 +78,18 @@ class Email extends AbstractEntity implements
 
     /**
      * The email subject.
-     *
-     * @var string
      */
-    private $subject;
+    private ?string $subject = null;
 
     /**
      * The HTML message body.
-     *
-     * @var string
      */
-    private $msgHtml;
+    private ?string $msgHtml = null;
 
     /**
      * The plain-text message body.
-     *
-     * @var string
      */
-    private $msgTxt;
+    private ?string $msgTxt = null;
 
     /**
      * @var array
@@ -133,35 +117,18 @@ class Email extends AbstractEntity implements
 
     /**
      * The data to pass onto the view controller.
-     *
-     * @var array
      */
-    private $templateData = [];
+    private array $templateData = [];
 
-    /**
-     * @var PHPMailer
-     */
-    private $phpMailer;
+    private \PHPMailer\PHPMailer\PHPMailer $phpMailer;
 
-    /**
-     * @var FactoryInterface
-     */
-    private $templateFactory;
+    private \Charcoal\Factory\FactoryInterface $templateFactory;
 
-    /**
-     * @var FactoryInterface
-     */
-    private $queueItemFactory;
+    private \Charcoal\Factory\FactoryInterface $queueItemFactory;
 
-    /**
-     * @var FactoryInterface
-     */
-    private $logFactory;
+    private \Charcoal\Factory\FactoryInterface $logFactory;
 
-    /**
-     * @var Tracker
-     */
-    private $tracker;
+    private \Charcoal\Email\Services\Tracker $tracker;
 
     /**
      * Construct a new Email object with the given dependencies.
@@ -191,9 +158,8 @@ class Email extends AbstractEntity implements
      * Set the campaign ID.
      *
      * @param  string $campaign The campaign identifier.
-     * @return self
      */
-    public function setCampaign(string $campaign)
+    public function setCampaign(string $campaign): static
     {
         $this->campaign = $campaign;
         return $this;
@@ -203,10 +169,8 @@ class Email extends AbstractEntity implements
      * Get the campaign identifier.
      *
      * If it has not been explicitely set, it will be auto-generated (with uniqid).
-     *
-     * @return string
      */
-    public function campaign()
+    public function campaign(): string
     {
         if ($this->campaign === null) {
             $this->campaign = $this->generateCampaign();
@@ -219,9 +183,8 @@ class Email extends AbstractEntity implements
      *
      * @param string|array $email The recipient email address(es).
      * @throws InvalidArgumentException If the email address is invalid.
-     * @return self
      */
-    public function setTo($email)
+    public function setTo($email): static
     {
         if (is_string($email)) {
             $email = [ $email ];
@@ -253,9 +216,8 @@ class Email extends AbstractEntity implements
      *
      * @param  mixed $email The recipient email address to add.
      * @throws InvalidArgumentException If the email address is invalid.
-     * @return self
      */
-    public function addTo($email)
+    public function addTo($email): static
     {
         $this->to[] = $this->parseEmail($email);
         return $this;
@@ -266,7 +228,7 @@ class Email extends AbstractEntity implements
      *
      * @return string[]
      */
-    public function to()
+    public function to(): array
     {
         return $this->to;
     }
@@ -276,9 +238,8 @@ class Email extends AbstractEntity implements
      *
      * @param string|array $email The CC recipient email address(es).
      * @throws InvalidArgumentException If the email address is invalid.
-     * @return self
      */
-    public function setCc($email)
+    public function setCc($email): static
     {
         if (is_string($email)) {
             $email = [ $email ];
@@ -310,9 +271,8 @@ class Email extends AbstractEntity implements
      *
      * @param mixed $email The CC recipient email address to add.
      * @throws InvalidArgumentException If the email address is invalid.
-     * @return self
      */
-    public function addCc($email)
+    public function addCc($email): static
     {
         $this->cc[] = $this->parseEmail($email);
         return $this;
@@ -323,7 +283,7 @@ class Email extends AbstractEntity implements
      *
      * @return string[]
      */
-    public function cc()
+    public function cc(): array
     {
         return $this->cc;
     }
@@ -333,9 +293,8 @@ class Email extends AbstractEntity implements
      *
      * @param string|array $email The BCC recipient email address(es).
      * @throws InvalidArgumentException If the email address is invalid.
-     * @return self
      */
-    public function setBcc($email)
+    public function setBcc($email): static
     {
         if (is_string($email)) {
             // Means we have a straight email
@@ -368,9 +327,8 @@ class Email extends AbstractEntity implements
      *
      * @param mixed $email The BCC recipient email address to add.
      * @throws InvalidArgumentException If the email address is invalid.
-     * @return self
      */
-    public function addBcc($email)
+    public function addBcc($email): static
     {
         $this->bcc[] = $this->parseEmail($email);
         return $this;
@@ -381,7 +339,7 @@ class Email extends AbstractEntity implements
      *
      * @return string[]
      */
-    public function bcc()
+    public function bcc(): array
     {
         return $this->bcc;
     }
@@ -391,10 +349,9 @@ class Email extends AbstractEntity implements
      *
      * @param  string|array $email An email address.
      * @throws InvalidArgumentException If the email is not a string or an array.
-     * @return self
      * @todo   Implement optional "Sender" field.
      */
-    public function setFrom($email)
+    public function setFrom($email): static
     {
         $this->from = $this->parseEmail($email);
         return $this;
@@ -405,7 +362,7 @@ class Email extends AbstractEntity implements
      *
      * @return string
      */
-    public function from()
+    public function from(): ?string
     {
         if ($this->from === null) {
             $this->setFrom($this->config()->defaultFrom());
@@ -418,9 +375,8 @@ class Email extends AbstractEntity implements
      *
      * @param  mixed $email The sender's "Reply-To" email address.
      * @throws InvalidArgumentException If the email is not a string or an array.
-     * @return self
      */
-    public function setReplyTo($email)
+    public function setReplyTo($email): static
     {
         $this->replyTo = $this->parseEmail($email);
         return $this;
@@ -443,9 +399,8 @@ class Email extends AbstractEntity implements
      * Set the email subject.
      *
      * @param  string $subject The email subject.
-     * @return self
      */
-    public function setSubject(string $subject)
+    public function setSubject(string $subject): static
     {
         $this->subject = $subject;
         return $this;
@@ -465,9 +420,8 @@ class Email extends AbstractEntity implements
      * Set the email's HTML message body.
      *
      * @param  string $body The HTML message body.
-     * @return self
      */
-    public function setMsgHtml(string $body)
+    public function setMsgHtml(string $body): static
     {
         $this->msgHtml = $body;
         return $this;
@@ -478,8 +432,6 @@ class Email extends AbstractEntity implements
      *
      * If the message is not explitely set, it will be
      * auto-generated from a template view.
-     *
-     * @return string
      */
     public function msgHtml(): string
     {
@@ -493,9 +445,8 @@ class Email extends AbstractEntity implements
      * Set the email's plain-text message body.
      *
      * @param string $body The message's text body.
-     * @return self
      */
-    public function setMsgTxt(string $body)
+    public function setMsgTxt(string $body): static
     {
         $this->msgTxt = $body;
         return $this;
@@ -506,8 +457,6 @@ class Email extends AbstractEntity implements
      *
      * If the plain-text message is not explitely set,
      * it will be auto-generated from the HTML message.
-     *
-     * @return string
      */
     public function msgTxt(): string
     {
@@ -521,9 +470,8 @@ class Email extends AbstractEntity implements
      * Set the email's attachments.
      *
      * @param  array $attachments The file attachments.
-     * @return self
      */
-    public function setAttachments(array $attachments)
+    public function setAttachments(array $attachments): static
     {
         foreach ($attachments as $att) {
             $this->addAttachment($att);
@@ -535,9 +483,8 @@ class Email extends AbstractEntity implements
      * Add an attachment to the email.
      *
      * @param  mixed $attachment A single file attachment.
-     * @return self
      */
-    public function addAttachment($attachment)
+    public function addAttachment($attachment): static
     {
         $this->attachments[] = $attachment;
         return $this;
@@ -557,18 +504,15 @@ class Email extends AbstractEntity implements
      * Enable or disable logging for this particular email.
      *
      * @param  boolean $log The log-enabled flag.
-     * @return self
      */
-    public function setLogEnabled($log)
+    public function setLogEnabled($log): static
     {
-        $this->logEnabled = !!$log;
+        $this->logEnabled = (bool) $log;
         return $this;
     }
 
     /**
      * Determine if logging is enabled for this particular email.
-     *
-     * @return boolean
      */
     public function logEnabled(): bool
     {
@@ -582,18 +526,15 @@ class Email extends AbstractEntity implements
      * Enable or disable email open tracking for this particular email.
      *
      * @param boolean $track The track flag.
-     * @return self
      */
-    public function setTrackOpenEnabled($track)
+    public function setTrackOpenEnabled($track): static
     {
-        $this->trackOpenEnabled = !!$track;
+        $this->trackOpenEnabled = (bool) $track;
         return $this;
     }
 
     /**
      * Determine if email open tracking is enabled for this particular email.
-     *
-     * @return boolean
      */
     public function trackOpenEnabled(): bool
     {
@@ -607,18 +548,15 @@ class Email extends AbstractEntity implements
      * Enable or disable email links tracking for this particular email.
      *
      * @param boolean $track The track flag.
-     * @return self
      */
-    public function setTrackLinksEnabled($track)
+    public function setTrackLinksEnabled($track): static
     {
-        $this->trackLinksEnabled = !!$track;
+        $this->trackLinksEnabled = (bool) $track;
         return $this;
     }
 
     /**
      * Determine if email links tracking is enabled for this particular email.
-     *
-     * @return boolean
      */
     public function trackLinksEnabled(): bool
     {
@@ -694,10 +632,10 @@ class Email extends AbstractEntity implements
 
             $logId = uniqid();
 
-            if ($this->trackOpenEnabled() === true) {
+            if ($this->trackOpenEnabled()) {
                 $this->tracker->addOpenTrackingImage($this, $logId);
             }
-            if ($this->trackLinksEnabled() === true) {
+            if ($this->trackLinksEnabled()) {
                 $this->tracker->replaceLinksWithTracker($this, $logId);
             }
 
@@ -717,7 +655,7 @@ class Email extends AbstractEntity implements
             throw new EmailNotSentException($e->getMessage(), $e->getCode(), $e);
         }
 
-        if ($this->logEnabled() === true) {
+        if ($this->logEnabled()) {
             try {
                 $this->logSend($ret, $logId, $mail);
             } catch (PDOException $e) {
@@ -760,9 +698,8 @@ class Email extends AbstractEntity implements
      * Enqueue the email for each recipient.
      *
      * @param mixed $ts A date/time to initiate the queue processing.
-     * @return self
      */
-    public function queue($ts = null)
+    public function queue($ts = null): static
     {
         $recipients = $this->to();
         $author     = $this->from();
@@ -773,7 +710,7 @@ class Email extends AbstractEntity implements
         $queueId    = $this->queueId();
 
         foreach ($recipients as $to) {
-            if (is_string($to) && !empty($to)) {
+            if (is_string($to) && ($to !== '' && $to !== '0')) {
                 $queueItem = $this->queueItemFactory()->create(EmailQueueItem::class);
 
                 $queueItem->setTo($to);
@@ -800,7 +737,7 @@ class Email extends AbstractEntity implements
      * @param array $data The template data.
      * @return Email Chainable
      */
-    public function setTemplateData(array $data)
+    public function setTemplateData(array $data): static
     {
         $this->templateData = $data;
         return $this;
@@ -808,8 +745,6 @@ class Email extends AbstractEntity implements
 
     /**
      * Get the template data for the view.
-     *
-     * @return array
      */
     public function templateData(): array
     {
@@ -847,15 +782,12 @@ class Email extends AbstractEntity implements
      * @param FactoryInterface $factory The factory to use to create email template objects.
      * @return Email Chainable
      */
-    protected function setTemplateFactory(FactoryInterface $factory)
+    protected function setTemplateFactory(FactoryInterface $factory): static
     {
         $this->templateFactory = $factory;
         return $this;
     }
 
-    /**
-     * @return FactoryInterface
-     */
     protected function templateFactory(): FactoryInterface
     {
         return $this->templateFactory;
@@ -865,15 +797,12 @@ class Email extends AbstractEntity implements
      * @param FactoryInterface $factory The factory to use to create email queue item objects.
      * @return Email Chainable
      */
-    protected function setQueueItemFactory(FactoryInterface $factory)
+    protected function setQueueItemFactory(FactoryInterface $factory): static
     {
         $this->queueItemFactory = $factory;
         return $this;
     }
 
-    /**
-     * @return FactoryInterface
-     */
     protected function queueItemFactory(): FactoryInterface
     {
         return $this->queueItemFactory;
@@ -883,15 +812,12 @@ class Email extends AbstractEntity implements
      * @param FactoryInterface $factory The factory to use to create log objects.
      * @return Email Chainable
      */
-    protected function setLogFactory(FactoryInterface $factory)
+    protected function setLogFactory(FactoryInterface $factory): static
     {
         $this->logFactory = $factory;
         return $this;
     }
 
-    /**
-     * @return FactoryInterface
-     */
     protected function logFactory(): FactoryInterface
     {
         return $this->logFactory;
@@ -899,9 +825,8 @@ class Email extends AbstractEntity implements
 
     /**
      * @param Tracker $tracker Tracker service.
-     * @return void
      */
-    public function setTracker(Tracker $tracker)
+    public function setTracker(Tracker $tracker): void
     {
         $this->tracker = $tracker;
     }
@@ -910,25 +835,16 @@ class Email extends AbstractEntity implements
      * Get the email's HTML message from the template, if applicable.
      *
      * @see    ViewableInterface::render()
-     * @return string
      */
     protected function generateMsgHtml(): string
     {
         $templateIdent = $this->templateIdent();
 
-        if (!$templateIdent) {
-            $message = '';
-        } else {
-            $message = $this->render($templateIdent);
-        }
-
-        return $message;
+        return $templateIdent ? $this->render($templateIdent) : '';
     }
 
     /**
      * Generates a unique identifier ideal for a campaign ID.
-     *
-     * @return string
      */
     protected function generateCampaign(): string
     {
@@ -984,18 +900,17 @@ class Email extends AbstractEntity implements
                 '#<style[^>]*?>.*?</style>#siu'
             ],
             '',
-            $str
+            (string) $str
         );
-        $str = strip_tags($str);
+        $str = strip_tags((string) $str);
 
         // Trim whitespace
         $str = str_replace("\t", '', $str);
         $str = preg_replace('#\n\r|\r\n#', "\n", $str);
-        $str = preg_replace('#\n{3,}#', "\n\n", $str);
-        $str = preg_replace('/ {2,}/', ' ', $str);
-        $str = implode("\n", array_map('trim', explode("\n", $str)));
-        $str = trim($str) . "\n";
-        return $str;
+        $str = preg_replace('#\n{3,}#', "\n\n", (string) $str);
+        $str = preg_replace('/ {2,}/', ' ', (string) $str);
+        $str = implode("\n", array_map(trim(...), explode("\n", (string) $str)));
+        return trim($str) . "\n";
     }
 
     /**
@@ -1004,7 +919,6 @@ class Email extends AbstractEntity implements
      * @param  boolean   $result Success or failure.
      * @param  string    $logId  Email log id.
      * @param  PHPMailer $mailer The raw mailer.
-     * @return void
      */
     protected function logSend(bool $result, string $logId, PHPMailer $mailer): void
     {
@@ -1045,10 +959,8 @@ class Email extends AbstractEntity implements
 
     /**
      * Temporary hack to fulfills the Configurable Interface.
-     *
-     * @return EmailConfig
      */
-    public function createConfig()
+    public function createConfig(): \Charcoal\Email\EmailConfig
     {
         // This should really be avoided.
         $this->logger->warning('AbstractEmail::createConfig() was called, but should not.');

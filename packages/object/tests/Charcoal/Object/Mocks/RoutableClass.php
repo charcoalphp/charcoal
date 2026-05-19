@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Charcoal\Tests\Object\Mocks;
 
 // From 'charcoal-object'
@@ -15,18 +17,12 @@ class RoutableClass extends AbstractModel implements
 {
     use RoutableTrait;
 
-    /**
-     * @return string
-     */
-    public static function objType()
+    public static function objType(): string
     {
         return 'charcoal/tests/object/routable-class';
     }
 
-    /**
-     * @return null
-     */
-    public function templateIdent()
+    public function templateIdent(): null
     {
         return null;
     }

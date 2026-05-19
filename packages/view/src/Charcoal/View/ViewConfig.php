@@ -16,24 +16,13 @@ use Charcoal\View\Twig\TwigEngine;
  */
 class ViewConfig extends AbstractConfig
 {
-    /**
-     * @var array $paths
-     */
-    private $paths = [];
+    private array $paths = [];
 
-    /**
-     * @var array $engines
-     */
-    private $engines = [];
+    private array $engines = [];
 
-    /**
-     * @var string $defaultEngine
-     */
-    private $defaultEngine;
+    private ?string $defaultEngine = null;
 
-    /**
-     * @return array
-     */
+    #[\Override]
     public function defaults(): array
     {
         return [
@@ -54,9 +43,8 @@ class ViewConfig extends AbstractConfig
 
     /**
      * @param array $paths The paths to search into.
-     * @return self
      */
-    public function setPaths(array $paths)
+    public function setPaths(array $paths): static
     {
         $this->paths = [];
         $this->addPaths($paths);
@@ -65,9 +53,8 @@ class ViewConfig extends AbstractConfig
 
     /**
      * @param  string[] $paths One or more search paths.
-     * @return self
      */
-    public function addPaths(array $paths)
+    public function addPaths(array $paths): static
     {
         foreach ($paths as $path) {
             $this->addPath($path);
@@ -78,17 +65,13 @@ class ViewConfig extends AbstractConfig
     /**
      * @param string $path A path to add to the paths list.
      * @throws InvalidArgumentException If the path is not a string.
-     * @return self
      */
-    public function addPath(string $path)
+    public function addPath(string $path): static
     {
         $this->paths[] = $path;
         return $this;
     }
 
-    /**
-     * @return array
-     */
     public function paths(): array
     {
         return $this->paths;
@@ -96,9 +79,8 @@ class ViewConfig extends AbstractConfig
 
     /**
      * @param array $engines The various engines configuration.
-     * @return self
      */
-    public function setEngines(array $engines)
+    public function setEngines(array $engines): static
     {
         $this->engines = [];
         foreach ($engines as $engineIdent => $engineConfig) {
@@ -110,17 +92,13 @@ class ViewConfig extends AbstractConfig
     /**
      * @param string $engineIdent  The engine identifier.
      * @param array  $engineConfig The engine configuration data.
-     * @return self
      */
-    public function addEngine(string $engineIdent, array $engineConfig)
+    public function addEngine(string $engineIdent, array $engineConfig): static
     {
         $this->engines[$engineIdent] = $engineConfig;
         return $this;
     }
 
-    /**
-     * @return array
-     */
     public function engines(): array
     {
         return $this->engines;
@@ -131,7 +109,6 @@ class ViewConfig extends AbstractConfig
      *
      * @param string|null $engineIdent The engine identifier to get the configuration of.
      * @throws InvalidArgumentException If the engine ident does not match any engines.
-     * @return array
      */
     public function engine(?string $engineIdent = null): array
     {
@@ -148,17 +125,13 @@ class ViewConfig extends AbstractConfig
 
     /**
      * @param string $engineIdent The default engine (identifier).
-     * @return self
      */
-    public function setDefaultEngine(string $engineIdent)
+    public function setDefaultEngine(string $engineIdent): static
     {
         $this->defaultEngine = $engineIdent;
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function defaultEngine(): string
     {
         return $this->defaultEngine;

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Charcoal\Tests\Mock;
 
 // From 'charcoal-core'
@@ -10,10 +12,7 @@ use Charcoal\Validator\AbstractValidator;
  */
 class ValidatorClass extends AbstractValidator
 {
-    /**
-     * @return boolean
-     */
-    public function validate()
+    public function validate(): bool
     {
         return true;
     }

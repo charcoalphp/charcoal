@@ -109,10 +109,8 @@ class StructureFormGroup extends FormGroupWidget implements
 
     /**
      * The form group the input belongs to.
-     *
-     * @var FormGroupInterface|null
      */
-    private $formGroup;
+    private ?\Charcoal\Ui\FormGroup\FormGroupInterface $formGroup = null;
 
     /**
      * Whether the form is ready.
@@ -136,19 +134,16 @@ class StructureFormGroup extends FormGroupWidget implements
      */
     protected $rawData;
 
-    /**
-     * @return string
-     */
-    public function type()
+    #[\Override]
+    public function type(): string
     {
         return 'charcoal/admin/widget/form-group/structure';
     }
 
     /**
      * @param  string $structId The structure entry identifier.
-     * @return self
      */
-    public function setStructId($structId)
+    public function setStructId($structId): static
     {
         $this->structId = $structId;
         return $this;
@@ -168,9 +163,9 @@ class StructureFormGroup extends FormGroupWidget implements
 
     /**
      * @param  array $data Widget data.
-     * @return self
      */
-    public function setData(array $data)
+    #[\Override]
+    public function setData(array $data): static
     {
         if ($this->rawData === null) {
             $this->rawData = $data;
@@ -186,6 +181,7 @@ class StructureFormGroup extends FormGroupWidget implements
      *
      * @return boolean If TRUE or unset, check if there is a title.
      */
+    #[\Override]
     public function showHeader()
     {
         if ($this->display() === self::SEAMLESS_STRUCT_DISPLAY) {
@@ -200,6 +196,7 @@ class StructureFormGroup extends FormGroupWidget implements
      *
      * @return boolean If TRUE or unset, check if there are notes.
      */
+    #[\Override]
     public function showFooter()
     {
         if ($this->display() === self::SEAMLESS_STRUCT_DISPLAY) {
@@ -216,6 +213,7 @@ class StructureFormGroup extends FormGroupWidget implements
      *
      * @return string If unset, returns the UI item type.
      */
+    #[\Override]
     public function template()
     {
         $this->setDynamicTemplate('structure_template', $this->displayTemplate());
@@ -225,10 +223,8 @@ class StructureFormGroup extends FormGroupWidget implements
 
     /**
      * Retrieve the property's display layout template.
-     *
-     * @return string|null
      */
-    public function displayTemplate()
+    public function displayTemplate(): string
     {
         $display = $this->display();
 
@@ -272,9 +268,8 @@ class StructureFormGroup extends FormGroupWidget implements
      * Set the form input's parent group.
      *
      * @param  FormGroupInterface $formGroup The parent form group object.
-     * @return self
      */
-    public function setFormGroup(FormGroupInterface $formGroup)
+    public function setFormGroup(FormGroupInterface $formGroup): static
     {
         $this->formGroup = $formGroup;
 
@@ -283,20 +278,16 @@ class StructureFormGroup extends FormGroupWidget implements
 
     /**
      * Retrieve the input's parent group.
-     *
-     * @return FormGroupInterface|null
      */
-    public function formGroup()
+    public function formGroup(): ?\Charcoal\Ui\FormGroup\FormGroupInterface
     {
         return $this->formGroup;
     }
 
     /**
      * Clear the group's parent group.
-     *
-     * @return self
      */
-    public function clearFormGroup()
+    public function clearFormGroup(): static
     {
         $this->formGroup = null;
 
@@ -312,9 +303,8 @@ class StructureFormGroup extends FormGroupWidget implements
      * @param  string|ModelStructureProperty $propertyIdent The property identifier—or instance—of a storage property.
      * @throws InvalidArgumentException If the property identifier is not a string.
      * @throws UnexpectedValueException If a property is invalid.
-     * @return self
      */
-    public function setStorageProperty($propertyIdent)
+    public function setStorageProperty($propertyIdent): static
     {
         $property = null;
         if ($propertyIdent instanceof PropertyInterface) {
@@ -331,11 +321,11 @@ class StructureFormGroup extends FormGroupWidget implements
             throw new UnexpectedValueException(sprintf(
                 'The "%1$s" property is not defined on [%2$s]',
                 $propertyIdent,
-                get_class($obj)
+                $obj::class
             ));
         }
 
-        if ($property === null) {
+        if (!$property instanceof \Charcoal\Property\PropertyInterface) {
             $property = $obj->property($propertyIdent);
         }
 
@@ -349,8 +339,8 @@ class StructureFormGroup extends FormGroupWidget implements
             throw new UnexpectedValueException(sprintf(
                 '"%s" [%s] is not a model structure property on [%s].',
                 $propertyIdent,
-                (is_object($property) ? get_class($property) : gettype($property)),
-                (is_object($obj) ? get_class($obj) : gettype($obj))
+                (get_debug_type($property)),
+                (get_debug_type($obj))
             ));
         }
 
@@ -368,7 +358,7 @@ class StructureFormGroup extends FormGroupWidget implements
         if ($this->storageProperty === null) {
             throw new RuntimeException(sprintf(
                 'Storage property owner is not defined for "%s"',
-                get_class($this)
+                static::class
             ));
         }
 
@@ -406,11 +396,7 @@ class StructureFormGroup extends FormGroupWidget implements
             $property = $this->storageProperty();
             $struct   = $property->getStructureMetadata();
 
-            if (isset($struct['admin']['auto_form_group'])) {
-                $this->autoFormGroup = $struct['admin']['auto_form_group'];
-            } else {
-                $this->autoFormGroup = true;
-            }
+            $this->autoFormGroup = $struct['admin']['auto_form_group'] ?? true;
         }
 
         return $this->autoFormGroup;
@@ -445,8 +431,6 @@ class StructureFormGroup extends FormGroupWidget implements
     protected function findStructureFormGroup(): ?array
     {
         $struct = $this->storageProperty()->getStructureMetadata();
-
-        $formGroup = null;
         if (isset($struct['admin']['form_group'])) {
             if (\is_string($struct['admin']['form_group'])) {
                 $groupName = $struct['admin']['form_group'];
@@ -476,6 +460,7 @@ class StructureFormGroup extends FormGroupWidget implements
      *
      * @return array
      */
+    #[\Override]
     protected function parsedFormProperties()
     {
         if ($this->parsedFormProperties === null) {
@@ -485,30 +470,28 @@ class StructureFormGroup extends FormGroupWidget implements
             $availableProperties = $this->structProperties();
 
             $structProperties = [];
-            if (!empty($groupProperties)) {
-                foreach ($groupProperties as $propertyIdent => $propertyMetadata) {
-                    if (is_string($propertyMetadata)) {
-                        $propertyIdent    = $propertyMetadata;
-                        $propertyMetadata = null;
-                    }
-
-                    $propertyIdent = $this->camelize($propertyIdent);
-
-                    if (!isset($availableProperties[$propertyIdent])) {
-                        continue;
-                    }
-
-                    if (is_array($propertyMetadata)) {
-                        $propertyMetadata = array_merge($propertyMetadata, $availableProperties[$propertyIdent]);
-                    } else {
-                        $propertyMetadata = $availableProperties[$propertyIdent];
-                    }
-
-                    $structProperties[$propertyIdent] = $propertyMetadata;
+            foreach ($groupProperties as $propertyIdent => $propertyMetadata) {
+                if (is_string($propertyMetadata)) {
+                    $propertyIdent    = $propertyMetadata;
+                    $propertyMetadata = null;
                 }
+
+                $propertyIdent = $this->camelize($propertyIdent);
+
+                if (!isset($availableProperties[$propertyIdent])) {
+                    continue;
+                }
+
+                if (is_array($propertyMetadata)) {
+                    $propertyMetadata = array_merge($propertyMetadata, $availableProperties[$propertyIdent]);
+                } else {
+                    $propertyMetadata = $availableProperties[$propertyIdent];
+                }
+
+                $structProperties[$propertyIdent] = $propertyMetadata;
             }
 
-            if (empty($structProperties) && $this->autoFormGroup() === true) {
+            if ($structProperties === [] && $this->autoFormGroup() === true) {
                 $structProperties = $availableProperties;
             }
 
@@ -526,12 +509,11 @@ class StructureFormGroup extends FormGroupWidget implements
      * @throws UnexpectedValueException If a property data is invalid.
      * @return \Charcoal\Admin\Widget\FormPropertyWidget[]|\Generator
      */
+    #[\Override]
     public function formProperties()
     {
-        if ($this instanceof ConditionalizableInterface) {
-            if ($this->condition() !== null && !$this->resolvedCondition()) {
-                return [];
-            }
+        if ($this->condition() !== null && !$this->resolvedCondition()) {
+            return [];
         }
 
         $this->finalizeStructure();
@@ -592,7 +574,7 @@ class StructureFormGroup extends FormGroupWidget implements
                 throw new UnexpectedValueException(sprintf(
                     'Invalid property data for "%1$s", received %2$s',
                     $propertyIdent,
-                    (is_object($propertyMetadata) ? get_class($propertyMetadata) : gettype($propertyMetadata))
+                    (get_debug_type($propertyMetadata))
                 ));
             }
 

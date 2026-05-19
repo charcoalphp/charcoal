@@ -26,10 +26,8 @@ class EventRoute extends TemplateRoute
 
     /**
      * URI path.
-     *
-     * @var string
      */
-    private $path;
+    private string $path;
 
     /**
      * The event object matching the URI path.
@@ -40,10 +38,8 @@ class EventRoute extends TemplateRoute
 
     /**
      * The event model.
-     *
-     * @var string
      */
-    private $objType = 'charcoal/cms/event';
+    private string $objType = 'charcoal/cms/event';
 
     /**
      * @param array $data Class depdendencies.
@@ -51,16 +47,15 @@ class EventRoute extends TemplateRoute
     public function __construct(array $data)
     {
         parent::__construct($data);
-        $this->path = ltrim($data['path'], '/');
+        $this->path = ltrim((string) $data['path'], '/');
     }
 
     /**
      * Determine if the URI path resolves to an object.
      *
      * @param  Container $container A DI (Pimple) container.
-     * @return boolean
      */
-    public function pathResolvable(Container $container)
+    public function pathResolvable(Container $container): bool
     {
         $event = $this->loadEventFromPath($container);
         return ($event instanceof EventInterface) && $event->id();
@@ -72,6 +67,7 @@ class EventRoute extends TemplateRoute
      * @param  ResponseInterface $response  A PSR-7 compatible Response instance.
      * @return ResponseInterface
      */
+    #[\Override]
     public function __invoke(
         Container $container,
         RequestInterface $request,
@@ -87,11 +83,11 @@ class EventRoute extends TemplateRoute
         $templateIdent      = (string)$event['templateIdent'];
         $templateController = (string)$event['templateIdent'];
 
-        if (!$templateController) {
+        if ($templateController === '' || $templateController === '0') {
             $container['logger']->warning(sprintf(
                 '[%s] Missing template controller on model [%s] for ID [%s]',
-                get_class($this),
-                get_class($event),
+                static::class,
+                $event::class,
                 $event['id']
             ));
             return $response->withStatus(500);
@@ -110,8 +106,8 @@ class EventRoute extends TemplateRoute
         if ($templateContent === $templateIdent || $templateContent === '') {
             $container['logger']->warning(sprintf(
                 '[%s] Missing or bad template identifier on model [%s] for ID [%s]',
-                get_class($this),
-                get_class($event),
+                static::class,
+                $event::class,
                 $templateIdent
             ));
             return $response->withStatus(500);
@@ -131,7 +127,7 @@ class EventRoute extends TemplateRoute
     {
         if ($this->event === null) {
             $config  = $this->config();
-            $objType = (isset($config['obj_type']) ? $config['obj_type'] : $this->objType);
+            $objType = ($config['obj_type'] ?? $this->objType);
 
             try {
                 $model = $container['model/factory']->create($objType);
@@ -146,11 +142,11 @@ class EventRoute extends TemplateRoute
                     $this->event = $model;
                     return $model;
                 }
-            } catch (Exception $e) {
+            } catch (Exception) {
                 $container['logger']->debug(sprintf(
                     '[%s] Unable to load model [%s] for path [%s]',
-                    get_class($this),
-                    get_class($model),
+                    static::class,
+                    $model::class,
                     $this->path
                 ));
             }

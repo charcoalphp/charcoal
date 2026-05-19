@@ -40,7 +40,6 @@ class Collection implements CollectionInterface
      * Create a new collection.
      *
      * @param  array|Traversable|null $objs Array of objects to pre-populate this collection.
-     * @return void
      */
     public function __construct($objs = null)
     {
@@ -54,7 +53,7 @@ class Collection implements CollectionInterface
      *
      * @return object|null Returns the first object, or NULL if the collection is empty.
      */
-    public function first()
+    public function first(): ?object
     {
         if (empty($this->objects)) {
             return null;
@@ -68,7 +67,7 @@ class Collection implements CollectionInterface
      *
      * @return object|null Returns the last object, or NULL if the collection is empty.
      */
-    public function last()
+    public function last(): ?object
     {
         if (empty($this->objects)) {
             return null;
@@ -79,15 +78,13 @@ class Collection implements CollectionInterface
 
     // Satisfies CollectionInterface
     // =============================================================================================
-
     /**
      * Merge the collection with the given objects.
      *
      * @param  array|Traversable $objs Array of objects to append to this collection.
      * @throws InvalidArgumentException If the given array contains an unacceptable value.
-     * @return self
      */
-    public function merge($objs)
+    public function merge($objs): static
     {
         $objs = $this->asArray($objs);
 
@@ -96,7 +93,7 @@ class Collection implements CollectionInterface
                 throw new InvalidArgumentException(
                     sprintf(
                         'Must be an array of models, contains %s',
-                        (is_object($obj) ? get_class($obj) : gettype($obj))
+                        (get_debug_type($obj))
                     )
                 );
             }
@@ -113,15 +110,14 @@ class Collection implements CollectionInterface
      *
      * @param  object $obj An acceptable object.
      * @throws InvalidArgumentException If the given object is not acceptable.
-     * @return self
      */
-    public function add($obj)
+    public function add($obj): static
     {
         if (!$this->isAcceptable($obj)) {
             throw new InvalidArgumentException(
                 sprintf(
                     'Must be a model, received %s',
-                    (is_object($obj) ? get_class($obj) : gettype($obj))
+                    (get_debug_type($obj))
                 )
             );
         }
@@ -155,15 +151,14 @@ class Collection implements CollectionInterface
      * Determine if an object exists in the collection by key.
      *
      * @param  mixed $key The primary key to lookup.
-     * @return boolean
      */
-    public function has($key)
+    public function has($key): bool
     {
         if ($this->isAcceptable($key)) {
             $key = $this->modelKey($key);
         }
 
-        return array_key_exists($key, $this->objects);
+        return array_key_exists((string) $key, $this->objects);
     }
 
     /**
@@ -171,9 +166,8 @@ class Collection implements CollectionInterface
      *
      * @param  mixed $key The object primary key to remove.
      * @throws InvalidArgumentException If the given key is not acceptable.
-     * @return self
      */
-    public function remove($key)
+    public function remove($key): static
     {
         if ($this->isAcceptable($key)) {
             $key = $this->modelKey($key);
@@ -186,10 +180,8 @@ class Collection implements CollectionInterface
 
     /**
      * Remove all objects from collection.
-     *
-     * @return self
      */
-    public function clear()
+    public function clear(): static
     {
         $this->objects = [];
 
@@ -211,7 +203,7 @@ class Collection implements CollectionInterface
      *
      * @return object[] A sequential array of objects.
      */
-    public function values()
+    public function values(): array
     {
         return array_values($this->objects);
     }
@@ -221,7 +213,7 @@ class Collection implements CollectionInterface
      *
      * @return array A sequential array of keys.
      */
-    public function keys()
+    public function keys(): array
     {
         return array_keys($this->objects);
     }
@@ -275,9 +267,8 @@ class Collection implements CollectionInterface
      * @param  mixed $offset The object primary key or array offset.
      * @param  mixed $value  The object.
      * @throws LogicException Attempts to assign an offset.
-     * @return void
      */
-    public function offsetSet($offset, $value)
+    public function offsetSet($offset, $value): void
     {
         if ($offset === null) {
             $this->add($value);
@@ -293,9 +284,8 @@ class Collection implements CollectionInterface
      *
      * @see    \ArrayAccess
      * @param  mixed $offset The object primary key or array offset.
-     * @return void
      */
-    public function offsetUnset($offset)
+    public function offsetUnset($offset): void
     {
         if (is_int($offset)) {
             $offset = $this->resolveOffset($offset);
@@ -319,10 +309,8 @@ class Collection implements CollectionInterface
      */
     protected function resolveOffset($offset)
     {
-        if (is_int($offset)) {
-            if ($offset < 0) {
-                $offset = ($this->count() - abs($offset));
-            }
+        if (is_int($offset) && $offset < 0) {
+            $offset = ($this->count() - abs($offset));
         }
 
         return $offset;
@@ -360,24 +348,22 @@ class Collection implements CollectionInterface
      * Retrieve a cached iterator.
      *
      * @param  integer $flags Bitmask of flags.
-     * @return \CachingIterator
      */
-    public function getCachingIterator($flags = CachingIterator::CALL_TOSTRING)
+    public function getCachingIterator($flags = CachingIterator::CALL_TOSTRING): \CachingIterator
     {
         return new CachingIterator($this->getIterator(), $flags);
     }
 
     // Satisfies backwards-compatibility
     // =============================================================================================
-
     /**
      * Retrieve the array offset from the given key.
      *
-     * @deprecated
      * @param  mixed $key The primary key to retrieve the offset from.
      * @return integer Returns an array offset.
      */
-    public function pos($key)
+    #[\Deprecated]
+    public function pos($key): int|false
     {
         trigger_error('Collection::pos() is deprecated', E_USER_DEPRECATED);
 
@@ -387,11 +373,11 @@ class Collection implements CollectionInterface
     /**
      * Alias of {@see self::values()}
      *
-     * @deprecated
      * @todo   Trigger deprecation error.
      * @return object[]
      */
-    public function objects()
+    #[\Deprecated]
+    public function objects(): array
     {
         return $this->values();
     }
@@ -399,26 +385,24 @@ class Collection implements CollectionInterface
     /**
      * Alias of {@see self::all()}.
      *
-     * @deprecated
      * @todo   Trigger deprecation error.
      * @return object[]
      */
+    #[\Deprecated]
     public function map()
     {
         return $this->all();
     }
 
     // =============================================================================================
-
     /**
      * Determine if the given value is acceptable for the collection.
      *
      * Note: Practical for specialized collections extending the base collection.
      *
      * @param  mixed $value The value being vetted.
-     * @return boolean
      */
-    public function isAcceptable($value)
+    public function isAcceptable($value): bool
     {
         return ($value instanceof ModelInterface);
     }
@@ -438,7 +422,7 @@ class Collection implements CollectionInterface
             throw new InvalidArgumentException(
                 sprintf(
                     'Must be a model, received %s',
-                    (is_object($obj) ? get_class($obj) : gettype($obj))
+                    (get_debug_type($obj))
                 )
             );
         }
@@ -448,10 +432,8 @@ class Collection implements CollectionInterface
 
     /**
      * Determine if the collection is empty or not.
-     *
-     * @return boolean
      */
-    public function isEmpty()
+    public function isEmpty(): bool
     {
         return empty($this->objects);
     }
@@ -460,10 +442,8 @@ class Collection implements CollectionInterface
      * Get a base collection instance from this collection.
      *
      * Note: Practical for extended classes.
-     *
-     * @return Collection
      */
-    public function toBase()
+    public function toBase(): self
     {
         return new self($this);
     }

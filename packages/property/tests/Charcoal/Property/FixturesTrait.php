@@ -13,7 +13,7 @@ trait FixturesTrait
      * @param  string $file The file path relative to the Fixture directory.
      * @return string The file path to the fixture relative to the base directory.
      */
-    public function getPathToFixture($file)
+    public function getPathToFixture($file): string
     {
         return $this->getPathToFixtures().'/'.ltrim($file, '/');
     }
@@ -23,7 +23,7 @@ trait FixturesTrait
      *
      * @return string The path to the fixtures directory relative to the base directory.
      */
-    public function getPathToFixtures()
+    public function getPathToFixtures(): string
     {
         return 'tests/Charcoal/Property/Fixture';
     }

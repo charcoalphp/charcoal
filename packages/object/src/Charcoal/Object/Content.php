@@ -36,32 +36,28 @@ class Content extends AbstractModel implements
 
     /**
      * Objects are active by default
-     * @var boolean
      */
-    private $active = true;
+    private bool $active = true;
 
     /**
      * The position is used for ordering lists
-     * @var integer
      */
-    private $position = 0;
+    private ?int $position = 0;
 
 
-    /**
-     * @var FactoryInterface
-     */
-    private $modelFactory;
+    private ?\Charcoal\Factory\FactoryInterface $modelFactory = null;
 
     /**
      * @var string[]
      */
-    private $requiredAclPermissions = [];
+    private array $requiredAclPermissions = [];
 
     /**
      * Dependencies
      * @param Container $container DI Container.
      * @return void
      */
+    #[\Override]
     protected function setDependencies(Container $container)
     {
         parent::setDependencies($container);
@@ -74,7 +70,7 @@ class Content extends AbstractModel implements
      * @param FactoryInterface $factory The factory used to create models.
      * @return Content Chainable
      */
-    protected function setModelFactory(FactoryInterface $factory)
+    protected function setModelFactory(FactoryInterface $factory): static
     {
         $this->modelFactory = $factory;
         return $this;
@@ -83,7 +79,7 @@ class Content extends AbstractModel implements
     /**
      * @return FactoryInterface The model factory.
      */
-    protected function modelFactory()
+    protected function modelFactory(): ?\Charcoal\Factory\FactoryInterface
     {
         return $this->modelFactory;
     }
@@ -92,16 +88,13 @@ class Content extends AbstractModel implements
      * @param boolean $active The active flag.
      * @return Content Chainable
      */
-    public function setActive($active)
+    public function setActive($active): static
     {
-        $this->active = !!$active;
+        $this->active = (bool) $active;
         return $this;
     }
 
-    /**
-     * @return boolean
-     */
-    public function getActive()
+    public function getActive(): bool
     {
         return $this->active;
     }
@@ -111,7 +104,7 @@ class Content extends AbstractModel implements
      * @throws InvalidArgumentException If the position is not an integer (or numeric integer string).
      * @return Content Chainable
      */
-    public function setPosition($position)
+    public function setPosition($position): static
     {
         if ($position === null) {
             $this->position = null;
@@ -121,7 +114,7 @@ class Content extends AbstractModel implements
         if (!is_numeric($position)) {
             throw new InvalidArgumentException(sprintf(
                 'Position must be an integer, received %s',
-                is_object($position) ? get_class($position) : gettype($position)
+                get_debug_type($position)
             ));
         }
 
@@ -132,7 +125,7 @@ class Content extends AbstractModel implements
     /**
      * @return integer
      */
-    public function getPosition()
+    public function getPosition(): ?int
     {
         return $this->position;
     }
@@ -143,7 +136,7 @@ class Content extends AbstractModel implements
      * @param  string|string[] $permissions The required ACL permissions.
      * @return Content Chainable
      */
-    public function setRequiredAclPermissions($permissions)
+    public function setRequiredAclPermissions($permissions): static
     {
         if ($permissions === null || !$permissions) {
             $this->requiredAclPermissions = [];
@@ -151,7 +144,7 @@ class Content extends AbstractModel implements
         }
         if (is_string($permissions)) {
             $permissions = explode(',', $permissions);
-            $permissions = array_map('trim', $permissions);
+            $permissions = array_map(trim(...), $permissions);
         }
         if (!is_array($permissions)) {
             throw new InvalidArgumentException(
@@ -165,7 +158,7 @@ class Content extends AbstractModel implements
     /**
      * @return string[]
      */
-    public function getRequiredAclPermissions()
+    public function getRequiredAclPermissions(): array
     {
         return $this->requiredAclPermissions;
     }
@@ -173,9 +166,9 @@ class Content extends AbstractModel implements
     /**
      * StorableTrait > preSave(): Called automatically before saving the object to source.
      * For content object, set the `created` and `lastModified` properties automatically
-     * @return boolean
      */
-    protected function preSave()
+    #[\Override]
+    protected function preSave(): bool
     {
         parent::preSave();
 
@@ -191,9 +184,9 @@ class Content extends AbstractModel implements
      * For content object, set the `lastModified` property automatically.
      *
      * @param array $properties The properties (ident) set for update.
-     * @return boolean
      */
-    protected function preUpdate(array $properties = null)
+    #[\Override]
+    protected function preUpdate(?array $properties = null): bool
     {
         parent::preUpdate($properties);
 

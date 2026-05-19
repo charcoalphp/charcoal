@@ -21,6 +21,7 @@ use Charcoal\Tests\Source\DatabaseExpressionTestTrait;
 /**
  * Test {@see DatabaseFilter}.
  */
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Source\Database\DatabaseFilter::class, 'isNegating')]
 class DatabaseFilterTest extends AbstractTestCase
 {
     use CoreContainerIntegrationTrait;
@@ -29,10 +30,8 @@ class DatabaseFilterTest extends AbstractTestCase
 
     /**
      * Create expression for testing.
-     *
-     * @return DatabaseFilter
      */
-    final protected function createExpression()
+    final protected function createExpression(): \Charcoal\Source\Database\DatabaseFilter
     {
         return new DatabaseFilter();
     }
@@ -56,10 +55,8 @@ class DatabaseFilterTest extends AbstractTestCase
      * Test default table name for default data values.
      *
      * @see \Charcoal\Tests\Source\Database\DatabaseOrderTest::testDefaultValues()
-     *
-     * @return void
      */
-    public function testDefaultValues()
+    public function testDefaultValues(): void
     {
         $obj = $this->createExpression();
 
@@ -71,10 +68,8 @@ class DatabaseFilterTest extends AbstractTestCase
 
     /**
      * Test influence of "active" property on SQL compilation.
-     *
-     * @return void
      */
-    public function testInactiveExpression()
+    public function testInactiveExpression(): void
     {
         $obj = $this->createExpression();
         $obj->setProperty('foo')->setValue('Charcoal');
@@ -94,11 +89,8 @@ class DatabaseFilterTest extends AbstractTestCase
      * 2. Negatable Operators
      * 3. Ignored Operators
      *
-     * @covers \Charcoal\Source\Database\DatabaseFilter::isNegating
-     *
-     * @return void
      */
-    public function testNegation()
+    public function testNegation(): void
     {
         $obj = $this->createExpression();
 
@@ -119,10 +111,8 @@ class DatabaseFilterTest extends AbstractTestCase
 
     /**
      * Test SQL without conditions.
-     *
-     * @return void
      */
-    public function testBlankSql()
+    public function testBlankSql(): void
     {
         $obj = $this->createExpression();
 
@@ -131,10 +121,8 @@ class DatabaseFilterTest extends AbstractTestCase
 
     /**
      * Test invalid SQL predicate.
-     *
-     * @return void
      */
-    public function testSqlWithoutPredicate()
+    public function testSqlWithoutPredicate(): void
     {
         $obj = $this->createExpression();
 
@@ -147,13 +135,12 @@ class DatabaseFilterTest extends AbstractTestCase
     /**
      * Test nested filters.
      *
-     * @dataProvider providedNestedExpressions
      *
      * @param  array  $conditions The expressions to define.
      * @param  string $expected   The expected compiled SQL string.
-     * @return void
      */
-    public function testNestedSql(array $conditions, $expected)
+    #[\PHPUnit\Framework\Attributes\DataProvider('providedNestedExpressions')]
+    public function testNestedSql(array $conditions, $expected): void
     {
         $obj = $this->createExpression();
         $obj->addFilters($conditions);
@@ -165,9 +152,8 @@ class DatabaseFilterTest extends AbstractTestCase
      *
      * @example [ [ <filters>, <SQL> ] ]
      * @used-by self::testNestedSql()
-     * @return  array
      */
-    public function providedNestedExpressions()
+    public function providedNestedExpressions(): array
     {
         return [
             'One Level'  => $this->nestedExpressionsDataset1(),
@@ -179,9 +165,8 @@ class DatabaseFilterTest extends AbstractTestCase
      * Dataset #1 for testing nested expressions.
      *
      * @used-by self::providedNestedExpressions()
-     * @return  array
      */
-    protected function nestedExpressionsDataset1()
+    protected function nestedExpressionsDataset1(): array
     {
         $time = new DateTime('3 days ago');
 
@@ -213,9 +198,8 @@ class DatabaseFilterTest extends AbstractTestCase
      * Dataset #2 for testing nested expressions.
      *
      * @used-by self::providedNestedExpressions()
-     * @return  array
      */
-    protected function nestedExpressionsDataset2()
+    protected function nestedExpressionsDataset2(): array
     {
         $time = date('Y-m-d');
 
@@ -265,10 +249,8 @@ class DatabaseFilterTest extends AbstractTestCase
 
     /**
      * Test nested filters has precedence over other features.
-     *
-     * @return void
      */
-    public function testNestedSqlPrecedence()
+    public function testNestedSqlPrecedence(): void
     {
         $obj = $this->createExpression();
 
@@ -282,10 +264,8 @@ class DatabaseFilterTest extends AbstractTestCase
 
     /**
      * Test invalid SQL nested filters.
-     *
-     * @return void
      */
-    public function testSqlWithoutNestedExpressions()
+    public function testSqlWithoutNestedExpressions(): void
     {
         $obj = $this->createExpression();
 
@@ -297,10 +277,8 @@ class DatabaseFilterTest extends AbstractTestCase
 
     /**
      * Test "condition" property with and without placeholders.
-     *
-     * @return void
      */
-    public function testCustomSql()
+    public function testCustomSql(): void
     {
         $obj = $this->createExpression();
 
@@ -310,10 +288,8 @@ class DatabaseFilterTest extends AbstractTestCase
 
     /**
      * Test the negation of the "condition" property with the "operator" property.
-     *
-     * @return void
      */
-    public function testCustomSqlNegation()
+    public function testCustomSqlNegation(): void
     {
         $obj = $this->createExpression();
 
@@ -323,10 +299,8 @@ class DatabaseFilterTest extends AbstractTestCase
 
     /**
      * Test "condition" property has precedence over other features.
-     *
-     * @return void
      */
-    public function testCustomSqlPrecedence()
+    public function testCustomSqlPrecedence(): void
     {
         $obj = $this->createExpression();
 
@@ -340,10 +314,8 @@ class DatabaseFilterTest extends AbstractTestCase
 
     /**
      * Test invalid custom SQL.
-     *
-     * @return void
      */
-    public function testCustomSqlWithoutQuery()
+    public function testCustomSqlWithoutQuery(): void
     {
         $obj = $this->createExpression();
 
@@ -355,10 +327,8 @@ class DatabaseFilterTest extends AbstractTestCase
 
     /**
      * Test condition compilation.
-     *
-     * @return void
      */
-    public function testCompileConditions()
+    public function testCompileConditions(): void
     {
         $obj = $this->createExpression();
 
@@ -369,10 +339,8 @@ class DatabaseFilterTest extends AbstractTestCase
 
     /**
      * Test basic SQL operator without a value.
-     *
-     * @return void
      */
-    public function testSqlOperatorWithoutValue()
+    public function testSqlOperatorWithoutValue(): void
     {
         $obj = $this->createExpression();
 
@@ -388,12 +356,11 @@ class DatabaseFilterTest extends AbstractTestCase
     /**
      * Test comparison SQL operators.
      *
-     * @dataProvider provideComparisonOperators
      *
      * @param  string $operator A SQL operator.
-     * @return void
      */
-    public function testSqlComparisonOperators($operator)
+    #[\PHPUnit\Framework\Attributes\DataProvider('provideComparisonOperators')]
+    public function testSqlComparisonOperators(string $operator): void
     {
         $obj = $this->createExpression();
         $obj->setData([
@@ -408,12 +375,11 @@ class DatabaseFilterTest extends AbstractTestCase
     /**
      * Test condition-style SQL operators ("value" is ignored).
      *
-     * @dataProvider provideConditionalOperators
      *
      * @param  string $operator A SQL operator.
-     * @return void
      */
-    public function testSqlConditionalOperators($operator)
+    #[\PHPUnit\Framework\Attributes\DataProvider('provideConditionalOperators')]
+    public function testSqlConditionalOperators(string $operator): void
     {
         $obj = $this->createExpression();
         $obj->setData([
@@ -428,12 +394,11 @@ class DatabaseFilterTest extends AbstractTestCase
     /**
      * Test NOT-style SQL operators ("value" is ignored).
      *
-     * @dataProvider provideNegationOperators
      *
      * @param  string $operator A SQL operator.
-     * @return void
      */
-    public function testSqlNegationOperators($operator)
+    #[\PHPUnit\Framework\Attributes\DataProvider('provideNegationOperators')]
+    public function testSqlNegationOperators(string $operator): void
     {
         $obj = $this->createExpression();
         $obj->setData([
@@ -448,14 +413,13 @@ class DatabaseFilterTest extends AbstractTestCase
     /**
      * Test list-based SQL operators.
      *
-     * @dataProvider provideSetOperators
      *
      * @param  string $operator  A SQL operator.
      * @param  string $delimiter The set's delimiter.
      * @param  string $expected  The expected result.
-     * @return void
      */
-    public function testSqlSetOperators($operator, $delimiter, $expected)
+    #[\PHPUnit\Framework\Attributes\DataProvider('provideSetOperators')]
+    public function testSqlSetOperators(string $operator, string $delimiter, string $expected): void
     {
         $obj = $this->createExpression();
 
@@ -475,14 +439,13 @@ class DatabaseFilterTest extends AbstractTestCase
     /**
      * Test list-based SQL operator without a value.
      *
-     * @dataProvider provideSetOperators
      *
      * @param  string $operator  A SQL operator.
      * @param  string $delimiter The set's delimiter.
      * @param  string $expected  Unused; The expected result.
-     * @return void
      */
-    public function testSqlSetOperatorsWithoutValue($operator, $delimiter, $expected)
+    #[\PHPUnit\Framework\Attributes\DataProvider('provideSetOperators')]
+    public function testSqlSetOperatorsWithoutValue(string $operator, string $delimiter, string $expected): void
     {
         $obj = $this->createExpression();
 
@@ -497,10 +460,8 @@ class DatabaseFilterTest extends AbstractTestCase
 
     /**
      * Test SQL function.
-     *
-     * @return void
      */
-    public function testSqlFunction()
+    public function testSqlFunction(): void
     {
         $obj = $this->createExpression();
         $obj->setData([
@@ -515,10 +476,8 @@ class DatabaseFilterTest extends AbstractTestCase
 
     /**
      * Test SQL condition with multiple field names.
-     *
-     * @return void
      */
-    public function testSqlFields()
+    public function testSqlFields(): void
     {
         $container = $this->getContainer();
 
@@ -543,9 +502,8 @@ class DatabaseFilterTest extends AbstractTestCase
      * Provide data for simple operators.
      *
      * @used-by self::testSqlComparisonOperators()
-     * @return  array
      */
-    public function provideComparisonOperators()
+    public static function provideComparisonOperators(): array
     {
         return [
             [ '=' ], [ '!=' ],
@@ -559,9 +517,8 @@ class DatabaseFilterTest extends AbstractTestCase
      * Provide data for sets-style operators.
      *
      * @used-by self::testSqlSetOperators()
-     * @return  array
      */
-    public function provideSetOperators()
+    public static function provideSetOperators(): array
     {
         return [
             'FIND_IN_SET' => [ 'FIND_IN_SET', ',',     'FIND_IN_SET(\'%2$s\', %1$s)' ],
@@ -574,9 +531,8 @@ class DatabaseFilterTest extends AbstractTestCase
      * Provide data for condition-style operators.
      *
      * @used-by self::testSqlConditionalOperators()
-     * @return  array
      */
-    public function provideConditionalOperators()
+    public static function provideConditionalOperators(): array
     {
         return [
             [ 'IS NULL' ], [ 'IS NOT NULL' ],
@@ -590,9 +546,8 @@ class DatabaseFilterTest extends AbstractTestCase
      * Provide data for logical NOT operators.
      *
      * @used-by self::testSqlNegationOperators()
-     * @return  array
      */
-    public function provideNegationOperators()
+    public static function provideNegationOperators(): array
     {
         return [
             [ '!' ],

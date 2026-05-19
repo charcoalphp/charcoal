@@ -14,22 +14,24 @@ use Twig\TwigFunction;
 class UrlHelpers extends AbstractExtension implements
     HelpersInterface
 {
+    public $baseUrl;
     /**
      * @param array $data Class Dependencies.
      */
-    public function __construct(array $data = null)
+    public function __construct(?array $data = null)
     {
         if (isset($data['baseUrl'])) {
             $this->baseUrl = $data['baseUrl'];
         }
     }
 
+    #[\Override]
     public function getFunctions(): array
     {
         return [
-            new TwigFunction('baseUrl', [ $this, 'baseUrl' ]),
-            new TwigFunction('siteUrl', [ $this, 'baseUrl' ]),
-            new TwigFunction('withBaseUrl', [ $this, 'withBaseUrl' ]),
+            new TwigFunction('baseUrl', $this->baseUrl(...)),
+            new TwigFunction('siteUrl', $this->baseUrl(...)),
+            new TwigFunction('withBaseUrl', $this->withBaseUrl(...)),
         ];
     }
 
@@ -60,16 +62,13 @@ class UrlHelpers extends AbstractExtension implements
             $uri = $this->baseUrl->withPath('');
         } else {
             $parts = parse_url($uri);
-            if (!isset($parts['scheme'])) {
-                if (!in_array($uri[0], [ '/', '#', '?' ])) {
-                    $path  = isset($parts['path']) ? $parts['path'] : '';
-                    $query = isset($parts['query']) ? $parts['query'] : '';
-                    $hash  = isset($parts['fragment']) ? $parts['fragment'] : '';
-
-                    $uri = $this->baseUrl->withPath($path)
-                                   ->withQuery($query)
-                                   ->withFragment($hash);
-                }
+            if (!isset($parts['scheme']) && !in_array($uri[0], [ '/', '#', '?' ])) {
+                $path  = $parts['path'] ?? '';
+                $query = $parts['query'] ?? '';
+                $hash  = $parts['fragment'] ?? '';
+                $uri = $this->baseUrl->withPath($path)
+                               ->withQuery($query)
+                               ->withFragment($hash);
             }
         }
 
@@ -78,8 +77,6 @@ class UrlHelpers extends AbstractExtension implements
 
     /**
      * Retrieve the helpers.
-     *
-     * @return array
      */
     public function toArray(): array
     {

@@ -23,10 +23,8 @@ class OrderTest extends AbstractTestCase
 
     /**
      * Create expression for testing.
-     *
-     * @return Order
      */
-    final protected function createExpression()
+    final protected function createExpression(): \Charcoal\Source\Order
     {
         return new Order();
     }
@@ -36,10 +34,8 @@ class OrderTest extends AbstractTestCase
      *
      * Assertions:
      * 1. Implements {@see OrderInterface}
-     *
-     * @return void
      */
-    public function testOrderConstruct()
+    public function testOrderConstruct(): void
     {
         $obj = $this->createExpression();
 
@@ -51,9 +47,8 @@ class OrderTest extends AbstractTestCase
      * Provide data for value parsing.
      *
      * @used-by ExpressionTestTrait::testDefaultValues()
-     * @return  array
      */
-    final public function provideDefaultValues()
+    final public function provideDefaultValues(): array
     {
         return [
             'property'  => [ 'property',   null ],
@@ -76,10 +71,8 @@ class OrderTest extends AbstractTestCase
      * 3. Chainable method
      * 4. Accepts NULL
      * 5. Unsupported direction sets DESC
-     *
-     * @return void
      */
-    public function testDirection()
+    public function testDirection(): void
     {
         $obj = $this->createExpression();
 
@@ -98,16 +91,14 @@ class OrderTest extends AbstractTestCase
         $this->assertNull($obj->direction());
 
         /** 5. Unsupported Direction */
-        $that = $obj->setDirection('foo');
+        $obj->setDirection('foo');
         $this->assertEquals('DESC', $obj->direction());
     }
 
     /**
      * Test "direction" property with invalid value.
-     *
-     * @return void
      */
-    public function testDirectionWithInvalidValue()
+    public function testDirectionWithInvalidValue(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->createExpression()->setDirection(0);
@@ -122,10 +113,8 @@ class OrderTest extends AbstractTestCase
      * 3. Chainable method
      * 4. Accepts mixed case
      * 5. Accepts NULL
-     *
-     * @return void
      */
-    public function testMode()
+    public function testMode(): void
     {
         $obj = $this->createExpression();
 
@@ -151,10 +140,8 @@ class OrderTest extends AbstractTestCase
 
     /**
      * Test "direction" property when selecting a direction "mode".
-     *
-     * @return void
      */
-    public function testDirectionMode()
+    public function testDirectionMode(): void
     {
         $obj = $this->createExpression();
 
@@ -172,10 +159,8 @@ class OrderTest extends AbstractTestCase
 
     /**
      * Test "mode" property with unsupported mode.
-     *
-     * @return void
      */
-    public function testModeWithUnsupportedMode()
+    public function testModeWithUnsupportedMode(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->createExpression()->setMode('foobar');
@@ -183,10 +168,8 @@ class OrderTest extends AbstractTestCase
 
     /**
      * Test "mode" property with invalid value.
-     *
-     * @return void
      */
-    public function testModeWithInvalidValue()
+    public function testModeWithInvalidValue(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->createExpression()->setMode([]);
@@ -200,10 +183,8 @@ class OrderTest extends AbstractTestCase
      * 2. Mutated state
      * 3. Chainable method
      * 4. Accepts NULL
-     *
-     * @return void
      */
-    public function testValues()
+    public function testValues(): void
     {
         $obj = $this->createExpression();
 
@@ -233,10 +214,8 @@ class OrderTest extends AbstractTestCase
 
     /**
      * Test "mode" property with blank string.
-     *
-     * @return void
      */
-    public function testValuesWithBlankValue()
+    public function testValuesWithBlankValue(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->createExpression()->setValues('');
@@ -244,10 +223,8 @@ class OrderTest extends AbstractTestCase
 
     /**
      * Test "mode" property with blank string.
-     *
-     * @return void
      */
-    public function testValuesWithEmptyArray()
+    public function testValuesWithEmptyArray(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->createExpression()->setValues([]);
@@ -255,10 +232,8 @@ class OrderTest extends AbstractTestCase
 
     /**
      * Test "mode" property with invalid value.
-     *
-     * @return void
      */
-    public function testValuesWithInvalidValue()
+    public function testValuesWithInvalidValue(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->createExpression()->setValues(42);
@@ -271,10 +246,8 @@ class OrderTest extends AbstractTestCase
      * 1. Mutate all options
      * 2. Partially mutated state
      * 3. Auto-set mode from "condition"
-     *
-     * @return void
      */
-    public function testData()
+    public function testData(): void
     {
         /** 1. Mutate all options */
         $values   = [ 'foo', 'baz', 'qux' ];
@@ -342,10 +315,8 @@ class OrderTest extends AbstractTestCase
      * Test deprecated "string" property.
      *
      * @see FilterTest::testDeprecatedStringExpression()
-     *
-     * @return void
      */
-    public function testDeprecatedStringExpression()
+    public function testDeprecatedStringExpression(): void
     {
         $obj = $this->createExpression();
 
@@ -359,21 +330,14 @@ class OrderTest extends AbstractTestCase
      * @see FilterTest::testDeprecatedStringError()
      *
      * @used-by self::testDeprecatedStringErrorInPhp7()
-     *
-     * @return void
      */
-    public function delegatedTestDeprecatedStringError()
+    public function delegatedTestDeprecatedStringError(): void
     {
         $this->createExpression()->setData([ 'string' => '1 = 1' ]);
     }
 
-    /**
-     *
-     *
-     * @requires PHP >= 7.0
-     * @return   void
-     */
-    public function testDeprecatedStringErrorInPhp7()
+    #[\PHPUnit\Framework\Attributes\RequiresPhp('>= 7.0')]
+    public function testDeprecatedStringErrorInPhp7(): void
     {
         $this->expectDeprecation();
         $this->delegatedTestDeprecatedStringError();

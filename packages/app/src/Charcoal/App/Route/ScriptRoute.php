@@ -36,10 +36,9 @@ class ScriptRoute implements
 
     /**
      * @param mixed|null $data Optional config data.
-     * @return ScriptRouteConfig
      * @see ConfigurableTrait::createConfig()
      */
-    public function createConfig($data = null)
+    public function createConfig($data = null): \Charcoal\App\Route\ScriptRouteConfig
     {
         return new ScriptRouteConfig($data);
     }

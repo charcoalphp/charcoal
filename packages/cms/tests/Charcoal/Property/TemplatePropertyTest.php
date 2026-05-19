@@ -27,8 +27,6 @@ class TemplatePropertyTest extends AbstractTestCase
 
     /**
      * Set up the test.
-     *
-     * @return void
      */
     protected function setUp(): void
     {
@@ -43,26 +41,17 @@ class TemplatePropertyTest extends AbstractTestCase
         $this->obj = new TemplateProperty($dependencies);
     }
 
-    /**
-     * @return void
-     */
-    public function testType()
+    public function testType(): void
     {
         $this->assertEquals('template', $this->obj->type());
     }
 
-    /**
-     * @return void
-     */
-    public function testSqlExtra()
+    public function testSqlExtra(): void
     {
         $this->assertEquals('', $this->obj->sqlExtra());
     }
 
-    /**
-     * @return void
-     */
-    public function testSqlType()
+    public function testSqlType(): void
     {
         $this->obj->setMultiple(false);
         $this->assertEquals('VARCHAR(255)', $this->obj->sqlType());
@@ -71,18 +60,12 @@ class TemplatePropertyTest extends AbstractTestCase
         $this->assertEquals('TEXT', $this->obj->sqlType());
     }
 
-    /**
-     * @return void
-     */
-    public function testSqlPdoType()
+    public function testSqlPdoType(): void
     {
         $this->assertEquals(PDO::PARAM_STR, $this->obj->sqlPdoType());
     }
 
-    /**
-     * @return void
-     */
-    public function testChoices()
+    public function testChoices(): void
     {
         $container = $this->getContainer();
         $templates = $container['config']['templates'];
@@ -109,59 +92,40 @@ class TemplatePropertyTest extends AbstractTestCase
         $this->assertArrayHasKey('zyx', $this->obj->choices());
     }
 
-    /**
-     * @return void
-     */
-    public function testChoicesInvalidKey()
+    public function testChoicesInvalidKey(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->obj->addChoice(3, 'boo');
     }
 
-    /**
-     * @return void
-     */
-    public function testChoicesInvalidString()
+    public function testChoicesInvalidString(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->obj->addChoice('boo', 'boo');
     }
 
-    /**
-     * @return void
-     */
-    public function testChoicesInvalidBoolean()
+    public function testChoicesInvalidBoolean(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->obj->addChoice('boo', true);
     }
 
-    /**
-     * @return void
-     */
-    public function testChoicesInvalidArray()
+    public function testChoicesInvalidArray(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->obj->addChoice('boo', [ 'foo' => 'boo' ]);
     }
 
-    /**
-     * @return void
-     */
-    public function testChoicesInvalidType()
+    public function testChoicesInvalidType(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->obj->addChoice('xyz', null);
     }
 
-    /**
-     * @return void
-     */
-    public function testDisplayVal()
+    public function testDisplayVal(): void
     {
         $container  = $this->getContainer();
         $translator = $container['translator'];
-        $templates  = $container['config']['templates'];
 
         $this->assertEquals('', $this->obj->displayVal(null));
         $this->assertEquals('', $this->obj->displayVal(''));
@@ -189,10 +153,7 @@ class TemplatePropertyTest extends AbstractTestCase
         $this->assertEquals('Oofoof, Zabzab, Xuqxuq', $this->obj->displayVal('foo,baz,qux', [ 'lang' => 'fr' ]));
     }
 
-    /**
-     * @return void
-     */
-    public function testToString()
+    public function testToString(): void
     {
         $this->assertEquals('', (string)$this->obj);
 

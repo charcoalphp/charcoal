@@ -20,11 +20,7 @@ class ImagemagickResizeEffect extends AbstractResizeEffect
      */
     protected function doResize($width, $height, $bestFit = false)
     {
-        if ($this->adaptive()) {
-            $option = '-adaptive-resize';
-        } else {
-            $option = '-resize';
-        }
+        $option = $this->adaptive() ? '-adaptive-resize' : '-resize';
 
         $size = $this->size();
         if ($size) {

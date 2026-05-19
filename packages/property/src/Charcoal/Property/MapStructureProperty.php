@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Charcoal\Property;
 
 // From 'charcoal-property'
@@ -12,10 +14,9 @@ class MapStructureProperty extends StructureProperty
 {
     /**
      * Retrieve the property's type identifier.
-     *
-     * @return string
      */
-    public function type()
+    #[\Override]
+    public function type(): string
     {
         return 'map-structure';
     }

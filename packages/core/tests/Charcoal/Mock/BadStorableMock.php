@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Charcoal\Tests\Mock;
 
 // From 'charcoal-core'
@@ -16,10 +18,8 @@ class BadStorableMock extends StorableMock
 
     /**
      * Whether to fail before or after an event.
-     *
-     * @var boolean
      */
-    private $fail = self::FAIL_BEFORE;
+    private readonly bool $fail;
 
     /**
      * Create new storable mock.
@@ -38,7 +38,7 @@ class BadStorableMock extends StorableMock
      *
      * @return static
      */
-    public static function createToFailBefore()
+    public static function createToFailBefore(): self
     {
         return new self(self::FAIL_BEFORE);
     }
@@ -48,7 +48,7 @@ class BadStorableMock extends StorableMock
      *
      * @return static
      */
-    public static function createToFailAfter()
+    public static function createToFailAfter(): self
     {
         return new self(self::FAIL_AFTER);
     }
@@ -59,7 +59,8 @@ class BadStorableMock extends StorableMock
      * @see    StorableTrait::preSave()
      * @return boolean TRUE to proceed with creation; FALSE to stop creation.
      */
-    protected function preSave()
+    #[\Override]
+    protected function preSave(): bool
     {
         return $this->fail;
     }
@@ -70,7 +71,8 @@ class BadStorableMock extends StorableMock
      * @see    StorableTrait::postSave()
      * @return boolean TRUE to indicate object was created.
      */
-    protected function postSave()
+    #[\Override]
+    protected function postSave(): bool
     {
         return !$this->fail;
     }
@@ -82,7 +84,8 @@ class BadStorableMock extends StorableMock
      * @param  string[] $keys Optional list of properties to update.
      * @return boolean TRUE to proceed with update; FALSE to stop update.
      */
-    protected function preUpdate(array $keys = null)
+    #[\Override]
+    protected function preUpdate(?array $keys = null): bool
     {
         return $this->fail;
     }
@@ -94,7 +97,8 @@ class BadStorableMock extends StorableMock
      * @param  string[] $keys Optional list of properties to update.
      * @return boolean TRUE to indicate object was updated.
      */
-    protected function postUpdate(array $keys = null)
+    #[\Override]
+    protected function postUpdate(?array $keys = null): bool
     {
         return !$this->fail;
     }
@@ -105,7 +109,8 @@ class BadStorableMock extends StorableMock
      * @see    StorableTrait::preDelete()
      * @return boolean TRUE to proceed with deletion; FALSE to stop deletion.
      */
-    protected function preDelete()
+    #[\Override]
+    protected function preDelete(): bool
     {
         return $this->fail;
     }
@@ -116,7 +121,8 @@ class BadStorableMock extends StorableMock
      * @see    StorableTrait::postDelete()
      * @return boolean TRUE to indicate object was deleted.
      */
-    protected function postDelete()
+    #[\Override]
+    protected function postDelete(): bool
     {
         return !$this->fail;
     }

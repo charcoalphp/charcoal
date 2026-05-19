@@ -15,11 +15,11 @@ use Charcoal\Ui\MenuItem\MenuItemInterface;
  */
 abstract class AbstractMenuItem extends AbstractUiItem implements MenuItemInterface
 {
+    public $menuItemBuilder;
     /**
      * Parent menu item
-     * @var MenuInterface $menu
      */
-    private $menu;
+    private ?\Charcoal\Ui\Menu\MenuInterface $menu = null;
 
     /**
      * @var string $ident
@@ -51,7 +51,7 @@ abstract class AbstractMenuItem extends AbstractUiItem implements MenuItemInterf
      *
      * @param array|\ArrayAccess $data Class dependencies.
      */
-    public function __construct($data)
+    public function __construct(?array $data)
     {
         parent::__construct($data);
 
@@ -162,7 +162,7 @@ abstract class AbstractMenuItem extends AbstractUiItem implements MenuItemInterf
      */
     public function hasUrl()
     {
-        return !!($this->url());
+        return (bool) $this->url();
     }
 
     /**
@@ -205,12 +205,12 @@ abstract class AbstractMenuItem extends AbstractUiItem implements MenuItemInterf
      * @param callable $childCallback Optional callback.
      * @return MenuItemInterface[]
      */
-    public function children(callable $childCallback = null)
+    public function children(?callable $childCallback = null)
     {
         $children = $this->children;
         uasort($children, ['self', 'sortChildrenByPrioriy']);
 
-        $childCallback = isset($childCallback) ? $childCallback : $this->childCallback;
+        $childCallback ??= $this->childCallback;
         foreach ($children as $child) {
             if ($childCallback) {
                 $childCallback($child);

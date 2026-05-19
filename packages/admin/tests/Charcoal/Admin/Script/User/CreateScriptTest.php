@@ -31,21 +31,14 @@ use Charcoal\Tests\Admin\ContainerProvider;
  */
 class CreateScriptTest extends AbstractTestCase
 {
-    /**
-     * @var Container
-     */
-    private $container;
+    private \Pimple\Container $container;
 
     /**
      * Instance of class under test
-     * @var CreateScript
      */
-    private $obj;
+    private \Charcoal\Admin\Script\User\CreateScript $obj;
 
-    /**
-     * @return Container
-     */
-    private function getContainer()
+    private function getContainer(): \Pimple\Container
     {
         $container = new Container();
         $containerProvider = new ContainerProvider();
@@ -53,9 +46,6 @@ class CreateScriptTest extends AbstractTestCase
         return $container;
     }
 
-    /**
-     * @return void
-     */
     public function setUp(): void
     {
         $this->container = $this->getContainer();
@@ -68,10 +58,7 @@ class CreateScriptTest extends AbstractTestCase
         ]);
     }
 
-    /**
-     * @return void
-     */
-    public function testDefaultArguments()
+    public function testDefaultArguments(): void
     {
         $args = $this->obj->defaultArguments();
 
@@ -80,30 +67,13 @@ class CreateScriptTest extends AbstractTestCase
         $this->assertArrayHasKey('roles', $args);
     }
 
-    /**
-     * @return void
-     */
-    public function testArguments()
+    public function testArguments(): void
     {
         $args = $this->obj->arguments();
 
         $this->assertArrayHasKey('email', $args);
         $this->assertArrayHasKey('password', $args);
         $this->assertArrayHasKey('roles', $args);
-    }
-
-    /**
-     * @return integer
-     */
-    private function numAdminUsersInSource()
-    {
-        $source = $this->container['model/factory']->create('charcoal/admin/user')->source();
-        $source->createTable();
-
-        $table = $source->table();
-        $q = 'select count(`email`) as num from `'.$table.'`';
-        $req = $this->container['database']->query($q);
-        return $req->fetchColumn(0);
     }
 
     // public function testInvoke()

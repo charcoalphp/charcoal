@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Charcoal\User;
 
 // From 'laminas/laminas-permissions-acl'

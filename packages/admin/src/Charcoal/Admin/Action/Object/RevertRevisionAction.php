@@ -50,7 +50,8 @@ class RevertRevisionAction extends AdminAction implements ObjectContainerInterfa
      *
      * @return string[]
      */
-    protected function validDataFromRequest()
+    #[\Override]
+    protected function validDataFromRequest(): array
     {
         return array_merge([
             'obj_type',
@@ -66,12 +67,12 @@ class RevertRevisionAction extends AdminAction implements ObjectContainerInterfa
      * @throws InvalidArgumentException If the given revision is invalid.
      * @return ObjectContainerInterface Chainable
      */
-    protected function setRevNum($revNum)
+    protected function setRevNum($revNum): static
     {
         if (!is_numeric($revNum)) {
             throw new InvalidArgumentException(sprintf(
                 'Revision must be an integer, received %s.',
-                (is_object($revNum) ? get_class($revNum) : gettype($revNum))
+                (get_debug_type($revNum))
             ));
         }
 

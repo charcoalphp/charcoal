@@ -11,26 +11,16 @@ use InvalidArgumentException;
  */
 class ValidatorResult
 {
-    /**
-     * @var string $ident
-     */
-    private $ident;
+    private ?string $ident = null;
 
     /**
      * Can be `notice`, `warning` or `error`
-     * @var string $level
      */
-    private $level;
+    private ?string $level = null;
 
-    /**
-     * @var string $message
-     */
-    private $message;
+    private ?string $message = null;
 
-    /**
-     * @var DateTimeInterface $ts
-     */
-    private $ts;
+    private \DateTimeInterface $ts;
 
     /**
      * @param array|\ArrayAccess $data Optional data.
@@ -47,9 +37,8 @@ class ValidatorResult
 
     /**
      * @param array $data The validator result data.
-     * @return self
      */
-    public function setData(array $data)
+    public function setData(array $data): static
     {
         if (isset($data['ident'])) {
             $this->setIdent($data['ident']);
@@ -69,9 +58,8 @@ class ValidatorResult
     /**
      * @param string $ident The result identigier.
      * @throws InvalidArgumentException If parameter is not valid.
-     * @return ValidatorResult
      */
-    public function setIdent($ident)
+    public function setIdent($ident): static
     {
         if (!is_string($ident)) {
             throw new InvalidArgumentException(
@@ -85,7 +73,7 @@ class ValidatorResult
     /**
      * @return string
      */
-    public function ident()
+    public function ident(): ?string
     {
         return $this->ident;
     }
@@ -93,9 +81,8 @@ class ValidatorResult
     /**
      * @param string $level The validation level ('notice', 'warning' or 'error').
      * @throws InvalidArgumentException If parameter is not a valid level.
-     * @return ValidatorResult
      */
-    public function setLevel($level)
+    public function setLevel($level): static
     {
         if (!is_string($level)) {
             throw new InvalidArgumentException(
@@ -114,7 +101,7 @@ class ValidatorResult
     /**
      * @return string
      */
-    public function level()
+    public function level(): ?string
     {
         return $this->level;
     }
@@ -122,9 +109,8 @@ class ValidatorResult
     /**
      * @param string $message The validation message.
      * @throws InvalidArgumentException If parameter is not valid.
-     * @return ValidatorResult
      */
-    public function setMessage($message)
+    public function setMessage($message): static
     {
         if (!is_string($message)) {
             throw new InvalidArgumentException(
@@ -138,7 +124,7 @@ class ValidatorResult
     /**
      * @return string
      */
-    public function message()
+    public function message(): ?string
     {
         return $this->message;
     }
@@ -146,9 +132,8 @@ class ValidatorResult
     /**
      * @param string|DateTime $ts The datetime value.
      * @throws InvalidArgumentException If parameter is not valid "datetime".
-     * @return ValidatorResult
      */
-    public function setTs($ts)
+    public function setTs($ts): static
     {
         if (is_string($ts)) {
             $ts = new DateTime($ts);
@@ -165,7 +150,7 @@ class ValidatorResult
     /**
      * @return DateTime
      */
-    public function ts()
+    public function ts(): \DateTimeInterface
     {
         return $this->ts;
     }

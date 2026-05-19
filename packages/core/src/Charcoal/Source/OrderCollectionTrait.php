@@ -112,16 +112,14 @@ trait OrderCollectionTrait
 
         throw new InvalidArgumentException(sprintf(
             'Order must be a string, structure, or Expression object; received %s',
-            is_object($order) ? get_class($order) : gettype($order)
+            get_debug_type($order)
         ));
     }
 
     /**
      * Determine if the object has any query orders.
-     *
-     * @return boolean
      */
-    public function hasOrders()
+    public function hasOrders(): bool
     {
         return !empty($this->orders);
     }
@@ -165,5 +163,5 @@ trait OrderCollectionTrait
      * @param  array $data Optional expression data.
      * @return OrderInterface A new order expression object.
      */
-    abstract protected function createOrder(array $data = null);
+    abstract protected function createOrder(?array $data = null);
 }

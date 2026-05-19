@@ -18,9 +18,6 @@ class NumberPropertyTest extends AbstractTestCase
      */
     public $obj;
 
-    /**
-     * @return void
-     */
     protected function setUp(): void
     {
         $container = $this->getContainer();
@@ -32,21 +29,18 @@ class NumberPropertyTest extends AbstractTestCase
         ]);
     }
 
-    /**
-     * @return void
-     */
-    public function testType()
+    public function testType(): void
     {
         $this->assertEquals('number', $this->obj->type());
     }
 
-    public function testDefaults()
+    public function testDefaults(): void
     {
         $this->assertNull($this->obj->getMin());
         $this->assertNull($this->obj->getMax());
     }
 
-    public function testSetData()
+    public function testSetData(): void
     {
         $this->obj->setData([
             'min' => 0,
@@ -56,7 +50,7 @@ class NumberPropertyTest extends AbstractTestCase
         $this->assertEquals(100, $this->obj->getMax());
     }
 
-    public function testValidationMethods()
+    public function testValidationMethods(): void
     {
         $ret = $this->obj->validationMethods();
         $this->assertContains('min', $ret);

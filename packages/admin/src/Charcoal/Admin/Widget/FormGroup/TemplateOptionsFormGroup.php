@@ -80,14 +80,12 @@ class TemplateOptionsFormGroup extends StructureFormGroup
      *
      * @var TemplateableInterface|string|null
      */
-    private $controllerIdent;
+    private ?string $controllerIdent = null;
 
     /**
      * Store the metadata loader instance.
-     *
-     * @var MetadataLoader
      */
-    private $metadataLoader;
+    private ?\Charcoal\Model\Service\MetadataLoader $metadataLoader = null;
 
     /**
      * Set the form object's template controller identifier.
@@ -95,7 +93,7 @@ class TemplateOptionsFormGroup extends StructureFormGroup
      * @param  mixed $ident The template controller identifier.
      * @return TemplateableInterface Chainable
      */
-    public function setControllerIdent($ident)
+    public function setControllerIdent(string $ident): static
     {
         if (class_exists($ident)) {
             $this->controllerIdent = $ident;
@@ -103,7 +101,7 @@ class TemplateOptionsFormGroup extends StructureFormGroup
             return $this;
         }
 
-        if (substr($ident, -9) !== '-template') {
+        if (!str_ends_with($ident, '-template')) {
             $ident .= '-template';
         }
 
@@ -114,10 +112,8 @@ class TemplateOptionsFormGroup extends StructureFormGroup
 
     /**
      * Retrieve the form object's template controller identifier.
-     *
-     * @return mixed
      */
-    public function controllerIdent()
+    public function controllerIdent(): ?string
     {
         return $this->controllerIdent;
     }
@@ -132,7 +128,7 @@ class TemplateOptionsFormGroup extends StructureFormGroup
      * @throws UnexpectedValueException If a property data is invalid.
      * @return StructureFormGroup
      */
-    public function setTemplateProperty($propertyIdent)
+    public function setTemplateProperty($propertyIdent): static
     {
         if ($propertyIdent === null) {
             $this->templateProperty = null;
@@ -155,11 +151,11 @@ class TemplateOptionsFormGroup extends StructureFormGroup
             throw new UnexpectedValueException(sprintf(
                 'The "%1$s" property is not defined on [%2$s]',
                 $propertyIdent,
-                get_class($this->obj())
+                $this->obj()::class
             ));
         }
 
-        if ($property === null) {
+        if (!$property instanceof \Charcoal\Property\PropertyInterface) {
             $property = $obj->property($propertyIdent);
         }
 
@@ -183,7 +179,7 @@ class TemplateOptionsFormGroup extends StructureFormGroup
             } else {
                 throw new RuntimeException(sprintf(
                     'Storage property owner is not defined for "%s"',
-                    get_class($this)
+                    static::class
                 ));
             }
         }
@@ -197,6 +193,7 @@ class TemplateOptionsFormGroup extends StructureFormGroup
      * @throws RuntimeException If the storage property was not previously set.
      * @return PropertyInterface
      */
+    #[\Override]
     public function storageProperty()
     {
         if ($this->storageProperty === null) {
@@ -206,7 +203,7 @@ class TemplateOptionsFormGroup extends StructureFormGroup
             } else {
                 throw new RuntimeException(sprintf(
                     'Storage property owner is not defined for "%s"',
-                    get_class($this)
+                    static::class
                 ));
             }
         }
@@ -220,6 +217,7 @@ class TemplateOptionsFormGroup extends StructureFormGroup
      * @param  Container $container A dependencies container instance.
      * @return void
      */
+    #[\Override]
     protected function setDependencies(Container $container)
     {
         parent::setDependencies($container);
@@ -231,9 +229,8 @@ class TemplateOptionsFormGroup extends StructureFormGroup
      * Set a metadata loader.
      *
      * @param  MetadataLoader $loader The loader instance, used to load metadata.
-     * @return self
      */
-    protected function setMetadataLoader(MetadataLoader $loader)
+    protected function setMetadataLoader(MetadataLoader $loader): static
     {
         $this->metadataLoader = $loader;
 
@@ -244,14 +241,13 @@ class TemplateOptionsFormGroup extends StructureFormGroup
      * Retrieve the metadata loader.
      *
      * @throws RuntimeException If the metadata loader was not previously set.
-     * @return MetadataLoader
      */
-    protected function metadataLoader()
+    protected function metadataLoader(): \Charcoal\Model\Service\MetadataLoader
     {
-        if ($this->metadataLoader === null) {
+        if (!$this->metadataLoader instanceof \Charcoal\Model\Service\MetadataLoader) {
             throw new RuntimeException(sprintf(
                 'Metadata Loader is not defined for "%s"',
-                get_class($this)
+                static::class
             ));
         }
 
@@ -266,8 +262,7 @@ class TemplateOptionsFormGroup extends StructureFormGroup
      */
     protected function loadMetadata($metadataIdent)
     {
-        $metadata = $this->metadataLoader()->load($metadataIdent, $this->metadataClass());
-        return $metadata;
+        return $this->metadataLoader()->load($metadataIdent, $this->metadataClass());
     }
 
     /**
@@ -283,10 +278,8 @@ class TemplateOptionsFormGroup extends StructureFormGroup
 
     /**
      * Retrieve the class name of the metadata object.
-     *
-     * @return string
      */
-    protected function metadataClass()
+    protected function metadataClass(): string
     {
         return StructureMetadata::class;
     }
@@ -297,6 +290,7 @@ class TemplateOptionsFormGroup extends StructureFormGroup
      * @param  boolean $reload Rebuild the form group's structure.
      * @return void
      */
+    #[\Override]
     protected function finalizeStructure($reload = false)
     {
         if ($reload || !$this->isStructureFinalized) {
@@ -311,7 +305,7 @@ class TemplateOptionsFormGroup extends StructureFormGroup
             }
 
             $controllerInterfaces = (array)$this->controllerIdent();
-            if (!empty($controllerInterfaces)) {
+            if ($controllerInterfaces !== []) {
                 $metadataLoader = $this->metadataLoader();
 
                 $controllerStructKey = $controllerInterfaces;

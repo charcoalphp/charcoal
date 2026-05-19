@@ -23,9 +23,6 @@ class RendererTest extends AbstractTestCase
      */
     public $obj;
 
-    /**
-     * @return void
-     */
     public function setUp(): void
     {
         $loader = new MustacheLoader([
@@ -44,10 +41,7 @@ class RendererTest extends AbstractTestCase
         ]);
     }
 
-    /**
-     * @return void
-     */
-    public function testRender()
+    public function testRender(): void
     {
         $response = new Response();
         $ret = $this->obj->render($response, 'foo', [ 'foo' => 'Charcoal' ]);

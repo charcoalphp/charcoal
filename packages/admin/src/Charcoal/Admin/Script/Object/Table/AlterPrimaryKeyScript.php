@@ -78,6 +78,7 @@ class AlterPrimaryKeyScript extends AdminScript
     /**
      * @return void
      */
+    #[\Override]
     protected function init()
     {
         parent::init();
@@ -93,9 +94,8 @@ class AlterPrimaryKeyScript extends AdminScript
      *
      * @param  RequestInterface  $request  A PSR-7 compatible Request instance.
      * @param  ResponseInterface $response A PSR-7 compatible Response instance.
-     * @return ResponseInterface
      */
-    public function run(RequestInterface $request, ResponseInterface $response)
+    public function run(RequestInterface $request, ResponseInterface $response): ResponseInterface
     {
         unset($request);
 
@@ -110,10 +110,8 @@ class AlterPrimaryKeyScript extends AdminScript
 
     /**
      * Execute the prime directive.
-     *
-     * @return self
      */
-    public function start()
+    public function start(): static
     {
         $cli = $this->climate();
 
@@ -235,7 +233,7 @@ class AlterPrimaryKeyScript extends AdminScript
      * @throws RuntimeException If the $oldKey does not exist.
      * @return IdProperty[]
      */
-    protected function prepareProperties($oldKey, $newKey, &$oldProp = null, &$newProp = null)
+    protected function prepareProperties($oldKey, $newKey, &$oldProp = null, &$newProp = null): array
     {
         $model  = $this->targetModel();
         $source = $model->source();
@@ -282,11 +280,11 @@ class AlterPrimaryKeyScript extends AdminScript
                 );
             }
 
-            if (preg_match('~\bINT\(?(?:$|\b)~i', $col['Type'])) {
+            if (preg_match('~\bINT\(?(?:$|\b)~i', (string) $col['Type'])) {
                 $oldProp->setMode(IdProperty::MODE_AUTO_INCREMENT);
-            } elseif (preg_match('~(?:^|\b)(?:VAR)?CHAR\(13\)(?:$|\b)~i', $col['Type'])) {
+            } elseif (preg_match('~(?:^|\b)(?:VAR)?CHAR\(13\)(?:$|\b)~i', (string) $col['Type'])) {
                 $oldProp->setMode(IdProperty::MODE_UNIQID);
-            } elseif (preg_match('~(?:^|\b)(?:VAR)?CHAR\(36\)(?:$|\b)~i', $col['Type'])) {
+            } elseif (preg_match('~(?:^|\b)(?:VAR)?CHAR\(36\)(?:$|\b)~i', (string) $col['Type'])) {
                 $oldProp->setMode(IdProperty::MODE_UUID);
             } else {
                 $oldProp->setMode(IdProperty::MODE_CUSTOM);
@@ -299,7 +297,7 @@ class AlterPrimaryKeyScript extends AdminScript
             throw new RuntimeException(
                 sprintf(
                     'The model [%1$s] does not have the target field [%2$s]',
-                    get_class($model),
+                    $model::class,
                     $oldKey
                 )
             );
@@ -316,41 +314,30 @@ class AlterPrimaryKeyScript extends AdminScript
      *
      * @param  string|IdProperty $mode The mode or property to resolve.
      * @throws UnexpectedValueException If the ID mode is invalid.
-     * @return string
      */
-    protected function labelFromMode($mode)
+    protected function labelFromMode($mode): string
     {
         if ($mode instanceof IdProperty) {
             $mode = $mode->getMode();
         }
-
-        switch ($mode) {
-            case IdProperty::MODE_AUTO_INCREMENT:
-                return 'auto-increment';
-
-            case IdProperty::MODE_UNIQID:
-                return 'uniqid()';
-
-            case IdProperty::MODE_UUID:
-                return 'RFC-4122 UUID';
-
-            case IdProperty::MODE_CUSTOM:
-                return 'custom';
-        }
-
-        throw new UnexpectedValueException(sprintf(
-            'The ID mode was not recognized: %s',
-            is_object($mode) ? get_class($mode) : gettype($mode)
-        ));
+        return match ($mode) {
+            IdProperty::MODE_AUTO_INCREMENT => 'auto-increment',
+            IdProperty::MODE_UNIQID => 'uniqid()',
+            IdProperty::MODE_UUID => 'RFC-4122 UUID',
+            IdProperty::MODE_CUSTOM => 'custom',
+            default => throw new UnexpectedValueException(sprintf(
+                'The ID mode was not recognized: %s',
+                get_debug_type($mode)
+            )),
+        };
     }
 
     /**
      * Retrieve a label for the property.
      *
      * @param  IdProperty $prop The new ID property to analyse.
-     * @return string|null
      */
-    protected function labelFromProp(IdProperty $prop)
+    protected function labelFromProp(IdProperty $prop): ?string
     {
         $mode = $prop->getMode();
         switch ($mode) {
@@ -362,7 +349,7 @@ class AlterPrimaryKeyScript extends AdminScript
 
             default:
                 $label = $this->labelFromMode($mode);
-                if ($label) {
+                if ($label !== '' && $label !== '0') {
                     return sprintf('auto-generated ID (%s)', $label);
                 } else {
                     return 'auto-generated ID';
@@ -377,11 +364,10 @@ class AlterPrimaryKeyScript extends AdminScript
      *
      * @param  IdProperty $newProp The new ID property to analyse.
      * @param  IdProperty $oldProp The previous ID property to analyse.
-     * @return self
      */
-    protected function describeConversion(IdProperty $newProp, IdProperty $oldProp = null)
+    protected function describeConversion(IdProperty $newProp, ?IdProperty $oldProp = null): static
     {
-        if ($oldProp) {
+        if ($oldProp instanceof \Charcoal\Property\IdProperty) {
             $new  = $this->labelFromProp($newProp);
             $old  = $this->labelFromProp($oldProp);
             $desc = sprintf('Converting to %s from %s.', $new, $old);
@@ -401,7 +387,7 @@ class AlterPrimaryKeyScript extends AdminScript
      * @param  IdProperty $prop The property to retrieve the field from.
      * @return PropertyField
      */
-    protected function propertyField(IdProperty $prop)
+    protected function propertyField(IdProperty $prop): \Charcoal\Property\PropertyField|false
     {
         $fields = $prop->fields();
 
@@ -447,12 +433,7 @@ class AlterPrimaryKeyScript extends AdminScript
     private function oldPrimaryKey()
     {
         if ($this->oldPrimaryKey === null) {
-            if ($this->isPrimaryKeyDifferent()) {
-                $oldKey = $this->climate()->arguments->get('old_key');
-            } else {
-                $oldKey = $this->targetModel()->key();
-            }
-
+            $oldKey = $this->isPrimaryKeyDifferent() ? $this->climate()->arguments->get('old_key') : $this->targetModel()->key();
             $this->oldPrimaryKey = $oldKey;
         }
 
@@ -469,11 +450,7 @@ class AlterPrimaryKeyScript extends AdminScript
         if ($this->newPrimaryKey === null) {
             $model = $this->targetModel();
 
-            if ($this->isPrimaryKeyDifferent()) {
-                $newKey = $model->key();
-            } else {
-                $newKey = sprintf('%s_new', $model->key());
-            }
+            $newKey = $this->isPrimaryKeyDifferent() ? $model->key() : sprintf('%s_new', $model->key());
 
             $this->newPrimaryKey = $newKey;
         }
@@ -486,9 +463,8 @@ class AlterPrimaryKeyScript extends AdminScript
      *
      * @param  array|Traversable $rows The target model's existing rows.
      * @throws InvalidArgumentException If the given argument is not iterable.
-     * @return boolean
      */
-    private function describeCount($rows = null)
+    private function describeCount($rows = null): bool
     {
         if ($rows === null) {
             $rows = $this->fetchTargetRows();
@@ -498,7 +474,7 @@ class AlterPrimaryKeyScript extends AdminScript
             throw new InvalidArgumentException(
                 sprintf(
                     'The rows must be iterable; received %s',
-                    is_object($rows) ? get_class($rows) : gettype($rows)
+                    get_debug_type($rows)
                 )
             );
         }
@@ -506,7 +482,7 @@ class AlterPrimaryKeyScript extends AdminScript
         $cli   = $this->climate();
         $model = $this->targetModel();
 
-        if (is_array($rows) || $rows instanceof Countable) {
+        if (is_countable($rows)) {
             $count = count($rows);
         } elseif ($rows instanceof PDOStatement) {
             $count = $rows->rowCount();
@@ -525,12 +501,10 @@ class AlterPrimaryKeyScript extends AdminScript
             if (!$this->quiet()) {
                 $cli->comment('The object table has 1 row.');
             }
-        } else {
-            if (!$this->quiet()) {
-                $cli->comment(
-                    sprintf('The object table has %s rows.', $count)
-                );
-            }
+        } elseif (!$this->quiet()) {
+            $cli->comment(
+                sprintf('The object table has %s rows.', $count)
+            );
         }
 
         return true;
@@ -541,9 +515,8 @@ class AlterPrimaryKeyScript extends AdminScript
      *
      * @param  PropertyField $field The new ID field.
      * @param  IdProperty    $prop  The new ID property.
-     * @return self
      */
-    private function insertNewField(PropertyField $field, IdProperty $prop)
+    private function insertNewField(PropertyField $field, IdProperty $prop): static
     {
         unset($prop);
 
@@ -588,9 +561,8 @@ class AlterPrimaryKeyScript extends AdminScript
      *
      * @param  PropertyField $field The previous ID field.
      * @param  IdProperty    $prop  The previous ID property.
-     * @return self
      */
-    private function dropPrimaryKey(PropertyField $field, IdProperty $prop)
+    private function dropPrimaryKey(PropertyField $field, IdProperty $prop): static
     {
         $keepId = $this->climate()->arguments->defined('keep_id');
         $model  = $this->targetModel();
@@ -628,9 +600,8 @@ class AlterPrimaryKeyScript extends AdminScript
      *
      * @param  PropertyField $field The new ID field.
      * @param  IdProperty    $prop  The new ID property.
-     * @return self
      */
-    private function applyPrimaryKey(PropertyField $field, IdProperty $prop)
+    private function applyPrimaryKey(PropertyField $field, IdProperty $prop): static
     {
         unset($prop);
 
@@ -655,9 +626,8 @@ class AlterPrimaryKeyScript extends AdminScript
      * @param  PropertyField $field The field to rename.
      * @param  string        $from  The original field key.
      * @param  string        $to    The new field key.
-     * @return self
      */
-    private function renameColumn(PropertyField $field, $from, $to)
+    private function renameColumn(PropertyField $field, $from, $to): static
     {
         $model  = $this->targetModel();
         $source = $model->source();
@@ -681,9 +651,8 @@ class AlterPrimaryKeyScript extends AdminScript
      * Remove the given field.
      *
      * @param  PropertyField $field The field to remove.
-     * @return self
      */
-    private function removeColumn(PropertyField $field)
+    private function removeColumn(PropertyField $field): static
     {
         $source = $this->targetModel()->source();
 
@@ -707,21 +676,20 @@ class AlterPrimaryKeyScript extends AdminScript
      * @param  IdProperty    $oldProp  The previous ID property.
      * @param  PropertyField $oldField The previous ID field.
      * @throws InvalidArgumentException If the new property does not implement the proper mode.
-     * @return self
      */
     protected function convertIdField(
         IdProperty $newProp,
         PropertyField $newField,
         IdProperty $oldProp,
         PropertyField $oldField
-    ) {
+    ): static {
         $cli = $this->climate();
 
         $keepId = $cli->arguments->defined('keep_id');
         $model  = $this->targetModel();
         $source = $model->source();
         $table  = $source->table();
-        $dbh    = $source->db();
+        $source->db();
 
         $newKey = $newProp->getIdent();
         $oldKey = $oldProp->getIdent();
@@ -739,7 +707,7 @@ class AlterPrimaryKeyScript extends AdminScript
             switch ($mode) {
                 case IdProperty::MODE_AUTO_INCREMENT:
                     $pool = 0;
-                    $ids  = function () use (&$pool) {
+                    $ids  = function () use (&$pool): int {
                         return ++$pool;
                     };
                     break;
@@ -750,7 +718,7 @@ class AlterPrimaryKeyScript extends AdminScript
                     $generator = $this->idGenerator();
 
                     $pool = [];
-                    $ids  = function () use (&$pool, $model, $generator) {
+                    $ids  = function () use (&$pool, $generator) {
                         $id = $generator();
                         while (in_array($id, $pool)) {
                             $id = $generator();
@@ -764,7 +732,7 @@ class AlterPrimaryKeyScript extends AdminScript
 
                 default:
                     $pool = [];
-                    $ids  = function () use (&$pool, $newProp) {
+                    $ids  = function () use (&$pool, $newProp): ?string {
                         $id = $newProp->autoGenerate();
                         while (in_array($id, $pool)) {
                             $id = $newProp->autoGenerate();
@@ -830,14 +798,13 @@ class AlterPrimaryKeyScript extends AdminScript
      * @param  IdProperty    $oldProp  The previous ID property.
      * @param  PropertyField $oldField The previous ID field.
      * @throws InvalidArgumentException If the new property does not implement the proper mode.
-     * @return self
      */
     protected function syncRelatedFields(
         IdProperty $newProp,
         PropertyField $newField,
         IdProperty $oldProp,
         PropertyField $oldField
-    ) {
+    ): static {
         unset($newProp, $oldProp, $oldField);
 
         $cli = $this->climate();
@@ -907,21 +874,18 @@ class AlterPrimaryKeyScript extends AdminScript
      *
      * @return array
      */
+    #[\Override]
     public function defaultArguments()
     {
         static $arguments;
 
         if ($arguments === null) {
-            $validateFieldName = function ($response) {
-                return is_string($response) && strlen($response) > 0;
-            };
+            $validateFieldName = (fn($response): bool => is_string($response) && $response !== '');
 
-            $validateCallback = function ($response) {
-                return is_string($response) && (strpos($callable, '::') > 1 || function_exists($response));
-            };
+            $validateCallback = (fn($response): bool => is_string($response) && (strpos($callable, '::') > 1 || function_exists($response)));
 
-            $validateModel = function ($response) {
-                if (strlen($response) === 0) {
+            $validateModel = function ($response): bool {
+                if ((string) $response === '') {
                     return false;
                 }
 
@@ -936,8 +900,8 @@ class AlterPrimaryKeyScript extends AdminScript
                 return true;
             };
 
-            $validateModels = function ($response) {
-                if (strlen($response) === 0) {
+            $validateModels = function ($response): bool {
+                if ((string) $response === '') {
                     return false;
                 }
 
@@ -1018,9 +982,8 @@ class AlterPrimaryKeyScript extends AdminScript
      *
      * @param  mixed $callable A function or method.
      * @throws InvalidArgumentException If the given argument is not a callable function.
-     * @return self
      */
-    public function setIdGenerator($callable)
+    public function setIdGenerator($callable): static
     {
         $this->idGenerator = $this->parseIdGenerator($callable);
 
@@ -1047,16 +1010,16 @@ class AlterPrimaryKeyScript extends AdminScript
         $bail     = false;
 
         if (is_array($callable) && count($callable) === 2) {
-            list($class, $func) = $callable;
+            [$class, $func] = $callable;
             $isMethod = ($class && $func);
         } elseif (is_string($callable) && strpos($callable, '::') > 1) {
-            list($class, $func) = explode('::', $callable);
+            [$class, $func] = explode('::', $callable);
             $isMethod = ($class && $func);
         }
 
         if ($isMethod) {
             $model   = $this->targetModel();
-            $isModel = is_a($model, $class);
+            $isModel = $model instanceof $class;
 
             $method = new ReflectionMethod($class, $func);
             if ($isModel && $method->isPublic()) {
@@ -1073,7 +1036,7 @@ class AlterPrimaryKeyScript extends AdminScript
                 sprintf(
                     'The ID generator must be callable, received: %s',
                     is_object($callable)
-                        ? get_class($callable)
+                        ? $callable::class
                         : (is_string($callable)
                             ? $callable
                             : gettype($callable)
@@ -1093,7 +1056,7 @@ class AlterPrimaryKeyScript extends AdminScript
      */
     public function idGenerator()
     {
-        if (!isset($this->idGenerator)) {
+        if ($this->idGenerator === null) {
             throw new RuntimeException('A function to generate a unique ID must be provided.');
         }
 
@@ -1105,9 +1068,8 @@ class AlterPrimaryKeyScript extends AdminScript
      *
      * @param  string|ModelInterface $model An object model.
      * @throws InvalidArgumentException If the given argument is not a model.
-     * @return self
      */
-    public function setTargetModel($model)
+    public function setTargetModel($model): static
     {
         if (is_string($model)) {
             $model = $this->modelFactory()->get($model);
@@ -1135,7 +1097,7 @@ class AlterPrimaryKeyScript extends AdminScript
      */
     public function targetModel()
     {
-        if (!isset($this->targetModel)) {
+        if ($this->targetModel === null) {
             throw new RuntimeException('A model must be targeted.');
         }
 
@@ -1147,14 +1109,13 @@ class AlterPrimaryKeyScript extends AdminScript
      *
      * @param  string|array $models One or more object models.
      * @throws InvalidArgumentException If the given argument is not a model.
-     * @return self
      */
-    public function setRelatedModels($models)
+    public function setRelatedModels($models): static
     {
         $models = $this->parseAsArray($models);
         foreach ($models as $i => $model) {
             if (is_string($model)) {
-                list($model, $prop) = $this->resolveRelatedModel($model);
+                [$model, $prop] = $this->resolveRelatedModel($model);
                 $models[$i]                                 = $model;
                 $this->relatedProperties[$model->objType()] = $prop;
             } elseif ($model instanceof ModelInterface) {
@@ -1162,7 +1123,7 @@ class AlterPrimaryKeyScript extends AdminScript
                     throw new InvalidArgumentException(
                         sprintf(
                             'The related model [%s] requires a target property',
-                            get_class($model)
+                            $model::class
                         )
                     );
                 }
@@ -1189,16 +1150,16 @@ class AlterPrimaryKeyScript extends AdminScript
      * @throws InvalidArgumentException If the identifier is invalid.
      * @return array Returns an array containing a ModelInterface and a property identifier.
      */
-    protected function resolveRelatedModel($pattern)
+    protected function resolveRelatedModel($pattern): array
     {
-        list($class, $prop) = array_pad($this->parseAsArray($pattern, ':'), 2, null);
+        [$class, $prop] = array_pad($this->parseAsArray($pattern, ':'), 2, null);
         $model = $this->modelFactory()->get($class);
 
         if (!$prop) {
             throw new InvalidArgumentException(
                 sprintf(
                     'The related model [%s] requires a target property',
-                    get_class($model)
+                    $model::class
                 )
             );
         }

@@ -16,37 +16,30 @@ class LayoutServiceProvider implements ServiceProviderInterface
 {
     /**
      * @param Container $container A Pimple DI container.
-     * @return void
      */
-    public function register(Container $container)
+    public function register(Container $container): void
     {
         $this->registerLayoutServices($container);
     }
 
     /**
      * @param Container $container A Pimple DI container.
-     * @return void
      */
-    private function registerLayoutServices(Container $container)
+    private function registerLayoutServices(Container $container): void
     {
         /**
          * @param Container $container A Pimple DI container.
          * @return LayoutFactory
          */
-        $container['layout/factory'] = function () {
-
-            $layoutFactory = new LayoutFactory();
-            return $layoutFactory;
-        };
+        $container['layout/factory'] = (fn(): \Charcoal\Ui\Layout\LayoutFactory => new LayoutFactory());
 
         /**
          * @param Container $container A Pimple DI container.
          * @return LayoutBuilder
          */
-        $container['layout/builder'] = function (Container $container) {
+        $container['layout/builder'] = function (Container $container): \Charcoal\Ui\Layout\LayoutBuilder {
             $layoutFactory = $container['layout/factory'];
-            $layoutBuilder = new LayoutBuilder($layoutFactory, $container);
-            return $layoutBuilder;
+            return new LayoutBuilder($layoutFactory, $container);
         };
     }
 }

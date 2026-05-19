@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Charcoal\Tests\Config\Mock;
 
 // From 'charcoal-config'
@@ -15,9 +17,9 @@ class Entity extends AbstractEntity
      *
      * @param array $data Data to pre-populate the entity.
      */
-    public function __construct(array $data = null)
+    public function __construct(?array $data = null)
     {
-        if (!empty($data)) {
+        if ($data !== null && $data !== []) {
             $this->setData($data);
         }
     }

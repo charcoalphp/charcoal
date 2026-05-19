@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Charcoal\Tests\Cms\Mock;
 
 // From 'charcoal-core'
@@ -23,6 +25,7 @@ class TemplateableModel extends AbstractModel implements
      * @see    \Charcoal\Source\StorableTrait::preSave() For the "create" Event.
      * @return boolean
      */
+    #[\Override]
     public function preSave()
     {
         $this->saveTemplateOptions();
@@ -36,7 +39,8 @@ class TemplateableModel extends AbstractModel implements
      * @param  array $properties Optional. The list of properties to update.
      * @return boolean
      */
-    public function preUpdate(array $properties = null)
+    #[\Override]
+    public function preUpdate(?array $properties = null)
     {
         if ($properties === null || array_search('template_options', $properties)) {
             $this->saveTemplateOptions();

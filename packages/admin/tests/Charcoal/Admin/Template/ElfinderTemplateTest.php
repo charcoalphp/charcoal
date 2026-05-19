@@ -19,22 +19,16 @@ class ElfinderTemplateTest extends AbstractTestCase
 {
     /**
      * Tested Class.
-     *
-     * @var ElfinderTemplate
      */
-    private $obj;
+    private \Charcoal\Admin\Template\ElfinderTemplate $obj;
 
     /**
      * Store the service container.
-     *
-     * @var Container
      */
-    private $container;
+    private ?\Pimple\Container $container = null;
 
     /**
      * Set up the test.
-     *
-     * @return void
      */
     public function setUp(): void
     {
@@ -46,10 +40,7 @@ class ElfinderTemplateTest extends AbstractTestCase
         ]);
     }
 
-    /**
-     * @return void
-     */
-    public function testAdminAssertsUrl()
+    public function testAdminAssertsUrl(): void
     {
         $ret = $this->obj->adminAssetsUrl();
         $this->assertEquals('/assets/admin/', $ret);
@@ -57,17 +48,15 @@ class ElfinderTemplateTest extends AbstractTestCase
 
     /**
      * Set up the service container.
-     *
-     * @return Container
      */
-    protected function container()
+    protected function container(): \Pimple\Container
     {
-        if ($this->container === null) {
+        if (!$this->container instanceof \Pimple\Container) {
             $container = new Container();
             $containerProvider = new ContainerProvider();
             $containerProvider->registerTemplateDependencies($container);
             $containerProvider->registerElfinderConfig($container);
-            $container['widget/factory'] = $this->createMock('\Charcoal\Factory\FactoryInterface');
+            $container['widget/factory'] = $this->createMock(\Charcoal\Factory\FactoryInterface::class);
 
             $this->container = $container;
         }

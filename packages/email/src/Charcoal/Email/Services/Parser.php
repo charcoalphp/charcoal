@@ -19,7 +19,6 @@ class Parser
     /**
      * @param string|array $email An email value (either a string or an array).
      * @throws InvalidArgumentException If the email is invalid.
-     * @return string
      */
     public function parse($email): string
     {
@@ -40,7 +39,6 @@ class Parser
      *
      * @param  string $var An email array (containing an "email" key and optionally a "name" key).
      * @throws InvalidArgumentException If the email is invalid.
-     * @return array
      */
     public function emailToArray(string $var): array
     {
@@ -56,7 +54,6 @@ class Parser
      *
      * @param  array $arr An email array (containing an "email" key and optionally a "name" key).
      * @throws InvalidArgumentException If the email array is invalid.
-     * @return string
      */
     public function emailFromArray(array $arr): string
     {

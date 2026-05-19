@@ -17,7 +17,8 @@ use Symfony\Component\Translation\TranslatorInterface;
 class Translation implements
     TranslatableInterface,
     ArrayAccess,
-    JsonSerializable
+    JsonSerializable,
+    \Stringable
 {
     /**
      * The object's translations.
@@ -29,25 +30,17 @@ class Translation implements
     private $val = [];
 
     /**
-     * @var LocalesManager
-     */
-    private $manager;
-
-    /**
      * @param Translation|array|string $val     The translation values.
      * @param LocalesManager           $manager A LocalesManager instance.
      */
-    public function __construct($val, LocalesManager $manager)
+    public function __construct($val, private readonly LocalesManager $manager)
     {
-        $this->manager = $manager;
         $this->setVal($val);
     }
     /**
      * Output the current language's value, when cast to string.
-     *
-     * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
         $lang = $this->manager->currentLocale();
         if (isset($this->val[$lang])) {
@@ -78,7 +71,7 @@ class Translation implements
         if (!is_string($lang)) {
             throw new InvalidArgumentException(sprintf(
                 'Invalid language; must be a string, received %s',
-                (is_object($lang) ? get_class($lang) : gettype($lang))
+                (get_debug_type($lang))
             ));
         }
 
@@ -97,7 +90,7 @@ class Translation implements
         if (!is_string($lang)) {
             throw new InvalidArgumentException(sprintf(
                 'Invalid language; must be a string, received %s',
-                (is_object($lang) ? get_class($lang) : gettype($lang))
+                (get_debug_type($lang))
             ));
         }
 
@@ -114,23 +107,22 @@ class Translation implements
     /**
      * @param  string $lang A language identifier.
      * @param  string $val  A translation value.
-     * @return void
      * @see    ArrayAccess::offsetSet()
      * @throws InvalidArgumentException If array key isn't a string.
      */
-    public function offsetSet($lang, $val)
+    public function offsetSet($lang, $val): void
     {
         if (!is_string($lang)) {
             throw new InvalidArgumentException(sprintf(
                 'Invalid language; must be a string, received %s',
-                (is_object($lang) ? get_class($lang) : gettype($lang))
+                (get_debug_type($lang))
             ));
         }
 
         if (!is_string($val)) {
             throw new InvalidArgumentException(sprintf(
                 'Translation must be a string, received %s',
-                (is_object($val) ? get_class($val) : gettype($val))
+                (get_debug_type($val))
             ));
         }
 
@@ -139,16 +131,15 @@ class Translation implements
 
     /**
      * @param  string $lang A language identifier.
-     * @return void
      * @see    ArrayAccess::offsetUnset()
      * @throws InvalidArgumentException If array key isn't a string.
      */
-    public function offsetUnset($lang)
+    public function offsetUnset($lang): void
     {
         if (!is_string($lang)) {
             throw new InvalidArgumentException(sprintf(
                 'Invalid language; must be a string, received %s',
-                (is_object($lang) ? get_class($lang) : gettype($lang))
+                (get_debug_type($lang))
             ));
         }
 
@@ -171,9 +162,8 @@ class Translation implements
      *
      * @param  callable $callback The callback function to run for each value.
      *     The callback takes on the value only.
-     * @return self
      */
-    public function sanitize(callable $callback)
+    public function sanitize(callable $callback): static
     {
         foreach ($this->val as $lang => $val) {
             $this->val[$lang] = call_user_func($callback, $val);
@@ -186,9 +176,8 @@ class Translation implements
      *
      * @param  callable $callback The callback function to run for each value.
      *     The callback takes on two parameters. The value being the first, and the language code second.
-     * @return self
      */
-    public function each(callable $callback)
+    public function each(callable $callback): static
     {
         foreach ($this->val as $lang => $val) {
             $this->val[$lang] = call_user_func($callback, $val, $lang);
@@ -219,10 +208,9 @@ class Translation implements
      *     - array: All languages available in the array. The format of the array should
      *       be a hash in the `lang` => `string` format.
      *     - string: The value will be assigned to the current language.
-     * @return self
      * @throws InvalidArgumentException If language or value are invalid.
      */
-    private function setVal($val)
+    private function setVal($val): static
     {
         if ($val instanceof Translation) {
             $this->val = $val->data();
@@ -232,7 +220,7 @@ class Translation implements
                 if (!is_string($lang)) {
                     throw new InvalidArgumentException(sprintf(
                         'Invalid language; must be a string, received %s',
-                        (is_object($lang) ? get_class($lang) : gettype($lang))
+                        (get_debug_type($lang))
                     ));
                 }
 

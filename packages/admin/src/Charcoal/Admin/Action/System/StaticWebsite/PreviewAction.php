@@ -20,10 +20,7 @@ class PreviewAction extends AdminAction
      */
     private $basePath;
 
-    /**
-     * @var string
-     */
-    private $fileContent = '';
+    private string|bool $fileContent = '';
 
     /**
      * @param  RequestInterface  $request  A PSR-7 compatible Request instance.
@@ -34,7 +31,7 @@ class PreviewAction extends AdminAction
     {
         $url = $request->getParam('url');
         $relativeUrl = str_replace($this->baseUrl(), '', $url);
-        $url = $this->baseUrl() . $relativeUrl;
+        $this->baseUrl();
 
         $outputDir = $this->basePath . DIRECTORY_SEPARATOR . 'cache/static/' . $relativeUrl;
         if (!file_exists($outputDir)) {
@@ -59,24 +56,21 @@ class PreviewAction extends AdminAction
         return $response->withStatus(404);
     }
 
-    /**
-     * @return array
-     */
-    public function results()
+    #[\Override]
+    public function results(): array
     {
-        $ret = [
+        return [
             'success'   => $this->success(),
             'feedbacks' => $this->feedbacks(),
             'content'   => $this->fileContent
         ];
-
-        return $ret;
     }
 
     /**
      * @param Container $container Pimple DI Container.
      * @return void
      */
+    #[\Override]
     protected function setDependencies(Container $container)
     {
         parent::setDependencies($container);

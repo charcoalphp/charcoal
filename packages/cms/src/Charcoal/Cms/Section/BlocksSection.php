@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Charcoal\Cms\Section;
 
 use RuntimeException;
@@ -27,10 +29,9 @@ class BlocksSection extends AbstractSection implements
 
     /**
      * Overrides `AbstractSection::section_type()`
-     *
-     * @return string
      */
-    public function sectionType()
+    #[\Override]
+    public function sectionType(): string
     {
         return AbstractSection::TYPE_BLOCKS;
     }
@@ -49,7 +50,7 @@ class BlocksSection extends AbstractSection implements
     /**
      * @return Collection
      */
-    public function loadBlocks()
+    public function loadBlocks(): array
     {
         // @todo
         return [];

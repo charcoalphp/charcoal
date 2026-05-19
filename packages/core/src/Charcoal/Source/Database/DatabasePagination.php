@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Charcoal\Source\Database;
 
 use UnexpectedValueException;
@@ -18,7 +20,7 @@ class DatabasePagination extends Pagination implements
      *
      * @return string A SQL string fragment.
      */
-    public function sql()
+    public function sql(): string
     {
         if ($this->active() && $this->hasLimit()) {
             $limit  = $this->limit();
@@ -31,10 +33,8 @@ class DatabasePagination extends Pagination implements
 
     /**
      * Determine if the expression has a number per page.
-     *
-     * @return boolean
      */
-    public function hasLimit()
+    public function hasLimit(): bool
     {
         return ($this->limit() > 0);
     }
@@ -51,10 +51,8 @@ class DatabasePagination extends Pagination implements
 
     /**
      * Retrieve the offset from the page number and count.
-     *
-     * @return integer
      */
-    public function offset()
+    public function offset(): int
     {
         $page   = $this->page();
         $limit  = $this->numPerPage();

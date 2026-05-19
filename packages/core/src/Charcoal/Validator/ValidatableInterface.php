@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Charcoal\Validator;
 
 // From 'charcoal-core'
@@ -27,5 +29,5 @@ interface ValidatableInterface
      * @param ValidatorInterface $v Optional. A custom validator object to use for validation. If null, use object's.
      * @return boolean
      */
-    public function validate(ValidatorInterface &$v = null);
+    public function validate(?ValidatorInterface &$v = null);
 }

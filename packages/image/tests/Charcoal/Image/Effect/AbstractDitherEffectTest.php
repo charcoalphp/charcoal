@@ -8,13 +8,13 @@ class AbstractDitherEffectTest extends \PHPUnit\Framework\TestCase
 
     protected function setUp(): void
     {
-        $img = $this->getMockForAbstractClass('\Charcoal\Image\AbstractImage');
+        $img = $this->getMockForAbstractClass(\Charcoal\Image\AbstractImage::class);
         $img->method('driverType')->willReturn('imagick');
-        $this->obj = $this->getMockForAbstractClass('\Charcoal\Image\Effect\AbstractDitherEffect');
+        $this->obj = $this->getMockForAbstractClass(\Charcoal\Image\Effect\AbstractDitherEffect::class);
         $this->obj->setImage($img);
     }
 
-    public function testDefaults()
+    public function testDefaults(): void
     {
         $obj = $this->obj;
 
@@ -22,7 +22,7 @@ class AbstractDitherEffectTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('', $obj->mode());
     }
 
-    public function testSetData()
+    public function testSetData(): void
     {
         $obj = $this->obj;
         $ret = $obj->setData(
@@ -37,7 +37,7 @@ class AbstractDitherEffectTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('h6x6a', $obj->mode());
     }
 
-    public function testSetColors()
+    public function testSetColors(): void
     {
         $obj = $this->obj;
         $ret = $obj->setColors(6);
@@ -48,7 +48,7 @@ class AbstractDitherEffectTest extends \PHPUnit\Framework\TestCase
         $obj->setColors(false);
     }
 
-    public function testSetMode()
+    public function testSetMode(): void
     {
         $obj = $this->obj;
         $ret = $obj->setMode('checks');

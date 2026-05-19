@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Charcoal\Tests\Cms\Mock;
 
 // From 'charcoal-app'
@@ -13,24 +15,20 @@ use Charcoal\Cms\EventInterface;
  */
 class EventTemplate extends AbstractTemplate
 {
-    /**
-     * @var EventInterface $event
-     */
-    private $event;
+    private ?\Charcoal\Cms\EventInterface $event = null;
 
     /**
      * @return EventInterface
      */
-    public function event()
+    public function event(): ?\Charcoal\Cms\EventInterface
     {
         return $this->event;
     }
 
     /**
      * @param  EventInterface $event The current event.
-     * @return self
      */
-    public function setEvent(EventInterface $event)
+    public function setEvent(EventInterface $event): static
     {
         $this->event = $event;
 

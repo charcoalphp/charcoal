@@ -26,10 +26,8 @@ class NewsRoute extends TemplateRoute
 
     /**
      * URI path.
-     *
-     * @var string
      */
-    private $path;
+    private string $path;
 
     /**
      * The news entry matching the URI path.
@@ -40,10 +38,8 @@ class NewsRoute extends TemplateRoute
 
     /**
      * The news entry model.
-     *
-     * @var string
      */
-    private $objType = 'charcoal/cms/news';
+    private string $objType = 'charcoal/cms/news';
 
     /**
      * @param array $data Class depdendencies.
@@ -51,16 +47,15 @@ class NewsRoute extends TemplateRoute
     public function __construct(array $data)
     {
         parent::__construct($data);
-        $this->path = ltrim($data['path'], '/');
+        $this->path = ltrim((string) $data['path'], '/');
     }
 
     /**
      * Determine if the URI path resolves to an object.
      *
      * @param  Container $container A DI (Pimple) container.
-     * @return boolean
      */
-    public function pathResolvable(Container $container)
+    public function pathResolvable(Container $container): bool
     {
         $news = $this->loadNewsFromPath($container);
         return ($news instanceof NewsInterface) && $news->id();
@@ -72,6 +67,7 @@ class NewsRoute extends TemplateRoute
      * @param  ResponseInterface $response  A PSR-7 compatible Response instance.
      * @return ResponseInterface
      */
+    #[\Override]
     public function __invoke(
         Container $container,
         RequestInterface $request,
@@ -87,11 +83,11 @@ class NewsRoute extends TemplateRoute
         $templateIdent      = (string)$news['templateIdent'];
         $templateController = (string)$news['templateIdent'];
 
-        if (!$templateController) {
+        if ($templateController === '' || $templateController === '0') {
             $container['logger']->warning(sprintf(
                 '[%s] Missing template controller on model [%s] for ID [%s]',
-                get_class($this),
-                get_class($news),
+                static::class,
+                $news::class,
                 $news['id']
             ));
             return $response->withStatus(500);
@@ -110,8 +106,8 @@ class NewsRoute extends TemplateRoute
         if ($templateContent === $templateIdent || $templateContent === '') {
             $container['logger']->warning(sprintf(
                 '[%s] Missing or bad template identifier on model [%s] for ID [%s]',
-                get_class($this),
-                get_class($news),
+                static::class,
+                $news::class,
                 $templateIdent
             ));
             return $response->withStatus(500);
@@ -131,7 +127,7 @@ class NewsRoute extends TemplateRoute
     {
         if ($this->news === null) {
             $config  = $this->config();
-            $objType = (isset($config['obj_type']) ? $config['obj_type'] : $this->objType);
+            $objType = ($config['obj_type'] ?? $this->objType);
 
             try {
                 $model = $container['model/factory']->create($objType);
@@ -146,11 +142,11 @@ class NewsRoute extends TemplateRoute
                     $this->news = $model;
                     return $model;
                 }
-            } catch (Exception $e) {
+            } catch (Exception) {
                 $container['logger']->debug(sprintf(
                     '[%s] Unable to load model [%s] for path [%s]',
-                    get_class($this),
-                    get_class($model),
+                    static::class,
+                    $model::class,
                     $this->path
                 ));
             }

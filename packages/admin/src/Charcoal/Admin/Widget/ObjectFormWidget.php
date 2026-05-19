@@ -27,6 +27,10 @@ use Charcoal\Admin\Ui\ObjectContainerTrait;
 class ObjectFormWidget extends FormWidget implements
     ObjectContainerInterface
 {
+    /**
+     * @var mixed
+     */
+    public $nextUrl;
     use ObjectContainerTrait;
 
     /**
@@ -54,10 +58,7 @@ class ObjectFormWidget extends FormWidget implements
      */
     protected $forcePageReload = false;
 
-    /**
-     * @return string
-     */
-    public function widgetType()
+    public function widgetType(): string
     {
         return 'charcoal/admin/widget/object-form';
     }
@@ -67,7 +68,8 @@ class ObjectFormWidget extends FormWidget implements
      *
      * @return Translation|string|null
      */
-    public function defaultSubmitLabel()
+    #[\Override]
+    public function defaultSubmitLabel(): ?\Charcoal\Translator\Translation
     {
         if ($this->objId()) {
             return $this->translator()->translation('Update');
@@ -80,7 +82,8 @@ class ObjectFormWidget extends FormWidget implements
      * @param  array $data The widget data.
      * @return ObjectFormWidget Chainable
      */
-    public function setData(array $data)
+    #[\Override]
+    public function setData(array $data): static
     {
         parent::setData($data);
 
@@ -99,7 +102,7 @@ class ObjectFormWidget extends FormWidget implements
      * @throws InvalidArgumentException If the identifier is not a string.
      * @return ObjectForm Chainable
      */
-    public function setFormIdent($formIdent)
+    public function setFormIdent($formIdent): static
     {
         if (!is_string($formIdent)) {
             throw new InvalidArgumentException(
@@ -147,7 +150,7 @@ class ObjectFormWidget extends FormWidget implements
      * @throws InvalidArgumentException If argument is not a string.
      * @return ActionInterface Chainable
      */
-    public function setNextUrl($url)
+    public function setNextUrl($url): static
     {
         if (!is_string($url)) {
             throw new InvalidArgumentException(
@@ -174,9 +177,8 @@ class ObjectFormWidget extends FormWidget implements
 
     /**
      * @param boolean $allowReload AllowReload for ObjectFormWidget.
-     * @return self
      */
-    public function setAllowReload($allowReload)
+    public function setAllowReload($allowReload): static
     {
         $this->allowReload = $allowReload;
 
@@ -193,9 +195,8 @@ class ObjectFormWidget extends FormWidget implements
 
     /**
      * @param boolean $forcePageReload ForcePageReload for ObjectFormWidget.
-     * @return self
      */
-    public function setForcePageReload($forcePageReload)
+    public function setForcePageReload($forcePageReload): static
     {
         $this->forcePageReload = $forcePageReload;
 
@@ -207,6 +208,7 @@ class ObjectFormWidget extends FormWidget implements
      *
      * @return string Relative URL
      */
+    #[\Override]
     public function action()
     {
         $action = parent::action();
@@ -230,14 +232,15 @@ class ObjectFormWidget extends FormWidget implements
      * @throws UnexpectedValueException If a property data is invalid.
      * @return FormPropertyWidget[]|\Generator
      */
-    public function formProperties(array $group = null)
+    #[\Override]
+    public function formProperties(?array $group = null)
     {
         $obj   = $this->obj();
         $props = $obj->metadata()->properties();
 
         // We need to sort form properties by form group property order if a group exists
-        if (!empty($group)) {
-            $group = array_map([ $this, 'camelize' ], $group);
+        if ($group !== null && $group !== []) {
+            $group = array_map($this->camelize(...), $group);
             $group = array_flip($group);
             $props = array_intersect_key($props, $group);
             $props = array_merge($group, $props);
@@ -253,7 +256,7 @@ class ObjectFormWidget extends FormWidget implements
                 throw new UnexpectedValueException(sprintf(
                     'Invalid property data for "%1$s", received %2$s',
                     $propertyIdent,
-                    (is_object($propertyMetadata) ? get_class($propertyMetadata) : gettype($propertyMetadata))
+                    (get_debug_type($propertyMetadata))
                 ));
             }
 
@@ -293,13 +296,11 @@ class ObjectFormWidget extends FormWidget implements
             throw new UnexpectedValueException(sprintf(
                 'Invalid property data for "%1$s", received %2$s',
                 $propertyIdent,
-                (is_object($propertyMetadata) ? get_class($propertyMetadata) : gettype($propertyMetadata))
+                (get_debug_type($propertyMetadata))
             ));
         }
 
-        $p = $this->getOrCreateFormProperty($propertyIdent, $propertyMetadata);
-
-        return $p;
+        return $this->getOrCreateFormProperty($propertyIdent, $propertyMetadata);
     }
 
     /**
@@ -311,19 +312,14 @@ class ObjectFormWidget extends FormWidget implements
      * @param array $data Data.
      * @return ObjectFormWidget Chainable.
      */
-    public function setFormData(array $data)
+    #[\Override]
+    public function setFormData(array $data): static
     {
         $objData = $this->objData();
         $merged  = array_replace_recursive($objData, $data);
 
         // Remove null values
-        $merged = array_filter($merged, function ($val) {
-            if ($val === null) {
-                return false;
-            }
-
-            return true;
-        });
+        $merged = array_filter($merged, fn($val): bool => $val !== null);
 
         $this->formData = $merged;
         $this->obj()->setData($merged);
@@ -336,6 +332,7 @@ class ObjectFormWidget extends FormWidget implements
      *
      * @return array
      */
+    #[\Override]
     public function formData()
     {
         if (!$this->formData) {
@@ -356,10 +353,9 @@ class ObjectFormWidget extends FormWidget implements
 
     /**
      * Retrieve the widget's data options for JavaScript components.
-     *
-     * @return array
      */
-    public function widgetDataForJs()
+    #[\Override]
+    public function widgetDataForJs(): array
     {
         return [
             'obj_id'             => $this->objId(),
@@ -378,9 +374,8 @@ class ObjectFormWidget extends FormWidget implements
      * Self recursive when a groups is an instance of FormInterface.
      *
      * @param array|null $groups Form groups to parse.
-     * @return array
      */
-    protected function groupsConditionalLogic(array $groups = null)
+    protected function groupsConditionalLogic(?array $groups = null): array
     {
         if (!$groups) {
             $groups = iterator_to_array($this->groups());
@@ -391,7 +386,7 @@ class ObjectFormWidget extends FormWidget implements
         foreach ($groups as $group) {
             if ($group instanceof FormInterface) {
                 $groupGroups = iterator_to_array($group->groups());
-                if (!empty($groupGroups)) {
+                if ($groupGroups !== []) {
                     $conditions = array_merge(
                         $conditions,
                         $this->groupsConditionalLogic($groupGroups)
@@ -411,6 +406,7 @@ class ObjectFormWidget extends FormWidget implements
      * @param Container $container The DI container.
      * @return void
      */
+    #[\Override]
     protected function setDependencies(Container $container)
     {
         parent::setDependencies($container);
@@ -424,17 +420,17 @@ class ObjectFormWidget extends FormWidget implements
      *
      * @return string[]
      */
-    protected function defaultDataSources()
+    #[\Override]
+    protected function defaultDataSources(): array
     {
         return [static::DATA_SOURCE_REQUEST, static::DATA_SOURCE_OBJECT];
     }
 
     /**
      * Retrieve the default data source filters (when setting data on an entity).
-     *
-     * @return array
      */
-    protected function defaultDataSourceFilters()
+    #[\Override]
+    protected function defaultDataSourceFilters(): array
     {
         return [
             'request' => null,
@@ -451,6 +447,7 @@ class ObjectFormWidget extends FormWidget implements
      * @param  mixed $toResolve A callable used when merging data.
      * @return callable|null
      */
+    #[\Override]
     protected function resolveDataSourceFilter($toResolve)
     {
         if (is_string($toResolve)) {
@@ -477,10 +474,9 @@ class ObjectFormWidget extends FormWidget implements
 
     /**
      * Retrieve the accepted metadata from the current request.
-     *
-     * @return array
      */
-    protected function acceptedRequestData()
+    #[\Override]
+    protected function acceptedRequestData(): array
     {
         return array_merge([
             'obj_type',
@@ -498,7 +494,7 @@ class ObjectFormWidget extends FormWidget implements
     {
         $obj           = $this->obj();
         $objMetadata   = $obj->metadata();
-        $adminMetadata = (isset($objMetadata['admin']) ? $objMetadata['admin'] : null);
+        $adminMetadata = ($objMetadata['admin'] ?? null);
 
         $formIdent = $this->formIdent();
         if (!$formIdent) {
@@ -509,11 +505,7 @@ class ObjectFormWidget extends FormWidget implements
             $formIdent = $obj->render($formIdent);
         }
 
-        if (isset($adminMetadata['forms'][$formIdent])) {
-            $objFormData = $adminMetadata['forms'][$formIdent];
-        } else {
-            $objFormData = [];
-        }
+        $objFormData = $adminMetadata['forms'][$formIdent] ?? [];
 
         $formGroups = [];
 
@@ -525,7 +517,7 @@ class ObjectFormWidget extends FormWidget implements
             $formGroups = array_merge($formGroups, $adminMetadata['formGroups']);
         }
 
-        if (isset($objFormData['groups']) && !empty($formGroups)) {
+        if (isset($objFormData['groups']) && $formGroups !== []) {
             $extraFormGroups = array_intersect(
                 array_keys($formGroups),
                 array_keys($objFormData['groups'])
@@ -548,7 +540,7 @@ class ObjectFormWidget extends FormWidget implements
             $formSidebars = array_merge($formSidebars, $adminMetadata['formSidebars']);
         }
 
-        if (isset($objFormData['sidebars']) && !empty($formSidebars)) {
+        if (isset($objFormData['sidebars']) && $formSidebars !== []) {
             $extraFormSidebars = array_intersect(
                 array_keys($formSidebars),
                 array_keys($objFormData['sidebars'])
@@ -566,9 +558,8 @@ class ObjectFormWidget extends FormWidget implements
 
     /**
      * Whether a language switcher could be displayed.
-     *
-     * @return bool
      */
+    #[\Override]
     public function supportsLanguageSwitch(): bool
     {
         if ($this->validateObjType()) {
@@ -593,10 +584,9 @@ class ObjectFormWidget extends FormWidget implements
 
     /**
      * Determine if the form has any multilingual properties.
-     *
-     * @return boolean
      */
-    public function hasL10nFormProperties()
+    #[\Override]
+    public function hasL10nFormProperties(): bool
     {
         if ($this->validateObjType()) {
             $locales = count($this->translator()->availableLocales());
@@ -616,11 +606,8 @@ class ObjectFormWidget extends FormWidget implements
 
     /**
      * Determine if the group has any multilingual properties.
-     *
-     * @param  FormGroupInterface $group
-     * @return bool
      */
-    protected function hasL10nGroupProperties(FormGroupInterface $group)
+    protected function hasL10nGroupProperties(FormGroupInterface $group): bool
     {
         if ($group instanceof AdminFormGroupInterface) {
             foreach ($group->groupProperties() as $prop) {
@@ -635,10 +622,6 @@ class ObjectFormWidget extends FormWidget implements
 
     /**
      * Determine if the model property is multilingual.
-     *
-     * @param  ModelInterface $model
-     * @param  string         $propertyIdent
-     * @return ?bool
      */
     protected function isL10nModelProperty(ModelInterface $model, string $propertyIdent): ?bool
     {
@@ -667,6 +650,7 @@ class ObjectFormWidget extends FormWidget implements
      * @throws InvalidArgumentException If the identifier is not a string or the group is invalid.
      * @return FormGroupInterface
      */
+    #[\Override]
     protected function parseFormGroup($groupIdent, $group)
     {
         $group = parent::parseFormGroup($groupIdent, $group);
@@ -680,10 +664,8 @@ class ObjectFormWidget extends FormWidget implements
 
     /**
      * Yield the form's property controls.
-     *
-     * @return array
      */
-    public function parseFormProperties()
+    public function parseFormProperties(): array
     {
         $props = [];
         foreach ($this->formProperties as $k => $v) {
@@ -699,13 +681,10 @@ class ObjectFormWidget extends FormWidget implements
      * @param  array|null $data Optional. The form group data to set.
      * @return FormGroupInterface
      */
-    protected function createFormGroup(array $data = null)
+    #[\Override]
+    protected function createFormGroup(?array $data = null)
     {
-        if (isset($data['type'])) {
-            $type = $data['type'];
-        } else {
-            $type = $this->defaultGroupType();
-        }
+        $type = $data['type'] ?? $this->defaultGroupType();
 
         $group = $this->formGroupFactory()->create($type);
         $group->setForm($this->formWidget());
@@ -734,13 +713,13 @@ class ObjectFormWidget extends FormWidget implements
      * @param  FormGroupInterface $group      The form group to update.
      * @param  array|null         $groupData  Optional. The new group data to apply.
      * @param  string|null        $groupIdent Optional. The new group identifier.
-     * @return FormGroupInterface
      */
+    #[\Override]
     protected function updateFormGroup(
         FormGroupInterface $group,
-        array $groupData = null,
+        ?array $groupData = null,
         $groupIdent = null
-    ) {
+    ): FormGroupInterface {
         $group->setForm($this);
 
         if ($groupIdent !== null) {

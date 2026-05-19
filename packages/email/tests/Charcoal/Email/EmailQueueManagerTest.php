@@ -26,7 +26,7 @@ class EmailQueueManagerTest extends AbstractTestCase
         ]);
     }
 
-    public function testProto()
+    public function testProto(): void
     {
         $ret = $this->obj->queueItemProto();
         $this->assertInstanceOf(EmailQueueItem::class, $ret);

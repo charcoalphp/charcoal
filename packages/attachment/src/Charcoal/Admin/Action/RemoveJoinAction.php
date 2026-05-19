@@ -22,9 +22,8 @@ class RemoveJoinAction extends AdminAction
     /**
      * @param RequestInterface  $request  A PSR-7 compatible Request instance.
      * @param ResponseInterface $response A PSR-7 compatible Response instance.
-     * @return ResponseInterface
      */
-    public function run(RequestInterface $request, ResponseInterface $response)
+    public function run(RequestInterface $request, ResponseInterface $response): ResponseInterface
     {
         $params = $request->getParams();
 
@@ -47,7 +46,7 @@ class RemoveJoinAction extends AdminAction
         // Try loading the object
         try {
             $obj = $this->modelFactory()->create($objType)->load($objId);
-        } catch (Exception $e) {
+        } catch (Exception) {
             $this->setSuccess(false);
 
             return $response;
@@ -84,7 +83,7 @@ class RemoveJoinAction extends AdminAction
             if ($attachment['id'] !== null) {
                 $attachment->delete();
             }
-        } catch (Exception $error) {
+        } catch (Exception) {
             $this->setSuccess(false);
             return $response;
         }

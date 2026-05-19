@@ -17,22 +17,16 @@ class PermissionTest extends AbstractTestCase
 {
     /**
      * Tested Class.
-     *
-     * @var Permission
      */
-    private $obj;
+    private \Charcoal\User\Acl\Permission|array $obj;
 
     /**
      * Store the service container.
-     *
-     * @var Container
      */
-    private $container;
+    private ?\Pimple\Container $container = null;
 
     /**
      * Set up the test.
-     *
-     * @return void
      */
     protected function setUp(): void
     {
@@ -44,10 +38,7 @@ class PermissionTest extends AbstractTestCase
         ]);
     }
 
-    /**
-     * @return void
-     */
-    public function testToString()
+    public function testToString(): void
     {
         $this->assertEquals('', (string)$this->obj);
         $this->obj->setIdent('foobar');
@@ -59,18 +50,13 @@ class PermissionTest extends AbstractTestCase
 
     /**
      * Assert that the object's key is the "ident" property.
-     *
-     * @return void
      */
-    public function testKey()
+    public function testKey(): void
     {
         $this->assertEquals('ident', $this->obj->key());
     }
 
-    /**
-     * @return void
-     */
-    public function testSetIdent()
+    public function testSetIdent(): void
     {
         $ret = $this->obj->setIdent('foobar');
         $this->assertSame($ret, $this->obj);
@@ -80,20 +66,14 @@ class PermissionTest extends AbstractTestCase
         $this->obj->setIdent(false);
     }
 
-    /**
-     * @return void
-     */
-    public function testSetName()
+    public function testSetName(): void
     {
         $ret = $this->obj->setName('foobar');
         $this->assertSame($ret, $this->obj);
         $this->assertEquals('foobar', (string)$this->obj['name']);
     }
 
-    /**
-     * @return void
-     */
-    public function testCastToString()
+    public function testCastToString(): void
     {
         $this->obj->setIdent('foobar');
         $this->assertEquals('foobar', (string)$this->obj);
@@ -103,12 +83,10 @@ class PermissionTest extends AbstractTestCase
 
     /**
      * Set up the service container.
-     *
-     * @return Container
      */
-    private function container()
+    private function container(): \Pimple\Container
     {
-        if ($this->container === null) {
+        if (!$this->container instanceof \Pimple\Container) {
             $container = new Container();
             $containerProvider = new ContainerProvider();
             $containerProvider->registerBaseServices($container);

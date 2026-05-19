@@ -11,19 +11,14 @@ class ImagemagickTintEffect extends AbstractTintEffect
 {
     /**
      * @param array $data The effect data, if available.
-     * @return self
      */
-    public function process(array $data = null)
+    public function process(?array $data = null): static
     {
         if ($data !== null) {
             $this->setData($data);
         }
 
-        if ($this->midtone() === true) {
-            $tintCmd = '-tint';
-        } else {
-            $tintCmd = '-colorize';
-        }
+        $tintCmd = $this->midtone() === true ? '-tint' : '-colorize';
         $color = $this->color();
         $value = ($this->opacity() * 100) . '%';
         $cmd = '-fill "' . $color . '" ' . $tintCmd . ' ' . $value;

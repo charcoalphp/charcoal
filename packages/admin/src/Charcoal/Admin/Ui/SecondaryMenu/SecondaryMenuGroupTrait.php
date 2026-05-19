@@ -207,7 +207,7 @@ trait SecondaryMenuGroupTrait
             $permissions = [];
 
             if (isset($link['active'])) {
-                $active = !!$link['active'];
+                $active = (bool) $link['active'];
             }
 
             if (isset($link['name'])) {
@@ -242,7 +242,7 @@ trait SecondaryMenuGroupTrait
         } else {
             throw new InvalidArgumentException(sprintf(
                 'Link must be an associative array, received %s',
-                (is_object($link) ? get_class($link) : gettype($link))
+                (get_debug_type($link))
             ));
         }
 
@@ -270,10 +270,8 @@ trait SecondaryMenuGroupTrait
                 unset($link['required_acl_permissions']);
             }
 
-            if (isset($link['permissions'])) {
-                if ($this->hasPermissions($link['permissions']) === false) {
-                    continue;
-                }
+            if (isset($link['permissions']) && $this->hasPermissions($link['permissions']) === false) {
+                continue;
             }
 
             yield $link;
@@ -282,26 +280,22 @@ trait SecondaryMenuGroupTrait
 
     /**
      * Determine if the secondary menu has any links.
-     *
-     * @return boolean
      */
-    public function hasLinks()
+    public function hasLinks(): bool
     {
-        return !!$this->numLinks();
+        return (bool) $this->numLinks();
     }
 
     /**
      * Count the number of secondary menu links.
-     *
-     * @return integer
      */
-    public function numLinks()
+    public function numLinks(): int
     {
         if (!is_array($this->links) && !($this->links instanceof \Traversable)) {
             return 0;
         }
 
-        $links = array_filter($this->links, function ($link) {
+        $links = array_filter($this->links, function (array $link): bool {
             if (isset($link['active']) && !$link['active']) {
                 return false;
             }
@@ -310,14 +304,7 @@ trait SecondaryMenuGroupTrait
                 $link['permissions'] = $link['required_acl_permissions'];
                 unset($link['required_acl_permissions']);
             }
-
-            if (isset($link['permissions'])) {
-                if ($this->hasPermissions($link['permissions']) === false) {
-                    return false;
-                }
-            }
-
-            return true;
+            return !(isset($link['permissions']) && $this->hasPermissions($link['permissions']) === false);
         });
 
         return count($links);
@@ -332,7 +319,7 @@ trait SecondaryMenuGroupTrait
     public function isSelected($flag = null)
     {
         if ($flag !== null) {
-            $this->isSelected = !!$flag;
+            $this->isSelected = (bool) $flag;
 
             $this->setCollapsed(!$flag);
         }
@@ -342,20 +329,16 @@ trait SecondaryMenuGroupTrait
 
     /**
      * Determine if the secondary groups should be displayed as panels.
-     *
-     * @return boolean
      */
-    public function displayAsPanel()
+    public function displayAsPanel(): bool
     {
         return in_array($this->displayType(), [ 'panel', 'collapsible' ]);
     }
 
     /**
      * Determine if the group is collapsible.
-     *
-     * @return boolean
      */
-    public function collapsible()
+    public function collapsible(): bool
     {
         return ($this->displayType() === 'collapsible');
     }
@@ -368,7 +351,7 @@ trait SecondaryMenuGroupTrait
      */
     public function setCollapsed($flag)
     {
-        $this->collapsed = !!$flag;
+        $this->collapsed = (bool) $flag;
 
         return $this;
     }
@@ -401,7 +384,7 @@ trait SecondaryMenuGroupTrait
      */
     public function setParented($flag)
     {
-        $this->parented = !!$flag;
+        $this->parented = (bool) $flag;
 
         return $this;
     }
@@ -447,7 +430,7 @@ trait SecondaryMenuGroupTrait
      */
     public function setActive($active)
     {
-        $this->active = !!$active;
+        $this->active = (bool) $active;
 
         return $this;
     }

@@ -17,22 +17,16 @@ class RoleTest extends AbstractTestCase
 {
     /**
      * Tested Class.
-     *
-     * @var Role
      */
-    private $obj;
+    private \Charcoal\User\Acl\Role $obj;
 
     /**
      * Store the service container.
-     *
-     * @var Container
      */
-    private $container;
+    private ?\Pimple\Container $container = null;
 
     /**
      * Set up the test.
-     *
-     * @return void
      */
     protected function setUp(): void
     {
@@ -41,10 +35,7 @@ class RoleTest extends AbstractTestCase
         $this->obj = $container['model/factory']->create(Role::class);
     }
 
-    /**
-     * @return void
-     */
-    public function testToString()
+    public function testToString(): void
     {
         $this->assertEquals('', (string)$this->obj);
         $this->obj->ident = 'foobar';
@@ -56,28 +47,20 @@ class RoleTest extends AbstractTestCase
 
     /**
      * Assert that the object's key is the "ident" property.
-     *
-     * @return void
      */
-    public function testKey()
+    public function testKey(): void
     {
         $this->assertEquals('ident', $this->obj->key());
     }
 
-    /**
-     * @return void
-     */
-    public function testSetParent()
+    public function testSetParent(): void
     {
         $ret = $this->obj->setParent('foo');
         $this->assertSame($ret, $this->obj);
         $this->assertEquals('foo', $this->obj['parent']);
     }
 
-    /**
-     * @return void
-     */
-    public function testSetAllowed()
+    public function testSetAllowed(): void
     {
         $this->assertNull($this->obj['allowed']);
         $ret = $this->obj->setAllowed('foo');
@@ -88,10 +71,7 @@ class RoleTest extends AbstractTestCase
         $this->assertSame(['bar', 'baz'], $this->obj['allowed']);
     }
 
-    /**
-     * @return void
-     */
-    public function testSuperuser()
+    public function testSuperuser(): void
     {
         $this->assertFalse($this->obj['superuser']);
         $ret = $this->obj->setSuperuser(1);
@@ -101,12 +81,10 @@ class RoleTest extends AbstractTestCase
 
     /**
      * Set up the service container.
-     *
-     * @return Container
      */
-    private function container()
+    private function container(): \Pimple\Container
     {
-        if ($this->container === null) {
+        if (!$this->container instanceof \Pimple\Container) {
             $container = new Container();
             $containerProvider = new ContainerProvider();
             $containerProvider->registerBaseServices($container);

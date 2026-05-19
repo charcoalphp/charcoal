@@ -35,10 +35,8 @@ class IdProperty extends AbstractProperty
 
     /**
      * Retrieve the property type.
-     *
-     * @return string
      */
-    public function type()
+    public function type(): string
     {
         return 'id';
     }
@@ -51,12 +49,12 @@ class IdProperty extends AbstractProperty
      * @see    AbstractProperty::setMultiple()
      * @param  boolean $flag The multiple flag.
      * @throws InvalidArgumentException If the multiple argument is TRUE (must be FALSE).
-     * @return self
      */
-    public function setMultiple($flag)
+    #[\Override]
+    public function setMultiple($flag): static
     {
-        $flag = !!$flag;
-        if ($flag === true) {
+        $flag = (bool) $flag;
+        if ($flag) {
             throw new InvalidArgumentException(
                 'The ID property does not support multiple values.'
             );
@@ -69,9 +67,9 @@ class IdProperty extends AbstractProperty
      * Multiple is always FALSE for ID property.
      *
      * @see    AbstractProperty::getMultiple()
-     * @return boolean
      */
-    public function getMultiple()
+    #[\Override]
+    public function getMultiple(): bool
     {
         return false;
     }
@@ -82,13 +80,13 @@ class IdProperty extends AbstractProperty
      * @see    AbstractProperty::setL10n()
      * @param  boolean $flag The l10n, or "translatable" flag.
      * @throws InvalidArgumentException If the L10N argument is TRUE (must be FALSE).
-     * @return self
      */
-    public function setL10n($flag)
+    #[\Override]
+    public function setL10n($flag): static
     {
-        $flag = !!$flag;
+        $flag = (bool) $flag;
 
-        if ($flag === true) {
+        if ($flag) {
             throw new InvalidArgumentException(
                 'The ID property can not be translatable.'
             );
@@ -101,19 +99,17 @@ class IdProperty extends AbstractProperty
      * L10N is always FALSE for ID property.
      *
      * @see    AbstractProperty::getL10n()
-     * @return boolean
      */
-    public function getL10n()
+    #[\Override]
+    public function getL10n(): bool
     {
         return false;
     }
 
     /**
      * Retrieve the available ID modes.
-     *
-     * @return array
      */
-    public function availableModes()
+    public function availableModes(): array
     {
         return [
             self::MODE_AUTO_INCREMENT,
@@ -128,9 +124,8 @@ class IdProperty extends AbstractProperty
      *
      * @param string $mode The ID mode ("auto-increment", "custom", "uniqid" or "uuid").
      * @throws InvalidArgumentException If the mode is not one of the 4 valid modes.
-     * @return self
      */
-    public function setMode($mode)
+    public function setMode($mode): static
     {
         $availableModes = $this->availableModes();
         if (!in_array($mode, $availableModes)) {
@@ -163,6 +158,7 @@ class IdProperty extends AbstractProperty
      * @param mixed $val The value, at time of saving.
      * @return mixed
      */
+    #[\Override]
     public function save($val)
     {
         if (!$val) {
@@ -175,6 +171,7 @@ class IdProperty extends AbstractProperty
     /**
      * @return boolean
      */
+    #[\Override]
     public function validateRequired()
     {
         $mode = $this->getMode();
@@ -199,9 +196,8 @@ class IdProperty extends AbstractProperty
      *   - A random RFC-4122 UUID value.
      *
      * @throws DomainException If the mode does not have a value generator.
-     * @return string|null
      */
-    public function autoGenerate()
+    public function autoGenerate(): ?string
     {
         $mode = $this['mode'];
 
@@ -218,9 +214,8 @@ class IdProperty extends AbstractProperty
      * Generate a RFC-4122 v4 Universally-Unique Identifier (UUID).
      *
      * @see http://tools.ietf.org/html/rfc4122#section-4.4
-     * @return string
      */
-    private function generateUuid()
+    private function generateUuid(): string
     {
         // Generate a uniq string identifer (valid v4 uuid)
         return sprintf(
@@ -249,7 +244,7 @@ class IdProperty extends AbstractProperty
      * @see StorablePropertyTrait::sqlExtra()
      * @return string
      */
-    public function sqlExtra()
+    public function sqlExtra(): null
     {
         $mode = $this->getMode();
 
@@ -271,7 +266,7 @@ class IdProperty extends AbstractProperty
      * @see StorablePropertyTrait::sqlType()
      * @return string The SQL type.
      */
-    public function sqlType()
+    public function sqlType(): ?string
     {
         $mode = $this->getMode();
 
@@ -289,15 +284,15 @@ class IdProperty extends AbstractProperty
         } elseif ($mode === self::MODE_CUSTOM) {
             return 'VARCHAR(255)';
         }
+        return null;
     }
 
     /**
      * Get the PDO data type.
      *
      * @see StorablePropertyTrait::sqlPdoType()
-     * @return integer
      */
-    public function sqlPdoType()
+    public function sqlPdoType(): int
     {
         $mode = $this->getMode();
 

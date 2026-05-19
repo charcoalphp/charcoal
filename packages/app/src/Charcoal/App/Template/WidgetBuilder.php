@@ -14,24 +14,11 @@ use Charcoal\Factory\FactoryInterface;
 class WidgetBuilder
 {
     /**
-     * @var FactoryInterface $factory
-     */
-    protected $factory;
-
-    /**
-     * A Pimple dependency-injection container to fulfill the required services.
-     * @var Container $container
-     */
-    protected $container;
-
-    /**
      * @param FactoryInterface $factory   An object factory.
      * @param Container        $container The DI container.
      */
-    public function __construct(FactoryInterface $factory, Container $container)
+    public function __construct(protected \Charcoal\Factory\FactoryInterface $factory, protected \Pimple\Container $container)
     {
-        $this->factory = $factory;
-        $this->container = $container;
     }
 
     /**

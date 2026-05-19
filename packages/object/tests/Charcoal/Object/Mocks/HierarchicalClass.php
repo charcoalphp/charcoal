@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Charcoal\Tests\Object\Mocks;
 
 // From 'charcoal-object'
@@ -15,18 +17,12 @@ class HierarchicalClass extends AbstractModel implements
 {
     use HierarchicalTrait;
 
-    /**
-     * @return string
-     */
-    public static function objType()
+    public static function objType(): string
     {
         return 'charcoal/tests/object/hierarchical-class';
     }
 
-    /**
-     * @return array
-     */
-    public function loadChildren()
+    public function loadChildren(): array
     {
         return [];
     }

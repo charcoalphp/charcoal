@@ -49,30 +49,16 @@ class NotAllowed extends AbstractHandler
         } else {
             $status = 405;
             $contentType = $this->determineContentType($request);
-            switch ($contentType) {
-                case 'application/json':
-                    $output = $this->renderJsonOutput();
-                    break;
-
-                case 'text/xml':
-                case 'application/xml':
-                    $output = $this->renderXmlOutput();
-                    break;
-
-                case 'text/html':
-                    $output = $this->renderHtmlOutput();
-                    break;
-
-                case 'text/plain':
-                    $output = $this->renderPlainOutput();
-                    break;
-
-                default:
-                    throw new UnexpectedValueException(sprintf(
-                        'Cannot render unknown content type: %s',
-                        $contentType
-                    ));
-            }
+            $output = match ($contentType) {
+                'application/json' => $this->renderJsonOutput(),
+                'text/xml', 'application/xml' => $this->renderXmlOutput(),
+                'text/html' => $this->renderHtmlOutput(),
+                'text/plain' => $this->renderPlainOutput(),
+                default => throw new UnexpectedValueException(sprintf(
+                    'Cannot render unknown content type: %s',
+                    $contentType
+                )),
+            };
         }
 
         return $this->respondWith(
@@ -87,9 +73,8 @@ class NotAllowed extends AbstractHandler
      * Set the HTTP methods allowed by the current request.
      *
      * @param  array $methods Case-sensitive array of methods.
-     * @return self
      */
-    protected function setMethods(array $methods)
+    protected function setMethods(array $methods): static
     {
         $this->methods = implode(', ', $methods);
 
@@ -108,10 +93,8 @@ class NotAllowed extends AbstractHandler
 
     /**
      * Render Text Error
-     *
-     * @return string
      */
-    protected function renderPlainOutput()
+    protected function renderPlainOutput(): string
     {
         $message = $this->translator()->translate('Allowed methods: {{ methods }}', [
             '{{ methods }}' => $this->getMethods()
@@ -122,10 +105,8 @@ class NotAllowed extends AbstractHandler
 
     /**
      * Render JSON Error
-     *
-     * @return string
      */
-    protected function renderJsonOutput()
+    protected function renderJsonOutput(): string
     {
         $message = $this->translator()->translate('Method not allowed. Must be one of: {{ methods }}', [
             '{{ methods }}' => $this->getMethods()
@@ -137,10 +118,8 @@ class NotAllowed extends AbstractHandler
 
     /**
      * Render XML Error
-     *
-     * @return string
      */
-    protected function renderXmlOutput()
+    protected function renderXmlOutput(): string
     {
         $message = $this->translator()->translate('Method not allowed. Must be one of: {{ methods }}', [
             '{{ methods }}' => $this->getMethods()
@@ -165,6 +144,7 @@ class NotAllowed extends AbstractHandler
      * @param  array|\ArrayAccess $data Raw template data.
      * @return array|\ArrayAccess Expanded and processed template data.
      */
+    #[\Override]
     protected function parseTemplateData($data = [])
     {
         $data['allowedMethods'] = $this->getMethods();
@@ -174,10 +154,9 @@ class NotAllowed extends AbstractHandler
 
     /**
      * Retrieve the response's HTTP code.
-     *
-     * @return integer
      */
-    public function getCode()
+    #[\Override]
+    public function getCode(): int
     {
         return 405;
     }
@@ -194,10 +173,8 @@ class NotAllowed extends AbstractHandler
 
     /**
      * Retrieve the handler's message.
-     *
-     * @return string
      */
-    public function getMessage()
+    public function getMessage(): string
     {
         return $this->renderPlainOutput();
     }

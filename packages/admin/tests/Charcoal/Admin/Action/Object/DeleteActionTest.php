@@ -29,22 +29,16 @@ class DeleteActionTest extends AbstractTestCase
 
     /**
      * Tested Class.
-     *
-     * @var DeleteAction
      */
-    private $obj;
+    private \Charcoal\Admin\Action\Object\DeleteAction $obj;
 
     /**
      * Store the service container.
-     *
-     * @var Container
      */
-    private $container;
+    private ?\Pimple\Container $container = null;
 
     /**
      * Set up the test.
-     *
-     * @return void
      */
     public function setUp(): void
     {
@@ -56,19 +50,13 @@ class DeleteActionTest extends AbstractTestCase
         ]);
     }
 
-    /**
-     * @return void
-     */
-    public function testAuthRequiredIsTrue()
+    public function testAuthRequiredIsTrue(): void
     {
         $res = $this->callMethod($this->obj, 'authRequired');
         $this->assertTrue($res);
     }
 
-    /**
-     * @return void
-     */
-    public function testRunWithoutObjTypeIs400()
+    public function testRunWithoutObjTypeIs400(): void
     {
         $request  = Request::createFromEnvironment(Environment::mock());
         $response = new Response();
@@ -80,10 +68,7 @@ class DeleteActionTest extends AbstractTestCase
         $this->assertFalse($results['success']);
     }
 
-    /**
-     * @return void
-     */
-    public function testRunWithoutObjIdIs400()
+    public function testRunWithoutObjIdIs400(): void
     {
         $request = Request::createFromEnvironment(Environment::mock([
             'QUERY_STRING' => 'obj_type=charcoal/admin/user'
@@ -97,13 +82,10 @@ class DeleteActionTest extends AbstractTestCase
         $this->assertFalse($results['success']);
     }
 
-    /**
-     * @return void
-     */
-    public function testRunWithInvalidObject()
+    public function testRunWithInvalidObject(): void
     {
         $email = 'foobar@foo.bar';
-        $user  = $this->createUser($email);
+        $this->createUser($email);
         $this->assertTrue($this->userExists($email));
 
         $request = Request::createFromEnvironment(Environment::mock([
@@ -120,10 +102,7 @@ class DeleteActionTest extends AbstractTestCase
         $this->assertTrue($this->userExists($email));
     }
 
-    /**
-     * @return void
-     */
-    public function testRunWithObjectDelete()
+    public function testRunWithObjectDelete(): void
     {
         $email = 'foobar@foo.bar';
         $user = $this->createUser($email);
@@ -145,12 +124,10 @@ class DeleteActionTest extends AbstractTestCase
 
     /**
      * Set up the service container.
-     *
-     * @return Container
      */
-    protected function container()
+    protected function container(): \Pimple\Container
     {
-        if ($this->container === null) {
+        if (!$this->container instanceof \Pimple\Container) {
             $container = new Container();
             $containerProvider = new ContainerProvider();
             $containerProvider->registerActionDependencies($container);

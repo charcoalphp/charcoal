@@ -21,22 +21,16 @@ class AbstractUserTest extends AbstractTestCase
 {
     /**
      * Tested Class.
-     *
-     * @var UserInterface
      */
-    private $obj;
+    private \Charcoal\User\UserInterface $obj;
 
     /**
      * Store the service container.
-     *
-     * @var Container
      */
-    private $container;
+    private ?\Pimple\Container $container = null;
 
     /**
      * Set up the test.
-     *
-     * @return void
      */
     protected function setUp(): void
     {
@@ -66,19 +60,13 @@ class AbstractUserTest extends AbstractTestCase
             ->will($this->returnValue('charcoal.user'));
     }
 
-    /**
-     * @return void
-     */
-    public function testKey()
+    public function testKey(): void
     {
         $obj = $this->obj;
         $this->assertEquals('id', $obj->key());
     }
 
-    /**
-     * @return void
-     */
-    public function testDefaultValues()
+    public function testDefaultValues(): void
     {
         $obj = $this->obj;
         $this->assertTrue($obj['active']);
@@ -88,10 +76,8 @@ class AbstractUserTest extends AbstractTestCase
      * Assert that the `setData` method:
      * - is chainable
      * - set the various properties
-     *
-     * @return void
      */
-    public function testSetData()
+    public function testSetData(): void
     {
         $obj = $this->obj;
         $ret = $obj->setData([
@@ -106,10 +92,7 @@ class AbstractUserTest extends AbstractTestCase
         $this->assertFalse($obj['active']);
     }
 
-    /**
-     * @return void
-     */
-    public function testSetEmail()
+    public function testSetEmail(): void
     {
         $ret = $this->obj->setEmail('test@example.com');
         $this->assertSame($ret, $this->obj);
@@ -125,10 +108,7 @@ class AbstractUserTest extends AbstractTestCase
         $this->obj->setEmail(false);
     }
 
-    /**
-     * @return void
-     */
-    public function testSetRoles()
+    public function testSetRoles(): void
     {
         $ret = $this->obj->setRoles(null);
         $this->assertSame($ret, $this->obj);
@@ -144,10 +124,7 @@ class AbstractUserTest extends AbstractTestCase
         $this->obj->setRoles(42);
     }
 
-    /**
-     * @return void
-     */
-    public function testSetLastLoginDate()
+    public function testSetLastLoginDate(): void
     {
         $ret = $this->obj->setLastLoginDate('today');
         $this->assertSame($ret, $this->obj);
@@ -172,10 +149,7 @@ class AbstractUserTest extends AbstractTestCase
         $this->obj->setLastLoginDate(false);
     }
 
-    /**
-     * @return void
-     */
-    public function testSetLastLoginIp()
+    public function testSetLastLoginIp(): void
     {
         $ret = $this->obj->setLastLoginIp('8.8.8.8');
         $this->assertSame($ret, $this->obj);
@@ -197,10 +171,7 @@ class AbstractUserTest extends AbstractTestCase
         $this->obj->setLastLoginIp(false);
     }
 
-    /**
-     * @return void
-     */
-    public function testSetLastPasswordDate()
+    public function testSetLastPasswordDate(): void
     {
         $ret = $this->obj->setLastPasswordDate('today');
         $this->assertSame($ret, $this->obj);
@@ -225,10 +196,7 @@ class AbstractUserTest extends AbstractTestCase
         $this->obj->setLastPasswordDate(false);
     }
 
-    /**
-     * @return void
-     */
-    public function testSetLastPasswordIp()
+    public function testSetLastPasswordIp(): void
     {
         $ret = $this->obj->setLastPasswordIp('8.8.8.8');
         $this->assertSame($ret, $this->obj);
@@ -253,12 +221,10 @@ class AbstractUserTest extends AbstractTestCase
 
     /**
      * Set up the service container.
-     *
-     * @return Container
      */
-    private function container()
+    private function container(): \Pimple\Container
     {
-        if ($this->container === null) {
+        if (!$this->container instanceof \Pimple\Container) {
             $container = new Container();
             $containerProvider = new ContainerProvider();
             $containerProvider->registerBaseServices($container);

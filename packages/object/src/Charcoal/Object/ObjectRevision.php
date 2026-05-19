@@ -33,9 +33,8 @@ class ObjectRevision extends AbstractModel implements ObjectRevisionInterface
 
     /**
      * Object type of this revision (required)
-     * @var string $targetType
      */
-    private $targetType;
+    private ?string $targetType = null;
 
     /**
      * Object ID of this revision (required)
@@ -45,21 +44,18 @@ class ObjectRevision extends AbstractModel implements ObjectRevisionInterface
 
     /**
      * Revision number. Sequential integer for each object's ID. (required)
-     * @var integer $revNum
      */
-    private $revNum;
+    private ?int $revNum = null;
 
     /**
      * Timestamp; when this revision was created
-     * @var DateTimeInterface|null $revTs
      */
-    private $revTs;
+    private ?\DateTimeInterface $revTs = null;
 
     /**
      * The (admin) user that was
-     * @var string|null $revUser
      */
-    private $revUser;
+    private ?string $revUser = null;
 
     /**
      * @var array $dataPrev
@@ -80,6 +76,7 @@ class ObjectRevision extends AbstractModel implements ObjectRevisionInterface
      * @param  Container $container DI Container.
      * @return void
      */
+    #[\Override]
     protected function setDependencies(Container $container)
     {
         parent::setDependencies($container);
@@ -92,7 +89,7 @@ class ObjectRevision extends AbstractModel implements ObjectRevisionInterface
      * @throws InvalidArgumentException If the obj type parameter is not a string.
      * @return ObjectRevision Chainable
      */
-    public function setTargetType($targetType)
+    public function setTargetType($targetType): static
     {
         if (!is_string($targetType)) {
             throw new InvalidArgumentException(
@@ -106,7 +103,7 @@ class ObjectRevision extends AbstractModel implements ObjectRevisionInterface
     /**
      * @return string
      */
-    public function getTargetType()
+    public function getTargetType(): ?string
     {
         return $this->targetType;
     }
@@ -115,7 +112,7 @@ class ObjectRevision extends AbstractModel implements ObjectRevisionInterface
      * @param  mixed $targetId The object ID.
      * @return ObjectRevision Chainable
      */
-    public function setTargetId($targetId)
+    public function setTargetId($targetId): static
     {
         $this->targetId = $targetId;
         return $this;
@@ -134,7 +131,7 @@ class ObjectRevision extends AbstractModel implements ObjectRevisionInterface
      * @throws InvalidArgumentException If the revision number argument is not numerical.
      * @return ObjectRevision Chainable
      */
-    public function setRevNum($revNum)
+    public function setRevNum($revNum): static
     {
         if (!is_numeric($revNum)) {
             throw new InvalidArgumentException(
@@ -148,7 +145,7 @@ class ObjectRevision extends AbstractModel implements ObjectRevisionInterface
     /**
      * @return integer
      */
-    public function getRevNum()
+    public function getRevNum(): ?int
     {
         return $this->revNum;
     }
@@ -158,7 +155,7 @@ class ObjectRevision extends AbstractModel implements ObjectRevisionInterface
      * @throws InvalidArgumentException If the timestamp is invalid.
      * @return ObjectRevision Chainable
      */
-    public function setRevTs($revTs)
+    public function setRevTs($revTs): static
     {
         if ($revTs === null) {
             $this->revTs = null;
@@ -176,10 +173,7 @@ class ObjectRevision extends AbstractModel implements ObjectRevisionInterface
         return $this;
     }
 
-    /**
-     * @return DateTimeInterface|null
-     */
-    public function getRevTs()
+    public function getRevTs(): ?\DateTimeInterface
     {
         return $this->revTs;
     }
@@ -189,7 +183,7 @@ class ObjectRevision extends AbstractModel implements ObjectRevisionInterface
      * @throws InvalidArgumentException If the revision user parameter is not a string.
      * @return ObjectRevision Chainable
      */
-    public function setRevUser($revUser)
+    public function setRevUser($revUser): static
     {
         if ($revUser === null) {
             $this->revUser = null;
@@ -207,7 +201,7 @@ class ObjectRevision extends AbstractModel implements ObjectRevisionInterface
     /**
      * @return string
      */
-    public function getRevUser()
+    public function getRevUser(): ?string
     {
         return $this->revUser;
     }
@@ -216,10 +210,10 @@ class ObjectRevision extends AbstractModel implements ObjectRevisionInterface
      * @param  string|array|null $data The previous revision data.
      * @return ObjectRevision Chainable
      */
-    public function setDataPrev($data)
+    public function setDataPrev($data): static
     {
         if (!is_array($data)) {
-            $data = json_decode($data, true);
+            $data = json_decode((string) $data, true);
         }
         if ($data === null) {
             $data = [];
@@ -240,10 +234,10 @@ class ObjectRevision extends AbstractModel implements ObjectRevisionInterface
      * @param  array|string|null $data The current revision (object) data.
      * @return ObjectRevision Chainable
      */
-    public function setDataObj($data)
+    public function setDataObj($data): static
     {
         if (!is_array($data)) {
-            $data = json_decode($data, true);
+            $data = json_decode((string) $data, true);
         }
         if ($data === null) {
             $data = [];
@@ -262,9 +256,8 @@ class ObjectRevision extends AbstractModel implements ObjectRevisionInterface
 
     /**
      * @param  array|string $data The data diff.
-     * @return ObjectRevision
      */
-    public function setDataDiff($data)
+    public function setDataDiff($data): static
     {
         if (!is_array($data)) {
             $data = json_decode($data, true);
@@ -294,7 +287,7 @@ class ObjectRevision extends AbstractModel implements ObjectRevisionInterface
      * @param  RevisionableInterface $obj The object to create the revision from.
      * @return ObjectRevision Chainable
      */
-    public function createFromObject(RevisionableInterface $obj)
+    public function createFromObject(RevisionableInterface $obj): static
     {
         $prevRev = $this->lastObjectRevision($obj);
 
@@ -321,7 +314,7 @@ class ObjectRevision extends AbstractModel implements ObjectRevisionInterface
      * @param array $dataObj  Optional. Current revision (object) data.
      * @return array The diff data
      */
-    public function createDiff(array $dataPrev = null, array $dataObj = null)
+    public function createDiff(?array $dataPrev = null, ?array $dataObj = null): array
     {
         if ($dataPrev === null) {
             $dataPrev = $this->getDataPrev();
@@ -329,8 +322,7 @@ class ObjectRevision extends AbstractModel implements ObjectRevisionInterface
         if ($dataObj === null) {
             $dataObj = $this->getDataObj();
         }
-        $dataDiff = $this->recursiveDiff($dataPrev, $dataObj);
-        return $dataDiff;
+        return $this->recursiveDiff($dataPrev, $dataObj);
     }
 
     /**
@@ -340,7 +332,7 @@ class ObjectRevision extends AbstractModel implements ObjectRevisionInterface
      * @param array $array2 Second Array.
      * @return array The array diff.
      */
-    public function recursiveDiff(array $array1, array $array2)
+    public function recursiveDiff(array $array1, array $array2): array
     {
         $diff = [];
 
@@ -354,13 +346,11 @@ class ObjectRevision extends AbstractModel implements ObjectRevisionInterface
                     $diff[1][$key] = $array2[$key];
                 } else {
                     $new = $this->recursiveDiff($value, $array2[$key]);
-                    if ($new !== false) {
-                        if (isset($new[0])) {
-                            $diff[0][$key] = $new[0];
-                        }
-                        if (isset($new[1])) {
-                            $diff[1][$key] = $new[1];
-                        }
+                    if (isset($new[0])) {
+                        $diff[0][$key] = $new[0];
+                    }
+                    if (isset($new[1])) {
+                        $diff[1][$key] = $new[1];
                     }
                 }
             } elseif ($array2[$key] !== $value) {

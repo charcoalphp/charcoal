@@ -14,7 +14,7 @@ class TemplateRouteConfigTest extends AbstractTestCase
         $this->obj = new TemplateRouteConfig();
     }
 
-    public function testSetEngine()
+    public function testSetEngine(): void
     {
         //$this->assertEquals('mustache', $this->obj->engine());
         $ret = $this->obj->setEngine('twig');
@@ -28,7 +28,7 @@ class TemplateRouteConfigTest extends AbstractTestCase
         $this->obj->setEngine(false);
     }
 
-    public function testSetTemplate()
+    public function testSetTemplate(): void
     {
         $this->assertNull($this->obj->template());
         $ret = $this->obj->setTemplate('foobar');
@@ -40,7 +40,7 @@ class TemplateRouteConfigTest extends AbstractTestCase
         $this->obj->setTemplate(false);
     }
 
-    public function testRedirect()
+    public function testRedirect(): void
     {
         $this->assertNull($this->obj->redirect());
         $ret = $this->obj->setRedirect('foobar');
@@ -49,7 +49,7 @@ class TemplateRouteConfigTest extends AbstractTestCase
         $this->assertEquals('foobar', $this->obj->redirect());
     }
 
-    public function testSetRedirectMode()
+    public function testSetRedirectMode(): void
     {
         $this->assertEquals(301, $this->obj->redirectMode());
         $ret = $this->obj->setRedirectMode(302);
@@ -60,7 +60,7 @@ class TemplateRouteConfigTest extends AbstractTestCase
         $this->obj->setRedirectMode(666);
     }
 
-    public function testSetCache()
+    public function testSetCache(): void
     {
         $this->assertFalse($this->obj->cache());
         $ret = $this->obj->setCache(true);
@@ -68,7 +68,7 @@ class TemplateRouteConfigTest extends AbstractTestCase
         $this->assertTrue($this->obj->cache());
     }
 
-    public function testSetCacheTtl()
+    public function testSetCacheTtl(): void
     {
         $this->assertEquals(0, $this->obj->cacheTtl());
         $ret = $this->obj->setCacheTtl('42');

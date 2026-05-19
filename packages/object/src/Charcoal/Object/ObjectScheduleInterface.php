@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Charcoal\Object;
 
 /**
@@ -81,8 +83,8 @@ interface ObjectScheduleInterface
      * @return boolean  Success / Failure
      */
     public function process(
-        callable $callback = null,
-        callable $successCallback = null,
-        callable $failureCallback = null
+        ?callable $callback = null,
+        ?callable $successCallback = null,
+        ?callable $failureCallback = null
     );
 }

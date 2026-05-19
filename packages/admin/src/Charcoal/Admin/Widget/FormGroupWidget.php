@@ -34,30 +34,22 @@ class FormGroupWidget extends AbstractUiItem implements
 
     /**
      * Whether notes shoudl be display before or after the form fields.
-     *
-     * @var boolean
      */
-    private $showNotesAbove = false;
+    private bool $showNotesAbove = false;
 
     /**
      * @var array|null $parsedFormProperties
      */
     protected $parsedFormProperties;
 
-    /**
-     * @var array $groupProperties
-     */
-    private $groupProperties = [];
+    private array $groupProperties = [];
 
-    /**
-     * @var array $propertiesOptions
-     */
-    private $propertiesOptions = [];
+    private array $propertiesOptions = [];
 
     /**
      * @param array|\ArrayAccess $data Dependencies.
      */
-    public function __construct($data)
+    public function __construct(?array $data)
     {
         parent::__construct($data);
 
@@ -70,7 +62,8 @@ class FormGroupWidget extends AbstractUiItem implements
      * @param  array $data Widget data.
      * @return FormGroupWidget Chainable
      */
-    public function setData(array $data)
+    #[\Override]
+    public function setData(array $data): static
     {
         if (!empty($data['properties'])) {
             $this->setGroupProperties($data['properties']);
@@ -92,10 +85,8 @@ class FormGroupWidget extends AbstractUiItem implements
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function type()
+    #[\Override]
+    public function type(): string
     {
         return 'charcoal/admin/widget/form-group-widget';
     }
@@ -104,7 +95,7 @@ class FormGroupWidget extends AbstractUiItem implements
      * @param string $widgetId The widget identifier.
      * @return AdminWidget Chainable
      */
-    public function setWidgetId($widgetId)
+    public function setWidgetId($widgetId): static
     {
         $this->widgetId = $widgetId;
 
@@ -127,7 +118,7 @@ class FormGroupWidget extends AbstractUiItem implements
      * @param array $properties The group properties.
      * @return FormGroupWidget Chainable
      */
-    public function setGroupProperties(array $properties)
+    public function setGroupProperties(array $properties): static
     {
         $this->groupProperties      = $properties;
         $this->parsedFormProperties = null;
@@ -135,10 +126,7 @@ class FormGroupWidget extends AbstractUiItem implements
         return $this;
     }
 
-    /**
-     * @return array
-     */
-    public function groupProperties()
+    public function groupProperties(): array
     {
         return $this->groupProperties;
     }
@@ -147,29 +135,24 @@ class FormGroupWidget extends AbstractUiItem implements
      * @param array $properties The options to customize the group properties.
      * @return FormGroupWidget Chainable
      */
-    public function setPropertiesOptions(array $properties)
+    public function setPropertiesOptions(array $properties): static
     {
         $this->propertiesOptions = $properties;
 
         return $this;
     }
 
-    /**
-     * @return array
-     */
-    public function propertiesOptions()
+    public function propertiesOptions(): array
     {
         return $this->propertiesOptions;
     }
 
     /**
      * Determine if the form group has properties.
-     *
-     * @return boolean
      */
-    public function hasFormProperties()
+    public function hasFormProperties(): bool
     {
-        return !!count($this->parsedFormProperties());
+        return (bool) count($this->parsedFormProperties());
     }
 
     /**
@@ -182,7 +165,7 @@ class FormGroupWidget extends AbstractUiItem implements
         $form = $this->form();
         $obj  = ($form instanceof ObjectContainerInterface) ? $form->obj() : null;
 
-        $groupProperties = array_map([ $this, 'camelize' ], $this->groupProperties());
+        $groupProperties = array_map($this->camelize(...), $this->groupProperties());
         $formProperties  = $this->parsedFormProperties();
         $propOptions     = $this->propertiesOptions();
 
@@ -233,9 +216,8 @@ class FormGroupWidget extends AbstractUiItem implements
      * Retrieve the available languages, formatted for the sidebar language-switcher.
      *
      * @see    FormSidebarWidget::languages()
-     * @return array
      */
-    public function languages()
+    public function languages(): array
     {
         $currentLocale = $this->translator()->getLocale();
         $languages = [];
@@ -249,7 +231,7 @@ class FormGroupWidget extends AbstractUiItem implements
             } else {
                 $trans = 'locale.' . $locale;
                 if ($trans === $this->translator()->translate($trans)) {
-                    $label = strtoupper($locale);
+                    $label = strtoupper((string) $locale);
                 } else {
                     $label = $this->translator()->translation($trans);
                 }
@@ -300,7 +282,8 @@ class FormGroupWidget extends AbstractUiItem implements
     /**
      * @return Translation|string|null
      */
-    public function description()
+    #[\Override]
+    public function description(): string
     {
         return $this->renderTemplate((string)parent::description());
     }
@@ -308,7 +291,8 @@ class FormGroupWidget extends AbstractUiItem implements
     /**
      * @return Translation|string|null
      */
-    public function notes()
+    #[\Override]
+    public function notes(): string
     {
         return $this->renderTemplate((string)parent::notes());
     }
@@ -319,6 +303,7 @@ class FormGroupWidget extends AbstractUiItem implements
      * @param  boolean|string $show Whether to show or hide notes.
      * @return FormGroupWidget Chainable
      */
+    #[\Override]
     public function setShowNotes($show)
     {
         $this->showNotesAbove = ($show === 'above');
@@ -326,10 +311,7 @@ class FormGroupWidget extends AbstractUiItem implements
         return parent::setShowNotes($show);
     }
 
-    /**
-     * @return boolean
-     */
-    public function showNotesAbove()
+    public function showNotesAbove(): bool
     {
         return $this->showNotesAbove && $this->showNotes();
     }
@@ -338,6 +320,7 @@ class FormGroupWidget extends AbstractUiItem implements
      * @param Container $container The DI container.
      * @return void
      */
+    #[\Override]
     protected function setDependencies(Container $container)
     {
         parent::setDependencies($container);

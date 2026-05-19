@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Charcoal\Property;
 
 // From 'charcoal-property'
@@ -17,21 +19,18 @@ class TextProperty extends StringProperty
      */
     protected $long = self::DEFAULT_LONG;
 
-    /**
-     * @return string
-     */
-    public function type()
+    #[\Override]
+    public function type(): string
     {
         return 'text';
     }
 
     /**
      * @param boolean $long Whether long text are supported.
-     * @return self
      */
-    public function setLong($long)
+    public function setLong($long): static
     {
-        $this->long = !!$long;
+        $this->long = (bool) $long;
         return $this;
     }
 
@@ -48,9 +47,9 @@ class TextProperty extends StringProperty
      * (0 = no max length).
      *
      * @see StringProperty::defaultMaxLength()
-     * @return integer
      */
-    public function defaultMaxLength()
+    #[\Override]
+    public function defaultMaxLength(): int
     {
         return 0;
     }
@@ -61,7 +60,8 @@ class TextProperty extends StringProperty
      * @see StorablePropertyTrait::sqlType()
      * @return string The SQL type
      */
-    public function sqlType()
+    #[\Override]
+    public function sqlType(): string
     {
         if ($this['long'] === true) {
             return 'LONGTEXT';

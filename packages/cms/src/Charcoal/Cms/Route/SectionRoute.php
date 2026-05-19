@@ -26,10 +26,8 @@ class SectionRoute extends TemplateRoute
 
     /**
      * URI path.
-     *
-     * @var string
      */
-    private $path;
+    private string $path;
 
     /**
      * The section object matching the URI path.
@@ -40,10 +38,8 @@ class SectionRoute extends TemplateRoute
 
     /**
      * The section model.
-     *
-     * @var string
      */
-    private $objType = 'charcoal/cms/section';
+    private string $objType = 'charcoal/cms/section';
 
     /**
      * @param array $data Class depdendencies.
@@ -52,16 +48,15 @@ class SectionRoute extends TemplateRoute
     {
         parent::__construct($data);
 
-        $this->path = ltrim($data['path'], '/');
+        $this->path = ltrim((string) $data['path'], '/');
     }
 
     /**
      * Determine if the URI path resolves to an object.
      *
      * @param  Container $container A DI (Pimple) container.
-     * @return boolean
      */
-    public function pathResolvable(Container $container)
+    public function pathResolvable(Container $container): bool
     {
         $section = $this->loadSectionFromPath($container);
         return ($section instanceof SectionInterface) && $section->id();
@@ -73,6 +68,7 @@ class SectionRoute extends TemplateRoute
      * @param  ResponseInterface $response  A PSR-7 compatible Response instance.
      * @return ResponseInterface
      */
+    #[\Override]
     public function __invoke(
         Container $container,
         RequestInterface $request,
@@ -88,11 +84,11 @@ class SectionRoute extends TemplateRoute
         $templateIdent      = (string)$section['templateIdent'];
         $templateController = (string)$section['templateIdent'];
 
-        if (!$templateController) {
+        if ($templateController === '' || $templateController === '0') {
             $container['logger']->warning(sprintf(
                 '[%s] Missing template controller on model [%s] for ID [%s]',
-                get_class($this),
-                get_class($section),
+                static::class,
+                $section::class,
                 $section['id']
             ));
             return $response->withStatus(500);
@@ -112,8 +108,8 @@ class SectionRoute extends TemplateRoute
         if ($templateContent === $templateIdent || $templateContent === '') {
             $container['logger']->warning(sprintf(
                 '[%s] Missing or bad template identifier on model [%s] for ID [%s]',
-                get_class($this),
-                get_class($section),
+                static::class,
+                $section::class,
                 $templateIdent
             ));
             return $response->withStatus(500);
@@ -133,7 +129,7 @@ class SectionRoute extends TemplateRoute
     {
         if ($this->section === null) {
             $config  = $this->config();
-            $objType = (isset($config['obj_type']) ? $config['obj_type'] : $this->objType);
+            $objType = ($config['obj_type'] ?? $this->objType);
 
             try {
                 $model = $container['model/factory']->create($objType);
@@ -148,11 +144,11 @@ class SectionRoute extends TemplateRoute
                     $this->section = $model;
                     return $model;
                 }
-            } catch (Exception $e) {
+            } catch (Exception) {
                 $container['logger']->debug(sprintf(
                     '[%s] Unable to load model [%s] for path [%s]',
-                    get_class($this),
-                    get_class($model),
+                    static::class,
+                    $model::class,
                     $this->path
                 ));
             }

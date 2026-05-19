@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Charcoal\Admin\Widget;
 
 // From 'charcoal-admin'
@@ -10,25 +12,13 @@ use Charcoal\Admin\AdminWidget;
  */
 class TextWidget extends AdminWidget
 {
-    /**
-     * @var boolean
-     */
-    private $showTitle = true;
+    private bool $showTitle = true;
 
-    /**
-     * @var boolean
-     */
-    private $showSubtitle = true;
+    private bool $showSubtitle = true;
 
-    /**
-     * @var boolean
-     */
-    private $showDescription = true;
+    private bool $showDescription = true;
 
-    /**
-     * @var boolean
-     */
-    private $showNotes = true;
+    private bool $showNotes = true;
 
     /**
      * @var \Charcoal\Translator\Translation|string|null
@@ -52,11 +42,10 @@ class TextWidget extends AdminWidget
 
     /**
      * @param boolean $show The show title flag.
-     * @return self
      */
-    public function setShowTitle($show)
+    public function setShowTitle($show): static
     {
-        $this->showTitle = !!$show;
+        $this->showTitle = (bool) $show;
         return $this;
     }
 
@@ -68,17 +57,16 @@ class TextWidget extends AdminWidget
         if ($this->showTitle === false) {
             return false;
         } else {
-            return !!$this->title();
+            return (bool) $this->title();
         }
     }
 
     /**
      * @param boolean $show The show subtitle flag.
-     * @return self
      */
-    public function setShowSubtitle($show)
+    public function setShowSubtitle($show): static
     {
-        $this->showSubtitle = !!$show;
+        $this->showSubtitle = (bool) $show;
         return $this;
     }
 
@@ -90,17 +78,16 @@ class TextWidget extends AdminWidget
         if ($this->showSubtitle === false) {
             return false;
         } else {
-            return !!$this->subtitle();
+            return (bool) $this->subtitle();
         }
     }
 
     /**
      * @param boolean $show The show description flag.
-     * @return self
      */
-    public function setShowDescription($show)
+    public function setShowDescription($show): static
     {
-        $this->showDescription = !!$show;
+        $this->showDescription = (bool) $show;
         return $this;
     }
 
@@ -112,17 +99,16 @@ class TextWidget extends AdminWidget
         if ($this->showDescription === false) {
             return false;
         } else {
-            return !!$this->description();
+            return (bool) $this->description();
         }
     }
 
     /**
      * @param boolean $show The "show notes" flag.
-     * @return self
      */
-    public function setShowNotes($show)
+    public function setShowNotes($show): static
     {
-        $this->showNotes = !!$show;
+        $this->showNotes = (bool) $show;
         return $this;
     }
 
@@ -134,15 +120,14 @@ class TextWidget extends AdminWidget
         if ($this->showNotes === false) {
             return false;
         } else {
-            return !!$this->notes();
+            return (bool) $this->notes();
         }
     }
 
     /**
      * @param mixed $title The text widget title.
-     * @return self
      */
-    public function setTitle($title)
+    public function setTitle($title): static
     {
         $this->title = $this->translator()->translation($title);
 
@@ -159,9 +144,8 @@ class TextWidget extends AdminWidget
 
     /**
      * @param mixed $subtitle The text widget subtitle.
-     * @return self
      */
-    public function setSubtitle($subtitle)
+    public function setSubtitle($subtitle): static
     {
         $this->subtitle = $this->translator()->translation($subtitle);
 
@@ -178,9 +162,8 @@ class TextWidget extends AdminWidget
 
     /**
      * @param mixed $description The text widget description (main content).
-     * @return self
      */
-    public function setDescription($description)
+    public function setDescription($description): static
     {
         $this->description = $this->translator()->translation($description);
 
@@ -197,9 +180,8 @@ class TextWidget extends AdminWidget
 
     /**
      * @param mixed $notes The text widget notes.
-     * @return self
      */
-    public function setNotes($notes)
+    public function setNotes($notes): static
     {
         $this->notes = $this->translator()->translation($notes);
 

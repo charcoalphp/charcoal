@@ -10,9 +10,6 @@ use Psr\Log\LoggerInterface;
  */
 class DefaultAwarePool extends \Stash\Pool
 {
-    /**
-     * @return string
-     */
     public function getItemClass():string
     {
         return $this->itemClass;
@@ -21,6 +18,7 @@ class DefaultAwarePool extends \Stash\Pool
     /**
      * @return false|string
      */
+    #[\Override]
     public function getNamespace(): ?string
     {
         return $this->namespace;

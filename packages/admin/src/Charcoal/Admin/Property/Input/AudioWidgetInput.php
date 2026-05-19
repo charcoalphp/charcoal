@@ -2,6 +2,7 @@
 
 namespace Charcoal\Admin\Property\Input;
 
+use Aws\signer\signerClient;
 use InvalidArgumentException;
 use UnexpectedValueException;
 // From Mustache
@@ -24,24 +25,18 @@ class AudioWidgetInput extends AudioInput
 
     /**
      * Whether text-to-speech is enabled.
-     *
-     * @var boolean
      */
-    private $textEnabled = true;
+    private bool $textEnabled = true;
 
     /**
      * Whether audio recording is enabled.
-     *
-     * @var boolean
      */
-    private $captureEnabled = true;
+    private bool $captureEnabled = true;
 
     /**
      * Whether file upload is enabled.
-     *
-     * @var boolean
      */
-    private $uploadEnabled = true;
+    private bool $uploadEnabled = true;
 
     /**
      * URL for the "audio recorder" plugin.
@@ -59,10 +54,8 @@ class AudioWidgetInput extends AudioInput
 
     /**
      * The text property for TTS.
-     *
-     * @var PropertyInterface
      */
-    private $textProperty;
+    private ?\Charcoal\Property\PropertyInterface $textProperty = null;
 
     /**
      * The HTML input name attribute for TTS.
@@ -87,125 +80,98 @@ class AudioWidgetInput extends AudioInput
 
     /**
      * Retrieve the control type for the HTML element `<input>`.
-     *
-     * @return string
      */
-    public function type()
+    #[\Override]
+    public function type(): string
     {
         return 'hidden';
     }
 
-    /**
-     * @return boolean
-     */
-    public function displayAudioWidget()
+    public function displayAudioWidget(): bool
     {
         return $this->textEnabled() || $this->captureEnabled() || $this->uploadEnabled();
     }
 
     /**
      * @param  boolean $textEnabled If TTS is enabled or not for this widget.
-     * @return self
      */
-    public function setTextEnabled($textEnabled)
+    public function setTextEnabled($textEnabled): static
     {
-        $this->textEnabled = !!$textEnabled;
+        $this->textEnabled = (bool) $textEnabled;
         return $this;
     }
 
-    /**
-     * @return boolean
-     */
-    public function textEnabled()
+    public function textEnabled(): bool
     {
         return $this->textEnabled;
     }
 
     /**
      * @param  boolean $captureEnabled If recording is enabled or not for this widget.
-     * @return self
      */
-    public function setCaptureEnabled($captureEnabled)
+    public function setCaptureEnabled($captureEnabled): static
     {
-        $this->captureEnabled = !!$captureEnabled;
+        $this->captureEnabled = (bool) $captureEnabled;
         return $this;
     }
 
-    /**
-     * @return boolean
-     */
-    public function captureEnabled()
+    public function captureEnabled(): bool
     {
         return $this->captureEnabled;
     }
 
     /**
-     * @deprecated In favour of {@see self::setCaptureEnabled()}
      *
      * @param  boolean $recordingEnabled If recording is enabled or not for this widget.
-     * @return self
      */
-    public function setRecordingEnabled($recordingEnabled)
+    #[\Deprecated(message: 'In favour of {@see self::setCaptureEnabled()}')]
+    public function setRecordingEnabled($recordingEnabled): static
     {
-        $this->captureEnabled = !!$recordingEnabled;
+        $this->captureEnabled = (bool) $recordingEnabled;
         return $this;
     }
 
-    /**
-     * @deprecated In favour of {@see self::captureEnabled()}
-     *
-     * @return boolean
-     */
-    public function recordingEnabled()
+    #[\Deprecated(message: 'In favour of {@see self::captureEnabled()}')]
+    public function recordingEnabled(): bool
     {
         return $this->captureEnabled;
     }
 
     /**
      * @param  boolean $uploadEnabled If file upload is enabled or not for this widget.
-     * @return self
      */
-    public function setUploadEnabled($uploadEnabled)
+    public function setUploadEnabled($uploadEnabled): static
     {
-        $this->uploadEnabled = !!$uploadEnabled;
+        $this->uploadEnabled = (bool) $uploadEnabled;
         return $this;
     }
 
-    /**
-     * @return boolean
-     */
-    public function uploadEnabled()
+    public function uploadEnabled(): bool
     {
         return $this->uploadEnabled;
     }
 
     /**
-     * @deprecated In favour of {@see self::setUploadEnabled()}
      *
      * @param  boolean $fileEnabled If file upload is enabled or not for this widget.
-     * @return self
      */
-    public function setFileEnabled($fileEnabled)
+    #[\Deprecated(message: 'In favour of {@see self::setUploadEnabled()}')]
+    public function setFileEnabled($fileEnabled): static
     {
-        $this->uploadEnabled = !!$fileEnabled;
+        $this->uploadEnabled = (bool) $fileEnabled;
         return $this;
     }
 
-    /**
-     * @deprecated In favour of {@see self::uploadEnabled()}
-     *
-     * @return boolean
-     */
-    public function fileEnabled()
+    #[\Deprecated(message: 'In favour of {@see self::uploadEnabled()}')]
+    public function fileEnabled(): bool
     {
         return $this->uploadEnabled;
     }
 
     /**
      * @param  string $url The recording/exporting plugin URL.
-     * @return self
      */
-    public function setRecorderPluginUrl($url)
+    public function setRecorderPluginUrl($url): static
     {
         $this->recorderPluginUrl = $url;
         return $this;
@@ -238,7 +204,7 @@ class AudioWidgetInput extends AudioInput
     {
         $uri = $this->getRecorderPluginUrlTemplate();
 
-        return function ($noop, LambdaHelper $helper) use ($uri) {
+        return function ($noop, LambdaHelper $helper) use ($uri): null {
             $uri = $helper->render($uri);
             $this->setRecorderPluginUrl($uri);
 
@@ -251,15 +217,12 @@ class AudioWidgetInput extends AudioInput
      *
      * This method is overriden to change the `callback` value to reflect
      * the correct input control ID.
-     *
-     * @return string
      */
-    protected function getRecorderPluginUrlTemplate()
+    protected function getRecorderPluginUrlTemplate(): string
     {
         $uri = 'assets/admin/scripts/vendors/recorderjs/recorder.js';
-        $uri = '{{# withBaseUrl }}' . $uri . '{{/ withBaseUrl }}';
 
-        return $uri;
+        return '{{# withBaseUrl }}' . $uri . '{{/ withBaseUrl }}';
     }
 
     /**
@@ -267,9 +230,8 @@ class AudioWidgetInput extends AudioInput
      *
      * @param  string $activePane The active widget pane.
      * @throws InvalidArgumentException If the provided argument is not a string.
-     * @return self
      */
-    public function setActivePane($activePane)
+    public function setActivePane($activePane): static
     {
         if ($activePane === null || $activePane === '') {
             $this->activePane = null;
@@ -325,9 +287,8 @@ class AudioWidgetInput extends AudioInput
      * Alias of {@see AbstractPropertyInput::setPropertyVal()}.
      *
      * @param  mixed $val The audio property value.
-     * @return self
      */
-    public function setAudioPropertyVal($val)
+    public function setAudioPropertyVal($val): static
     {
         $this->setPropertyVal($val);
         return $this;
@@ -343,10 +304,7 @@ class AudioWidgetInput extends AudioInput
         return $this->propertyVal();
     }
 
-    /**
-     * @return boolean
-     */
-    public function hasAudioPropertyVal()
+    public function hasAudioPropertyVal(): bool
     {
         $prop = $this->audioProperty();
         $val  = $prop->inputVal($this->audioPropertyVal(), [
@@ -360,9 +318,8 @@ class AudioWidgetInput extends AudioInput
      * Alias of {@see AbstractPropertyInput::setProperty()}.
      *
      * @param  PropertyInterface $p The property for TTS.
-     * @return self
      */
-    public function setAudioProperty(PropertyInterface $p)
+    public function setAudioProperty(PropertyInterface $p): static
     {
         $this->setProperty($p);
         return $this;
@@ -392,9 +349,8 @@ class AudioWidgetInput extends AudioInput
      * Alias of {@see AbstractPropertyInput::setInputName()}.
      *
      * @param  string $inputName HTML input id attribute.
-     * @return self
      */
-    public function setAudioInputName($inputName)
+    public function setAudioInputName($inputName): static
     {
         $this->setInputName($inputName);
 
@@ -425,9 +381,8 @@ class AudioWidgetInput extends AudioInput
      * Set the property value for TTS.
      *
      * @param  mixed $val The property value.
-     * @return self
      */
-    public function setTextPropertyVal($val)
+    public function setTextPropertyVal($val): static
     {
         $this->textPropertyVal = $val;
         return $this;
@@ -443,10 +398,7 @@ class AudioWidgetInput extends AudioInput
         return $this->textPropertyVal;
     }
 
-    /**
-     * @return boolean
-     */
-    public function hasTextPropertyVal()
+    public function hasTextPropertyVal(): bool
     {
         $prop = $this->textProperty();
         $val  = $prop->inputVal($this->textPropertyVal(), [
@@ -460,9 +412,8 @@ class AudioWidgetInput extends AudioInput
      * Set the property instance for TTS.
      *
      * @param  PropertyInterface $p The property for TTS.
-     * @return self
      */
-    public function setTextProperty(PropertyInterface $p)
+    public function setTextProperty(PropertyInterface $p): static
     {
         $this->textProperty = $p;
         return $this;
@@ -473,7 +424,7 @@ class AudioWidgetInput extends AudioInput
      *
      * @return PropertyInterface
      */
-    public function textProperty()
+    public function textProperty(): ?\Charcoal\Property\PropertyInterface
     {
         return $this->textProperty;
     }
@@ -493,9 +444,8 @@ class AudioWidgetInput extends AudioInput
      *
      * @see    AbstractPropertyInput::setInputName()
      * @param  string $inputName HTML input name attribute.
-     * @return self
      */
-    public function setTextInputName($inputName)
+    public function setTextInputName($inputName): static
     {
         $this->textInputName = $inputName;
         return $this;
@@ -509,11 +459,7 @@ class AudioWidgetInput extends AudioInput
      */
     public function textInputName()
     {
-        if ($this->textInputName) {
-            $name = $this->textInputName;
-        } else {
-            $name = $this->textPropertyIdent();
-        }
+        $name = $this->textInputName ?: $this->textPropertyIdent();
 
         if ($this->textProperty()['l10n']) {
             $name .= '[' . $this->lang() . ']';
@@ -529,7 +475,7 @@ class AudioWidgetInput extends AudioInput
      * @throws UnexpectedValueException If the value is invalid.
      * @return string
      */
-    public function textInputVal()
+    public function textInputVal(): int|float|string|bool
     {
         $prop = $this->textProperty();
         $val  = $prop->inputVal($this->textPropertyVal(), [
@@ -543,7 +489,7 @@ class AudioWidgetInput extends AudioInput
         if (!is_scalar($val)) {
             throw new UnexpectedValueException(sprintf(
                 'Property Input Value must be a string, received %s',
-                (is_object($val) ? get_class($val) : gettype($val))
+                (get_debug_type($val))
             ));
         }
 
@@ -552,40 +498,32 @@ class AudioWidgetInput extends AudioInput
 
     /**
      * Retrieve the input ID for the TTS property.
-     *
-     * @return string
      */
-    public function textInputId()
+    public function textInputId(): string
     {
         return 'audio_text_' . $this->inputId();
     }
 
     /**
      * Retrieve the input ID for the audio recorder property.
-     *
-     * @return string
      */
-    public function captureInputId()
+    public function captureInputId(): string
     {
         return 'audio_capture_' . $this->inputId();
     }
 
     /**
      * Retrieve the input ID for the audio file property.
-     *
-     * @return string
      */
-    public function uploadInputId()
+    public function uploadInputId(): string
     {
         return 'audio_upload_' . $this->inputId();
     }
 
     /**
      * Retrieve the input ID for the widget's hidden property.
-     *
-     * @return string
      */
-    public function hiddenInputId()
+    public function hiddenInputId(): string
     {
         return 'audio_hidden_' . $this->inputId();
     }
@@ -595,7 +533,7 @@ class AudioWidgetInput extends AudioInput
      *
      * @return callable|null
      */
-    public function textPropertyContext()
+    public function textPropertyContext(): ?\Closure
     {
         if (!$this->textEnabled() || $this->currentContext) {
             return null;
@@ -622,7 +560,7 @@ class AudioWidgetInput extends AudioInput
      *
      * @return callable|null
      */
-    public function capturePropertyContext()
+    public function capturePropertyContext(): ?\Closure
     {
         if (!$this->captureEnabled() || $this->currentContext) {
             return null;
@@ -649,7 +587,7 @@ class AudioWidgetInput extends AudioInput
      *
      * @return callable|null
      */
-    public function uploadPropertyContext()
+    public function uploadPropertyContext(): ?\Closure
     {
         if (!$this->uploadEnabled() || $this->currentContext) {
             return null;
@@ -676,25 +614,22 @@ class AudioWidgetInput extends AudioInput
      *
      * This method is overriden to change the `callback` value to reflect
      * the correct input control ID.
-     *
-     * @return string
      */
-    protected function getFilePickerUrlTemplate()
+    #[\Override]
+    protected function getFilePickerUrlTemplate(): string
     {
         $uri = 'obj_type={{ objType }}&obj_id={{ objId }}&property={{ p.ident }}&callback={{ uploadInputId }}';
-        $uri = '{{# withAdminUrl }}elfinder?' . $uri . '{{/ withAdminUrl }}';
 
-        return $uri;
+        return '{{# withAdminUrl }}elfinder?' . $uri . '{{/ withAdminUrl }}';
     }
 
     /**
      * Retrieve the control's data options for JavaScript components.
-     *
-     * @return array
      */
-    public function controlDataForJs()
+    #[\Override]
+    public function controlDataForJs(): array
     {
-        $inputId = $this->inputId();
+        $this->inputId();
         $data    = parent::controlDataForJs();
 
         return array_replace($data, [

@@ -32,36 +32,26 @@ class ReorderActionTest extends AbstractTestCase
 
     /**
      * The primary model to test with.
-     *
-     * @var string
      */
-    private $model = Model::class;
+    private string $model = Model::class;
 
     /**
      * Store the tested instance.
-     *
-     * @var ReorderAction
      */
-    private $action;
+    private \Charcoal\Admin\Action\Object\ReorderAction $action;
 
     /**
      * Store the object collection loader.
-     *
-     * @var CollectionLoader
      */
-    private $collectionLoader;
+    private ?\Charcoal\Loader\CollectionLoader $collectionLoader = null;
 
     /**
      * Store the service container.
-     *
-     * @var Container
      */
-    private $container;
+    private ?\Pimple\Container $container = null;
 
     /**
      * Set up the test.
-     *
-     * @return void
      */
     public function setUp(): void
     {
@@ -78,7 +68,7 @@ class ReorderActionTest extends AbstractTestCase
     /**
      * @return array
      */
-    public function setUpObjects()
+    public function setUpObjects(): \ArrayAccess|array
     {
         $container = $this->container();
 
@@ -110,9 +100,9 @@ class ReorderActionTest extends AbstractTestCase
     /**
      * @return Collection
      */
-    public function getObjects()
+    public function getObjects(): \ArrayAccess|array
     {
-        if ($this->collectionLoader === null) {
+        if (!$this->collectionLoader instanceof \Charcoal\Loader\CollectionLoader) {
             $container = $this->container();
 
             $loader = new CollectionLoader([
@@ -129,24 +119,20 @@ class ReorderActionTest extends AbstractTestCase
         return $this->collectionLoader->load();
     }
 
-    /**
-     * @return void
-     */
-    public function testAuthRequiredIsTrue()
+    public function testAuthRequiredIsTrue(): void
     {
         $res = $this->callMethod($this->action, 'authRequired');
         $this->assertTrue($res);
     }
 
     /**
-     * @dataProvider runRequestProvider
      *
      * @param  integer $status  An HTTP status code.
      * @param  string  $success Whether the action was successful.
      * @param  array   $mock    The request parameters to test.
-     * @return void
      */
-    public function testRun($status, $success, array $mock)
+    #[\PHPUnit\Framework\Attributes\DataProvider('runRequestProvider')]
+    public function testRun(int $status, bool $success, array $mock): void
     {
         if ($status === 200) {
             $this->setUpObjects();
@@ -167,29 +153,25 @@ class ReorderActionTest extends AbstractTestCase
         }
     }
 
-    /**
-     * @return array
-     */
-    public function runRequestProvider()
+    public static function runRequestProvider(): array
     {
+        $model = Model::class;
         return [
             [ 400, false, [] ],
-            [ 400, false, [ 'QUERY_STRING' => 'obj_type='.$this->model ] ],
-            [ 400, false, [ 'QUERY_STRING' => 'obj_type='.$this->model.'&order_property=5' ] ],
-            [ 400, false, [ 'QUERY_STRING' => 'obj_type='.$this->model.'&order_property=foobar' ] ],
-            [ 500, false, [ 'QUERY_STRING' => 'obj_type='.$this->model.'&obj_orders[]=xyzzy&obj_orders[]=qwerty' ] ],
-            [ 200, true,  [ 'QUERY_STRING' => 'obj_type='.$this->model.'&obj_orders[]=baz&obj_orders[]=bar&obj_orders[]=qux&obj_orders[]=foo' ] ],
+            [ 400, false, [ 'QUERY_STRING' => 'obj_type='.$model ] ],
+            [ 400, false, [ 'QUERY_STRING' => 'obj_type='.$model.'&order_property=5' ] ],
+            [ 400, false, [ 'QUERY_STRING' => 'obj_type='.$model.'&order_property=foobar' ] ],
+            [ 500, false, [ 'QUERY_STRING' => 'obj_type='.$model.'&obj_orders[]=xyzzy&obj_orders[]=qwerty' ] ],
+            [ 200, true,  [ 'QUERY_STRING' => 'obj_type='.$model.'&obj_orders[]=baz&obj_orders[]=bar&obj_orders[]=qux&obj_orders[]=foo' ] ],
         ];
     }
 
     /**
      * Set up the service container.
-     *
-     * @return Container
      */
-    protected function container()
+    protected function container(): \Pimple\Container
     {
-        if ($this->container === null) {
+        if (!$this->container instanceof \Pimple\Container) {
             $container = new Container();
             $containerProvider = new ContainerProvider();
             $containerProvider->registerAdminServices($container);

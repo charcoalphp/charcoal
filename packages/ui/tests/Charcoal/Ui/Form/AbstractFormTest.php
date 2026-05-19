@@ -20,9 +20,6 @@ class AbstractFormTest extends AbstractTestCase
      */
     public $obj;
 
-    /**
-     * @return void
-     */
     protected function setUp(): void
     {
         $container = $this->getContainer();
@@ -40,22 +37,14 @@ class AbstractFormTest extends AbstractTestCase
         ]);
     }
 
-    /**
-     * @return void
-     */
-    public function testSetGroupCallback()
+    public function testSetGroupCallback(): void
     {
-        $cb = function($o) {
-            return 'foo';
-        };
+        $cb = (fn($o): string => 'foo');
         $ret = $this->obj->setGroupCallback($cb);
         $this->assertSame($ret, $this->obj);
     }
 
-    /**
-     * @return void
-     */
-    public function testSetAction()
+    public function testSetAction(): void
     {
         $this->assertEquals('', $this->obj->action());
         $ret = $this->obj->setAction('foo/bar');
@@ -66,10 +55,7 @@ class AbstractFormTest extends AbstractTestCase
         $this->obj->setAction(false);
     }
 
-    /**
-     * @return void
-     */
-    public function testSetMethod()
+    public function testSetMethod(): void
     {
         //$this->assertEquals('post', $obj->method());
         $ret = $this->obj->setMethod('get');
@@ -83,20 +69,14 @@ class AbstractFormTest extends AbstractTestCase
         $this->obj->setMethod('foobar');
     }
 
-    /**
-     * @return void
-     */
-    public function testSetL10nMode()
+    public function testSetL10nMode(): void
     {
         $ret = $this->obj->setL10nMode('loop');
         $this->assertSame($ret, $this->obj);
         $this->assertEquals('loop', $this->obj->l10nMode());
     }
 
-    /**
-     * @return void
-     */
-    public function testSetGroup()
+    public function testSetGroup(): void
     {
         $ret = $this->obj->setGroups([
             'test' => []
@@ -106,37 +86,28 @@ class AbstractFormTest extends AbstractTestCase
         $this->assertEquals(1, $this->obj->numGroups());
     }
 
-    /**
-     * @return void
-     */
-    public function testAddGroup()
+    public function testAddGroup(): void
     {
         $ret = $this->obj->addGroup('ident', []);
         $this->assertSame($ret, $this->obj);
     }
 
-    /**
-     * @return void
-     */
-    public function testHasGroups()
+    public function testHasGroups(): void
     {
         $this->assertFalse($this->obj->hasGroups());
 
-        $ret = $this->obj->setGroups([
+        $this->obj->setGroups([
             'test' => []
         ]);
 
         $this->assertTrue($this->obj->hasGroups());
     }
 
-    /**
-     * @return void
-     */
-    public function testNumGroups()
+    public function testNumGroups(): void
     {
         $this->assertEquals(0, $this->obj->numGroups());
 
-        $ret = $this->obj->setGroups([
+        $this->obj->setGroups([
             'test'   => [],
             'foobar' => []
         ]);
@@ -144,10 +115,7 @@ class AbstractFormTest extends AbstractTestCase
          $this->assertEquals(2, $this->obj->numGroups());
     }
 
-    /**
-     * @return void
-     */
-    public function testSetFormData()
+    public function testSetFormData(): void
     {
         $this->assertEquals([], $this->obj->formData());
         $ret = $this->obj->setFormData([ 'foo' => 'bar' ]);
@@ -158,10 +126,7 @@ class AbstractFormTest extends AbstractTestCase
         $this->assertEquals([ 'baz' => 42 ], $this->obj->formData());
     }
 
-    /**
-     * @return void
-     */
-    public function testAddData()
+    public function testAddData(): void
     {
         $ret = $this->obj->addFormData('foo', 'bar');
         $this->assertSame($ret, $this->obj);

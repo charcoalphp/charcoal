@@ -23,11 +23,8 @@ class ResetPasswordTemplateTest extends AbstractTestCase
      * Instance of object under test
      * @var LoginTemplate
      */
-    private $obj;
+    private \Charcoal\Admin\Template\Account\ResetPasswordTemplate $obj;
 
-    /**
-     * @return void
-     */
     public function setUp(): void
     {
         $this->obj = new ResetPasswordTemplate([
@@ -35,10 +32,7 @@ class ResetPasswordTemplateTest extends AbstractTestCase
         ]);
     }
 
-    /**
-     * @return void
-     */
-    public function testAuthRequiredIsFalse()
+    public function testAuthRequiredIsFalse(): void
     {
         $res = $this->callMethod($this->obj, 'authRequired');
         $this->assertNotTrue($res);

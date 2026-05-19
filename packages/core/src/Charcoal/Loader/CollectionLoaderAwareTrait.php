@@ -42,7 +42,7 @@ trait CollectionLoaderAwareTrait
         if (!isset($this->collectionLoader)) {
             throw new RuntimeException(sprintf(
                 'Collection Loader is not defined for [%s]',
-                get_class($this)
+                $this::class
             ));
         }
 

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Charcoal\Property;
 
 // From 'charcoal-factory'
@@ -10,34 +12,26 @@ use Charcoal\Factory\ResolverFactory;
  */
 class PropertyFactory extends ResolverFactory
 {
-    /**
-     * @return string
-     */
-    public function baseClass()
+    #[\Override]
+    public function baseClass(): string
     {
-        return '\Charcoal\Property\PropertyInterface';
+        return \Charcoal\Property\PropertyInterface::class;
     }
 
-    /**
-     * @return string
-     */
-    public function defaultClass()
+    #[\Override]
+    public function defaultClass(): string
     {
-        return '\Charcoal\Property\GenericProperty';
+        return \Charcoal\Property\GenericProperty::class;
     }
 
-    /**
-     * @return string
-     */
-    public function resolverPrefix()
+    #[\Override]
+    public function resolverPrefix(): string
     {
         return '\Charcoal\Property';
     }
 
-    /**
-     * @return string
-     */
-    public function resolverSuffix()
+    #[\Override]
+    public function resolverSuffix(): string
     {
         return 'Property';
     }

@@ -28,10 +28,8 @@ class ObjectsScript extends AdminScript implements CollectionContainerInterface
 {
     use CollectionContainerTrait;
 
-    /**
-     * @return array
-     */
-    public function defaultArguments()
+    #[\Override]
+    public function defaultArguments(): array
     {
         $arguments = [
             'obj-type' => [
@@ -54,17 +52,14 @@ class ObjectsScript extends AdminScript implements CollectionContainerInterface
                 'castTo'       => 'int'
             ]
         ];
-
-        $arguments = array_merge(parent::defaultArguments(), $arguments);
-        return $arguments;
+        return array_merge(parent::defaultArguments(), $arguments);
     }
 
     /**
      * @param RequestInterface  $request  A PSR-7 compatible Request instance.
      * @param ResponseInterface $response A PSR-7 compatible Response instance.
-     * @return ResponseInterface
      */
-    public function run(RequestInterface $request, ResponseInterface $response)
+    public function run(RequestInterface $request, ResponseInterface $response): ResponseInterface
     {
         unset($request);
 
@@ -94,7 +89,7 @@ class ObjectsScript extends AdminScript implements CollectionContainerInterface
         $collection = $this->collection();
         $table = [];
 
-        $rows = $this->objectRows();
+        $this->objectRows();
 
         foreach ($collection as $c) {
             $obj = [];

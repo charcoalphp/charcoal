@@ -18,26 +18,25 @@ class TranslatorHelpers extends AbstractExtension implements
 {
     /**
      * Store the translator service.
-     *
-     * @var Translator|null
      */
-    private $translator;
+    private ?\Charcoal\Translator\Translator $translator = null;
 
     /**
      * @param array $data Class Dependencies.
      */
-    public function __construct(array $data = null)
+    public function __construct(?array $data = null)
     {
         if (isset($data['translator'])) {
             $this->setTranslator($data['translator']);
         }
     }
 
+    #[\Override]
     public function getFilters(): array
     {
         return [
-            new TwigFilter('trans', [ $this, 'trans' ]),
-            new TwigFilter('transchoice', [ $this, 'transchoice' ]),
+            new TwigFilter('trans', $this->trans(...)),
+            new TwigFilter('transchoice', $this->transchoice(...)),
         ];
     }
 
@@ -53,7 +52,7 @@ class TranslatorHelpers extends AbstractExtension implements
      */
     public function trans($message, array $arguments = [], $domain = null, $locale = null): string
     {
-        if (null === $this->translator) {
+        if (!$this->translator instanceof \Charcoal\Translator\Translator) {
             return strtr($message, $arguments);
         }
 
@@ -73,7 +72,7 @@ class TranslatorHelpers extends AbstractExtension implements
      */
     public function transChoice($message, $count, array $arguments = [], $domain = null, $locale = null): ?string
     {
-        if (null === $this->translator) {
+        if (!$this->translator instanceof \Charcoal\Translator\Translator) {
             return strtr($message, $arguments);
         }
 
@@ -82,8 +81,6 @@ class TranslatorHelpers extends AbstractExtension implements
 
     /**
      * Retrieve the helpers.
-     *
-     * @return array
      */
     public function toArray(): array
     {
@@ -96,7 +93,6 @@ class TranslatorHelpers extends AbstractExtension implements
      * Set the translator service.
      *
      * @param  Translator $translator The Translator service.
-     * @return void
      */
     protected function setTranslator(Translator $translator): void
     {

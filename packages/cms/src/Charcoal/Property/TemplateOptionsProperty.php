@@ -14,10 +14,9 @@ class TemplateOptionsProperty extends ModelStructureProperty
 {
     /**
      * Retrieve the property's type identifier.
-     *
-     * @return string
      */
-    public function type()
+    #[\Override]
+    public function type(): string
     {
         return 'template-options';
     }
@@ -28,13 +27,13 @@ class TemplateOptionsProperty extends ModelStructureProperty
      * @see    StructureProperty::addStructureInterface()
      * @param  string $interface A metadata interface to use.
      * @throws InvalidArgumentException If the template property value is invalid.
-     * @return TemplateOptionsProperty
      */
-    public function addStructureInterface($interface)
+    #[\Override]
+    public function addStructureInterface($interface): static
     {
         if ($interface instanceof TemplateProperty) {
             $interface = (string)$interface;
-            if (empty($interface)) {
+            if ($interface === '0') {
                 throw new InvalidArgumentException(
                     'Invalid template structure interface'
                 );

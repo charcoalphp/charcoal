@@ -55,9 +55,8 @@ class ContainerProvider
      * Register the unit tests required services.
      *
      * @param  Container $container A DI container.
-     * @return void
      */
-    public function registerBaseServices(Container $container)
+    public function registerBaseServices(Container $container): void
     {
         $this->registerConfig($container);
         $this->registerDatabase($container);
@@ -69,9 +68,8 @@ class ContainerProvider
      * Register the admin services.
      *
      * @param  Container $container A DI container.
-     * @return void
      */
-    public function registerAdminServices(Container $container)
+    public function registerAdminServices(Container $container): void
     {
         $this->registerBaseUrl($container);
         $this->registerAdminConfig($container);
@@ -81,67 +79,57 @@ class ContainerProvider
      * Setup the application's base URI.
      *
      * @param  Container $container A DI container.
-     * @return void
      */
-    public function registerBaseUrl(Container $container)
+    public function registerBaseUrl(Container $container): void
     {
-        $container['base-url'] = function () {
-            return Uri::createFromString('');
-        };
+        $container['base-url'] = (fn() => Uri::createFromString(''));
 
-        $container['admin/base-url'] = function () {
-            return Uri::createFromString('admin');
-        };
+        $container['admin/base-url'] = (fn() => Uri::createFromString('admin'));
     }
 
     /**
      * Setup the application configset.
      *
      * @param  Container $container A DI container.
-     * @return void
      */
-    public function registerConfig(Container $container)
+    public function registerConfig(Container $container): void
     {
-        $container['config'] = function () {
-            return new AppConfig([
-                'base_path'  => realpath(__DIR__ . '/../../..'),
-                'apis'       => [
-                    'google' => [
-                        'recaptcha' => [
-                            'public_key'  => 'foobar',
-                            'private_key' => 'bazqux',
-                        ],
+        $container['config'] = (fn(): \Charcoal\App\AppConfig => new AppConfig([
+            'base_path'  => realpath(__DIR__ . '/../../..'),
+            'apis'       => [
+                'google' => [
+                    'recaptcha' => [
+                        'public_key'  => 'foobar',
+                        'private_key' => 'bazqux',
                     ],
                 ],
-                'locales'    => [
-                    'en' => [
-                        'locale' => 'en-US',
-                    ],
+            ],
+            'locales'    => [
+                'en' => [
+                    'locale' => 'en-US',
                 ],
-                'translator' => [
-                    'paths' => [],
+            ],
+            'translator' => [
+                'paths' => [],
+            ],
+            'metadata'   => [
+                'paths'  => [
+                    'metadata',
+                    // Standalone
+                    'vendor/charcoal/object/metadata',
+                    'vendor/charcoal/user/metadata',
+                    // Monorepo
+                    '/../object/metadata',
+                    '/../user/metadata',
                 ],
-                'metadata'   => [
-                    'paths'  => [
-                        'metadata',
-                        // Standalone
-                        'vendor/charcoal/object/metadata',
-                        'vendor/charcoal/user/metadata',
-                        // Monorepo
-                        '/../object/metadata',
-                        '/../user/metadata',
-                    ],
-                ],
-            ]);
-        };
+            ],
+        ]));
 
         /**
          * List of Charcoal module classes.
          *
          * Explicitly defined in case of a version mismatch with dependencies. This parameter
          * is normally defined by {@see \Charcoal\App\ServiceProvider\AppServiceProvider}.
-         *
-         * @var array
          */
         $container['module/classes'] = [];
     }
@@ -150,22 +138,18 @@ class ContainerProvider
      * Setup the admin module configset.
      *
      * @param  Container $container A DI container.
-     * @return void
      */
-    public function registerAdminConfig(Container $container)
+    public function registerAdminConfig(Container $container): void
     {
         $this->registerConfig($container);
 
-        $container['admin/config'] = function () {
-            return new AdminConfig();
-        };
+        $container['admin/config'] = (fn(): \Charcoal\Admin\Config => new AdminConfig());
     }
 
     /**
      * @param  Container $container A DI container.
-     * @return void
      */
-    public function registerClimate(Container $container)
+    public function registerClimate(Container $container): void
     {
         $container['climate/system'] = function () {
             $system = Mockery::mock(Linux::class);
@@ -192,11 +176,9 @@ class ContainerProvider
             return $reader;
         };
 
-        $container['climate/util'] = function (Container $container) {
-            return new UtilFactory($container['climate/system']);
-        };
+        $container['climate/util'] = (fn(Container $container): \League\CLImate\Util\UtilFactory => new UtilFactory($container['climate/system']));
 
-        $container['climate'] = function (Container $container) {
+        $container['climate'] = function (Container $container): \League\CLImate\CLImate {
             $climate = new CLImate();
 
             $climate->setOutput($container['climate/output']);
@@ -209,11 +191,10 @@ class ContainerProvider
 
     /**
      * @param  Container $container A DI container.
-     * @return void
      */
-    public function registerDatabase(Container $container)
+    public function registerDatabase(Container $container): void
     {
-        $container['database'] = function () {
+        $container['database'] = function (): \PDO {
             $pdo = new PDO('sqlite::memory:');
             $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             return $pdo;
@@ -222,9 +203,8 @@ class ContainerProvider
 
     /**
      * @param  Container $container A DI container.
-     * @return void
      */
-    public function registerModelServiceProvider(Container $container)
+    public function registerModelServiceProvider(Container $container): void
     {
         static $provider = null;
 
@@ -237,9 +217,8 @@ class ContainerProvider
 
     /**
      * @param  Container $container A DI container.
-     * @return void
      */
-    public function registerAuthServiceProvider(Container $container)
+    public function registerAuthServiceProvider(Container $container): void
     {
         static $provider = null;
 
@@ -252,9 +231,8 @@ class ContainerProvider
 
     /**
      * @param  Container $container A DI container.
-     * @return void
      */
-    public function registerTranslatorServiceProvider(Container $container)
+    public function registerTranslatorServiceProvider(Container $container): void
     {
         static $provider = null;
 
@@ -267,9 +245,8 @@ class ContainerProvider
 
     /**
      * @param  Container $container A DI container.
-     * @return void
      */
-    public function registerViewServiceProvider(Container $container)
+    public function registerViewServiceProvider(Container $container): void
     {
         static $provider = null;
 
@@ -282,9 +259,8 @@ class ContainerProvider
 
     /**
      * @param  Container $container A DI container.
-     * @return void
      */
-    public function registerAdminServiceProvider(Container $container)
+    public function registerAdminServiceProvider(Container $container): void
     {
         static $provider = null;
 
@@ -297,23 +273,17 @@ class ContainerProvider
 
     /**
      * @param  Container $container A DI container.
-     * @return void
      */
-    public function registerLogger(Container $container)
+    public function registerLogger(Container $container): void
     {
-        $container['logger'] = function () {
-            return new NullLogger();
-        };
+        $container['logger'] = (fn(): \Psr\Log\NullLogger => new NullLogger());
     }
 
     /**
      * @param  Container $container A DI container.
-     * @return void
      */
-    public function registerCache(Container $container)
+    public function registerCache(Container $container): void
     {
-        $container['cache'] = function () {
-            return new Pool();
-        };
+        $container['cache'] = (fn(): \Stash\Pool => new Pool());
     }
 }

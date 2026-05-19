@@ -97,19 +97,15 @@ class ModelStructureProperty extends StructureProperty
 {
     /**
      * Track the state of loaded metadata for the structure.
-     *
-     * @var boolean
      */
-    private $isStructureFinalized = false;
+    private bool $isStructureFinalized = false;
 
     /**
      * The metadata interfaces to use as the structure.
      *
      * These are paths (PSR-4) to import.
-     *
-     * @var array
      */
-    private $structureInterfaces = [];
+    private array $structureInterfaces = [];
 
     /**
      * Store the property's structure.
@@ -123,10 +119,8 @@ class ModelStructureProperty extends StructureProperty
      *
      * This represents the value of "structure_metadata" key on a property definition.
      * This should always be merged last, after the interfaces are imported.
-     *
-     * @var MetadataInterface|array|null
      */
-    private $terminalStructureMetadata;
+    private null|array|\Charcoal\Model\MetadataInterface $terminalStructureMetadata = null;
 
     /**
      * Store the property's model prototype.
@@ -137,10 +131,8 @@ class ModelStructureProperty extends StructureProperty
 
     /**
      * The object type of the "structure" collection to use.
-     *
-     * @var string
      */
-    private $structureModelType;
+    private ?string $structureModelType = null;
 
     /**
      * The class name of the "structure" collection to use.
@@ -160,10 +152,9 @@ class ModelStructureProperty extends StructureProperty
 
     /**
      * Retrieve the property's type identifier.
-     *
-     * @return string
      */
-    public function type()
+    #[\Override]
+    public function type(): string
     {
         return 'model-structure';
     }
@@ -171,16 +162,14 @@ class ModelStructureProperty extends StructureProperty
     /**
      * {@inheritdoc}
      */
-    public function validationMethods()
+    #[\Override]
+    public function validationMethods(): array
     {
         return array_merge(parent::validationMethods(), [
             'modelStructure',
         ]);
     }
 
-    /**
-     * @return boolean
-     */
     public function validateModelStructure(): bool
     {
         $result = true;
@@ -198,7 +187,7 @@ class ModelStructureProperty extends StructureProperty
         if ($this['multiple']) {
             $objs = (array)$this->structureVal($val);
             $val  = [];
-            if (!empty($objs)) {
+            if ($objs !== []) {
                 $val  = [];
                 foreach ($objs as $obj) {
                     if ($obj->validate() === false) {
@@ -241,9 +230,8 @@ class ModelStructureProperty extends StructureProperty
      *
      * @param  MetadataInterface|array|null $data The property's structure (fields, data).
      * @throws InvalidArgumentException If the structure is invalid.
-     * @return self
      */
-    public function setStructureMetadata($data)
+    public function setStructureMetadata($data): static
     {
         if ($data === null) {
             $this->structureMetadata = $data;
@@ -260,7 +248,7 @@ class ModelStructureProperty extends StructureProperty
         } else {
             throw new InvalidArgumentException(sprintf(
                 'Structure [%s] is invalid (must be array or an instance of %s).',
-                (is_object($data) ? get_class($data) : gettype($data)),
+                (get_debug_type($data)),
                 StructureMetadata::class
             ));
         }
@@ -272,12 +260,10 @@ class ModelStructureProperty extends StructureProperty
 
     /**
      * Retrieve the metadata interfaces used by the property as a structure.
-     *
-     * @return array
      */
-    public function getStructureInterfaces()
+    public function getStructureInterfaces(): array
     {
-        if (empty($this->structureInterfaces)) {
+        if ($this->structureInterfaces === []) {
             return $this->structureInterfaces;
         }
 
@@ -286,21 +272,18 @@ class ModelStructureProperty extends StructureProperty
 
     /**
      * Determine if the property has any structure metadata interfaces.
-     *
-     * @return boolean
      */
-    public function hasStructureInterfaces()
+    public function hasStructureInterfaces(): bool
     {
-        return !empty($this->structureInterfaces);
+        return $this->structureInterfaces !== [];
     }
 
     /**
      * Set the given metadata interfaces for the property to use as a structure.
      *
      * @param  array $interfaces One or more metadata interfaces to use.
-     * @return self
      */
-    public function setStructureInterfaces(array $interfaces)
+    public function setStructureInterfaces(array $interfaces): static
     {
         $this->structureInterfaces = [];
 
@@ -313,9 +296,8 @@ class ModelStructureProperty extends StructureProperty
      * Add the given metadata interfaces for the property to use as a structure.
      *
      * @param  array $interfaces One or more metadata interfaces to use.
-     * @return self
      */
-    public function addStructureInterfaces(array $interfaces)
+    public function addStructureInterfaces(array $interfaces): static
     {
         foreach ($interfaces as $interface) {
             $this->addStructureInterface($interface);
@@ -329,18 +311,17 @@ class ModelStructureProperty extends StructureProperty
      *
      * @param  string $interface A metadata interface to use.
      * @throws InvalidArgumentException If the interface is not a string.
-     * @return self
      */
-    public function addStructureInterface($interface)
+    public function addStructureInterface($interface): static
     {
         if (!is_string($interface)) {
             throw new InvalidArgumentException(sprintf(
                 'Structure interface must to be a string, received %s',
-                is_object($interface) ? get_class($interface) : gettype($interface)
+                get_debug_type($interface)
             ));
         }
 
-        if (!empty($interface)) {
+        if ($interface !== '' && $interface !== '0') {
             $interface = $this->parseStructureInterface($interface);
 
             $this->structureInterfaces[$interface] = true;
@@ -368,7 +349,7 @@ class ModelStructureProperty extends StructureProperty
                 $structureInterfaces = (array)$this->getStructureModelType();
             }
 
-            if (!empty($structureInterfaces)) {
+            if ($structureInterfaces !== []) {
                 $metadataLoader = $this->metadataLoader();
                 $metadataClass  = $this->getStructureMetadataClass();
 
@@ -417,10 +398,8 @@ class ModelStructureProperty extends StructureProperty
 
     /**
      * Retrieve the default data-model structure class name.
-     *
-     * @return string
      */
-    public static function getDefaultStructureModelClass()
+    public static function getDefaultStructureModelClass(): string
     {
         return StructureModel::class;
     }
@@ -432,9 +411,8 @@ class ModelStructureProperty extends StructureProperty
      *
      * @param  string $className The class name of the structure.
      * @throws InvalidArgumentException If the class name is invalid.
-     * @return self
      */
-    protected function setStructureModelClass($className)
+    protected function setStructureModelClass($className): static
     {
         if ($className === null) {
             $this->structureModelClass = static::getDefaultStructureModelClass();
@@ -448,11 +426,11 @@ class ModelStructureProperty extends StructureProperty
             );
         }
 
-        if (strpos($className, '/') !== false) {
+        if (str_contains($className, '/')) {
             try {
                 $this->structureModelType = $className;
                 $prototype = $this->structureModelFactory()->get($className);
-                $className = get_class($prototype);
+                $className = $prototype::class;
             } catch (\Exception $e) {
                 throw new InvalidArgumentException(sprintf(
                     'Invalid structure class name: %s',
@@ -469,10 +447,8 @@ class ModelStructureProperty extends StructureProperty
 
     /**
      * Determine if the property is using a custom data-model.
-     *
-     * @return boolean
      */
-    public function hasCustomStructureModelClass()
+    public function hasCustomStructureModelClass(): bool
     {
         return $this->getStructureModelClass() !== static::getDefaultStructureModelClass();
     }
@@ -489,10 +465,8 @@ class ModelStructureProperty extends StructureProperty
 
     /**
      * Retrieve the class name of the data-model structure.
-     *
-     * @return string
      */
-    public function getStructureModelType()
+    public function getStructureModelType(): string
     {
         if ($this->structureModelType === null) {
             $this->structureModelType = $this->parseStructureInterface($this->getStructureModelClass());
@@ -532,7 +506,7 @@ class ModelStructureProperty extends StructureProperty
         } else {
             throw new InvalidArgumentException(sprintf(
                 'Structure value options must to be an array or an instance of %2$s, received %1$s',
-                is_object($options) ? get_class($options) : gettype($options),
+                get_debug_type($options),
                 StructureMetadata::class
             ));
         }
@@ -603,6 +577,7 @@ class ModelStructureProperty extends StructureProperty
      * @param  mixed $val The value, at time of saving.
      * @return mixed
      */
+    #[\Override]
     public function save($val)
     {
         $val = parent::save($val);
@@ -612,7 +587,7 @@ class ModelStructureProperty extends StructureProperty
             if ($proto instanceof ModelInterface) {
                 $objs = (array)$this->structureVal($val);
                 $val  = [];
-                if (!empty($objs)) {
+                if ($objs !== []) {
                     $val  = [];
                     foreach ($objs as $obj) {
                         $obj->saveProperties();
@@ -634,9 +609,9 @@ class ModelStructureProperty extends StructureProperty
     /**
      * @param  mixed $val     The value to to convert for display.
      * @param  array $options Optional display options.
-     * @return string
      */
-    public function displayVal($val, array $options = [])
+    #[\Override]
+    public function displayVal($val, array $options = []): string
     {
         if ($val === null || $val === '') {
             return '';
@@ -667,6 +642,7 @@ class ModelStructureProperty extends StructureProperty
      * @param  Container $container A dependencies container instance.
      * @return void
      */
+    #[\Override]
     protected function setDependencies(Container $container)
     {
         parent::setDependencies($container);
@@ -682,10 +658,10 @@ class ModelStructureProperty extends StructureProperty
      */
     protected function structureModelFactory()
     {
-        if (!isset($this->structureModelFactory)) {
+        if ($this->structureModelFactory === null) {
             throw new RuntimeException(sprintf(
                 'Model Factory is not defined for "%s"',
-                get_class($this)
+                static::class
             ));
         }
 
@@ -696,9 +672,8 @@ class ModelStructureProperty extends StructureProperty
      * Set an structure model factory.
      *
      * @param FactoryInterface $factory The model factory, to create objects.
-     * @return self
      */
-    private function setStructureModelFactory(FactoryInterface $factory)
+    private function setStructureModelFactory(FactoryInterface $factory): static
     {
         $this->structureModelFactory = $factory;
 
@@ -711,14 +686,12 @@ class ModelStructureProperty extends StructureProperty
      * Change `\` and `.` to `/` and force lowercase
      *
      * @param  string $interface A metadata interface to convert.
-     * @return string
      */
-    protected function parseStructureInterface($interface)
+    protected function parseStructureInterface($interface): string
     {
         $ident = preg_replace('/([a-z])([A-Z])/', '$1-$2', $interface);
-        $ident = strtolower(str_replace('\\', '/', $ident));
 
-        return $ident;
+        return strtolower(str_replace('\\', '/', $ident));
     }
 
     /**
@@ -736,10 +709,8 @@ class ModelStructureProperty extends StructureProperty
 
     /**
      * Retrieve the class name of the metadata object.
-     *
-     * @return string
      */
-    protected function getStructureMetadataClass()
+    protected function getStructureMetadataClass(): string
     {
         return StructureMetadata::class;
     }
@@ -783,17 +754,15 @@ class ModelStructureProperty extends StructureProperty
         if (!$model instanceof DescribableInterface) {
             throw new UnexpectedValueException(sprintf(
                 'Structure [%s] must implement [%s]',
-                get_class($model),
+                $model::class,
                 DescribableInterface::class
             ));
         }
 
         $model->setMetadata($metadata);
 
-        if ($datasets) {
-            foreach ($datasets as $data) {
-                $model->setData($data);
-            }
+        foreach ($datasets as $data) {
+            $model->setData($data);
         }
 
         return $model;

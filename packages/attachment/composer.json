@@ -1,5 +1,4 @@
 {
-    "type": "library",
     "name": "charcoal/attachment",
     "description": "Charcoal Attachments Module",
     "homepage": "https://charcoal.locomotive.ca",
@@ -14,13 +13,9 @@
             "homepage": "https://locomotive.ca"
         }
     ],
-    "extra": {
-        "branch-alias": {
-            "dev-main": "5.x-dev"
-        }
-    },
+    "type": "library",
     "require": {
-        "php": "^7.4 || ^8.0",
+        "php": "^8.3",
         "charcoal/config": "^5.1",
         "charcoal/core": "^5.1",
         "charcoal/object": "^5.1",
@@ -30,11 +25,8 @@
         "charcoal/admin": "^5.1",
         "mockery/mockery": "^1.0",
         "php-coveralls/php-coveralls": "^2.2",
-        "phpunit/phpunit": "^9.5",
+        "phpunit/phpunit": "^12.5",
         "squizlabs/php_codesniffer": "^3.5"
-    },
-    "suggest": {
-        "charcoal/admin": "To use the attachment widgets, actions, and scripts."
     },
     "autoload": {
         "psr-4": {
@@ -46,8 +38,10 @@
             "Charcoal\\Tests\\": "tests/Charcoal"
         }
     },
-    "replace": {
-        "locomotivemtl/charcoal-attachment": "*"
+    "extra": {
+        "branch-alias": {
+            "dev-main": "5.x-dev"
+        }
     },
     "scripts": {
         "test": [
@@ -61,6 +55,12 @@
         "phpcs": "php vendor/bin/phpcs -ps --colors src/ tests/",
         "phpcbf": "php vendor/bin/phpcbf -ps --colors src/ tests/",
         "phpunit": "php vendor/bin/phpunit --coverage-text"
+    },
+    "suggest": {
+        "charcoal/admin": "To use the attachment widgets, actions, and scripts."
+    },
+    "replace": {
+        "locomotivemtl/charcoal-attachment": "*"
     },
     "minimum-stability": "dev",
     "prefer-stable": true

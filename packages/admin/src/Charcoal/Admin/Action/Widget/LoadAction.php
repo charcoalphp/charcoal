@@ -115,7 +115,7 @@ class LoadAction extends AdminAction
 
         try {
             if (!$widgetType) {
-                $actualType = is_object($widgetType) ? get_class($widgetType) : gettype($widgetType);
+                $actualType = get_debug_type($widgetType);
                 $this->addFeedback('error', strtr($reqMessage, [
                     '{{ parameter }}'    => '"widget_type"',
                     '{{ expectedType }}' => 'string',
@@ -133,7 +133,7 @@ class LoadAction extends AdminAction
 
             if (isset($widgetOptions)) {
                 if (!is_array($widgetOptions)) {
-                    $actualType = is_object($widgetOptions) ? get_class($widgetOptions) : gettype($widgetOptions);
+                    $actualType = get_debug_type($widgetOptions);
                     $this->addFeedback('error', strtr($typeMessage, [
                         '{{ parameter }}'    => '"widget_options"',
                         '{{ expectedType }}' => 'array',
@@ -190,7 +190,7 @@ class LoadAction extends AdminAction
      * @throws InvalidArgumentException If the widget ID argument is not a string.
      * @return LoadAction Chainable
      */
-    public function setWidgetId($id)
+    public function setWidgetId($id): static
     {
         if (!is_string($id)) {
             throw new InvalidArgumentException(
@@ -217,9 +217,8 @@ class LoadAction extends AdminAction
      * Set the widget's DATA.
      *
      * @param array|mixed $widgetData WidgetData for LoadAction.
-     * @return self
      */
-    public function setWidgetData($widgetData)
+    public function setWidgetData($widgetData): static
     {
         $this->widgetData = $widgetData;
 
@@ -243,7 +242,7 @@ class LoadAction extends AdminAction
      * @throws InvalidArgumentException If the widget type argument is not a string.
      * @return LoadAction Chainable
      */
-    public function setWidgetType($type)
+    public function setWidgetType($type): static
     {
         if (!is_string($type)) {
             throw new InvalidArgumentException(
@@ -273,7 +272,7 @@ class LoadAction extends AdminAction
      * @throws InvalidArgumentException If the widget HTML is not a string.
      * @return LoadAction Chainable
      */
-    public function setWidgetHtml($html)
+    public function setWidgetHtml($html): static
     {
         if (!is_string($html)) {
             throw new InvalidArgumentException(
@@ -296,10 +295,8 @@ class LoadAction extends AdminAction
         return $this->widgetHtml;
     }
 
-    /**
-     * @return array
-     */
-    public function results()
+    #[\Override]
+    public function results(): array
     {
         return [
             'success'       => $this->success(),
@@ -314,6 +311,7 @@ class LoadAction extends AdminAction
      * @param  Container $container A dependencies container instance.
      * @return void
      */
+    #[\Override]
     protected function setDependencies(Container $container)
     {
         parent::setdependencies($container);
@@ -331,7 +329,7 @@ class LoadAction extends AdminAction
      */
     protected function widgetView()
     {
-        if (!isset($this->widgetView)) {
+        if ($this->widgetView === null) {
             throw new RuntimeException('Widget Renderer is not defined');
         }
 
@@ -346,7 +344,7 @@ class LoadAction extends AdminAction
      */
     protected function widgetFactory()
     {
-        if (!isset($this->widgetFactory)) {
+        if ($this->widgetFactory === null) {
             throw new RuntimeException('Widget Factory is not defined');
         }
 
@@ -357,9 +355,8 @@ class LoadAction extends AdminAction
      * Set the widget renderer.
      *
      * @param  ViewInterface $view The view renderer to create widgets.
-     * @return void
      */
-    private function setWidgetView(ViewInterface $view)
+    private function setWidgetView(ViewInterface $view): void
     {
         $this->widgetView = $view;
     }
@@ -368,9 +365,8 @@ class LoadAction extends AdminAction
      * Set the widget factory.
      *
      * @param  FactoryInterface $factory The factory to create widgets.
-     * @return void
      */
-    private function setWidgetFactory(FactoryInterface $factory)
+    private function setWidgetFactory(FactoryInterface $factory): void
     {
         $this->widgetFactory = $factory;
     }

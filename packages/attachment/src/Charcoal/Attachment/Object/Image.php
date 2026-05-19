@@ -14,6 +14,7 @@ class Image extends File
      *
      * @return string|null
      */
+    #[\Override]
     public function src()
     {
         $src = $this->thumbnail();
@@ -31,9 +32,9 @@ class Image extends File
      * @todo    Generate thumbnail from the main image (or not.).
      * @used-by StorableTrait::preSave() For the "create" Event.
      * @used-by StorableTrait::preUpdate() For the "update" Event.
-     * @return  boolean
      */
-    public function generateThumbnail()
+    #[\Override]
+    public function generateThumbnail(): bool
     {
         return true;
     }

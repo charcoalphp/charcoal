@@ -48,10 +48,8 @@ trait ModelAwareTrait
 
     /**
      * Determine if the source has a model.
-     *
-     * @return boolean
      */
-    public function hasModel()
+    public function hasModel(): bool
     {
         return ($this->model !== null);
     }

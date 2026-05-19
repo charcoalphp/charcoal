@@ -28,14 +28,10 @@ abstract class AbstractSharpenEffect extends AbstractEffect
 
     /**
      * Threshold. Ony used in `unsharp` mode
-     * @var float $threshold
      */
-    private $threshold = 0.05;
+    private float $threshold = 0.05;
 
-    /**
-     * @var string $mode
-     */
-    private $mode = 'standard';
+    private string $mode = 'standard';
 
     /**
      * @var string $channel
@@ -193,24 +189,18 @@ abstract class AbstractSharpenEffect extends AbstractEffect
      * @param array $data The effect data, if available.
      * @return self
      */
-    public function process(array $data = null)
+    public function process(?array $data = null)
     {
         if ($data !== null) {
             $this->setData($data);
         }
 
         $mode = $this->mode();
-        switch ($mode) {
-            case 'adaptive':
-                return $this->processAdaptive();
-
-            case 'unsharp':
-                return $this->processUnsharp();
-
-            case 'standard':
-            default:
-                return $this->processStandard();
-        }
+        return match ($mode) {
+            'adaptive' => $this->processAdaptive(),
+            'unsharp' => $this->processUnsharp(),
+            default => $this->processStandard(),
+        };
     }
 
     /**

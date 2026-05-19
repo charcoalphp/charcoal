@@ -15,14 +15,8 @@ use Charcoal\Tests\Admin\ContainerProvider;
  */
 class TextInputTest extends AbstractTestCase
 {
-    /**
-     * @var TextInput
-     */
-    private $obj;
+    private \Charcoal\Admin\Property\Input\TextInput $obj;
 
-    /**
-     * @return void
-     */
     public function setUp(): void
     {
         $container = new Container();
@@ -36,10 +30,7 @@ class TextInputTest extends AbstractTestCase
         ]);
     }
 
-    /**
-     * @return void
-     */
-    public function testSetData()
+    public function testSetData(): void
     {
         $obj = $this->obj;
         $ret = $obj->setData([
@@ -53,14 +44,11 @@ class TextInputTest extends AbstractTestCase
         $this->assertEquals(42, $obj->size());
         $this->assertEquals(10, $obj->minLength());
         $this->assertEquals(100, $obj->maxLength());
-        $this->assertEquals('foo', (string)$obj->pattern());
+        $this->assertEquals('foo', $obj->pattern());
         $this->assertEquals('bar', (string)$obj->placeholder());
     }
 
-    /**
-     * @return void
-     */
-    public function testSetSize()
+    public function testSetSize(): void
     {
         $obj = $this->obj;
         $ret = $obj->setSize(42);
@@ -71,10 +59,7 @@ class TextInputTest extends AbstractTestCase
         $obj->setSize(false);
     }
 
-    /**
-     * @return void
-     */
-    public function testSetMinLength()
+    public function testSetMinLength(): void
     {
         $obj = $this->obj;
         $ret = $obj->setMinLength(42);
@@ -85,10 +70,7 @@ class TextInputTest extends AbstractTestCase
         $obj->setMinLength(false);
     }
 
-    /**
-     * @return void
-     */
-    public function testSetMaxLength()
+    public function testSetMaxLength(): void
     {
         $obj = $this->obj;
         $ret = $obj->setMaxLength(42);
@@ -99,10 +81,7 @@ class TextInputTest extends AbstractTestCase
         $obj->setMaxLength(false);
     }
 
-    /**
-     * @return void
-     */
-    public function testSetPattern()
+    public function testSetPattern(): void
     {
         $obj = $this->obj;
         $ret = $obj->setPattern('foo');
@@ -113,10 +92,7 @@ class TextInputTest extends AbstractTestCase
         $obj->setPattern(false);
     }
 
-    /**
-     * @return void
-     */
-    public function testSetPlaceholder()
+    public function testSetPlaceholder(): void
     {
         $obj = $this->obj;
         $ret = $obj->setPlaceholder('foo');

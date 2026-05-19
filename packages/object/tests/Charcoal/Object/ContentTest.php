@@ -19,22 +19,16 @@ class ContentTest extends AbstractTestCase
 {
     /**
      * Tested Class.
-     *
-     * @var Content
      */
-    private $obj;
+    private \Charcoal\Object\Content $obj;
 
     /**
      * Store the service container.
-     *
-     * @var Container
      */
-    private $container;
+    private ?\Pimple\Container $container = null;
 
     /**
      * Set up the test.
-     *
-     * @return void
      */
     public function setUp(): void
     {
@@ -43,10 +37,7 @@ class ContentTest extends AbstractTestCase
         $this->obj = $container['model/factory']->create(Content::class);
     }
 
-    /**
-     * @return void
-     */
-    public function testDefaults()
+    public function testDefaults(): void
     {
         $this->assertTrue($this->obj['active']);
         $this->assertEquals(0, $this->obj['position']);
@@ -64,10 +55,7 @@ class ContentTest extends AbstractTestCase
         $this->assertTrue($this->obj['revisionEnabled']);
     }
 
-    /**
-     * @return void
-     */
-    public function testSetData()
+    public function testSetData(): void
     {
         $ret = $this->obj->setData([
             'active'          => false,
@@ -90,10 +78,7 @@ class ContentTest extends AbstractTestCase
         $this->assertEquals(['foo', 'bar'], $this->obj['requiredAclPermissions']);
     }
 
-    /**
-     * @return void
-     */
-    public function testSetActive()
+    public function testSetActive(): void
     {
         $this->assertTrue($this->obj['active']);
         $ret = $this->obj->setActive(false);
@@ -110,12 +95,8 @@ class ContentTest extends AbstractTestCase
         $this->assertTrue($this->obj['active']);
     }
 
-    /**
-     * @return void
-     */
-    public function testSetPosition()
+    public function testSetPosition(): void
     {
-        $this->obj = $this->obj;
         $this->assertEquals(0, $this->obj['position']);
         $ret = $this->obj->setPosition(42);
         $this->assertSame($ret, $this->obj);
@@ -134,10 +115,7 @@ class ContentTest extends AbstractTestCase
         $this->obj->setPosition('foo');
     }
 
-    /**
-     * @return void
-     */
-    public function testSetCreated()
+    public function testSetCreated(): void
     {
         $ret = $this->obj->setCreated('2015-01-01 13:05:45');
         $this->assertSame($ret, $this->obj);
@@ -156,19 +134,13 @@ class ContentTest extends AbstractTestCase
         $this->obj->setCreated(false);
     }
 
-    /**
-     * @return void
-     */
-    public function testSetCreatedInvalidDate()
+    public function testSetCreatedInvalidDate(): void
     {
         $this->expectException('\Exception');
         $this->obj->setCreated('foo.bar');
     }
 
-    /**
-     * @return void
-     */
-    public function testSetCreatedBy()
+    public function testSetCreatedBy(): void
     {
         $ret = $this->obj->setCreatedBy('Me');
         $this->assertSame($ret, $this->obj);
@@ -178,10 +150,7 @@ class ContentTest extends AbstractTestCase
         //$this->obj->setCreatedBy(false);
     }
 
-    /**
-     * @return void
-     */
-    public function testSetLastModified()
+    public function testSetLastModified(): void
     {
         $ret = $this->obj->setLastModified('2015-01-01 13:05:45');
         $this->assertSame($ret, $this->obj);
@@ -200,19 +169,13 @@ class ContentTest extends AbstractTestCase
         $this->obj->setLastModified(false);
     }
 
-    /**
-     * @return void
-     */
-    public function testSetLastModifiedInvalidDate()
+    public function testSetLastModifiedInvalidDate(): void
     {
         $this->expectException('\Exception');
         $this->obj->setLastModified('foo.bar');
     }
 
-    /**
-     * @return void
-     */
-    public function testSetLastModifiedBy()
+    public function testSetLastModifiedBy(): void
     {
         $ret = $this->obj->setLastModifiedBy('Me');
         $this->assertSame($ret, $this->obj);
@@ -222,10 +185,7 @@ class ContentTest extends AbstractTestCase
         //$this->obj->setLastModifiedBy(false);
     }
 
-    /**
-     * @return void
-     */
-    public function testSetRequiredAclPermissions()
+    public function testSetRequiredAclPermissions(): void
     {
         $ret = $this->obj->setRequiredAclPermissions(['a', 'b', 'c']);
         $this->assertSame($ret, $this->obj);
@@ -247,12 +207,10 @@ class ContentTest extends AbstractTestCase
 
     /**
      * Set up the service container.
-     *
-     * @return Container
      */
-    private function container()
+    private function container(): \Pimple\Container
     {
-        if ($this->container === null) {
+        if (!$this->container instanceof \Pimple\Container) {
             $container = new Container();
             $containerProvider = new ContainerProvider();
             $containerProvider->registerBaseServices($container);

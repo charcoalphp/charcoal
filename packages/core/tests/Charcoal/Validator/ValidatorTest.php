@@ -26,28 +26,19 @@ class ValidatorTest extends AbstractTestCase
      */
     public $model;
 
-    /**
-     * @return void
-     */
     protected function setUp(): void
     {
         $this->model = new ValidatableClass();
         $this->obj   = new ValidatorClass($this->model);
     }
 
-    /**
-     * @return void
-     */
-    public function testConstructor()
+    public function testConstructor(): void
     {
         $obj = $this->obj;
-        $this->assertInstanceOf('\Charcoal\Validator\AbstractValidator', $obj);
+        $this->assertInstanceOf(\Charcoal\Validator\AbstractValidator::class, $obj);
     }
 
-    /**
-     * @return void
-     */
-    public function testError()
+    public function testError(): void
     {
         $obj = $this->obj;
         $ret = $obj->error('foo');
@@ -55,10 +46,7 @@ class ValidatorTest extends AbstractTestCase
         // var_dump($obj->errorResults());
     }
 
-    /**
-     * @return void
-     */
-    public function testWarning()
+    public function testWarning(): void
     {
         $obj = $this->obj;
         $ret = $obj->warning('foo');
@@ -66,10 +54,7 @@ class ValidatorTest extends AbstractTestCase
         // var_dump($obj->warningResults());
     }
 
-    /**
-     * @return void
-     */
-    public function testNotice()
+    public function testNotice(): void
     {
         $obj = $this->obj;
         $ret = $obj->notice('foo');
@@ -77,10 +62,7 @@ class ValidatorTest extends AbstractTestCase
         // var_dump($obj->noticeResults());
     }
 
-    /**
-     * @return void
-     */
-    public function testAddResult()
+    public function testAddResult(): void
     {
         $result = [
             'ident'   => 'bar',
@@ -100,11 +82,8 @@ class ValidatorTest extends AbstractTestCase
         $obj->addResult(false);
     }
 
-    /**
-     * @group time-sensitive
-     * @return void
-     */
-    public function testResults()
+    #[\PHPUnit\Framework\Attributes\Group('time-sensitive')]
+    public function testResults(): void
     {
         $result = [
             'ident'   => 'bar',
@@ -128,10 +107,7 @@ class ValidatorTest extends AbstractTestCase
         $this->assertEquals([ ValidatorClass::ERROR => [ $expectedResult ] ], $actualResult);
     }
 
-    /**
-     * @return void
-     */
-    public function testErrorResults()
+    public function testErrorResults(): void
     {
         $result1 = [
             'ident'   => 'bar',
@@ -161,10 +137,7 @@ class ValidatorTest extends AbstractTestCase
         $this->assertEquals([ $expectedResult ], $actualResult);
     }
 
-    /**
-     * @return void
-     */
-    public function testWarningResults()
+    public function testWarningResults(): void
     {
         $result1 = [
             'ident'   => 'bar',
@@ -194,10 +167,7 @@ class ValidatorTest extends AbstractTestCase
         $this->assertEquals([ $expectedResult ], $actualResult);
     }
 
-    /**
-     * @return void
-     */
-    public function testNoticeResults()
+    public function testNoticeResults(): void
     {
         $result1 = [
             'ident'   => 'bar',
@@ -227,10 +197,7 @@ class ValidatorTest extends AbstractTestCase
         $this->assertEquals([ $expectedResult ], $actualResult);
     }
 
-    /**
-     * @return void
-     */
-    public function testMerge()
+    public function testMerge(): void
     {
         $result1 = [
             'ident'   => 'bar',

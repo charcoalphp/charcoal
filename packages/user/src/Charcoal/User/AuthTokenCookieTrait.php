@@ -24,7 +24,7 @@ trait AuthTokenCookieTrait
         $path   = $metadata['tokenPath'];
         $secure = $metadata['httpsOnly'];
 
-        return setcookie($name, $value, $expiry, $path, '', $secure);
+        return setcookie($name, $value, ['expires' => $expiry, 'path' => $path, 'domain' => '', 'secure' => $secure]);
     }
 
     /**
@@ -43,13 +43,13 @@ trait AuthTokenCookieTrait
         $path   = $metadata['tokenPath'];
         $secure = $metadata['httpsOnly'];
 
-        return setcookie($name, '', $expiry, $path, '', $secure);
+        return setcookie($name, '', ['expires' => $expiry, 'path' => $path, 'domain' => '', 'secure' => $secure]);
     }
 
     /**
      * @return array|null `[ 'ident' => '', 'token' => '' ]
      */
-    public function getTokenDataFromCookie()
+    public function getTokenDataFromCookie(): ?array
     {
         if (!$this->isEnabled()) {
             return null;
@@ -63,7 +63,7 @@ trait AuthTokenCookieTrait
         }
 
         $cookie = $_COOKIE[$name];
-        $data   = array_pad(explode(';', $cookie), 2, null);
+        $data   = array_pad(explode(';', (string) $cookie), 2, null);
         if (!isset($data[0]) || !isset($data[1])) {
             return null;
         }

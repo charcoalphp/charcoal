@@ -15,10 +15,8 @@ trait ExpressionTestFieldTrait
 {
     /**
      * Test deprecated "table_name" property.
-     *
-     * @return void
      */
-    public function testDeprecatedTableNameExpression()
+    public function testDeprecatedTableNameExpression(): void
     {
         $obj = $this->createExpression();
 
@@ -30,19 +28,16 @@ trait ExpressionTestFieldTrait
      * Test "table_name" property deprecation notice.
      *
      * @used-by self::testDeprecatedTableNameErrorInPhp7()
-     *
-     * @return void
      */
-    public function delegatedTestDeprecatedTableNameError()
+    public function delegatedTestDeprecatedTableNameError(): void
     {
         $this->createExpression()->setData([ 'table_name' => 'foobar' ]);
     }
 
     /**
      * @requires PHP >= 7.0
-     * @return   void
      */
-    public function testDeprecatedTableNameErrorInPhp7()
+    public function testDeprecatedTableNameErrorInPhp7(): void
     {
         $this->expectDeprecation();
         $this->delegatedTestDeprecatedTableNameError();
@@ -53,11 +48,10 @@ trait ExpressionTestFieldTrait
      *
      * @param ExpressionFieldInterface $obj      The expression to test.
      * @param array|null               $expected The expected data subset.
-     * @return void
      */
-    public function assertStructHasFieldData(ExpressionFieldInterface $obj, array $expected = null)
+    public function assertStructHasFieldData(ExpressionFieldInterface $obj, ?array $expected = null): void
     {
-        if (empty($expected)) {
+        if ($expected === null || $expected === []) {
             $expected = [
                 'property' => 'col',
                 'table'    => 'tbl',

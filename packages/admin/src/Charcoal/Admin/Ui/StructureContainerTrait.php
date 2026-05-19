@@ -43,7 +43,7 @@ trait StructureContainerTrait
         if (!is_string($display)) {
             throw new InvalidArgumentException(sprintf(
                 'Layout must be a string, received %s',
-                (is_object($display) ? get_class($display) : gettype($display))
+                (get_debug_type($display))
             ));
         }
 
@@ -77,10 +77,8 @@ trait StructureContainerTrait
 
     /**
      * Retrieve the display layouts; for templating.
-     *
-     * @return array
      */
-    public function displays()
+    public function displays(): array
     {
         $supported = $this->supportedDisplayLayouts();
         $displays  = [];
@@ -93,10 +91,8 @@ trait StructureContainerTrait
 
     /**
      * Retrieve the supported display layouts.
-     *
-     * @return array
      */
-    protected function supportedDisplayLayouts()
+    protected function supportedDisplayLayouts(): array
     {
         return [
             self::GROUP_STRUCT_DISPLAY,
@@ -123,7 +119,7 @@ trait StructureContainerTrait
      */
     public function setShowEmpty($show)
     {
-        $this->showEmpty = !!$show;
+        $this->showEmpty = (bool) $show;
 
         return $this;
     }

@@ -29,10 +29,8 @@ class TinymceInput extends TextareaInput
 
     /**
      * Flag wether the "file picker" popup button should be displaed.
-     *
-     * @var boolean
      */
-    private $showFilePicker;
+    private ?bool $showFilePicker = null;
 
     /**
      * URL for the "file picker" popup.
@@ -49,7 +47,7 @@ class TinymceInput extends TextareaInput
      * @param  array $settings The editor options.
      * @return Tinymce Chainable
      */
-    public function setEditorOptions(array $settings)
+    public function setEditorOptions(array $settings): static
     {
         $this->editorOptions = array_merge($this->defaultEditorOptions(), $settings);
 
@@ -62,7 +60,7 @@ class TinymceInput extends TextareaInput
      * @param  array $settings The editor options.
      * @return Tinymce Chainable
      */
-    public function mergeEditorOptions(array $settings)
+    public function mergeEditorOptions(array $settings): static
     {
         $this->editorOptions = array_merge($this->editorOptions, $settings);
 
@@ -77,7 +75,7 @@ class TinymceInput extends TextareaInput
      * @throws InvalidArgumentException If the identifier is not a string.
      * @return Tinymce Chainable
      */
-    public function addEditorOption($key, $val)
+    public function addEditorOption($key, $val): static
     {
         if (!is_string($key)) {
             throw new InvalidArgumentException(
@@ -118,11 +116,7 @@ class TinymceInput extends TextareaInput
     {
         $defaultData = $this->metadata()->defaultData();
 
-        if (isset($defaultData['editor_options'])) {
-            return $defaultData['editor_options'];
-        }
-
-        return [];
+        return $defaultData['editor_options'] ?? [];
     }
 
     /**
@@ -139,9 +133,8 @@ class TinymceInput extends TextareaInput
      * Set the title for the file picker dialog.
      *
      * @param  mixed $title The dialog title.
-     * @return self
      */
-    public function setDialogTitle($title)
+    public function setDialogTitle($title): static
     {
         $this->dialogTitle = $this->translator()->translation($title);
 
@@ -153,7 +146,7 @@ class TinymceInput extends TextareaInput
      *
      * @return \Charcoal\Translator\Translation|string|null
      */
-    protected function defaultDialogTitle()
+    protected function defaultDialogTitle(): ?\Charcoal\Translator\Translation
     {
         return $this->translator()->translation('filesystem.library.media');
     }
@@ -176,9 +169,9 @@ class TinymceInput extends TextareaInput
      * @param boolean $show The show file picker flag.
      * @return FileInput Chainable
      */
-    public function setShowFilePicker($show)
+    public function setShowFilePicker($show): static
     {
-        $this->showFilePicker = !!$show;
+        $this->showFilePicker = (bool) $show;
 
         return $this;
     }
@@ -195,10 +188,7 @@ class TinymceInput extends TextareaInput
         return $this->showFilePicker;
     }
 
-    /**
-     * @return boolean
-     */
-    public function hasFilePicker()
+    public function hasFilePicker(): bool
     {
         return class_exists('\\elFinder');
     }
@@ -207,7 +197,7 @@ class TinymceInput extends TextareaInput
      * @param  string $url The file picker AJAX URL.
      * @return FileInput Chainable
      */
-    public function setFilePickerUrl($url)
+    public function setFilePickerUrl($url): static
     {
         $this->filePickerUrl = $url;
         return $this;
@@ -235,7 +225,7 @@ class TinymceInput extends TextareaInput
      *
      * @return callable|null
      */
-    public function prepareFilePickerUrl()
+    public function prepareFilePickerUrl(): ?\Closure
     {
         if (!$this->showFilePicker()) {
             return null;
@@ -243,7 +233,7 @@ class TinymceInput extends TextareaInput
 
         $uri = $this->getFilePickerUrlTemplate();
 
-        return function ($noop, LambdaHelper $helper) use ($uri) {
+        return function ($noop, LambdaHelper $helper) use ($uri): null {
             $uri = $helper->render($uri);
             $this->setFilePickerUrl($uri);
 
@@ -253,23 +243,19 @@ class TinymceInput extends TextareaInput
 
     /**
      * Retrieve the elFinder connector URL template for rendering.
-     *
-     * @return string
      */
-    protected function getFilePickerUrlTemplate()
+    protected function getFilePickerUrlTemplate(): string
     {
         $uri = 'obj_type={{ objType }}&obj_id={{ objId }}&property={{ p.ident }}&callback={{ inputId }}';
-        $uri = '{{# withAdminUrl }}elfinder?' . $uri . '{{/ withAdminUrl }}';
 
-        return $uri;
+        return '{{# withAdminUrl }}elfinder?' . $uri . '{{/ withAdminUrl }}';
     }
 
     /**
      * Retrieve the control's data options for JavaScript components.
-     *
-     * @return array
      */
-    public function controlDataForJs()
+    #[\Override]
+    public function controlDataForJs(): array
     {
         return [
             'editor_options' => $this->editorOptions(),

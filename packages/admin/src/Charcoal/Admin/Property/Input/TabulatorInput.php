@@ -27,6 +27,7 @@ class TabulatorInput extends AbstractPropertyInput
      *
      * @param array<string, mixed> $options The input options.
      */
+    #[\Override]
     public function setInputOptions(array $options): self
     {
         parent::setInputOptions($options);
@@ -79,6 +80,7 @@ class TabulatorInput extends AbstractPropertyInput
      *
      * @return array<string, mixed>
      */
+    #[\Override]
     public function getDefaultInputOptions(): array
     {
         $translator = $this->translator();
@@ -175,9 +177,8 @@ class TabulatorInput extends AbstractPropertyInput
 
     /**
      * Retrieve the control's data options for JavaScript components.
-     *
-     * @return array
      */
+    #[\Override]
     public function controlDataForJs(): array
     {
         $inputOptions = $this->getInputOptions();

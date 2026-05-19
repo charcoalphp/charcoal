@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Charcoal\Translator;
 
 use InvalidArgumentException;
@@ -14,30 +16,16 @@ use Charcoal\Config\AbstractConfig;
  */
 class LocalesConfig extends AbstractConfig
 {
-    /**
-     * @var array
-     */
-    private $languages;
+    private ?array $languages = null;
 
-    /**
-     * @var string
-     */
-    private $defaultLanguage;
+    private ?string $defaultLanguage = null;
 
-    /**
-     * @var array
-     */
-    private $fallbackLanguages;
+    private ?array $fallbackLanguages = null;
 
-    /**
-     * @var boolean
-     */
-    private $autoDetect;
+    private ?bool $autoDetect = null;
 
-    /**
-     * @return array
-     */
-    public function defaults()
+    #[\Override]
+    public function defaults(): array
     {
         return [
             'languages' => [
@@ -57,7 +45,7 @@ class LocalesConfig extends AbstractConfig
      * @param  array $languages The languages configuration.
      * @return LocalesConfig Chainable
      */
-    public function setLanguages(array $languages)
+    public function setLanguages(array $languages): static
     {
         $this->languages = $languages;
         return $this;
@@ -66,7 +54,7 @@ class LocalesConfig extends AbstractConfig
     /**
      * @return array
      */
-    public function languages()
+    public function languages(): ?array
     {
         return $this->languages;
     }
@@ -76,7 +64,7 @@ class LocalesConfig extends AbstractConfig
      * @throws InvalidArgumentException If the default language is not a string.
      * @return LocalesConfig Chainable
      */
-    public function setDefaultLanguage($lang)
+    public function setDefaultLanguage($lang): static
     {
         if (!is_string($lang)) {
             throw new InvalidArgumentException(
@@ -90,7 +78,7 @@ class LocalesConfig extends AbstractConfig
     /**
      * @return string
      */
-    public function defaultLanguage()
+    public function defaultLanguage(): ?string
     {
         return $this->defaultLanguage;
     }
@@ -99,7 +87,7 @@ class LocalesConfig extends AbstractConfig
      * @param  array $languages The fallback languages, used when a translation is not set in a language.
      * @return LocalesConfig Chainable
      */
-    public function setFallbackLanguages(array $languages)
+    public function setFallbackLanguages(array $languages): static
     {
         $this->fallbackLanguages = $languages;
         return $this;
@@ -108,7 +96,7 @@ class LocalesConfig extends AbstractConfig
     /**
      * @return array
      */
-    public function fallbackLanguages()
+    public function fallbackLanguages(): ?array
     {
         return $this->fallbackLanguages;
     }
@@ -117,16 +105,16 @@ class LocalesConfig extends AbstractConfig
      * @param  boolean $autoDetect The auto-detect flag.
      * @return LocalesConfig Chainable
      */
-    public function setAutoDetect($autoDetect)
+    public function setAutoDetect($autoDetect): static
     {
-        $this->autoDetect = !!$autoDetect;
+        $this->autoDetect = (bool) $autoDetect;
         return $this;
     }
 
     /**
      * @return boolean
      */
-    public function autoDetect()
+    public function autoDetect(): ?bool
     {
         return $this->autoDetect;
     }

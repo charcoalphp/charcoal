@@ -47,10 +47,7 @@ abstract class AbstractSection extends Content implements SectionInterface
     public const TYPE_EXTERNAL = 'charcoal/cms/section/external-section';
     public const DEFAULT_TYPE = self::TYPE_CONTENT;
 
-    /**
-     * @var string
-     */
-    private $sectionType = self::DEFAULT_TYPE;
+    private string $sectionType = self::DEFAULT_TYPE;
 
     /**
      * @var Translation|string|null
@@ -103,11 +100,11 @@ abstract class AbstractSection extends Content implements SectionInterface
      * Section constructor.
      * @param array $data Init data.
      */
-    public function __construct(array $data = null)
+    public function __construct(?array $data = null)
     {
         parent::__construct($data);
 
-        if (is_callable([ $this, 'defaultData' ])) {
+        if (is_callable($this->defaultData(...))) {
             $this->setData($this->defaultData());
         }
     }
@@ -119,7 +116,7 @@ abstract class AbstractSection extends Content implements SectionInterface
      */
     public function isDeletable()
     {
-        return !!$this->id() && !$this->locked();
+        return (bool) $this->id() && !$this->locked();
     }
 
     /**
@@ -423,10 +420,9 @@ abstract class AbstractSection extends Content implements SectionInterface
      * Route generated on postSave in case
      * it contains the ID of the section, which
      * you only get once you have save
-     *
-     * @return boolean
      */
-    protected function postSave()
+    #[\Override]
+    protected function postSave(): bool
     {
         // RoutableTrait
         if (!$this->locked()) {
@@ -440,9 +436,9 @@ abstract class AbstractSection extends Content implements SectionInterface
      * Check whatever before the update.
      *
      * @param  array|null $properties Properties.
-     * @return boolean
      */
-    protected function postUpdate(array $properties = null)
+    #[\Override]
+    protected function postUpdate(?array $properties = null): bool
     {
         if (!$this->locked()) {
             $this->generateObjectRoute($this['slug']);
@@ -453,10 +449,9 @@ abstract class AbstractSection extends Content implements SectionInterface
 
     /**
      * {@inheritdoc}
-     *
-     * @return boolean
      */
-    protected function preSave()
+    #[\Override]
+    protected function preSave(): bool
     {
         if (!$this->locked()) {
             $this->setSlug($this->generateSlug());
@@ -469,9 +464,9 @@ abstract class AbstractSection extends Content implements SectionInterface
      * {@inheritdoc}
      *
      * @param array $properties Optional properties to update.
-     * @return boolean
      */
-    protected function preUpdate(array $properties = null)
+    #[\Override]
+    protected function preUpdate(?array $properties = null): bool
     {
         if (!$this->locked()) {
             $this->setSlug($this->generateSlug());
@@ -484,9 +479,9 @@ abstract class AbstractSection extends Content implements SectionInterface
      * Event called before _deleting_ the object.
      *
      * @see    \Charcoal\Model\AbstractModel::preDelete() For the "delete" Event.
-     * @return boolean
      */
-    protected function preDelete()
+    #[\Override]
+    protected function preDelete(): bool
     {
         if ($this->locked()) {
             return false;

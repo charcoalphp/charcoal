@@ -34,24 +34,18 @@ class NestedWidgetInput extends AbstractPropertyInput implements
 
     /**
      * Store the widget factory instance for the current class.
-     *
-     * @var FactoryInterface
      */
-    private $widgetFactory;
+    private ?\Charcoal\Factory\FactoryInterface $widgetFactory = null;
 
     /**
      * Store the form group widget factory instance for the current class.
-     *
-     * @var FactoryInterface
      */
-    private $formGroupFactory;
+    private ?\Charcoal\Factory\FactoryInterface $formGroupFactory = null;
 
     /**
      * The form group the input belongs to.
-     *
-     * @var FormGroupInterface
      */
-    private $formGroup;
+    private ?\Charcoal\Ui\FormGroup\FormGroupInterface $formGroup = null;
 
     /**
      * Set the form input's parent group.
@@ -59,7 +53,7 @@ class NestedWidgetInput extends AbstractPropertyInput implements
      * @param  FormGroupInterface $formGroup The parent form group object.
      * @return FormInputInterface Chainable
      */
-    public function setFormGroup(FormGroupInterface $formGroup)
+    public function setFormGroup(FormGroupInterface $formGroup): static
     {
         $this->formGroup = $formGroup;
 
@@ -71,7 +65,7 @@ class NestedWidgetInput extends AbstractPropertyInput implements
      *
      * @return FormGroupInterface
      */
-    public function formGroup()
+    public function formGroup(): ?\Charcoal\Ui\FormGroup\FormGroupInterface
     {
         return $this->formGroup;
     }
@@ -82,6 +76,7 @@ class NestedWidgetInput extends AbstractPropertyInput implements
      * @param Container $container A dependencies container instance.
      * @return void
      */
+    #[\Override]
     protected function setDependencies(Container $container)
     {
         parent::setDependencies($container);
@@ -94,9 +89,8 @@ class NestedWidgetInput extends AbstractPropertyInput implements
      * Set the widget factory.
      *
      * @param FactoryInterface $factory The factory to create widgets.
-     * @return self
      */
-    protected function setWidgetFactory(FactoryInterface $factory)
+    protected function setWidgetFactory(FactoryInterface $factory): static
     {
         $this->widgetFactory = $factory;
 
@@ -107,14 +101,13 @@ class NestedWidgetInput extends AbstractPropertyInput implements
      * Retrieve the widget factory.
      *
      * @throws RuntimeException If the widget factory was not previously set.
-     * @return FactoryInterface
      */
-    protected function widgetFactory()
+    protected function widgetFactory(): \Charcoal\Factory\FactoryInterface
     {
-        if ($this->widgetFactory === null) {
+        if (!$this->widgetFactory instanceof \Charcoal\Factory\FactoryInterface) {
             throw new RuntimeException(sprintf(
                 'Widget Factory is not defined for "%s"',
-                get_class($this)
+                static::class
             ));
         }
 
@@ -125,9 +118,8 @@ class NestedWidgetInput extends AbstractPropertyInput implements
      * Set the form group factory.
      *
      * @param FactoryInterface $factory The factory to create form groups.
-     * @return self
      */
-    protected function setFormGroupFactory(FactoryInterface $factory)
+    protected function setFormGroupFactory(FactoryInterface $factory): static
     {
         $this->formGroupFactory = $factory;
 
@@ -138,14 +130,13 @@ class NestedWidgetInput extends AbstractPropertyInput implements
      * Retrieve the form group factory.
      *
      * @throws RuntimeException If the form group factory was not previously set.
-     * @return FactoryInterface
      */
-    protected function formGroupFactory()
+    protected function formGroupFactory(): \Charcoal\Factory\FactoryInterface
     {
-        if ($this->formGroupFactory === null) {
+        if (!$this->formGroupFactory instanceof \Charcoal\Factory\FactoryInterface) {
             throw new RuntimeException(sprintf(
                 'Form Group Factory is not defined for "%s"',
-                get_class($this)
+                static::class
             ));
         }
 

@@ -10,9 +10,21 @@ use Charcoal\Cache\CacheConfig;
 
 /**
  * Test CacheConfig
- *
- * @coversDefaultClass \Charcoal\Cache\CacheConfig
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\Charcoal\Cache\CacheConfig::class)]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Cache\CacheConfig::class, 'defaults')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Cache\CacheConfig::class, 'active')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Cache\CacheConfig::class, 'types')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Cache\CacheConfig::class, 'defaultTypes')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Cache\CacheConfig::class, 'defaultTtl')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Cache\CacheConfig::class, 'prefix')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Cache\CacheConfig::class, 'setActive')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Cache\CacheConfig::class, 'setTypes')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Cache\CacheConfig::class, 'addTypes')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Cache\CacheConfig::class, 'addType')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Cache\CacheConfig::class, 'validTypes')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Cache\CacheConfig::class, 'setDefaultTtl')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Cache\CacheConfig::class, 'setPrefix')]
 class CacheConfigTest extends AbstractTestCase
 {
     /**
@@ -32,22 +44,13 @@ class CacheConfigTest extends AbstractTestCase
      * Create a new CacheConfig instance.
      *
      * @param  array $args Parameters for the initialization of a CacheConfig.
-     * @return CacheConfig
      */
-    public function configFactory(array $args = [])
+    public function configFactory(array $args = []): \Charcoal\Cache\CacheConfig
     {
         return new CacheConfig($args);
     }
 
-    /**
-     * @covers ::defaults
-     * @covers ::active
-     * @covers ::types
-     * @covers ::defaultTypes
-     * @covers ::defaultTtl
-     * @covers ::prefix
-     */
-    public function testDefaults()
+    public function testDefaults(): void
     {
         $this->assertEquals('charcoal', CacheConfig::DEFAULT_NAMESPACE);
         $this->assertEquals((60 * 60), CacheConfig::HOUR_IN_SECONDS);
@@ -70,11 +73,7 @@ class CacheConfigTest extends AbstractTestCase
         $this->assertEquals($defaults['prefix'], $this->cfg->prefix());
     }
 
-    /**
-     * @covers ::setActive
-     * @covers ::active
-     */
-    public function testActive()
+    public function testActive(): void
     {
         // Chainable
         $that = $this->cfg->setActive(false);
@@ -84,11 +83,7 @@ class CacheConfigTest extends AbstractTestCase
         $this->assertFalse($this->cfg->active());
     }
 
-    /**
-     * @covers ::setTypes
-     * @covers ::types
-     */
-    public function testReplaceDrivers()
+    public function testReplaceDrivers(): void
     {
         // Chainable
         $that = $this->cfg->setTypes([ 'memcache', 'noop' ]);
@@ -99,10 +94,7 @@ class CacheConfigTest extends AbstractTestCase
         $this->assertEquals([ 'memcache', 'noop', 'memory' ], $types);
     }
 
-    /**
-     * @covers ::types
-     */
-    public function testUniqueDrivers()
+    public function testUniqueDrivers(): void
     {
         $this->cfg->setTypes([ 'memcache', 'memory', 'file', 'memcache' ]);
 
@@ -110,12 +102,7 @@ class CacheConfigTest extends AbstractTestCase
         $this->assertEquals([ 'memcache', 'memory', 'file' ], $types);
     }
 
-    /**
-     * @covers ::addTypes
-     * @covers ::addType
-     * @covers ::types
-     */
-    public function testAddDrivers()
+    public function testAddDrivers(): void
     {
         // Chainable
         $that = $this->cfg->addTypes([ 'memcache', 'noop' ]);
@@ -128,22 +115,14 @@ class CacheConfigTest extends AbstractTestCase
         $this->assertContains('noop', $types);
     }
 
-    /**
-     * @covers ::validTypes
-     * @covers ::addType
-     */
-    public function testAddDriverOnInvalidType()
+    public function testAddDriverOnInvalidType(): void
     {
         $this->expectExceptionMessage('Invalid cache type: "foobar"');
         $this->expectException(InvalidArgumentException::class);
         $this->cfg->addType('foobar');
     }
 
-    /**
-     * @covers ::setDefaultTtl
-     * @covers ::defaultTtl
-     */
-    public function testDefaultTtl()
+    public function testDefaultTtl(): void
     {
         // Chainable
         $that = $this->cfg->setDefaultTtl(42);
@@ -153,21 +132,14 @@ class CacheConfigTest extends AbstractTestCase
         $this->assertEquals(42, $this->cfg->defaultTtl());
     }
 
-    /**
-     * @covers ::setDefaultTtl
-     */
-    public function testSetDefaultTtlOnInvalidType()
+    public function testSetDefaultTtlOnInvalidType(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('TTL must be an integer (seconds)');
         $this->cfg->setDefaultTtl('foo');
     }
 
-    /**
-     * @covers ::setPrefix
-     * @covers ::prefix
-     */
-    public function testPrefix()
+    public function testPrefix(): void
     {
         // Chainable
         $that = $this->cfg->setPrefix('foo');
@@ -177,20 +149,14 @@ class CacheConfigTest extends AbstractTestCase
         $this->assertEquals('foo', $this->cfg->prefix());
     }
 
-    /**
-     * @covers ::setPrefix
-     */
-    public function testSetPrefixOnInvalidType()
+    public function testSetPrefixOnInvalidType(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Prefix must be a string');
         $this->cfg->setPrefix(false);
     }
 
-    /**
-     * @covers ::setPrefix
-     */
-    public function testSetPrefixOnInvalidValue()
+    public function testSetPrefixOnInvalidValue(): void
     {
         $this->expectExceptionMessage('Prefix must be alphanumeric');
         $this->expectException(InvalidArgumentException::class);

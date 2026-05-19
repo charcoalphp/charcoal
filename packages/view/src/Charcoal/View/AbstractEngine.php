@@ -16,10 +16,7 @@ namespace Charcoal\View;
  */
 abstract class AbstractEngine implements EngineInterface
 {
-    /**
-     * @var LoaderInterface
-     */
-    private $loader;
+    private \Charcoal\View\LoaderInterface $loader;
 
     /**
      * The cache option.
@@ -45,9 +42,6 @@ abstract class AbstractEngine implements EngineInterface
         }
     }
 
-    /**
-     * @return string
-     */
     abstract public function type(): string;
 
     /**
@@ -84,7 +78,6 @@ abstract class AbstractEngine implements EngineInterface
     /**
      * @param string      $varName       The name of the variable to set this template unto.
      * @param string|null $templateIdent The "dynamic template" to set. null to clear.
-     * @return void
      */
     public function setDynamicTemplate(string $varName, ?string $templateIdent): void
     {
@@ -97,7 +90,6 @@ abstract class AbstractEngine implements EngineInterface
      * @param  mixed $cache A engine cache implementation,
      *                      an absolute path to the compiled views,
      *                      a boolean to enable/disable cache.
-     * @return void
      */
     protected function setCache($cache): void
     {
@@ -115,9 +107,6 @@ abstract class AbstractEngine implements EngineInterface
     }
 
 
-    /**
-     * @return LoaderInterface
-     */
     protected function loader(): LoaderInterface
     {
         return $this->loader;
@@ -127,7 +116,6 @@ abstract class AbstractEngine implements EngineInterface
 
     /**
      * @param LoaderInterface $loader A loader instance.
-     * @return void
      */
     private function setLoader(LoaderInterface $loader): void
     {

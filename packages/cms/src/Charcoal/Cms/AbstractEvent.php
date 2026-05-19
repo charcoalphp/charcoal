@@ -50,15 +50,9 @@ abstract class AbstractEvent extends Content implements EventInterface
      */
     private $image;
 
-    /**
-     * @var DateTimeInterface|null
-     */
-    private $startDate;
+    private ?\DateTimeInterface $startDate = null;
 
-    /**
-     * @var DateTimeInterface|null
-     */
-    private $endDate;
+    private ?\DateTimeInterface $endDate = null;
 
     /**
      * @var Translation|string|null
@@ -71,15 +65,9 @@ abstract class AbstractEvent extends Content implements EventInterface
     private $infoPhone;
 
 
-    /**
-     * @var float|null
-     */
-    private $ticketPriceMin;
+    private ?float $ticketPriceMin = null;
 
-    /**
-     * @var float|null
-     */
-    private $ticketPriceMax;
+    private ?float $ticketPriceMax = null;
 
     /**
      * @var Translation|string|null
@@ -105,11 +93,11 @@ abstract class AbstractEvent extends Content implements EventInterface
      * Section constructor.
      * @param array $data The data.
      */
-    public function __construct(array $data = null)
+    public function __construct(?array $data = null)
     {
         parent::__construct($data);
 
-        if (is_callable([ $this, 'defaultData' ])) {
+        if (is_callable($this->defaultData(...))) {
             $this->setData($this->defaultData());
         }
     }
@@ -125,9 +113,8 @@ abstract class AbstractEvent extends Content implements EventInterface
 
     /**
      * Some dates cannot be null
-     * @return void
      */
-    public function verifyDates()
+    public function verifyDates(): void
     {
         if (!$this['startDate']) {
             $this->setStartDate('now');
@@ -150,13 +137,7 @@ abstract class AbstractEvent extends Content implements EventInterface
         $start = $this['startDate']->format('Y-m-d');
         $end = $this['endDate']->format('Y-m-d');
 
-        if ($start === $end) {
-            $date = $start;
-        } else {
-            $date = $start . ' - ' . $end;
-        }
-
-        return $date;
+        return $start === $end ? $start : $start . ' - ' . $end;
     }
 
     /**
@@ -506,10 +487,9 @@ abstract class AbstractEvent extends Content implements EventInterface
 
     /**
      * {@inheritdoc}
-     *
-     * @return boolean
      */
-    protected function preSave()
+    #[\Override]
+    protected function preSave(): bool
     {
         $this->verifyDates();
         $this->setSlug($this->generateSlug());
@@ -521,9 +501,9 @@ abstract class AbstractEvent extends Content implements EventInterface
      * {@inheritdoc}
      *
      * @param  array $properties Optional properties to update.
-     * @return boolean
      */
-    protected function preUpdate(array $properties = null)
+    #[\Override]
+    protected function preUpdate(?array $properties = null): bool
     {
         $this->verifyDates();
         $this->setSlug($this->generateSlug());
@@ -534,7 +514,8 @@ abstract class AbstractEvent extends Content implements EventInterface
     /**
      * @return boolean Parent postSave().
      */
-    protected function postSave()
+    #[\Override]
+    protected function postSave(): bool
     {
         // RoutableTrait
         $this->generateObjectRoute($this['slug']);
@@ -544,9 +525,9 @@ abstract class AbstractEvent extends Content implements EventInterface
 
     /**
      * @param array|null $properties Properties.
-     * @return boolean
      */
-    protected function postUpdate(array $properties = null)
+    #[\Override]
+    protected function postUpdate(?array $properties = null): bool
     {
         // RoutableTrait
         $this->generateObjectRoute($this['slug']);

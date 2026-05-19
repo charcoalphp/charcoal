@@ -32,15 +32,14 @@ class DatabaseServiceProvider implements ServiceProviderInterface
      * It should not get services.
      *
      * @param  Container $container A service container.
-     * @return void
      */
-    public function register(Container $container)
+    public function register(Container $container): void
     {
         /**
          * @param  Container $container A service container.
          * @return Container<string, DatabaseConfig> A map of database configsets.
          */
-        $container['databases/config'] = function (Container $container) {
+        $container['databases/config'] = function (Container $container): \Pimple\Container {
             $databases = ($container['config']['databases'] ?? []);
 
             $configs = new Container();
@@ -48,9 +47,7 @@ class DatabaseServiceProvider implements ServiceProviderInterface
                 /**
                  * @return DatabaseConfig
                  */
-                $configs[$dbIdent] = function () use ($dbOptions) {
-                    return new DatabaseConfig($dbOptions);
-                };
+                $configs[$dbIdent] = (fn(): \Charcoal\App\Config\DatabaseConfig => new DatabaseConfig($dbOptions));
             }
 
             return $configs;
@@ -60,7 +57,7 @@ class DatabaseServiceProvider implements ServiceProviderInterface
          * @param  Container $container A service container.
          * @return Container<string, PDO> A map of database handlers.
          */
-        $container['databases'] = function (Container $container) {
+        $container['databases'] = function (Container $container): \Pimple\Container {
             $databases = ($container['config']['databases'] ?? []);
 
             $dbs = new Container();
@@ -68,7 +65,7 @@ class DatabaseServiceProvider implements ServiceProviderInterface
                 /**
                  * @return PDO
                  */
-                $dbs[$dbIdent] = function () use ($dbIdent, $container) {
+                $dbs[$dbIdent] = function () use ($dbIdent, $container): \PDO {
                     $dbConfig = $container['databases/config'][$dbIdent];
 
                     $type = $dbConfig['type'];
@@ -82,21 +79,17 @@ class DatabaseServiceProvider implements ServiceProviderInterface
                     $extraOptions = null;
                     if (!isset($dbConfig['disable_utf8']) || !$dbConfig['disable_utf8']) {
                         $extraOptions = [
-                            PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8mb4',
+                            \Pdo\Mysql::ATTR_INIT_COMMAND => 'SET NAMES utf8mb4',
                         ];
                     }
 
-                    if ($type === 'sqlite') {
-                        $dsn = $type . ':' . $database;
-                    } else {
-                        $dsn = $type . ':host=' . $host . ';dbname=' . $database;
-                    }
+                    $dsn = $type === 'sqlite' ? $type . ':' . $database : $type . ':host=' . $host . ';dbname=' . $database;
 
                     $db = new PDO($dsn, $username, $password, $extraOptions);
 
                     $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
                     if ($type === 'mysql') {
-                        $db->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, true);
+                        $db->setAttribute(\Pdo\Mysql::ATTR_USE_BUFFERED_QUERY, true);
                     }
 
                     return $db;

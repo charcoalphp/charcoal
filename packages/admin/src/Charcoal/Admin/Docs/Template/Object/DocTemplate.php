@@ -19,6 +19,7 @@ class DocTemplate extends AdminTemplate implements
     DashboardContainerInterface,
     ObjectContainerInterface
 {
+    public $headerMenu;
     use DashboardContainerTrait;
     use ObjectContainerTrait;
 
@@ -27,7 +28,8 @@ class DocTemplate extends AdminTemplate implements
      *
      * @return string[]
      */
-    protected function validDataFromRequest()
+    #[\Override]
+    protected function validDataFromRequest(): array
     {
         return array_merge([
             'obj_type'
@@ -59,9 +61,10 @@ class DocTemplate extends AdminTemplate implements
      *
      * @return \Charcoal\Translator\Translation
      */
+    #[\Override]
     public function title()
     {
-        if (isset($this->title)) {
+        if ($this->title !== null) {
             return $this->title;
         }
 
@@ -81,7 +84,7 @@ class DocTemplate extends AdminTemplate implements
         $metadata = $obj->metadata();
         $objLabel = null;
 
-        if (!$objLabel && isset($metadata['admin']['forms'])) {
+        if (isset($metadata['admin']['forms'])) {
             $adminMetadata = $metadata['admin'];
 
             $formIdent = filter_input(INPUT_GET, 'form_ident', FILTER_SANITIZE_STRING);
@@ -113,11 +116,7 @@ class DocTemplate extends AdminTemplate implements
             }
         }
 
-        if ($this->isObjRenderable($obj)) {
-            $this->title = $obj->render((string)$objLabel, $obj);
-        } else {
-            $this->title = (string)$objLabel;
-        }
+        $this->title = $this->isObjRenderable($obj) ? $obj->render((string)$objLabel, $obj) : (string)$objLabel;
 
         return $this->title;
     }
@@ -126,6 +125,7 @@ class DocTemplate extends AdminTemplate implements
      * @param Container $container DI container.
      * @return void
      */
+    #[\Override]
     protected function setDependencies(Container $container)
     {
         parent::setDependencies($container);
@@ -150,10 +150,8 @@ class DocTemplate extends AdminTemplate implements
             $dashboardIdent = filter_input(INPUT_GET, 'dashboard_ident', FILTER_SANITIZE_STRING);
         }
 
-        if (empty($dashboardIdent)) {
-            if (isset($adminMetadata['default_doc_dashboard'])) {
-                $dashboardIdent = $adminMetadata['default_doc_dashboard'];
-            }
+        if (empty($dashboardIdent) && isset($adminMetadata['default_doc_dashboard'])) {
+            $dashboardIdent = $adminMetadata['default_doc_dashboard'];
         }
 
         $overrideType = false;
@@ -162,7 +160,7 @@ class DocTemplate extends AdminTemplate implements
             if (!isset($adminMetadata['default_edit_dashboard'])) {
                 throw new Exception(sprintf(
                     'No default doc dashboard defined in admin metadata for %s',
-                    get_class($this->obj())
+                    $this->obj()::class
                 ));
             }
             $overrideType = true;
@@ -199,11 +197,11 @@ class DocTemplate extends AdminTemplate implements
 
         $objMetadata = $obj->metadata();
 
-        $adminMetadata = isset($objMetadata['admin']) ? $objMetadata['admin'] : null;
+        $adminMetadata = $objMetadata['admin'] ?? null;
         if ($adminMetadata === null) {
             throw new Exception(sprintf(
                 'The object %s does not have an admin metadata.',
-                get_class($obj)
+                $obj::class
             ));
         }
 

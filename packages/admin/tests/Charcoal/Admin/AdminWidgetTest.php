@@ -17,22 +17,16 @@ class AdminWidgetTest extends AbstractTestCase
 {
     /**
      * Tested Class.
-     *
-     * @var AdminWidget
      */
-    private $obj;
+    private \Charcoal\Admin\AdminWidget $obj;
 
     /**
      * Store the service container.
-     *
-     * @var Container
      */
-    private $container;
+    private ?\Pimple\Container $container = null;
 
     /**
      * Set up the test.
-     *
-     * @return void
      */
     public function setUp(): void
     {
@@ -44,10 +38,7 @@ class AdminWidgetTest extends AbstractTestCase
         ]);
     }
 
-    /**
-     * @return void
-     */
-    public function testSetData()
+    public function testSetData(): void
     {
         $obj = $this->obj;
         $ret = $obj->setData([
@@ -64,10 +55,7 @@ class AdminWidgetTest extends AbstractTestCase
         $this->assertNotTrue($obj->showActions());
     }
 
-    /**
-     * @return void
-     */
-    public function testSetType()
+    public function testSetType(): void
     {
         $obj = $this->obj;
         $this->assertEquals(null, $obj->type());
@@ -80,12 +68,8 @@ class AdminWidgetTest extends AbstractTestCase
         $obj->setType(1);
     }
 
-    /**
-     * @return void
-     */
-    public function testSetLabel()
+    public function testSetLabel(): void
     {
-        $obj = $this->obj;
         //$this->assertEquals(null, $obj->label());
 
         $obj = $this->obj;
@@ -101,12 +85,10 @@ class AdminWidgetTest extends AbstractTestCase
 
     /**
      * Set up the service container.
-     *
-     * @return Container
      */
-    protected function container()
+    protected function container(): \Pimple\Container
     {
-        if ($this->container === null) {
+        if (!$this->container instanceof \Pimple\Container) {
             $container = new Container();
             $containerProvider = new ContainerProvider();
             $containerProvider->registerWidgetDependencies($container);

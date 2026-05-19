@@ -29,8 +29,6 @@ class TemplateableTraitTest extends AbstractTestCase
 
     /**
      * Set up the test.
-     *
-     * @return void
      */
     protected function setUp(): void
     {
@@ -58,8 +56,6 @@ class TemplateableTraitTest extends AbstractTestCase
      * Tear down the test.
      *
      * Drop any existing SQL table.
-     *
-     * @return void
      */
     protected function tearDown(): void
     {
@@ -68,10 +64,8 @@ class TemplateableTraitTest extends AbstractTestCase
 
     /**
      * Drop the SQL table.
-     *
-     * @return void
      */
-    private function dropTable()
+    private function dropTable(): void
     {
         $container = $this->getContainer();
 
@@ -80,10 +74,8 @@ class TemplateableTraitTest extends AbstractTestCase
 
     /**
      * Retrieve the model's mock metadata.
-     *
-     * @return array
      */
-    public function getModelMetadata()
+    public function getModelMetadata(): array
     {
         return [
             'properties' => [
@@ -124,30 +116,21 @@ class TemplateableTraitTest extends AbstractTestCase
         ];
     }
 
-    /**
-     * @return void
-     */
-    public function testMissingPropertyDependency()
+    public function testMissingPropertyDependency(): void
     {
         $this->expectException(RuntimeException::class);
         $obj = new TemplateableModel($this->getModelDependencies());
         $obj->templateOptionsStructure();
     }
 
-    /**
-     * @return void
-     */
-    public function testMissingInterfaceDependency()
+    public function testMissingInterfaceDependency(): void
     {
         $this->expectException(RuntimeException::class);
         $obj = $this->getMockForTrait(TemplateableTrait::class);
         $obj->templateOptionsStructure();
     }
 
-    /**
-     * @return void
-     */
-    public function testTemplateIdent()
+    public function testTemplateIdent(): void
     {
         $this->assertEmpty($this->obj->templateIdent());
 
@@ -155,10 +138,7 @@ class TemplateableTraitTest extends AbstractTestCase
         $this->assertEquals('foobar', $this->obj->templateIdent());
     }
 
-    /**
-     * @return void
-     */
-    public function testControllerIdent()
+    public function testControllerIdent(): void
     {
         $this->assertNull($this->obj->controllerIdent());
 
@@ -166,10 +146,7 @@ class TemplateableTraitTest extends AbstractTestCase
         $this->assertEquals('foobar', $this->obj->controllerIdent());
     }
 
-    /**
-     * @return void
-     */
-    public function testTemplateOptions()
+    public function testTemplateOptions(): void
     {
         $this->assertIsArray($this->obj->templateOptions());
         $this->assertEmpty($this->obj->templateOptions());
@@ -194,10 +171,7 @@ class TemplateableTraitTest extends AbstractTestCase
         $this->assertEquals($obj, $this->obj->templateOptions());
     }
 
-    /**
-     * @return void
-     */
-    public function testSavingTemplateOptions()
+    public function testSavingTemplateOptions(): void
     {
         $obj = $this->obj;
         $obj->setTemplateIdent('foo');
@@ -214,10 +188,7 @@ class TemplateableTraitTest extends AbstractTestCase
         $this->assertTrue($result);
     }
 
-    /**
-     * @return void
-     */
-    public function testTemplateOptionsStructure()
+    public function testTemplateOptionsStructure(): void
     {
         $templateData         = [ 'foo' => 'Huxley' ];
         $basePath = $this->getContainer()['config']['base_path'];

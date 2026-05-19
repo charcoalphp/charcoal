@@ -19,24 +19,18 @@ class UploadImageAction extends AdminAction
 
     /**
      * Whether uploaded files should be accessible from the web root.
-     *
-     * @var boolean
      */
-    private $publicAccess = self::DEFAULT_PUBLIC_ACCESS;
+    private bool $publicAccess = self::DEFAULT_PUBLIC_ACCESS;
 
     /**
      * The relative path to the storage directory.
-     *
-     * @var string
      */
-    private $uploadPath = self::DEFAULT_UPLOAD_PATH;
+    private string $uploadPath = self::DEFAULT_UPLOAD_PATH;
 
     /**
      * Whether existing destinations should be overwritten.
-     *
-     * @var boolean
      */
-    private $overwrite = self::DEFAULT_OVERWRITE;
+    private bool $overwrite = self::DEFAULT_OVERWRITE;
 
     /**
      * The base path for the Charcoal installation.
@@ -52,10 +46,7 @@ class UploadImageAction extends AdminAction
      */
     private $publicPath;
 
-    /**
-     * @var string
-     */
-    private $uploadedPath;
+    private ?string $uploadedPath = null;
 
     /**
      * Inject dependencies from a DI Container.
@@ -63,6 +54,7 @@ class UploadImageAction extends AdminAction
      * @param  Container $container A dependencies container instance.
      * @return void
      */
+    #[\Override]
     protected function setDependencies(Container $container)
     {
         parent::setDependencies($container);
@@ -78,19 +70,18 @@ class UploadImageAction extends AdminAction
      *
      * @param RequestInterface  $request  A PSR-7 compatible Request instance.
      * @param ResponseInterface $response A PSR-7 compatible Response instance.
-     * @return ResponseInterface
      */
-    public function run(RequestInterface $request, ResponseInterface $response)
+    public function run(RequestInterface $request, ResponseInterface $response): ResponseInterface
     {
         $path = $request->getParam('upload_path');
 
-        if (!!$path) {
+        if ((bool) $path) {
             $this->setUploadPath($path);
         }
 
         $this->uploadedPath = $this->fileUpload($_FILES['file']);
 
-        $this->setSuccess(!!$this->uploadedPath);
+        $this->setSuccess((bool) $this->uploadedPath);
 
         return $response;
     }
@@ -100,9 +91,8 @@ class UploadImageAction extends AdminAction
      *
      * @param array $fileData The file data (from $_FILES, typically).
      * @throws \InvalidArgumentException If the FILES data argument is missing `name` or `tmp_name`.
-     * @return string
      */
-    public function fileUpload(array $fileData)
+    public function fileUpload(array $fileData): string
     {
         if (!isset($fileData['name'])) {
             throw new \InvalidArgumentException(
@@ -121,18 +111,16 @@ class UploadImageAction extends AdminAction
         } else {
             $this->logger->notice(sprintf('File %s uploaded succesfully', $target));
             $basePath = $this->basePath();
-            $target   = str_replace($basePath, '', $target);
 
-            return $target;
+            return str_replace($basePath, '', $target);
         }
     }
 
     /**
      * @param string $filename Optional. The filename to save. If unset, a default filename will be generated.
      * @throws \Exception If the target path is not writeable.
-     * @return string
      */
-    public function uploadTarget($filename = null)
+    public function uploadTarget($filename = null): string
     {
         $basePath = $this->basePath();
 
@@ -143,7 +131,7 @@ class UploadImageAction extends AdminAction
             // @todo: Feedback
             $this->logger->debug(
                 'Path does not exist. Attempting to create path ' . $dir . '.',
-                [get_called_class() . '::' . __FUNCTION__]
+                [static::class . '::' . __FUNCTION__]
             );
             mkdir($dir, 0777, true);
         }
@@ -156,7 +144,7 @@ class UploadImageAction extends AdminAction
         $target = $dir . $filename;
 
         if ($this->fileExists($target)) {
-            if ($this->overwrite() === true) {
+            if ($this->overwrite()) {
                 return $target;
             } else {
                 $target = $dir . $this->generateUniqueFilename($filename);
@@ -177,9 +165,8 @@ class UploadImageAction extends AdminAction
      *
      * @param  string  $file            The full file to check.
      * @param  boolean $caseInsensitive Case-insensitive by default.
-     * @return boolean
      */
-    public function fileExists($file, $caseInsensitive = true)
+    public function fileExists($file, $caseInsensitive = true): bool
     {
         if (!$this->isAbsolutePath($file)) {
             $file = $this->basePath() . DIRECTORY_SEPARATOR . $file;
@@ -197,7 +184,7 @@ class UploadImageAction extends AdminAction
         if ($files) {
             $pattern = preg_quote($file, '#');
             foreach ($files as $f) {
-                if (preg_match("#${pattern}#i", $f)) {
+                if (preg_match("#{$pattern}#i", $f)) {
                     return true;
                 }
             }
@@ -216,7 +203,7 @@ class UploadImageAction extends AdminAction
      * @param  string $file A file path.
      * @return boolean Returns TRUE if the given path is absolute. Otherwise, returns FALSE.
      */
-    protected function isAbsolutePath($file)
+    protected function isAbsolutePath($file): bool
     {
         return strspn($file, '/\\', 0, 1)
             || (strlen($file) > 3
@@ -232,7 +219,7 @@ class UploadImageAction extends AdminAction
      * @param string $filename The filename to sanitize.
      * @return string The sanitized filename.
      */
-    public function sanitizeFilename($filename)
+    public function sanitizeFilename($filename): string
     {
         // Remove blacklisted caharacters
         $blacklist = ['/', '\\', '\0', '*', ':', '?', '"', '<', '>', '|', '#', '&', '!', '`', ' '];
@@ -249,22 +236,17 @@ class UploadImageAction extends AdminAction
      *
      * @param  string|array $filename The filename to alter.
      * @throws \InvalidArgumentException If the given filename is invalid.
-     * @return string
      */
-    public function generateUniqueFilename($filename)
+    public function generateUniqueFilename($filename): string
     {
         if (!is_string($filename) && !is_array($filename)) {
             throw new \InvalidArgumentException(sprintf(
                 'The target must be a string or an array from [pathfino()], received %s',
-                (is_object($filename) ? get_class($filename) : gettype($filename))
+                (get_debug_type($filename))
             ));
         }
 
-        if (is_string($filename)) {
-            $info = pathinfo($filename);
-        } else {
-            $info = $filename;
-        }
+        $info = is_string($filename) ? pathinfo($filename) : $filename;
 
         $filename = $info['filename'] . '-' . uniqid();
 
@@ -275,10 +257,7 @@ class UploadImageAction extends AdminAction
         return $filename;
     }
 
-    /**
-     * @return string
-     */
-    public function uploadPath()
+    public function uploadPath(): string
     {
         return $this->uploadPath;
     }
@@ -290,9 +269,8 @@ class UploadImageAction extends AdminAction
      *
      * @param string $path The destination directory, relative to project's root.
      * @throws \InvalidArgumentException If the path is not a string.
-     * @return self
      */
-    public function setUploadPath($path)
+    public function setUploadPath($path): static
     {
         if (!is_string($path)) {
             throw new \InvalidArgumentException(
@@ -310,21 +288,18 @@ class UploadImageAction extends AdminAction
      * Set whether uploaded files should be publicly available.
      *
      * @param boolean $public Whether uploaded files should be accessible (TRUE) or not (FALSE) from the web root.
-     * @return self
      */
-    public function setPublicAccess($public)
+    public function setPublicAccess($public): static
     {
-        $this->publicAccess = !!$public;
+        $this->publicAccess = (bool) $public;
 
         return $this;
     }
 
     /**
      * Determine if uploaded files should be publicly available.
-     *
-     * @return boolean
      */
-    public function publicAccess()
+    public function publicAccess(): bool
     {
         return $this->publicAccess;
     }
@@ -333,21 +308,18 @@ class UploadImageAction extends AdminAction
      * Set whether existing destinations should be overwritten.
      *
      * @param boolean $overwrite Whether existing destinations should be overwritten (TRUE) or not (FALSE).
-     * @return self
      */
-    public function setOverwrite($overwrite)
+    public function setOverwrite($overwrite): static
     {
-        $this->overwrite = !!$overwrite;
+        $this->overwrite = (bool) $overwrite;
 
         return $this;
     }
 
     /**
      * Determine if existing destinations should be overwritten.
-     *
-     * @return boolean
      */
-    public function overwrite()
+    public function overwrite(): bool
     {
         return $this->overwrite;
     }
@@ -368,10 +340,9 @@ class UploadImageAction extends AdminAction
 
     /**
      * Default response stub.
-     *
-     * @return array
      */
-    public function results()
+    #[\Override]
+    public function results(): array
     {
         return [
             'success'  => $this->success(),

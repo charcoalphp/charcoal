@@ -66,7 +66,8 @@ class CollectionMapWidget extends AdminWidget implements CollectionContainerInte
      * @param array $data The widget data.
      * @return TableWidget Chainable
      */
-    public function setData(array $data)
+    #[\Override]
+    public function setData(array $data): static
     {
         parent::setData($data);
 
@@ -82,9 +83,8 @@ class CollectionMapWidget extends AdminWidget implements CollectionContainerInte
      * Sets the API key for the mapping service.
      *
      * @param  string $key An API key.
-     * @return self
      */
-    public function setApiKey($key)
+    public function setApiKey($key): static
     {
         $this->apiKey = $key;
 
@@ -105,7 +105,7 @@ class CollectionMapWidget extends AdminWidget implements CollectionContainerInte
      * @param string $p The latitude property ident.
      * @return MapWidget Chainable
      */
-    public function setLatProperty($p)
+    public function setLatProperty($p): static
     {
         $this->latProperty = $p;
         return $this;
@@ -123,7 +123,7 @@ class CollectionMapWidget extends AdminWidget implements CollectionContainerInte
      * @param string $p The longitude property ident.
      * @return MapWidget Chainable
      */
-    public function setLonProperty($p)
+    public function setLonProperty($p): static
     {
         $this->lonProperty = $p;
         return $this;
@@ -141,7 +141,7 @@ class CollectionMapWidget extends AdminWidget implements CollectionContainerInte
      * @param string $p The polygon property ident.
      * @return MapWidget Chainable
      */
-    public function setPolygonProperty($p)
+    public function setPolygonProperty($p): static
     {
         $this->polygonProperty = $p;
         return $this;
@@ -159,7 +159,7 @@ class CollectionMapWidget extends AdminWidget implements CollectionContainerInte
      * @param string $p The path property ident.
      * @return MapWidget Chainable
      */
-    public function setPathProperty($p)
+    public function setPathProperty($p): static
     {
         $this->pathProperty = $p;
         return $this;
@@ -177,7 +177,7 @@ class CollectionMapWidget extends AdminWidget implements CollectionContainerInte
      * @param string $template The infobox template ident.
      * @return CollectionMapWidget Chainable
      */
-    public function setInfoboxTemplate($template)
+    public function setInfoboxTemplate($template): static
     {
         $this->infoboxTemplate = $template;
         return $this;
@@ -204,7 +204,7 @@ class CollectionMapWidget extends AdminWidget implements CollectionContainerInte
             if (!$objType) {
                 throw new UnexpectedValueException(sprintf(
                     '%1$s cannot create collection map. Object type is not defined.',
-                    get_class($this)
+                    static::class
                 ));
             }
 
@@ -212,12 +212,12 @@ class CollectionMapWidget extends AdminWidget implements CollectionContainerInte
             $loader->setModel($this->proto());
 
             $collectionConfig = $this->collectionConfig();
-            if (is_array($collectionConfig) && !empty($collectionConfig)) {
+            if (is_array($collectionConfig) && $collectionConfig !== []) {
                 unset($collectionConfig['properties']);
                 $loader->setData($collectionConfig);
             }
 
-            $callback = function (&$obj) {
+            $callback = function (&$obj): void {
                 $obj->mapInfoboxTemplate = $this->infoboxTemplate();
 
                 if ($this->latProperty() && $this->latProperty()) {
@@ -273,10 +273,7 @@ class CollectionMapWidget extends AdminWidget implements CollectionContainerInte
         }
     }
 
-    /**
-     * @return boolean
-     */
-    public function showInfobox()
+    public function showInfobox(): bool
     {
         return ($this->infoboxTemplate != '');
     }
@@ -294,10 +291,8 @@ class CollectionMapWidget extends AdminWidget implements CollectionContainerInte
 
     /**
      * Retrieve the accepted metadata from the current request.
-     *
-     * @return array
      */
-    public function acceptedRequestData()
+    public function acceptedRequestData(): array
     {
         return [
             'obj_type',
@@ -315,7 +310,7 @@ class CollectionMapWidget extends AdminWidget implements CollectionContainerInte
     {
         $proto         = $this->proto();
         $objMetadata   = $proto->metadata();
-        $adminMetadata = (isset($objMetadata['admin']) ? $objMetadata['admin'] : null);
+        $adminMetadata = ($objMetadata['admin'] ?? null);
 
         if (empty($adminMetadata['lists'])) {
             return [];
@@ -334,11 +329,7 @@ class CollectionMapWidget extends AdminWidget implements CollectionContainerInte
             return [];
         }
 
-        if (isset($adminMetadata['lists'][$collectionIdent])) {
-            $objListData = $adminMetadata['lists'][$collectionIdent];
-        } else {
-            $objListData = [];
-        }
+        $objListData = $adminMetadata['lists'][$collectionIdent] ?? [];
 
         $collectionConfig = [];
 
@@ -368,7 +359,7 @@ class CollectionMapWidget extends AdminWidget implements CollectionContainerInte
             }
         }
 
-        if ($collectionConfig) {
+        if ($collectionConfig !== []) {
             $this->mergeCollectionConfig($collectionConfig);
         }
 
@@ -381,6 +372,7 @@ class CollectionMapWidget extends AdminWidget implements CollectionContainerInte
      * @param  Container $container A dependencies container instance.
      * @return void
      */
+    #[\Override]
     protected function setDependencies(Container $container)
     {
         parent::setDependencies($container);
@@ -420,11 +412,7 @@ class CollectionMapWidget extends AdminWidget implements CollectionContainerInte
             $data = $obj;
             foreach (explode('.', $key) as $segment) {
                 $accessible = is_array($data) || $data instanceof ArrayAccess;
-                if ($data instanceof ArrayAccess) {
-                    $exists = $data->offsetExists($segment);
-                } else {
-                    $exists = array_key_exists($segment, $data);
-                }
+                $exists = $data instanceof ArrayAccess ? $data->offsetExists($segment) : array_key_exists($segment, $data);
 
                 if ($accessible && $exists) {
                     $data = $data[$segment];
@@ -446,6 +434,7 @@ class CollectionMapWidget extends AdminWidget implements CollectionContainerInte
      * @param  mixed $toResolve A callable used when merging data.
      * @return callable|null
      */
+    #[\Override]
     protected function resolveDataSourceFilter($toResolve)
     {
         if (is_string($toResolve)) {

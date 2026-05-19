@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Charcoal\Tests\Admin\Mock;
 
 // From 'charcoal-core'
@@ -16,7 +18,7 @@ class SortableModel extends AbstractModel
     /**
      * @param array $data Dependencies.
      */
-    public function __construct(array $data = null)
+    public function __construct(?array $data = null)
     {
         $data['metadata'] = [
             'properties' => [

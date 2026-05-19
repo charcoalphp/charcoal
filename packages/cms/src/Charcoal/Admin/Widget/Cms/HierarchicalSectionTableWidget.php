@@ -24,10 +24,9 @@ class HierarchicalSectionTableWidget extends TableWidget
 
     /**
      * Provide a template to fullfill UIItem interface.
-     *
-     * @return string
      */
-    public function template()
+    #[\Override]
+    public function template(): string
     {
         return 'charcoal/admin/widget/table';
     }
@@ -38,6 +37,7 @@ class HierarchicalSectionTableWidget extends TableWidget
      * @see \Charcoal\Admin\Ui\CollectionContainerTrait::sortObjects()
      * @return array
      */
+    #[\Override]
     public function sortObjects()
     {
         $collection = new HierarchicalCollection($this->objects(), false);
@@ -55,6 +55,7 @@ class HierarchicalSectionTableWidget extends TableWidget
      * @param  Container $container A dependencies container instance.
      * @return void
      */
+    #[\Override]
     protected function setDependencies(Container $container)
     {
         parent::setDependencies($container);
@@ -71,6 +72,7 @@ class HierarchicalSectionTableWidget extends TableWidget
      * @param  PropertyInterface $property The current property.
      * @return void
      */
+    #[\Override]
     protected function setupDisplayPropertyValue(
         ModelInterface $object,
         PropertyInterface $property

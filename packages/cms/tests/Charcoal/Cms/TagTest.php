@@ -17,15 +17,11 @@ class TagTest extends AbstractTestCase
 
     /**
      * Tested Class.
-     *
-     * @var Tag
      */
-    private $obj;
+    private \Charcoal\Cms\Tag $obj;
 
     /**
      * Set up the test.
-     *
-     * @return void
      */
     protected function setUp(): void
     {
@@ -34,10 +30,7 @@ class TagTest extends AbstractTestCase
         $this->obj = new Tag($dependencies);
     }
 
-    /**
-     * @return void
-     */
-    public function testSetData()
+    public function testSetData(): void
     {
         $ret = $this->obj->setData([
             'name'       => 'Foo?',
@@ -54,34 +47,28 @@ class TagTest extends AbstractTestCase
         $this->assertEquals(42, $this->obj->searchWeight());
     }
 
-    /**
-     * @return void
-     */
-    public function testSetName()
+    public function testSetName(): void
     {
         $ret = $this->obj->setName('Foo?');
         $this->assertSame($ret, $this->obj);
         $this->assertEquals('Foo?', $this->obj->name());
     }
 
-    /**
-     * @return void
-     */
-    public function testSetColor()
+    public function testSetColor(): void
     {
         $ret = $this->obj->setColor('Bar');
         $this->assertSame($ret, $this->obj);
         $this->assertEquals('Bar', $this->obj->color());
     }
 
-    public function testSetVariations()
+    public function testSetVariations(): void
     {
         $ret = $this->obj->setVariations('foo,bar,baz');
         $this->assertSame($ret, $this->obj);
         $this->assertEquals('foo,bar,baz', $this->obj->variations());
     }
 
-    public function testSetSearchWeight()
+    public function testSetSearchWeight(): void
     {
         $ret = $this->obj->setSearchWeight(1984);
         $this->assertSame($ret, $this->obj);

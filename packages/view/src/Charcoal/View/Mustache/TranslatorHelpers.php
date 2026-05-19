@@ -19,10 +19,8 @@ class TranslatorHelpers implements HelpersInterface
 {
     /**
      * Store the translator service.
-     *
-     * @var Translator|null
      */
-    private $translator;
+    private ?\Charcoal\Translator\Translator $translator = null;
 
     /**
      * Store the given number to use to find the indice of the message (Mustache tag node).
@@ -40,24 +38,20 @@ class TranslatorHelpers implements HelpersInterface
      * Store the given locale (Mustache tag node).
      *
      * This must be an available locale on the Translator.
-     *
-     * @var string|null
      */
-    private $locale;
+    private ?string $locale = null;
 
     /**
      * Store the given domain for the message (Mustache tag node).
      *
      * This must be an available domain on the Translator.
-     *
-     * @var string|null
      */
-    private $domain;
+    private ?string $domain = null;
 
     /**
      * @param array $data Class Dependencies.
      */
-    public function __construct(array $data = null)
+    public function __construct(?array $data = null)
     {
         if (isset($data['translator'])) {
             $this->setTranslator($data['translator']);
@@ -68,7 +62,6 @@ class TranslatorHelpers implements HelpersInterface
      * Set the translator service.
      *
      * @param  Translator $translator The Translator service.
-     * @return void
      */
     protected function setTranslator(Translator $translator): void
     {
@@ -77,8 +70,6 @@ class TranslatorHelpers implements HelpersInterface
 
     /**
      * Retrieve the helpers.
-     *
-     * @return array
      */
     public function toArray(): array
     {
@@ -89,8 +80,6 @@ class TranslatorHelpers implements HelpersInterface
 
     /**
      * Clear macros.
-     *
-     * @return void
      */
     protected function reset(): void
     {
@@ -104,11 +93,10 @@ class TranslatorHelpers implements HelpersInterface
      *
      * @param  string            $text   The translation key.
      * @param  LambdaHelper|null $helper For rendering strings in the current context.
-     * @return string
      */
-    public function __invoke(string $text, LambdaHelper $helper = null): string
+    public function __invoke(string $text, ?LambdaHelper $helper = null): string
     {
-        if ($this->translator) {
+        if ($this->translator instanceof \Charcoal\Translator\Translator) {
             if ($this->number === null) {
                 $text = $this->translator->trans($text, [], $this->domain, $this->locale);
             } else {
@@ -132,7 +120,6 @@ class TranslatorHelpers implements HelpersInterface
      * Required by Mustache.
      *
      * @param  string $macro A domain, locale, or number.
-     * @return boolean
      */
     public function __isset(string $macro): bool
     {
@@ -146,11 +133,10 @@ class TranslatorHelpers implements HelpersInterface
      *
      * @param  string $macro A domain, locale, or number.
      * @throws LogicException If the macro is unresolved.
-     * @return mixed
      */
-    public function __get(string $macro)
+    public function __get(string $macro): mixed
     {
-        if (!$this->translator) {
+        if (!$this->translator instanceof \Charcoal\Translator\Translator) {
             return $this;
         }
 

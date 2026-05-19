@@ -2,6 +2,7 @@
 
 namespace Charcoal\Config;
 
+use AllowDynamicProperties;
 use ArrayAccess;
 use InvalidArgumentException;
 
@@ -17,6 +18,7 @@ use InvalidArgumentException;
  * - A key-value pair is internally passed to a (non-private / non-static) setter method (if present)
  *   or assigned to a (non-private / non-static) property (declared or not) and tracks affected keys.
  */
+#[AllowDynamicProperties]
 abstract class AbstractEntity implements EntityInterface
 {
     /**
@@ -58,7 +60,7 @@ abstract class AbstractEntity implements EntityInterface
      * @param  string[] $keys Optional. Extracts only the requested data.
      * @return array Key-value array of data, excluding pairs with NULL values.
      */
-    public function data(array $keys = null)
+    public function data(?array $keys = null)
     {
         if ($keys === null) {
             $keys = $this->keys();
@@ -66,7 +68,7 @@ abstract class AbstractEntity implements EntityInterface
 
         $data = [];
         foreach ($keys as $key) {
-            if (strtolower($key) === 'data') {
+            if (strtolower((string) $key) === 'data') {
                 /** @internal Edge Case: Avoid recursive call */
                 continue;
             }
@@ -88,7 +90,7 @@ abstract class AbstractEntity implements EntityInterface
     public function setData(array $data)
     {
         foreach ($data as $key => $value) {
-            if (strtolower($key) === 'data') {
+            if (strtolower((string) $key) === 'data') {
                 /** @internal Edge Case: Avoid recursive call */
                 continue;
             }
@@ -150,7 +152,7 @@ abstract class AbstractEntity implements EntityInterface
      * @throws InvalidArgumentException If the $key is not a string or is a numeric value.
      * @return boolean TRUE if $key exists and has a value other than NULL, FALSE otherwise.
      */
-    public function offsetExists($key)
+    public function offsetExists($key): bool
     {
         if (is_numeric($key)) {
             throw new InvalidArgumentException(
@@ -183,12 +185,7 @@ abstract class AbstractEntity implements EntityInterface
             return ($this->{$key}() !== null);
         }
         // -- END DEPRECATED
-
-        if (isset($this->{$key})) {
-            return true;
-        }
-
-        return false;
+        return isset($this->{$key});
     }
 
     /**
@@ -205,7 +202,7 @@ abstract class AbstractEntity implements EntityInterface
      * @throws InvalidArgumentException If the $key is not a string or is a numeric value.
      * @return mixed Value of the requested $key on success, NULL if the $key is not set.
      */
-    public function offsetGet($key)
+    public function offsetGet($key): mixed
     {
         if (is_numeric($key)) {
             throw new InvalidArgumentException(
@@ -237,13 +234,8 @@ abstract class AbstractEntity implements EntityInterface
         if ($this->mutatorCache[$key]) {
             return $this->{$key}();
         }
-        // -- END DEPRECATED
 
-        if (isset($this->{$key})) {
-            return $this->{$key};
-        }
-
-        return null;
+        return $this->{$key} ?? null;
     }
 
     /**
@@ -259,9 +251,8 @@ abstract class AbstractEntity implements EntityInterface
      * @param  string $key   The data key to assign $value to.
      * @param  mixed  $value The data value to assign to $key.
      * @throws InvalidArgumentException If the $key is not a string or is a numeric value.
-     * @return void
      */
-    public function offsetSet($key, $value)
+    public function offsetSet($key, $value): void
     {
         if (is_numeric($key)) {
             throw new InvalidArgumentException(
@@ -301,9 +292,8 @@ abstract class AbstractEntity implements EntityInterface
      * @uses   self::offsetSet()
      * @param  string $key The data key to remove.
      * @throws InvalidArgumentException If the $key is not a string or is a numeric value.
-     * @return void
      */
-    public function offsetUnset($key)
+    public function offsetUnset($key): void
     {
         if (is_numeric($key)) {
             throw new InvalidArgumentException(
@@ -328,7 +318,7 @@ abstract class AbstractEntity implements EntityInterface
      * @see    \JsonSerializable
      * @return array Key-value array of data.
      */
-    public function jsonSerialize()
+    public function jsonSerialize(): mixed
     {
         return $this->data();
     }
@@ -349,9 +339,8 @@ abstract class AbstractEntity implements EntityInterface
      *
      * @see    \Serializable
      * @param  string $data The serialized data to extract.
-     * @return void
      */
-    public function unserialize($data)
+    public function unserialize($data): void
     {
         $data = unserialize($data);
         $this->setData($data);
@@ -371,8 +360,8 @@ abstract class AbstractEntity implements EntityInterface
             return static::$camelCache[$key];
         }
 
-        if (strpos($value, '_') !== false) {
-            $value = implode('', array_map('ucfirst', explode('_', $value)));
+        if (str_contains($value, '_')) {
+            $value = implode('', array_map(ucfirst(...), explode('_', $value)));
         }
 
         static::$camelCache[$key] = lcfirst($value);

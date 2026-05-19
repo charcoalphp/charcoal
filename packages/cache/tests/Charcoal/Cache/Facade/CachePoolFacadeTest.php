@@ -23,9 +23,16 @@ use Charcoal\Cache\CacheConfig;
  * Test CachePoolFacade
  *
  * This class is based on {@see \Stash\Test\AbstractPoolTest}.
- *
- * @coversDefaultClass \Charcoal\Cache\Facade\CachePoolFacade
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\Charcoal\Cache\Facade\CachePoolFacade::class)]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Cache\Facade\CachePoolFacade::class, '__construct')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Cache\Facade\CachePoolFacade::class, 'get')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Cache\Facade\CachePoolFacade::class, 'save')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Cache\Facade\CachePoolFacade::class, 'has')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Cache\Facade\CachePoolFacade::class, 'set')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Cache\Facade\CachePoolFacade::class, 'delete')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Cache\Facade\CachePoolFacade::class, 'defaultTtl')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Cache\Facade\CachePoolFacade::class, 'setDefaultTtl')]
 class CachePoolFacadeTest extends AbstractTestCase
 {
     use CachePoolTrait;
@@ -43,8 +50,6 @@ class CachePoolFacadeTest extends AbstractTestCase
 
     /**
      * Prepare the cache pool.
-     *
-     * @return void
      */
     public function setUp(): void
     {
@@ -53,8 +58,6 @@ class CachePoolFacadeTest extends AbstractTestCase
 
     /**
      * Empty the cache pool.
-     *
-     * @return void
      */
     public function tearDown(): void
     {
@@ -65,9 +68,8 @@ class CachePoolFacadeTest extends AbstractTestCase
      * Create a new CachePoolFacade instance.
      *
      * @param  array $args Parameters for the initialization of a CachePoolFacade.
-     * @return CachePoolFacade
      */
-    protected function facadeFactory(array $args = [])
+    protected function facadeFactory(array $args = []): \Charcoal\Cache\Facade\CachePoolFacade
     {
         if (!isset($args['cache'])) {
             $args['cache'] = static::getCachePool();
@@ -76,10 +78,7 @@ class CachePoolFacadeTest extends AbstractTestCase
         return new CachePoolFacade($args);
     }
 
-    /**
-     * @covers ::__construct
-     */
-    public function testConstruct()
+    public function testConstruct(): void
     {
         $facade = $this->facadeFactory([
             'default_ttl' => 120,
@@ -88,13 +87,7 @@ class CachePoolFacadeTest extends AbstractTestCase
         $this->assertInstanceOf(CachePoolFacade::class, $facade);
     }
 
-    /**
-     * @covers ::get
-     * @covers ::save
-     *
-     * @return void
-     */
-    public function testGet()
+    public function testGet(): void
     {
         $facade = $this->facadeFactory();
 
@@ -105,19 +98,12 @@ class CachePoolFacadeTest extends AbstractTestCase
         $data = $facade->get('base/one');
         $this->assertEquals($this->data, $data);
 
-        $func = function () {
-            return $this->data;
-        };
+        $func = (fn() => $this->data);
         $data = $facade->get('base/two', $func);
         $this->assertEquals($this->data, $data);
     }
 
-    /**
-     * @covers ::has
-     *
-     * @return void
-     */
-    public function testHas()
+    public function testHas(): void
     {
         $facade = $this->facadeFactory();
 
@@ -128,8 +114,6 @@ class CachePoolFacadeTest extends AbstractTestCase
     }
 
     /**
-     * @covers ::set
-     * @covers ::save
      *
      * @return CachePoolFacade To use the same cache pool facade for the next test.
      */
@@ -150,13 +134,10 @@ class CachePoolFacadeTest extends AbstractTestCase
     }
 
     /**
-     * @depends testSet
-     * @covers  ::delete
-     *
      * @param  CachePoolFacade $facade The cache pool facade from the previous test.
-     * @return void
      */
-    public function testDelete(CachePoolFacade $facade)
+    #[\PHPUnit\Framework\Attributes\Depends('testSet')]
+    public function testDelete(CachePoolFacade $facade): void
     {
         $keys = array_keys($this->multiData);
 
@@ -170,17 +151,15 @@ class CachePoolFacadeTest extends AbstractTestCase
     /**
      * Test a numeric expiration time for this cache item.
      *
-     * @covers ::save
      *
-     * @dataProvider provideTtlOnSave
      *
      * @param  DateTimeInterface $expected   The expected expiration time
      *     from {@see \Stash\Interfaces\ItemInterface::getExpiration()}.
      * @param  mixed             $itemTtl    The cache item's expiration time.
      * @param  DateTimeInterface $defaultTtl The facade default expiration time.
-     * @return void
      */
-    public function testTtlOnSave(DateTimeInterface $expected, $itemTtl, DateTimeInterface $defaultTtl)
+    #[\PHPUnit\Framework\Attributes\DataProvider('provideTtlOnSave')]
+    public function testTtlOnSave(DateTimeInterface $expected, $itemTtl, DateTimeInterface $defaultTtl): void
     {
         $stash  = static::getCachePool();
         $facade = $this->facadeFactory([
@@ -199,9 +178,8 @@ class CachePoolFacadeTest extends AbstractTestCase
      * Provide data for testing the expiration time per cache item.
      *
      * @used-by self::testTtlOnSave()
-     * @return  array
      */
-    public function provideTtlOnSave()
+    public static function provideTtlOnSave(): array
     {
         $data = [];
         $date = new DateTimeImmutable('now');
@@ -231,13 +209,7 @@ class CachePoolFacadeTest extends AbstractTestCase
         return $data;
     }
 
-    /**
-     * @covers ::defaultTtl
-     * @covers ::setDefaultTtl
-     *
-     * @return void
-     */
-    public function testSetDefaultTtl()
+    public function testSetDefaultTtl(): void
     {
         $time = new \DateInterval('P1D');
         $facade = $this->facadeFactory([

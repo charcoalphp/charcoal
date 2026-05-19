@@ -17,6 +17,9 @@ use Charcoal\Tests\Source\ExpressionTestTrait;
 /**
  * Test {@see Filter} and {@see FilterInterface}.
  */
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Source\Filter::class, '__clone')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Source\Filter::class, 'count')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Source\Filter::class, 'createFilter')]
 class FilterTest extends AbstractTestCase
 {
     use CoreContainerIntegrationTrait;
@@ -29,7 +32,7 @@ class FilterTest extends AbstractTestCase
      *
      * @return Order
      */
-    final protected function createExpression()
+    final protected function createExpression(): \Charcoal\Source\Filter
     {
         return new Filter();
     }
@@ -39,10 +42,8 @@ class FilterTest extends AbstractTestCase
      *
      * Assertions:
      * 1. Implements {@see FilterInterface}
-     *
-     * @return void
      */
-    public function testFilterConstruct()
+    public function testFilterConstruct(): void
     {
         $obj = $this->createExpression();
 
@@ -53,11 +54,8 @@ class FilterTest extends AbstractTestCase
     /**
      * Test deep cloning of expression trees.
      *
-     * @covers \Charcoal\Source\Filter::__clone
-     *
-     * @return void
      */
-    public function testDeepCloning()
+    public function testDeepCloning(): void
     {
         $obj = $this->createExpression();
         $obj->addFilters([
@@ -88,9 +86,8 @@ class FilterTest extends AbstractTestCase
      * Provide data for value parsing.
      *
      * @used-by ExpressionTestTrait::testDefaultValues()
-     * @return  array
      */
-    final public function provideDefaultValues()
+    final public function provideDefaultValues(): array
     {
         return [
             'property'    => [ 'property',     null ],
@@ -116,10 +113,8 @@ class FilterTest extends AbstractTestCase
      *
      * Note: {@see Filter::value()} uses {@see \Charcoal\Source\AbstractExpression::parseValue()}.
      * Tests for `parseValue()` are performed in {@see ExpressionTestTrait::testParseValue()}.
-     *
-     * @return void
      */
-    public function testValue()
+    public function testValue(): void
     {
         $obj = $this->createExpression();
 
@@ -137,10 +132,8 @@ class FilterTest extends AbstractTestCase
 
     /**
      * Test deprecated "val" property.
-     *
-     * @return void
      */
-    public function testDeprecatedValExpression()
+    public function testDeprecatedValExpression(): void
     {
         $obj = $this->createExpression();
 
@@ -152,21 +145,14 @@ class FilterTest extends AbstractTestCase
      * Test "val" property deprecation notice.
      *
      * @used-by self::testDeprecatedValErrorInPhp7()
-     *
-     * @return void
      */
-    public function delegatedTestDeprecatedValError()
+    public function delegatedTestDeprecatedValError(): void
     {
         $this->createExpression()->setData([ 'val' => 'qux' ]);
     }
 
-    /**
-     *
-     *
-     * @requires PHP >= 7.0
-     * @return   void
-     */
-    public function testDeprecatedValErrorInPhp7()
+    #[\PHPUnit\Framework\Attributes\RequiresPhp('>= 7.0')]
+    public function testDeprecatedValErrorInPhp7(): void
     {
         $this->expectDeprecation();
         $this->delegatedTestDeprecatedValError();
@@ -181,10 +167,8 @@ class FilterTest extends AbstractTestCase
      * 2. Mutated state
      * 3. Chainable method
      * 4. Accepts mixed case
-     *
-     * @return void
      */
-    public function testOperator()
+    public function testOperator(): void
     {
         $obj = $this->createExpression();
 
@@ -206,10 +190,8 @@ class FilterTest extends AbstractTestCase
 
     /**
      * Test "operator" property with unsupported operator.
-     *
-     * @return void
      */
-    public function testOperatorWithUnsupportedOperator()
+    public function testOperatorWithUnsupportedOperator(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->createExpression()->setOperator('foo');
@@ -217,10 +199,8 @@ class FilterTest extends AbstractTestCase
 
     /**
      * Test "operator" property with invalid value.
-     *
-     * @return void
      */
-    public function testOperatorWithInvalidValue()
+    public function testOperatorWithInvalidValue(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->createExpression()->setOperator(42);
@@ -235,10 +215,8 @@ class FilterTest extends AbstractTestCase
      * 3. Chainable method
      * 4. Accepts mixed case
      * 5. Accepts NULL
-     *
-     * @return void
      */
-    public function testFunc()
+    public function testFunc(): void
     {
         $obj = $this->createExpression();
 
@@ -264,10 +242,8 @@ class FilterTest extends AbstractTestCase
 
     /**
      * Test "func" property with unsupported func.
-     *
-     * @return void
      */
-    public function testFuncWithUnsupportedFunction()
+    public function testFuncWithUnsupportedFunction(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->createExpression()->setFunc('xyzzy');
@@ -275,10 +251,8 @@ class FilterTest extends AbstractTestCase
 
     /**
      * Test "func" property with invalid value.
-     *
-     * @return void
      */
-    public function testFuncWithInvalidValue()
+    public function testFuncWithInvalidValue(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->createExpression()->setFunc(33);
@@ -292,10 +266,8 @@ class FilterTest extends AbstractTestCase
      * 2. Mutated state
      * 3. Chainable method
      * 4. Accepts mixed case
-     *
-     * @return void
      */
-    public function testConjunction()
+    public function testConjunction(): void
     {
         $obj = $this->createExpression();
 
@@ -317,10 +289,8 @@ class FilterTest extends AbstractTestCase
 
     /**
      * Test "conjunction" property with unsupported conjunction.
-     *
-     * @return void
      */
-    public function testConjunctionWithUnsupportedConjunction()
+    public function testConjunctionWithUnsupportedConjunction(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->createExpression()->setConjunction('qux');
@@ -328,10 +298,8 @@ class FilterTest extends AbstractTestCase
 
     /**
      * Test "conjunction" property with invalid value.
-     *
-     * @return void
      */
-    public function testConjunctionWithInvalidValue()
+    public function testConjunctionWithInvalidValue(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->createExpression()->setConjunction(11);
@@ -339,10 +307,8 @@ class FilterTest extends AbstractTestCase
 
     /**
      * Test deprecated "operand" property.
-     *
-     * @return void
      */
-    public function testDeprecatedOperandExpression()
+    public function testDeprecatedOperandExpression(): void
     {
         $obj = $this->createExpression();
 
@@ -354,21 +320,14 @@ class FilterTest extends AbstractTestCase
      * Test "operand" property deprecation notice.
      *
      * @used-by self::testDeprecatedOperandErrorInPhp7()
-     *
-     * @return void
      */
-    public function delegatedTestDeprecatedOperandError()
+    public function delegatedTestDeprecatedOperandError(): void
     {
         $this->createExpression()->setData([ 'operand' => 'XOR' ]);
     }
 
-    /**
-     *
-     *
-     * @requires PHP >= 7.0
-     * @return   void
-     */
-    public function testDeprecatedOperandErrorInPhp7()
+    #[\PHPUnit\Framework\Attributes\RequiresPhp('>= 7.0')]
+    public function testDeprecatedOperandErrorInPhp7(): void
     {
         $this->expectDeprecation();
         $this->delegatedTestDeprecatedOperandError();
@@ -381,11 +340,8 @@ class FilterTest extends AbstractTestCase
      * 1. Default state
      * 2. Mutated state
      *
-     * @covers \Charcoal\Source\Filter::count
-     *
-     * @return void
      */
-    public function testCount()
+    public function testCount(): void
     {
         $obj = $this->createExpression();
 
@@ -405,11 +361,8 @@ class FilterTest extends AbstractTestCase
      * 2. Instance of {@see Filter}
      *
      * @see    \Charcoal\Tests\Source\AbstractSourceTest::testCreateFilter
-     * @covers \Charcoal\Source\Filter::createFilter
-     *
-     * @return void
      */
-    public function testCreateFilter()
+    public function testCreateFilter(): void
     {
         $obj = $this->createExpression();
 
@@ -426,10 +379,8 @@ class FilterTest extends AbstractTestCase
      * 1. Mutate all options
      * 2. Partially mutated state
      * 3. Mutation via aliases
-     *
-     * @return void
      */
-    public function testData()
+    public function testData(): void
     {
         /** 1. Mutate all options */
         $exp1 = $this->createExpression();
@@ -514,10 +465,8 @@ class FilterTest extends AbstractTestCase
      * Test deprecated "string" property.
      *
      * @see OrderTest::testDeprecatedStringExpression()
-     *
-     * @return void
      */
-    public function testDeprecatedStringExpression()
+    public function testDeprecatedStringExpression(): void
     {
         $obj = $this->createExpression();
 
@@ -531,19 +480,14 @@ class FilterTest extends AbstractTestCase
      * @see OrderTest::testDeprecatedStringError()
      *
      * @used-by self::testDeprecatedStringErrorInPhp7()
-     *
-     * @return void
      */
-    public function delegatedTestDeprecatedStringError()
+    public function delegatedTestDeprecatedStringError(): void
     {
         $this->createExpression()->setData([ 'string' => '1 = 1' ]);
     }
 
-    /**
-     * @requires PHP >= 7.0
-     * @return   void
-     */
-    public function testDeprecatedStringErrorInPhp7()
+    #[\PHPUnit\Framework\Attributes\RequiresPhp('>= 7.0')]
+    public function testDeprecatedStringErrorInPhp7(): void
     {
         $this->expectDeprecation();
         $this->delegatedTestDeprecatedStringError();

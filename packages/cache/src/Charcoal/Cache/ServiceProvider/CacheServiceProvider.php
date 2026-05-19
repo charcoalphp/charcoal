@@ -44,9 +44,8 @@ class CacheServiceProvider implements ServiceProviderInterface
 {
     /**
      * @param  Container $container A container instance.
-     * @return void
      */
-    public function register(Container $container)
+    public function register(Container $container): void
     {
         $this->registerDrivers($container);
         $this->registerService($container);
@@ -55,14 +54,11 @@ class CacheServiceProvider implements ServiceProviderInterface
 
     /**
      * @param  Container $container A container instance.
-     * @return void
      */
-    public function registerDrivers(Container $container)
+    public function registerDrivers(Container $container): void
     {
         /**
          * The collection of cache drivers that are supported by this system.
-         *
-         * @var array An associative array structured as `"Driver Name" => "Class Name"`.
          */
         $container['cache/available-drivers'] = DriverList::getAvailableDrivers();
 
@@ -72,14 +68,14 @@ class CacheServiceProvider implements ServiceProviderInterface
          * @param  Container $container The service container.
          * @return Container Service container of cache drivers from Stash.
          */
-        $container['cache/drivers'] = function (Container $container) {
+        $container['cache/drivers'] = function (Container $container): \Pimple\Container {
             $drivers = new Container();
 
             /**
              * @param  Container $container The service container.
              * @return \Stash\Driver\Apc|null
              */
-            $drivers['apc'] = function () use ($container) {
+            $drivers['apc'] = function () use ($container): ?object {
                 $drivers = $container['cache/available-drivers'];
                 if (!isset($drivers['Apc'])) {
                     // Apc is not available on system
@@ -99,7 +95,7 @@ class CacheServiceProvider implements ServiceProviderInterface
              * @param  Container $container A container instance.
              * @return \Stash\Driver\Sqlite|null
              */
-            $drivers['db'] = function () use ($container) {
+            $drivers['db'] = function () use ($container): ?object {
                 $drivers = $container['cache/available-drivers'];
                 if (!isset($drivers['SQLite'])) {
                     // SQLite is not available on system
@@ -113,7 +109,7 @@ class CacheServiceProvider implements ServiceProviderInterface
              * @param  Container $container A container instance.
              * @return \Stash\Driver\FileSystem
              */
-            $drivers['file'] = function () use ($container) {
+            $drivers['file'] = function () use ($container): object {
                 $drivers = $container['cache/available-drivers'];
                 return new $drivers['FileSystem']();
             };
@@ -122,7 +118,7 @@ class CacheServiceProvider implements ServiceProviderInterface
              * @param  Container $container A container instance.
              * @return \Stash\Driver\Memcache|null
              */
-            $drivers['memcache'] = function () use ($container) {
+            $drivers['memcache'] = function () use ($container): ?object {
                 $drivers = $container['cache/available-drivers'];
                 if (!isset($drivers['Memcache'])) {
                     // Memcache is not available on system
@@ -152,7 +148,7 @@ class CacheServiceProvider implements ServiceProviderInterface
              * @param  Container $container A container instance.
              * @return \Stash\Driver\Ephemeral
              */
-            $drivers['memory'] = function () use ($container) {
+            $drivers['memory'] = function () use ($container): object {
                 $drivers = $container['cache/available-drivers'];
                 return new $drivers['Ephemeral']();
             };
@@ -161,7 +157,7 @@ class CacheServiceProvider implements ServiceProviderInterface
              * @param  Container $container A container instance.
              * @return \Stash\Driver\BlackHole
              */
-            $drivers['noop'] = function () use ($container) {
+            $drivers['noop'] = function () use ($container): object {
                 $drivers = $container['cache/available-drivers'];
                 return new $drivers['BlackHole']();
             };
@@ -170,7 +166,7 @@ class CacheServiceProvider implements ServiceProviderInterface
              * @param  Container $container A container instance.
              * @return \Stash\Driver\Redis|null
              */
-            $drivers['redis'] = function () use ($container) {
+            $drivers['redis'] = function () use ($container): ?object {
                 $drivers = $container['cache/available-drivers'];
                 if (!isset($drivers['Redis'])) {
                     // Redis is not available on system
@@ -186,9 +182,8 @@ class CacheServiceProvider implements ServiceProviderInterface
 
     /**
      * @param  Container $container A container instance.
-     * @return void
      */
-    public function registerService(Container $container)
+    public function registerService(Container $container): void
     {
         /**
          * The cache configset.
@@ -196,9 +191,9 @@ class CacheServiceProvider implements ServiceProviderInterface
          * @param  Container $container The service container.
          * @return CacheConfig
          */
-        $container['cache/config'] = function (Container $container) {
-            $appConfig   = isset($container['config']) ? $container['config'] : [];
-            $cacheConfig = isset($appConfig['cache']) ? $appConfig['cache'] : null;
+        $container['cache/config'] = function (Container $container): \Charcoal\Cache\CacheConfig {
+            $appConfig   = $container['config'] ?? [];
+            $cacheConfig = $appConfig['cache'] ?? null;
             return new CacheConfig($cacheConfig);
         };
 
@@ -208,7 +203,7 @@ class CacheServiceProvider implements ServiceProviderInterface
          * @param  Container $container A Pimple DI container.
          * @return CacheBuilder
          */
-        $container['cache/builder'] = function (Container $container) {
+        $container['cache/builder'] = function (Container $container): \Charcoal\Cache\CacheBuilder {
             $cacheConfig = $container['cache/config'];
 
             return new CacheBuilder([
@@ -224,9 +219,7 @@ class CacheServiceProvider implements ServiceProviderInterface
          * @param  Container $container The service container.
          * @return DriverInterface Primary cache driver from Stash.
          */
-        $container['cache/driver'] = $container->factory(function (Container $container) {
-            return $container['cache']->getDriver();
-        });
+        $container['cache/driver'] = $container->factory(fn(Container $container) => $container['cache']->getDriver());
 
         /**
          * The main cache item pool.
@@ -238,11 +231,7 @@ class CacheServiceProvider implements ServiceProviderInterface
             $cacheBuilder = $container['cache/builder'];
             $cacheConfig  = $container['cache/config'];
 
-            if ($cacheConfig['active'] === true) {
-                $cacheDrivers = $cacheConfig['types'];
-            } else {
-                $cacheDrivers = $cacheConfig['default_types'];
-            }
+            $cacheDrivers = $cacheConfig['active'] === true ? $cacheConfig['types'] : $cacheConfig['default_types'];
 
             return $cacheBuilder($cacheDrivers);
         };
@@ -253,7 +242,7 @@ class CacheServiceProvider implements ServiceProviderInterface
          * @param  Container $container The service container.
          * @return CachePoolFacade The facade for the main cache pool.
          */
-        $container['cache/facade'] = function (Container $container) {
+        $container['cache/facade'] = function (Container $container): \Charcoal\Cache\Facade\CachePoolFacade {
             $args = [
                 'cache' => $container['cache'],
             ];
@@ -269,9 +258,8 @@ class CacheServiceProvider implements ServiceProviderInterface
 
     /**
      * @param  Container $container A container instance.
-     * @return void
      */
-    private function registerMiddleware(Container $container)
+    private function registerMiddleware(Container $container): void
     {
         /**
          * The cache middleware configset.
@@ -280,7 +268,7 @@ class CacheServiceProvider implements ServiceProviderInterface
          * @return array
          */
         $container['cache/middleware/config'] = function (Container $container) {
-            $appConfig = isset($container['config']) ? $container['config'] : [];
+            $appConfig = $container['config'] ?? [];
 
             if (isset($appConfig['middlewares']['charcoal/cache/middleware/cache'])) {
                 $wareConfig = $appConfig['middlewares']['charcoal/cache/middleware/cache'];
@@ -299,8 +287,6 @@ class CacheServiceProvider implements ServiceProviderInterface
          * @param  Container $container A container instance.
          * @return CacheMiddleware
          */
-        $container['middlewares/charcoal/cache/middleware/cache'] = function (Container $container) {
-            return new CacheMiddleware($container['cache/middleware/config']);
-        };
+        $container['middlewares/charcoal/cache/middleware/cache'] = (fn(Container $container): \Charcoal\Cache\Middleware\CacheMiddleware => new CacheMiddleware($container['cache/middleware/config']));
     }
 }

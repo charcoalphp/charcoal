@@ -57,9 +57,8 @@ trait AuthenticatableTrait
      * Set the token value for the login token.
      *
      * @param  string $value The token value.
-     * @return void
      */
-    public function setAuthLoginToken($value)
+    public function setAuthLoginToken($value): void
     {
         $key = $this->getAuthLoginTokenKey();
         $this[$key] = $value;

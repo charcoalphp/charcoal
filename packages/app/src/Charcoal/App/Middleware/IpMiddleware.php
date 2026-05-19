@@ -61,8 +61,6 @@ class IpMiddleware
 
     /**
      * Default middleware options.
-     *
-     * @return array
      */
     public function defaults(): array
     {
@@ -97,7 +95,7 @@ class IpMiddleware
     public function __invoke(RequestInterface $request, ResponseInterface $response, callable $next)
     {
         $ip = $this->getClientIp();
-        if (!$ip) {
+        if ($ip === '' || $ip === '0') {
             if ((!empty($this->disallowed) || !empty($this->allowed)) && $this->failOnInvalidIp === true) {
                 if ($this->errorMessage) {
                     $response->getBody()->write($this->errorMessage);
@@ -109,7 +107,7 @@ class IpMiddleware
         }
 
         // Check disallowed.
-        if ($this->isIpDisallowed($ip) === true) {
+        if ($this->isIpDisallowed($ip)) {
             if ($this->disallowedRedirect !== '') {
                 return $response
                     ->withStatus(302)
@@ -150,9 +148,8 @@ class IpMiddleware
      * Note: this method only performs an exact string match on IP address, no IP masking / range features.
      *
      * @param string $ip The IP address to check against the disallowed.
-     * @return boolean
      */
-    private function isIpDisallowed($ip): bool
+    private function isIpDisallowed(string $ip): bool
     {
         if (empty($this->disallowed)) {
             return false;
@@ -168,9 +165,8 @@ class IpMiddleware
      * Note; This method only performs an exact string match on IP address, no IP masking / range features.
      *
      * @param string $ip The IP address to check against the allowed.
-     * @return boolean
      */
-    private function isIpAllowed($ip): bool
+    private function isIpAllowed(string $ip): bool
     {
         if (empty($this->allowed)) {
             return true;
@@ -181,18 +177,17 @@ class IpMiddleware
     /**
      * @param string   $ip    The IP to check.
      * @param string[] $cidrs The array of IPs/CIDRs to validate against. "/32" netmask is assumed.
-     * @return boolean
      */
     private function isIpInRange(string $ip, array $cidrs): bool
     {
         foreach ($cidrs as $range) {
-            if (strpos($range, '/') === false) {
+            if (!str_contains($range, '/')) {
                 $range .= '/32';
             }
             // $range is in IP/CIDR format eg 127.0.0.1/24
-            list($subnet, $netmask) = explode('/', $range, 2);
-            $netmask = ~(pow(2, (32 - (int)$netmask)) - 1);
-            if ((ip2long($ip) & $netmask) == (ip2long($subnet) & $netmask)) {
+            [$subnet, $netmask] = explode('/', $range, 2);
+            $netmask = ~(2 ** (32 - (int)$netmask) - 1);
+            if ((ip2long($ip) & $netmask) === (ip2long($subnet) & $netmask)) {
                 return true;
             }
         }
@@ -200,9 +195,6 @@ class IpMiddleware
         return false;
     }
 
-    /**
-     * @return string
-     */
     private function getClientIp(): string
     {
         if (isset($_SERVER['REMOTE_ADDR'])) {

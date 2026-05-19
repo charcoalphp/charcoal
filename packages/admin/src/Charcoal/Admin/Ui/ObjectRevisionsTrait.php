@@ -27,7 +27,7 @@ trait ObjectRevisionsTrait
         $lastRevision = $obj->latestRevision();
         $propLabel    = '<span title="%1$s">%2$s</code>';
 
-        $callback = function (ObjectRevisionInterface &$revision) use ($lastRevision, $obj, $propLabel) {
+        $callback = function (ObjectRevisionInterface &$revision) use ($lastRevision, $obj, $propLabel): void {
             $dataDiff = $revision['dataDiff'];
             $revision->revTsDisplay = $revision['revTs']->format('Y-m-d H:i:s');
             $revision->revUserDisplay = $revision->p('revUser')->displayVal($revision['revUser']);

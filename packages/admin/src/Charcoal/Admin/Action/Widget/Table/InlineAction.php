@@ -68,7 +68,7 @@ class InlineAction extends AdminAction
         $reqMessage  = $this->translator()->translation(
             '{{ parameter }} required, must be a {{ expectedType }}, received {{ actualType }}'
         );
-        $typeMessage = $this->translator()->translation(
+        $this->translator()->translation(
             '{{ parameter }} must be a {{ expectedType }}, received {{ actualType }}'
         );
 
@@ -76,7 +76,7 @@ class InlineAction extends AdminAction
         $objId   = $request->getParam('obj_id');
 
         if (!$objType) {
-            $actualType = is_object($objType) ? get_class($objType) : gettype($objType);
+            $actualType = get_debug_type($objType);
             $this->addFeedback('error', strtr($reqMessage, [
                 '{{ parameter }}'    => '"obj_type"',
                 '{{ expectedType }}' => 'string',
@@ -88,7 +88,7 @@ class InlineAction extends AdminAction
         }
 
         if (!$objId) {
-            $actualType = is_object($objId) ? get_class($objId) : gettype($objId);
+            $actualType = get_debug_type($objId);
             $this->addFeedback('error', strtr($reqMessage, [
                 '{{ parameter }}'    => '"obj_id"',
                 '{{ expectedType }}' => 'string or numeric',
@@ -149,10 +149,8 @@ class InlineAction extends AdminAction
         }
     }
 
-    /**
-     * @return array
-     */
-    public function results()
+    #[\Override]
+    public function results(): array
     {
         return [
             'success'    => $this->success(),
@@ -165,6 +163,7 @@ class InlineAction extends AdminAction
      * @param Container $container DI container.
      * @return void
      */
+    #[\Override]
     protected function setDependencies(Container $container)
     {
         parent::setDependencies($container);
@@ -180,7 +179,7 @@ class InlineAction extends AdminAction
      */
     protected function widgetFactory()
     {
-        if (!isset($this->widgetFactory)) {
+        if ($this->widgetFactory === null) {
             throw new RuntimeException('Widget Factory is not defined');
         }
 
@@ -191,9 +190,8 @@ class InlineAction extends AdminAction
      * Set the widget factory.
      *
      * @param  FactoryInterface $factory The factory to create widgets.
-     * @return void
      */
-    private function setWidgetFactory(FactoryInterface $factory)
+    private function setWidgetFactory(FactoryInterface $factory): void
     {
         $this->widgetFactory = $factory;
     }

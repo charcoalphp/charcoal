@@ -19,17 +19,13 @@ class IpProperty extends AbstractProperty
 
     /**
      * The storage mode can be either "string" (default) or "int".
-     *
-     * @var string $storageMode
      */
-    private $storageMode = self::DEFAULT_STORAGE_MODE;
+    private string $storageMode = self::DEFAULT_STORAGE_MODE;
 
     /**
      * Retrieve the property type.
-     *
-     * @return string
      */
-    public function type()
+    public function type(): string
     {
         return 'ip';
     }
@@ -42,11 +38,12 @@ class IpProperty extends AbstractProperty
      * @see    AbstractProperty::setMultiple()
      * @return IdProperty Chainable
      */
-    public function setMultiple($flag)
+    #[\Override]
+    public function setMultiple($flag): static
     {
-        $flag = !!$flag;
+        $flag = (bool) $flag;
 
-        if ($flag === true) {
+        if ($flag) {
             throw new InvalidArgumentException(
                 'The ID property does not support multiple values.'
             );
@@ -59,9 +56,9 @@ class IpProperty extends AbstractProperty
      * Multiple is always FALSE for ID property.
      *
      * @see    AbstractProperty::getMultiple()
-     * @return boolean
      */
-    public function getMultiple()
+    #[\Override]
+    public function getMultiple(): bool
     {
         return false;
     }
@@ -74,11 +71,12 @@ class IpProperty extends AbstractProperty
      * @see    AbstractProperty::setL10n()
      * @return IdProperty Chainable
      */
-    public function setL10n($flag)
+    #[\Override]
+    public function setL10n($flag): static
     {
-        $flag = !!$flag;
+        $flag = (bool) $flag;
 
-        if ($flag === true) {
+        if ($flag) {
             throw new InvalidArgumentException(
                 'The ID property is not translatable.'
             );
@@ -91,9 +89,9 @@ class IpProperty extends AbstractProperty
      * L10N is always FALSE for IP property.
      *
      * @see    AbstractProperty::getL10n()
-     * @return boolean
      */
-    public function getL10n()
+    #[\Override]
+    public function getL10n(): bool
     {
         return false;
     }
@@ -101,9 +99,8 @@ class IpProperty extends AbstractProperty
     /**
      * @param string $mode Either "string" or "int".
      * @throws InvalidArgumentException If the storage mode is invalid.
-     * @return self
      */
-    public function setStorageMode($mode)
+    public function setStorageMode($mode): static
     {
         $validModes = [
             self::STORAGE_MODE_STRING,
@@ -118,10 +115,7 @@ class IpProperty extends AbstractProperty
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getStorageMode()
+    public function getStorageMode(): string
     {
         return $this->storageMode;
     }
@@ -132,7 +126,7 @@ class IpProperty extends AbstractProperty
      * @param mixed $val The value to convert (if necessary) to integer.
      * @return integer
      */
-    public function intVal($val)
+    public function intVal($val): int|false
     {
         if (is_numeric($val)) {
             return (int)$val;
@@ -145,9 +139,8 @@ class IpProperty extends AbstractProperty
      * Get the IP value as an string (IPv4 dotted format).
      *
      * @param mixed $val The value to convert to string.
-     * @return string
      */
-    public function stringVal($val)
+    public function stringVal($val): string
     {
         if (is_string($val)) {
             return $val;
@@ -163,7 +156,8 @@ class IpProperty extends AbstractProperty
      * @see StorablePropertyTrait::storageVal()
      * @return string
      */
-    public function storageVal($val)
+    #[\Override]
+    public function storageVal($val): int|false|string
     {
         $mode = $this->getStorageMode();
 
@@ -180,7 +174,7 @@ class IpProperty extends AbstractProperty
      * @param mixed $val The value to convert to string.
      * @return string
      */
-    public function hostname($val)
+    public function hostname($val): string|false
     {
         $val = $this->stringVal($val);
         return gethostbyaddr($val);
@@ -188,9 +182,8 @@ class IpProperty extends AbstractProperty
 
     /**
      * @see StorableProperyTrait:sqlType()
-     * @return string
      */
-    public function sqlType()
+    public function sqlType(): string
     {
         $mode = $this->getStorageMode();
 
@@ -203,9 +196,8 @@ class IpProperty extends AbstractProperty
 
     /**
      * @see StorableProperyTrait::sqlPdoType()
-     * @return integer
      */
-    public function sqlPdoType()
+    public function sqlPdoType(): int
     {
         $mode = $this->getStorageMode();
 

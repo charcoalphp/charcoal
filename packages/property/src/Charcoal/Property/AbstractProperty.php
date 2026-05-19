@@ -43,7 +43,8 @@ abstract class AbstractProperty extends AbstractEntity implements
     DescribablePropertyInterface,
     LoggerAwareInterface,
     StorablePropertyInterface,
-    ValidatableInterface
+    ValidatableInterface,
+    \Stringable
 {
     use LoggerAwareTrait;
     use DescribableTrait;
@@ -62,10 +63,7 @@ abstract class AbstractProperty extends AbstractEntity implements
     public const DEFAULT_VALIDATABLE = true;
     public const DEFAULT_ACTIVE = true;
 
-    /**
-     * @var string
-     */
-    private $ident = '';
+    private string $ident = '';
 
     /**
      * @var mixed
@@ -77,15 +75,9 @@ abstract class AbstractProperty extends AbstractEntity implements
      */
     private $label;
 
-    /**
-     * @var boolean
-     */
-    private $l10n = self::DEFAULT_L10N;
+    private bool $l10n = self::DEFAULT_L10N;
 
-    /**
-     * @var boolean
-     */
-    private $multiple = self::DEFAULT_MULTIPLE;
+    private bool $multiple = self::DEFAULT_MULTIPLE;
 
     /**
      * Array of options for multiple properties
@@ -96,45 +88,34 @@ abstract class AbstractProperty extends AbstractEntity implements
      */
     private $multipleOptions;
 
-    /**
-     * @var boolean
-     */
-    private $hidden = self::DEFAULT_HIDDEN;
+    private bool $hidden = self::DEFAULT_HIDDEN;
 
     /**
      * If true, this property *must* have a value
-     * @var boolean
      */
-    private $required = self::DEFAULT_REQUIRED;
+    private bool $required = self::DEFAULT_REQUIRED;
 
     /**
      * Unique properties should not share he same value across 2 objects
-     * @var boolean
      */
-    private $unique = self::DEFAULT_UNIQUE;
+    private bool $unique = self::DEFAULT_UNIQUE;
 
-    /**
-     * @var boolean $allowNull
-     */
-    private $allowNull = self::DEFAULT_ALLOW_NULL;
+    private bool $allowNull = self::DEFAULT_ALLOW_NULL;
 
     /**
      * Only the storable properties should be saved in storage.
-     * @var boolean
      */
-    private $storable = self::DEFAULT_STORABLE;
+    private bool $storable = self::DEFAULT_STORABLE;
 
     /**
      * Whether to validate the property.
-     * @var boolean
      */
-    private $validatable = self::DEFAULT_VALIDATABLE;
+    private bool $validatable = self::DEFAULT_VALIDATABLE;
 
     /**
      * Inactive properties should be hidden everywhere / unused
-     * @var boolean
      */
-    private $active = self::DEFAULT_ACTIVE;
+    private bool $active = self::DEFAULT_ACTIVE;
 
     /**
      * @var Translation|null
@@ -169,7 +150,7 @@ abstract class AbstractProperty extends AbstractEntity implements
      *
      * @param array $data Optional. Class Dependencies.
      */
-    public function __construct(array $data = null)
+    public function __construct(?array $data = null)
     {
         $this->setLogger($data['logger']);
         $this->setPdo($data['database']);
@@ -190,21 +171,16 @@ abstract class AbstractProperty extends AbstractEntity implements
         }
     }
 
-    /**
-     * @return string
-     * @deprecated
-     */
-    public function __toString()
+    #[\Deprecated]
+    public function __toString(): string
     {
         $val = $this->val();
         if (is_string($val)) {
             return $val;
+        } elseif (is_object($val)) {
+            return (string)$val;
         } else {
-            if (is_object($val)) {
-                return (string)$val;
-            } else {
-                return '';
-            }
+            return '';
         }
     }
 
@@ -294,11 +270,11 @@ abstract class AbstractProperty extends AbstractEntity implements
     /**
      * Set the property's value.
      *
-     * @deprecated
      *
      * @param  mixed $val The property (raw) value.
      * @return self
      */
+    #[\Deprecated]
     final public function setVal($val)
     {
         $this->val = $this->parseVal($val);
@@ -309,10 +285,10 @@ abstract class AbstractProperty extends AbstractEntity implements
     /**
      * Clear the property's value.
      *
-     * @deprecated
      *
      * @return self
      */
+    #[\Deprecated]
     final public function clearVal()
     {
         $this->val = null;
@@ -323,10 +299,10 @@ abstract class AbstractProperty extends AbstractEntity implements
     /**
      * Retrieve the property's value.
      *
-     * @deprecated
      *
      * @return mixed
      */
+    #[\Deprecated]
     final public function val()
     {
         return $this->val;
@@ -358,7 +334,6 @@ abstract class AbstractProperty extends AbstractEntity implements
 
         if ($this['multiple']) {
             $val = $this->parseValAsMultiple($val);
-
             if (empty($val)) {
                 if ($this['allowNull'] === false) {
                     throw new InvalidArgumentException(sprintf(
@@ -369,18 +344,14 @@ abstract class AbstractProperty extends AbstractEntity implements
 
                 return $val;
             }
-
-            $val = array_map([ $this, 'parseOne' ], $val);
-        } else {
-            if ($this['l10n']) {
-                $val = $this->parseValAsL10n($val);
-
-                if ($val) {
-                    $val->sanitize([ $this, 'parseOne' ]);
-                }
-            } else {
-                $val = $this->parseOne($val);
+            $val = array_map($this->parseOne(...), $val);
+        } elseif ($this['l10n']) {
+            $val = $this->parseValAsL10n($val);
+            if ($val instanceof \Charcoal\Translator\TranslatableInterface) {
+                $val->sanitize($this->parseOne(...));
             }
+        } else {
+            $val = $this->parseOne($val);
         }
 
         return $val;
@@ -425,10 +396,8 @@ abstract class AbstractProperty extends AbstractEntity implements
         }
 
         /** Parse multiple values / ensure they are of array type. */
-        if ($this['multiple']) {
-            if (is_array($propertyValue)) {
-                $propertyValue = implode($this->multipleSeparator(), $propertyValue);
-            }
+        if ($this['multiple'] && is_array($propertyValue)) {
+            $propertyValue = implode($this->multipleSeparator(), $propertyValue);
         }
 
         if (!is_scalar($propertyValue)) {
@@ -437,8 +406,7 @@ abstract class AbstractProperty extends AbstractEntity implements
             } elseif (($options['pretty'] ?? false)) {
                 $flags = JSON_PRETTY_PRINT;
             }
-            $propertyValue = json_encode($propertyValue, ($flags ?? 0));
-            return $propertyValue;
+            return json_encode($propertyValue, ($flags ?? 0));
         }
 
         return (string)$propertyValue;
@@ -468,10 +436,8 @@ abstract class AbstractProperty extends AbstractEntity implements
         }
 
         /** Parse multiple values / ensure they are of array type. */
-        if ($this['multiple']) {
-            if (!is_array($propertyValue)) {
-                $propertyValue = $this->parseValAsMultiple($propertyValue);
-            }
+        if ($this['multiple'] && !is_array($propertyValue)) {
+            $propertyValue = $this->parseValAsMultiple($propertyValue);
         }
 
         if (is_array($propertyValue)) {
@@ -515,7 +481,7 @@ abstract class AbstractProperty extends AbstractEntity implements
      */
     public function setL10n($l10n)
     {
-        $this->l10n = !!$l10n;
+        $this->l10n = (bool) $l10n;
 
         return $this;
     }
@@ -545,7 +511,7 @@ abstract class AbstractProperty extends AbstractEntity implements
      */
     public function setHidden($hidden)
     {
-        $this->hidden = !!$hidden;
+        $this->hidden = (bool) $hidden;
 
         return $this;
     }
@@ -577,7 +543,7 @@ abstract class AbstractProperty extends AbstractEntity implements
             }
         }
 
-        $this->multiple = !!$multiple;
+        $this->multiple = $multiple;
 
         return $this;
     }
@@ -703,7 +669,7 @@ abstract class AbstractProperty extends AbstractEntity implements
      */
     public function setAllowNull($allow)
     {
-        $this->allowNull = !!$allow;
+        $this->allowNull = (bool) $allow;
 
         return $this;
     }
@@ -727,7 +693,7 @@ abstract class AbstractProperty extends AbstractEntity implements
      */
     public function setRequired($required)
     {
-        $this->required = !!$required;
+        $this->required = (bool) $required;
 
         return $this;
     }
@@ -751,7 +717,7 @@ abstract class AbstractProperty extends AbstractEntity implements
      */
     public function setUnique($unique)
     {
-        $this->unique = !!$unique;
+        $this->unique = (bool) $unique;
 
         return $this;
     }
@@ -770,7 +736,7 @@ abstract class AbstractProperty extends AbstractEntity implements
      */
     public function setActive($active)
     {
-        $this->active = !!$active;
+        $this->active = (bool) $active;
 
         return $this;
     }
@@ -799,7 +765,7 @@ abstract class AbstractProperty extends AbstractEntity implements
      */
     public function setValidatable($validatable)
     {
-        $this->validatable = !!$validatable;
+        $this->validatable = (bool) $validatable;
 
         return $this;
     }
@@ -818,7 +784,7 @@ abstract class AbstractProperty extends AbstractEntity implements
      */
     public function setStorable($storable)
     {
-        $this->storable = !!$storable;
+        $this->storable = (bool) $storable;
 
         return $this;
     }
@@ -908,10 +874,6 @@ abstract class AbstractProperty extends AbstractEntity implements
      */
     public function validateUnique()
     {
-        if (!$this['unique']) {
-            return true;
-        }
-
         /** @todo Check in the model's storage if the value already exists. */
         return true;
     }
@@ -1028,14 +990,10 @@ abstract class AbstractProperty extends AbstractEntity implements
      * @param  mixed $lang The language to return the value in.
      * @return string|null
      */
-    protected function l10nVal($val, $lang = null)
+    protected function l10nVal(array $val, $lang = null)
     {
         if (!is_string($lang)) {
-            if (is_array($lang) && isset($lang['lang'])) {
-                $lang = $lang['lang'];
-            } else {
-                $lang = $this->translator()->getLocale();
-            }
+            $lang = is_array($lang) && isset($lang['lang']) ? $lang['lang'] : $this->translator()->getLocale();
         }
 
         return ($val[$lang] ?? null);
@@ -1048,7 +1006,7 @@ abstract class AbstractProperty extends AbstractEntity implements
      * @see DescribableTrait::createMetadata()
      * @return PropertyMetadata
      */
-    protected function createMetadata(array $data = null)
+    protected function createMetadata(?array $data = null)
     {
         $class = $this->metadataClass();
         return new $class($data);
@@ -1073,16 +1031,13 @@ abstract class AbstractProperty extends AbstractEntity implements
      */
     protected function createValidator()
     {
-        $validator = new PropertyValidator($this);
-
-        return $validator;
+        return new PropertyValidator($this);
     }
 
     /**
      * @param PDO $pdo The database connection (PDO) instance.
-     * @return void
      */
-    private function setPdo(PDO $pdo)
+    private function setPdo(PDO $pdo): void
     {
         $this->pdo = $pdo;
     }

@@ -11,11 +11,11 @@ use Charcoal\Image\Imagick\ImagickImage as Image;
 
 class ImagickImageTest extends \PHPUnit\Framework\TestCase
 {
-    private $factory;
+    private ?\Charcoal\Image\ImageFactory $factory = null;
 
-    public function imageFactory()
+    public function imageFactory(): \Charcoal\Image\ImageFactory
     {
-        if ($this->factory === null) {
+        if (!$this->factory instanceof \Charcoal\Image\ImageFactory) {
             $this->factory = new ImageFactory();
         }
 
@@ -27,13 +27,13 @@ class ImagickImageTest extends \PHPUnit\Framework\TestCase
         return $this->imageFactory()->create('imagick');
     }
 
-    public function testFromFactory()
+    public function testFromFactory(): void
     {
         $obj = $this->createImage();
         $this->assertInstanceOf(Image::class, $obj);
     }
 
-    public function testCreate()
+    public function testCreate(): void
     {
         $obj = $this->createImage();
         $ret = $obj->create(1, 1);
@@ -43,21 +43,21 @@ class ImagickImageTest extends \PHPUnit\Framework\TestCase
         $obj->create('foo', 'bar');
     }
 
-    public function testCreateMinWidth()
+    public function testCreateMinWidth(): void
     {
         $obj = $this->createImage();
         $this->expectException('\InvalidArgumentException');
         $obj->create(400, 0);
     }
 
-    public function testCreateMinHeigth()
+    public function testCreateMinHeigth(): void
     {
         $obj = $this->createImage();
         $this->expectException('\InvalidArgumentException');
         $obj->create(0, 400);
     }
 
-    public function testOpen()
+    public function testOpen(): void
     {
         $obj = $this->createImage();
         $ret = $obj->open(EXAMPLES_DIR.'/test01.jpg');
@@ -67,14 +67,14 @@ class ImagickImageTest extends \PHPUnit\Framework\TestCase
         $obj->open(false);
     }
 
-    public function testOpenInvalidFile()
+    public function testOpenInvalidFile(): void
     {
         $obj = $this->createImage();
         $this->expectException('\Exception');
         $obj->open('foo/bar/baz.png');
     }
 
-    public function testOpenWithoutParamUseSource()
+    public function testOpenWithoutParamUseSource(): void
     {
         $obj1 = $this->createImage();
         $obj1->open(EXAMPLES_DIR.'/test01.jpg');
@@ -90,25 +90,25 @@ class ImagickImageTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($id1, $id2);
     }
 
-    public function testWidth()
+    public function testWidth(): void
     {
         $obj = $this->createImage();
-        $ret = $obj->open(EXAMPLES_DIR.'/test01.jpg');
+        $obj->open(EXAMPLES_DIR.'/test01.jpg');
 
         $width = $obj->width();
         $this->assertEquals(3456, $width);
     }
 
-    public function testHeight()
+    public function testHeight(): void
     {
         $obj = $this->createImage();
-        $ret = $obj->open(EXAMPLES_DIR.'/test01.jpg');
+        $obj->open(EXAMPLES_DIR.'/test01.jpg');
 
         $height = $obj->height();
         $this->assertEquals(2304, $height);
     }
 
-    public function testImagickChannel()
+    public function testImagickChannel(): void
     {
         $obj = $this->createImage();
         $ret = $obj->imagickChannel('red');
@@ -118,7 +118,7 @@ class ImagickImageTest extends \PHPUnit\Framework\TestCase
         $obj->imagickChannel('foobar');
     }
 
-    public function testImagickGravity()
+    public function testImagickGravity(): void
     {
         $obj = $this->createImage();
         $ret = $obj->imagickGravity('ne');
@@ -128,10 +128,8 @@ class ImagickImageTest extends \PHPUnit\Framework\TestCase
         $obj->imagickGravity('foobar');
     }
 
-    /**
-     * @dataProvider effectProvider
-     */
-    public function testEffects($effect, $filename)
+    #[\PHPUnit\Framework\Attributes\DataProvider('effectProvider')]
+    public function testEffects(array $effect, string $filename): void
     {
         $obj = $this->createImage();
         $obj->open(EXAMPLES_DIR.'/test02.png');
@@ -142,10 +140,8 @@ class ImagickImageTest extends \PHPUnit\Framework\TestCase
         $this->assertTrue(file_exists(OUTPUT_DIR.'/'.$filename));
     }
 
-    /**
-     * @dataProvider invalidEffectProvider
-     */
-    public function testInvalidEffect($effect)
+    #[\PHPUnit\Framework\Attributes\DataProvider('invalidEffectProvider')]
+    public function testInvalidEffect(array $effect): void
     {
         $obj = $this->createImage();
         $obj->open(EXAMPLES_DIR.'/test02.png');
@@ -154,7 +150,7 @@ class ImagickImageTest extends \PHPUnit\Framework\TestCase
         $obj->processsEffect($effect);
     }
 
-    public function effectProvider()
+    public static function effectProvider(): array
     {
         return [
             # Blur
@@ -220,7 +216,7 @@ class ImagickImageTest extends \PHPUnit\Framework\TestCase
         ];
     }
 
-    public function invalidEffectProvider()
+    public static function invalidEffectProvider(): array
     {
         return [
             # Blur

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Charcoal\Admin\User;
 
 // From 'charcoal-user'
@@ -10,16 +12,12 @@ use Charcoal\User\AuthTokenMetadata as BaseAuthTokenMetadata;
  */
 class AuthTokenMetadata extends BaseAuthTokenMetadata
 {
-    /**
-     * @return array
-     */
-    public function defaults()
+    #[\Override]
+    public function defaults(): array
     {
         $parentDefaults = parent::defaults();
-
-        $defaults = array_replace_recursive($parentDefaults, [
+        return array_replace_recursive($parentDefaults, [
             'cookie_name' => 'charcoal_admin_login',
         ]);
-        return $defaults;
     }
 }

@@ -26,9 +26,6 @@ class StorablePropertyTraitTest extends AbstractTestCase
      */
     private $obj;
 
-    /**
-     * @return void
-     */
     protected function setUp(): void
     {
         $container = $this->getContainer();
@@ -73,10 +70,7 @@ class StorablePropertyTraitTest extends AbstractTestCase
         return $prop;
     }
 
-    /**
-     * @return void
-     */
-    public function testStorageVal()
+    public function testStorageVal(): void
     {
         $container = $this->getContainer();
 
@@ -97,10 +91,8 @@ class StorablePropertyTraitTest extends AbstractTestCase
 
     /**
      * Test Unilingual Property Fields
-     *
-     * @return void
      */
-    public function testFields()
+    public function testFields(): void
     {
         $fields = $this->obj->fields('Cooking');
 
@@ -118,10 +110,7 @@ class StorablePropertyTraitTest extends AbstractTestCase
         $this->assertEquals('[]', $field->val());
     }
 
-    /**
-     * @return void
-     */
-    public function testUpdateFields()
+    public function testUpdateFields(): void
     {
         $fields = $this->callMethod($this->obj, 'updatedFields', [ [], 'Cooking' ]);
         $this->assertEquals(['Cooking'], array_map(fn($field) => $field->val(), array_values($fields)));
@@ -129,12 +118,10 @@ class StorablePropertyTraitTest extends AbstractTestCase
 
     /**
      * Test Multilingual Property Fields
-     *
-     * @return void
      */
-    public function testMultilingualFields()
+    public function testMultilingualFields(): void
     {
-        $container = $this->getContainer();
+        $this->getContainer();
 
         $obj = $this->createMultilingualProperty();
 
@@ -163,10 +150,8 @@ class StorablePropertyTraitTest extends AbstractTestCase
 
     /**
      * Test Unilingual Property Field Names
-     *
-     * @return void
      */
-    public function testFieldNames()
+    public function testFieldNames(): void
     {
         $names = $this->obj->fieldNames();
 
@@ -181,10 +166,8 @@ class StorablePropertyTraitTest extends AbstractTestCase
 
     /**
      * Test Multilingual Property Field Names
-     *
-     * @return void
      */
-    public function testMultilingualFieldNames()
+    public function testMultilingualFieldNames(): void
     {
         $obj = $this->createMultilingualProperty();
 

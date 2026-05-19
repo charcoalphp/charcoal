@@ -25,9 +25,6 @@ class SecondaryMenuWidgetTest extends AbstractTestCase
      */
     public $obj;
 
-    /**
-     * @return void
-     */
     public function setUp(): void
     {
         $container = new Container();
@@ -44,10 +41,7 @@ class SecondaryMenuWidgetTest extends AbstractTestCase
         ]);
     }
 
-    /**
-     * @return void
-     */
-    public function testConstructor()
+    public function testConstructor(): void
     {
         $this->assertInstanceOf(SecondaryMenuWidget::class, $this->obj);
     }

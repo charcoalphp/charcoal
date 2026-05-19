@@ -22,9 +22,9 @@ class OrderTree extends BaseOrder implements
      *
      * @param  array<string,mixed> $data The expression data;
      *     as an associative array.
-     * @return self
      */
-    public function setData(array $data)
+    #[\Override]
+    public function setData(array $data): static
     {
         parent::setData($data);
 
@@ -40,7 +40,8 @@ class OrderTree extends BaseOrder implements
      *
      * @return array<string,mixed> An associative array.
      */
-    public function defaultData()
+    #[\Override]
+    public function defaultData(): array
     {
         return [
             'property'  => null,
@@ -60,7 +61,8 @@ class OrderTree extends BaseOrder implements
      *
      * @return array<string,mixed> An associative array.
      */
-    public function data()
+    #[\Override]
+    public function data(): array
     {
         return [
             'property'  => $this->property(),
@@ -80,9 +82,8 @@ class OrderTree extends BaseOrder implements
      *
      * @see    OrderCollectionTrait::createOrder()
      * @param  array $data Optional expression data.
-     * @return self
      */
-    protected function createOrder(array $data = null)
+    protected function createOrder(?array $data = null): static
     {
         $order = new static();
         if ($data !== null) {
@@ -104,8 +105,6 @@ class OrderTree extends BaseOrder implements
 
     /**
      * Clone this expression and its subtree of expressions.
-     *
-     * @return void
      */
     public function __clone()
     {

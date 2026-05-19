@@ -231,7 +231,7 @@ trait EventManagerAwareTrait
      * @param EventInterface $event Charcoal\Cms\EventInterface.
      * @return array The needed event properties.
      */
-    protected function eventFormatShort(EventInterface $event)
+    protected function eventFormatShort(EventInterface $event): array
     {
         return [
             'title'         => (string)$event->title(),
@@ -251,7 +251,7 @@ trait EventManagerAwareTrait
      * @param EventInterface $event Charcoal\Cms\EventInterface.
      * @return array The needed event properties.
      */
-    protected function eventFormatNav(EventInterface $event)
+    protected function eventFormatNav(EventInterface $event): array
     {
         return [
             'startDate'     => $this->getEventStartDateFormat($event),
@@ -269,7 +269,7 @@ trait EventManagerAwareTrait
      * @param EventInterface $event The current event.
      * @return array The needed properties.
      */
-    protected function eventFormatFull(EventInterface $event)
+    protected function eventFormatFull(EventInterface $event): array
     {
         $contentBlocks = $event->getAttachments('content-blocks');
         $gallery = $event->getAttachments('image-gallery');
@@ -288,11 +288,11 @@ trait EventManagerAwareTrait
             'date'             => $this->getEventDateFormat($event),
             'time'             => $this->getEventTimeFormat($event),
             'contentBlocks'    => $contentBlocks,
-            'hasContentBlocks' => !!(count($contentBlocks)),
+            'hasContentBlocks' => (bool) count($contentBlocks),
             'documents'        => $documents,
-            'hasDocuments'     => !!(count($documents)),
+            'hasDocuments'     => (bool) count($documents),
             'gallery'          => $gallery,
-            'hasGallery'       => !!(count($gallery)),
+            'hasGallery'       => (bool) count($gallery),
             'url'              => $event->url(),
             'metaTitle'        => (string)$event->metaTitle(),
             'locationName'     => (string)$event->locationName(),
@@ -305,7 +305,7 @@ trait EventManagerAwareTrait
      * @param CategoryInterface $category The category item.
      * @return array The formatted category item.
      */
-    protected function eventFormatCategory(CategoryInterface $category)
+    protected function eventFormatCategory(CategoryInterface $category): array
     {
         return [
             'id'   => $category->id(),
@@ -326,7 +326,7 @@ trait EventManagerAwareTrait
         if (!$this->eventManager instanceof EventManager) {
             throw new ContainerException(sprintf(
                 'Missing dependency for %s: %s',
-                get_called_class(),
+                static::class,
                 EventManager::class
             ));
         }

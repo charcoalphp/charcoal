@@ -30,18 +30,14 @@ class ResetPasswordTemplate extends AdminTemplate
      * Determine if the password token is valid.
      *
      * @param  RequestInterface $request The PSR-7 HTTP request.
-     * @return boolean
      */
-    public function init(RequestInterface $request)
+    #[\Override]
+    public function init(RequestInterface $request): bool
     {
         // Undocumented Slim 3 feature: The route attributes are stored in routeInfo[2].
         $routeInfo = $request->getAttribute('routeInfo');
 
-        if (isset($routeInfo[2]['token'])) {
-            $this->lostPasswordToken = $routeInfo[2]['token'];
-        } else {
-            $this->lostPasswordToken = $request->getParam('token');
-        }
+        $this->lostPasswordToken = $routeInfo[2]['token'] ?? $request->getParam('token');
 
         if ($this->lostPasswordToken && $this->validateToken($this->lostPasswordToken)) {
             return true;
@@ -60,10 +56,8 @@ class ResetPasswordTemplate extends AdminTemplate
         return $this->lostPasswordToken;
     }
 
-    /**
-     * @return boolean
-     */
-    public function authRequired()
+    #[\Override]
+    public function authRequired(): bool
     {
         return false;
     }
@@ -86,9 +80,8 @@ class ResetPasswordTemplate extends AdminTemplate
      *
      * @see    \Charcoal\Admin\Action\Account\ResetPasswordAction::validateToken()
      * @param  string $token The token to validate.
-     * @return boolean
      */
-    private function validateToken($token)
+    private function validateToken($token): bool
     {
         $obj = $this->modelFactory()->create(LostPasswordToken::class);
         $sql = strtr('SELECT * FROM `%table` WHERE `token` = :token AND `expiry` > NOW()', [
@@ -98,7 +91,7 @@ class ResetPasswordTemplate extends AdminTemplate
             'token' => $token
         ]);
 
-        return !!$obj->token();
+        return (bool) $obj->token();
     }
 
     /**
@@ -106,6 +99,7 @@ class ResetPasswordTemplate extends AdminTemplate
      *
      * @return \Charcoal\Translator\Translation|string|null
      */
+    #[\Override]
     public function title()
     {
         if ($this->title === null) {
@@ -120,7 +114,8 @@ class ResetPasswordTemplate extends AdminTemplate
      *
      * @return string[]
      */
-    public function recaptchaParameters()
+    #[\Override]
+    public function recaptchaParameters(): array
     {
         $params = parent::recaptchaParameters();
         $params['tabindex'] = 5;
@@ -136,13 +131,11 @@ class ResetPasswordTemplate extends AdminTemplate
 
     // Templating
     // =========================================================================
-
     /**
      * Determine if main & secondary menu should appear as mobile in a desktop resolution.
-     *
-     * @return boolean
      */
-    public function isFullscreenTemplate()
+    #[\Override]
+    public function isFullscreenTemplate(): bool
     {
         return true;
     }

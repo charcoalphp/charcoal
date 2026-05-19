@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Charcoal\Admin\Action\System\StaticWebsite;
 
 // From PSR-7
@@ -76,9 +78,7 @@ class ActivateAction extends AdminAction
         }
     }
 
-    /**
-     * @return array
-     */
+    #[\Override]
     public function results(): array
     {
         return [
@@ -91,6 +91,7 @@ class ActivateAction extends AdminAction
      * @param Container $container Pimple DI Container.
      * @return void
      */
+    #[\Override]
     protected function setDependencies(Container $container)
     {
         parent::setDependencies($container);

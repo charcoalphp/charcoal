@@ -61,10 +61,8 @@ abstract class AbstractWebTemplate extends AbstractTemplate
 
     /**
      * Additional SEO metadata.
-     *
-     * @var array
      */
-    private $seoMetadata = [];
+    private \ArrayIterator|array $seoMetadata = [];
 
     /**
      * Inject dependencies from a DI Container.
@@ -72,6 +70,7 @@ abstract class AbstractWebTemplate extends AbstractTemplate
      * @param  Container $container A dependencies container instance.
      * @return void
      */
+    #[\Override]
     protected function setDependencies(Container $container)
     {
         parent::setDependencies($container);
@@ -343,7 +342,7 @@ abstract class AbstractWebTemplate extends AbstractTemplate
             $img = (string)$this->fallbackOpengraphImage();
         }
 
-        if ($img) {
+        if ($img !== '' && $img !== '0') {
             $uri = $this->baseUrl();
             return $uri->withPath(strval($img));
         }
@@ -384,7 +383,7 @@ abstract class AbstractWebTemplate extends AbstractTemplate
             return (count($this->seoMetadata) > 0);
         }
 
-        return !empty($this->seoMetadata);
+        return $this->seoMetadata !== [];
     }
 
     /**
@@ -443,12 +442,10 @@ abstract class AbstractWebTemplate extends AbstractTemplate
         if ($key) {
             if (isset($this->appConfig[$key])) {
                 return $this->appConfig[$key];
+            } elseif (!is_string($default) && is_callable($default)) {
+                return $default();
             } else {
-                if (!is_string($default) && is_callable($default)) {
-                    return $default();
-                } else {
-                    return $default;
-                }
+                return $default;
             }
         }
 
@@ -477,10 +474,10 @@ abstract class AbstractWebTemplate extends AbstractTemplate
      */
     public function baseUrl()
     {
-        if (!isset($this->baseUrl)) {
+        if ($this->baseUrl === null) {
             throw new RuntimeException(sprintf(
                 'The base URI is not defined for [%s]',
-                get_class($this)
+                static::class
             ));
         }
 
@@ -500,13 +497,11 @@ abstract class AbstractWebTemplate extends AbstractTemplate
             $uri = $this->baseUrl()->withPath('');
         } else {
             $parts = parse_url($uri);
-            if (!isset($parts['scheme'])) {
-                if (!in_array($uri[0], [ '/', '#', '?' ])) {
-                    $path  = isset($parts['path']) ? $parts['path'] : '';
-                    $query = isset($parts['query']) ? $parts['query'] : '';
-                    $hash  = isset($parts['fragment']) ? $parts['fragment'] : '';
-                    $uri   = $this->baseUrl()->withPath($path)->withQuery($query)->withFragment($hash);
-                }
+            if (!isset($parts['scheme']) && !in_array($uri[0], [ '/', '#', '?' ])) {
+                $path  = $parts['path'] ?? '';
+                $query = $parts['query'] ?? '';
+                $hash  = $parts['fragment'] ?? '';
+                $uri   = $this->baseUrl()->withPath($path)->withQuery($query)->withFragment($hash);
             }
         }
 

@@ -47,13 +47,13 @@ class AbstractManager
         if (!isset($data['factory'])) {
             throw new Exception(sprintf(
                 'Model Factory must be defined in the %s constructor.',
-                get_called_class()
+                static::class
             ));
         }
         if (!isset($data['loader'])) {
             throw new Exception(sprintf(
                 'CollectionLoader must be defined in the %s constructor.',
-                get_called_class()
+                static::class
             ));
         }
         if (!isset($data['cms/config'])) {
@@ -73,9 +73,8 @@ class AbstractManager
      * Set an object model factory.
      *
      * @param FactoryInterface $factory The model factory, to create objects.
-     * @return self
      */
-    protected function setModelFactory(FactoryInterface $factory)
+    protected function setModelFactory(FactoryInterface $factory): static
     {
         $this->modelFactory = $factory;
 
@@ -90,9 +89,9 @@ class AbstractManager
      */
     public function modelFactory()
     {
-        if (!isset($this->modelFactory)) {
+        if ($this->modelFactory === null) {
             throw new RuntimeException(
-                sprintf('Model Factory is not defined for "%s"', get_class($this))
+                sprintf('Model Factory is not defined for "%s"', static::class)
             );
         }
 
@@ -103,9 +102,8 @@ class AbstractManager
      * Set a model collection loader.
      *
      * @param CollectionLoader $loader The collection loader.
-     * @return self
      */
-    protected function setCollectionLoader(CollectionLoader $loader)
+    protected function setCollectionLoader(CollectionLoader $loader): static
     {
         $this->collectionLoader = $loader;
 
@@ -120,9 +118,9 @@ class AbstractManager
      */
     public function collectionLoader()
     {
-        if (!isset($this->collectionLoader)) {
+        if ($this->collectionLoader === null) {
             throw new RuntimeException(
-                sprintf('Collection Loader is not defined for "%s"', get_class($this))
+                sprintf('Collection Loader is not defined for "%s"', static::class)
             );
         }
 
@@ -131,9 +129,8 @@ class AbstractManager
 
     /**
      * @param mixed $adminConfig The admin configuration.
-     * @return self
      */
-    public function setAdminConfig($adminConfig)
+    public function setAdminConfig($adminConfig): static
     {
         $this->adminConfig = $adminConfig;
 

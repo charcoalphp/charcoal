@@ -48,24 +48,18 @@ class SelectizeInput extends SelectInput
 
     /**
      * Store the factory instance for the current class.
-     *
-     * @var FactoryInterface
      */
-    private $modelFactory;
+    private ?\Charcoal\Factory\FactoryInterface $modelFactory = null;
 
     /**
      * Store the collection loader for the current class.
-     *
-     * @var CollectionLoader
      */
-    private $collectionLoader;
+    private ?\Charcoal\Loader\CollectionLoader $collectionLoader = null;
 
     /**
      * Should the object be loaded in deferred mode.
-     *
-     * @var boolean
      */
-    private $deferred;
+    private ?bool $deferred = null;
 
     /**
      * Whether to show a button to allow update items.
@@ -104,10 +98,8 @@ class SelectizeInput extends SelectInput
      * The form data to use while creating objects through Selectize.
      *
      * Must be an array
-     *
-     * @var array|null
      */
-    private $formData;
+    private ?array $formData = null;
 
     /**
      * Label for the create item dialog.
@@ -130,20 +122,14 @@ class SelectizeInput extends SelectInput
      */
     protected $isChoiceObjMapFinalized = false;
 
-    /**
-     * @var array
-     */
-    private $selectizeTemplates;
+    private object|array|null $selectizeTemplates = null;
 
     /**
      * @var SelectizeRenderer
      */
     private $selectizeRenderer;
 
-    /**
-     * @var array
-     */
-    private $disabledFields = [];
+    private array $disabledFields = [];
 
     /**
      * @var string $remoteSource
@@ -162,10 +148,8 @@ class SelectizeInput extends SelectInput
 
     /**
      * Check used to parse multi Optgroup map against the obj properties.
-     *
-     * @var boolean
      */
-    private $isOptgroupObjMapFinalized = false;
+    private bool $isOptgroupObjMapFinalized = false;
 
     /**
      * This function takes an array and fill the model object with its value.
@@ -179,9 +163,9 @@ class SelectizeInput extends SelectInput
      * on the metadata object, because the method `set_foobar()` does not exist.
      *
      * @param array $data The input data.
-     * @return self
      */
-    public function setData(array $data)
+    #[\Override]
+    public function setData(array $data): static
     {
         // Push selectize options back at the end of the data container.
         if (isset($data['selectizeOptions'])) {
@@ -199,14 +183,13 @@ class SelectizeInput extends SelectInput
      * Retrieve the object model factory.
      *
      * @throws RuntimeException If the model factory was not previously set.
-     * @return FactoryInterface
      */
-    public function modelFactory()
+    public function modelFactory(): \Charcoal\Factory\FactoryInterface
     {
-        if (!isset($this->modelFactory)) {
+        if (!$this->modelFactory instanceof \Charcoal\Factory\FactoryInterface) {
             throw new RuntimeException(sprintf(
                 'Model Factory is not defined for "%s"',
-                get_class($this)
+                static::class
             ));
         }
 
@@ -217,9 +200,8 @@ class SelectizeInput extends SelectInput
      * Set a model collection loader.
      *
      * @param CollectionLoader $loader The collection loader.
-     * @return self
      */
-    private function setCollectionLoader(CollectionLoader $loader)
+    private function setCollectionLoader(CollectionLoader $loader): static
     {
         $this->collectionLoader = $loader;
 
@@ -230,14 +212,13 @@ class SelectizeInput extends SelectInput
      * Retrieve the model collection loader.
      *
      * @throws RuntimeException If the collection loader was not previously set.
-     * @return CollectionLoader
      */
-    protected function collectionLoader()
+    protected function collectionLoader(): \Charcoal\Loader\CollectionLoader
     {
-        if (!isset($this->collectionLoader)) {
+        if (!$this->collectionLoader instanceof \Charcoal\Loader\CollectionLoader) {
             throw new RuntimeException(sprintf(
                 'Collection Loader is not defined for "%s"',
-                get_class($this)
+                static::class
             ));
         }
 
@@ -246,10 +227,9 @@ class SelectizeInput extends SelectInput
 
     /**
      * Retrieve the default empty option structure.
-     *
-     * @return array
      */
-    protected function defaultEmptyChoice()
+    #[\Override]
+    protected function defaultEmptyChoice(): array
     {
         return [
             'value' => '',
@@ -265,6 +245,7 @@ class SelectizeInput extends SelectInput
      * @todo   [^1]: With PHP7 we can simply do `yield from $choices;`.
      * @return \Generator|array
      */
+    #[\Override]
     public function choices()
     {
         if ($this->p()['allowNull'] && !$this->p()['multiple']) {
@@ -273,11 +254,7 @@ class SelectizeInput extends SelectInput
         }
 
         // When deferred, we want to fetch choices for current values only.
-        if ($this->deferred()) {
-            $choices = $this->selectizeVal($this->propertyVal());
-        } else {
-            $choices = $this->selectizeVal($this->p()->choices());
-        }
+        $choices = $this->deferred() ? $this->selectizeVal($this->propertyVal()) : $this->selectizeVal($this->p()->choices());
 
         /* Pass along the Generator from the parent method [^1] */
         /* Filter the all options down to those *not* selected */
@@ -291,22 +268,20 @@ class SelectizeInput extends SelectInput
 
     /**
      * Create an input group to nest extra inputs alongside selectize
-     * @return boolean
      */
-    public function inputGroup()
+    public function inputGroup(): bool
     {
-        return !!($this->allowClipboardCopy() || $this->allowUpdate() || $this->allowCreate());
+        return $this->allowClipboardCopy() || $this->allowUpdate() || $this->allowCreate();
     }
 
     /**
      * Show/hide the "Copy to Clipboard" button.
      *
      * @param  boolean $flag Show (TRUE) or hide (FALSE) the copy button.
-     * @return self
      */
-    public function setAllowClipboardCopy($flag)
+    public function setAllowClipboardCopy($flag): static
     {
-        $this->allowClipboardCopy = !!$flag;
+        $this->allowClipboardCopy = (bool) $flag;
 
         return $this;
     }
@@ -323,11 +298,10 @@ class SelectizeInput extends SelectInput
 
     /**
      * @param boolean $allowUpdate Show (TRUE) or hide (FALSE) the update button.
-     * @return self
      */
-    public function setAllowUpdate($allowUpdate)
+    public function setAllowUpdate($allowUpdate): static
     {
-        $this->allowUpdate = !!$allowUpdate;
+        $this->allowUpdate = (bool) $allowUpdate;
 
         return $this;
     }
@@ -344,11 +318,10 @@ class SelectizeInput extends SelectInput
 
     /**
      * @param boolean $allowCreate Show (TRUE) or hide (FALSE) the create button.
-     * @return self
      */
-    public function setAllowCreate($allowCreate)
+    public function setAllowCreate($allowCreate): static
     {
-        $this->allowCreate = !!$allowCreate;
+        $this->allowCreate = (bool) $allowCreate;
 
         return $this;
     }
@@ -366,18 +339,17 @@ class SelectizeInput extends SelectInput
     /**
      * @return boolean
      */
-    public function deferred()
+    public function deferred(): ?bool
     {
         return $this->deferred;
     }
 
     /**
      * @param boolean $deferred Should the object be loaded in deferred mode.
-     * @return self
      */
-    public function setDeferred($deferred)
+    public function setDeferred($deferred): static
     {
-        $this->deferred = ($this->property() instanceof ObjectProperty || $this->remoteSource()) ? $deferred : false;
+        $this->deferred = ($this->property() instanceof ObjectProperty || $this->remoteSource()) && $deferred;
 
         return $this;
     }
@@ -392,9 +364,8 @@ class SelectizeInput extends SelectInput
 
     /**
      * @param string $formWidget The form widget for object creation and modification.
-     * @return self
      */
-    public function setFormWidget($formWidget)
+    public function setFormWidget($formWidget): static
     {
         $this->formWidget = $formWidget;
 
@@ -411,18 +382,14 @@ class SelectizeInput extends SelectInput
 
     /**
      * @param mixed $formIdent The form ident(s) for object creation and modification.
-     * @return self
      */
-    public function setFormIdent($formIdent)
+    public function setFormIdent($formIdent): static
     {
         $this->formIdent = $formIdent;
 
         return $this;
     }
 
-    /**
-     * @return array|null
-     */
     public function getFormData(): ?array
     {
         return $this->formData;
@@ -430,7 +397,6 @@ class SelectizeInput extends SelectInput
 
     /**
      * @param array|null $formData FormData for SelectizeInput.
-     * @return self
      */
     public function setFormData(?array $formData): self
     {
@@ -451,9 +417,8 @@ class SelectizeInput extends SelectInput
      * Set the title for the create item dialog.
      *
      * @param  string|string[] $title The dialog title.
-     * @return self
      */
-    public function setDialogTitleCreate($title)
+    public function setDialogTitleCreate($title): static
     {
         $this->dialogTitleCreate = $this->translator()->translation($title);
 
@@ -474,9 +439,8 @@ class SelectizeInput extends SelectInput
      * Set the title for the update item dialog.
      *
      * @param  string|string[] $title The dialog title.
-     * @return self
      */
-    public function setDialogTitleUpdate($title)
+    public function setDialogTitleUpdate($title): static
     {
         $this->dialogTitleUpdate = $this->translator()->translation($title);
 
@@ -501,7 +465,7 @@ class SelectizeInput extends SelectInput
      * @param  array $settings The selectize picker options.
      * @return self Chainable
      */
-    public function setSelectizeOptions(array $settings)
+    public function setSelectizeOptions(array $settings): static
     {
         $this->selectizeOptions = array_merge(
             $this->defaultSelectizeOptions(),
@@ -517,7 +481,7 @@ class SelectizeInput extends SelectInput
      * @param  array $settings The selectize picker options.
      * @return self Chainable
      */
-    public function mergeSelectizeOptions(array $settings)
+    public function mergeSelectizeOptions(array $settings): static
     {
         $this->selectizeOptions = array_merge(
             $this->selectizeOptions,
@@ -535,7 +499,7 @@ class SelectizeInput extends SelectInput
      * @throws InvalidArgumentException If the identifier is not a string.
      * @return self Chainable
      */
-    public function addSelectizeOption($key, $val)
+    public function addSelectizeOption($key, $val): static
     {
         if (!is_string($key)) {
             throw new InvalidArgumentException(
@@ -582,11 +546,7 @@ class SelectizeInput extends SelectInput
             $options = $this->parseSelectizeOptions($options);
         }
 
-        if ($this->deferred()) {
-            $placeholder = $this->translator()->trans('Search…');
-        } else {
-            $placeholder = $this->translator()->trans('Select…');
-        }
+        $placeholder = $this->deferred() ? $this->translator()->trans('Search…') : $this->translator()->trans('Select…');
 
         $options['placeholder'] = $placeholder;
         $prop = $this->property();
@@ -598,7 +558,7 @@ class SelectizeInput extends SelectInput
             $optgroupProp = $model->p($this->optgroupProperty());
 
             if ($optgroupProp instanceof ObjectProperty) {
-                $method = [ $this, 'mapObjToOptgroup' ];
+                $method = $this->mapObjToOptgroup(...);
 
                 $loader = $this->collectionLoader()->setModel($optgroupProp['objType']);
 
@@ -621,7 +581,7 @@ class SelectizeInput extends SelectInput
                 $optgroups = array_values($optgroupProp->choices());
 
                 // Make sure label is converted to string.
-                array_walk($optgroups, function (&$item) {
+                array_walk($optgroups, function (array &$item): void {
                     $item['label'] = (string)$item['label'];
                 });
 
@@ -632,14 +592,10 @@ class SelectizeInput extends SelectInput
         if ($prop instanceof SelectablePropertyInterface) {
             $choices = iterator_to_array($this->choices());
 
-            if (isset($options['options'])) {
-                $options['options'] = array_merge($options['options'], $choices);
-            } else {
-                $options['options'] = $choices;
-            }
+            $options['options'] = isset($options['options']) ? array_merge($options['options'], $choices) : $choices;
 
             // L10n properties is not supported through selectize items array,
-            $items = !$prop['l10n'] ? $this->propertyVal() : null;
+            $items = $prop['l10n'] ? null : $this->propertyVal();
 
             if ($items !== null && $prop instanceof AbstractProperty) {
                 $items = $this->property()->inputVal($items);
@@ -691,7 +647,7 @@ class SelectizeInput extends SelectInput
      * @param  array $settings The selectize picker options.
      * @return array Returns the parsed options.
      */
-    protected function parseSelectizeOptions(array $settings)
+    protected function parseSelectizeOptions(array $settings): array
     {
         // Translate labels
         $settings = $this->recursiveTranslation($settings);
@@ -701,9 +657,8 @@ class SelectizeInput extends SelectInput
 
     /**
      * @param array $array The array of possible translation.
-     * @return array
      */
-    private function recursiveTranslation(array $array)
+    private function recursiveTranslation(array $array): array
     {
         foreach ($array as &$item) {
             if (is_array($item)) {
@@ -719,12 +674,9 @@ class SelectizeInput extends SelectInput
         return $array;
     }
 
-    /**
-     * @return boolean
-     */
-    public function isObject()
+    public function isObject(): bool
     {
-        return !!($this->p() instanceof ObjectProperty);
+        return $this->p() instanceof ObjectProperty;
     }
 
     /**
@@ -734,13 +686,10 @@ class SelectizeInput extends SelectInput
      *
      * @return string
      */
+    #[\Override]
     public function inputName()
     {
-        if ($this->inputName) {
-            $name = $this->inputName;
-        } else {
-            $name = $this->propertyIdent();
-        }
+        $name = $this->inputName ?: $this->propertyIdent();
 
         if ($this->p()['l10n']) {
             $name .= '[' . $this->lang() . ']';
@@ -756,7 +705,7 @@ class SelectizeInput extends SelectInput
     /**
      * @return array
      */
-    public function selectizeTemplates()
+    public function selectizeTemplates(): object|array|null
     {
         return $this->selectizeTemplates;
     }
@@ -764,9 +713,8 @@ class SelectizeInput extends SelectInput
     /**
      * @param array|object|mixed $selectizeTemplates Selectize Templates array.
      * @throws \InvalidArgumentException If the supplied argument is not of type object.
-     * @return self
      */
-    public function setSelectizeTemplates($selectizeTemplates)
+    public function setSelectizeTemplates($selectizeTemplates): static
     {
         if (!is_object($selectizeTemplates) && !is_array($selectizeTemplates)) {
             $selectizeTemplates = [
@@ -795,9 +743,8 @@ class SelectizeInput extends SelectInput
      * @param  mixed $val     The value to parse into selectize choices.
      * @param  array $options Optional structure options.
      * @throws InvalidArgumentException If the choice structure is missing a value.
-     * @return array
      */
-    public function selectizeVal($val, array $options = [])
+    public function selectizeVal($val, array $options = []): array
     {
         /** @todo Find a use for this */
         unset($options);
@@ -822,10 +769,10 @@ class SelectizeInput extends SelectInput
         }
 
         $selectizeTemplates = $this->selectizeTemplates();
-        $itemTemplate = isset($selectizeTemplates['item']) ? $selectizeTemplates['item'] : null;
-        $optionTemplate = isset($selectizeTemplates['option']) ? $selectizeTemplates['option'] : null;
-        $selectizeController = isset($selectizeTemplates['controller']) ? $selectizeTemplates['controller'] : null;
-        $selectizeData = isset($selectizeTemplates['data']) ? $selectizeTemplates['data'] : [];
+        $itemTemplate = $selectizeTemplates['item'] ?? null;
+        $optionTemplate = $selectizeTemplates['option'] ?? null;
+        $selectizeController = $selectizeTemplates['controller'] ?? null;
+        $selectizeData = $selectizeTemplates['data'] ?? [];
 
         if ($prop instanceof ObjectProperty) {
             foreach ($val as &$v) {
@@ -945,6 +892,7 @@ class SelectizeInput extends SelectInput
      *
      * @return array Returns a data map to abide.
      */
+    #[\Override]
     public function choiceObjMap()
     {
         $map = parent::choiceObjMap();
@@ -963,7 +911,7 @@ class SelectizeInput extends SelectInput
                 }
 
                 foreach ($map as &$mapProp) {
-                    $props = explode(':', $mapProp);
+                    $props = explode(':', (string) $mapProp);
                     foreach ($props as $p) {
                         if (isset($objProperties[$p])) {
                             $mapProp = $p;
@@ -981,10 +929,9 @@ class SelectizeInput extends SelectInput
 
     /**
      * Retrieve the default object-to-choice data map.
-     *
-     * @return array
      */
-    public function defaultChoiceObjMap()
+    #[\Override]
+    public function defaultChoiceObjMap(): array
     {
         return [
             'value' => 'id',
@@ -995,9 +942,8 @@ class SelectizeInput extends SelectInput
 
     /**
      * @param  array|\ArrayAccess|ModelInterface $obj The object to map to a optgroup.
-     * @return array
      */
-    public function mapObjToOptgroup($obj)
+    public function mapObjToOptgroup($obj): array
     {
         $map = $this->optgroupObjMap();
 
@@ -1029,9 +975,8 @@ class SelectizeInput extends SelectInput
 
     /**
      * @param array|null $optgroupObjMap OptgroupObjMap for SelectizeInput.
-     * @return self
      */
-    public function setOptgroupObjMap($optgroupObjMap)
+    public function setOptgroupObjMap($optgroupObjMap): static
     {
         $map = $optgroupObjMap ?: $this->defaultOptgroupObjMap();
 
@@ -1057,7 +1002,7 @@ class SelectizeInput extends SelectInput
                     }
 
                     foreach ($map as &$mapProp) {
-                        $props = explode(':', $mapProp);
+                        $props = explode(':', (string) $mapProp);
                         foreach ($props as $p) {
                             if (isset($objProperties[$p])) {
                                 $mapProp = $p;
@@ -1077,10 +1022,8 @@ class SelectizeInput extends SelectInput
 
     /**
      * Retrieve the default object-to-optgroup data map.
-     *
-     * @return array
      */
-    public function defaultOptgroupObjMap()
+    public function defaultOptgroupObjMap(): array
     {
         return [
             'value' => 'id',
@@ -1091,10 +1034,9 @@ class SelectizeInput extends SelectInput
 
     /**
      * Retrieve the control's data options for JavaScript components.
-     *
-     * @return array
      */
-    public function controlDataForJs()
+    #[\Override]
+    public function controlDataForJs(): array
     {
         $prop = $this->property();
 
@@ -1130,29 +1072,23 @@ class SelectizeInput extends SelectInput
             'multiple_options'         => $this->property()['multipleOptions'],
         ];
 
-        if ($prop instanceof ObjectProperty) {
-            if ($prop['objType']) {
-                $data['pattern']  = $prop['pattern'];
-                $data['obj_type'] = $prop['objType'];
-            }
+        if ($prop instanceof ObjectProperty && $prop['objType']) {
+            $data['pattern']  = $prop['pattern'];
+            $data['obj_type'] = $prop['objType'];
         }
 
         return $data;
     }
 
-    /**
-     * @return array
-     */
-    public function disabledFields()
+    public function disabledFields(): array
     {
         return $this->disabledFields;
     }
 
     /**
      * @param array $disabledFields DisabledFields for SelectizeInput.
-     * @return self
      */
-    public function setDisabledFields(array $disabledFields)
+    public function setDisabledFields(array $disabledFields): static
     {
         $this->disabledFields = $disabledFields;
 
@@ -1169,9 +1105,8 @@ class SelectizeInput extends SelectInput
 
     /**
      * @param string $remoteSource RemoteSource for SelectizeInput.
-     * @return self
      */
-    public function setRemoteSource($remoteSource)
+    public function setRemoteSource($remoteSource): static
     {
         $this->remoteSource = $remoteSource;
 
@@ -1192,9 +1127,8 @@ class SelectizeInput extends SelectInput
 
     /**
      * @param string|null $optgroupProperty OptgroupProperty for SelectizeInput.
-     * @return self
      */
-    public function setOptgroupProperty($optgroupProperty)
+    public function setOptgroupProperty($optgroupProperty): static
     {
         $this->optgroupProperty = $optgroupProperty;
 
@@ -1207,6 +1141,7 @@ class SelectizeInput extends SelectInput
      * @param  Container $container A dependencies container instance.
      * @return void
      */
+    #[\Override]
     protected function setDependencies(Container $container)
     {
         parent::setDependencies($container);

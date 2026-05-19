@@ -23,15 +23,10 @@ class TemplateProperty extends AbstractProperty implements SelectablePropertyInt
 
     /**
      * The available selectable templates.
-     *
-     * @var array|null
      */
-    private $availableTemplates;
+    private ?array $availableTemplates = null;
 
-    /**
-     * @return string
-     */
-    public function type()
+    public function type(): string
     {
         return 'template';
     }
@@ -41,9 +36,8 @@ class TemplateProperty extends AbstractProperty implements SelectablePropertyInt
      *
      * @param  string       $choiceIdent The choice identifier (will be key / default ident).
      * @param  string|array $choice      A string representing the choice label or a structure.
-     * @return self
      */
-    public function addChoice($choiceIdent, $choice)
+    public function addChoice($choiceIdent, $choice): static
     {
         $choice = $this->parseTemplateChoice($choice, strval($choiceIdent));
 
@@ -79,7 +73,7 @@ class TemplateProperty extends AbstractProperty implements SelectablePropertyInt
                     $choice
                 ));
             }
-        } elseif (is_bool($choice) && $choice === true) {
+        } elseif (is_bool($choice) && $choice) {
             if (isset($this->availableTemplates[$choiceIdent])) {
                 return $this->availableTemplates[$choiceIdent];
             } else {
@@ -122,6 +116,7 @@ class TemplateProperty extends AbstractProperty implements SelectablePropertyInt
      * @param  array $options Optional display options.
      * @return string
      */
+    #[\Override]
     public function displayVal($val, array $options = [])
     {
         if ($val === null || $val === '') {
@@ -143,10 +138,8 @@ class TemplateProperty extends AbstractProperty implements SelectablePropertyInt
         $separator = $this->multipleSeparator();
 
         /** Parse multiple values / ensure they are of array type. */
-        if ($this['multiple']) {
-            if (!is_array($propertyValue)) {
-                $propertyValue = explode($separator, $propertyValue);
-            }
+        if ($this['multiple'] && !is_array($propertyValue)) {
+            $propertyValue = explode($separator, (string) $propertyValue);
         }
 
         if ($separator === ',') {
@@ -175,10 +168,9 @@ class TemplateProperty extends AbstractProperty implements SelectablePropertyInt
 
     /**
      * Retrieve the selected template's FQCN.
-     *
-     * @return string
      */
-    public function __toString()
+    #[\Override]
+    public function __toString(): string
     {
         $val = $this->val();
         if ($this->hasChoice($val)) {
@@ -186,7 +178,7 @@ class TemplateProperty extends AbstractProperty implements SelectablePropertyInt
             $keys   = [ 'controller', 'template', 'class' ];
             foreach ($keys as $key) {
                 if (isset($choice[$key])) {
-                    return $choice[$key];
+                    return (string) $choice[$key];
                 }
             }
         }
@@ -194,10 +186,7 @@ class TemplateProperty extends AbstractProperty implements SelectablePropertyInt
         return '';
     }
 
-    /**
-     * @return string
-     */
-    public function sqlExtra()
+    public function sqlExtra(): string
     {
         return '';
     }
@@ -207,7 +196,7 @@ class TemplateProperty extends AbstractProperty implements SelectablePropertyInt
      *
      * @return string The SQL type
      */
-    public function sqlType()
+    public function sqlType(): string
     {
         if ($this['multiple']) {
             return 'TEXT';
@@ -216,10 +205,7 @@ class TemplateProperty extends AbstractProperty implements SelectablePropertyInt
         return 'VARCHAR(255)';
     }
 
-    /**
-     * @return integer
-     */
-    public function sqlPdoType()
+    public function sqlPdoType(): int
     {
         return PDO::PARAM_STR;
     }
@@ -230,6 +216,7 @@ class TemplateProperty extends AbstractProperty implements SelectablePropertyInt
      * @param  Container $container A dependencies container instance.
      * @return void
      */
+    #[\Override]
     protected function setDependencies(Container $container)
     {
         parent::setDependencies($container);

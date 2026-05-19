@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Charcoal\Admin\Widget\FormGroup;
 
 // From 'charcoal-ui'
@@ -23,6 +25,7 @@ class GroupAttachmentFormGroup extends GroupAttachmentWidget implements
     /**
      * @return boolean
      */
+    #[\Override]
     public function active()
     {
         if (!$this->hasGroups()) {

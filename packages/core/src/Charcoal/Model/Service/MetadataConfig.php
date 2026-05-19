@@ -15,17 +15,13 @@ class MetadataConfig extends AbstractConfig
 {
     /**
      * Metadata search paths.
-     *
-     * @var array
      */
-    private $paths = [];
+    private array $paths = [];
 
     /**
      * The PSR-6 caching service or cache identifier(s) to use.
-     *
-     * @var mixed
      */
-    private $cache = true;
+    private array|bool|null|object $cache = true;
 
     /**
      * Retrieve the default values.
@@ -34,7 +30,8 @@ class MetadataConfig extends AbstractConfig
      * @return mixed An associative array if $key is NULL.
      *     If $key is specified, the value of that data key if it exists, NULL on failure.
      */
-    public function defaults($key = null)
+    #[\Override]
+    public function defaults($key = null): array|true|null
     {
         $data = [
             'paths' => [],
@@ -42,7 +39,7 @@ class MetadataConfig extends AbstractConfig
         ];
 
         if ($key) {
-            return isset($data[$key]) ? $data[$key] : null;
+            return $data[$key] ?? null;
         }
 
         return $data;
@@ -53,9 +50,9 @@ class MetadataConfig extends AbstractConfig
      *
      * @see    \Charcoal\Config\AbstractConfig::merge()
      * @param  array|Traversable $data The data to merge.
-     * @return self
      */
-    public function merge($data)
+    #[\Override]
+    public function merge($data): static
     {
         foreach ($data as $key => $val) {
             if ($key === 'paths') {
@@ -70,19 +67,15 @@ class MetadataConfig extends AbstractConfig
         return $this;
     }
 
-    /**
-     * @return array
-     */
-    public function paths()
+    public function paths(): array
     {
         return $this->paths;
     }
 
     /**
      * @param  string[] $paths One or more search paths.
-     * @return self
      */
-    public function setPaths(array $paths)
+    public function setPaths(array $paths): static
     {
         $this->paths = [];
         $this->addPaths($paths);
@@ -91,9 +84,8 @@ class MetadataConfig extends AbstractConfig
 
     /**
      * @param  string[] $paths One or more search paths.
-     * @return self
      */
-    public function addPaths(array $paths)
+    public function addPaths(array $paths): static
     {
         foreach ($paths as $path) {
             $this->addPath($path);
@@ -104,9 +96,8 @@ class MetadataConfig extends AbstractConfig
     /**
      * @param  string $path A directory path.
      * @throws InvalidArgumentException If the path is not a string.
-     * @return self
      */
-    public function addPath($path)
+    public function addPath($path): static
     {
         if (!is_string($path)) {
             throw new InvalidArgumentException(
@@ -117,12 +108,9 @@ class MetadataConfig extends AbstractConfig
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function cache()
+    public function cache(): bool|object|array
     {
-        return isset($this->cache) ? $this->cache : false;
+        return $this->cache ?? false;
     }
 
     /**
@@ -137,9 +125,8 @@ class MetadataConfig extends AbstractConfig
      *     - a {@see \Psr\Cache\CacheItemPoolInterface PSR-6 caching service},
      *       that instance will be used by the {@see \Charcoal\Model\Service\MetadataLoader}.
      * @throws InvalidArgumentException If the cache option is invalid.
-     * @return self
      */
-    public function setCache($cache)
+    public function setCache($cache): static
     {
         if ($cache === null) {
             $this->cache = $this->defaults('cache');

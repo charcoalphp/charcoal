@@ -79,7 +79,7 @@ trait ConfigurableTrait
      * @param  mixed $data Initial data. Either a filepath, a datamap, or a Config object.
      * @return ConfigInterface A new Config object.
      */
-    protected function createConfig($data = null)
+    protected function createConfig($data = null): \Charcoal\Config\GenericConfig
     {
         return new GenericConfig($data);
     }

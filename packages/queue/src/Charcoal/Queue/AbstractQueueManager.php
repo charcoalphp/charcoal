@@ -47,24 +47,18 @@ abstract class AbstractQueueManager implements
 
     /**
      * The queue processing rate (throttle), in items per second.
-     *
-     * @var integer
      */
-    private $rate = 0;
+    private int $rate = 0;
 
     /**
      * The batch limit.
-     *
-     * @var integer
      */
-    private $limit = 0;
+    private int $limit = 0;
 
     /**
      * The chunk size to batch the queue with.
-     *
-     * @var integer
      */
-    private $chunkSize = 0;
+    private int $chunkSize = 0;
 
     /**
      * The queue ID.
@@ -125,10 +119,7 @@ abstract class AbstractQueueManager implements
      */
     private $processedCallback;
 
-    /**
-     * @var FactoryInterface $queueItemFactory
-     */
-    private $queueItemFactory;
+    private \Charcoal\Factory\FactoryInterface $queueItemFactory;
 
     /**
      * Construct new queue manager.
@@ -302,7 +293,7 @@ abstract class AbstractQueueManager implements
      *                            after all queue items are processed.
      * @return boolean  Success / Failure
      */
-    public function processQueue(callable $callback = null)
+    public function processQueue(?callable $callback = null)
     {
         if (!is_callable($callback)) {
             $callback = $this->processedCallback;
@@ -337,14 +328,14 @@ abstract class AbstractQueueManager implements
                 $queueId,
                 $summary
             ), [
-                'manager' => get_called_class(),
+                'manager' => static::class,
             ]);
         } else {
             $this->logger->notice(sprintf(
                 'Completed processing of queues: %s',
                 $summary
             ), [
-                'manager' => get_called_class(),
+                'manager' => static::class,
             ]);
         }
 
@@ -353,9 +344,8 @@ abstract class AbstractQueueManager implements
 
     /**
      * @param mixed $queuedItems The items to process.
-     * @return void
      */
-    private function processItems($queuedItems)
+    private function processItems($queuedItems): void
     {
         /** @var QueueItemInterface $q */
         foreach ($queuedItems as $q) {
@@ -390,7 +380,7 @@ abstract class AbstractQueueManager implements
                 $this->logger->error(
                     sprintf('Could not process a queue item: %s', $e->getMessage()),
                     [
-                        'manager' => get_called_class(),
+                        'manager' => static::class,
                         'queueId' => $q['queueId'],
                         'itemId'  => $q['id'],
                     ]
@@ -405,10 +395,8 @@ abstract class AbstractQueueManager implements
 
     /**
      * Throttle processing of items.
-     *
-     * @return void
      */
-    private function throttle()
+    private function throttle(): void
     {
         if ($this->rate > 0) {
             usleep(1000000 / $this->rate);
@@ -422,13 +410,11 @@ abstract class AbstractQueueManager implements
      */
     public function createQueueItemsLoader()
     {
-        $loader = new CollectionLoader([
+        return new CollectionLoader([
             'logger'  => $this->logger,
             'factory' => $this->queueItemFactory(),
             'model'   => $this->queueItemProto(),
         ]);
-
-        return $loader;
     }
 
     /**
@@ -544,9 +530,8 @@ abstract class AbstractQueueManager implements
 
     /**
      * @param FactoryInterface $factory The factory used to create queue items.
-     * @return self
      */
-    private function setQueueItemFactory(FactoryInterface $factory)
+    private function setQueueItemFactory(FactoryInterface $factory): static
     {
         $this->queueItemFactory = $factory;
         return $this;

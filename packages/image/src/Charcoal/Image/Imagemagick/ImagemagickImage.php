@@ -17,9 +17,8 @@ class ImagemagickImage extends AbstractImage
 {
     /**
      * The temporary file location
-     * @var string|null $tmpFile
      */
-    private $tmpFile;
+    private ?string $tmpFile = null;
 
     /**
      * @var string $mogrifyCmd
@@ -59,10 +58,7 @@ class ImagemagickImage extends AbstractImage
         $this->resetTmp();
     }
 
-    /**
-     * @return string
-     */
-    public function driverType()
+    public function driverType(): string
     {
         return 'imagemagick';
     }
@@ -74,9 +70,8 @@ class ImagemagickImage extends AbstractImage
      * @param integer $height Image height, in pixels.
      * @param string  $color  Default to transparent.
      * @throws InvalidArgumentException If the size arguments are not valid.
-     * @return self
      */
-    public function create($width, $height, $color = 'rgb(100%, 100%, 100%, 0)')
+    public function create($width, $height, $color = 'rgb(100%, 100%, 100%, 0)'): static
     {
         if (!is_numeric($width) || $width < 1) {
             throw new InvalidArgumentException(
@@ -101,9 +96,8 @@ class ImagemagickImage extends AbstractImage
      * @param string $source The source path / filename.
      * @throws Exception If the source file does not exist.
      * @throws InvalidArgumentException If the source argument is not a string.
-     * @return self
      */
-    public function open($source = null)
+    public function open($source = null): static
     {
         if ($source !== null && !is_string($source)) {
             throw new InvalidArgumentException(
@@ -111,14 +105,12 @@ class ImagemagickImage extends AbstractImage
             );
         }
 
-        $source = ($source) ? $source : $this->source();
+        $source = $source ?: $this->source();
         $this->resetTmp();
-        if (!file_exists($source)) {
-            if (null === parse_url($source, PHP_URL_HOST)) {
-                throw new Exception(
-                    sprintf('File "%s" does not exist', $source)
-                );
-            }
+        if (!file_exists($source) && null === parse_url($source, PHP_URL_HOST)) {
+            throw new Exception(
+                sprintf('File "%s" does not exist', $source)
+            );
         }
 
         copy($source, $this->tmp());
@@ -133,9 +125,8 @@ class ImagemagickImage extends AbstractImage
      * @param string $target The target path / filename.
      * @throws Exception If the target file does not exist or is not writeable.
      * @throws InvalidArgumentException If the target argument is not a string.
-     * @return self
      */
-    public function save($target = null)
+    public function save($target = null): static
     {
         if ($target !== null && !is_string($target)) {
             throw new InvalidArgumentException(
@@ -143,7 +134,7 @@ class ImagemagickImage extends AbstractImage
             );
         }
 
-        $target = ($target) ? $target : $this->target();
+        $target = $target ?: $this->target();
         if (!is_writable(dirname($target))) {
             throw new Exception(
                 sprintf('Target "%s" is not writable', $target)
@@ -157,10 +148,8 @@ class ImagemagickImage extends AbstractImage
 
     /**
      * Get the image's width, in pixels
-     *
-     * @return integer
      */
-    public function width()
+    public function width(): int
     {
         if (!file_exists($this->tmp())) {
             return 0;
@@ -171,10 +160,8 @@ class ImagemagickImage extends AbstractImage
 
     /**
      * Get the image's height, in pixels
-     *
-     * @return integer
      */
-    public function height()
+    public function height(): int
     {
         if (!file_exists($this->tmp())) {
             return 0;
@@ -185,9 +172,8 @@ class ImagemagickImage extends AbstractImage
 
     /**
      * @param string $channel The channel name to convert.
-     * @return string
      */
-    public function convertChannel($channel)
+    public function convertChannel($channel): string
     {
         return ucfirst($channel);
     }
@@ -211,13 +197,13 @@ class ImagemagickImage extends AbstractImage
         if (!is_string($cmdName)) {
             throw new InvalidArgumentException(sprintf(
                 'Target image must be a string, received %s',
-                (is_object($cmdName) ? get_class($cmdName) : gettype($cmdName))
+                (get_debug_type($cmdName))
             ));
         }
 
         if (!in_array($cmdName, $this->availableCommands())) {
             if (!is_string($cmdName)) {
-                $cmdName = (is_object($cmdName) ? get_class($cmdName) : gettype($cmdName));
+                $cmdName = (get_debug_type($cmdName));
             }
             throw new OutOfBoundsException(sprintf(
                 'Unsupported command "%s" provided',
@@ -228,7 +214,7 @@ class ImagemagickImage extends AbstractImage
         $cmd = exec('type -p ' . $cmdName);
         $cmd = str_replace($cmdName . ' is ', '', $cmd);
 
-        if (!$cmd) {
+        if ($cmd === '' || $cmd === '0') {
             $cmd = exec('where ' . $cmdName);
         }
 
@@ -248,10 +234,8 @@ class ImagemagickImage extends AbstractImage
 
     /**
      * Retrieve the list of available commands.
-     *
-     * @return array
      */
-    public function availableCommands()
+    public function availableCommands(): array
     {
         return [ 'mogrify', 'convert', 'composite', 'identify' ];
     }
@@ -269,7 +253,7 @@ class ImagemagickImage extends AbstractImage
         if (!is_string($name)) {
             throw new InvalidArgumentException(sprintf(
                 'Command name must be a string, received %s',
-                (is_object($name) ? get_class($name) : gettype($name))
+                (get_debug_type($name))
             ));
         }
 
@@ -288,7 +272,7 @@ class ImagemagickImage extends AbstractImage
 
             default:
                 if (!is_string($name)) {
-                    $name = (is_object($name) ? get_class($name) : gettype($name));
+                    $name = (get_debug_type($name));
                 }
                 throw new OutOfBoundsException(sprintf(
                     'Unsupported command "%s" provided',
@@ -347,10 +331,8 @@ class ImagemagickImage extends AbstractImage
 
     /**
      * Generate a temporary file, to apply effects on.
-     *
-     * @return string
      */
-    public function tmp()
+    public function tmp(): string
     {
         if ($this->tmpFile !== null) {
             return $this->tmpFile;
@@ -363,7 +345,7 @@ class ImagemagickImage extends AbstractImage
     /**
      * @return ImagemagickImage Chainable
      */
-    public function resetTmp()
+    public function resetTmp(): static
     {
         if (file_exists($this->tmpFile)) {
             unlink($this->tmpFile);
@@ -383,7 +365,7 @@ class ImagemagickImage extends AbstractImage
      * @throws Exception If the command fails.
      * @return string
      */
-    public function exec($cmd)
+    public function exec(string $cmd): string|false|null
     {
         if (function_exists('proc_open')) {
             $proc = proc_open(
@@ -408,9 +390,7 @@ class ImagemagickImage extends AbstractImage
 
             return $out;
         } else {
-            $ret = shell_exec($cmd);
-
-            return $ret;
+            return shell_exec($cmd);
         }
     }
 
@@ -420,13 +400,9 @@ class ImagemagickImage extends AbstractImage
      * @throws Exception If the tmp file was not properly set.
      * @return ImagemagickImage Chainable
      */
-    public function applyCmd($params, $cmd = null)
+    public function applyCmd(string $params, $cmd = null): static
     {
-        if ($cmd === null) {
-            $cmd = $this->mogrifyCmd();
-        } else {
-            $cmd = $this->cmd($cmd);
-        }
+        $cmd = $cmd === null ? $this->mogrifyCmd() : $this->cmd($cmd);
 
         if (!file_exists($this->tmp())) {
             throw new Exception(
@@ -444,9 +420,8 @@ class ImagemagickImage extends AbstractImage
      *
      * @param string $gravity The standard gravity name.
      * @throws InvalidArgumentException If the gravity argument is not a valid gravity.
-     * @return integer
      */
-    public function imagemagickGravity($gravity)
+    public function imagemagickGravity($gravity): string
     {
         $gravityMap = [
             'center'    => 'center',

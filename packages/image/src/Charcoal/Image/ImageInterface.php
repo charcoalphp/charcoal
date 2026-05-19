@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Charcoal\Image;
 
 interface ImageInterface
@@ -53,7 +55,7 @@ interface ImageInterface
      * @param array $effects Extra effects to process.
      * @return ImageInterface Chainable
      */
-    public function process(array $effects = null);
+    public function process(?array $effects = null);
 
     /**
      * @param array|EffectInterface $effect An effect to process.

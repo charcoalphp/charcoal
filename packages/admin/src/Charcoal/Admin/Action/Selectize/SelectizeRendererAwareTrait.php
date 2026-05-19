@@ -77,7 +77,7 @@ trait SelectizeRendererAwareTrait
     protected function selectizeInput()
     {
         $prop = $this->selectizeProperty();
-        $type = isset($prop['input_type']) ? $prop['input_type'] : SelectizeInput::class;
+        $type = $prop['input_type'] ?? SelectizeInput::class;
 
         $input = $this->propertyInputFactory()->create($type);
         $input->setInputType($type);
@@ -93,9 +93,8 @@ trait SelectizeRendererAwareTrait
      * Retrieves the output from SelectizeInput::selectizeVal.
      *
      * @param mixed $val The value(s) to parse as selectize choices.
-     * @return array
      */
-    protected function selectizeVal($val)
+    protected function selectizeVal($val): array
     {
         if ($val === null) {
             return [];
@@ -139,7 +138,7 @@ trait SelectizeRendererAwareTrait
         if (!isset($this->propertyInputFactory)) {
             throw new RuntimeException(sprintf(
                 'Property Input Factory is not defined for [%s]',
-                get_class($this)
+                $this::class
             ));
         }
 
@@ -170,7 +169,7 @@ trait SelectizeRendererAwareTrait
         if (!isset($this->propertyFactory)) {
             throw new RuntimeException(sprintf(
                 'Property Control Factory is not defined for [%s]',
-                get_class($this)
+                $this::class
             ));
         }
 

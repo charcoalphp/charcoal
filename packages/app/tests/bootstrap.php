@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 session_start();
 mb_internal_encoding('UTF-8');
 date_default_timezone_set('UTC');

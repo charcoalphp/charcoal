@@ -13,10 +13,7 @@ use Charcoal\Tests\AbstractTestCase;
  */
 class SourceConfigTest extends AbstractTestCase
 {
-    /**
-     * @return void
-     */
-    public function testDefaultData()
+    public function testDefaultData(): void
     {
         $obj = new SourceConfig();
         $defaults = $obj->defaults();
@@ -24,10 +21,7 @@ class SourceConfigTest extends AbstractTestCase
         $this->assertEquals($obj->type(), $defaults['type']);
     }
 
-    /**
-     * @return void
-     */
-    public function testSetType()
+    public function testSetType(): void
     {
         $obj = new SourceConfig();
         $ret = $obj->setType('foo');

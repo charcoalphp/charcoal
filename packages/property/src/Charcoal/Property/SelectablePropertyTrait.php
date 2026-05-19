@@ -67,12 +67,10 @@ trait SelectablePropertyTrait
 
     /**
      * Determine if choices are available.
-     *
-     * @return boolean
      */
-    public function hasChoices()
+    public function hasChoices(): bool
     {
-        return !!$this->choices;
+        return (bool) $this->choices;
     }
 
     /**
@@ -89,9 +87,8 @@ trait SelectablePropertyTrait
      * Determine if the given choice is available.
      *
      * @param  string $choiceIdent The choice identifier to lookup.
-     * @return boolean
      */
-    public function hasChoice($choiceIdent)
+    public function hasChoice($choiceIdent): bool
     {
         return isset($this->choices[$choiceIdent]);
     }
@@ -159,7 +156,7 @@ trait SelectablePropertyTrait
      * @param  array $choices One or more values to format.
      * @return array Returns a collection of choice structures.
      */
-    protected function parseChoices(array $choices)
+    protected function parseChoices(array $choices): array
     {
         $parsed = [];
         foreach ($choices as $choiceIdent => $choice) {

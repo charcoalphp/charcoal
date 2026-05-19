@@ -19,29 +19,13 @@ class DashboardBuilder
     public const DEFAULT_TYPE = 'charcoal/ui/dashboard/generic';
 
     /**
-     * Store the dashboard factory instance.
-     *
-     * @var FactoryInterface
-     */
-    protected $factory;
-
-    /**
-     * Store the dependency-injection container to fulfill the required services.
-     *
-     * @var Container $container
-     */
-    protected $container;
-
-    /**
      * Return a new dashboard builder.
      *
      * @param FactoryInterface $factory   A dashboard factory.
      * @param Container        $container The DI container.
      */
-    public function __construct(FactoryInterface $factory, Container $container)
+    public function __construct(protected \Charcoal\Factory\FactoryInterface $factory, protected \Pimple\Container $container)
     {
-        $this->factory   = $factory;
-        $this->container = $container;
     }
 
     /**
@@ -52,7 +36,7 @@ class DashboardBuilder
      */
     public function build($options)
     {
-        $objType = isset($options['type']) ? $options['type'] : self::DEFAULT_TYPE;
+        $objType = $options['type'] ?? self::DEFAULT_TYPE;
 
         $obj = $this->factory->create($objType);
         $obj->setData($options);

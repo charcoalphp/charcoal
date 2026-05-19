@@ -21,6 +21,7 @@ class StaticWebsiteTemplate extends AdminTemplate
      *
      * @return \Charcoal\Translator\Translation|string|null
      */
+    #[\Override]
     public function title()
     {
         if ($this->title === null) {
@@ -35,19 +36,17 @@ class StaticWebsiteTemplate extends AdminTemplate
      *
      * @return \Charcoal\Admin\Widget\SecondaryMenuWidgetInterface|null
      */
+    #[\Override]
     public function secondaryMenu()
     {
         if ($this->secondaryMenu === null) {
-            $this->secondaryMenu = $this->createSecondaryMenu('system');
+            $this->secondaryMenu = $this->createSecondaryMenu();
         }
 
         return $this->secondaryMenu;
     }
 
-    /**
-     * @return boolean
-     */
-    public function isStaticWebsiteEnabled()
+    public function isStaticWebsiteEnabled(): bool
     {
         return file_exists($this->basePath . DIRECTORY_SEPARATOR . '/www/static');
     }
@@ -65,7 +64,7 @@ class StaticWebsiteTemplate extends AdminTemplate
                 'size'      => $this->formatBytes(filesize($file)),
                 'mtime'     => date(DATE_ATOM, filemtime($file)),
                 'generated' => date('Y-m-d H:i:s', filemtime($file)),
-                'type'      => pathinfo($file, PATHINFO_EXTENSION)
+                'type'      => pathinfo((string) $file, PATHINFO_EXTENSION)
             ];
         }
     }
@@ -74,6 +73,7 @@ class StaticWebsiteTemplate extends AdminTemplate
      * @param Container $container Pimple DI Container.
      * @return void
      */
+    #[\Override]
     protected function setDependencies(Container $container)
     {
         parent::setDependencies($container);
@@ -84,9 +84,8 @@ class StaticWebsiteTemplate extends AdminTemplate
      * Human-readable bytes format.
      *
      * @param integer $size The number of bytes to format.
-     * @return boolean
      */
-    private function formatBytes($size)
+    private function formatBytes(int|bool $size): int|string
     {
         if ($size === 0) {
             return 0;
@@ -95,7 +94,7 @@ class StaticWebsiteTemplate extends AdminTemplate
         $suffixes = [ 'bytes', 'k', 'M', 'G', 'T' ];
 
         $floor = floor($base);
-        return round(pow(1024, ($base - $floor)), 2) . ' ' . $suffixes[$floor];
+        return round(1024 ** ($base - $floor), 2) . ' ' . $suffixes[$floor];
     }
 
     /**
@@ -104,7 +103,7 @@ class StaticWebsiteTemplate extends AdminTemplate
      * @param integer $flags   Glob flags.
      * @return array
      */
-    private function globRecursive($dir, $pattern, $flags = 0)
+    private function globRecursive(string $dir, string $pattern, $flags = 0): array|false
     {
         $files = glob($dir . '/' . $pattern, $flags);
         foreach (glob($dir . '/*', (GLOB_ONLYDIR | GLOB_NOSORT)) as $dir) {

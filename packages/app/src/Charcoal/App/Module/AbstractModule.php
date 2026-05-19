@@ -105,9 +105,9 @@ abstract class AbstractModule implements
      */
     public function setupRoutes()
     {
-        if (!isset($this->routeManager)) {
+        if ($this->routeManager === null) {
             $config = $this->config();
-            $routes = (isset($config['routes']) ? $config['routes'] : [] );
+            $routes = ($config['routes'] ?? [] );
 
             $this->routeManager = new RouteManager([
                 'config' => $routes,

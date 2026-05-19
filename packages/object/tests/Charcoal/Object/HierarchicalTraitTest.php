@@ -18,22 +18,17 @@ class HierarchicalTraitTest extends AbstractTestCase
      *
      * @var Hierarchical
      */
-    private $obj;
+    private \Charcoal\Tests\Object\Mocks\HierarchicalClass $obj;
 
     /**
      * Set up the test.
-     *
-     * @return void
      */
     public function setUp(): void
     {
         $this->obj = new HierarchicalObject();
     }
 
-    /**
-     * @return void
-     */
-    public function testSetMaster()
+    public function testSetMaster(): void
     {
         $obj = $this->obj;
         // $master = $this->createMock(get_class($obj));
@@ -43,49 +38,37 @@ class HierarchicalTraitTest extends AbstractTestCase
         $this->assertSame($master, $obj->getMaster());
     }
 
-    /**
-     * @return void
-     */
-    public function testHasMaster()
+    public function testHasMaster(): void
     {
         $obj = $this->obj;
         $this->assertFalse($obj->hasMaster());
 
-        $master = $this->createMock(get_class($obj));
+        $master = $this->createStub($obj::class);
         $obj->setMaster($master);
         $this->assertTrue($obj->hasMaster());
     }
 
-    /**
-     * @return void
-     */
-    public function testIsTopLevel()
+    public function testIsTopLevel(): void
     {
         $obj = $this->obj;
         $this->assertTrue($obj->isTopLevel());
 
-        $master = $this->createMock(get_class($obj));
+        $master = $this->createStub($obj::class);
         $obj->setMaster($master);
         $this->assertFalse($obj->isTopLevel());
     }
 
-    /**
-     * @return void
-     */
-    public function testIsLastLevel()
+    public function testIsLastLevel(): void
     {
         $obj = $this->obj;
         $this->assertTrue($obj->isLastLevel());
 
-        $children = array_fill(0, 4, $this->createMock(get_class($obj)));
+        $children = array_fill(0, 4, $this->createMock($obj::class));
         $obj->setChildren($children);
         $this->assertFalse($obj->isLastLevel());
     }
 
-    /**
-     * @return void
-     */
-    public function testHierarchyLevel()
+    public function testHierarchyLevel(): void
     {
         $obj = $this->obj;
 
@@ -93,7 +76,7 @@ class HierarchicalTraitTest extends AbstractTestCase
 
         $master = clone $obj;
         $master2 = clone $obj;
-        $children = array_fill(0, 4, $this->createMock(get_class($obj)));
+        $children = array_fill(0, 4, $this->createMock($obj::class));
 
         $obj->setMaster($master);
         $obj->setChildren($children);
@@ -107,17 +90,14 @@ class HierarchicalTraitTest extends AbstractTestCase
         $this->assertEquals(3, $obj->hierarchyLevel());
     }
 
-    /**
-     * @return void
-     */
-    public function testToplevelMaster()
+    public function testToplevelMaster(): void
     {
         $obj = $this->obj;
 
         $this->assertSame(null, $obj->toplevelMaster());
 
-        $master1 = $this->createMock(get_class($obj));
-        $master2 = $this->createMock(get_class($obj));
+        $master1 = $this->createMock($obj::class);
+        $master2 = $this->createMock($obj::class);
 
         $obj->setMaster($master1->id());
         // No longer easily testable because of modelLoader.
@@ -129,16 +109,13 @@ class HierarchicalTraitTest extends AbstractTestCase
         // $this->assertSame($master2, $obj->toplevelMaster());
     }
 
-    /**
-     * @return void
-     */
-    public function testHierarchy()
+    public function testHierarchy(): void
     {
-        $obj = $this->createPartialMock(get_class($this->obj), ['getMasterObject']);
+        $obj = $this->createPartialMock($this->obj::class, ['getMasterObject']);
         $this->assertEquals([], $obj->hierarchy());
 
-        $master1 = $this->createPartialMock(get_class($this->obj), ['getMasterObject']);
-        $master2 = $this->createTestProxy(get_class($this->obj));
+        $master1 = $this->createPartialMock($this->obj::class, ['getMasterObject']);
+        $master2 = $this->createTestProxy($this->obj::class);
 
         $obj->setMaster($master1->getId());
         $obj->method('getMasterObject')->willReturn($master1);
@@ -152,10 +129,7 @@ class HierarchicalTraitTest extends AbstractTestCase
         $this->assertSame([$master1, $master2], $obj->hierarchy());
     }
 
-    /**
-     * @return void
-     */
-    public function testInvertedHierarchy()
+    public function testInvertedHierarchy(): void
     {
         $obj = $this->obj;
 
@@ -172,13 +146,10 @@ class HierarchicalTraitTest extends AbstractTestCase
         $this->assertSame([$master2, $master1], $obj->invertedHierarchy());
     }
 
-    /**
-     * @return void
-     */
-    public function testIsMasterOf()
+    public function testIsMasterOf(): void
     {
         $obj = $this->obj;
-        $master = $this->createTestProxy(get_class($obj));
+        $master = $this->createTestProxy($obj::class);
 
         $this->assertFalse($master->isMasterOf($obj));
         $obj->setMaster($master->getId());
@@ -186,57 +157,45 @@ class HierarchicalTraitTest extends AbstractTestCase
         $this->assertFalse($obj->isMasterOf($master));
     }
 
-    /**
-     * @return void
-     */
-    public function testHasChildren()
+    public function testHasChildren(): void
     {
         $obj = $this->obj;
         $this->assertFalse($obj->hasChildren());
 
-        $children = array_fill(0, 4, $this->createMock(get_class($obj)));
+        $children = array_fill(0, 4, $this->createMock($obj::class));
         $obj->setChildren($children);
         $this->assertTrue($obj->hasChildren());
     }
 
-    /**
-     * @return void
-     */
-    public function testNumChildren()
+    public function testNumChildren(): void
     {
         $obj = $this->obj;
         $this->assertEquals(0, $obj->numChildren());
 
 
-        $children = array_fill(0, 4, $this->createMock(get_class($obj)));
+        $children = array_fill(0, 4, $this->createMock($obj::class));
         $obj->setChildren($children);
         $this->assertEquals(4, $obj->numChildren());
 
-        $child5 = $this->createMock(get_class($obj));
+        $child5 = $this->createStub($obj::class);
         $obj->addChild($child5);
         $this->assertEquals(5, $obj->numChildren());
     }
 
-    /**
-     * @return void
-     */
-    public function testIsChildOf()
+    public function testIsChildOf(): void
     {
         $obj = $this->obj;
-        $master = $this->createTestProxy(get_class($obj));
+        $master = $this->createTestProxy($obj::class);
 
         $this->assertFalse($obj->isChildOf($master));
         $obj->setMaster($master->getId());
         $this->assertTrue($obj->isChildOf($master));
     }
 
-    /**
-     * @return void
-     */
-    public function testRecurisveIsChildOf()
+    public function testRecurisveIsChildOf(): void
     {
         $obj = $this->obj;
-        $master = $this->createTestProxy(get_class($obj));
+        $master = $this->createTestProxy($obj::class);
 
         $this->assertFalse($obj->isChildOf($master));
         $obj->setMaster($master->getId());

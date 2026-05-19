@@ -72,7 +72,7 @@ trait CallableResolverAwareTrait
     {
         if (!isset($this->callableResolver)) {
             throw new RuntimeException(
-                sprintf('Callable Resolver is not defined for "%s"', get_class($this))
+                sprintf('Callable Resolver is not defined for "%s"', $this::class)
             );
         }
 

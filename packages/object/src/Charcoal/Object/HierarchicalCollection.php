@@ -38,7 +38,6 @@ class HierarchicalCollection extends CharcoalCollection
      *
      * @param  array|Traversable|null $objs Array of objects to pre-populate this collection.
      * @param  boolean                $sort Whether to sort the collection immediately.
-     * @return void
      */
     public function __construct($objs = [], $sort = true)
     {
@@ -53,10 +52,8 @@ class HierarchicalCollection extends CharcoalCollection
 
     /**
      * Sort the hierarchical collection of objects.
-     *
-     * @return self
      */
-    public function sortTree()
+    public function sortTree(): static
     {
         $level   = 0;
         $count   = 0;
@@ -81,8 +78,8 @@ class HierarchicalCollection extends CharcoalCollection
             }
         }
 
-        if (empty($rootObjects) && !empty($childObjects)) {
-            foreach ($childObjects as $parentId => $children) {
+        if ($rootObjects === [] && $childObjects !== []) {
+            foreach ($childObjects as $children) {
                 $parentObj = $children[0]->getMasterObject();
                 $parentObj->auxiliary = true;
 
@@ -111,14 +108,12 @@ class HierarchicalCollection extends CharcoalCollection
             }
 
             // Display orphaned descendants.
-            if ($childObjects) {
-                foreach ($childObjects as $orphans) {
-                    foreach ($orphans as $descendants) {
-                        $descendants->level = 0;
-                        $sortedObjects[$descendants->id()] = $descendants;
+            foreach ($childObjects as $orphans) {
+                foreach ($orphans as $descendants) {
+                    $descendants->level = 0;
+                    $sortedObjects[$descendants->id()] = $descendants;
 
-                        $count++;
-                    }
+                    $count++;
                 }
             }
         } else {
@@ -184,15 +179,14 @@ class HierarchicalCollection extends CharcoalCollection
      * @param  integer                 $level         The level directly below the $parentObj.
      * @param  HierarchicalInterface[] $sortedObjects The list of objects to be displayed.
      *     Passed by reference.
-     * @return void
      */
     private function sortDescendantObjects(
         HierarchicalInterface $parentObj,
         array &$childObjects,
-        &$count,
-        $level,
+        int|float &$count,
+        int|float $level,
         array &$sortedObjects
-    ) {
+    ): void {
         $pageNum = $this->getPage();
         $perPage = $this->getNumPerPage();
 
@@ -293,7 +287,7 @@ class HierarchicalCollection extends CharcoalCollection
      * @throws InvalidArgumentException If the parameter is not numeric or < 0.
      * @return Pagination (Chainable)
      */
-    public function setPage($page)
+    public function setPage($page): static
     {
         if (!is_numeric($page)) {
             throw new InvalidArgumentException(
@@ -326,7 +320,7 @@ class HierarchicalCollection extends CharcoalCollection
      * @throws InvalidArgumentException If the parameter is not numeric or < 0.
      * @return Pagination (Chainable)
      */
-    public function setNumPerPage($num)
+    public function setNumPerPage($num): static
     {
         if (!is_numeric($num)) {
             throw new InvalidArgumentException(
@@ -359,9 +353,9 @@ class HierarchicalCollection extends CharcoalCollection
      * Determine if the given value is acceptable for the collection.
      *
      * @param  mixed $value The value being vetted.
-     * @return boolean
      */
-    public function isAcceptable($value)
+    #[\Override]
+    public function isAcceptable($value): bool
     {
         return ($value instanceof HierarchicalInterface);
     }

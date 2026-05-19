@@ -16,26 +16,16 @@ use Charcoal\Model\AbstractModel;
  */
 class LinkLog extends AbstractModel
 {
-    /**
-     * @var string|null
-     */
-    private $link;
+    private ?string $link = null;
 
-    /**
-     * @var DateTimeInterface|null
-     */
-    private $ts;
+    private ?\DateTimeInterface $ts = null;
 
-    /**
-     * @var string|null
-     */
-    private $ip;
+    private ?string $ip = null;
 
     /**
      * @param string|null $linkId The link id.
-     * @return self
      */
-    public function setLink(?string $linkId)
+    public function setLink(?string $linkId): static
     {
         $this->link = $linkId;
         return $this;
@@ -52,9 +42,8 @@ class LinkLog extends AbstractModel
     /**
      * @param  null|string|DateTimeInterface $ts The "timestamp" datetime value.
      * @throws InvalidArgumentException If the timestamp is not a valid datetime value.
-     * @return self
      */
-    public function setTs($ts)
+    public function setTs($ts): static
     {
         if ($ts === null) {
             $this->ts = null;
@@ -65,7 +54,7 @@ class LinkLog extends AbstractModel
             try {
                 $ts = new DateTime($ts);
             } catch (Exception $e) {
-                throw new InvalidArgumentException($e->getMessage());
+                throw new InvalidArgumentException($e->getMessage(), $e->getCode(), $e);
             }
         }
 
@@ -79,27 +68,20 @@ class LinkLog extends AbstractModel
         return $this;
     }
 
-    /**
-     * @return null|DateTimeInterface
-     */
-    public function ts()
+    public function ts(): ?\DateTimeInterface
     {
         return $this->ts;
     }
 
     /**
      * @param string|null $ip The IP address.
-     * @return self
      */
-    public function setIp(?string $ip)
+    public function setIp(?string $ip): static
     {
         $this->ip = $ip;
         return $this;
     }
 
-    /**
-     * @return string|null
-     */
     public function ip(): ?string
     {
         return $this->ip;

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Charcoal\Cms\Config;
 
 // From 'charcoal-config'
@@ -45,10 +47,7 @@ class NewsConfig extends AbstractConfig
      */
     private $configFeatIdent;
 
-    /**
-     * @var array
-     */
-    private $thumbnail;
+    private ?array $thumbnail = null;
 
     /**
      * l10n
@@ -116,7 +115,7 @@ class NewsConfig extends AbstractConfig
     /**
      * @return array Thumbnail generation values.
      */
-    public function thumbnail()
+    public function thumbnail(): ?array
     {
         return $this->thumbnail;
     }
@@ -131,9 +130,8 @@ class NewsConfig extends AbstractConfig
 
     /**
      * @param integer $numPerPage Number of news per page.
-     * @return NewsConfig
      */
-    public function setNumPerPage($numPerPage)
+    public function setNumPerPage($numPerPage): static
     {
         $this->numPerPage = $numPerPage;
 
@@ -142,9 +140,8 @@ class NewsConfig extends AbstractConfig
 
     /**
      * @param boolean $entryCycle Cycle news or not.
-     * @return NewsConfig
      */
-    public function setEntryCycle($entryCycle)
+    public function setEntryCycle($entryCycle): static
     {
         $this->entryCycle = $entryCycle;
 
@@ -154,9 +151,8 @@ class NewsConfig extends AbstractConfig
     /**
      * Accept all DateTime string.
      * @param string $defaultExpiry Expiry.
-     * @return NewsConfig
      */
-    public function setDefaultExpiry($defaultExpiry)
+    public function setDefaultExpiry($defaultExpiry): static
     {
         $this->defaultExpiry = $defaultExpiry;
 
@@ -165,9 +161,8 @@ class NewsConfig extends AbstractConfig
 
     /**
      * @param string $median DateTime string.
-     * @return NewsConfig
      */
-    public function setMedian($median)
+    public function setMedian($median): static
     {
         $this->median = $median;
 
@@ -176,9 +171,8 @@ class NewsConfig extends AbstractConfig
 
     /**
      * @param string $objType News object type.
-     * @return NewsConfig
      */
-    public function setObjType($objType)
+    public function setObjType($objType): static
     {
         $this->objType = $objType;
 
@@ -187,9 +181,8 @@ class NewsConfig extends AbstractConfig
 
     /**
      * @param string $category News category object.
-     * @return NewsConfig
      */
-    public function setCategory($category)
+    public function setCategory($category): static
     {
         $this->category = $category;
 
@@ -199,9 +192,8 @@ class NewsConfig extends AbstractConfig
     /**
      * Might be overkill.
      * @param string $configFeatIdent Config property containing featured news.
-     * @return NewsConfig
      */
-    public function setConfigFeatIdent($configFeatIdent)
+    public function setConfigFeatIdent($configFeatIdent): static
     {
         $this->configFeatIdent = $configFeatIdent;
 
@@ -211,9 +203,8 @@ class NewsConfig extends AbstractConfig
     /**
      * resize -> width.
      * @param array $thumbnail News thumbnail size.
-     * @return NewsConfig
      */
-    public function setThumbnail(array $thumbnail)
+    public function setThumbnail(array $thumbnail): static
     {
         $this->thumbnail = $thumbnail;
 
@@ -222,9 +213,8 @@ class NewsConfig extends AbstractConfig
 
     /**
      * @param string $parentSectionSlug News parent section (slug).
-     * @return NewsConfig
      */
-    public function setParentSectionSlug($parentSectionSlug)
+    public function setParentSectionSlug($parentSectionSlug): static
     {
         $this->parentSectionSlug = $parentSectionSlug;
 

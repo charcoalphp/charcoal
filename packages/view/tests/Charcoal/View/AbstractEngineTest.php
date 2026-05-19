@@ -19,9 +19,6 @@ class AbstractEngineTest extends AbstractTestCase
      */
     public $obj;
 
-    /**
-     * @return void
-     */
     public function setUp(): void
     {
         $loader = new MustacheLoader([
@@ -35,10 +32,7 @@ class AbstractEngineTest extends AbstractTestCase
         ]);
     }
 
-    /**
-     * @return void
-     */
-    public function testLoadTemplate()
+    public function testLoadTemplate(): void
     {
         $this->assertEquals('', $this->obj->loadTemplate(''));
 
@@ -46,10 +40,7 @@ class AbstractEngineTest extends AbstractTestCase
         $this->assertEquals($expected, $this->obj->loadTemplate('foo'));
     }
 
-    /**
-     * @return void
-     */
-    public function testSetDynamicTemplate()
+    public function testSetDynamicTemplate(): void
     {
         $this->assertNull($this->obj->setDynamicTemplate('foo', 'bar'));
     }

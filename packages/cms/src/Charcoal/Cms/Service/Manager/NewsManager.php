@@ -109,10 +109,8 @@ class NewsManager extends AbstractManager
     {
         $page = $this->page();
         $cat = $this->category();
-        if (isset($this->entries[$cat])) {
-            if (isset($this->entries[$cat][$page])) {
-                return $this->entries[$cat][$page];
-            }
+        if (isset($this->entries[$cat]) && isset($this->entries[$cat][$page])) {
+            return $this->entries[$cat][$page];
         }
 
         $loader = $this->entriesLoader();
@@ -136,7 +134,7 @@ class NewsManager extends AbstractManager
         if ($this->numPerPage()) {
             $loader->setPage($this->page());
 
-            $numPerPage = !!($this->page()) ? $this->numPerPage() : 0;
+            $numPerPage = $this->page() ? $this->numPerPage() : 0;
             $loader->setNumPerPage($numPerPage);
         }
 
@@ -179,7 +177,7 @@ class NewsManager extends AbstractManager
     /**
      * @return CategoryInterface[]|Collection The category collection.
      */
-    public function loadCategoryItems()
+    public function loadCategoryItems(): \ArrayAccess|array
     {
         $proto = $this->modelFactory()->create($this->categoryItemType());
         $loader = $this->collectionLoader()->setModel($proto);
@@ -223,7 +221,7 @@ class NewsManager extends AbstractManager
             throw new Exception(sprintf(
                 'The featured news ident "%s" doesn\'t exist the class "%s"',
                 $ident,
-                get_class($config)
+                $config::class
             ));
         }
         $ids = $config->{$ident}();
@@ -232,32 +230,30 @@ class NewsManager extends AbstractManager
             return null;
         }
 
-        $ids = explode(',', $ids);
+        $ids = explode(',', (string) $ids);
 
         $loader->addFilter('id', $ids, [ 'operator' => 'in' ])
             ->addOrder('id', 'values', [ 'values' => $ids ]);
 
-        if (count($options) > 0) {
-            foreach ($options as $key => $option) {
-                switch ($key) {
-                    case 'filters':
-                        $filters = $option;
-                        foreach ($filters as $f) {
-                            $filter[] = $f['property'] ?: '';
-                            $filter[] = $f['value'] ?: '';
-                            $filter[] = $f['options'] ?: '';
-                            $filter = join(',', $filter);
+        foreach ($options as $key => $option) {
+            switch ($key) {
+                case 'filters':
+                    $filters = $option;
+                    foreach ($filters as $f) {
+                        $filter[] = $f['property'] ?: '';
+                        $filter[] = $f['value'] ?: '';
+                        $filter[] = $f['options'] ?: '';
+                        $filter = implode(',', $filter);
 
-                            $loader->addFilter($filter);
-                        }
-                        break;
-                    case 'page':
-                        $loader->setPage($option);
-                        break;
-                    case 'numPerPage':
-                        $loader->setNumPerPage($option);
-                        break;
-                }
+                        $loader->addFilter($filter);
+                    }
+                    break;
+                case 'page':
+                    $loader->setPage($option);
+                    break;
+                case 'numPerPage':
+                    $loader->setNumPerPage($option);
+                    break;
             }
         }
 
@@ -273,10 +269,8 @@ class NewsManager extends AbstractManager
     {
         $page = $this->page();
         $cat = $this->category();
-        if (isset($this->archive[$cat])) {
-            if (isset($this->archive[$cat][$page])) {
-                return $this->archive[$cat][$page];
-            }
+        if (isset($this->archive[$cat]) && isset($this->archive[$cat][$page])) {
+            return $this->archive[$cat][$page];
         }
 
         $loader = $this->loader()->archive();
@@ -394,25 +388,23 @@ class NewsManager extends AbstractManager
      * Amount of news (total)
      * @return integer How many news?
      */
-    public function numNews()
+    public function numNews(): bool
     {
-        return !!(count($this->entries()));
+        return (bool) count($this->entries());
     }
 
     /**
      * The total amount of pages.
-     * @return float
      */
-    public function numPages()
+    public function numPages(): float
     {
         return ceil($this->entriesLoader()->loadCount() / $this->numPerPage());
     }
 
     /**
      * Is there a pager.
-     * @return boolean
      */
-    public function hasPager()
+    public function hasPager(): bool
     {
         return ($this->numPages() > 1);
     }
@@ -461,7 +453,7 @@ class NewsManager extends AbstractManager
      * @param mixed $currentNews The current news context.
      * @return self .
      */
-    public function setCurrentNews($currentNews)
+    public function setCurrentNews($currentNews): static
     {
         $this->currentNews = $currentNews;
 
@@ -470,9 +462,8 @@ class NewsManager extends AbstractManager
 
     /**
      * @param integer $numPerPage The number of news per page.
-     * @return self
      */
-    public function setNumPerPage($numPerPage)
+    public function setNumPerPage($numPerPage): static
     {
         $this->numPerPage = $numPerPage;
 
@@ -481,9 +472,8 @@ class NewsManager extends AbstractManager
 
     /**
      * @param boolean $entryCycle Next and Prev cycles indefinitely.
-     * @return self
      */
-    public function setEntryCycle($entryCycle)
+    public function setEntryCycle($entryCycle): static
     {
         $this->entryCycle = $entryCycle;
 
@@ -492,9 +482,8 @@ class NewsManager extends AbstractManager
 
     /**
      * @param integer $page The page number to load.
-     * @return self
      */
-    public function setPage($page)
+    public function setPage($page): static
     {
         $this->page = $page;
 
@@ -503,9 +492,8 @@ class NewsManager extends AbstractManager
 
     /**
      * @param integer $category The current news category.
-     * @return self
      */
-    public function setCategory($category)
+    public function setCategory($category): static
     {
         $this->category = $category;
 
@@ -514,9 +502,8 @@ class NewsManager extends AbstractManager
 
     /**
      * @param mixed $objType The object type.
-     * @return self
      */
-    public function setObjType($objType)
+    public function setObjType($objType): static
     {
         $this->objType = $objType;
 
@@ -525,9 +512,8 @@ class NewsManager extends AbstractManager
 
     /**
      * @param mixed $featIdent The featured list ident.
-     * @return self
      */
-    public function setFeatIdent($featIdent)
+    public function setFeatIdent($featIdent): static
     {
         $this->featIdent = $featIdent;
 
@@ -536,9 +522,8 @@ class NewsManager extends AbstractManager
 
     /**
      * @param NewsLoader $loader The news loader provider.
-     * @return self
      */
-    public function setLoader(NewsLoader $loader)
+    public function setLoader(NewsLoader $loader): static
     {
         $this->loader = $loader;
 
@@ -549,7 +534,7 @@ class NewsManager extends AbstractManager
      * Set the Prev and Next news
      * @return $this
      */
-    public function setPrevNext()
+    public function setPrevNext(): static
     {
         if ($this->nextNews && $this->prevNews) {
             return $this;

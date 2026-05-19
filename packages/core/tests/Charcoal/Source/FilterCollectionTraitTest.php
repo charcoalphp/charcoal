@@ -20,6 +20,14 @@ use Charcoal\Tests\Source\ExpressionCollectionTestTrait;
 /**
  * Test {@see FilterCollectionTrait} and {@see FilterCollectionInterface}.
  */
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Source\FilterCollectionTrait::class, 'createFilter')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Source\FilterCollectionTrait::class, 'filters')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Source\FilterCollectionTrait::class, 'hasFilters')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Source\FilterCollectionTrait::class, 'setFilters')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Source\FilterCollectionTrait::class, 'addFilters')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Source\FilterCollectionTrait::class, 'addFilter')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Source\FilterCollectionTrait::class, 'processFilter')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Source\FilterCollectionTrait::class, 'traverseFilters')]
 class FilterCollectionTraitTest extends AbstractTestCase
 {
     use AssertionsTrait;
@@ -28,10 +36,8 @@ class FilterCollectionTraitTest extends AbstractTestCase
 
     /**
      * Create mock object for testing.
-     *
-     * @return FilterCollectionClass
      */
-    final public function createCollector()
+    final public function createCollector(): \Charcoal\Tests\Mock\FilterCollectionClass
     {
         return new FilterCollectionClass();
     }
@@ -40,9 +46,8 @@ class FilterCollectionTraitTest extends AbstractTestCase
      * Create expression for testing.
      *
      * @param  array $data Optional expression data.
-     * @return Filter
      */
-    final protected function createExpression(array $data = null)
+    final protected function createExpression(?array $data = null): \Charcoal\Source\Filter
     {
         $expr = new Filter();
         if ($data !== null) {
@@ -58,11 +63,8 @@ class FilterCollectionTraitTest extends AbstractTestCase
      * 1. Instance of {@see ExpressionInterface}
      * 2. Instance of {@see FilterInterface}
      *
-     * @covers \Charcoal\Source\FilterCollectionTrait::createFilter
-     *
-     * @return void
      */
-    public function testCreateExpression()
+    public function testCreateExpression(): void
     {
         $obj = $this->createCollector();
 
@@ -78,11 +80,8 @@ class FilterCollectionTraitTest extends AbstractTestCase
      * 1. Empty; Default state
      * 2. Populated; Mutated state
      *
-     * @covers \Charcoal\Source\FilterCollectionTrait::filters
-     *
-     * @return void
      */
-    public function testGetExpressions()
+    public function testGetExpressions(): void
     {
         $obj = $this->createCollector();
 
@@ -103,11 +102,8 @@ class FilterCollectionTraitTest extends AbstractTestCase
      * 1. Empty; Default state
      * 2. Populated; Mutated state
      *
-     * @covers \Charcoal\Source\FilterCollectionTrait::hasFilters
-     *
-     * @return void
      */
-    public function testHasExpressions()
+    public function testHasExpressions(): void
     {
         $obj = $this->createCollector();
 
@@ -126,11 +122,8 @@ class FilterCollectionTraitTest extends AbstractTestCase
      * 1. Replaces expressions with a new collection
      * 2. Chainable method
      *
-     * @covers \Charcoal\Source\FilterCollectionTrait::setFilters
-     *
-     * @return void
      */
-    public function testSetExpressions()
+    public function testSetExpressions(): void
     {
         $obj  = $this->createCollector();
         $exp1 = $this->createExpression();
@@ -157,11 +150,8 @@ class FilterCollectionTraitTest extends AbstractTestCase
      * 1. Appends an array of items to the internal collection
      * 2. Chainable method
      *
-     * @covers \Charcoal\Source\FilterCollectionTrait::addFilters
-     *
-     * @return void
      */
-    public function testAddExpressions()
+    public function testAddExpressions(): void
     {
         $obj  = $this->createCollector();
         $exp1 = $this->createExpression();
@@ -184,11 +174,8 @@ class FilterCollectionTraitTest extends AbstractTestCase
     /**
      * Test the mass addition of expressions with names.
      *
-     * @covers \Charcoal\Source\FilterCollectionTrait::addFilters
-     *
-     * @return void
      */
-    public function testAddExpressionsMap()
+    public function testAddExpressionsMap(): void
     {
         $obj = $this->createCollector();
         $map = [
@@ -216,11 +203,8 @@ class FilterCollectionTraitTest extends AbstractTestCase
      * 1. Appends one item to the internal collection
      * 2. Chainable method
      *
-     * @covers \Charcoal\Source\FilterCollectionTrait::addFilter
-     *
-     * @return void
      */
-    public function testAddExpression()
+    public function testAddExpression(): void
     {
         $obj  = $this->createCollector();
         $expr = $this->createExpression();
@@ -251,11 +235,8 @@ class FilterCollectionTraitTest extends AbstractTestCase
      * 4. If an instance of {@see FilterInterface} is provided,
      *    the Expression object is used as is.
      *
-     * @covers \Charcoal\Source\FilterCollectionTrait::processFilter
-     *
-     * @return void
      */
-    public function testProcessExpression()
+    public function testProcessExpression(): void
     {
         $obj = $this->createCollector();
 
@@ -275,9 +256,7 @@ class FilterCollectionTraitTest extends AbstractTestCase
         $this->assertArrayContains($struct, $result->data());
 
         /** 3. Closure */
-        $lambda = function (FilterInterface $expr, FilterCollectionInterface $tested) use ($struct) {
-            return $expr->setData($struct);
-        };
+        $lambda = (fn(FilterInterface $expr, FilterCollectionInterface $tested) => $expr->setData($struct));
         $result = $this->callMethodWith($obj, 'processFilter', $lambda);
         $this->assertInstanceOf(FilterInterface::class, $result);
         $this->assertArrayContains($struct, $result->data());
@@ -291,11 +270,8 @@ class FilterCollectionTraitTest extends AbstractTestCase
     /**
      * Test the failure when parsing an invalid expression.
      *
-     * @covers \Charcoal\Source\FilterCollectionTrait::processFilter
-     *
-     * @return void
      */
-    public function testProcessExpressionWithInvalidValue()
+    public function testProcessExpressionWithInvalidValue(): void
     {
         $obj = $this->createCollector();
 
@@ -310,11 +286,8 @@ class FilterCollectionTraitTest extends AbstractTestCase
      * 1. Applies callback to internal collection
      * 2. Chainable method
      *
-     * @covers \Charcoal\Source\FilterCollectionTrait::traverseFilters
-     *
-     * @return void
      */
-    public function testTraverseExpressions()
+    public function testTraverseExpressions(): void
     {
         $obj  = $this->createCollector();
         $exp1 = $this->createExpression();
@@ -327,7 +300,7 @@ class FilterCollectionTraitTest extends AbstractTestCase
 
         /** 1. Traverse internal collection */
         $obj->addFilters([ $exp1, $exp4 ]);
-        $that = $obj->traverseFilters(function (FilterInterface $exp) {
+        $that = $obj->traverseFilters(function (FilterInterface $exp): void {
             $exp->setProperty('foo');
         });
 

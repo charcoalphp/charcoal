@@ -11,15 +11,21 @@ use Charcoal\Cache\Middleware\CacheMiddleware;
 
 /**
  * Test HTTP Requests with CacheMiddleware.
- *
- * @coversDefaultClass \Charcoal\Cache\Middleware\CacheMiddleware
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\Charcoal\Cache\Middleware\CacheMiddleware::class)]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Cache\Middleware\CacheMiddleware::class, '__invoke')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Cache\Middleware\CacheMiddleware::class, 'isRequestMethodValid')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Cache\Middleware\CacheMiddleware::class, 'isResponseStatusValid')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Cache\Middleware\CacheMiddleware::class, 'isPathIncluded')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Cache\Middleware\CacheMiddleware::class, 'isPathExcluded')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Cache\Middleware\CacheMiddleware::class, 'isQueryIncluded')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Cache\Middleware\CacheMiddleware::class, 'isQueryExcluded')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Cache\Middleware\CacheMiddleware::class, 'parseIgnoredParams')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Cache\Middleware\CacheMiddleware::class, 'disableCacheHeadersOnResponse')]
 class CacheMiddlewareRequestTest extends AbstractCacheMiddlewareTest
 {
     /**
      * Prepare the cache pool.
-     *
-     * @return void
      */
     public function setUp(): void
     {
@@ -28,8 +34,6 @@ class CacheMiddlewareRequestTest extends AbstractCacheMiddlewareTest
 
     /**
      * Empty the cache pool.
-     *
-     * @return void
      */
     public function tearDown(): void
     {
@@ -39,25 +43,15 @@ class CacheMiddlewareRequestTest extends AbstractCacheMiddlewareTest
     /**
      * Test middleware with an invalid HTTP request method.
      *
-     * @covers ::__invoke
-     * @covers ::isRequestMethodValid
-     * @covers ::isResponseStatusValid
-     * @covers ::isPathIncluded
-     * @covers ::isPathExcluded
-     * @covers ::isQueryIncluded
-     * @covers ::isQueryExcluded
-     * @covers ::parseIgnoredParams
-     * @covers ::disableCacheHeadersOnResponse
      *
-     * @dataProvider provideInvokableSituations
      *
      * @param  boolean $expected         The expected result from {@see \Psr\Cache\CacheItemInterface::isHit()}.
      * @param  boolean $checkHttpHeaders Whether to test the HTTP response's headers.
      * @param  stromg  $requestUri       The request URI for {@see self::createRequest()}.
      * @param  array   $cacheConfig      The CacheMiddleware settings.
-     * @return void
      */
-    public function testInvoke($expected, $checkHttpHeaders, $requestUri, array $cacheConfig)
+    #[\PHPUnit\Framework\Attributes\DataProvider('provideInvokableSituations')]
+    public function testInvoke(bool $expected, bool $checkHttpHeaders, string $requestUri, array $cacheConfig): void
     {
         $middleware = $this->middlewareFactory($cacheConfig);
         $request    = $this->createRequest('GET', $requestUri);
@@ -85,9 +79,8 @@ class CacheMiddlewareRequestTest extends AbstractCacheMiddlewareTest
      * Provide data for testing the middleware.
      *
      * @used-by self::testInvoke()
-     * @return  array
      */
-    public function provideInvokableSituations()
+    public static function provideInvokableSituations(): array
     {
         $target1 = '/foo/bar';
         $target2 = '/foo/bar?abc=123';

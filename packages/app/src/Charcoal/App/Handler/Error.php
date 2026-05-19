@@ -37,30 +37,16 @@ class Error extends AbstractError
         $this->setThrown($error);
 
         $contentType = $this->determineContentType($request);
-        switch ($contentType) {
-            case 'application/json':
-                $output = $this->renderJsonOutput();
-                break;
-
-            case 'text/xml':
-            case 'application/xml':
-                $output = $this->renderXmlOutput();
-                break;
-
-            case 'text/html':
-                $output = $this->renderHtmlOutput();
-                break;
-
-            case 'text/plain':
-                $output = $this->renderPlainOutput();
-                break;
-
-            default:
-                throw new UnexpectedValueException(sprintf(
-                    'Cannot render unknown content type: %s',
-                    $contentType
-                ));
-        }
+        $output = match ($contentType) {
+            'application/json' => $this->renderJsonOutput(),
+            'text/xml', 'application/xml' => $this->renderXmlOutput(),
+            'text/html' => $this->renderHtmlOutput(),
+            'text/plain' => $this->renderPlainOutput(),
+            default => throw new UnexpectedValueException(sprintf(
+                'Cannot render unknown content type: %s',
+                $contentType
+            )),
+        };
 
         $this->writeToErrorLog($error);
 
@@ -73,10 +59,8 @@ class Error extends AbstractError
 
     /**
      * Render Text Error
-     *
-     * @return string
      */
-    protected function renderPlainOutput()
+    protected function renderPlainOutput(): string
     {
         $message = $this->renderTextMessage($this->getThrown());
 
@@ -85,10 +69,8 @@ class Error extends AbstractError
 
     /**
      * Render JSON Error
-     *
-     * @return string
      */
-    protected function renderJsonOutput()
+    protected function renderJsonOutput(): string
     {
         $message = $this->renderJsonMessage($this->getThrown());
 
@@ -97,10 +79,8 @@ class Error extends AbstractError
 
     /**
      * Render XML Error
-     *
-     * @return string
      */
-    protected function renderXmlOutput()
+    protected function renderXmlOutput(): string
     {
         $message = $this->renderXmlMessage($this->getThrown());
 

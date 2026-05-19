@@ -26,6 +26,7 @@ use Charcoal\Translator\TranslatorAwareTrait;
  */
 class Exporter
 {
+    public $logger;
     use TranslatorAwareTrait;
 
     /**
@@ -43,16 +44,14 @@ class Exporter
     /**
      * Options
      * Booleans
-     * @var boolean $convertBrToNewlines
      */
-    private $convertBrToNewlines;
+    private ?bool $convertBrToNewlines = null;
 
     /**
      * Options
      * Booleans
-     * @var boolean $stripTags
      */
-    private $stripTags;
+    private ?bool $stripTags = null;
 
     /**
      * Export ident for metadata
@@ -62,21 +61,18 @@ class Exporter
 
     /**
      * Output properties
-     * @var array $properties
      */
-    private $properties = [];
+    private array $properties = [];
 
     /**
      * CollectionConfig
-     * @var array $collectionConfig
      */
-    private $collectionConfig;
+    private ?array $collectionConfig = null;
 
     /**
      * Model factory
-     * @var FactoryInterface $modelFactory
      */
-    private $modelFactory;
+    private \Charcoal\Factory\FactoryInterface $modelFactory;
 
     /**
      * Property factory used
@@ -134,7 +130,7 @@ class Exporter
      * Init function
      * @return Exporter Chainable.
      */
-    public function process()
+    public function process(): static
     {
         $this->prepareOptions();
         $this->export();
@@ -143,9 +139,8 @@ class Exporter
 
     /**
      * Export to CSV
-     * @return void
      */
-    public function export()
+    public function export(): void
     {
         $headers = $this->fileHeaders();
         $rows = $this->rows();
@@ -177,7 +172,7 @@ class Exporter
         if (!$this->collectionConfig()) {
             throw new RuntimeException(sprintf(
                 'Collection Config required for "%s"',
-                get_class($this)
+                static::class
             ));
         }
 
@@ -230,7 +225,7 @@ class Exporter
      */
     private function metadata()
     {
-        $proto = $this->proto();
+        $this->proto();
         return $this->proto()->metadata();
     }
 
@@ -241,7 +236,7 @@ class Exporter
      * @throws InvalidArgumentException If no properties are defined.
      * @return Exporter Chainable.
      */
-    private function prepareOptions()
+    private function prepareOptions(): static
     {
         $metadata = $this->metadata();
 
@@ -252,7 +247,7 @@ class Exporter
                 throw new InvalidArgumentException(sprintf(
                     'No export ident defined for "%s" in %s',
                     $this->objType(),
-                    get_class($this)
+                    static::class
                 ));
             }
 
@@ -265,7 +260,7 @@ class Exporter
                 'No export data defined for "%s" at "%s" in %s',
                 $this->objType(),
                 $this->exportIdent(),
-                get_class($this)
+                static::class
             ));
         }
 
@@ -275,7 +270,7 @@ class Exporter
                 throw new InvalidArgumentException(sprintf(
                     'No export data defined for "%s" in %s',
                     $this->objType(),
-                    get_class($this)
+                    static::class
                 ));
             }
         }
@@ -284,7 +279,7 @@ class Exporter
             throw new InvalidArgumentException(sprintf(
                 'No properties defined to export "%s" in %s',
                 $this->objType(),
-                get_class($this)
+                static::class
             ));
         }
 
@@ -326,7 +321,7 @@ class Exporter
     /**
      * @return array File headers.
      */
-    private function fileHeaders()
+    private function fileHeaders(): array
     {
         $metadata = $this->metadata();
         $properties = $this->properties();
@@ -339,11 +334,7 @@ class Exporter
                 continue;
             }
 
-            if (isset($prop['label'])) {
-                $label = $this->translator()->translation($prop['label']);
-            } else {
-                $label = ucfirst($p);
-            }
+            $label = isset($prop['label']) ? $this->translator()->translation($prop['label']) : ucfirst((string) $p);
             $out[] = $label;
         }
 
@@ -394,7 +385,7 @@ class Exporter
      * @param string $filename Output filename.
      * @return Exporter (chainable).
      */
-    private function setFilename($filename)
+    private function setFilename($filename): static
     {
         $this->filename = $filename;
         return $this;
@@ -404,7 +395,7 @@ class Exporter
      * @param string $objType Object to be exported.
      * @return Exporter (chainable).
      */
-    private function setObjType($objType)
+    private function setObjType($objType): static
     {
         $this->objType = $objType;
         return $this;
@@ -415,9 +406,9 @@ class Exporter
      * @param boolean $bool Convert br to newline.
      * @return Exporter (chainable)
      */
-    private function setConvertBrToNewlines($bool)
+    private function setConvertBrToNewlines($bool): static
     {
-        $this->convertBrToNewlines = !!$bool;
+        $this->convertBrToNewlines = (bool) $bool;
         return $this;
     }
 
@@ -426,9 +417,9 @@ class Exporter
      * @param boolean $bool Strip tags.
      * @return Exporter (chainable)
      */
-    private function setStripTags($bool)
+    private function setStripTags($bool): static
     {
-        $this->stripTags = !!$bool;
+        $this->stripTags = (bool) $bool;
         return $this;
     }
 
@@ -439,7 +430,7 @@ class Exporter
      * @param string $ident Config ident.
      * @return Exporter (chainable)
      */
-    public function setExportIdent($ident)
+    public function setExportIdent($ident): static
     {
         $this->exportIdent = $ident;
         return $this;
@@ -451,14 +442,14 @@ class Exporter
      * @throws InvalidArgumentException If the array is not a list of strings.
      * @return Exporter Chainable.
      */
-    private function setProperties(array $properties)
+    private function setProperties(array $properties): static
     {
         $p = reset($properties);
         if (!is_string($p)) {
             throw new InvalidArgumentException(sprintf(
                 'Invalid properties to export "%s" in %s',
                 $this->objType(),
-                get_class($this)
+                static::class
             ));
         }
 
@@ -471,7 +462,7 @@ class Exporter
      * @param array $cfg Collection config.
      * @return Exporter Chainable.
      */
-    private function setCollectionConfig(array $cfg)
+    private function setCollectionConfig(array $cfg): static
     {
         $this->collectionConfig = $cfg;
         return $this;
@@ -482,7 +473,7 @@ class Exporter
      * @param FactoryInterface $factory Model factory.
      * @return Exporter (chainable)
      */
-    private function setModelFactory(FactoryInterface $factory)
+    private function setModelFactory(FactoryInterface $factory): static
     {
         $this->modelFactory = $factory;
         return $this;
@@ -492,7 +483,7 @@ class Exporter
      * @param FactoryInterface $factory The property factory, to create properties.
      * @return TableWidget Chainable
      */
-    private function setPropertyFactory(FactoryInterface $factory)
+    private function setPropertyFactory(FactoryInterface $factory): static
     {
         $this->propertyFactory = $factory;
         return $this;
@@ -521,7 +512,7 @@ class Exporter
     /**
      * @return boolean Convert to newlines.
      */
-    private function convertBrToNewlines()
+    private function convertBrToNewlines(): ?bool
     {
         return $this->convertBrToNewlines;
     }
@@ -529,7 +520,7 @@ class Exporter
     /**
      * @return boolean Striptags.
      */
-    private function stripTags()
+    private function stripTags(): ?bool
     {
         return $this->stripTags;
     }
@@ -545,7 +536,7 @@ class Exporter
     /**
      * @return array Properties.
      */
-    private function properties()
+    private function properties(): array
     {
         return $this->properties;
     }
@@ -553,7 +544,7 @@ class Exporter
     /**
      * @return array CollectionConfig.
      */
-    private function collectionConfig()
+    private function collectionConfig(): ?array
     {
         return $this->collectionConfig;
     }
@@ -561,7 +552,7 @@ class Exporter
     /**
      * @return ModelFactory Model factory.
      */
-    private function modelFactory()
+    private function modelFactory(): \Charcoal\Factory\FactoryInterface
     {
         return $this->modelFactory;
     }
@@ -588,11 +579,10 @@ class Exporter
      * @param  string $text Text.
      * @return string       Text with newlines.
      */
-    private function brToNewline($text)
+    private function brToNewline($text): string
     {
         $breaks = [ '<br />', '<br>', '<br/>' ];
-        $text = str_ireplace($breaks, "\r\n", $text);
-        return $text;
+        return str_ireplace($breaks, "\r\n", $text);
     }
 
     /**

@@ -19,9 +19,6 @@ class GenericLayoutTest extends AbstractTestCase
      */
     public $obj;
 
-    /**
-     * @return void
-     */
     protected function setUp(): void
     {
         $container = $this->getContainer();
@@ -32,10 +29,7 @@ class GenericLayoutTest extends AbstractTestCase
         $this->obj = new GenericLayout();
     }
 
-    /**
-     * @return void
-     */
-    public function testType()
+    public function testType(): void
     {
         $this->assertEquals('charcoal/ui/layout/generic', $this->obj->type());
     }

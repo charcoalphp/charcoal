@@ -21,17 +21,13 @@ class PaginationWidget extends AdminWidget
 
     /**
      * The pager object.
-     *
-     * @var PaginationInterface
      */
-    private $pager;
+    private ?\Charcoal\Source\Pagination $pager = null;
 
     /**
      * The total number of items.
-     *
-     * @var integer
      */
-    private $numTotal;
+    private ?int $numTotal = null;
 
     /**
      * @var integer
@@ -43,9 +39,9 @@ class PaginationWidget extends AdminWidget
      *
      * @return PaginationInterface
      */
-    protected function pager()
+    protected function pager(): \Charcoal\Source\Pagination
     {
-        if ($this->pager === null) {
+        if (!$this->pager instanceof \Charcoal\Source\Pagination) {
             $this->pager = $this->createPagination();
         }
 
@@ -57,19 +53,17 @@ class PaginationWidget extends AdminWidget
      *
      * @return PaginationInterface
      */
-    protected function createPagination()
+    protected function createPagination(): \Charcoal\Source\Pagination
     {
-        $pagination = new Pagination();
-        return $pagination;
+        return new Pagination();
     }
 
     /**
      * Set the page number.
      *
      * @param  integer $page The current page. Pages should start at 1.
-     * @return self
      */
-    public function setPage($page)
+    public function setPage($page): static
     {
         $this->pager()->setPage($page);
 
@@ -88,20 +82,16 @@ class PaginationWidget extends AdminWidget
 
     /**
      * Retrieve the previous page number.
-     *
-     * @return integer
      */
-    public function pagePrev()
+    public function pagePrev(): int
     {
         return max(1, ($this->page() - 1));
     }
 
     /**
      * Retrieve the next page number.
-     *
-     * @return integer
      */
-    public function pageNext()
+    public function pageNext(): int
     {
         return min($this->numPages(), ($this->page() + 1));
     }
@@ -111,9 +101,8 @@ class PaginationWidget extends AdminWidget
      *
      * @param  integer $count The number of results to return, per page.
      *                        Use 0 to request all results.
-     * @return self
      */
-    public function setNumPerPage($count)
+    public function setNumPerPage($count): static
     {
         $this->pager()->setNumPerPage($count);
 
@@ -135,7 +124,7 @@ class PaginationWidget extends AdminWidget
      *
      * @return integer
      */
-    public function numTotal()
+    public function numTotal(): ?int
     {
         return $this->numTotal;
     }
@@ -145,9 +134,8 @@ class PaginationWidget extends AdminWidget
      *
      * @param  integer $total The total number of items.
      * @throws InvalidArgumentException If the argument is not a number or lower than 0.
-     * @return self
      */
-    public function setNumTotal($total)
+    public function setNumTotal($total): static
     {
         if (!is_numeric($total)) {
             throw new InvalidArgumentException(
@@ -167,10 +155,7 @@ class PaginationWidget extends AdminWidget
         return $this;
     }
 
-    /**
-     * @return array
-     */
-    public function pages()
+    public function pages(): array
     {
         if ($this->quickJumpEnabled()) {
             return $this->buildQuickJumpForm();
@@ -189,12 +174,8 @@ class PaginationWidget extends AdminWidget
         return $out;
     }
 
-    /**
-     * @return array
-     */
-    private function buildQuickJumpForm()
+    private function buildQuickJumpForm(): array
     {
-        $out          = [];
         $i            = 1;
         $numPages     = $this->numPages();
         $maxPageCount = $this->maxPageCount();
@@ -253,16 +234,13 @@ class PaginationWidget extends AdminWidget
             }
         }
 
-        $out = array_merge($left, $middle, $right);
-
-        return $out;
+        return array_merge($left, $middle, $right);
     }
 
     /**
      * @param integer $page The page index.
-     * @return array
      */
-    private function formatPage($page)
+    private function formatPage($page): array
     {
         return [
             'separator' => false,
@@ -276,7 +254,7 @@ class PaginationWidget extends AdminWidget
      *
      * @return integer
      */
-    public function numPages()
+    public function numPages(): int|float
     {
         if ($this->numPerPage() == 0) {
             return 1;
@@ -295,9 +273,8 @@ class PaginationWidget extends AdminWidget
 
     /**
      * @param integer $maxPageCount The maximum number of page to display in pager at the same time.
-     * @return PaginationWidget
      */
-    public function setMaxPageCount($maxPageCount)
+    public function setMaxPageCount($maxPageCount): static
     {
         $this->maxPageCount = $maxPageCount;
 
@@ -307,40 +284,32 @@ class PaginationWidget extends AdminWidget
 
     /**
      * Determine if pagination can be displayed.
-     *
-     * @return boolean
      */
-    public function showPagination()
+    public function showPagination(): bool
     {
         return ($this->numPages() > 1);
     }
 
     /**
      * Determine if the "previous page" link can be displayed.
-     *
-     * @return boolean
      */
-    public function previousEnabled()
+    public function previousEnabled(): bool
     {
         return ($this->page() > 1);
     }
 
     /**
      * Determine if the "next page" link can be displayed.
-     *
-     * @return boolean
      */
-    public function nextEnabled()
+    public function nextEnabled(): bool
     {
         return ($this->page() < $this->numPages());
     }
 
     /**
      * His the quick jump input allowed?
-     *
-     * @return boolean
      */
-    public function quickJumpEnabled()
+    public function quickJumpEnabled(): bool
     {
         return ($this->numPages() > $this->maxPageCount());
     }

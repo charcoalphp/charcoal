@@ -11,8 +11,6 @@ interface ViewableInterface
 {
     /**
      * Render the viewable object.
-     *
-     * @return string
      */
     public function __toString(): string;
 
@@ -70,7 +68,6 @@ interface ViewableInterface
     /**
      * @param string      $varName       The name of the variable to set this template unto.
      * @param string|null $templateIdent The "dynamic template" to set. null to clear.
-     * @return void
      */
     public function setDynamicTemplate(string $varName, ?string $templateIdent): void;
 }

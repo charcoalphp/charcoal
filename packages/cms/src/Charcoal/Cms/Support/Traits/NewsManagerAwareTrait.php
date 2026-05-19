@@ -190,7 +190,7 @@ trait NewsManagerAwareTrait
      * @param NewsInterface $news A single news.
      * @return array The needed news properties.
      */
-    protected function newsFormatShort(NewsInterface $news)
+    protected function newsFormatShort(NewsInterface $news): array
     {
         return [
             'title'        => (string)$news->title(),
@@ -208,7 +208,7 @@ trait NewsManagerAwareTrait
      * @param NewsInterface $news A single news.
      * @return array The needed news properties.
      */
-    protected function newsFormatNav(NewsInterface $news)
+    protected function newsFormatNav(NewsInterface $news): array
     {
         return [
             'date'         => $this->getNewsDateFormat($news),
@@ -224,7 +224,7 @@ trait NewsManagerAwareTrait
      * @param NewsInterface $news The current news.
      * @return array The needed properties.
      */
-    protected function newsFormatFull(NewsInterface $news)
+    protected function newsFormatFull(NewsInterface $news): array
     {
         $contentBlocks = $news->getAttachments('content-blocks');
         $gallery = $news->getAttachments('image-gallery');
@@ -239,11 +239,11 @@ trait NewsManagerAwareTrait
             'date'             => $this->getNewsDateFormat($news),
             'dateTime'         => $news->newsDate()->format('Y-m-d h:i'),
             'contentBlocks'    => $contentBlocks,
-            'hasContentBlocks' => !!(count($contentBlocks)),
+            'hasContentBlocks' => (bool) count($contentBlocks),
             'documents'        => $documents,
-            'hasDocuments'     => !!(count($documents)),
+            'hasDocuments'     => (bool) count($documents),
             'gallery'          => $gallery,
-            'hasGallery'       => !!(count($gallery)),
+            'hasGallery'       => (bool) count($gallery),
             'url'              => $news->url(),
             'metaTitle'        => (string)$news->metaTitle(),
             'category'         => $news->category(),
@@ -255,7 +255,7 @@ trait NewsManagerAwareTrait
      * @param CategoryInterface $category The category item.
      * @return array The formatted category item.
      */
-    protected function newsFormatCategory(CategoryInterface $category)
+    protected function newsFormatCategory(CategoryInterface $category): array
     {
         return [
             'id'   => $category->id(),
@@ -276,7 +276,7 @@ trait NewsManagerAwareTrait
         if (!$this->newsManager instanceof NewsManager) {
             throw new ContainerException(sprintf(
                 'Missing dependency for %s: %s',
-                get_called_class(),
+                static::class,
                 NewsManager::class
             ));
         }

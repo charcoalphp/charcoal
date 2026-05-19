@@ -22,9 +22,6 @@ class LogoutTemplateTest extends AbstractTestCase
      */
     public $obj;
 
-    /**
-     * @return void
-     */
     public function setUp(): void
     {
         $this->obj = new LogoutTemplate([
@@ -32,10 +29,7 @@ class LogoutTemplateTest extends AbstractTestCase
         ]);
     }
 
-    /**
-     * @return void
-     */
-    public function testAuthRequiredIsFalse()
+    public function testAuthRequiredIsFalse(): void
     {
         $res = $this->callMethod($this->obj, 'authRequired');
         $this->assertNotTrue($res);

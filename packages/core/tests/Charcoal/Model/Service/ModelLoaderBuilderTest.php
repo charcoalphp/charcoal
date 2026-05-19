@@ -24,9 +24,6 @@ class ModelLoaderBuilderTest extends AbstractTestCase
      */
     public $obj;
 
-    /**
-     * @return void
-     */
     protected function setUp(): void
     {
         $container = $this->getContainer();
@@ -52,19 +49,13 @@ class ModelLoaderBuilderTest extends AbstractTestCase
         ]);
     }
 
-    /**
-     * @return void
-     */
-    public function testBuild()
+    public function testBuild(): void
     {
         $ret = $this->obj->build(GenericModel::class, 'name');
         $this->assertInstanceOf(ModelLoader::class, $ret);
     }
 
-    /**
-     * @return void
-     */
-    public function testInvokable()
+    public function testInvokable(): void
     {
         $builder = $this->obj;
         $ret = $builder(GenericModel::class);

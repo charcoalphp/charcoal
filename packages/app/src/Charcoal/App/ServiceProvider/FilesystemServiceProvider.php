@@ -33,15 +33,14 @@ class FilesystemServiceProvider implements ServiceProviderInterface
 {
     /**
      * @param  Container $container A service container.
-     * @return void
      */
-    public function register(Container $container)
+    public function register(Container $container): void
     {
         /**
          * @param  Container $container A service container.
          * @return FilesystemConfig
          */
-        $container['filesystem/config'] = function (Container $container) {
+        $container['filesystem/config'] = function (Container $container): \Charcoal\App\Config\FilesystemConfig {
             $fsConfig = ($container['config']['filesystem'] ?? null);
             return new FilesystemConfig($fsConfig);
         };
@@ -50,15 +49,13 @@ class FilesystemServiceProvider implements ServiceProviderInterface
          * @param  Container $container A service container.
          * @return MountManager
          */
-        $container['filesystem/manager'] = function () {
-            return new MountManager();
-        };
+        $container['filesystem/manager'] = (fn(): \League\Flysystem\MountManager => new MountManager());
 
         /**
          * @param  Container $container A service container.
          * @return array<string, Filesystem>
          */
-        $container['filesystems'] = function (Container $container) {
+        $container['filesystems'] = function (Container $container): \Pimple\Container {
             $filesystemConfig = $container['filesystem/config'];
             $filesystems = new Container();
 
@@ -77,9 +74,8 @@ class FilesystemServiceProvider implements ServiceProviderInterface
      * @param  Container $container A service container.
      * @throws Exception If the filesystem type is not defined in config.
      * @throws UnexpectedValueException If the filesystem type is invalid / unsupported.
-     * @return Filesystem
      */
-    private function createConnection(array $config, Container $container)
+    private function createConnection(array $config, Container $container): \League\Flysystem\Filesystem
     {
         if (!isset($config['type'])) {
             throw new Exception(
@@ -89,36 +85,17 @@ class FilesystemServiceProvider implements ServiceProviderInterface
 
         $type = $config['type'];
 
-        switch ($type) {
-            case 'local':
-                $adapter = $this->createLocalAdapter($config, $container);
-                break;
-
-            case 's3':
-                $adapter = $this->createS3Adapter($config);
-                break;
-
-            case 'ftp':
-                $adapter = $this->createFtpAdapter($config);
-                break;
-
-            case 'sftp':
-                $adapter = $this->createSftpAdapter($config);
-                break;
-
-            case 'memory':
-                $adapter = $this->createMemoryAdapter();
-                break;
-
-            case 'noop':
-                $adapter = $this->createNullAdapter();
-                break;
-
-            default:
-                throw new UnexpectedValueException(
-                    sprintf('Invalid filesystem type "%s"', $type)
-                );
-        }
+        $adapter = match ($type) {
+            'local' => $this->createLocalAdapter($config, $container),
+            's3' => $this->createS3Adapter($config),
+            'ftp' => $this->createFtpAdapter($config),
+            'sftp' => $this->createSftpAdapter($config),
+            'memory' => $this->createMemoryAdapter(),
+            'noop' => $this->createNullAdapter(),
+            default => throw new UnexpectedValueException(
+                sprintf('Invalid filesystem type "%s"', $type)
+            ),
+        };
 
         return new Filesystem($adapter);
     }
@@ -127,9 +104,8 @@ class FilesystemServiceProvider implements ServiceProviderInterface
      * @param  array $config The driver (adapter) configuration.
      * @param  Container $container A service container.
      * @throws InvalidArgumentException If the path is not defined.
-     * @return LocalAdapter
      */
-    private function createLocalAdapter(array $config, Container $container)
+    private function createLocalAdapter(array $config, Container $container): \League\Flysystem\Adapter\Local
     {
         if (empty($config['path'])) {
             throw new InvalidArgumentException(
@@ -138,10 +114,8 @@ class FilesystemServiceProvider implements ServiceProviderInterface
         }
 
         $path = $config['path'];
-        if (is_string($path)) {
-            if (isset($container['config']) && ($container['config'] instanceof AppConfig)) {
-                $path = $container['config']->resolveValue($path);
-            }
+        if (is_string($path) && (isset($container['config']) && $container['config'] instanceof AppConfig)) {
+            $path = $container['config']->resolveValue($path);
         }
 
         $defaults = [
@@ -157,9 +131,8 @@ class FilesystemServiceProvider implements ServiceProviderInterface
     /**
      * @param  array $config The driver (adapter) configuration.
      * @throws InvalidArgumentException If the key, secret or bucket is not defined in config.
-     * @return AwsS3Adapter
      */
-    private function createS3Adapter(array $config)
+    private function createS3Adapter(array $config): \League\Flysystem\AwsS3v3\AwsS3Adapter
     {
         if (!isset($config['key']) || !$config['key']) {
             throw new InvalidArgumentException(
@@ -195,13 +168,9 @@ class FilesystemServiceProvider implements ServiceProviderInterface
             'version'     => $config['version'],
         ]);
 
-        if (isset($config['public']) && !$config['public']) {
-            $permissions = null;
-        } else {
-            $permissions = [
-                'ACL' => 'public-read',
-            ];
-        }
+        $permissions = isset($config['public']) && !$config['public'] ? null : [
+            'ACL' => 'public-read',
+        ];
 
         return new AwsS3Adapter($client, $config['bucket'], $config['prefix'], $permissions);
     }
@@ -209,9 +178,8 @@ class FilesystemServiceProvider implements ServiceProviderInterface
     /**
      * @param  array $config The driver (adapter) configuration.
      * @throws InvalidArgumentException If the host, username or password is not defined in config.
-     * @return FtpAdapter
      */
-    private function createFtpAdapter(array $config)
+    private function createFtpAdapter(array $config): \League\Flysystem\Adapter\Ftp
     {
         if (!$config['host']) {
             throw new InvalidArgumentException(
@@ -246,9 +214,8 @@ class FilesystemServiceProvider implements ServiceProviderInterface
     /**
      * @param  array $config The driver (adapter) configuration.
      * @throws InvalidArgumentException If the host, username or password is not defined in config.
-     * @return SftpAdapter
      */
-    private function createSftpAdapter(array $config)
+    private function createSftpAdapter(array $config): \League\Flysystem\Sftp\SftpAdapter
     {
         if (!$config['host']) {
             throw new InvalidArgumentException(
@@ -279,18 +246,12 @@ class FilesystemServiceProvider implements ServiceProviderInterface
         return new SftpAdapter($config);
     }
 
-    /**
-     * @return MemoryAdapter
-     */
-    private function createMemoryAdapter()
+    private function createMemoryAdapter(): \League\Flysystem\Memory\MemoryAdapter
     {
         return new MemoryAdapter();
     }
 
-    /**
-     * @return NullAdapter
-     */
-    private function createNullAdapter()
+    private function createNullAdapter(): \League\Flysystem\Adapter\NullAdapter
     {
         return new NullAdapter();
     }

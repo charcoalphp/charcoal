@@ -24,29 +24,17 @@ use Charcoal\Tests\AbstractTestCase;
  */
 class TranslatorHelpersTest extends AbstractTestCase
 {
-    /**
-     * @var Translator
-     */
-    private $translator;
+    private \Charcoal\Translator\Translator $translator;
 
-    /**
-     * @var MustacheEngine
-     */
-    private $mustache;
+    private \Mustache_Engine $mustache;
 
-    /**
-     * @return void
-     */
     public function setUp(): void
     {
         $this->translator = $this->createTranslator();
         $this->mustache   = $this->createMustacheEngine($this->translator);
     }
 
-    /**
-     * @return void
-     */
-    public function testTransWithoutTranslator()
+    public function testTransWithoutTranslator(): void
     {
         $this->mustache = $this->createMustacheEngine();
 
@@ -59,25 +47,19 @@ class TranslatorHelpersTest extends AbstractTestCase
         $this->assertEquals($expected, $output);
     }
 
-    /**
-     * @return void
-     */
-    public function testTransWithUnknownMacro()
+    public function testTransWithUnknownMacro(): void
     {
         $this->expectException(LogicException::class);
 
         $this->addTranslatorResources();
 
         $template = $this->mustache->loadTemplate('{{# _t.num.unknown }}count.apples{{/ _t.num.unknown }}');
-        $output   = $template->render([
+        $template->render([
             'num' => 1,
         ]);
     }
 
-    /**
-     * @return void
-     */
-    public function testTrans()
+    public function testTrans(): void
     {
         // phpcs:disable Squiz.Strings.DoubleQuoteUsage.NotRequired
         $this->addTranslatorResources();
@@ -102,10 +84,7 @@ class TranslatorHelpersTest extends AbstractTestCase
         // phpcs:enable
     }
 
-    /**
-     * @return void
-     */
-    public function testTransChoice()
+    public function testTransChoice(): void
     {
         // phpcs:disable Squiz.Strings.DoubleQuoteUsage.NotRequired
         $this->addTranslatorResources();
@@ -128,10 +107,7 @@ class TranslatorHelpersTest extends AbstractTestCase
         // phpcs:enable
     }
 
-    /**
-     * @return void
-     */
-    public function addTranslatorResources()
+    public function addTranslatorResources(): void
     {
         $this->translator->addResource('array', [
             'count.apples' => '{0} There are no apples|{1} There is one apple|]1,Inf[ There are %count% apples',
@@ -154,10 +130,7 @@ class TranslatorHelpersTest extends AbstractTestCase
         ], 'en', 'slang');
     }
 
-    /**
-     * @return Translator
-     */
-    public function createTranslator()
+    public function createTranslator(): \Charcoal\Translator\Translator
     {
         $translator = new Translator([
             'locale'            => 'en',
@@ -188,17 +161,15 @@ class TranslatorHelpersTest extends AbstractTestCase
 
     /**
      * @param  Translator|null $translator The translator service for the translator helpers.
-     * @return MustacheEngine
      */
-    public function createMustacheEngine($translator = null)
+    public function createMustacheEngine($translator = null): \Mustache_Engine
     {
         $helper   = new TranslatorHelpers([
             'translator' => $translator,
         ]);
-        $mustache = new MustacheEngine([
+
+        return new MustacheEngine([
             'helpers' => $helper->toArray(),
         ]);
-
-        return $mustache;
     }
 }

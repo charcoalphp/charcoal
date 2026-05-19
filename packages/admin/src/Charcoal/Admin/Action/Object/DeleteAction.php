@@ -58,7 +58,7 @@ class DeleteAction extends AdminAction
             $objId   = $request->getParam('obj_id');
 
             if (!$objType) {
-                $actualType = is_object($objType) ? get_class($objType) : gettype($objType);
+                $actualType = get_debug_type($objType);
                 $this->addFeedback('error', strtr($reqMessage, [
                     '{{ parameter }}'    => '"obj_type"',
                     '{{ expectedType }}' => 'string',
@@ -70,7 +70,7 @@ class DeleteAction extends AdminAction
             }
 
             if (!$objId) {
-                $actualType = is_object($objId) ? get_class($objId) : gettype($objId);
+                $actualType = get_debug_type($objId);
                 $this->addFeedback('error', strtr($reqMessage, [
                     '{{ parameter }}'    => '"obj_id"',
                     '{{ expectedType }}' => 'string or numeric',
@@ -124,10 +124,8 @@ class DeleteAction extends AdminAction
         }
     }
 
-    /**
-     * @return array
-     */
-    public function results()
+    #[\Override]
+    public function results(): array
     {
         return [
             'success'   => $this->success(),

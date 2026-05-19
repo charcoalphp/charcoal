@@ -20,9 +20,6 @@ class AbstractUiItemTest extends AbstractTestCase
      */
     public $obj;
 
-    /**
-     * @return void
-     */
     protected function setUp(): void
     {
         $container = $this->getContainer();
@@ -32,14 +29,10 @@ class AbstractUiItemTest extends AbstractTestCase
         ]]);
 
         $method = new ReflectionMethod($this->obj, 'setAuthDependencies');
-        $method->setAccessible(true);
         $method->invoke($this->obj, $container);
     }
 
-    /**
-     * @return void
-     */
-    public function testDefaults()
+    public function testDefaults(): void
     {
         $this->assertTrue($this->obj->active());
         $this->assertEquals(0, $this->obj->priority());
@@ -52,40 +45,28 @@ class AbstractUiItemTest extends AbstractTestCase
         $this->assertEquals('', $this->obj->notes());
     }
 
-    /**
-     * @return void
-     */
-    public function testSetType()
+    public function testSetType(): void
     {
         $ret = $this->obj->setType('foobar');
         $this->assertSame($ret, $this->obj);
         $this->assertEquals('foobar', $this->obj->type());
     }
 
-    /**
-     * @return void
-     */
-    public function testSetAcive()
+    public function testSetAcive(): void
     {
         $ret = $this->obj->setActive(false);
         $this->assertSame($ret, $this->obj);
         $this->assertEquals(false, $this->obj->active());
     }
 
-    /**
-     * @return void
-     */
-    public function testSetPriority()
+    public function testSetPriority(): void
     {
         $ret = $this->obj->setPriority(42);
         $this->assertSame($ret, $this->obj);
         $this->assertEquals(42, $this->obj->priority());
     }
 
-    /**
-     * @return void
-     */
-    public function testSetTemplate()
+    public function testSetTemplate(): void
     {
         $ret = $this->obj->setTemplate('foo/bar');
         $this->assertSame($ret, $this->obj);
@@ -95,60 +76,42 @@ class AbstractUiItemTest extends AbstractTestCase
         $this->obj->setTemplate(false);
     }
 
-    /**
-     * @return void
-     */
-    public function testNoTemplateReturnsType()
+    public function testNoTemplateReturnsType(): void
     {
         $ret = $this->obj->setType('foobar/baz');
         $this->assertSame($ret, $this->obj);
         $this->assertEquals('foobar/baz', $this->obj->template());
     }
 
-    /**
-     * @return void
-     */
-    public function testSetTitle()
+    public function testSetTitle(): void
     {
         $ret = $this->obj->setTitle('Hello');
         $this->assertSame($ret, $this->obj);
         $this->assertEquals('Hello', (string)$this->obj->title());
     }
 
-    /**
-     * @return void
-     */
-    public function testSetSubtitle()
+    public function testSetSubtitle(): void
     {
         $ret = $this->obj->setSubtitle('Hello');
         $this->assertSame($ret, $this->obj);
         $this->assertEquals('Hello', (string)$this->obj->subtitle());
     }
 
-    /**
-     * @return void
-     */
-    public function testSetDescription()
+    public function testSetDescription(): void
     {
         $ret = $this->obj->setDescription('Hello');
         $this->assertSame($ret, $this->obj);
         $this->assertEquals('Hello', (string)$this->obj->description());
     }
 
-    /**
-     * @return void
-     */
-    public function testSetNotes()
+    public function testSetNotes(): void
     {
         $ret = $this->obj->setNotes('Hello');
         $this->assertSame($ret, $this->obj);
         $this->assertEquals('Hello', (string)$this->obj->notes());
     }
 
-    /**
-     * @return void
-     */
-    public function testShowTitle()
+    public function testShowTitle(): void
     {
         $this->assertFalse($this->obj->showTitle());
         $this->obj->setTitle('Foo');
@@ -158,10 +121,7 @@ class AbstractUiItemTest extends AbstractTestCase
         $this->assertFalse($this->obj->showTitle());
     }
 
-    /**
-     * @return void
-     */
-    public function testShowSubtitle()
+    public function testShowSubtitle(): void
     {
         $this->assertFalse($this->obj->showSubtitle());
         $this->obj->setSubtitle('Foo');
@@ -171,10 +131,7 @@ class AbstractUiItemTest extends AbstractTestCase
         $this->assertFalse($this->obj->showSubtitle());
     }
 
-    /**
-     * @return void
-     */
-    public function testShowDescription()
+    public function testShowDescription(): void
     {
         $this->assertFalse($this->obj->showDescription());
         $this->obj->setDescription('Foo');
@@ -184,10 +141,7 @@ class AbstractUiItemTest extends AbstractTestCase
         $this->assertFalse($this->obj->showDescription());
     }
 
-    /**
-     * @return void
-     */
-    public function testShowNotes()
+    public function testShowNotes(): void
     {
         $this->assertFalse($this->obj->showNotes());
         $this->obj->setNotes('Foo');

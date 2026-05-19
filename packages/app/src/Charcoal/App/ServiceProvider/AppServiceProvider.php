@@ -66,9 +66,8 @@ class AppServiceProvider implements ServiceProviderInterface
      * It should not get services.
      *
      * @param  Container $container A service container.
-     * @return void
      */
-    public function register(Container $container)
+    public function register(Container $container): void
     {
         $container->register(new CacheServiceProvider());
         $container->register(new DatabaseServiceProvider());
@@ -104,13 +103,13 @@ class AppServiceProvider implements ServiceProviderInterface
              * @param  Container $container A service container.
              * @return boolean
              */
-            $container['debug'] = function (Container $container) {
+            $container['debug'] = function (Container $container): bool {
                 if (isset($container['config']['debug'])) {
-                    return !!$container['config']['debug'];
+                    return (bool) $container['config']['debug'];
                 }
 
                 if (isset($container['config']['dev_mode'])) {
-                    return !!$container['config']['dev_mode'];
+                    return (bool) $container['config']['dev_mode'];
                 }
 
                 return false;
@@ -273,19 +272,17 @@ class AppServiceProvider implements ServiceProviderInterface
          * @param  Container $container A service container.
          * @return \Charcoal\Factory\FactoryInterface
          */
-        $container['route/factory'] = function (Container $container) {
-            return new Factory([
-                'base_class'       => RouteInterface::class,
-                'resolver_options' => [
-                    'suffix' => 'Route',
+        $container['route/factory'] = (fn(Container $container): \Charcoal\Factory\GenericFactory => new Factory([
+            'base_class'       => RouteInterface::class,
+            'resolver_options' => [
+                'suffix' => 'Route',
+            ],
+            'arguments'  => [
+                [
+                    'logger' => $container['logger'],
                 ],
-                'arguments'  => [
-                    [
-                        'logger' => $container['logger'],
-                    ],
-                ],
-            ]);
-        };
+            ],
+        ]));
     }
 
     /**
@@ -298,7 +295,7 @@ class AppServiceProvider implements ServiceProviderInterface
          * @param  Container $container A service container.
          * @return IpMiddleware
          */
-        $container['middlewares/charcoal/app/middleware/ip'] = function (container $container) {
+        $container['middlewares/charcoal/app/middleware/ip'] = function (container $container): \Charcoal\App\Middleware\IpMiddleware {
             $wareConfig = $container['config']['middlewares']['charcoal/app/middleware/ip'];
             return new IpMiddleware($wareConfig);
         };
@@ -319,20 +316,18 @@ class AppServiceProvider implements ServiceProviderInterface
          * @param  Container $container A service container.
          * @return \Charcoal\Factory\FactoryInterface
          */
-        $container['action/factory'] = function (Container $container) {
-            return new Factory([
-                'base_class'       => ActionInterface::class,
-                'resolver_options' => [
-                    'suffix' => 'Action',
+        $container['action/factory'] = (fn(Container $container): \Charcoal\Factory\GenericFactory => new Factory([
+            'base_class'       => ActionInterface::class,
+            'resolver_options' => [
+                'suffix' => 'Action',
+            ],
+            'arguments' => [
+                [
+                    'container' => $container,
+                    'logger'    => $container['logger'],
                 ],
-                'arguments' => [
-                    [
-                        'container' => $container,
-                        'logger'    => $container['logger'],
-                    ],
-                ],
-            ]);
-        };
+            ],
+        ]));
 
         /**
          * The Template Factory service is used to instanciate new templates.
@@ -343,20 +338,18 @@ class AppServiceProvider implements ServiceProviderInterface
          * @param  Container $container A service container.
          * @return \Charcoal\Factory\FactoryInterface
          */
-        $container['template/factory'] = function (Container $container) {
-            return new Factory([
-                'base_class'       => TemplateInterface::class,
-                'resolver_options' => [
-                    'suffix' => 'Template',
+        $container['template/factory'] = (fn(Container $container): \Charcoal\Factory\GenericFactory => new Factory([
+            'base_class'       => TemplateInterface::class,
+            'resolver_options' => [
+                'suffix' => 'Template',
+            ],
+            'arguments' => [
+                [
+                    'container' => $container,
+                    'logger'    => $container['logger'],
                 ],
-                'arguments' => [
-                    [
-                        'container' => $container,
-                        'logger'    => $container['logger'],
-                    ],
-                ],
-            ]);
-        };
+            ],
+        ]));
 
         /**
          * The Widget Factory service is used to instanciate new widgets.
@@ -367,28 +360,24 @@ class AppServiceProvider implements ServiceProviderInterface
          * @param  Container $container A service container.
          * @return \Charcoal\Factory\FactoryInterface
          */
-        $container['widget/factory'] = function (Container $container) {
-            return new Factory([
-                'base_class'       => WidgetInterface::class,
-                'resolver_options' => [
-                    'suffix' => 'Widget',
+        $container['widget/factory'] = (fn(Container $container): \Charcoal\Factory\GenericFactory => new Factory([
+            'base_class'       => WidgetInterface::class,
+            'resolver_options' => [
+                'suffix' => 'Widget',
+            ],
+            'arguments' => [
+                [
+                    'container' => $container,
+                    'logger'    => $container['logger'],
                 ],
-                'arguments' => [
-                    [
-                        'container' => $container,
-                        'logger'    => $container['logger'],
-                    ],
-                ],
-            ]);
-        };
+            ],
+        ]));
 
         /**
          * @param  Container $container A service container.
          * @return WidgetBuilder
          */
-        $container['widget/builder'] = function (Container $container) {
-            return new WidgetBuilder($container['widget/factory'], $container);
-        };
+        $container['widget/builder'] = (fn(Container $container): \Charcoal\App\Template\WidgetBuilder => new WidgetBuilder($container['widget/factory'], $container));
     }
 
     /**
@@ -405,19 +394,17 @@ class AppServiceProvider implements ServiceProviderInterface
          * @param  Container $container A service container.
          * @return \Charcoal\Factory\FactoryInterface
          */
-        $container['module/factory'] = function (Container $container) {
-            return new Factory([
-                'base_class'       => ModuleInterface::class,
-                'resolver_options' => [
-                    'suffix' => 'Module',
+        $container['module/factory'] = (fn(Container $container): \Charcoal\Factory\GenericFactory => new Factory([
+            'base_class'       => ModuleInterface::class,
+            'resolver_options' => [
+                'suffix' => 'Module',
+            ],
+            'arguments'  => [
+                [
+                    'logger' => $container['logger'],
                 ],
-                'arguments'  => [
-                    [
-                        'logger' => $container['logger'],
-                    ],
-                ],
-            ]);
-        };
+            ],
+        ]));
 
         /**
          * The modules as PHP classes.
@@ -425,7 +412,7 @@ class AppServiceProvider implements ServiceProviderInterface
          * @param  Container $container A service container.
          * @return array
          */
-        $container['module/classes'] = function (Container $container) {
+        $container['module/classes'] = function (Container $container): array {
             $appConfig = $container['config'];
 
             $modules = $appConfig['modules'];
@@ -435,13 +422,9 @@ class AppServiceProvider implements ServiceProviderInterface
                 'suffix' => 'Module',
             ]);
 
-            $modules = array_map(function ($module) use ($moduleResolver) {
-                return $moduleResolver->resolve($module);
-            }, $modules);
+            $modules = array_map($moduleResolver->resolve(...), $modules);
 
-            array_filter($modules, function ($class) {
-                return class_exists($class);
-            });
+            array_filter($modules, class_exists(...));
 
             return $modules;
         };
@@ -462,14 +445,11 @@ class AppServiceProvider implements ServiceProviderInterface
 
     /**
      * @param Container $container The DI container.
-     * @return void
      */
     protected function registerMustacheHelpersServices(Container $container): void
     {
         if (!isset($container['view/mustache/helpers'])) {
-            $container['view/mustache/helpers'] = function () {
-                return [];
-            };
+            $container['view/mustache/helpers'] = (fn(): array => []);
         }
 
         /**
@@ -477,7 +457,7 @@ class AppServiceProvider implements ServiceProviderInterface
          *
          * @return array
          */
-        $container->extend('view/mustache/helpers', function (array $helpers, Container $container) {
+        $container->extend('view/mustache/helpers', function (array $helpers, Container $container): array {
             $baseUrl = $container['base-url'];
             $urls = [
                 /**
@@ -504,8 +484,8 @@ class AppServiceProvider implements ServiceProviderInterface
                  * @param  string $uri A URI path to wrap.
                  * @return UriInterface|null
                  */
-                'withBaseUrl' => function ($uri, LambdaHelper $helper = null) use ($baseUrl) {
-                    if ($helper) {
+                'withBaseUrl' => function ($uri, ?LambdaHelper $helper = null) use ($baseUrl) {
+                    if ($helper instanceof \Mustache_LambdaHelper) {
                         $uri = $helper->render($uri);
                     }
 
@@ -514,24 +494,19 @@ class AppServiceProvider implements ServiceProviderInterface
                         $uri = $baseUrl->withPath('');
                     } else {
                         $parts = parse_url($uri);
-                        if (!isset($parts['scheme'])) {
-                            if (!in_array($uri[0], [ '/', '#', '?' ])) {
-                                $path  = isset($parts['path']) ? $parts['path'] : '';
-                                $query = isset($parts['query']) ? $parts['query'] : '';
-                                $hash  = isset($parts['fragment']) ? $parts['fragment'] : '';
-
-                                $uri = $baseUrl->withPath($path)
-                                               ->withQuery($query)
-                                               ->withFragment($hash);
-                            }
+                        if (!isset($parts['scheme']) && !in_array($uri[0], [ '/', '#', '?' ])) {
+                            $path  = $parts['path'] ?? '';
+                            $query = $parts['query'] ?? '';
+                            $hash  = $parts['fragment'] ?? '';
+                            $uri = $baseUrl->withPath($path)
+                                           ->withQuery($query)
+                                           ->withFragment($hash);
                         }
                     }
 
                     return $uri;
                 },
-                'renderContext' => function ($text, LambdaHelper $helper = null) {
-                    return $helper->render('{{>' . $helper->render($text) . '}}');
-                },
+                'renderContext' => fn($text, ?LambdaHelper $helper = null) => $helper->render('{{>' . $helper->render($text) . '}}'),
             ];
 
             return array_merge($helpers, $urls);
@@ -540,14 +515,11 @@ class AppServiceProvider implements ServiceProviderInterface
 
     /**
      * @param Container $container The DI container.
-     * @return void
      */
     protected function registerTwigHelpersServices(Container $container): void
     {
         if (!isset($container['view/twig/helpers'])) {
-            $container['view/twig/helpers'] = function () {
-                return [];
-            };
+            $container['view/twig/helpers'] = (fn(): array => []);
         }
 
         /**
@@ -555,22 +527,18 @@ class AppServiceProvider implements ServiceProviderInterface
          *
          * @return TwigUrlHelpers
          */
-        $container['view/twig/helpers/url'] = function (Container $container): TwigHelpersInterface {
-            return new TwigUrlHelpers([
-                'baseUrl' => $container['base-url'],
-            ]);
-        };
+        $container['view/twig/helpers/url'] = (fn(Container $container): TwigHelpersInterface => new TwigUrlHelpers([
+            'baseUrl' => $container['base-url'],
+        ]));
 
         /**
          * Debug helpers for Twig.
          *
          * @return TwigDebugHelpers
          */
-        $container['view/twig/helpers/debug'] = function (Container $container): TwigHelpersInterface {
-            return new TwigDebugHelpers([
-                'debug'  => $container['debug'],
-            ]);
-        };
+        $container['view/twig/helpers/debug'] = (fn(Container $container): TwigHelpersInterface => new TwigDebugHelpers([
+            'debug'  => $container['debug'],
+        ]));
 
         /**
          * Extend global helpers for the Twig Engine.
@@ -579,12 +547,10 @@ class AppServiceProvider implements ServiceProviderInterface
          * @param  Container $container A container instance.
          * @return array
          */
-        $container->extend('view/twig/helpers', function (array $helpers, Container $container): array {
-            return array_merge(
-                $helpers,
-                $container['view/twig/helpers/url']->toArray(),
-                $container['view/twig/helpers/debug']->toArray(),
-            );
-        });
+        $container->extend('view/twig/helpers', fn(array $helpers, Container $container): array => array_merge(
+            $helpers,
+            $container['view/twig/helpers/url']->toArray(),
+            $container['view/twig/helpers/debug']->toArray(),
+        ));
     }
 }

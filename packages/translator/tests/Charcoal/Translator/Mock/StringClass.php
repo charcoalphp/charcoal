@@ -1,29 +1,22 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Charcoal\Tests\Translator\Mock;
 
 /**
  * {@link https://github.com/symfony/translation/blob/v3.2.3/Tests/TranslatorTest.php}
  */
-class StringClass
+class StringClass implements \Stringable
 {
-    /**
-     * @var string
-     */
-    protected $str;
-
     /**
      * @param string $str A string.
      */
-    public function __construct($str)
+    public function __construct(protected $str)
     {
-        $this->str = $str;
     }
 
-    /**
-     * @return string
-     */
-    public function __toString()
+    public function __toString(): string
     {
         return $this->str;
     }

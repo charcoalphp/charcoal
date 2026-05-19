@@ -18,9 +18,6 @@ class ModelStructurePropertyTest extends AbstractTestCase
      */
     public $obj;
 
-    /**
-     * @return void
-     */
     protected function setUp(): void
     {
         $container = $this->getContainer();
@@ -32,15 +29,12 @@ class ModelStructurePropertyTest extends AbstractTestCase
         ]);
     }
 
-    /**
-     * @return void
-     */
-    public function testType()
+    public function testType(): void
     {
         $this->assertEquals('model-structure', $this->obj->type());
     }
 
-    public function testSetStructureMetadata()
+    public function testSetStructureMetadata(): void
     {
         $ret = $this->obj->setStructureMetadata(null);
         $this->assertSame($ret, $this->obj);
@@ -51,7 +45,7 @@ class ModelStructurePropertyTest extends AbstractTestCase
         $this->obj->setStructureMetadata('foo');
     }
 
-    public function setStructureInterfaces()
+    public function setStructureInterfaces(): void
     {
         $ret = $this->obj->setStructureInterfaces([]);
         $this->assertSame($ret, $this->obj);

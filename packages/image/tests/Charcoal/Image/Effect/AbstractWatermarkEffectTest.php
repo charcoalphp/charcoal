@@ -8,12 +8,12 @@ class AbstractWatermarkEffectTest extends \PHPUnit\Framework\TestCase
 
     protected function setUp(): void
     {
-        $img = $this->getMockForAbstractClass('\Charcoal\Image\AbstractImage');
-        $this->obj = $this->getMockForAbstractClass('\Charcoal\Image\Effect\AbstractWatermarkEffect');
+        $img = $this->getMockForAbstractClass(\Charcoal\Image\AbstractImage::class);
+        $this->obj = $this->getMockForAbstractClass(\Charcoal\Image\Effect\AbstractWatermarkEffect::class);
         $this->obj->setImage($img);
     }
 
-    public function testDefaults()
+    public function testDefaults(): void
     {
         $obj = $this->obj;
 
@@ -23,7 +23,7 @@ class AbstractWatermarkEffectTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(0, $obj->y());
     }
 
-    public function testSetData()
+    public function testSetData(): void
     {
         $obj = $this->obj;
         $ret = $obj->setData(
@@ -44,7 +44,7 @@ class AbstractWatermarkEffectTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(20, $obj->y());
     }
 
-    public function testSetWatermark()
+    public function testSetWatermark(): void
     {
         $obj = $this->obj;
         $ret = $obj->setWatermark('bar/baz.png');
@@ -55,7 +55,7 @@ class AbstractWatermarkEffectTest extends \PHPUnit\Framework\TestCase
         $obj->setWatermark(false);
     }
 
-    public function testSetOpacity()
+    public function testSetOpacity(): void
     {
         $obj = $this->obj;
         $ret = $obj->setOpacity(0.42);
@@ -66,7 +66,7 @@ class AbstractWatermarkEffectTest extends \PHPUnit\Framework\TestCase
         $obj->setOpacity(false);
     }
 
-    public function testSetGravity()
+    public function testSetGravity(): void
     {
         $obj = $this->obj;
         $ret = $obj->setGravity('se');
@@ -77,7 +77,7 @@ class AbstractWatermarkEffectTest extends \PHPUnit\Framework\TestCase
         $obj->setGravity('foobar');
     }
 
-    public function testSetX()
+    public function testSetX(): void
     {
         $obj = $this->obj;
         $ret = $obj->setX(15);
@@ -88,7 +88,7 @@ class AbstractWatermarkEffectTest extends \PHPUnit\Framework\TestCase
         $obj->setX(false);
     }
 
-    public function testSetY()
+    public function testSetY(): void
     {
         $obj = $this->obj;
         $ret = $obj->setY(15);

@@ -29,60 +29,36 @@ class LanguageMiddleware
      */
     private $browserLanguage;
 
-    /**
-     * @var array
-     */
-    private $excludedPath;
+    private array $excludedPath;
 
-    /**
-     * @var boolean
-     */
-    private $usePath;
+    private bool $usePath;
 
     /**
      * @var string
      */
     private $pathRegexp;
 
-    /**
-     * @var boolean
-     */
-    private $useBrowser;
+    private bool $useBrowser;
 
-    /**
-     * @var boolean
-     */
-    private $useSession;
+    private bool $useSession;
 
     /**
      * @var string[]
      */
-    private $sessionKey;
+    private array $sessionKey;
 
-    /**
-     * @var boolean
-     */
-    private $useParams;
+    private bool $useParams;
 
     /**
      * @var string[]
      */
-    private $paramKey;
+    private array $paramKey;
 
-    /**
-     * @var boolean
-     */
-    private $useHost;
+    private bool $useHost;
 
-    /**
-     * @var array
-     */
-    private $hostMap;
+    private array $hostMap;
 
-    /**
-     * @var boolean
-     */
-    private $setLocale;
+    private bool $setLocale;
 
     /**
      * @param array $data The middleware options.
@@ -96,30 +72,28 @@ class LanguageMiddleware
         $this->defaultLanguage = $data['default_language'];
         $this->browserLanguage = $data['browser_language'];
 
-        $this->usePath      = !!$data['use_path'];
+        $this->usePath      = (bool) $data['use_path'];
         $this->excludedPath = (array)$data['excluded_path'];
         $this->pathRegexp   = $data['path_regexp'];
 
-        $this->useParams    = !!$data['use_params'];
+        $this->useParams    = (bool) $data['use_params'];
         $this->paramKey     = (array)$data['param_key'];
 
-        $this->useSession   = !!$data['use_session'];
+        $this->useSession   = (bool) $data['use_session'];
         $this->sessionKey   = (array)$data['session_key'];
 
-        $this->useBrowser   = !!$data['use_browser'];
+        $this->useBrowser   = (bool) $data['use_browser'];
 
-        $this->useHost      = !!$data['use_host'];
+        $this->useHost      = (bool) $data['use_host'];
         $this->hostMap      = (array)$data['host_map'];
 
-        $this->setLocale    = !!$data['set_locale'];
+        $this->setLocale    = (bool) $data['set_locale'];
     }
 
     /**
      * Default middleware options.
-     *
-     * @return array
      */
-    public function defaults()
+    public function defaults(): array
     {
         return [
             'default_language' => null,
@@ -173,35 +147,35 @@ class LanguageMiddleware
      */
     private function getLanguage(RequestInterface $request)
     {
-        if ($this->useHost === true) {
+        if ($this->useHost) {
             $lang = $this->getLanguageFromHost($request);
             if ($lang) {
                 return $lang;
             }
         }
 
-        if ($this->usePath === true) {
+        if ($this->usePath) {
             $lang = $this->getLanguageFromPath($request);
-            if ($lang) {
+            if ($lang !== '' && $lang !== '0') {
                 return $lang;
             }
         }
 
-        if ($this->useParams === true) {
+        if ($this->useParams) {
             $lang = $this->getLanguageFromParams($request);
             if ($lang) {
                 return $lang;
             }
         }
 
-        if ($this->useSession === true) {
+        if ($this->useSession) {
             $lang = $this->getLanguageFromSession();
             if ($lang) {
                 return $lang;
             }
         }
 
-        if ($this->useBrowser === true) {
+        if ($this->useBrowser) {
             $lang = $this->getLanguageFromBrowser();
             if ($lang) {
                 return $lang;
@@ -215,11 +189,11 @@ class LanguageMiddleware
      * @param  RequestInterface $request The PSR-7 HTTP request.
      * @return string
      */
-    private function getLanguageFromHost(RequestInterface $request)
+    private function getLanguageFromHost(RequestInterface $request): int|string
     {
         $uriHost = $request->getUri()->getHost();
         foreach ($this->hostMap as $lang => $host) {
-            if (stripos($uriHost, $host) !== false) {
+            if (stripos($uriHost, (string) $host) !== false) {
                 return $lang;
             }
         }
@@ -229,9 +203,8 @@ class LanguageMiddleware
 
     /**
      * @param  RequestInterface $request The PSR-7 HTTP request.
-     * @return string
      */
-    private function getLanguageFromPath(RequestInterface $request)
+    private function getLanguageFromPath(RequestInterface $request): string
     {
         $path = $request->getRequestTarget();
         if (preg_match('@' . $this->pathRegexp . '@', $path, $matches)) {
@@ -291,28 +264,26 @@ class LanguageMiddleware
 
     /**
      * @param  string $lang The language code to set.
-     * @return void
      */
-    private function setLanguage($lang)
+    private function setLanguage($lang): void
     {
         $this->translator()->setLocale($lang);
 
-        if ($this->useSession === true) {
+        if ($this->useSession) {
             foreach ($this->sessionKey as $key) {
                 $_SESSION[$key] = $this->translator()->getLocale();
             }
         }
 
-        if ($this->setLocale === true) {
+        if ($this->setLocale) {
             $this->setLocale($lang);
         }
     }
 
     /**
      * @param  string $lang The language code to set.
-     * @return void
      */
-    private function setLocale($lang)
+    private function setLocale($lang): void
     {
         $translator = $this->translator();
         $available  = $translator->locales();
@@ -329,14 +300,14 @@ class LanguageMiddleware
                     $choices = (array)$locale['locales'];
                     array_push($locales, ...$choices);
                 } elseif (isset($locale['locale'])) {
-                    array_push($locales, $locale['locale']);
+                    $locales[] = $locale['locale'];
                 }
             }
         }
 
         $locales = array_unique($locales);
 
-        if (!empty($locales)) {
+        if ($locales !== []) {
             setlocale(LC_ALL, $locales);
         }
     }

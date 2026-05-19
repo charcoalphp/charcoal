@@ -11,9 +11,8 @@ class ImagickMirrorEffect extends AbstractMirrorEffect
 {
     /**
      * @param array $data The effect data, if available.
-     * @return self
      */
-    public function process(array $data = null)
+    public function process(?array $data = null): static
     {
         if ($data !== null) {
             $this->setData($data);

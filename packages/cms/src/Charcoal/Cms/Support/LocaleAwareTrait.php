@@ -66,9 +66,8 @@ trait LocaleAwareTrait
      * @param  array  $localeStruct The language structure.
      * @param  string $langCode     The language code.
      * @throws InvalidArgumentException If the locale does not have a language code.
-     * @return array
      */
-    private function parseLocale(array $localeStruct, $langCode)
+    private function parseLocale(array $localeStruct, string $langCode): array
     {
         $trans = 'locale.' . $langCode;
 
@@ -105,10 +104,8 @@ trait LocaleAwareTrait
 
     /**
      * Retrieve the translator service.
-     *
-     * @return array
      */
-    protected function availableLanguages()
+    protected function availableLanguages(): array
     {
         return array_keys($this->locales());
     }
@@ -117,10 +114,8 @@ trait LocaleAwareTrait
      * Build the alternate translations associated with the current route.
      *
      * This method _excludes_ the current route's canonical URI.
-     *
-     * @return array
      */
-    protected function buildAlternateTranslations()
+    protected function buildAlternateTranslations(): array
     {
         $translations = [];
 
@@ -171,7 +166,7 @@ trait LocaleAwareTrait
      * @param  array $localeStruct The currently iterated language.
      * @return array Returns a link structure.
      */
-    protected function formatAlternateTranslation($context, array $localeStruct)
+    protected function formatAlternateTranslation(array $context, array $localeStruct): array
     {
         return [
             'id'       => ($context['id']) ? : $this->templateName(),
@@ -222,10 +217,8 @@ trait LocaleAwareTrait
 
     /**
      * Determine if there exists alternate translations associated with the current route.
-     *
-     * @return boolean
      */
-    public function hasAlternateTranslations()
+    public function hasAlternateTranslations(): bool
     {
         return !empty($this->getAlternateTranslations());
     }

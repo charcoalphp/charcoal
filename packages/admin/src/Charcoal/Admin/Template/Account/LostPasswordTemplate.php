@@ -21,9 +21,9 @@ class LostPasswordTemplate extends AdminTemplate
      * Determine if the password token is valid.
      *
      * @param  RequestInterface $request The PSR-7 HTTP request.
-     * @return boolean
      */
-    public function init(RequestInterface $request)
+    #[\Override]
+    public function init(RequestInterface $request): bool
     {
         $translator = $this->translator();
 
@@ -52,10 +52,8 @@ class LostPasswordTemplate extends AdminTemplate
         return true;
     }
 
-    /**
-     * @return boolean
-     */
-    public function authRequired()
+    #[\Override]
+    public function authRequired(): bool
     {
         return false;
     }
@@ -73,6 +71,7 @@ class LostPasswordTemplate extends AdminTemplate
      *
      * @return \Charcoal\Translator\Translation|string|null
      */
+    #[\Override]
     public function title()
     {
         if ($this->title === null) {
@@ -87,7 +86,8 @@ class LostPasswordTemplate extends AdminTemplate
      *
      * @return string[]
      */
-    public function recaptchaParameters()
+    #[\Override]
+    public function recaptchaParameters(): array
     {
         $params = parent::recaptchaParameters();
         $params['tabindex'] = 2;
@@ -103,13 +103,11 @@ class LostPasswordTemplate extends AdminTemplate
 
     // Templating
     // =========================================================================
-
     /**
      * Determine if main & secondary menu should appear as mobile in a desktop resolution.
-     *
-     * @return boolean
      */
-    public function isFullscreenTemplate()
+    #[\Override]
+    public function isFullscreenTemplate(): bool
     {
         return true;
     }

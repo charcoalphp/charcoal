@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Charcoal\Admin\Property\Input;
 
 // From 'charcoal-admin'
@@ -14,26 +16,18 @@ class SwitchInput extends AbstractPropertyInput
 {
     /**
      * Retrieve the control type for the HTML element `<input>`.
-     *
-     * @return string
      */
-    public function type()
+    public function type(): string
     {
         return 'checkbox';
     }
 
-    /**
-     * @return boolean
-     */
-    public function checked()
+    public function checked(): bool
     {
-        return !!$this->inputVal();
+        return (bool) $this->inputVal();
     }
 
-    /**
-     * @return integer
-     */
-    public function value()
+    public function value(): int
     {
         return $this->inputVal() ? 1 : 0;
     }

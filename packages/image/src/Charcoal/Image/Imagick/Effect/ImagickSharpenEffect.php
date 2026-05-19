@@ -12,7 +12,7 @@ class ImagickSharpenEffect extends AbstractSharpenEffect
     /**
      * @return ImagickSharpenEffect Chainable
      */
-    public function processAdaptive()
+    public function processAdaptive(): static
     {
         $channel = $this->image()->imagickChannel($this->channel());
         $this->image()->imagick()->adaptiveAbstractSharpenEffectImage($this->radius(), $this->sigma(), $channel);
@@ -22,7 +22,7 @@ class ImagickSharpenEffect extends AbstractSharpenEffect
     /**
      * @return ImagickSharpenEffect Chainable
      */
-    public function processUnsharp()
+    public function processUnsharp(): static
     {
         $radius = $this->radius();
         $sigma = $this->sigma();
@@ -38,7 +38,7 @@ class ImagickSharpenEffect extends AbstractSharpenEffect
     /**
      * @return ImagickSharpenEffect Chainable
      */
-    public function processStandard()
+    public function processStandard(): static
     {
         $channel = $this->image()->imagickChannel($this->channel());
         $this->image()->imagick()->sharpenImage($this->radius(), $this->sigma(), $channel);

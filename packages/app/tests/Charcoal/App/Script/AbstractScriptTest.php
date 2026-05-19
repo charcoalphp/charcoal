@@ -21,17 +21,13 @@ class AbstractScriptTest extends AbstractTestCase
 {
     /**
      * Tested Class.
-     *
-     * @var AbstractScript
      */
-    private $obj;
+    private \Charcoal\App\Script\AbstractScript $obj;
 
     /**
      * Store the service container.
-     *
-     * @var Container
      */
-    private $container;
+    private ?\Pimple\Container $container = null;
 
     /**
      * Set up the test.
@@ -47,21 +43,21 @@ class AbstractScriptTest extends AbstractTestCase
         ]]);
     }
 
-    public function testSetIdent()
+    public function testSetIdent(): void
     {
         $ret = $this->obj->setIdent('foobar');
         $this->assertSame($ret, $this->obj);
         $this->assertEquals('foobar', $this->obj->ident());
     }
 
-    public function testSetDescription()
+    public function testSetDescription(): void
     {
         $ret = $this->obj->setDescription('Foo Description');
         $this->assertSame($ret, $this->obj);
         $this->assertEQuals('Foo Description', $this->obj->description());
     }
 
-    public function testSetQuiet()
+    public function testSetQuiet(): void
     {
         $this->assertFalse($this->obj->quiet());
         $ret = $this->obj->setQuiet(true);
@@ -69,7 +65,7 @@ class AbstractScriptTest extends AbstractTestCase
         $this->assertTrue($this->obj->quiet());
     }
 
-    public function testSetVerbose()
+    public function testSetVerbose(): void
     {
         $this->assertFalse($this->obj->verbose());
         $ret = $this->obj->setVerbose(true);
@@ -77,9 +73,9 @@ class AbstractScriptTest extends AbstractTestCase
         $this->assertTrue($this->obj->verbose());
     }
 
-    public function testSetArguments()
+    public function testSetArguments(): void
     {
-        $defaultArgs = $this->obj->arguments();
+        $this->obj->arguments();
         $ret = $this->obj->setArguments([
             'foo'=>[]
         ]);
@@ -90,12 +86,10 @@ class AbstractScriptTest extends AbstractTestCase
 
     /**
      * Set up the service container.
-     *
-     * @return Container
      */
-    private function container()
+    private function container(): \Pimple\Container
     {
-        if ($this->container === null) {
+        if (!$this->container instanceof \Pimple\Container) {
             $container = new Container();
             $containerProvider = new ContainerProvider();
             $containerProvider->registerLogger($container);

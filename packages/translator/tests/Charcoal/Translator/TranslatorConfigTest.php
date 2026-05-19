@@ -15,25 +15,18 @@ class TranslatorConfigTest extends AbstractTestCase
 {
     /**
      * Tested Class.
-     *
-     * @var TranslatorConfig
      */
-    private $obj;
+    private \Charcoal\Translator\TranslatorConfig|array $obj;
 
     /**
      * Set up the test.
-     *
-     * @return void
      */
     protected function setUp(): void
     {
         $this->obj = new TranslatorConfig();
     }
 
-    /**
-     * @return void
-     */
-    public function testDefaultsArrayAccess()
+    public function testDefaultsArrayAccess(): void
     {
         $this->assertEquals([ 'csv' ], $this->obj['loaders']);
         $this->assertContains('translations/', $this->obj['paths']);
@@ -41,10 +34,7 @@ class TranslatorConfigTest extends AbstractTestCase
         $this->assertEquals('../cache/translator', $this->obj['cache_dir']);
     }
 
-    /**
-     * @return void
-     */
-    public function testSetLoaders()
+    public function testSetLoaders(): void
     {
         $this->assertEquals([ 'csv' ], $this->obj->loaders());
 
@@ -56,46 +46,31 @@ class TranslatorConfigTest extends AbstractTestCase
         $this->assertEquals([ 'php' ], $this->obj['loaders']);
     }
 
-    /**
-     * @return void
-     */
-    public function testSetUnavailableLoaders()
+    public function testSetUnavailableLoaders(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->obj['loaders'] = [ 'foo' ];
     }
 
-    /**
-     * @return void
-     */
-    public function testSetInvalidPaths()
+    public function testSetInvalidPaths(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->obj['paths'] = [ false ];
     }
 
-    /**
-     * @return void
-     */
-    public function testSetInvalidDomainTranslations()
+    public function testSetInvalidDomainTranslations(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->obj['translations'] = [ false ];
     }
 
-    /**
-     * @return void
-     */
-    public function testSetInvalidMessageTranslations()
+    public function testSetInvalidMessageTranslations(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->obj['translations'] = [ [ false ] ];
     }
 
-    /**
-     * @return void
-     */
-    public function testSetDebug()
+    public function testSetDebug(): void
     {
         $this->assertFalse($this->obj->debug());
         $ret = $this->obj->setDebug(true);
@@ -106,10 +81,7 @@ class TranslatorConfigTest extends AbstractTestCase
         $this->assertFalse($this->obj['debug']);
     }
 
-    /**
-     * @return void
-     */
-    public function testSetCacheDir()
+    public function testSetCacheDir(): void
     {
         $this->assertEquals('../cache/translator', $this->obj->cacheDir());
         $ret = $this->obj->setCacheDir('foo');
@@ -120,10 +92,7 @@ class TranslatorConfigTest extends AbstractTestCase
         $this->assertEquals('bar', $this->obj['cache_dir']);
     }
 
-    /**
-     * @return void
-     */
-    public function testSetInvalidCacheDir()
+    public function testSetInvalidCacheDir(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->obj['cache_dir'] = false;

@@ -67,6 +67,7 @@ abstract class AbstractCacheAction extends AdminAction
     /**
      * @return array
      */
+    #[\Override]
     public function results()
     {
         return [
@@ -81,6 +82,7 @@ abstract class AbstractCacheAction extends AdminAction
      * @param  Container $container A service locator.
      * @return void
      */
+    #[\Override]
     protected function setDependencies(Container $container)
     {
         parent::setDependencies($container);
@@ -95,7 +97,7 @@ abstract class AbstractCacheAction extends AdminAction
             return null;
         };
         $this->twigEngine = function () use ($container) {
-            if (class_exists('\Twig\Environment')) {
+            if (class_exists(\Twig\Environment::class)) {
                 return $container['view/engine/twig'];
             }
 

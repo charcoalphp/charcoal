@@ -78,15 +78,10 @@ class TableWidget extends AdminWidget implements CollectionContainerInterface
 
     /**
      * Store the factory instance for the current class.
-     *
-     * @var FactoryInterface
      */
-    private $widgetFactory;
+    private ?\Charcoal\Factory\FactoryInterface $widgetFactory = null;
 
-    /**
-     * @var FactoryInterface $propertyFactory
-     */
-    private $propertyFactory;
+    private ?\Charcoal\Factory\FactoryInterface $propertyFactory = null;
 
     /**
      * @var mixed $adminMetadata
@@ -95,10 +90,8 @@ class TableWidget extends AdminWidget implements CollectionContainerInterface
 
     /**
      * List actions ars displayed by default.
-     *
-     * @var boolean
      */
-    private $showListActions = true;
+    private bool $showListActions = true;
 
     /**
      * Store the list actions.
@@ -130,10 +123,8 @@ class TableWidget extends AdminWidget implements CollectionContainerInterface
 
     /**
      * Object actions ars displayed by default.
-     *
-     * @var boolean
      */
-    private $showObjectActions = true;
+    private bool $showObjectActions = true;
 
     /**
      * Store the object actions.
@@ -173,7 +164,8 @@ class TableWidget extends AdminWidget implements CollectionContainerInterface
      * @param  array $data The widget data.
      * @return TableWidget Chainable
      */
-    public function setData(array $data)
+    #[\Override]
+    public function setData(array $data): static
     {
         if (isset($data['obj_type'])) {
             $this->setObjType($data['obj_type']);
@@ -218,10 +210,8 @@ class TableWidget extends AdminWidget implements CollectionContainerInterface
 
     /**
      * Retrieve the accepted metadata from the current request.
-     *
-     * @return array
      */
-    public function acceptedRequestData()
+    public function acceptedRequestData(): array
     {
         return [
             'obj_type',
@@ -241,7 +231,7 @@ class TableWidget extends AdminWidget implements CollectionContainerInterface
     {
         $proto = $this->proto();
         $objMetadata = $proto->metadata();
-        $adminMetadata = (isset($objMetadata['admin']) ? $objMetadata['admin'] : null);
+        $adminMetadata = ($objMetadata['admin'] ?? null);
 
         if (empty($adminMetadata['lists'])) {
             return [];
@@ -260,11 +250,7 @@ class TableWidget extends AdminWidget implements CollectionContainerInterface
             return [];
         }
 
-        if (isset($adminMetadata['lists'][$collectionIdent])) {
-            $objListData = $adminMetadata['lists'][$collectionIdent];
-        } else {
-            $objListData = [];
-        }
+        $objListData = $adminMetadata['lists'][$collectionIdent] ?? [];
 
         $collectionConfig = [];
 
@@ -320,7 +306,7 @@ class TableWidget extends AdminWidget implements CollectionContainerInterface
             }
         }
 
-        if ($collectionConfig) {
+        if ($collectionConfig !== []) {
             $this->mergeCollectionConfig($collectionConfig);
         }
 
@@ -329,10 +315,9 @@ class TableWidget extends AdminWidget implements CollectionContainerInterface
 
     /**
      * Retrieve the widget's data options for JavaScript components.
-     *
-     * @return array
      */
-    public function widgetDataForJs()
+    #[\Override]
+    public function widgetDataForJs(): array
     {
         return [
             'obj_type'         => $this->objType(),
@@ -376,7 +361,7 @@ class TableWidget extends AdminWidget implements CollectionContainerInterface
             if ($listProperties) {
                 $props = [];
                 foreach ($listProperties as $k => $v) {
-                    $k = lcfirst(implode('', array_map('ucfirst', explode('_', $k))));
+                    $k = lcfirst(implode('', array_map(ucfirst(...), explode('_', (string) $k))));
                     $props[$k] = $v;
                 }
                 // Replacing values of listProperties from index to actual property values
@@ -398,11 +383,8 @@ class TableWidget extends AdminWidget implements CollectionContainerInterface
     public function propertiesIdents()
     {
         $collectionConfig = $this->collectionConfig();
-        if (isset($collectionConfig['properties'])) {
-            return $collectionConfig['properties'];
-        }
 
-        return [];
+        return $collectionConfig['properties'] ?? [];
     }
 
     /**
@@ -472,11 +454,7 @@ class TableWidget extends AdminWidget implements CollectionContainerInterface
             $options = $this->viewOptions($propertyIdent);
             $classes = $this->parsePropertyCellClasses($p);
 
-            if (isset($options['label'])) {
-                $label = $this->translator()->translate($options['label']);
-            } else {
-                $label = strval($p['label']);
-            }
+            $label = isset($options['label']) ? $this->translator()->translate($options['label']) : strval($p['label']);
 
             $column = [
                 'label' => trim($label)
@@ -489,24 +467,20 @@ class TableWidget extends AdminWidget implements CollectionContainerInterface
             if (isset($options['attr'])) {
                 $column['attr'] = array_merge($column['attr'], $options['attr']);
             }
-
-            if (isset($classes)) {
-                if (isset($column['attr']['class'])) {
-                    if (is_string($classes)) {
-                        $classes = explode(' ', $column['attr']['class']);
-                    }
-
-                    if (is_string($column['attr']['class'])) {
-                        $column['attr']['class'] = explode(' ', $column['attr']['class']);
-                    }
-
-                    $column['attr']['class'] = array_unique(array_merge($column['attr']['class'], $classes));
-                } else {
-                    $column['attr']['class'] = $classes;
+            if (isset($column['attr']['class'])) {
+                if (is_string($classes)) {
+                    $classes = explode(' ', $column['attr']['class']);
                 }
 
-                unset($classes);
+                if (is_string($column['attr']['class'])) {
+                    $column['attr']['class'] = explode(' ', $column['attr']['class']);
+                }
+
+                $column['attr']['class'] = array_unique(array_merge($column['attr']['class'], $classes));
+            } else {
+                $column['attr']['class'] = $classes;
             }
+            unset($classes);
 
             $column['attr'] = html_build_attributes($column['attr']);
 
@@ -520,19 +494,17 @@ class TableWidget extends AdminWidget implements CollectionContainerInterface
      * @param  boolean $show Show (TRUE) or hide (FALSE) the actions.
      * @return TableWidget Chainable
      */
-    public function setShowObjectActions($show)
+    public function setShowObjectActions($show): static
     {
-        $this->showObjectActions = !!$show;
+        $this->showObjectActions = (bool) $show;
 
         return $this;
     }
 
     /**
      * Determine if the table's object actions should be shown.
-     *
-     * @return boolean
      */
-    public function showObjectActions()
+    public function showObjectActions(): false|int
     {
         if ($this->showObjectActions === false) {
             return false;
@@ -543,10 +515,8 @@ class TableWidget extends AdminWidget implements CollectionContainerInterface
 
     /**
      * Retrieve the table's object actions.
-     *
-     * @return array
      */
-    public function objectActions()
+    public function objectActions(): array
     {
         $this->rawObjectActions();
 
@@ -571,11 +541,7 @@ class TableWidget extends AdminWidget implements CollectionContainerInterface
             $parsed = $this->parsedObjectActions;
 
             $collectionConfig = $this->collectionConfig();
-            if (isset($collectionConfig['object_actions'])) {
-                $actions = $collectionConfig['object_actions'];
-            } else {
-                $actions = [];
-            }
+            $actions = $collectionConfig['object_actions'] ?? [];
 
             $this->setObjectActions($actions);
 
@@ -596,7 +562,7 @@ class TableWidget extends AdminWidget implements CollectionContainerInterface
      * @param  array $actions One or more actions.
      * @return TableWidget Chainable.
      */
-    public function setObjectActions(array $actions)
+    public function setObjectActions(array $actions): static
     {
         $this->parsedObjectActions = false;
 
@@ -619,7 +585,7 @@ class TableWidget extends AdminWidget implements CollectionContainerInterface
      * @param  array $actions Actions to resolve.
      * @return array Object actions.
      */
-    public function createObjectActions(array $actions)
+    public function createObjectActions(array $actions): array
     {
         $this->parsingObjectActions = true;
         $objectActions = $this->parseActions($actions);
@@ -632,9 +598,8 @@ class TableWidget extends AdminWidget implements CollectionContainerInterface
      * Parse the given actions as (row) object actions.
      *
      * @param  array $actions Actions to resolve.
-     * @return array
      */
-    protected function parseAsObjectActions(array $actions)
+    protected function parseAsObjectActions(array $actions): array
     {
         $objectActions = [];
         foreach ($actions as $action) {
@@ -654,9 +619,7 @@ class TableWidget extends AdminWidget implements CollectionContainerInterface
 
             if ($action['actions']) {
                 $action['actions']    = $this->parseAsObjectActions($action['actions']);
-                $action['hasActions'] = !!array_filter($action['actions'], function ($action) {
-                    return $action['active'];
-                });
+                $action['hasActions'] = (bool) array_filter($action['actions'], fn(array $action): mixed => $action['active']);
             }
 
             $objectActions[] = $action;
@@ -667,10 +630,8 @@ class TableWidget extends AdminWidget implements CollectionContainerInterface
 
     /**
      * Determine if the table's empty collection actions should be shown.
-     *
-     * @return boolean
      */
-    public function showEmptyListActions()
+    public function showEmptyListActions(): int
     {
         $actions = $this->emptyListActions();
 
@@ -679,16 +640,12 @@ class TableWidget extends AdminWidget implements CollectionContainerInterface
 
     /**
      * Retrieve the table's empty collection actions.
-     *
-     * @return array
      */
-    public function emptyListActions()
+    public function emptyListActions(): array
     {
         $actions = $this->listActions();
 
-        $filteredArray = array_filter($actions, function ($action) {
-            return $action['empty'] && $action['active'];
-        });
+        $filteredArray = array_filter($actions, fn(array $action): bool => $action['empty'] && $action['active']);
 
         return array_values($filteredArray);
     }
@@ -699,19 +656,17 @@ class TableWidget extends AdminWidget implements CollectionContainerInterface
      * @param  boolean $show Show (TRUE) or hide (FALSE) the actions.
      * @return TableWidget Chainable
      */
-    public function setShowListActions($show)
+    public function setShowListActions($show): static
     {
-        $this->showListActions = !!$show;
+        $this->showListActions = (bool) $show;
 
         return $this;
     }
 
     /**
      * Determine if the table's collection actions should be shown.
-     *
-     * @return boolean
      */
-    public function showListActions()
+    public function showListActions(): false|int
     {
         if ($this->showListActions === false) {
             return false;
@@ -729,11 +684,7 @@ class TableWidget extends AdminWidget implements CollectionContainerInterface
     {
         if ($this->listActions === null) {
             $collectionConfig = $this->collectionConfig();
-            if (isset($collectionConfig['list_actions'])) {
-                $actions = $collectionConfig['list_actions'];
-            } else {
-                $actions = [];
-            }
+            $actions = $collectionConfig['list_actions'] ?? [];
             $this->setListActions($actions);
         }
 
@@ -765,9 +716,9 @@ class TableWidget extends AdminWidget implements CollectionContainerInterface
      * @param boolean $show The show flag.
      * @return TableWidget Chainable
      */
-    public function setShowTableHeader($show)
+    public function setShowTableHeader($show): static
     {
-        $this->showTableHeader = !!$show;
+        $this->showTableHeader = (bool) $show;
 
         return $this;
     }
@@ -784,9 +735,9 @@ class TableWidget extends AdminWidget implements CollectionContainerInterface
      * @param boolean $show The show flag.
      * @return TableWidget Chainable
      */
-    public function setShowTableHead($show)
+    public function setShowTableHead($show): static
     {
-        $this->showTableHead = !!$show;
+        $this->showTableHead = (bool) $show;
 
         return $this;
     }
@@ -803,9 +754,9 @@ class TableWidget extends AdminWidget implements CollectionContainerInterface
      * @param boolean $show The show flag.
      * @return TableWidget Chainable
      */
-    public function setShowTableFoot($show)
+    public function setShowTableFoot($show): static
     {
-        $this->showTableFoot = !!$show;
+        $this->showTableFoot = (bool) $show;
 
         return $this;
     }
@@ -822,9 +773,9 @@ class TableWidget extends AdminWidget implements CollectionContainerInterface
      * @param boolean $sortable The sortable flag.
      * @return TableWidget Chainable
      */
-    public function setSortable($sortable)
+    public function setSortable($sortable): static
     {
-        $this->sortable = !!$sortable;
+        $this->sortable = (bool) $sortable;
 
         return $this;
     }
@@ -842,30 +793,21 @@ class TableWidget extends AdminWidget implements CollectionContainerInterface
      *
      * @param  mixed   $action The action structure.
      * @param  boolean $row    Whether to resolve action type for a row.
-     * @return string
      */
-    protected function resolveActionType($action, $row = false)
+    protected function resolveActionType(array $action, $row = false): string
     {
         if ($row || $this->parsingObjectActions) {
-            switch ($action['ident']) {
-                case 'reset':
-                    return 'warning';
-
-                case 'delete':
-                    return 'danger';
-
-                default:
-                    return 'seamless';
-            }
+            return match ($action['ident']) {
+                'reset' => 'warning',
+                'delete' => 'danger',
+                default => 'seamless',
+            };
         }
 
         return $this->resolveDefaultActionType($action);
     }
 
-    /**
-     * @return string
-     */
-    public function jsActionPrefix()
+    public function jsActionPrefix(): string
     {
         return ($this->currentObj) ? 'js-obj' : 'js-list';
     }
@@ -880,9 +822,9 @@ class TableWidget extends AdminWidget implements CollectionContainerInterface
         $url   = 'object/edit?main_menu={{ main_menu }}&obj_type=' . $this->objType();
 
         if ($this->isObjRenderable($model)) {
-            $url = $model->render((string)$url);
+            $url = $model->render($url);
         } else {
-            $url = preg_replace('~{{\s*id\s*}}~', $this->currentObjId, $url);
+            $url = preg_replace('~{{\s*id\s*}}~', (string) $this->currentObjId, $url);
         }
 
         return $url;
@@ -897,17 +839,14 @@ class TableWidget extends AdminWidget implements CollectionContainerInterface
         $actions = $this->listActions();
         if ($actions) {
             foreach ($actions as $action) {
-                if (isset($action['ident']) && $action['ident'] === 'create') {
-                    if (isset($action['url'])) {
-                        $model = $this->proto();
-                        if ($this->isObjRenderable($model)) {
-                            $action['url'] = $model->render((string)$action['url']);
-                        } else {
-                            $action['url'] = preg_replace('~{{\s*id\s*}}~', $this->currentObjId, $action['url']);
-                        }
-
-                        return $action['url'];
+                if (isset($action['ident']) && $action['ident'] === 'create' && isset($action['url'])) {
+                    $model = $this->proto();
+                    if ($this->isObjRenderable($model)) {
+                        $action['url'] = $model->render((string)$action['url']);
+                    } else {
+                        $action['url'] = preg_replace('~{{\s*id\s*}}~', (string) $this->currentObjId, $action['url']);
                     }
+                    return $action['url'];
                 }
             }
         }
@@ -921,9 +860,9 @@ class TableWidget extends AdminWidget implements CollectionContainerInterface
      * @param  ModelInterface|null $object The object to test.
      * @return boolean
      */
-    public function isObjActive(ModelInterface $object = null)
+    public function isObjActive(?ModelInterface $object = null)
     {
-        if ($object === null) {
+        if (!$object instanceof \Charcoal\Model\ModelInterface) {
             $object = $this->getCurrentObjOrProto();
         }
 
@@ -948,9 +887,9 @@ class TableWidget extends AdminWidget implements CollectionContainerInterface
      * @param  ModelInterface|null $object The object to test.
      * @return boolean
      */
-    public function isObjCreatable(ModelInterface $object = null)
+    public function isObjCreatable(?ModelInterface $object = null)
     {
-        if ($object === null) {
+        if (!$object instanceof \Charcoal\Model\ModelInterface) {
             $object = $this->proto();
         }
 
@@ -971,9 +910,9 @@ class TableWidget extends AdminWidget implements CollectionContainerInterface
      * @param  ModelInterface|null $object The object to test.
      * @return boolean
      */
-    public function isObjEditable(ModelInterface $object = null)
+    public function isObjEditable(?ModelInterface $object = null)
     {
-        if ($object === null) {
+        if (!$object instanceof \Charcoal\Model\ModelInterface) {
             $object = $this->getCurrentObjOrProto();
         }
 
@@ -994,9 +933,9 @@ class TableWidget extends AdminWidget implements CollectionContainerInterface
      * @param  ModelInterface|null $object The object to test.
      * @return boolean
      */
-    public function isObjDeletable(ModelInterface $object = null)
+    public function isObjDeletable(?ModelInterface $object = null)
     {
-        if ($object === null) {
+        if (!$object instanceof \Charcoal\Model\ModelInterface) {
             $object = $this->getCurrentObjOrProto();
         }
 
@@ -1017,9 +956,9 @@ class TableWidget extends AdminWidget implements CollectionContainerInterface
      * @param  ModelInterface|null $object The object to test.
      * @return boolean
      */
-    public function isObjViewable(ModelInterface $object = null)
+    public function isObjViewable(?ModelInterface $object = null)
     {
-        if ($object === null) {
+        if (!$object instanceof \Charcoal\Model\ModelInterface) {
             $object = $this->getCurrentObjOrProto();
         }
 
@@ -1039,6 +978,7 @@ class TableWidget extends AdminWidget implements CollectionContainerInterface
      * @param Container $container Pimple DI container.
      * @return void
      */
+    #[\Override]
     protected function setDependencies(Container $container)
     {
         parent::setDependencies($container);
@@ -1063,27 +1003,23 @@ class TableWidget extends AdminWidget implements CollectionContainerInterface
      * @param  array|null       $data   Optional collection data.
      * @return void
      */
-    protected function configureCollectionLoader(CollectionLoader $loader, array $data = null)
+    protected function configureCollectionLoader(CollectionLoader $loader, ?array $data = null)
     {
         $this->configureCollectionLoaderFromTrait($loader, $data);
 
-        if (!isset($loader->hasMainMenuCallback)) {
+        if (!property_exists($loader, 'hasMainMenuCallback') || $loader->hasMainMenuCallback === null) {
             $mainMenu = filter_input(INPUT_GET, 'main_menu', FILTER_SANITIZE_STRING);
             if ($mainMenu) {
-                $fn = function (&$obj) use ($mainMenu) {
+                $fn = function (array &$obj) use ($mainMenu): void {
                     if (!$obj['main_menu']) {
                         $obj['main_menu'] = $mainMenu;
                     }
                 };
 
                 $callback = $loader->callback();
-                if ($callback === null) {
-                    $callback = $fn;
-                } else {
-                    $callback = function (&$obj) use ($fn) {
-                        $fn($obj);
-                    };
-                }
+                $callback = $callback === null ? $fn : function (&$obj) use ($fn): void {
+                    $fn($obj);
+                };
 
                 $loader->setCallback($callback);
                 $loader->hasMainMenuCallback = true;
@@ -1095,13 +1031,12 @@ class TableWidget extends AdminWidget implements CollectionContainerInterface
      * Retrieve the widget factory.
      *
      * @throws RuntimeException If the widget factory was not previously set.
-     * @return FactoryInterface
      */
-    protected function widgetFactory()
+    protected function widgetFactory(): \Charcoal\Factory\FactoryInterface
     {
-        if ($this->widgetFactory === null) {
+        if (!$this->widgetFactory instanceof \Charcoal\Factory\FactoryInterface) {
             throw new RuntimeException(
-                sprintf('Widget Factory is not defined for "%s"', get_class($this))
+                sprintf('Widget Factory is not defined for "%s"', static::class)
             );
         }
 
@@ -1110,11 +1045,10 @@ class TableWidget extends AdminWidget implements CollectionContainerInterface
 
     /**
      * @throws RuntimeException If the property factory was not previously set / injected.
-     * @return FactoryInterface
      */
-    protected function propertyFactory()
+    protected function propertyFactory(): \Charcoal\Factory\FactoryInterface
     {
-        if ($this->propertyFactory === null) {
+        if (!$this->propertyFactory instanceof \Charcoal\Factory\FactoryInterface) {
             throw new RuntimeException(
                 'Property factory is not set for table widget'
             );
@@ -1132,6 +1066,7 @@ class TableWidget extends AdminWidget implements CollectionContainerInterface
      * @param  mixed $toResolve A callable used when merging data.
      * @return callable|null
      */
+    #[\Override]
     protected function resolveDataSourceFilter($toResolve)
     {
         if (is_string($toResolve)) {
@@ -1162,7 +1097,7 @@ class TableWidget extends AdminWidget implements CollectionContainerInterface
      * @param  array $actions One or more actions.
      * @return TableWidget Chainable.
      */
-    protected function setListActions(array $actions)
+    protected function setListActions(array $actions): static
     {
         $this->parsedListActions = false;
 
@@ -1183,7 +1118,7 @@ class TableWidget extends AdminWidget implements CollectionContainerInterface
      * @param  array $actions Actions to resolve.
      * @return array List actions.
      */
-    protected function createListActions(array $actions)
+    protected function createListActions(array $actions): array
     {
         $this->actionsPriority = $this->defaultActionPriority();
 
@@ -1198,9 +1133,8 @@ class TableWidget extends AdminWidget implements CollectionContainerInterface
      * Parse the given actions as collection actions.
      *
      * @param  array $actions Actions to resolve.
-     * @return array
      */
-    protected function parseAsListActions(array $actions)
+    protected function parseAsListActions(array $actions): array
     {
         $listActions = [];
         foreach ($actions as $ident => $action) {
@@ -1218,14 +1152,12 @@ class TableWidget extends AdminWidget implements CollectionContainerInterface
                     $action['active'] = false;
                 }
             } else {
-                $action['empty'] = (isset($action['empty']) ? boolval($action['empty']) : false);
+                $action['empty'] = (isset($action['empty']) && boolval($action['empty']));
             }
 
             if (is_array($action['actions'])) {
                 $action['actions']    = $this->parseAsListActions($action['actions']);
-                $action['hasActions'] = !!array_filter($action['actions'], function ($action) {
-                    return $action['active'];
-                });
+                $action['hasActions'] = (bool) array_filter($action['actions'], fn(array $action): mixed => $action['active']);
             }
 
             if (isset($listActions[$ident])) {
@@ -1240,7 +1172,7 @@ class TableWidget extends AdminWidget implements CollectionContainerInterface
             }
         }
 
-        usort($listActions, [ 'Charcoal\Admin\Support\Sorter', 'sortByPriority' ]);
+        usort($listActions, \Charcoal\Admin\Support\Sorter::sortByPriority(...));
 
         while (($first = reset($listActions)) && $first['isSeparator']) {
             array_shift($listActions);
@@ -1313,19 +1245,18 @@ class TableWidget extends AdminWidget implements CollectionContainerInterface
      * @param  ModelInterface    $object        The current row's object.
      * @param  PropertyInterface $property      The current property.
      * @param  string            $propertyValue The property $key's display value.
-     * @return array
      */
     protected function parsePropertyCell(
         ModelInterface $object,
         PropertyInterface $property,
         $propertyValue
-    ) {
+    ): array {
         $cell    = $this->parseCollectionPropertyCell($object, $property, $propertyValue);
         $ident   = $property->ident();
         $options = $this->viewOptions($ident);
         $classes = $this->parsePropertyCellClasses($property, $object);
 
-        $cell['truncate'] = (isset($options['truncate']) ? boolval($options['truncate']) : false);
+        $cell['truncate'] = (isset($options['truncate']) && boolval($options['truncate']));
 
         if (!isset($cell['attr'])) {
             $cell['attr'] = [];
@@ -1335,24 +1266,20 @@ class TableWidget extends AdminWidget implements CollectionContainerInterface
             unset($options['attr']['width']);
             $cell['attr'] = array_merge($cell['attr'], $options['attr']);
         }
-
-        if (isset($classes)) {
-            if (isset($cell['attr']['class'])) {
-                if (is_string($classes)) {
-                    $classes = explode(' ', $cell['attr']['class']);
-                }
-
-                if (is_string($cell['attr']['class'])) {
-                    $cell['attr']['class'] = explode(' ', $cell['attr']['class']);
-                }
-
-                $cell['attr']['class'] = array_unique(array_merge($cell['attr']['class'], $classes));
-            } else {
-                $cell['attr']['class'] = $classes;
+        if (isset($cell['attr']['class'])) {
+            if (is_string($classes)) {
+                $classes = explode(' ', $cell['attr']['class']);
             }
 
-            unset($classes);
+            if (is_string($cell['attr']['class'])) {
+                $cell['attr']['class'] = explode(' ', $cell['attr']['class']);
+            }
+
+            $cell['attr']['class'] = array_unique(array_merge($cell['attr']['class'], $classes));
+        } else {
+            $cell['attr']['class'] = $classes;
         }
+        unset($classes);
 
         $cell['attr'] = html_build_attributes($cell['attr']);
 
@@ -1367,12 +1294,11 @@ class TableWidget extends AdminWidget implements CollectionContainerInterface
      *
      * @param  PropertyInterface   $property The current property.
      * @param  ModelInterface|null $object   Optional. The current row's object.
-     * @return array
      */
     protected function parsePropertyCellClasses(
         PropertyInterface $property,
-        ModelInterface $object = null
-    ) {
+        ?ModelInterface $object = null
+    ): array {
         unset($object);
 
         $ident = $property->ident();
@@ -1397,13 +1323,12 @@ class TableWidget extends AdminWidget implements CollectionContainerInterface
      *
      * @param  ModelInterface $object           The current row's object.
      * @param  array          $objectProperties The $object's display properties.
-     * @return array
      */
-    protected function parseObjectRow(ModelInterface $object, array $objectProperties)
+    protected function parseObjectRow(ModelInterface $object, array $objectProperties): array
     {
         $row = $this->parseCollectionObjectRow($object, $objectProperties);
         $row['objectActions'] = $this->objectActions();
-        $row['showObjectActions'] = ($this->showObjectActions() === false) ? false : !!$row['objectActions'];
+        $row['showObjectActions'] = ($this->showObjectActions() === false) ? false : (bool) $row['objectActions'];
 
         $row['attr'] = [
             'class' => []
@@ -1424,9 +1349,8 @@ class TableWidget extends AdminWidget implements CollectionContainerInterface
      * Set an widget factory.
      *
      * @param FactoryInterface $factory The factory to create widgets.
-     * @return void
      */
-    private function setWidgetFactory(FactoryInterface $factory)
+    private function setWidgetFactory(FactoryInterface $factory): void
     {
         $this->widgetFactory = $factory;
     }
@@ -1435,7 +1359,7 @@ class TableWidget extends AdminWidget implements CollectionContainerInterface
      * @param FactoryInterface $factory The property factory, to create properties.
      * @return TableWidget Chainable
      */
-    private function setPropertyFactory(FactoryInterface $factory)
+    private function setPropertyFactory(FactoryInterface $factory): static
     {
         $this->propertyFactory = $factory;
 

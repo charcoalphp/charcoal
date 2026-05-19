@@ -14,25 +14,18 @@ class CategorizableTraitTest extends AbstractTestCase
 {
     /**
      * Tested Class.
-     *
-     * @var CategorizableTrait
      */
-    private $obj;
+    private \Charcoal\Object\CategorizableTrait $obj;
 
     /**
      * Set up the test.
-     *
-     * @return void
      */
     public function setUp(): void
     {
         $this->obj = $this->getMockForTrait(CategorizableTrait::class);
     }
 
-    /**
-     * @return void
-     */
-    public function testSetCategoryType()
+    public function testSetCategoryType(): void
     {
         $obj = $this->obj;
         $this->assertNull($obj->getCategoryType());

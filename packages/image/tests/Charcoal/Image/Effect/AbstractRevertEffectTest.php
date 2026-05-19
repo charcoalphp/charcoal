@@ -8,19 +8,19 @@ class AbstractRevertEffectTest extends \PHPUnit\Framework\TestCase
 
     protected function setUp(): void
     {
-        $img = $this->getMockForAbstractClass('\Charcoal\Image\AbstractImage');
-        $this->obj = $this->getMockForAbstractClass('\Charcoal\Image\Effect\AbstractRevertEffect');
+        $img = $this->getMockForAbstractClass(\Charcoal\Image\AbstractImage::class);
+        $this->obj = $this->getMockForAbstractClass(\Charcoal\Image\Effect\AbstractRevertEffect::class);
         $this->obj->setImage($img);
     }
 
-    public function testDefaults()
+    public function testDefaults(): void
     {
         $obj = $this->obj;
 
         $this->assertEquals('all', $obj->channel());
     }
 
-    public function testSetData()
+    public function testSetData(): void
     {
         $obj = $this->obj;
         $ret = $obj->setData(
@@ -33,7 +33,7 @@ class AbstractRevertEffectTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('green', $obj->channel());
     }
 
-    public function testSetChannel()
+    public function testSetChannel(): void
     {
         $obj = $this->obj;
         $ret = $obj->setChannel('gray');

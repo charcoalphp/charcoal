@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Charcoal\Tests\View\Twig\Mock;
 
 // From 'charcoal-view'
@@ -12,8 +14,6 @@ class MockHelpers implements HelpersInterface
 {
     /**
      * Retrieve the helpers.
-     *
-     * @return array
      */
     public function toArray(): array
     {

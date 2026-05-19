@@ -13,10 +13,7 @@ use Charcoal\Tests\AbstractTestCase;
  */
 class DatabaseSourceConfigTest extends AbstractTestCase
 {
-    /**
-     * @return void
-     */
-    public function testDefaultData()
+    public function testDefaultData(): void
     {
         $obj = new DatabaseSourceConfig();
         $defaults = $obj->defaults();
@@ -26,20 +23,14 @@ class DatabaseSourceConfigTest extends AbstractTestCase
         $this->assertEquals($obj->hostname(), $defaults['hostname']);
     }
 
-    /**
-     * @return void
-     */
-    public function testMerge()
+    public function testMerge(): void
     {
         $obj = new DatabaseSourceConfig();
         $ret = $obj->merge([]);
         $this->assertSame($ret, $obj);
     }
 
-    /**
-     * @return void
-     */
-    public function testSetHostname()
+    public function testSetHostname(): void
     {
         $obj = new DatabaseSourceConfig();
         $this->assertEquals('localhost', $obj->hostname());
@@ -51,10 +42,7 @@ class DatabaseSourceConfigTest extends AbstractTestCase
         $obj->setHostname(false);
     }
 
-    /**
-     * @return void
-     */
-    public function testSetUsername()
+    public function testSetUsername(): void
     {
         $obj = new DatabaseSourceConfig();
         $this->assertEquals(null, $obj->username());
@@ -66,10 +54,7 @@ class DatabaseSourceConfigTest extends AbstractTestCase
         $obj->setUsername(false);
     }
 
-    /**
-     * @return void
-     */
-    public function testSetPassword()
+    public function testSetPassword(): void
     {
         $obj = new DatabaseSourceConfig();
         $this->assertEquals('', $obj->password());
@@ -81,10 +66,7 @@ class DatabaseSourceConfigTest extends AbstractTestCase
         $obj->setPassword(false);
     }
 
-    /**
-     * @return void
-     */
-    public function testSetDatabase()
+    public function testSetDatabase(): void
     {
         $obj = new DatabaseSourceConfig();
         $this->assertEquals(null, $obj->database());
@@ -96,10 +78,7 @@ class DatabaseSourceConfigTest extends AbstractTestCase
         $obj->setDatabase(false);
     }
 
-    /**
-     * @return void
-     */
-    public function testSetDisableUtf8()
+    public function testSetDisableUtf8(): void
     {
         $obj = new DatabaseSourceConfig();
         $this->assertEquals(false, $obj->disableUtf8());

@@ -137,7 +137,7 @@ class EventLoader extends AbstractLoader
      * @param string $lifespan The lifespan of events.
      * @return self Chainable
      */
-    public function setLifespan($lifespan)
+    public function setLifespan($lifespan): static
     {
         $this->lifespan = $lifespan;
 
@@ -148,7 +148,7 @@ class EventLoader extends AbstractLoader
      * @param object $objType The object type.
      * @return self Chainable
      */
-    public function setObjType($objType)
+    public function setObjType($objType): static
     {
         $this->objType = $objType;
 
@@ -159,7 +159,7 @@ class EventLoader extends AbstractLoader
      * @param mixed $date The date to convert.
      * @return DateTime
      */
-    private function parseAsDate($date)
+    private function parseAsDate($date): \DateTimeInterface|\DateTime
     {
         if ($date instanceof DateTimeInterface) {
             return $date;

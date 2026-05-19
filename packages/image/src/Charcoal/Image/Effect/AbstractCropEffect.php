@@ -11,40 +11,22 @@ use Charcoal\Image\AbstractEffect;
  */
 abstract class AbstractCropEffect extends AbstractEffect
 {
-    /**
-     * @var integer $x
-     */
-    private $x = 0;
+    private int $x = 0;
 
-    /**
-     * @var integer $y
-     */
-    private $y = 0;
+    private int $y = 0;
 
-    /**
-     * @var integer $width
-     */
-    private $width = 0;
+    private int $width = 0;
 
-    /**
-     * @var integer $height
-     */
-    private $height = 0;
+    private int $height = 0;
 
-    /**
-     * @var mixed $geometry
-     */
-    private $geometry;
+    private string|float|int|null $geometry = null;
 
     /**
      * @var string $gravity
      */
     private $gravity = 'center';
 
-    /**
-     * @var boolean $repage
-     */
-    private $repage = false;
+    private bool $repage = false;
 
     /**
      * @param  integer $width The crop width.
@@ -204,7 +186,7 @@ abstract class AbstractCropEffect extends AbstractEffect
      */
     public function setRepage($repage)
     {
-        $this->repage = !!$repage;
+        $this->repage = (bool) $repage;
         return $this;
     }
 
@@ -220,7 +202,7 @@ abstract class AbstractCropEffect extends AbstractEffect
      * @param  array $data The effect data.
      * @return AbstractCropEffect
      */
-    public function process(array $data = null)
+    public function process(?array $data = null)
     {
         if ($data !== null) {
             $this->setData($data);

@@ -21,36 +21,25 @@ class ProcessHourlyScriptTest extends AbstractTestCase
 {
     use ReflectionsTrait;
 
-    /**
-     * @var Container
-     */
-    private $container;
+    private \Pimple\Container $container;
 
     /**
      * Instance of class under test
      * @var CreateScript
      */
-    private $obj;
+    private \Charcoal\Admin\Script\Notification\ProcessHourlyScript $obj;
 
-    /**
-     * @return Container
-     */
-    private function getContainer()
+    private function getContainer(): \Pimple\Container
     {
         $container = new Container();
         $containerProvider = new ContainerProvider();
         $containerProvider->registerScriptDependencies($container);
 
-        $container['email/factory'] = function(Container $container) {
-            return $container['model/factory'];
-        };
+        $container['email/factory'] = (fn(Container $container): mixed => $container['model/factory']);
 
         return $container;
     }
 
-    /**
-     * @return void
-     */
     public function setUp(): void
     {
         $this->container = $this->getContainer();
@@ -66,19 +55,13 @@ class ProcessHourlyScriptTest extends AbstractTestCase
     }
 
 
-    /**
-     * @return void
-     */
-    public function testDefaultArguments()
+    public function testDefaultArguments(): void
     {
         $args = $this->obj->defaultArguments();
         $this->assertArrayHasKey('now', $args);
     }
 
-    /**
-     * @return void
-     */
-    public function testFrequency()
+    public function testFrequency(): void
     {
         $this->assertEquals('hourly', $this->callMethod($this->obj, 'frequency'));
     }

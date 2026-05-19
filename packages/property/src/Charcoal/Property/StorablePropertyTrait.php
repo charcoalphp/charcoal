@@ -56,11 +56,7 @@ trait StorablePropertyTrait
      */
     public function fields($val = null)
     {
-        if (empty($this->fields)) {
-            $this->fields = $this->generateFields($val);
-        } else {
-            $this->fields = $this->updatedFields($this->fields, $val);
-        }
+        $this->fields = empty($this->fields) ? $this->generateFields($val) : $this->updatedFields($this->fields, $val);
 
         return $this->fields;
     }
@@ -126,7 +122,7 @@ trait StorablePropertyTrait
      * @param  mixed  $val The value to set as field value.
      * @return mixed
      */
-    protected function fieldValue($key, $val)
+    protected function fieldValue($key, array $val)
     {
         if ($val === null) {
             return null;
@@ -169,16 +165,12 @@ trait StorablePropertyTrait
             if ($val === '') {
                 return $val;
             }
-        } else {
-            if ($this['allowNull'] && $val === '') {
-                return null;
-            }
+        } elseif ($this['allowNull'] && $val === '') {
+            return null;
         }
 
-        if ($this['multiple']) {
-            if (is_array($val)) {
-                $val = implode($this->multipleSeparator(), $val);
-            }
+        if ($this['multiple'] && is_array($val)) {
+            $val = implode($this->multipleSeparator(), $val);
         }
 
         if (!is_scalar($val)) {
@@ -228,7 +220,7 @@ trait StorablePropertyTrait
      */
     protected function updatedFields(array $fields, $val)
     {
-        if (empty($fields)) {
+        if ($fields === []) {
             $fields = $this->generateFields($val);
         }
 
@@ -245,7 +237,7 @@ trait StorablePropertyTrait
      * @param  mixed $val The value to set as field value.
      * @return PropertyField[]
      */
-    protected function generateFields($val = null)
+    protected function generateFields($val = null): array
     {
         $fields = [];
 
@@ -270,9 +262,8 @@ trait StorablePropertyTrait
 
     /**
      * @param  array $data Optional. Field data.
-     * @return PropertyField
      */
-    protected function createPropertyField(array $data = null)
+    protected function createPropertyField(?array $data = null): \Charcoal\Property\PropertyField
     {
         $field = new PropertyField();
 
@@ -287,9 +278,8 @@ trait StorablePropertyTrait
      * Determine if the given value is a valid field key suffix.
      *
      * @param  mixed $key The key to test.
-     * @return boolean
      */
-    protected function isValidFieldKey($key)
+    protected function isValidFieldKey($key): bool
     {
         return (!empty($key) || is_numeric($key));
     }
@@ -300,7 +290,7 @@ trait StorablePropertyTrait
      * @param  string $value The string to snakeize.
      * @return string The snake_case string.
      */
-    protected function snakeize($value)
+    protected function snakeize($value): string
     {
         $key = $value;
 
@@ -308,7 +298,7 @@ trait StorablePropertyTrait
             return static::$snakeCache[$key];
         }
 
-        $value = strtolower(preg_replace('/(?<!^)[A-Z]/', '_$0', $value));
+        $value = strtolower((string) preg_replace('/(?<!^)[A-Z]/', '_$0', $value));
 
         static::$snakeCache[$key] = $value;
 
@@ -351,7 +341,7 @@ trait StorablePropertyTrait
     /**
      * @return string|null
      */
-    public function sqlExtra()
+    public function sqlExtra(): null
     {
         return null;
     }
@@ -359,7 +349,7 @@ trait StorablePropertyTrait
     /**
      * @return string|null
      */
-    public function sqlDefaultVal()
+    public function sqlDefaultVal(): null
     {
         return null;
     }

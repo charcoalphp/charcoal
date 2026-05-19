@@ -28,13 +28,13 @@ class EventManager extends AbstractManager
     private $currentEvent;
 
     /** @var integer $currentPage The current Page. */
-    private $currentPage;
+    private int|float|null $currentPage = null;
 
     /** @var integer $numPerPage Events by page. */
     private $numPerPage = 0;
 
     /** @var integer $numPage How many pages. */
-    private $numPage;
+    private float|int|null $numPage = null;
 
     /** @var boolean $entryCycle Does the pager can cycle indefinitely. */
     private $entryCycle = false;
@@ -55,13 +55,13 @@ class EventManager extends AbstractManager
     private $all = [];
 
     /** @var EventInterface[] $entries The event collection. */
-    private $entries = [];
+    private array $entries = [];
 
     /** @var EventInterface[] $archive The archive events collection. */
-    private $archive = [];
+    private array $archive = [];
 
     /** @var EventInterface $entry An event. */
-    private $entry;
+    private ?array $entry = null;
 
     /** @var object $objType The event object model. */
     private $objType;
@@ -76,19 +76,19 @@ class EventManager extends AbstractManager
     private $loader;
 
     /** @var array $mapEvents The events mapped per [year][month][date]. */
-    private $mapEvents = [];
+    private array $mapEvents = [];
 
     /** @var datetime $date Datetime filter */
-    private $date;
+    private ?\DateTime $date = null;
 
     /** @var mixed $year Year filter. */
-    private $year;
+    private int|float|string|bool|null $year = null;
 
     /** @var mixed $month Month filter. */
-    private $month;
+    private int|float|string|bool|null $month = null;
 
     /** @var mixed $day Day filter. */
-    private $day;
+    private int|float|string|bool|null $day = null;
 
     /**
      * EventManager constructor.
@@ -149,7 +149,7 @@ class EventManager extends AbstractManager
         }
 
         // Get event from specific date.
-        if ($date) {
+        if ($date instanceof \DateTime) {
             $loader = $this->loader()->all();
             $proto = $this->loader()->proto();
             $table = $proto->source()->table();
@@ -161,9 +161,7 @@ class EventManager extends AbstractManager
                 AND
                     active = 1' . $extraSql;
 
-            $collection = $loader->loadFromQuery($q);
-
-            return $collection;
+            return $loader->loadFromQuery($q);
         }
 
         // YEAR only filter.
@@ -179,9 +177,7 @@ class EventManager extends AbstractManager
                 AND
                     active = 1' . $extraSql;
 
-            $collection = $loader->loadFromQuery($q);
-
-            return $collection;
+            return $loader->loadFromQuery($q);
         }
 
         // Year AND month filter.
@@ -200,15 +196,11 @@ class EventManager extends AbstractManager
                 AND
                     active = 1' . $extraSql;
 
-            $collection = $loader->loadFromQuery($q);
-
-            return $collection;
+            return $loader->loadFromQuery($q);
         }
 
-        if (isset($this->entries[$cat])) {
-            if (isset($this->entries[$cat][$page])) {
-                return $this->entries[$cat][$page];
-            }
+        if (isset($this->entries[$cat]) && isset($this->entries[$cat][$page])) {
+            return $this->entries[$cat][$page];
         }
 
         if ($this->category()) {
@@ -264,7 +256,7 @@ class EventManager extends AbstractManager
     /**
      * @return CategoryInterface[]|Collection The category collection.
      */
-    public function loadCategoryItems()
+    public function loadCategoryItems(): \ArrayAccess|array
     {
         /** @var Model $model */
         $model = $this->modelFactory();
@@ -306,7 +298,7 @@ class EventManager extends AbstractManager
             throw new Exception(sprintf(
                 'The featured news ident "%s" doesn\'t exist the class "%s"',
                 $ident,
-                get_class($config)
+                $config::class
             ));
         }
         $ids = $config->{$ident}();
@@ -315,32 +307,30 @@ class EventManager extends AbstractManager
             return null;
         }
 
-        $ids = explode(',', $ids);
+        $ids = explode(',', (string) $ids);
 
         $loader->addFilter('id', $ids, [ 'operator' => 'in' ])
             ->addOrder('id', 'values', [ 'values' => $ids ]);
 
-        if (count($options) > 0) {
-            foreach ($options as $key => $option) {
-                switch ($key) {
-                    case 'filters':
-                        $filters = $option;
-                        foreach ($filters as $f) {
-                            $filter[] = $f['property'] ?: '';
-                            $filter[] = $f['value'] ?: '';
-                            $filter[] = $f['options'] ?: '';
-                            $filter = join(',', $filter);
+        foreach ($options as $key => $option) {
+            switch ($key) {
+                case 'filters':
+                    $filters = $option;
+                    foreach ($filters as $f) {
+                        $filter[] = $f['property'] ?: '';
+                        $filter[] = $f['value'] ?: '';
+                        $filter[] = $f['options'] ?: '';
+                        $filter = implode(',', $filter);
 
-                            $loader->addFilter($filter);
-                        }
-                        break;
-                    case 'page':
-                        $loader->setPage($option);
-                        break;
-                    case 'numPerPage':
-                        $loader->setNumPerPage($option);
-                        break;
-                }
+                        $loader->addFilter($filter);
+                    }
+                    break;
+                case 'page':
+                    $loader->setPage($option);
+                    break;
+                case 'numPerPage':
+                    $loader->setNumPerPage($option);
+                    break;
             }
         }
 
@@ -356,10 +346,8 @@ class EventManager extends AbstractManager
     {
         $page = $this->page();
         $cat = $this->category();
-        if (isset($this->archive[$cat])) {
-            if (isset($this->archive[$cat][$page])) {
-                return $this->archive[$cat][$page];
-            }
+        if (isset($this->archive[$cat]) && isset($this->archive[$cat][$page])) {
+            return $this->archive[$cat][$page];
         }
 
         $loader = $this->loader()->archive();
@@ -420,7 +408,7 @@ class EventManager extends AbstractManager
     /**
      * @return float|integer The current event index page ident.
      */
-    public function currentPage()
+    public function currentPage(): float|int
     {
         if ($this->currentPage) {
             return $this->currentPage;
@@ -459,11 +447,7 @@ class EventManager extends AbstractManager
         $month = $date->format('m');
         $day = $date->format('d');
 
-        if (isset($map[$year][$month][$day])) {
-            return $map[$year][$month][$day];
-        }
-
-        return [];
+        return $map[$year][$month][$day] ?? [];
     }
 
     /**
@@ -498,38 +482,29 @@ class EventManager extends AbstractManager
      * Amount of event (total)
      * @return integer How many event?
      */
-    public function numEvent()
+    public function numEvent(): bool
     {
-        return !!(count($this->entries()));
+        return (bool) count($this->entries());
     }
 
     /**
      * The total amount of pages.
      * @return float
      */
-    public function numPages()
+    public function numPages(): float|int
     {
-        if ($this->numPage) {
-            $this->numPage;
-        };
-
         $entries = $this->entries();
         $count = count($entries);
 
-        if ($this->numPerPage()) {
-            $this->numPage = ceil($count / $this->numPerPage());
-        } else {
-            $this->numPage = 1;
-        }
+        $this->numPage = $this->numPerPage() ? ceil($count / $this->numPerPage()) : 1;
 
         return $this->numPage;
     }
 
     /**
      * Is there a pager.
-     * @return boolean
      */
-    public function hasPager()
+    public function hasPager(): bool
     {
         return ($this->numPages() > 1);
     }
@@ -578,7 +553,7 @@ class EventManager extends AbstractManager
      * Datetime object OR null.
      * @return mixed Datetime or null.
      */
-    public function date()
+    public function date(): ?\DateTime
     {
         return $this->date;
     }
@@ -587,7 +562,7 @@ class EventManager extends AbstractManager
      * Full year
      * @return integer Full year.
      */
-    public function year()
+    public function year(): int|float|string|bool|null
     {
         return $this->year;
     }
@@ -596,7 +571,7 @@ class EventManager extends AbstractManager
      * Month
      * @return mixed month.
      */
-    public function month()
+    public function month(): int|float|string|bool|null
     {
         return $this->month;
     }
@@ -605,16 +580,15 @@ class EventManager extends AbstractManager
      * Day
      * @return mixed day.
      */
-    public function day()
+    public function day(): int|float|string|bool|null
     {
         return $this->day;
     }
 
     /**
      * @param mixed $currentEvent The current event context.
-     * @return self
      */
-    public function setCurrentEvent($currentEvent)
+    public function setCurrentEvent($currentEvent): static
     {
         $this->currentEvent = $currentEvent;
 
@@ -623,9 +597,8 @@ class EventManager extends AbstractManager
 
     /**
      * @param integer $numPerPage The number of event per page.
-     * @return self
      */
-    public function setNumPerPage($numPerPage)
+    public function setNumPerPage($numPerPage): static
     {
         $this->numPerPage = $numPerPage;
 
@@ -634,9 +607,8 @@ class EventManager extends AbstractManager
 
     /**
      * @param boolean $entryCycle Next and Prev cycles indefinitely.
-     * @return self
      */
-    public function setEntryCycle($entryCycle)
+    public function setEntryCycle($entryCycle): static
     {
         $this->entryCycle = $entryCycle;
 
@@ -645,9 +617,8 @@ class EventManager extends AbstractManager
 
     /**
      * @param integer $page The page number to load.
-     * @return self
      */
-    public function setPage($page)
+    public function setPage($page): static
     {
         $this->page = $page;
 
@@ -656,9 +627,8 @@ class EventManager extends AbstractManager
 
     /**
      * @param integer $category The current entry category.
-     * @return self
      */
-    public function setCategory($category)
+    public function setCategory($category): static
     {
         $this->category = $category;
 
@@ -667,9 +637,8 @@ class EventManager extends AbstractManager
 
     /**
      * @param mixed $objType The object type.
-     * @return self
      */
-    public function setObjType($objType)
+    public function setObjType($objType): static
     {
         $this->objType = $objType;
 
@@ -678,9 +647,8 @@ class EventManager extends AbstractManager
 
     /**
      * @param mixed $featIdent The featured list ident.
-     * @return self
      */
-    public function setFeatIdent($featIdent)
+    public function setFeatIdent($featIdent): static
     {
         $this->featIdent = $featIdent;
 
@@ -689,9 +657,8 @@ class EventManager extends AbstractManager
 
     /**
      * @param EventLoader|null $loader The event loader provider.
-     * @return self
      */
-    public function setLoader($loader)
+    public function setLoader($loader): static
     {
         $this->loader = $loader;
 
@@ -701,9 +668,8 @@ class EventManager extends AbstractManager
     /**
      * Set date filter.
      * @param DateTime $date Date filter.
-     * @return self
      */
-    public function setDate(DateTime $date)
+    public function setDate(DateTime $date): static
     {
         $this->date = $date;
 
@@ -716,7 +682,7 @@ class EventManager extends AbstractManager
      * @throws Exception If argument is not scalar.
      * @return EventManager
      */
-    public function setYear($year)
+    public function setYear($year): int|float|string|bool
     {
         if (!is_scalar($year)) {
             throw new Exception('Year must be a string or an integer in EventManager setYear method.');
@@ -730,9 +696,8 @@ class EventManager extends AbstractManager
      * Month.
      * @param mixed $month Specific month.
      * @throws Exception If argument is not scalar.
-     * @return EventManager
      */
-    public function setMonth($month)
+    public function setMonth($month): static
     {
         if (!is_scalar($month)) {
             throw new Exception('Month must be a string or an integer in EventManager setMonth method.');
@@ -746,9 +711,8 @@ class EventManager extends AbstractManager
      * Day.
      * @param mixed $day Specific day.
      * @throws Exception If argument is not scalar.
-     * @return EventManager
      */
-    public function setDay($day)
+    public function setDay($day): static
     {
         if (!is_scalar($day)) {
             throw new Exception('Day must be a string or an integer in EventManager setDay method.');
@@ -762,7 +726,7 @@ class EventManager extends AbstractManager
      * Set the Prev and Next event
      * @return $this
      */
-    public function setPrevNext()
+    public function setPrevNext(): static
     {
         if ($this->prevEvent && $this->nextEvent) {
             return $this;
@@ -815,7 +779,7 @@ class EventManager extends AbstractManager
      * Mapping between events and dates
      * @return array The array containing events stored as [$year][$month][$day][event]
      */
-    public function mapEvents()
+    public function mapEvents(): array
     {
         if ($this->mapEvents) {
             return $this->mapEvents;

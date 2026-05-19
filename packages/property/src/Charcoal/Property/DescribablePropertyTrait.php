@@ -30,17 +30,13 @@ trait DescribablePropertyTrait
      *     for retrieving a subset of property objects.
      * @return PropertyInterface[]|\Generator
      */
-    public function properties(array $propertyIdents = null)
+    public function properties(?array $propertyIdents = null)
     {
         // Hack: ensure metadata is loaded.
         $this->metadata();
 
         if ($propertyIdents === null) {
             $propertyIdents = array_keys($this->metadata()->properties());
-        }
-
-        if (empty($propertyIdents)) {
-            return;
         }
 
         foreach ($propertyIdents as $propertyIdent) {
@@ -61,7 +57,7 @@ trait DescribablePropertyTrait
         if (!is_string($propertyIdent)) {
             throw new InvalidArgumentException(
                 '[%s] Property identifier must be a string',
-                get_class($this)
+                $this::class
             );
         }
 
@@ -99,14 +95,13 @@ trait DescribablePropertyTrait
      *
      * @param  string $propertyIdent The property identifier to lookup.
      * @throws InvalidArgumentException If the property identifier is not a string.
-     * @return boolean
      */
-    public function hasProperty($propertyIdent)
+    public function hasProperty($propertyIdent): bool
     {
         if (!is_string($propertyIdent)) {
             throw new InvalidArgumentException(
                 '[%s] Property identifier must be a string',
-                get_class($this)
+                $this::class
             );
         }
 
@@ -158,7 +153,7 @@ trait DescribablePropertyTrait
         if ($this->propertyFactory === null) {
             throw new RuntimeException(sprintf(
                 '[%s] Model does not have a property factory',
-                get_class($this)
+                $this::class
             ));
         }
 
@@ -178,8 +173,8 @@ trait DescribablePropertyTrait
         if (!is_string($propertyIdent)) {
             throw new InvalidArgumentException(
                 '[%s] Property identifier must be a string, received %s',
-                get_class($this),
-                (is_object($propertyIdent) ? get_class($propertyIdent) : gettype($propertyIdent))
+                $this::class,
+                (get_debug_type($propertyIdent))
             );
         }
 
@@ -190,7 +185,7 @@ trait DescribablePropertyTrait
         if (empty($props)) {
             throw new RuntimeException(sprintf(
                 '[%s] Invalid model metadata - No properties defined (must define at least "%s")',
-                get_class($this),
+                $this::class,
                 $propertyIdent
             ));
         }
@@ -198,7 +193,7 @@ trait DescribablePropertyTrait
         if (!isset($props[$propertyIdent])) {
             throw new RuntimeException(sprintf(
                 '[%s] Invalid model metadata - Undefined property metadata for "%s"',
-                get_class($this),
+                $this::class,
                 $propertyIdent
             ));
         }
@@ -208,7 +203,7 @@ trait DescribablePropertyTrait
         if (!isset($propertyMetadata['type'])) {
             throw new RuntimeException(sprintf(
                 '[%s] Invalid model metadata - Undefined property type for "%s"',
-                get_class($this),
+                $this::class,
                 $propertyIdent
             ));
         }

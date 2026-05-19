@@ -15,10 +15,8 @@ trait SecurityTrait
      *
      * For example, the "Login" / "Reset Password" templates
      * should return `false`.
-     *
-     * @return boolean
      */
-    protected function authRequired()
+    protected function authRequired(): bool
     {
         return true;
     }

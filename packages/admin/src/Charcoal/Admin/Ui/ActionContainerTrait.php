@@ -38,7 +38,7 @@ trait ActionContainerTrait
      *     to determine if any renderables should be processed.
      * @return array Returns a collection of parsed actions.
      */
-    protected function parseActions(array $actions, $renderer = false)
+    protected function parseActions(array $actions, $renderer = false): array
     {
         $this->actionsPriority = $this->defaultActionPriority();
 
@@ -63,7 +63,7 @@ trait ActionContainerTrait
             }
         }
 
-        usort($parsedActions, [ 'Charcoal\Admin\Support\Sorter', 'sortByPriority' ]);
+        usort($parsedActions, \Charcoal\Admin\Support\Sorter::sortByPriority(...));
 
         while (($first = reset($parsedActions)) && $first['isSeparator']) {
             array_shift($parsedActions);
@@ -82,7 +82,7 @@ trait ActionContainerTrait
      * @param  array ...$params Variable list of actions to merge.
      * @return array Returns a collection of merged actions.
      */
-    protected function mergeActions(array ...$params)
+    protected function mergeActions(array ...$params): array
     {
         $unique = [];
         foreach ($params as $actions) {
@@ -96,15 +96,11 @@ trait ActionContainerTrait
                 $action['ident'] = $ident;
 
                 $hasActions = (isset($action['actions']) && is_array($action['actions']));
-                if ($hasActions) {
-                    $action['actions'] = $this->mergeActions($action['actions']);
-                } else {
-                    $action['actions'] = [];
-                }
+                $action['actions'] = $hasActions ? $this->mergeActions($action['actions']) : [];
 
                 if (isset($unique[$ident])) {
                     if (static::compareActions($action, $unique[$ident])) {
-                        if ($hasActions && !!$unique[$ident]['actions']) {
+                        if ($hasActions && (bool) $unique[$ident]['actions']) {
                             $action['actions'] = $this->mergeActions(
                                 $unique[$ident]['actions'],
                                 $action['actions']
@@ -113,7 +109,7 @@ trait ActionContainerTrait
                         }
                         $unique[$ident] = array_replace($unique[$ident], $action);
                     } else {
-                        if ($hasActions && !!$unique[$ident]['actions']) {
+                        if ($hasActions && (bool) $unique[$ident]['actions']) {
                             $unique[$ident]['actions'] = $this->mergeActions(
                                 $unique[$ident]['actions'],
                                 $action['actions']
@@ -138,13 +134,9 @@ trait ActionContainerTrait
      * @param  mixed  $action The action structure.
      * @return string Resolved action identifier.
      */
-    protected function parseActionIdent($ident, $action)
+    protected function parseActionIdent($ident, array $action)
     {
-        if (isset($action['ident'])) {
-            return $action['ident'];
-        }
-
-        return $ident;
+        return $action['ident'] ?? $ident;
     }
 
     /**
@@ -176,11 +168,9 @@ trait ActionContainerTrait
                 $action['ident'] = $ident;
             }
 
-            if (isset($action['buttonType'])) {
-                if (!in_array($action['buttonType'], $buttonTypes)) {
-                    $action['actionType'] = $action['buttonType'];
-                    $action['buttonType'] = 'button';
-                }
+            if (isset($action['buttonType']) && !in_array($action['buttonType'], $buttonTypes)) {
+                $action['actionType'] = $action['buttonType'];
+                $action['buttonType'] = 'button';
             }
 
             if (!isset($action['actionType'])) {
@@ -232,21 +222,17 @@ trait ActionContainerTrait
             }
 
             if (isset($action['dataAttributes']) && is_array($action['dataAttributes'])) {
-                $action['dataAttributes'] = array_filter($action['dataAttributes'], function ($attribute) {
-                    return  !empty($attribute['key']) &&
-                            is_string($attribute['key']) &&
-                            !empty($attribute['value']) &&
-                            is_string($attribute['value']);
-                });
+                $action['dataAttributes'] = array_filter($action['dataAttributes'], fn(array $attribute): bool => !empty($attribute['key']) &&
+                        is_string($attribute['key']) &&
+                        !empty($attribute['value']) &&
+                        is_string($attribute['value']));
             } else {
                 $action['dataAttributes'] = [];
             }
 
             if (isset($action['actions']) && is_array($action['actions'])) {
                 $action['actions']    = $this->parseActions($action['actions']);
-                $action['hasActions'] = !!array_filter($action['actions'], function ($action) {
-                    return $action['active'];
-                });
+                $action['hasActions'] = (bool) array_filter($action['actions'], fn(array $action): mixed => $action['active']);
             } else {
                 $action['actions']    = [];
                 $action['hasActions'] = false;
@@ -267,41 +253,25 @@ trait ActionContainerTrait
      * Resolve the action's type.
      *
      * @param  mixed $action The action structure.
-     * @return string
      */
-    protected function resolveActionType($action)
+    protected function resolveActionType(array $action): string
     {
-        switch ($action['ident']) {
-            case 'create':
-            case 'save':
-            case 'submit':
-            case 'update':
-            case 'edit':
-                return 'primary';
-
-            case 'reset':
-                return 'warning';
-
-            case 'delete':
-                return 'danger';
-
-            default:
-                return 'dark';
-        }
+        return match ($action['ident']) {
+            'create', 'save', 'submit', 'update', 'edit' => 'primary',
+            'reset' => 'warning',
+            'delete' => 'danger',
+            default => 'dark',
+        };
     }
 
     /**
      * Fetch a viewable instance to process an action's renderables.
-     *
-     * @return ViewableInterface|null
      */
-    protected function getActionRenderer()
+    protected function getActionRenderer(): ?\Charcoal\View\ViewableInterface
     {
         $obj = null;
-        if ($this instanceof FormSidebarInterface) {
-            if ($this->form()) {
-                $obj = $this->form()->obj();
-            }
+        if ($this instanceof FormSidebarInterface && $this->form()) {
+            $obj = $this->form()->obj();
         }
 
         if ($this instanceof ObjectContainerInterface) {
@@ -309,7 +279,7 @@ trait ActionContainerTrait
         }
 
         if ($this instanceof CollectionContainerInterface) {
-            $obj = isset($this->currentObj) ? $this->currentObj : $this->proto();
+            $obj = $this->currentObj ?? $this->proto();
         }
 
         if (($obj instanceof ViewableInterface) && ($obj->view() instanceof ViewInterface)) {
@@ -328,7 +298,7 @@ trait ActionContainerTrait
      * @throws RuntimeException If a renderer is unavailable.
      * @return array Resolved action structure.
      */
-    protected function parseActionRenderables($action, $renderer)
+    protected function parseActionRenderables(array $action, $renderer): array
     {
         if ($renderer === false) {
             return $action;
@@ -379,13 +349,13 @@ trait ActionContainerTrait
 
             $result = null;
             if ($renderer && is_callable([ $renderer, $condition ])) {
-                $result = !!$renderer->{$condition}();
+                $result = (bool) $renderer->{$condition}();
             } elseif (is_callable([ $this, $condition ])) {
-                $result = !!$this->{$condition}();
+                $result = (bool) $this->{$condition}();
             } elseif (is_callable($condition)) {
-                $result = !!$condition();
+                $result = (bool) $condition();
             } elseif ($renderer) {
-                $result = !!$renderer->renderTemplate($condition);
+                $result = (bool) $renderer->renderTemplate($condition);
             }
 
             if ($result !== null) {
@@ -418,7 +388,7 @@ trait ActionContainerTrait
 
         $url = trim($url);
 
-        if (empty($url) && !is_numeric($url)) {
+        if (($url === '' || $url === '0') && !is_numeric($url)) {
             return '#';
         }
 
@@ -432,10 +402,10 @@ trait ActionContainerTrait
             /** @todo Shame! Force `{{ type }}` to use "obj_type" GET parameter… */
             $objType = filter_input(INPUT_GET, 'obj_type', FILTER_SANITIZE_STRING);
             if ($objType) {
-                $url = preg_replace('~\{\{\s*(obj_)?type\s*\}\}~', $objType, $url);
+                $url = preg_replace('~\{\{\s*(obj_)?type\s*\}\}~', $objType, (string) $url);
             }
 
-            if ($url && strpos($url, ':') === false && !in_array($url[0], [ '/', '#', '?' ])) {
+            if ($url && !str_contains($url, ':') && !in_array($url[0], [ '/', '#', '?' ])) {
                 $url = $this->adminUrl() . $url;
             }
 
@@ -443,7 +413,7 @@ trait ActionContainerTrait
         } elseif ($renderer instanceof ViewableInterface) {
             $url = $renderer->renderTemplate($url);
 
-            if ($url && strpos($url, ':') === false && !in_array($url[0], [ '/', '#', '?' ])) {
+            if ($url && !str_contains($url, ':') && !in_array($url[0], [ '/', '#', '?' ])) {
                 $url = $this->adminUrl() . $url;
             }
         }
@@ -479,10 +449,8 @@ trait ActionContainerTrait
 
     /**
      * Retrieve the default action structure.
-     *
-     * @return array
      */
-    protected function defaultActionStruct()
+    protected function defaultActionStruct(): array
     {
         return [
             'ident'         => null,
@@ -533,10 +501,10 @@ trait ActionContainerTrait
      * @param  array $b Second action object to sort.
      * @return boolean Returns TRUE if $a has priority. Otherwise, FALSE for $b.
      */
-    protected function compareActions(array $a, array $b)
+    protected function compareActions(array $a, array $b): bool
     {
-        $a = isset($a['priority']) ? $a['priority'] : 0;
-        $b = isset($b['priority']) ? $b['priority'] : 0;
+        $a = $a['priority'] ?? 0;
+        $b = $b['priority'] ?? 0;
         $c = isset($action['isSubmittable']) && $action['isSubmittable'];
 
         return ($c || ($a === 0) || ($a >= $b));

@@ -11,10 +11,7 @@ use Charcoal\Tests\AbstractTestCase;
  */
 class ConfigTest extends AbstractTestCase
 {
-    /**
-     * @return void
-     */
-    public function testSetData()
+    public function testSetData(): void
     {
         $obj = new Config();
         $ret = $obj->merge([
@@ -24,10 +21,7 @@ class ConfigTest extends AbstractTestCase
         $this->assertEquals('foo', $obj->basePath());
     }
 
-    /**
-     * @return void
-     */
-    public function testSetBasePath()
+    public function testSetBasePath(): void
     {
         $obj = new Config();
         $this->assertEquals('admin', $obj->basePath());
@@ -40,10 +34,7 @@ class ConfigTest extends AbstractTestCase
         $obj->setBasePath([]);
     }
 
-    /**
-     * @return void
-     */
-    public function testSetBasePathEmptyParamThrowsException()
+    public function testSetBasePathEmptyParamThrowsException(): void
     {
         $obj = new Config();
 

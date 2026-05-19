@@ -34,6 +34,25 @@ use Charcoal\Tests\ReflectionsTrait;
 /**
  * Test {@see AbstractSource} and {@see SourceInterface}.
  */
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Source\AbstractSource::class, 'setProperties')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Source\AbstractSource::class, 'addProperties')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Source\AbstractSource::class, 'resolvePropertyName')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Source\AbstractSource::class, 'hasProperties')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Source\AbstractSource::class, 'addProperty')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Source\AbstractSource::class, 'removeProperty')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Source\AbstractSource::class, 'addFilter')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Source\AbstractSource::class, 'parseFilterWithModel')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Source\AbstractSource::class, 'createFilter')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Source\AbstractSource::class, 'addOrder')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Source\AbstractSource::class, 'parseOrderWithModel')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Source\AbstractSource::class, 'createOrder')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Source\AbstractSource::class, 'pagination')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Source\AbstractSource::class, 'hasPagination')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Source\AbstractSource::class, 'setPagination')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Source\AbstractSource::class, 'createPagination')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Source\AbstractSource::class, 'camelize')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Source\AbstractSource::class, 'getter')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Source\AbstractSource::class, 'setter')]
 class AbstractSourceTest extends AbstractTestCase
 {
     use AssertionsTrait;
@@ -49,8 +68,6 @@ class AbstractSourceTest extends AbstractTestCase
 
     /**
      * Setup the test.
-     *
-     * @return void
      */
     protected function setUp(): void
     {
@@ -83,10 +100,8 @@ class AbstractSourceTest extends AbstractTestCase
      * - clear the filters
      * - clear the orders
      * - @todo clear the pagination
-     *
-     * @return void
      */
-    public function testReset()
+    public function testReset(): void
     {
         $obj    = $this->obj;
         $filter = $this->createFilter();
@@ -114,10 +129,8 @@ class AbstractSourceTest extends AbstractTestCase
      * Assert that the `setData` method:
      * - is chainable
      * - set the data (properties, filters, orders & pagination)
-     *
-     * @return void
      */
-    public function testSetData()
+    public function testSetData(): void
     {
         $obj = $this->obj;
         $ret = $obj->setData([
@@ -137,10 +150,8 @@ class AbstractSourceTest extends AbstractTestCase
      * Assert that the `setModel` method:
      * - is chainable
      * - set the model (retrievable with the `model` method)
-     *
-     * @return void
      */
-    public function testSetModel()
+    public function testSetModel(): void
     {
         $container = $this->getContainer();
 
@@ -159,10 +170,7 @@ class AbstractSourceTest extends AbstractTestCase
         $this->assertSame($model, $obj->model());
     }
 
-    /**
-     * @return void
-     */
-    public function testModelWithoutSetThrowsException()
+    public function testModelWithoutSetThrowsException(): void
     {
         $obj = $this->obj;
         $this->expectException(RuntimeException::class);
@@ -175,13 +183,8 @@ class AbstractSourceTest extends AbstractTestCase
      * - set the properties
      * - reset the properties, when called again
      *
-     * @covers \Charcoal\Source\AbstractSource::setProperties
-     * @covers \Charcoal\Source\AbstractSource::addProperties
-     * @covers \Charcoal\Source\AbstractSource::resolvePropertyName
-     *
-     * @return void
      */
-    public function testSetProperties()
+    public function testSetProperties(): void
     {
         $obj = $this->obj;
         $ret = $obj->setProperties([ 'foo' ]);
@@ -199,11 +202,8 @@ class AbstractSourceTest extends AbstractTestCase
      * 1. Empty; Default state
      * 2. Populated; Mutated state
      *
-     * @covers \Charcoal\Source\AbstractSource::hasProperties
-     *
-     * @return void
      */
-    public function testHasProperties()
+    public function testHasProperties(): void
     {
         $obj = $this->obj;
 
@@ -218,12 +218,8 @@ class AbstractSourceTest extends AbstractTestCase
     /**
      * Test property collection appending.
      *
-     * @covers \Charcoal\Source\AbstractSource::addProperty
-     * @covers \Charcoal\Source\AbstractSource::resolvePropertyName
-     *
-     * @return void
      */
-    public function testAddProperty()
+    public function testAddProperty(): void
     {
         $obj = $this->obj;
         $this->assertEquals([], $obj->properties());
@@ -238,12 +234,8 @@ class AbstractSourceTest extends AbstractTestCase
     /**
      * Test property collection appending.
      *
-     * @covers \Charcoal\Source\AbstractSource::removeProperty
-     * @covers \Charcoal\Source\AbstractSource::resolvePropertyName
-     *
-     * @return void
      */
-    public function testRemoveProperty()
+    public function testRemoveProperty(): void
     {
         $obj = $this->obj;
         $obj->setProperties([ 'foo', 'bar', 'qux' ]);
@@ -256,11 +248,8 @@ class AbstractSourceTest extends AbstractTestCase
     /**
      * Test failure when appending an invalid property name.
      *
-     * @covers \Charcoal\Source\AbstractSource::resolvePropertyName
-     *
-     * @return void
      */
-    public function testInvalidPropertyNameResolution()
+    public function testInvalidPropertyNameResolution(): void
     {
         $obj = $this->obj;
         $this->expectException(InvalidArgumentException::class);
@@ -270,11 +259,8 @@ class AbstractSourceTest extends AbstractTestCase
     /**
      * Test failure when appending an blank property name.
      *
-     * @covers \Charcoal\Source\AbstractSource::resolvePropertyName
-     *
-     * @return void
      */
-    public function testBlankPropertyNameResolution()
+    public function testBlankPropertyNameResolution(): void
     {
         $obj = $this->obj;
         $this->expectException(InvalidArgumentException::class);
@@ -284,11 +270,8 @@ class AbstractSourceTest extends AbstractTestCase
     /**
      * Test failure when appending a unnamed property object.
      *
-     * @covers \Charcoal\Source\AbstractSource::resolvePropertyName
-     *
-     * @return void
      */
-    public function testAnonymousPropertyNameResolution()
+    public function testAnonymousPropertyNameResolution(): void
     {
         $obj  = $this->obj;
         $prop = $this->createProperty()->setIdent('');
@@ -299,11 +282,8 @@ class AbstractSourceTest extends AbstractTestCase
     /**
      * Test appending a named property object.
      *
-     * @covers \Charcoal\Source\AbstractSource::resolvePropertyName
-     *
-     * @return void
      */
-    public function testNamedPropertyNameResolution()
+    public function testNamedPropertyNameResolution(): void
     {
         $obj  = $this->obj;
         $prop = $this->createProperty();
@@ -329,11 +309,8 @@ class AbstractSourceTest extends AbstractTestCase
      *    an Expression object with given extra data is returned
      * 6. Chainable method
      *
-     * @covers \Charcoal\Source\AbstractSource::addFilter
-     *
-     * @return void
      */
-    public function testAddFilter()
+    public function testAddFilter(): void
     {
         $obj = $this->obj;
 
@@ -394,11 +371,8 @@ class AbstractSourceTest extends AbstractTestCase
      * 3. If a tree of expressions is passed, the source will traverse
      *    all expressions.
      *
-     * @covers \Charcoal\Source\AbstractSource::parseFilterWithModel
-     *
-     * @return void
      */
-    public function testParseFilterWithModel()
+    public function testParseFilterWithModel(): void
     {
         $model  = $this->createModel();
         $source = $this->obj;
@@ -438,11 +412,8 @@ class AbstractSourceTest extends AbstractTestCase
      * 2. Instance of {@see Filter}
      *
      * @see    \Charcoal\Tests\Source\FilterTest::testCreateFilter
-     * @covers \Charcoal\Source\AbstractSource::createFilter
-     *
-     * @return void
      */
-    public function testCreateFilter()
+    public function testCreateFilter(): void
     {
         $result = $this->callMethodWith($this->obj, 'createFilter', [ 'name' => 'foo' ]);
         $this->assertInstanceOf(Filter::class, $result);
@@ -467,11 +438,8 @@ class AbstractSourceTest extends AbstractTestCase
      *    an Expression object with given extra data is returned
      * 6. Chainable method
      *
-     * @covers \Charcoal\Source\AbstractSource::addOrder
-     *
-     * @return void
      */
-    public function testAddOrder()
+    public function testAddOrder(): void
     {
         $obj = $this->obj;
 
@@ -530,11 +498,8 @@ class AbstractSourceTest extends AbstractTestCase
      * 2. If a tree of expressions is passed, the source will traverse
      *    all expressions.
      *
-     * @covers \Charcoal\Source\AbstractSource::parseOrderWithModel
-     *
-     * @return void
      */
-    public function testParseOrderWithModel()
+    public function testParseOrderWithModel(): void
     {
         $model  = $this->createModel();
         $source = $this->obj;
@@ -567,11 +532,8 @@ class AbstractSourceTest extends AbstractTestCase
      * 1. Instance of {@see ExpressionInterface}
      * 2. Instance of {@see Order}
      *
-     * @covers \Charcoal\Source\AbstractSource::createOrder
-     *
-     * @return void
      */
-    public function testCreateOrder()
+    public function testCreateOrder(): void
     {
         $result = $this->callMethodWith($this->obj, 'createOrder', [ 'name' => 'foo' ]);
         $this->assertInstanceOf(Order::class, $result);
@@ -586,12 +548,8 @@ class AbstractSourceTest extends AbstractTestCase
      * 1. Default state is NULL
      * 2. Create paginator if state is NULL
      *
-     * @covers \Charcoal\Source\AbstractSource::pagination
-     * @covers \Charcoal\Source\AbstractSource::hasPagination
-     *
-     * @return void
      */
-    public function testGetPagination()
+    public function testGetPagination(): void
     {
         /** 1. Default state is NULL */
         $this->assertFalse($this->obj->hasPagination());
@@ -612,11 +570,8 @@ class AbstractSourceTest extends AbstractTestCase
      * 4. Accepts up to two numeric arguments
      * 5. Chainable method
      *
-     * @covers \Charcoal\Source\AbstractSource::setPagination
-     *
-     * @return void
      */
-    public function testSetPagination()
+    public function testSetPagination(): void
     {
         $obj = $this->obj;
 
@@ -653,11 +608,8 @@ class AbstractSourceTest extends AbstractTestCase
     /**
      * Test the failure when assigning an invalid pagination expression.
      *
-     * @covers \Charcoal\Source\AbstractSource::setPagination
-     *
-     * @return void
      */
-    public function testProcessExpressionWithInvalidValue()
+    public function testProcessExpressionWithInvalidValue(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->obj->setPagination(false);
@@ -670,11 +622,8 @@ class AbstractSourceTest extends AbstractTestCase
      * 1. Instance of {@see ExpressionInterface}
      * 2. Instance of {@see PaginationInterface}
      *
-     * @covers \Charcoal\Source\AbstractSource::createPagination
-     *
-     * @return void
      */
-    public function testCreatePagination()
+    public function testCreatePagination(): void
     {
         $result = $this->callMethodWith($this->obj, 'createPagination', [ 'name' => 'foo' ]);
         $this->assertInstanceOf(Pagination::class, $result);
@@ -682,10 +631,7 @@ class AbstractSourceTest extends AbstractTestCase
         $this->assertEquals('foo', $result->name());
     }
 
-    /**
-     * @return void
-     */
-    public function testSetPage()
+    public function testSetPage(): void
     {
         $obj = $this->obj;
         $this->assertEquals(1, $obj->page());
@@ -698,10 +644,7 @@ class AbstractSourceTest extends AbstractTestCase
         $obj->setPage('foo');
     }
 
-    /**
-     * @return void
-     */
-    public function testNumPerPage()
+    public function testNumPerPage(): void
     {
         $obj = $this->obj;
         $this->assertEquals(Pagination::DEFAULT_COUNT, $obj->numPerPage());
@@ -713,10 +656,7 @@ class AbstractSourceTest extends AbstractTestCase
         $obj->setNumPerPage('foobar');
     }
 
-    /**
-     * @return void
-     */
-    public function testCreateConfig()
+    public function testCreateConfig(): void
     {
         $obj = $this->obj;
         $config = $obj->createConfig([ 'type' => 'foo' ]);
@@ -727,13 +667,8 @@ class AbstractSourceTest extends AbstractTestCase
     /**
      * Test camelization.
      *
-     * @covers \Charcoal\Source\AbstractSource::camelize
-     * @covers \Charcoal\Source\AbstractSource::getter
-     * @covers \Charcoal\Source\AbstractSource::setter
-     *
-     * @return void
      */
-    public function testCamelize()
+    public function testCamelize(): void
     {
         $obj = $this->obj;
 
@@ -748,9 +683,8 @@ class AbstractSourceTest extends AbstractTestCase
      * Create a query filter expression, for testing.
      *
      * @param  array $data Optional expression data.
-     * @return Filter
      */
-    final public function createFilter(array $data = null)
+    final public function createFilter(?array $data = null): \Charcoal\Source\Filter
     {
         $expr = new Filter();
         if ($data !== null) {
@@ -763,9 +697,8 @@ class AbstractSourceTest extends AbstractTestCase
      * Create query sorting expression, for testing.
      *
      * @param  array $data Optional expression data.
-     * @return Order
      */
-    final public function createOrder(array $data = null)
+    final public function createOrder(?array $data = null): \Charcoal\Source\Order
     {
         $expr = new Order();
         if ($data !== null) {
@@ -778,9 +711,8 @@ class AbstractSourceTest extends AbstractTestCase
      * Create query pagination expression, for testing.
      *
      * @param  array $data Optional expression data.
-     * @return Pagination
      */
-    final public function createPagination(array $data = null)
+    final public function createPagination(?array $data = null): \Charcoal\Source\Pagination
     {
         $expr = new Pagination();
         if ($data !== null) {
@@ -806,10 +738,8 @@ class AbstractSourceTest extends AbstractTestCase
 
     /**
      * Retrieve the model's mock metadata.
-     *
-     * @return array
      */
-    final protected function getModelMetadata()
+    final protected function getModelMetadata(): array
     {
         return [
             'properties' => [

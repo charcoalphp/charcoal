@@ -24,7 +24,7 @@ class ClearCacheAction extends AbstractCacheAction
         $translator = $this->translator();
 
         $cacheType = $request->getParam('cache_type');
-        if (!is_string($cacheType) || empty($cacheType)) {
+        if (!is_string($cacheType) || ($cacheType === '' || $cacheType === '0')) {
             $this->addFeedback('error', $translator->translate('Cache type not defined.'));
             $this->setSuccess(false);
             return $response->withStatus(400);
@@ -100,8 +100,7 @@ class ClearCacheAction extends AbstractCacheAction
     private function clearGlobalCache()
     {
         $cache  = $this->cachePool();
-        $result = $cache->clear();
-        return $result;
+        return $cache->clear();
     }
 
     /**
@@ -112,8 +111,7 @@ class ClearCacheAction extends AbstractCacheAction
     private function clearPagesCache()
     {
         $cache  = $this->cachePool();
-        $result = $cache->deleteItems([ 'request', 'template' ]);
-        return $result;
+        return $cache->deleteItems([ 'request', 'template' ]);
     }
 
     /**
@@ -124,21 +122,18 @@ class ClearCacheAction extends AbstractCacheAction
     private function clearObjectsCache()
     {
         $cache  = $this->cachePool();
-        $result = $cache->deleteItems([ 'object', 'metadata' ]);
-        return $result;
+        return $cache->deleteItems([ 'object', 'metadata' ]);
     }
 
     private function clearTwigCache(): bool
     {
         $engine = $this->getTwigEngine();
-        if (!$engine) {
+        if (!$engine instanceof \Charcoal\View\Twig\TwigEngine) {
             return true;
         }
 
         $defaultCachePath = realpath($engine->cache());
-        $cachePath = $defaultCachePath
-            ? $defaultCachePath
-            : realpath($this->appConfig['publicPath'] . DIRECTORY_SEPARATOR . $engine->cache());
+        $cachePath = $defaultCachePath ?: realpath($this->appConfig['publicPath'] . DIRECTORY_SEPARATOR . $engine->cache());
         if (!is_dir($cachePath)) {
             return false;
         }
@@ -149,14 +144,12 @@ class ClearCacheAction extends AbstractCacheAction
     private function clearMustacheCache(): bool
     {
         $engine = $this->getMustacheEngine();
-        if (!$engine) {
+        if (!$engine instanceof \Charcoal\View\Mustache\MustacheEngine) {
             return true;
         }
 
         $defaultCachePath = realpath($engine->cache());
-        $cachePath = $defaultCachePath
-            ? $defaultCachePath
-            : realpath($this->appConfig['publicPath'] . DIRECTORY_SEPARATOR . $engine->cache());
+        $cachePath = $defaultCachePath ?: realpath($this->appConfig['publicPath'] . DIRECTORY_SEPARATOR . $engine->cache());
         if (!is_dir($cachePath)) {
             return false;
         }

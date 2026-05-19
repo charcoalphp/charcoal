@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Charcoal\Admin\Widget;
 
 // From 'charcoal-object'
@@ -27,10 +29,8 @@ class ObjectRevisionsWidget extends AdminWidget implements
      */
     protected $objId;
 
-    /**
-     * @return boolean
-     */
-    public function active()
+    #[\Override]
+    public function active(): bool
     {
         return parent::active() && $this->objType() && $this->objId();
     }
@@ -45,9 +45,8 @@ class ObjectRevisionsWidget extends AdminWidget implements
 
     /**
      * @param  string $objType ObjType for ObjectRevisionsWidget.
-     * @return self
      */
-    public function setObjType($objType)
+    public function setObjType($objType): static
     {
         $this->objType = $objType;
 
@@ -64,9 +63,8 @@ class ObjectRevisionsWidget extends AdminWidget implements
 
     /**
      * @param  string|integer $objId ObjId for ObjectRevisionsWidget.
-     * @return self
      */
-    public function setObjId($objId)
+    public function setObjId($objId): static
     {
         $this->objId = $objId;
 
@@ -78,7 +76,8 @@ class ObjectRevisionsWidget extends AdminWidget implements
      *
      * @return string[]
      */
-    protected function defaultDataSources()
+    #[\Override]
+    protected function defaultDataSources(): array
     {
         return [
             static::DATA_SOURCE_REQUEST,
@@ -88,15 +87,9 @@ class ObjectRevisionsWidget extends AdminWidget implements
 
     /**
      * Retrieve the accepted metadata from the current request.
-     *
-     * @return array
      */
-    protected function acceptedRequestData()
+    protected function acceptedRequestData(): array
     {
-        return array_merge([
-            'obj_type',
-            'obj_id',
-            'template',
-        ]);
+        return ['obj_type', 'obj_id', 'template'];
     }
 }

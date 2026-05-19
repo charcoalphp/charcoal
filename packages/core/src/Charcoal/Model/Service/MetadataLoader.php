@@ -29,10 +29,8 @@ final class MetadataLoader implements LoggerAwareInterface
 
     /**
      * The PSR-6 caching service.
-     *
-     * @var CacheItemPoolInterface
      */
-    private $cachePool;
+    private \Psr\Cache\CacheItemPoolInterface $cachePool;
 
     /**
      * The cache of metadata instances, indexed by metadata identifier.
@@ -43,10 +41,8 @@ final class MetadataLoader implements LoggerAwareInterface
 
     /**
      * The cache of class/interface lineages.
-     *
-     * @var array
      */
-    private static $lineageCache = [];
+    private static array $lineageCache = [];
 
     /**
      * The cache of snake-cased words.
@@ -57,24 +53,18 @@ final class MetadataLoader implements LoggerAwareInterface
 
     /**
      * The cache of camel-cased words.
-     *
-     * @var array
      */
-    private static $camelCache = [];
+    private static array $camelCache = [];
 
     /**
      * The base path to prepend to any relative paths to search in.
-     *
-     * @var string
      */
-    private $basePath = '';
+    private string $basePath = '';
 
     /**
      * The paths to search in.
-     *
-     * @var array
      */
-    private $paths = [];
+    private array $paths = [];
 
     /**
      * Return new MetadataLoader object.
@@ -89,9 +79,8 @@ final class MetadataLoader implements LoggerAwareInterface
      * - `base_path`
      *
      * @param  array $data The loader's dependencies.
-     * @return void
      */
-    public function __construct(array $data = null)
+    public function __construct(?array $data = null)
     {
         $this->setLogger($data['logger']);
         $this->setCachePool($data['cache']);
@@ -121,16 +110,16 @@ final class MetadataLoader implements LoggerAwareInterface
      *     as an array or an instance of {@see MetadataInterface}.
      *     See $metadata for more details.
      */
-    public function load($ident, $metadata = [], array $idents = null)
+    public function load($ident, $metadata = [], ?array $idents = null)
     {
         if (!is_string($ident)) {
             throw new InvalidArgumentException(sprintf(
                 'Metadata identifier must be a string, received %s',
-                is_object($ident) ? get_class($ident) : gettype($ident)
+                get_debug_type($ident)
             ));
         }
 
-        if (strpos($ident, '\\') !== false) {
+        if (str_contains($ident, '\\')) {
             $ident = $this->metaKeyFromClassName($ident);
         }
 
@@ -139,12 +128,12 @@ final class MetadataLoader implements LoggerAwareInterface
             throw new InvalidArgumentException(sprintf(
                 'Metadata object must be a class name or instance of %s, received %s',
                 MetadataInterface::class,
-                is_object($metadata) ? get_class($metadata) : gettype($metadata)
+                get_debug_type($metadata)
             ));
         }
 
-        if (isset(static::$metadataCache[$ident])) {
-            $cachedMetadata = static::$metadataCache[$ident];
+        if (isset(self::$metadataCache[$ident])) {
+            $cachedMetadata = self::$metadataCache[$ident];
 
             if (is_object($targetMetadata)) {
                 return $targetMetadata->merge($cachedMetadata);
@@ -165,7 +154,7 @@ final class MetadataLoader implements LoggerAwareInterface
         $targetMetadata = new $metadataType();
         $targetMetadata->setData($data);
 
-        static::$metadataCache[$ident] = $targetMetadata;
+        self::$metadataCache[$ident] = $targetMetadata;
 
         return $targetMetadata;
     }
@@ -175,9 +164,8 @@ final class MetadataLoader implements LoggerAwareInterface
      *
      * @param  string $ident The metadata identifier to load.
      * @throws InvalidArgumentException If the identifier is not a string.
-     * @return array
      */
-    public function loadMetadataByKey($ident)
+    public function loadMetadataByKey($ident): array
     {
         if (!is_string($ident)) {
             throw new InvalidArgumentException(
@@ -201,9 +189,8 @@ final class MetadataLoader implements LoggerAwareInterface
      * Fetch the metadata for the given identifiers.
      *
      * @param  array $idents One or more metadata identifiers to load.
-     * @return array
      */
-    public function loadMetadataByKeys(array $idents)
+    public function loadMetadataByKeys(array $idents): array
     {
         $metadata = [];
         foreach ($idents as $metaKey) {
@@ -222,14 +209,14 @@ final class MetadataLoader implements LoggerAwareInterface
      * @param  string $ident The FQCN (in snake-case) to load the hierarchy from.
      * @return array
      */
-    private function hierarchy($ident)
+    private function hierarchy(string $ident)
     {
         if (!is_string($ident)) {
             return [];
         }
 
-        if (isset(static::$lineageCache[$ident])) {
-            return static::$lineageCache[$ident];
+        if (isset(self::$lineageCache[$ident])) {
+            return self::$lineageCache[$ident];
         }
 
         $classname = $this->classNameFromMetaKey($ident);
@@ -254,8 +241,8 @@ final class MetadataLoader implements LoggerAwareInterface
             $ident = $this->metaKeyFromClassName($class);
         }
 
-        if (isset(static::$lineageCache[$ident])) {
-            return static::$lineageCache[$ident];
+        if (isset(self::$lineageCache[$ident])) {
+            return self::$lineageCache[$ident];
         }
 
         $class = $this->classNameFromMetaKey($ident);
@@ -280,7 +267,7 @@ final class MetadataLoader implements LoggerAwareInterface
 
         $hierarchy = array_keys($hierarchy);
 
-        static::$lineageCache[$ident] = $hierarchy;
+        self::$lineageCache[$ident] = $hierarchy;
 
         return $hierarchy;
     }
@@ -293,7 +280,7 @@ final class MetadataLoader implements LoggerAwareInterface
      *     and these metadata identifiers are loaded instead.
      * @return array The data associated with the metadata identifier.
      */
-    private function loadMetadataFromCache($ident, array $idents = null)
+    private function loadMetadataFromCache($ident, ?array $idents = null)
     {
         $cacheKey  = $this->cacheKeyFromMetaKey($ident);
         $cacheItem = $this->cachePool()->getItem($cacheKey);
@@ -310,12 +297,7 @@ final class MetadataLoader implements LoggerAwareInterface
 
             return $metadata;
         } else {
-            if (empty($idents)) {
-                $metadata = $this->loadMetadataByKey($ident);
-            } else {
-                $metadata = $this->loadMetadataByKeys($idents);
-            }
-
+            $metadata = $idents === null || $idents === [] ? $this->loadMetadataByKey($ident) : $this->loadMetadataByKeys($idents);
             $cacheItem->set($metadata);
             $this->cachePool()->save($cacheItem);
         }
@@ -346,14 +328,14 @@ final class MetadataLoader implements LoggerAwareInterface
      * @throws UnexpectedValueException If the file cannot be loaded.
      * @return array|null An associative array on success, NULL on failure.
      */
-    private function loadFile($path)
+    private function loadFile(string $path)
     {
         if (file_exists($path)) {
             return $this->loadJsonFile($path);
         }
 
         $dirs = $this->paths();
-        if (empty($dirs)) {
+        if ($dirs === []) {
             return null;
         }
 
@@ -366,7 +348,7 @@ final class MetadataLoader implements LoggerAwareInterface
             }
         }
 
-        if (empty($data)) {
+        if ($data === []) {
             return null;
         }
 
@@ -380,7 +362,7 @@ final class MetadataLoader implements LoggerAwareInterface
      * @throws UnexpectedValueException If the file can not correctly be parsed into an array.
      * @return array An associative array on success.
      */
-    private function loadJsonFile($path)
+    private function loadJsonFile(string $path)
     {
         $data = json_decode(file_get_contents($path), true);
         if (json_last_error() !== JSON_ERROR_NONE) {
@@ -403,9 +385,8 @@ final class MetadataLoader implements LoggerAwareInterface
      * Generate a store key.
      *
      * @param  string|string[] $ident The metadata identifier(s) to convert.
-     * @return string
      */
-    public function serializeMetaKey($ident)
+    public function serializeMetaKey($ident): string
     {
         if (is_array($ident)) {
             sort($ident);
@@ -423,8 +404,7 @@ final class MetadataLoader implements LoggerAwareInterface
      */
     public function cacheKeyFromMetaKey($ident)
     {
-        $cacheKey = 'metadata/' . str_replace('/', '.', $ident);
-        return $cacheKey;
+        return 'metadata/' . str_replace('/', '.', $ident);
     }
 
     /**
@@ -436,9 +416,8 @@ final class MetadataLoader implements LoggerAwareInterface
     private function filePathFromMetaKey($ident)
     {
         $filename  = str_replace('\\', '.', $ident);
-        $filename .= '.json';
 
-        return $filename;
+        return $filename . '.json';
     }
 
     /**
@@ -451,15 +430,15 @@ final class MetadataLoader implements LoggerAwareInterface
     {
         $key = $ident;
 
-        if (isset(static::$camelCache[$key])) {
-            return static::$camelCache[$key];
+        if (isset(self::$camelCache[$key])) {
+            return self::$camelCache[$key];
         }
 
         // Change "foo-bar" to "fooBar"
         $parts = explode('-', $ident);
         array_walk(
             $parts,
-            function (&$i) {
+            function (&$i): void {
                 $i = ucfirst($i);
             }
         );
@@ -471,14 +450,14 @@ final class MetadataLoader implements LoggerAwareInterface
 
         array_walk(
             $parts,
-            function (&$i) {
+            function (&$i): void {
                 $i = ucfirst($i);
             }
         );
 
         $classname = trim(implode('\\', $parts), '\\');
-        static::$camelCache[$key]       = $classname;
-        static::$snakeCache[$classname] = $key;
+        self::$camelCache[$key]       = $classname;
+        self::$snakeCache[$classname] = $key;
 
         return $classname;
     }
@@ -493,16 +472,16 @@ final class MetadataLoader implements LoggerAwareInterface
     {
         $key = trim($class, '\\');
 
-        if (isset(static::$snakeCache[$key])) {
-            return static::$snakeCache[$key];
+        if (isset(self::$snakeCache[$key])) {
+            return self::$snakeCache[$key];
         }
 
-        $ident = strtolower(preg_replace('/([a-z])([A-Z])/', '$1-$2', $class));
+        $ident = strtolower((string) preg_replace('/([a-z])([A-Z])/', '$1-$2', $class));
         $ident = str_replace('\\', '/', strtolower($ident));
         $ident = ltrim($ident, '/');
 
-        static::$snakeCache[$key]   = $ident;
-        static::$camelCache[$ident] = $key;
+        self::$snakeCache[$key]   = $ident;
+        self::$camelCache[$ident] = $key;
 
         return $ident;
     }
@@ -515,9 +494,8 @@ final class MetadataLoader implements LoggerAwareInterface
      * @param  mixed       $metadata The metadata type or container to validate.
      * @param  string|null $type     If provided, then it is filled with the resolved metadata type.
      * @param  mixed|null  $bag      If provided, then it is filled with the resolved metadata container.
-     * @return boolean
      */
-    private function validateMetadataContainer($metadata, &$type = null, &$bag = null)
+    private function validateMetadataContainer($metadata, &$type = null, &$bag = null): bool
     {
         // If variables are provided, clear existing values.
         $type = null;
@@ -531,7 +509,7 @@ final class MetadataLoader implements LoggerAwareInterface
 
         if (is_a($metadata, MetadataInterface::class, true)) {
             if (is_object($metadata)) {
-                $type = get_class($metadata);
+                $type = $metadata::class;
                 $bag  = $metadata;
                 return true;
             }
@@ -549,9 +527,8 @@ final class MetadataLoader implements LoggerAwareInterface
      *
      * @param  string $basePath The base path to use.
      * @throws InvalidArgumentException If the base path parameter is not a string.
-     * @return void
      */
-    private function setBasePath($basePath)
+    private function setBasePath($basePath): void
     {
         if (!is_string($basePath)) {
             throw new InvalidArgumentException(
@@ -565,10 +542,8 @@ final class MetadataLoader implements LoggerAwareInterface
 
     /**
      * Retrieve the base path for relative search paths.
-     *
-     * @return string
      */
-    private function basePath()
+    private function basePath(): string
     {
         return $this->basePath;
     }
@@ -577,9 +552,8 @@ final class MetadataLoader implements LoggerAwareInterface
      * Assign many search paths.
      *
      * @param  string[] $paths One or more search paths.
-     * @return void
      */
-    private function setPaths(array $paths)
+    private function setPaths(array $paths): void
     {
         $this->paths = [];
         $this->addPaths($paths);
@@ -590,7 +564,7 @@ final class MetadataLoader implements LoggerAwareInterface
      *
      * @return string[]
      */
-    private function paths()
+    private function paths(): array
     {
         return $this->paths;
     }
@@ -599,9 +573,8 @@ final class MetadataLoader implements LoggerAwareInterface
      * Append many search paths.
      *
      * @param  string[] $paths One or more search paths.
-     * @return self
      */
-    private function addPaths(array $paths)
+    private function addPaths(array $paths): self
     {
         foreach ($paths as $path) {
             $this->addPath($path);
@@ -614,9 +587,8 @@ final class MetadataLoader implements LoggerAwareInterface
      * Append a search path.
      *
      * @param  string $path A directory path.
-     * @return self
      */
-    private function addPath($path)
+    private function addPath($path): self
     {
         $path = $this->resolvePath($path);
 
@@ -632,9 +604,8 @@ final class MetadataLoader implements LoggerAwareInterface
      *
      * @param  string $path The path to resolve.
      * @throws InvalidArgumentException If the path is invalid.
-     * @return string
      */
-    private function resolvePath($path)
+    private function resolvePath($path): string
     {
         if (!is_string($path)) {
             throw new InvalidArgumentException(
@@ -645,7 +616,7 @@ final class MetadataLoader implements LoggerAwareInterface
         $basePath = $this->basePath();
         $path = trim($path, '/\\');
 
-        if ($basePath && strpos($path, $basePath) === false) {
+        if ($basePath && !str_contains($path, $basePath)) {
             $path = $basePath . DIRECTORY_SEPARATOR . $path;
         }
 
@@ -656,9 +627,8 @@ final class MetadataLoader implements LoggerAwareInterface
      * Validate a resolved path.
      *
      * @param  string $path The path to validate.
-     * @return string
      */
-    private function validatePath($path)
+    private function validatePath(string $path): bool
     {
         return is_dir($path);
     }
@@ -667,19 +637,16 @@ final class MetadataLoader implements LoggerAwareInterface
      * Set the cache service.
      *
      * @param  CacheItemPoolInterface $cache A PSR-6 compliant cache pool instance.
-     * @return void
      */
-    private function setCachePool(CacheItemPoolInterface $cache)
+    private function setCachePool(CacheItemPoolInterface $cache): void
     {
         $this->cachePool = $cache;
     }
 
     /**
      * Retrieve the cache service.
-     *
-     * @return CacheItemPoolInterface
      */
-    private function cachePool()
+    private function cachePool(): \Psr\Cache\CacheItemPoolInterface
     {
         return $this->cachePool;
     }

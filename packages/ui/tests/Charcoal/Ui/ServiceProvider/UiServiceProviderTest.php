@@ -24,9 +24,6 @@ class UiServiceProviderTest extends AbstractTestCase
      */
     public $container;
 
-    /**
-     * @return void
-     */
     protected function setUp(): void
     {
         $this->obj = new UiServiceProvider();
@@ -36,10 +33,8 @@ class UiServiceProviderTest extends AbstractTestCase
     /**
      * Asserts that the `register()` method
      * - Registers all services on the container
-     *
-     * @return void
      */
-    public function testRegisterRegistersAllProviders()
+    public function testRegisterRegistersAllProviders(): void
     {
         $this->container->register($this->obj);
 

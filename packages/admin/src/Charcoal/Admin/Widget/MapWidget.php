@@ -36,46 +36,34 @@ class MapWidget extends AdminWidget implements FormGroupInterface
 
     /**
      * Latitude
-     *
-     * @var float|null
      */
-    private $lat;
+    private ?float $lat = null;
 
     /**
      * Lontitude
-     *
-     * @var float|null
      */
-    private $lng;
+    private ?float $lng = null;
 
     /**
      * The $obj property key for the latitude.
-     *
-     * @var string
      */
-    private $latProperty = 'lat';
+    private ?string $latProperty = 'lat';
 
     /**
      * The $obj property key for the longitude.
-     *
-     * @var string
      */
-    private $lngProperty = 'lng';
+    private ?string $lngProperty = 'lng';
 
-    /**
-     * @return string
-     */
-    public function widgetType()
+    public function widgetType(): string
     {
         return 'charcoal/admin/widget/map';
     }
 
     /**
      * Retrieve the widget's data options for JavaScript components.
-     *
-     * @return array
      */
-    public function widgetDataForJs()
+    #[\Override]
+    public function widgetDataForJs(): array
     {
         return [
             'obj_id'   => null,
@@ -89,9 +77,8 @@ class MapWidget extends AdminWidget implements FormGroupInterface
      *
      * @param  string|null $key The latitude property ident.
      * @throws InvalidArgumentException If the property key is not a string.
-     * @return self
      */
-    public function setLatProperty($key)
+    public function setLatProperty($key): static
     {
         if ($key === null) {
             $this->latProperty = $key;
@@ -110,10 +97,8 @@ class MapWidget extends AdminWidget implements FormGroupInterface
 
     /**
      * Retrieve the $obj property key for the latitude.
-     *
-     * @return string|null
      */
-    public function latProperty()
+    public function latProperty(): ?string
     {
         return $this->latProperty;
     }
@@ -123,9 +108,8 @@ class MapWidget extends AdminWidget implements FormGroupInterface
      *
      * @param  string|null $key The longitude property key.
      * @throws InvalidArgumentException If the property key is not a string.
-     * @return self
      */
-    public function setLngProperty($key)
+    public function setLngProperty($key): static
     {
         if ($key === null) {
             $this->lngProperty = $key;
@@ -145,11 +129,10 @@ class MapWidget extends AdminWidget implements FormGroupInterface
     /**
      * Set the $obj property key for the longitude.
      *
-     * @deprecated In favour of {@see self::setLngProperty()}.
      * @param  string $key The longitude property key.
-     * @return self
      */
-    public function setLonProperty($key)
+    #[\Deprecated(message: 'In favour of {@see self::setLngProperty()}.')]
+    public function setLonProperty($key): static
     {
         $this->logger->warning(
             'MapWidget "lon_property" is deprecated. Use "lng_property".',
@@ -161,10 +144,8 @@ class MapWidget extends AdminWidget implements FormGroupInterface
 
     /**
      * Retrieve the $obj property key for the longitude.
-     *
-     * @return string|null
      */
-    public function lngProperty()
+    public function lngProperty(): ?string
     {
         return $this->lngProperty;
     }
@@ -174,9 +155,8 @@ class MapWidget extends AdminWidget implements FormGroupInterface
      *
      * @param  float $coord The latitude of a location.
      * @throws InvalidArgumentException If the longitude is not a number.
-     * @return self
      */
-    public function setLat($coord)
+    public function setLat($coord): static
     {
         if ($coord === null) {
             $this->lat = $coord;
@@ -217,9 +197,8 @@ class MapWidget extends AdminWidget implements FormGroupInterface
      *
      * @param  float $coord The longitude of a location.
      * @throws InvalidArgumentException If the longitude is not a number.
-     * @return self
      */
-    public function setLng($coord)
+    public function setLng($coord): static
     {
         if ($coord === null) {
             $this->lng = $coord;
@@ -258,9 +237,9 @@ class MapWidget extends AdminWidget implements FormGroupInterface
     /**
      * Set the $obj property key for the longitude.
      *
-     * @deprecated In favour of {@see self::lng()}.
      * @return self
      */
+    #[\Deprecated(message: 'In favour of {@see self::lng()}.')]
     public function lon()
     {
         $this->logger->warning(
@@ -275,7 +254,7 @@ class MapWidget extends AdminWidget implements FormGroupInterface
      *
      * @return float[]|null
      */
-    public function latLng()
+    public function latLng(): ?array
     {
         $lat = $this->lat();
         $lng = $this->lng();
@@ -292,7 +271,7 @@ class MapWidget extends AdminWidget implements FormGroupInterface
      *
      * @return float[]|null
      */
-    public function coords()
+    public function coords(): ?array
     {
         $lat = $this->lat();
         $lng = $this->lng();
@@ -314,7 +293,7 @@ class MapWidget extends AdminWidget implements FormGroupInterface
         if ($this->obj === null) {
             try {
                 $this->obj();
-            } catch (InvalidArgumentException $e) {
+            } catch (InvalidArgumentException) {
                 return false;
             }
         }

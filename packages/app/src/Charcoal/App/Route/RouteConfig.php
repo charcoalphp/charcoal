@@ -13,54 +13,44 @@ class RouteConfig extends AbstractConfig
 {
     /**
      * Route identifier/name
-     *
-     * @var string
      */
-    private $ident;
+    private ?string $ident = null;
 
     /**
      * Route pattern
-     *
-     * @var string
      */
-    private $route;
+    private ?string $route = null;
 
     /**
      * HTTP methods supported by this route
      *
      * @var string[]
      */
-    private $methods = [ 'GET' ];
+    private array $methods = [ 'GET' ];
 
     /**
      * Response controller classname
      *
      * Should be the class-ident of an action, a script or a template controller.
-     *
-     * @var string
      */
-    private $controller;
+    private ?string $controller = null;
 
     /**
      * Parent route groups
      *
      * @var string[]
      */
-    private $groups = [];
+    private array $groups = [];
 
     /**
      * Optional headers to set on response.
-     *
-     * @var array
      */
-    private $headers = [];
+    private array $headers = [];
 
     /**
      * Retrieve the default route types.
-     *
-     * @return array
      */
-    public static function defaultRouteTypes()
+    public static function defaultRouteTypes(): array
     {
         return [
             'templates',
@@ -74,9 +64,8 @@ class RouteConfig extends AbstractConfig
      *
      * @param string $ident Route identifier.
      * @throws InvalidArgumentException If the identifier is not a string.
-     * @return self
      */
-    public function setIdent($ident)
+    public function setIdent($ident): static
     {
         if (!is_string($ident)) {
             throw new InvalidArgumentException(
@@ -94,7 +83,7 @@ class RouteConfig extends AbstractConfig
      *
      * @return string
      */
-    public function ident()
+    public function ident(): ?string
     {
         return $this->ident;
     }
@@ -104,9 +93,8 @@ class RouteConfig extends AbstractConfig
      *
      * @param string $pattern Route pattern.
      * @throws InvalidArgumentException If the pattern argument is not a string.
-     * @return self
      */
-    public function setRoute($pattern)
+    public function setRoute($pattern): static
     {
         if (!is_string($pattern)) {
             throw new InvalidArgumentException(
@@ -124,7 +112,7 @@ class RouteConfig extends AbstractConfig
      *
      * @return string
      */
-    public function route()
+    public function route(): ?string
     {
         return $this->route;
     }
@@ -133,9 +121,8 @@ class RouteConfig extends AbstractConfig
      * Set parent route groups
      *
      * @param string[] $groups The parent route groups.
-     * @return self
      */
-    public function setGroups(array $groups)
+    public function setGroups(array $groups): static
     {
         $this->groups = [];
 
@@ -151,9 +138,8 @@ class RouteConfig extends AbstractConfig
      *
      * @param string $group The parent route group.
      * @throws InvalidArgumentException If the group is invalid.
-     * @return self
      */
-    public function addGroup($group)
+    public function addGroup($group): static
     {
         if (!is_string($group)) {
             throw new InvalidArgumentException(
@@ -168,10 +154,8 @@ class RouteConfig extends AbstractConfig
 
     /**
      * Get parent route groups
-     *
-     * @return array
      */
-    public function groups()
+    public function groups(): array
     {
         return $this->groups;
     }
@@ -180,9 +164,8 @@ class RouteConfig extends AbstractConfig
      * Add custom headers
      *
      * @param array $headers The custom headers, in key=>val pairs.
-     * @return self
      */
-    public function setHeaders(array $headers)
+    public function setHeaders(array $headers): static
     {
         $this->headers = [];
         foreach ($headers as $name => $val) {
@@ -197,7 +180,7 @@ class RouteConfig extends AbstractConfig
      * @throws InvalidArgumentException If the header name or value is not a string.
      * @return $this
      */
-    public function addHeader($name, $val)
+    public function addHeader($name, $val): static
     {
         if (!is_string($name)) {
             throw new InvalidArgumentException(
@@ -215,10 +198,8 @@ class RouteConfig extends AbstractConfig
 
     /**
      * Get custom route headers.
-     *
-     * @return array
      */
-    public function headers()
+    public function headers(): array
     {
         return $this->headers;
     }
@@ -228,9 +209,8 @@ class RouteConfig extends AbstractConfig
      *
      * @param string $controller Route controller name.
      * @throws InvalidArgumentException If the route view controller is not a string.
-     * @return self
      */
-    public function setController($controller)
+    public function setController($controller): static
     {
         if (!is_string($controller)) {
             throw new InvalidArgumentException(
@@ -250,9 +230,9 @@ class RouteConfig extends AbstractConfig
      *
      * @return string
      */
-    public function controller()
+    public function controller(): ?string
     {
-        if (!isset($this->controller)) {
+        if ($this->controller === null) {
             return $this->ident();
         }
 
@@ -263,9 +243,8 @@ class RouteConfig extends AbstractConfig
      * Set route methods
      *
      * @param string[] $methods The route's supported HTTP methods.
-     * @return self
      */
-    public function setMethods(array $methods)
+    public function setMethods(array $methods): static
     {
         $this->methods = [];
 
@@ -281,15 +260,14 @@ class RouteConfig extends AbstractConfig
      *
      * @param string $method The route's supported HTTP method.
      * @throws InvalidArgumentException If the HTTP method is invalid.
-     * @return self
      */
-    public function addMethod($method)
+    public function addMethod($method): static
     {
         if (!is_string($method)) {
             throw new InvalidArgumentException(
                 sprintf(
                     'Unsupported HTTP method; must be a string, received %s',
-                    (is_object($method) ? get_class($method) : gettype($method))
+                    (get_debug_type($method))
                 )
             );
         }
@@ -327,7 +305,7 @@ class RouteConfig extends AbstractConfig
      *
      * @return string[]
      */
-    public function methods()
+    public function methods(): array
     {
         return $this->methods;
     }

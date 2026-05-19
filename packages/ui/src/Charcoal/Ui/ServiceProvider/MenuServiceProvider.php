@@ -18,9 +18,8 @@ class MenuServiceProvider implements ServiceProviderInterface
 {
     /**
      * @param Container $container A Pimple DI container.
-     * @return void
      */
-    public function register(Container $container)
+    public function register(Container $container): void
     {
         $this->registerMenuServices($container);
         $this->registerMenuItemServices($container);
@@ -28,15 +27,14 @@ class MenuServiceProvider implements ServiceProviderInterface
 
     /**
      * @param Container $container A Pimple DI container.
-     * @return void
      */
-    public function registerMenuServices(Container $container)
+    public function registerMenuServices(Container $container): void
     {
         /**
          * @param Container $container A Pimple DI container.
          * @return MenuFactory
          */
-        $container['menu/factory'] = function (Container $container) {
+        $container['menu/factory'] = function (Container $container): \Charcoal\Ui\Menu\MenuFactory {
             $menuFactory = new MenuFactory();
             $menuFactory->setArguments([
                 'container'         => $container,
@@ -51,10 +49,9 @@ class MenuServiceProvider implements ServiceProviderInterface
          * @param Container $container A Pimple DI container.
          * @return MenuBuilder
          */
-        $container['menu/builder'] = function (Container $container) {
+        $container['menu/builder'] = function (Container $container): \Charcoal\Ui\Menu\MenuBuilder {
             $menuFactory = $container['menu/factory'];
-            $menuBuilder = new MenuBuilder($menuFactory, $container);
-            return $menuBuilder;
+            return new MenuBuilder($menuFactory, $container);
         };
     }
 
@@ -68,14 +65,13 @@ class MenuServiceProvider implements ServiceProviderInterface
      * instantiated at the same time.
      *
      * @param Container $container A Pimple DI container.
-     * @return void
      */
-    public function registerMenuItemServices(Container $container)
+    public function registerMenuItemServices(Container $container): void
     {
         /**
          * @var callable
          */
-        $delegate = function (Container $container) {
+        $delegate = function (Container $container): array {
             $args = [
                 'container' => $container,
                 'logger'    => $container['logger'],

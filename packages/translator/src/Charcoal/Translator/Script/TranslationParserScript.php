@@ -66,9 +66,9 @@ class TranslationParserScript extends AdminScript
 
     /**
      * @param Container $container Pimple DI container.
-     * @return void
      */
-    public function setDependencies(Container $container)
+    #[\Override]
+    public function setDependencies(Container $container): void
     {
         $this->appConfig = $container['config'];
         $this->setTranslator($container['translator']);
@@ -89,9 +89,9 @@ class TranslationParserScript extends AdminScript
      * - type : file type (either mustache or php)
      *
      * @todo Support php file type.
-     * @return array
      */
-    public function defaultArguments()
+    #[\Override]
+    public function defaultArguments(): array
     {
         $arguments = [
             'output' => [
@@ -135,17 +135,14 @@ class TranslationParserScript extends AdminScript
                 'defaultValue' => '_t'
             ]
         ];
-
-        $arguments = array_merge(parent::defaultArguments(), $arguments);
-        return $arguments;
+        return array_merge(parent::defaultArguments(), $arguments);
     }
 
     /**
      * @param RequestInterface  $request  A PSR-7 compatible Request instance.
      * @param ResponseInterface $response A PSR-7 compatible Response instance.
-     * @return ResponseInterface
      */
-    public function run(RequestInterface $request, ResponseInterface $response)
+    public function run(RequestInterface $request, ResponseInterface $response): ResponseInterface
     {
         // Unused
         unset($request);
@@ -173,13 +170,12 @@ class TranslationParserScript extends AdminScript
 
     /**
      * @param array $trans The translations array.
-     * @return array
      */
-    protected function parseTranslations(array $trans)
+    protected function parseTranslations(array $trans): array
     {
         // Must be the first occurrence of the the key.
-        foreach ($trans as $lang => &$value) {
-            array_walk($value, function (&$val, $key) {
+        foreach ($trans as &$value) {
+            array_walk($value, function (&$val, $key): void {
                 // remove key template ident in translation value.
                 if (preg_match('|^\[([^\]]*)\]|', $key, $translationContext)) {
                     $val = str_replace($translationContext[0], '', $val);
@@ -199,7 +195,7 @@ class TranslationParserScript extends AdminScript
      * Give feedback about what's going on.
      * @return self Chainable.
      */
-    protected function displayInformations()
+    protected function displayInformations(): static
     {
         $this->climate()->underline()->out(
             'Initializing translations parser script...'
@@ -244,7 +240,7 @@ class TranslationParserScript extends AdminScript
      * Available locales (languages)
      * @return array Locales.
      */
-    protected function locales()
+    protected function locales(): array
     {
         return $this->translator()->availableLocales();
     }
@@ -274,7 +270,7 @@ class TranslationParserScript extends AdminScript
      * Domain which is the csv file name prefix
      * @return string domain.
      */
-    public function domain()
+    public function domain(): string
     {
         return (string)$this->argOrInput('domain');
     }
@@ -285,7 +281,7 @@ class TranslationParserScript extends AdminScript
      * @param  string $type File type (mustache|php).
      * @return string Regex string.
      */
-    public function regEx($type)
+    public function regEx($type): string
     {
         switch ($type) {
             case 'php':
@@ -326,15 +322,14 @@ class TranslationParserScript extends AdminScript
      * ]
      * @return array        Translations.
      */
-    public function getTranslations()
+    public function getTranslations(): array
     {
         $path = $this->path();
 
         if ($path) {
             $this->climate()->green()->out('Parsing files in <white>' . $path . '</white>');
             $translations = $this->getTranslationsFromPath($path, 'mustache');
-            $translations = array_replace($translations, $this->getTranslationsFromPath($path, 'php'));
-            return $translations;
+            return array_replace($translations, $this->getTranslationsFromPath($path, 'php'));
         }
 
         $paths = $this->paths();
@@ -355,7 +350,7 @@ class TranslationParserScript extends AdminScript
      * @param  string $fileType The file extension|type.
      * @return array        Translations.
      */
-    public function getTranslationsFromPath($path, $fileType)
+    public function getTranslationsFromPath(string $path, string $fileType): array
     {
         // Remove vendor/charcoal/app
         $base  = $this->appConfig->get('base_path');
@@ -411,7 +406,7 @@ class TranslationParserScript extends AdminScript
      * @return array
      * @see http://in.php.net/manual/en/function.glob.php#106595
      */
-    public function globRecursive($pattern, $flags = 0)
+    public function globRecursive($pattern, $flags = 0): array|false
     {
         // $max = $this->maxRecursiveLevel();
         $i = 1;
@@ -469,9 +464,8 @@ class TranslationParserScript extends AdminScript
 
     /**
      * @param array $translations The translations to save in CSV.
-     * @return self
      */
-    public function toCSV(array $translations)
+    public function toCSV(array $translations): static
     {
         if (!count($translations)) {
             $this->climate()->error('
@@ -502,7 +496,7 @@ class TranslationParserScript extends AdminScript
 
             foreach ($trans as $key => $translation) {
                 $data = [ $key, $translation ];
-                fputcsv($file, $data, $separator, $enclosure);
+                fputcsv($file, $data, $separator, $enclosure, escape: '\\');
             }
             fclose($file);
         }
@@ -510,26 +504,17 @@ class TranslationParserScript extends AdminScript
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function enclosure()
+    public function enclosure(): string
     {
         return '"';
     }
 
-    /**
-     * @return string
-     */
-    public function separator()
+    public function separator(): string
     {
         return ';';
     }
 
-    /**
-     * @return integer
-     */
-    public function maxRecursiveLevel()
+    public function maxRecursiveLevel(): int
     {
         if ($this->climate()->arguments->defined('recursive')) {
             return (int)$this->climate()->arguments->get('recursive');
@@ -540,7 +525,7 @@ class TranslationParserScript extends AdminScript
     /**
      * @return string Php function
      */
-    private function phpFunction()
+    private function phpFunction(): string
     {
         if ($this->climate()->arguments->defined('php_function')) {
             return (string)$this->climate()->arguments->get('php_function');
@@ -552,7 +537,7 @@ class TranslationParserScript extends AdminScript
     /**
      * @return string Mustache tag
      */
-    private function mustacheTag()
+    private function mustacheTag(): string
     {
         if ($this->climate()->arguments->defined('mustache_tag')) {
             return (string)$this->climate()->arguments->get('mustache_tag');

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Charcoal\Admin\Docs\Widget\FormGroup;
 
 // From 'charcoal-admin'
@@ -10,23 +12,14 @@ use Charcoal\Admin\Widget\FormGroupWidget;
  */
 class DocFormGroup extends FormGroupWidget
 {
-    /**
-     * @return string
-     */
-    public function type()
+    #[\Override]
+    public function type(): string
     {
         return 'charcoal/admin/docs/widget/form-group-widget';
     }
 
-    /**
-     * @return boolean
-     */
-    public function hidden()
+    public function hidden(): bool
     {
-        if ($this->description() || $this->notes() || count($this->groupProperties())) {
-            return false;
-        }
-
-        return true;
+        return !($this->description() || $this->notes() || count($this->groupProperties()));
     }
 }

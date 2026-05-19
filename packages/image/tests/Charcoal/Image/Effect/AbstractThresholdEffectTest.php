@@ -8,19 +8,19 @@ class AbstractThresholdEffectTest extends \PHPUnit\Framework\TestCase
 
     protected function setUp(): void
     {
-        $img = $this->getMockForAbstractClass('\Charcoal\Image\AbstractImage');
-        $this->obj = $this->getMockForAbstractClass('\Charcoal\Image\Effect\AbstractThresholdEffect');
+        $img = $this->getMockForAbstractClass(\Charcoal\Image\AbstractImage::class);
+        $this->obj = $this->getMockForAbstractClass(\Charcoal\Image\Effect\AbstractThresholdEffect::class);
         $this->obj->setImage($img);
     }
 
-    public function testDefaults()
+    public function testDefaults(): void
     {
         $obj = $this->obj;
 
         $this->assertEquals(0.5, $obj->threshold());
     }
 
-    public function testSetData()
+    public function testSetData(): void
     {
         $obj = $this->obj;
         $ret = $obj->setData(
@@ -33,7 +33,7 @@ class AbstractThresholdEffectTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(0.1, $obj->threshold());
     }
 
-    public function testSetThreshold()
+    public function testSetThreshold(): void
     {
         $obj = $this->obj;
 
@@ -45,14 +45,14 @@ class AbstractThresholdEffectTest extends \PHPUnit\Framework\TestCase
         $obj->setThreshold('foobar');
     }
 
-    public function testSetThresholdMinException()
+    public function testSetThresholdMinException(): void
     {
         $this->expectException('\InvalidArgumentException');
         $obj = $this->obj;
         $obj->setThreshold(-1);
     }
 
-    public function testSetThresholdMaxException()
+    public function testSetThresholdMaxException(): void
     {
         $this->expectException('\InvalidArgumentException');
         $obj = $this->obj;

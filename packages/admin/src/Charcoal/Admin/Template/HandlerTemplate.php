@@ -14,10 +14,8 @@ class HandlerTemplate extends AdminTemplate
 {
     use HandlerAwareTrait;
 
-    /**
-     * @return string
-     */
-    public function ident()
+    #[\Override]
+    public function ident(): string
     {
         return 'error';
     }
@@ -27,6 +25,7 @@ class HandlerTemplate extends AdminTemplate
      *
      * @return string|null
      */
+    #[\Override]
     public function title()
     {
         return $this->appHandler()->getSummary();
@@ -34,10 +33,9 @@ class HandlerTemplate extends AdminTemplate
 
     /**
      * Error handler response is available to all users, no login required.
-     *
-     * @return boolean
      */
-    protected function authRequired()
+    #[\Override]
+    protected function authRequired(): bool
     {
         return false;
     }

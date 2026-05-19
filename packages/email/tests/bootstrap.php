@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Charcoal\App\AppConfig;
 use Charcoal\App\AppContainer;
 use Charcoal\Config\GenericConfig;

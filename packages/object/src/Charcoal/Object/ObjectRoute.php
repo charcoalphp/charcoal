@@ -118,10 +118,8 @@ class ObjectRoute extends AbstractModel implements
 
     /**
      * Store the increment used to create a unique slug.
-     *
-     * @var integer
      */
-    private $slugInc = 0;
+    private int $slugInc = 0;
 
     /**
      * Inject dependencies from a DI Container.
@@ -129,6 +127,7 @@ class ObjectRoute extends AbstractModel implements
      * @param  Container $container A dependencies container instance.
      * @return void
      */
+    #[\Override]
     protected function setDependencies(Container $container)
     {
         parent::setDependencies($container);
@@ -143,6 +142,7 @@ class ObjectRoute extends AbstractModel implements
      * @see    \Charcoal\Source\StorableTrait::preSave() For the "create" Event.
      * @return boolean
      */
+    #[\Override]
     protected function preSave()
     {
         $this->generateUniqueSlug();
@@ -159,7 +159,8 @@ class ObjectRoute extends AbstractModel implements
      * @param  array $properties Optional. The list of properties to update.
      * @return boolean
      */
-    protected function preUpdate(array $properties = null)
+    #[\Override]
+    protected function preUpdate(?array $properties = null)
     {
         $this->setCreationDate('now');
         $this->setLastModificationDate('now');
@@ -169,10 +170,8 @@ class ObjectRoute extends AbstractModel implements
 
     /**
      * Determine if the current slug is unique.
-     *
-     * @return boolean
      */
-    public function isSlugUnique()
+    public function isSlugUnique(): bool
     {
         $proto  = $this->modelFactory()->get(static::class);
         $loader = $this->collectionLoader();
@@ -235,9 +234,8 @@ class ObjectRoute extends AbstractModel implements
      *
      * @param  string|null $slug The route.
      * @throws InvalidArgumentException If the slug argument is not a string.
-     * @return self
      */
-    public function setSlug($slug)
+    public function setSlug($slug): static
     {
         if ($slug === null) {
             $this->slug = null;
@@ -258,9 +256,8 @@ class ObjectRoute extends AbstractModel implements
      * Set the locale of the object route.
      *
      * @param  string $lang The route's locale.
-     * @return self
      */
-    public function setLang($lang)
+    public function setLang($lang): static
     {
         $this->lang = $lang;
 
@@ -272,9 +269,8 @@ class ObjectRoute extends AbstractModel implements
      *
      * @param  string|DateTimeInterface|null $time The date/time value.
      * @throws InvalidArgumentException If the date/time value is invalid.
-     * @return self
      */
-    public function setCreationDate($time)
+    public function setCreationDate($time): static
     {
         if (empty($time) && !is_numeric($time)) {
             $this->creationDate = null;
@@ -309,9 +305,8 @@ class ObjectRoute extends AbstractModel implements
      *
      * @param  string|DateTimeInterface|null $time The date/time value.
      * @throws InvalidArgumentException If the date/time value is invalid.
-     * @return self
      */
-    public function setLastModificationDate($time)
+    public function setLastModificationDate($time): static
     {
         if (empty($time) && !is_numeric($time)) {
             $this->lastModificationDate = null;
@@ -345,9 +340,8 @@ class ObjectRoute extends AbstractModel implements
      * Set the foreign object type related to this route.
      *
      * @param  string $type The object type.
-     * @return self
      */
-    public function setRouteObjType($type)
+    public function setRouteObjType($type): static
     {
         $this->routeObjType = $type;
 
@@ -358,9 +352,8 @@ class ObjectRoute extends AbstractModel implements
      * Set the foreign object ID related to this route.
      *
      * @param  string $id The object ID.
-     * @return self
      */
-    public function setRouteObjId($id)
+    public function setRouteObjId($id): static
     {
         $this->routeObjId = $id;
 
@@ -371,9 +364,8 @@ class ObjectRoute extends AbstractModel implements
      * Set the foreign object's template identifier.
      *
      * @param  string $template The template identifier.
-     * @return self
      */
-    public function setRouteTemplate($template)
+    public function setRouteTemplate($template): static
     {
         $this->routeTemplate = $template;
 
@@ -384,9 +376,8 @@ class ObjectRoute extends AbstractModel implements
      * Customize the template's options.
      *
      * @param  mixed $options Template options.
-     * @return self
      */
-    public function setRouteOptions($options)
+    public function setRouteOptions($options): static
     {
         if (is_string($options)) {
             $options = json_decode($options, true);
@@ -399,9 +390,8 @@ class ObjectRoute extends AbstractModel implements
 
     /**
      * @param string $routeOptionsIdent Template options ident.
-     * @return self
      */
-    public function setRouteOptionsIdent($routeOptionsIdent)
+    public function setRouteOptionsIdent($routeOptionsIdent): static
     {
         $this->routeOptionsIdent = $routeOptionsIdent;
 
@@ -498,9 +488,8 @@ class ObjectRoute extends AbstractModel implements
 
     /**
      * Alias of {@see self::slug()}.
-     *
-     * @return string
      */
+    #[\Override]
     public function __toString(): string
     {
         return (string)$this->getSlug();

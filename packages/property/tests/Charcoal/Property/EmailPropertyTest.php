@@ -18,9 +18,6 @@ class EmailPropertyTest extends AbstractTestCase
      */
     public $obj;
 
-    /**
-     * @return void
-     */
     protected function setUp(): void
     {
         $container = $this->getContainer();
@@ -34,18 +31,13 @@ class EmailPropertyTest extends AbstractTestCase
 
     /**
      * Asserts that the `type()` method returns "url".
-     *
-     * @return void
      */
-    public function testType()
+    public function testType(): void
     {
         $this->assertEquals('email', $this->obj->type());
     }
 
-    /**
-     * @return void
-     */
-    public function testMaxLength()
+    public function testMaxLength(): void
     {
         $this->assertEquals(254, $this->obj['maxLength']);
 
@@ -53,10 +45,7 @@ class EmailPropertyTest extends AbstractTestCase
         $this->assertEquals(254, $this->obj['maxLength']);
     }
 
-    /**
-     * @return void
-     */
-    public function testValidateEmail()
+    public function testValidateEmail(): void
     {
         $this->obj['allowNull'] = false;
         $this->obj['required'] = true;
@@ -76,30 +65,27 @@ class EmailPropertyTest extends AbstractTestCase
         $this->assertFalse($this->obj->validateEmail());
     }
 
-    /**
-     * @return void
-     */
-    public function testValidationMethods()
+    public function testValidationMethods(): void
     {
         $this->assertContains('email', $this->obj->validationMethods());
     }
 
-    public function testParseVal()
+    public function testParseVal(): void
     {
         $this->assertEquals('charcoal@example.com', $this->obj->parseVal('charcoal@example.com'));
     }
 
-    public function testDisplayVal()
+    public function testDisplayVal(): void
     {
         $this->assertEquals('charcoal@example.com', $this->obj->displayVal('charcoal@example.com'));
     }
 
-    public function testInputVal()
+    public function testInputVal(): void
     {
         $this->assertEquals('charcoal@example.com', $this->obj->inputVal('charcoal@example.com'));
     }
 
-    public function testStorageVal()
+    public function testStorageVal(): void
     {
         $this->assertEquals('charcoal@example.com', $this->obj->storageVal('charcoal@example.com'));
     }

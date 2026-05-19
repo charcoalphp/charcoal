@@ -18,9 +18,7 @@ use Charcoal\Tests\Admin\ContainerProvider;
  */
 class FormGroupWidgetTest extends AbstractTestCase
 {
-    /**
-     * @return void
-     */
+    public $obj;
     public function setUp(): void
     {
         $container = new Container();
@@ -31,7 +29,7 @@ class FormGroupWidgetTest extends AbstractTestCase
         $containerProvider->registerAuthenticator($container);
 
 
-        $container['form/input/builder'] = $this->createMock(\Charcoal\Ui\FormInput\FormInputBuilder::class, '');
+        $container['form/input/builder'] = $this->createMock(\Charcoal\Ui\FormInput\FormInputBuilder::class);
 
         $container['authorizer'] = $container['admin/authorizer'];
         $container['authenticator'] = $container['admin/authenticator'];
@@ -42,10 +40,7 @@ class FormGroupWidgetTest extends AbstractTestCase
         ]);
     }
 
-    /**
-     * @return void
-     */
-    public function testConstructor()
+    public function testConstructor(): void
     {
         $this->assertInstanceOf(FormGroupWidget::class, $this->obj);
     }

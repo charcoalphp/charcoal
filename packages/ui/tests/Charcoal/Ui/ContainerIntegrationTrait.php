@@ -51,9 +51,8 @@ trait ContainerIntegrationTrait
 
     /**
      * @see    ContainerProvider
-     * @return void
      */
-    private function setupContainer()
+    private function setupContainer(): void
     {
         $provider  = new ContainerProvider();
         $container = new Container();

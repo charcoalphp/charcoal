@@ -48,7 +48,7 @@ trait SectionTableTrait
     {
         if (!isset($this->sectionFactory)) {
             throw new RuntimeException(
-                sprintf('Section Model Factory is not defined for "%s"', get_class($this))
+                sprintf('Section Model Factory is not defined for "%s"', $this::class)
             );
         }
 
@@ -89,30 +89,26 @@ trait SectionTableTrait
             case 'menu_label':
                 $sectionType = $object->sectionType();
 
-                switch ($sectionType) {
-                    case AbstractSection::TYPE_EXTERNAL:
-                        $externalUrl = (string)$object->externalUrl();
-                        $linkExcerpt = '';
-                        $tagTemplate = '<span class="fa fa-link" data-toggle="tooltip" ' .
-                            'data-placement="auto" title="%1$s"></span>';
+                if ($sectionType === AbstractSection::TYPE_EXTERNAL) {
+                    $externalUrl = (string)$object->externalUrl();
+                    $linkExcerpt = '';
+                    $tagTemplate = '<span class="fa fa-link" data-toggle="tooltip" ' .
+                        'data-placement="auto" title="%1$s"></span>';
+                    if ($externalUrl !== '' && $externalUrl !== '0') {
+                        $tagTemplate = '<a class="btn btn-secondary btn-sm" href="%2$s" target="_blank">' .
+                            '<span class="fa fa-link" aria-hidden="true"></span> ' .
+                            '<span class="sr-only">URL:</span> %3$s' .
+                            '</a>';
 
-                        if ($externalUrl) {
-                            $tagTemplate = '<a class="btn btn-secondary btn-sm" href="%2$s" target="_blank">' .
-                                '<span class="fa fa-link" aria-hidden="true"></span> ' .
-                                '<span class="sr-only">URL:</span> %3$s' .
-                                '</a>';
-
-                            $linkExcerpt = $this->abridgeUri($externalUrl);
-                        }
-
-                        $p = $object->p('section_type');
-                        $propertyValue .= sprintf(
-                            ' &nbsp; ' . $tagTemplate,
-                            $p->displayVal($p->val()),
-                            $externalUrl,
-                            $linkExcerpt
-                        );
-                        break;
+                        $linkExcerpt = $this->abridgeUri($externalUrl);
+                    }
+                    $p = $object->p('section_type');
+                    $propertyValue .= sprintf(
+                        ' &nbsp; ' . $tagTemplate,
+                        $p->displayVal($p->val()),
+                        $externalUrl,
+                        $linkExcerpt
+                    );
                 }
                 break;
         }

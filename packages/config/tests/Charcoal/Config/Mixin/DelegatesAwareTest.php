@@ -11,9 +11,13 @@ use Charcoal\Config\DelegatesAwareTrait;
 
 /**
  * Test DelegatesAwareTrait
- *
- * @coversDefaultClass \Charcoal\Config\DelegatesAwareTrait
  */
+#[\PHPUnit\Framework\Attributes\CoversTrait(\Charcoal\Config\DelegatesAwareTrait::class)]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Config\DelegatesAwareTrait::class, 'setDelegates()')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Config\DelegatesAwareTrait::class, 'addDelegate()')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Config\DelegatesAwareTrait::class, 'prependDelegate()')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Config\DelegatesAwareTrait::class, 'hasInDelegates()')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Config\DelegatesAwareTrait::class, 'getInDelegates()')]
 class DelegatesAwareTest extends AbstractTestCase
 {
     /**
@@ -28,8 +32,6 @@ class DelegatesAwareTest extends AbstractTestCase
 
     /**
      * Create a DelegateEntity instance.
-     *
-     * @return void
      */
     protected function setUp(): void
     {
@@ -72,20 +74,17 @@ class DelegatesAwareTest extends AbstractTestCase
      * Create a DelegateEntity instance.
      *
      * @param  array $data Data to pre-populate the object.
-     * @return DelegateEntity
      */
-    public function createObject(array $data = null)
+    public function createObject(?array $data = null): \Charcoal\Tests\Config\Mock\DelegateEntity
     {
         return new DelegateEntity($data);
     }
 
     /**
      * Asserts that the object implements DelegatesAwareInterface.
-     *
-     * @coversNothing
-     * @return void
      */
-    public function testDelegatesAwareInterface()
+    #[\PHPUnit\Framework\Attributes\CoversNothing]
+    public function testDelegatesAwareInterface(): void
     {
         $this->assertInstanceOf(DelegatesAwareInterface::class, $this->obj);
     }
@@ -94,25 +93,16 @@ class DelegatesAwareTest extends AbstractTestCase
 
     // Test Delegate Collecting
     // =========================================================================
-
     /**
      * Asserts that the separator is disabled by default.
-     *
-     * @coversNothing
-     * @return void
      */
-    public function testDefaultDelegatesCollection()
+    #[\PHPUnit\Framework\Attributes\CoversNothing]
+    public function testDefaultDelegatesCollection(): void
     {
         $this->assertEmpty($this->obj->delegates());
     }
 
-    /**
-     * @covers ::setDelegates()
-     * @covers ::addDelegate()
-     * @covers ::prependDelegate()
-     * @return void
-     */
-    public function testSetDelegates()
+    public function testSetDelegates(): void
     {
         $obj = $this->obj;
 
@@ -134,10 +124,10 @@ class DelegatesAwareTest extends AbstractTestCase
     }
 
     /**
-     * @coversNothing
-     * @doesNotPerformAssertions
      * @return DelegateEntity
      */
+    #[\PHPUnit\Framework\Attributes\CoversNothing]
+    #[\PHPUnit\Framework\Attributes\DoesNotPerformAssertions]
     public function testSetNestedDelegates()
     {
         $this->delegates[4]->addDelegate($this->delegates[2]);
@@ -155,28 +145,22 @@ class DelegatesAwareTest extends AbstractTestCase
 
     // Test HasInDelegates
     // =========================================================================
-
     /**
-     * @covers  ::hasInDelegates()
-     * @depends testSetNestedDelegates
      *
      * @see    self::$delegates[1]['bubble']
      * @param  DelegatesAwareInterface $obj The DelegatesAwareInterface implementation to test.
-     * @return void
      */
-    public function testHasInDelegatesReturnsTrueOnDelegatedKey(DelegatesAwareInterface $obj)
+    #[\PHPUnit\Framework\Attributes\Depends('testSetNestedDelegates')]
+    public function testHasInDelegatesReturnsTrueOnDelegatedKey(DelegatesAwareInterface $obj): void
     {
         $this->assertTrue($obj->hasInDelegates('bubble'));
     }
 
     /**
-     * @covers  ::hasInDelegates()
-     * @depends testSetNestedDelegates
-     *
      * @param  DelegatesAwareInterface $obj The DelegatesAwareInterface implementation to test.
-     * @return void
      */
-    public function testHasInDelegatesReturnsFalseOnNonexistentKey(DelegatesAwareInterface $obj)
+    #[\PHPUnit\Framework\Attributes\Depends('testSetNestedDelegates')]
+    public function testHasInDelegatesReturnsFalseOnNonexistentKey(DelegatesAwareInterface $obj): void
     {
         $this->assertFalse($obj->hasInDelegates('use_error_handler'));
     }
@@ -186,16 +170,13 @@ class DelegatesAwareTest extends AbstractTestCase
 
     // Test GetInDelegates
     // =========================================================================
-
     /**
-     * @covers  ::getInDelegates()
-     * @depends testSetNestedDelegates
      *
      * @see    self::$delegates[2]['level']
      * @param  DelegatesAwareInterface $obj The DelegatesAwareInterface implementation to test.
-     * @return void
      */
-    public function testGetInDelegatesReturnsValueOnDelegatedKey(DelegatesAwareInterface $obj)
+    #[\PHPUnit\Framework\Attributes\Depends('testSetNestedDelegates')]
+    public function testGetInDelegatesReturnsValueOnDelegatedKey(DelegatesAwareInterface $obj): void
     {
         $this->assertEquals(
             $this->delegates[2]['level'],
@@ -204,13 +185,10 @@ class DelegatesAwareTest extends AbstractTestCase
     }
 
     /**
-     * @covers  ::getInDelegates()
-     * @depends testSetNestedDelegates
-     *
      * @param  DelegatesAwareInterface $obj The DelegatesAwareInterface implementation to test.
-     * @return void
      */
-    public function testGetInDelegatesReturnsNullOnNonexistentKey(DelegatesAwareInterface $obj)
+    #[\PHPUnit\Framework\Attributes\Depends('testSetNestedDelegates')]
+    public function testGetInDelegatesReturnsNullOnNonexistentKey(DelegatesAwareInterface $obj): void
     {
         $this->assertNull($obj->getInDelegates('use_error_handler'));
     }

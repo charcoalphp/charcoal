@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Charcoal\Admin\Property\Input\Selectize;
 
 // From 'charcoal-admin'
@@ -10,23 +12,17 @@ use Charcoal\Admin\Property\Input\SelectizeInput;
  */
 class ListInput extends SelectizeInput
 {
-    /**
-     * @return string
-     */
-    public function inputType()
+    #[\Override]
+    public function inputType(): string
     {
         return 'charcoal/admin/property/input/selectize';
     }
 
-    /**
-     * @return string
-     */
-    public function inputClass()
+    #[\Override]
+    public function inputClass(): string
     {
         $parentClass = parent::inputClass();
 
-        $class = $parentClass . ' selectize-list';
-
-        return $class;
+        return $parentClass . ' selectize-list';
     }
 }

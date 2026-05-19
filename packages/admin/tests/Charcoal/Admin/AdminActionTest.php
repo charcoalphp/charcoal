@@ -27,22 +27,16 @@ class AdminActionTest extends AbstractTestCase
 
     /**
      * Tested Class.
-     *
-     * @var AdminAction
      */
-    private $obj;
+    private \Charcoal\Admin\AdminAction $obj;
 
     /**
      * Store the service container.
-     *
-     * @var Container
      */
-    private $container;
+    private ?\Pimple\Container $container = null;
 
     /**
      * Set up the test.
-     *
-     * @return void
      */
     public function setUp(): void
     {
@@ -63,10 +57,8 @@ class AdminActionTest extends AbstractTestCase
      * - success can be set by ArrayAccess
      * - success can be set with get()
      * - success can be accessed by ArrayAccess
-     *
-     * @return void
      */
-    public function testSuccess()
+    public function testSuccess(): void
     {
         $this->assertFalse($this->obj->success());
         $ret = $this->obj->setSuccess(true);
@@ -83,10 +75,7 @@ class AdminActionTest extends AbstractTestCase
         $this->assertFalse($this->obj['success']);
     }
 
-    /**
-     * @return void
-     */
-    public function testFeedback()
+    public function testFeedback(): void
     {
         $this->assertFalse($this->obj->hasFeedbacks());
         $this->assertEquals([], $this->obj->feedbacks());
@@ -105,18 +94,12 @@ class AdminActionTest extends AbstractTestCase
         $this->assertEquals(1, $this->obj->numFeedbacks());
     }
 
-    /**
-     * @return void
-     */
-    public function testAdminUrl()
+    public function testAdminUrl(): void
     {
         $this->assertEquals('/admin/', $this->obj->adminUrl());
     }
 
-    /**
-     * @return void
-     */
-    public function testAuthRequiredIsTrue()
+    public function testAuthRequiredIsTrue(): void
     {
         $res = $this->callMethod($this->obj, 'authRequired');
         $this->assertTrue($res);
@@ -124,12 +107,10 @@ class AdminActionTest extends AbstractTestCase
 
     /**
      * Set up the service container.
-     *
-     * @return Container
      */
-    protected function container()
+    protected function container(): \Pimple\Container
     {
-        if ($this->container === null) {
+        if (!$this->container instanceof \Pimple\Container) {
             $container = new Container();
             $containerProvider = new ContainerProvider();
             $containerProvider->registerActionDependencies($container);

@@ -37,9 +37,9 @@ class Pagination extends AbstractExpression implements
      *
      * @param  array<string,mixed> $data The expression data;
      *     as an associative array.
-     * @return self
      */
-    public function setData(array $data)
+    #[\Override]
+    public function setData(array $data): static
     {
         parent::setData($data);
 
@@ -63,7 +63,7 @@ class Pagination extends AbstractExpression implements
      *
      * @return array<string,mixed> An associative array.
      */
-    public function defaultData()
+    public function defaultData(): array
     {
         return [
             'page'         => self::DEFAULT_PAGE,
@@ -78,7 +78,7 @@ class Pagination extends AbstractExpression implements
      *
      * @return array<string,mixed> An associative array.
      */
-    public function data()
+    public function data(): array
     {
         return [
             'page'         => $this->page(),
@@ -94,9 +94,8 @@ class Pagination extends AbstractExpression implements
      * @param  integer $page The current page.
      *     Pages should start at 1.
      * @throws InvalidArgumentException If the parameter is not numeric or < 0.
-     * @return self
      */
-    public function setPage($page)
+    public function setPage($page): static
     {
         if (!is_numeric($page)) {
             throw new InvalidArgumentException(
@@ -133,9 +132,8 @@ class Pagination extends AbstractExpression implements
      * @param  integer $count The number of results to return, per page.
      *     Use 0 to request all results.
      * @throws InvalidArgumentException If the parameter is not numeric or < 0.
-     * @return self
      */
-    public function setNumPerPage($count)
+    public function setNumPerPage($count): static
     {
         if (!is_numeric($count)) {
             throw new InvalidArgumentException(
@@ -166,10 +164,8 @@ class Pagination extends AbstractExpression implements
 
     /**
      * Retrieve the pagination's lowest possible index.
-     *
-     * @return integer
      */
-    public function first()
+    public function first(): int
     {
         $page  = $this->page();
         $limit = $this->numPerPage();
@@ -184,7 +180,7 @@ class Pagination extends AbstractExpression implements
      *
      * @return integer
      */
-    public function last()
+    public function last(): float|int|array
     {
         $first = $this->first();
         $limit = $this->numPerPage();

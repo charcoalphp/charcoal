@@ -16,26 +16,20 @@ class HandlerConfig extends AbstractConfig
 {
     /**
      * The view (to load).
-     *
-     * @var string|null
      */
-    private $template;
+    private ?string $template = null;
 
     /**
      * The view engine ident to use.
      *
      * For example: "mustache"
-     *
-     * @var string|null
      */
-    private $engine;
+    private ?string $engine = null;
 
     /**
      * The view controller.
-     *
-     * @var string|null
      */
-    private $controller;
+    private ?string $controller = null;
 
     /**
      * Dynamic views to register.
@@ -48,31 +42,23 @@ class HandlerConfig extends AbstractConfig
 
     /**
      * Additional view data.
-     *
-     * @var array
      */
-    private $templateData = [];
+    private array $templateData = [];
 
     /**
      * Enable handler-level caching for the view.
-     *
-     * @var boolean $cache
      */
-    private $cache = false;
+    private bool $cache = false;
 
     /**
      * Time-to-live, in seconds, of the cache. (0 = no limit).
-     *
-     * @var integer
      */
-    private $cacheTtl = 0;
+    private int $cacheTtl = 0;
 
     /**
      * Retrieve the default handler types.
-     *
-     * @return array
      */
-    public static function defaultHandlerTypes()
+    public static function defaultHandlerTypes(): array
     {
         return [
             'maintenance',
@@ -90,7 +76,7 @@ class HandlerConfig extends AbstractConfig
      * @throws InvalidArgumentException If the template view is invalid.
      * @return HandlerConfig Chainable
      */
-    public function setTemplate($template)
+    public function setTemplate($template): static
     {
         if (empty($template)) {
             $this->template = null;
@@ -109,10 +95,8 @@ class HandlerConfig extends AbstractConfig
 
     /**
      * Retrieve the template view.
-     *
-     * @return string
      */
-    public function template()
+    public function template(): string
     {
         if ($this->template === null) {
             return 'charcoal/app/handler/layout';
@@ -126,9 +110,8 @@ class HandlerConfig extends AbstractConfig
      *
      * @param  string|null $controller Handler controller name.
      * @throws InvalidArgumentException If the template controller is invalid.
-     * @return self
      */
-    public function setController($controller)
+    public function setController($controller): static
     {
         if (empty($controller)) {
             $this->controller = null;
@@ -183,9 +166,8 @@ class HandlerConfig extends AbstractConfig
      *
      * @param  string|null $engine The view engine identifier.
      * @throws InvalidArgumentException If the engine is invalid.
-     * @return self
      */
-    public function setEngine($engine)
+    public function setEngine($engine): static
     {
         if (empty($engine)) {
             $this->engine = null;
@@ -235,9 +217,8 @@ class HandlerConfig extends AbstractConfig
      * Set the "handlerMessage" view ident.
      *
      * @param  string $templateIdent A template identifier.
-     * @return self
      */
-    public function setPartial($templateIdent)
+    public function setPartial($templateIdent): static
     {
         $this->partials['handlerMessage'] = $templateIdent;
         return $this;
@@ -259,7 +240,7 @@ class HandlerConfig extends AbstractConfig
      * @param  array $partials Dynamic templates.
      * @return HandlerConfig Chainable
      */
-    public function setPartials(array $partials)
+    public function setPartials(array $partials): static
     {
         $this->partials = array_replace($this->partials, $partials);
         return $this;
@@ -281,7 +262,7 @@ class HandlerConfig extends AbstractConfig
      * @param  array $data Additional template data.
      * @return HandlerConfig Chainable
      */
-    public function setTemplateData(array $data)
+    public function setTemplateData(array $data): static
     {
         $this->templateData = array_merge($this->templateData, $data);
         return $this;
@@ -289,10 +270,8 @@ class HandlerConfig extends AbstractConfig
 
     /**
      * Retrieve the template data for the view.
-     *
-     * @return array
      */
-    public function templateData()
+    public function templateData(): array
     {
         return $this->templateData;
     }
@@ -303,18 +282,16 @@ class HandlerConfig extends AbstractConfig
      * @param  boolean $cache The cache flag.
      * @return HandlerConfig Chainable
      */
-    public function setCache($cache)
+    public function setCache($cache): static
     {
-        $this->cache = !!$cache;
+        $this->cache = (bool) $cache;
         return $this;
     }
 
     /**
      * Determine if the cache is enabled or disabled.
-     *
-     * @return boolean
      */
-    public function cache()
+    public function cache(): bool
     {
         return $this->cache;
     }
@@ -325,7 +302,7 @@ class HandlerConfig extends AbstractConfig
      * @param  integer $ttl The time-to-live, in seconds.
      * @return HandlerConfig Chainable
      */
-    public function setCacheTtl($ttl)
+    public function setCacheTtl($ttl): static
     {
         $this->cacheTtl = intval($ttl);
         return $this;
@@ -333,10 +310,8 @@ class HandlerConfig extends AbstractConfig
 
     /**
      * Retrieve the time-to-live for the cached template.
-     *
-     * @return integer
      */
-    public function cacheTtl()
+    public function cacheTtl(): int
     {
         return $this->cacheTtl;
     }

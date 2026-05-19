@@ -9,10 +9,7 @@ use Charcoal\Image\Effect\AbstractSharpenEffect;
  */
 class ImagemagickSharpenEffect extends AbstractSharpenEffect
 {
-    /**
-     * @return self
-     */
-    public function processAdaptive()
+    public function processAdaptive(): static
     {
         $radius = $this->radius();
         $sigma = $this->sigma();
@@ -22,10 +19,7 @@ class ImagemagickSharpenEffect extends AbstractSharpenEffect
         return $this;
     }
 
-    /**
-     * @return self
-     */
-    public function processUnsharp()
+    public function processUnsharp(): static
     {
         $radius = $this->radius();
         $sigma = $this->sigma();
@@ -38,10 +32,7 @@ class ImagemagickSharpenEffect extends AbstractSharpenEffect
         return $this;
     }
 
-    /**
-     * @return self
-     */
-    public function processStandard()
+    public function processStandard(): static
     {
         $radius = $this->radius();
         $sigma = $this->sigma();

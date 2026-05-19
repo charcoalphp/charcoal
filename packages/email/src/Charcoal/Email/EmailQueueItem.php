@@ -26,17 +26,13 @@ class EmailQueueItem extends AbstractModel implements QueueItemInterface
 
     /**
      * The recipient's email address.
-     *
-     * @var string $to
      */
-    private $to;
+    private ?string $to = null;
 
     /**
      * The sender's email address.
-     *
-     * @var string $from
      */
-    private $from;
+    private ?string $from = null;
 
     /**
      * The email subject.
@@ -66,17 +62,13 @@ class EmailQueueItem extends AbstractModel implements QueueItemInterface
      */
     private $campaign;
 
-    /**
-     * @var FactoryInterface $emailFactory
-     */
-    private $emailFactory;
+    private \Charcoal\Factory\FactoryInterface $emailFactory;
 
     /**
      * Get the primary key that uniquely identifies each queue item.
-     *
-     * @return string
      */
-    public function key()
+    #[\Override]
+    public function key(): string
     {
         return 'id';
     }
@@ -85,13 +77,12 @@ class EmailQueueItem extends AbstractModel implements QueueItemInterface
      * Set the recipient's email address.
      *
      * @param  string|array $email An email address.
-     * @return self
      */
-    public function setTo($email)
+    public function setTo($email): static
     {
         try {
             $this->to = $this->parseEmail($email);
-        } catch (Exception $e) {
+        } catch (Exception) {
             $this->logger->warning(sprintf('Invalid "to" email: "%s"', strval($email)));
         }
 
@@ -103,7 +94,7 @@ class EmailQueueItem extends AbstractModel implements QueueItemInterface
      *
      * @return string
      */
-    public function to()
+    public function to(): ?string
     {
         return $this->to;
     }
@@ -112,13 +103,12 @@ class EmailQueueItem extends AbstractModel implements QueueItemInterface
      * Set the sender's email address.
      *
      * @param  string|array $email An email address.
-     * @return self
      */
-    public function setFrom($email)
+    public function setFrom($email): static
     {
         try {
             $this->from = $this->parseEmail($email);
-        } catch (Exception $e) {
+        } catch (Exception) {
             $this->logger->warning(sprintf('Invalid "from" email: "%s"', strval($email)));
         }
 
@@ -130,7 +120,7 @@ class EmailQueueItem extends AbstractModel implements QueueItemInterface
      *
      * @return string
      */
-    public function from()
+    public function from(): ?string
     {
         return $this->from;
     }
@@ -139,9 +129,8 @@ class EmailQueueItem extends AbstractModel implements QueueItemInterface
      * Set the email subject.
      *
      * @param  string $subject The email subject.
-     * @return self
      */
-    public function setSubject($subject)
+    public function setSubject($subject): static
     {
         $this->subject = $subject;
 
@@ -162,9 +151,8 @@ class EmailQueueItem extends AbstractModel implements QueueItemInterface
      * Set the email's HTML message body.
      *
      * @param  string $body The HTML message body.
-     * @return self
      */
-    public function setMsgHtml($body)
+    public function setMsgHtml($body): static
     {
         $this->msgHtml = $body;
 
@@ -185,9 +173,8 @@ class EmailQueueItem extends AbstractModel implements QueueItemInterface
      * Set the email's plain-text message body.
      *
      * @param  string $body The plain-text mesage body.
-     * @return self
      */
-    public function setMsgTxt($body)
+    public function setMsgTxt($body): static
     {
         $this->msgTxt = $body;
 
@@ -208,9 +195,8 @@ class EmailQueueItem extends AbstractModel implements QueueItemInterface
      * Set the campaign ID.
      *
      * @param  string $campaign The campaign identifier.
-     * @return self
      */
-    public function setCampaign($campaign)
+    public function setCampaign($campaign): static
     {
         $this->campaign = $campaign;
 
@@ -240,9 +226,9 @@ class EmailQueueItem extends AbstractModel implements QueueItemInterface
      *                                       processed.
      */
     public function process(
-        callable $alwaysCallback = null,
-        callable $successCallback = null,
-        callable $failureCallback = null
+        ?callable $alwaysCallback = null,
+        ?callable $successCallback = null,
+        ?callable $failureCallback = null
     ): ?bool {
         $email = $this->emailFactory()->create('email');
         $email->setData($this->data());
@@ -269,16 +255,13 @@ class EmailQueueItem extends AbstractModel implements QueueItemInterface
             // Clear cumbersome DB data
             $this->setMsgHtml(null)
                  ->setMsgTxt(null);
-
-            array_push($propsToUpdate, 'msg_html', 'msg_txt');
-
+            $propsToUpdate[] = 'msg_html';
+            $propsToUpdate[] = 'msg_txt';
             if ($successCallback !== null) {
                 $successCallback($this);
             }
-        } else {
-            if ($failureCallback !== null) {
-                $failureCallback($this);
-            }
+        } elseif ($failureCallback !== null) {
+            $failureCallback($this);
         }
 
         $this->update(array_merge([
@@ -294,8 +277,8 @@ class EmailQueueItem extends AbstractModel implements QueueItemInterface
 
     /**
      * @param Container $container Pimple DI container.
-     * @return void
      */
+    #[\Override]
     protected function setDependencies(Container $container): void
     {
         parent::setDependencies($container);
@@ -305,9 +288,9 @@ class EmailQueueItem extends AbstractModel implements QueueItemInterface
     /**
      * Hook called before saving the item.
      *
-     * @return boolean
      * @see \Charcoal\Queue\QueueItemTrait::preSaveQueueItem()
      */
+    #[\Override]
     protected function preSave(): bool
     {
         parent::preSave();
@@ -317,9 +300,6 @@ class EmailQueueItem extends AbstractModel implements QueueItemInterface
         return true;
     }
 
-    /**
-     * @return FactoryInterface
-     */
     protected function emailFactory(): FactoryInterface
     {
         return $this->emailFactory;
@@ -327,7 +307,6 @@ class EmailQueueItem extends AbstractModel implements QueueItemInterface
 
     /**
      * @param FactoryInterface $factory The factory to create email objects.
-     * @return void
      */
     private function setEmailFactory(FactoryInterface $factory): void
     {

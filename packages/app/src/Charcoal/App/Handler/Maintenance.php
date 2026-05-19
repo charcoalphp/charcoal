@@ -39,30 +39,16 @@ class Maintenance extends AbstractHandler
             $output = $this->renderPlainOutput();
         } else {
             $contentType = $this->determineContentType($request);
-            switch ($contentType) {
-                case 'application/json':
-                    $output = $this->renderJsonOutput();
-                    break;
-
-                case 'text/xml':
-                case 'application/xml':
-                    $output = $this->renderXmlOutput();
-                    break;
-
-                case 'text/html':
-                    $output = $this->renderHtmlOutput();
-                    break;
-
-                case 'text/plain':
-                    $output = $this->renderPlainOutput();
-                    break;
-
-                default:
-                    throw new UnexpectedValueException(sprintf(
-                        'Cannot render unknown content type: %s',
-                        $contentType
-                    ));
-            }
+            $output = match ($contentType) {
+                'application/json' => $this->renderJsonOutput(),
+                'text/xml', 'application/xml' => $this->renderXmlOutput(),
+                'text/html' => $this->renderHtmlOutput(),
+                'text/plain' => $this->renderPlainOutput(),
+                default => throw new UnexpectedValueException(sprintf(
+                    'Cannot render unknown content type: %s',
+                    $contentType
+                )),
+            };
         }
 
         return $this->respondWith(
@@ -74,10 +60,8 @@ class Maintenance extends AbstractHandler
 
     /**
      * Render Text Error
-     *
-     * @return string
      */
-    protected function renderPlainOutput()
+    protected function renderPlainOutput(): string
     {
         $message = $this->translator()->translate('Service Unavailable', [], 'charcoal');
 
@@ -86,10 +70,8 @@ class Maintenance extends AbstractHandler
 
     /**
      * Render JSON Error
-     *
-     * @return string
      */
-    protected function renderJsonOutput()
+    protected function renderJsonOutput(): string
     {
         $message = $this->translator()->translate(
             'The server is currently unavailable. We will be right back.',
@@ -103,10 +85,8 @@ class Maintenance extends AbstractHandler
 
     /**
      * Render XML Error
-     *
-     * @return string
      */
-    protected function renderXmlOutput()
+    protected function renderXmlOutput(): string
     {
         $message = $this->translator()->translate(
             'The server is currently unavailable. We will be right back.',
@@ -129,10 +109,9 @@ class Maintenance extends AbstractHandler
 
     /**
      * Retrieve the response's HTTP code.
-     *
-     * @return integer
      */
-    public function getCode()
+    #[\Override]
+    public function getCode(): int
     {
         return 503;
     }

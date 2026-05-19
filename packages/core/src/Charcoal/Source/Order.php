@@ -60,9 +60,9 @@ class Order extends Expression implements
      *
      * @param  array<string,mixed> $data The expression data;
      *     as an associative array.
-     * @return self
      */
-    public function setData(array $data)
+    #[\Override]
+    public function setData(array $data): static
     {
         parent::setData($data);
 
@@ -114,10 +114,8 @@ class Order extends Expression implements
             }
         }
 
-        if (isset($data['condition']) || isset($data['string'])) {
-            if (!isset($data['mode'])) {
-                $this->setMode(self::MODE_CUSTOM);
-            }
+        if ((isset($data['condition']) || isset($data['string'])) && !isset($data['mode'])) {
+            $this->setMode(self::MODE_CUSTOM);
         }
 
         return $this;
@@ -128,7 +126,8 @@ class Order extends Expression implements
      *
      * @return array<string,mixed> An associative array.
      */
-    public function defaultData()
+    #[\Override]
+    public function defaultData(): array
     {
         return [
             'property'  => null,
@@ -147,7 +146,8 @@ class Order extends Expression implements
      *
      * @return array<string,mixed> An associative array.
      */
-    public function data()
+    #[\Override]
+    public function data(): array
     {
         return [
             'property'  => $this->property(),
@@ -166,9 +166,8 @@ class Order extends Expression implements
      *
      * @param  string|null $mode The sorting mode.
      * @throws InvalidArgumentException If the mode is not a string or invalid.
-     * @return self
      */
-    public function setMode($mode)
+    public function setMode($mode): static
     {
         if ($mode === null) {
             $this->mode = $mode;
@@ -213,9 +212,8 @@ class Order extends Expression implements
      *
      * @param  string|null $direction The direction to sort on.
      * @throws InvalidArgumentException If the direction is not a string.
-     * @return self
      */
-    public function setDirection($direction)
+    public function setDirection($direction): static
     {
         if ($direction === null) {
             $this->direction = $direction;
@@ -253,9 +251,8 @@ class Order extends Expression implements
      *     - is a string, the string will be split by ",".
      *     - is an array, the values will be used as is.
      *     - any other data type throws an exception.
-     * @return self
      */
-    public function setValues($values)
+    public function setValues($values): static
     {
         if ($values === null) {
             $this->values = $values;
@@ -269,11 +266,11 @@ class Order extends Expression implements
                 );
             }
 
-            $values = array_map('trim', explode(',', $values));
+            $values = array_map(trim(...), explode(',', $values));
         }
 
         if (is_array($values)) {
-            if (empty($values)) {
+            if ($values === []) {
                 throw new InvalidArgumentException(
                     'Array values can not be empty.'
                 );
@@ -285,16 +282,14 @@ class Order extends Expression implements
 
         throw new InvalidArgumentException(sprintf(
             'Order Values must be an array or comma-delimited string, received %s',
-            is_object($values) ? get_class($values) : gettype($values)
+            get_debug_type($values)
         ));
     }
 
     /**
      * Determine if the Order expression has values.
-     *
-     * @return boolean
      */
-    public function hasValues()
+    public function hasValues(): bool
     {
         return !empty($this->values);
     }
@@ -311,10 +306,8 @@ class Order extends Expression implements
 
     /**
      * Retrieve the supported sorting modes.
-     *
-     * @return array
      */
-    protected function validModes()
+    protected function validModes(): array
     {
         return [
             self::MODE_DESC,

@@ -50,7 +50,7 @@ trait BaseUrlTrait
         if (!isset($this->baseUrl)) {
             throw new RuntimeException(sprintf(
                 'The base URI is not defined for [%s]',
-                get_class($this)
+                $this::class
             ));
         }
 
@@ -86,7 +86,7 @@ trait BaseUrlTrait
         if (!isset($this->adminUrl)) {
             throw new RuntimeException(sprintf(
                 'The Admin URI is not defined for [%s]',
-                get_class($this)
+                $this::class
             ));
         }
 
@@ -101,17 +101,10 @@ trait BaseUrlTrait
      * Determine if the given URI is relative.
      *
      * @param  string $uri A URI path to test.
-     * @return boolean
      */
-    protected function isRelativeUri($uri)
+    protected function isRelativeUri($uri): bool
     {
-        if ($uri && !parse_url($uri, PHP_URL_SCHEME)) {
-            if (!in_array($uri[0], [ '/', '#', '?' ])) {
-                return true;
-            }
-        }
-
-        return false;
+        return $uri && !parse_url($uri, PHP_URL_SCHEME) && !in_array($uri[0], [ '/', '#', '?' ]);
     }
 
     /**
@@ -126,14 +119,12 @@ trait BaseUrlTrait
         $targetPath = strval($targetPath);
         if ($targetPath === '') {
             return $basePath->withPath('');
-        } else {
-            if ($this->isRelativeUri($targetPath)) {
-                $parts = parse_url($targetPath);
-                $path  = isset($parts['path']) ? ltrim($parts['path'], '/') : '';
-                $query = isset($parts['query']) ? $parts['query'] : '';
-                $hash  = isset($parts['fragment']) ? $parts['fragment'] : '';
-                $targetPath = $basePath->withPath($path)->withQuery($query)->withFragment($hash);
-            }
+        } elseif ($this->isRelativeUri($targetPath)) {
+            $parts = parse_url($targetPath);
+            $path  = isset($parts['path']) ? ltrim($parts['path'], '/') : '';
+            $query = $parts['query'] ?? '';
+            $hash  = $parts['fragment'] ?? '';
+            $targetPath = $basePath->withPath($path)->withQuery($query)->withFragment($hash);
         }
 
         return $targetPath;

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Charcoal\Admin\Property\Input;
 
 use InvalidArgumentException;
@@ -13,33 +15,27 @@ class NumberInput extends AbstractPropertyInput
 {
     /**
      * The minimum numeric value allowed.
-     *
-     * @var integer|float|null
      */
-    private $min;
+    private null|int|float $min = null;
 
     /**
      * The maximum numeric value allowed.
-     *
-     * @var integer|float|null
      */
-    private $max;
+    private null|int|float $max = null;
 
     /**
      * Limit the increments at which a numeric value can be set.
      *
      * Note: It can be the string "any" or a positive floating point number.
-     *
-     * @var string|integer|float|null
      */
-    private $step;
+    private null|string|int|float $step = null;
 
     /**
      * @param  mixed $min The minimum.
      * @throws InvalidArgumentException If the argument is not a number.
      * @return Text Chainable
      */
-    public function setMin($min)
+    public function setMin($min): static
     {
         if ($min === null || $min === '') {
             $this->min = null;
@@ -56,18 +52,12 @@ class NumberInput extends AbstractPropertyInput
         return $this;
     }
 
-    /**
-     * @return boolean
-     */
-    public function hasMin()
+    public function hasMin(): bool
     {
         return !(empty($this->min) && !is_numeric($this->min));
     }
 
-    /**
-     * @return integer|float|null
-     */
-    public function min()
+    public function min(): int|float|null
     {
         return $this->min;
     }
@@ -77,7 +67,7 @@ class NumberInput extends AbstractPropertyInput
      * @throws InvalidArgumentException If the argument is not a number.
      * @return Text Chainable
      */
-    public function setMax($max)
+    public function setMax($max): static
     {
         if ($max === null || $max === '') {
             $this->max = null;
@@ -94,18 +84,12 @@ class NumberInput extends AbstractPropertyInput
         return $this;
     }
 
-    /**
-     * @return boolean
-     */
-    public function hasMax()
+    public function hasMax(): bool
     {
         return !(empty($this->max) && !is_numeric($this->max));
     }
 
-    /**
-     * @return integer|float|null
-     */
-    public function max()
+    public function max(): int|float|null
     {
         return $this->max;
     }
@@ -115,7 +99,7 @@ class NumberInput extends AbstractPropertyInput
      * @throws InvalidArgumentException If the value is not a number.
      * @return Text Chainable
      */
-    public function setStep($step)
+    public function setStep($step): static
     {
         if ($step === null || $step === '') {
             $this->step = null;
@@ -137,18 +121,12 @@ class NumberInput extends AbstractPropertyInput
         return $this;
     }
 
-    /**
-     * @return boolean
-     */
-    public function hasStep()
+    public function hasStep(): bool
     {
         return !(empty($this->step) && !is_numeric($this->step));
     }
 
-    /**
-     * @return string|integer|float|null
-     */
-    public function step()
+    public function step(): string|int|float|null
     {
         return $this->step;
     }

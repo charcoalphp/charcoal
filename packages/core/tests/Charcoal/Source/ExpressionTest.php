@@ -21,10 +21,8 @@ class ExpressionTest extends AbstractTestCase
 
     /**
      * Create expression for testing.
-     *
-     * @return Expression
      */
-    final protected function createExpression()
+    final protected function createExpression(): \Charcoal\Source\Expression
     {
         return new Expression();
     }
@@ -33,9 +31,8 @@ class ExpressionTest extends AbstractTestCase
      * Provide data for value parsing.
      *
      * @used-by ExpressionTestTrait::testDefaultValues()
-     * @return  array
      */
-    final public function provideDefaultValues()
+    final public function provideDefaultValues(): array
     {
         return [
             'condition' => [ 'condition', null ],
@@ -54,10 +51,8 @@ class ExpressionTest extends AbstractTestCase
      * 4. Trimmed value
      * 5. Accepts NULL
      * 6. Swaps blank string for NULL
-     *
-     * @return void
      */
-    public function testConditionExpression()
+    public function testConditionExpression(): void
     {
         $obj = $this->createExpression();
 
@@ -87,10 +82,8 @@ class ExpressionTest extends AbstractTestCase
 
     /**
      * Test the conditional check of "condition".
-     *
-     * @return void
      */
-    public function testHasConditionExpression()
+    public function testHasConditionExpression(): void
     {
         $obj = $this->createExpression();
 
@@ -99,16 +92,14 @@ class ExpressionTest extends AbstractTestCase
         $obj->setCondition('  ');
         $this->assertFalse($obj->hasCondition());
 
-        $that = $obj->setCondition('1 = 1');
+        $obj->setCondition('1 = 1');
         $this->assertTrue($obj->hasCondition());
     }
 
     /**
      * Test "condition" property with invalid value.
-     *
-     * @return void
      */
-    public function testConditionExpressionWithInvalidValue()
+    public function testConditionExpressionWithInvalidValue(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->createExpression()->setCondition([]);
@@ -120,10 +111,8 @@ class ExpressionTest extends AbstractTestCase
      * Assertions:
      * 1. Mutate all options
      * 2. Partially mutated state
-     *
-     * @return void
      */
-    public function testData()
+    public function testData(): void
     {
         /** 1. Mutate all options */
         $mutation = [

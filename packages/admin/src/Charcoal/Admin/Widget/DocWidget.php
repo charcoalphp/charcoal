@@ -22,6 +22,10 @@ use Charcoal\Admin\Widget\FormWidget;
 class DocWidget extends FormWidget implements
     ObjectContainerInterface
 {
+    /**
+     * @var mixed
+     */
+    public $nextUrl;
     use ObjectContainerTrait;
 
     /**
@@ -49,20 +53,19 @@ class DocWidget extends FormWidget implements
      *
      * @var string
      */
+    #[\Override]
     protected $formPropertyClass = DocFormPropertyWidget::class;
 
     /**
      * Display options.
-     *
-     * @var array
      */
-    private $displayOptions;
+    private ?array $displayOptions = null;
 
     /**
      * @param Container $container The DI container.
-     * @return void
      */
-    public function setDependencies(Container $container)
+    #[\Override]
+    public function setDependencies(Container $container): void
     {
         parent::setDependencies($container);
 
@@ -72,18 +75,14 @@ class DocWidget extends FormWidget implements
 
     /**
      * For doc, disable tab view
-     *
-     * @return boolean
      */
-    public function isTabbable()
+    #[\Override]
+    public function isTabbable(): bool
     {
         return false;
     }
 
-    /**
-     * @return string
-     */
-    public function widgetType()
+    public function widgetType(): string
     {
         return 'charcoal/admin/widget/doc';
     }
@@ -93,7 +92,7 @@ class DocWidget extends FormWidget implements
      *
      * @return Translation|string|null
      */
-    public function defaultBackToObjectLabel()
+    public function defaultBackToObjectLabel(): ?\Charcoal\Translator\Translation
     {
         if ($this->objId()) {
             return $this->translator()->translation('Update');
@@ -106,7 +105,8 @@ class DocWidget extends FormWidget implements
      * @param array $data The widget data.
      * @return ObjectForm Chainable
      */
-    public function setData(array $data)
+    #[\Override]
+    public function setData(array $data): static
     {
         parent::setData($data);
 
@@ -121,6 +121,7 @@ class DocWidget extends FormWidget implements
     /**
      * @return FormSidebarInterface[]|\Generator
      */
+    #[\Override]
     public function sidebars()
     {
         $objId = $this->obj()->id();
@@ -134,7 +135,7 @@ class DocWidget extends FormWidget implements
             $metadata = $this->obj()->metadata();
             $objType  = (isset($metadata['labels']['singular_name'])
                         ? $translator->translate($metadata['labels']['singular_name'])
-                        : (new ReflectionClass($obj))->getShortName());
+                        : new ReflectionClass($obj)->getShortName());
 
             $label = $translator->translate('Back to {{name}} id: {{id}}');
             $label = strtr($label, [
@@ -169,9 +170,8 @@ class DocWidget extends FormWidget implements
      *
      * @param  string $formIdent The form identifier.
      * @throws InvalidArgumentException If the identifier is not a string.
-     * @return self
      */
-    public function setFormIdent($formIdent)
+    public function setFormIdent($formIdent): static
     {
         if (!is_string($formIdent)) {
             throw new InvalidArgumentException(
@@ -209,7 +209,7 @@ class DocWidget extends FormWidget implements
      *
      * @return array
      */
-    public function displayOptions()
+    public function displayOptions(): ?array
     {
         if (!$this->displayOptions) {
             $this->setDisplayOptions([]);
@@ -223,9 +223,8 @@ class DocWidget extends FormWidget implements
      *
      * @param  array $options Display configuration.
      * @throws \RuntimeException If the display options are not an associative array.
-     * @return self
      */
-    public function setDisplayOptions(array $options)
+    public function setDisplayOptions(array $options): static
     {
         if (!is_array($options)) {
             throw new \RuntimeException('The display options must be an associative array.');
@@ -238,10 +237,8 @@ class DocWidget extends FormWidget implements
 
     /**
      * Retrieve the default display options for the widget.
-     *
-     * @return array
      */
-    public function defaultDisplayOptions()
+    public function defaultDisplayOptions(): array
     {
         return [
             'parented'    => false,
@@ -265,7 +262,7 @@ class DocWidget extends FormWidget implements
      * @throws InvalidArgumentException If argument is not a string.
      * @return ActionInterface Chainable
      */
-    public function setNextUrl($url)
+    public function setNextUrl($url): static
     {
         if (!is_string($url)) {
             throw new InvalidArgumentException(
@@ -287,6 +284,7 @@ class DocWidget extends FormWidget implements
      *
      * @return string Relative URL
      */
+    #[\Override]
     public function action()
     {
         $action = parent::action();
@@ -311,14 +309,15 @@ class DocWidget extends FormWidget implements
      * @throws UnexpectedValueException If a property data is invalid.
      * @return DocFormPropertyWidget[]|Generator
      */
-    public function formProperties(array $group = null)
+    #[\Override]
+    public function formProperties(?array $group = null)
     {
         $obj   = $this->obj();
         $props = $obj->metadata()->properties();
 
         // We need to sort form properties by form group property order if a group exists
-        if (!empty($group)) {
-            $group = array_map([ $this, 'camelize' ], $group);
+        if ($group !== null && $group !== []) {
+            $group = array_map($this->camelize(...), $group);
             $group = array_flip($group);
             $props = array_intersect_key($props, $group);
             $props = array_merge($group, $props);
@@ -344,7 +343,7 @@ class DocWidget extends FormWidget implements
                 throw new UnexpectedValueException(sprintf(
                     'Invalid property data for "%1$s", received %2$s',
                     $propertyIdent,
-                    (is_object($propertyMetadata) ? get_class($propertyMetadata) : gettype($propertyMetadata))
+                    (get_debug_type($propertyMetadata))
                 ));
             }
 
@@ -386,7 +385,7 @@ class DocWidget extends FormWidget implements
             throw new UnexpectedValueException(sprintf(
                 'Invalid property data for "%1$s", received %2$s',
                 $propertyIdent,
-                (is_object($propertyMetadata) ? get_class($propertyMetadata) : gettype($propertyMetadata))
+                (get_debug_type($propertyMetadata))
             ));
         }
 
@@ -407,19 +406,14 @@ class DocWidget extends FormWidget implements
      * @param array $data Data.
      * @return ObjectFormWidget Chainable.
      */
-    public function setFormData(array $data)
+    #[\Override]
+    public function setFormData(array $data): static
     {
         $objData = $this->objData();
         $merged = array_replace_recursive($objData, $data);
 
         // Remove null values
-        $merged = array_filter($merged, function ($val) {
-            if ($val === null) {
-                return false;
-            }
-
-            return true;
-        });
+        $merged = array_filter($merged, fn($val): bool => $val !== null);
 
         $this->formData = $merged;
         $this->obj()->setData($merged);
@@ -432,6 +426,7 @@ class DocWidget extends FormWidget implements
      *
      * @return array
      */
+    #[\Override]
     public function formData()
     {
         if (!$this->formData) {
@@ -460,9 +455,8 @@ class DocWidget extends FormWidget implements
 
     /**
      * @param boolean $showHeader Is the Header to be shown.
-     * @return self
      */
-    public function setShowHeader($showHeader)
+    public function setShowHeader($showHeader): static
     {
         $this->showHeader = $showHeader;
 
@@ -479,19 +473,16 @@ class DocWidget extends FormWidget implements
 
     /**
      * @param boolean $showTitle Is the title to be shown.
-     * @return self
      */
-    public function setShowTitle($showTitle)
+    public function setShowTitle($showTitle): static
     {
         $this->showTitle = $showTitle;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function defaultGroupType()
+    #[\Override]
+    public function defaultGroupType(): string
     {
         return 'charcoal/admin/docs/widget/form-group/doc';
     }
@@ -501,17 +492,17 @@ class DocWidget extends FormWidget implements
      *
      * @return string[]
      */
-    protected function defaultDataSources()
+    #[\Override]
+    protected function defaultDataSources(): array
     {
         return [ static::DATA_SOURCE_REQUEST, static::DATA_SOURCE_OBJECT ];
     }
 
     /**
      * Retrieve the default data source filters (when setting data on an entity).
-     *
-     * @return array
      */
-    protected function defaultDataSourceFilters()
+    #[\Override]
+    protected function defaultDataSourceFilters(): array
     {
         return [
             'request' => null,
@@ -528,6 +519,7 @@ class DocWidget extends FormWidget implements
      * @param  mixed $toResolve A callable used when merging data.
      * @return callable|null
      */
+    #[\Override]
     protected function resolveDataSourceFilter($toResolve)
     {
         if (is_string($toResolve)) {
@@ -554,10 +546,9 @@ class DocWidget extends FormWidget implements
 
     /**
      * Retrieve the accepted metadata from the current request.
-     *
-     * @return array
      */
-    protected function acceptedRequestData()
+    #[\Override]
+    protected function acceptedRequestData(): array
     {
         return array_merge(
             [ 'obj_type', 'obj_id', 'template' ],
@@ -574,7 +565,7 @@ class DocWidget extends FormWidget implements
     {
         $obj = $this->obj();
         $objMetadata = $obj->metadata();
-        $adminMetadata = (isset($objMetadata['admin']) ? $objMetadata['admin'] : null);
+        $adminMetadata = ($objMetadata['admin'] ?? null);
 
         $formIdent = $this->formIdent();
         if (!$formIdent) {
@@ -585,11 +576,7 @@ class DocWidget extends FormWidget implements
             $formIdent = $obj->render($formIdent);
         }
 
-        if (isset($adminMetadata['forms'][$formIdent])) {
-            $objFormData = $adminMetadata['forms'][$formIdent];
-        } else {
-            $objFormData = [];
-        }
+        $objFormData = $adminMetadata['forms'][$formIdent] ?? [];
 
         if (isset($objFormData['groups']) && isset($adminMetadata['form_groups'])) {
             $extraFormGroups = array_intersect(
@@ -627,7 +614,8 @@ class DocWidget extends FormWidget implements
      * @param  array|null $data Optional. The form group data to set.
      * @return FormGroupInterface
      */
-    protected function createFormGroup(array $data = null)
+    #[\Override]
+    protected function createFormGroup(?array $data = null)
     {
         $type = $this->defaultGroupType();
 
@@ -665,13 +653,13 @@ class DocWidget extends FormWidget implements
      * @param  FormGroupInterface $group      The form group to update.
      * @param  array|null         $groupData  Optional. The new group data to apply.
      * @param  string|null        $groupIdent Optional. The new group identifier.
-     * @return FormGroupInterface
      */
+    #[\Override]
     protected function updateFormGroup(
         FormGroupInterface $group,
-        array $groupData = null,
+        ?array $groupData = null,
         $groupIdent = null
-    ) {
+    ): FormGroupInterface {
         $group->setForm($this);
 
         if ($groupIdent !== null) {

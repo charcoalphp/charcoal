@@ -45,7 +45,7 @@ trait PathScriptTrait
             throw new InvalidArgumentException('Received invalid paths.');
         }
 
-        if (empty($paths)) {
+        if ($paths === []) {
             throw new InvalidArgumentException('Received empty paths.');
         }
 
@@ -78,13 +78,13 @@ trait PathScriptTrait
      * @throws InvalidArgumentException If the path is invalid.
      * @return string Returns the filtered path.
      */
-    public function filterPath($path, $trim = null)
+    public function filterPath($path, $trim = null): string
     {
         if (!is_string($path)) {
             throw new InvalidArgumentException('The path must be a string.');
         }
 
-        if ($trim === null && defined(get_called_class() . '::DIRECTORY_SEPARATORS')) {
+        if ($trim === null && defined(static::class . '::DIRECTORY_SEPARATORS')) {
             $trim = static::DIRECTORY_SEPARATORS;
         }
 
@@ -111,7 +111,7 @@ trait PathScriptTrait
      */
     public function filterWritablePath($path, $name = null)
     {
-        if ($name === null && defined(get_called_class() . '::DEFAULT_BASENAME')) {
+        if ($name === null && defined(static::class . '::DEFAULT_BASENAME')) {
             $name = static::DEFAULT_BASENAME;
         }
 
@@ -135,7 +135,7 @@ trait PathScriptTrait
                 throw new InvalidArgumentException('The target file is not writeable.');
             }
         } else {
-            $info = pathinfo($path);
+            $info = pathinfo((string) $path);
             $path = $this->filterWritablePath($info['dirname'], $info['basename']);
         }
 
@@ -169,7 +169,7 @@ trait PathScriptTrait
             }
         }
 
-        static::$globCache[$pattern][$depthKey] = array_filter($files, 'is_file');
+        static::$globCache[$pattern][$depthKey] = array_filter($files, is_file(...));
 
         return $files;
     }

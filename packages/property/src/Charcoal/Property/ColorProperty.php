@@ -14,15 +14,9 @@ class ColorProperty extends AbstractProperty
 {
     public const DEFAULT_SUPPORT_ALPHA = false;
 
-    /**
-     * @var boolean $supportAlpha
-     */
-    private $supportAlpha = self::DEFAULT_SUPPORT_ALPHA;
+    private bool $supportAlpha = self::DEFAULT_SUPPORT_ALPHA;
 
-    /**
-     * @return string
-     */
-    public function type()
+    public function type(): string
     {
         return 'color';
     }
@@ -31,16 +25,13 @@ class ColorProperty extends AbstractProperty
      * @param boolean $support The alpha support flag.
      * @return ColorProperty Chainable
      */
-    public function setSupportAlpha($support)
+    public function setSupportAlpha($support): static
     {
-        $this->supportAlpha = !!$support;
+        $this->supportAlpha = (bool) $support;
         return $this;
     }
 
-    /**
-     * @return boolean
-     */
-    public function getSupportAlpha()
+    public function getSupportAlpha(): bool
     {
         return $this->supportAlpha;
     }
@@ -53,7 +44,8 @@ class ColorProperty extends AbstractProperty
      * @throws InvalidArgumentException If the value does not match property's options.
      * @return string|null
      */
-    public function parseOne($val)
+    #[\Override]
+    public function parseOne($val): null|array|float|int|string|false
     {
         if ($val === null || $val === '') {
             if ($this['allowNull']) {
@@ -71,7 +63,7 @@ class ColorProperty extends AbstractProperty
      * @param  string|array $val The color value to sanitize to an hexadecimal or rgba() value.
      * @return string The color string. Hexadecimal or rgba() if alpha is supported..
      */
-    public function colorVal($val)
+    public function colorVal($val): array|int|float|false|null|string
     {
         if (!$val) {
             return $val;
@@ -99,7 +91,7 @@ class ColorProperty extends AbstractProperty
      *
      * @return string The SQL type
      */
-    public function sqlType()
+    public function sqlType(): string
     {
         // Multiple strings are always stored as TEXT because they can hold multiple values
         if ($this['multiple']) {
@@ -115,10 +107,8 @@ class ColorProperty extends AbstractProperty
 
     /**
      * @see StorablePropertyTrait::sqlPdoType()
-     *
-     * @return integer
      */
-    public function sqlPdoType()
+    public function sqlPdoType(): int
     {
         return PDO::PARAM_STR;
     }
@@ -129,7 +119,7 @@ class ColorProperty extends AbstractProperty
      * @param  integer $b Blue value (0 to 255).
      * @return string Hexadecimal color value, as uppercased hexadecimal without the "#" prefix.
      */
-    protected function rgbToHexadecimal($r, $g, $b)
+    protected function rgbToHexadecimal($r, $g, $b): string
     {
         $hex  = '';
         $hex .= str_pad(dechex($r), 2, '0', STR_PAD_LEFT);
@@ -156,7 +146,7 @@ class ColorProperty extends AbstractProperty
      * @throws InvalidArgumentException If the array does not have at least 3 items.
      * @return array The parsed `[r,g,b,a]` color array.
      */
-    private function parseArray(array $val)
+    private function parseArray(array $val): array
     {
         if (count($val) < 3) {
             throw new InvalidArgumentException(
@@ -168,12 +158,12 @@ class ColorProperty extends AbstractProperty
             $r = $val['r'];
             $g = $val['g'];
             $b = $val['b'];
-            $a = isset($val['a']) ? $val['a'] : 0;
+            $a = $val['a'] ?? 0;
         } else {
             $r = $val[0];
             $g = $val[1];
             $b = $val[2];
-            $a = isset($val[3]) ? $val[3] : 0;
+            $a = $val[3] ?? 0;
         }
 
         return [
@@ -213,11 +203,11 @@ class ColorProperty extends AbstractProperty
      * @param  string $val The hexadecimal color string to parse.
      * @return array The parsed `[r,g,b,a]` color array.
      */
-    private function parseHexadecimal($val)
+    private function parseHexadecimal(string $val): array
     {
         $val = str_replace('#', '', $val);
 
-        if (strlen($val) == 3) {
+        if (strlen($val) === 3) {
             return [
                 'r' => hexdec(substr($val, 0, 1) . substr($val, 0, 1)),
                 'g' => hexdec(substr($val, 1, 1) . substr($val, 1, 1)),
@@ -241,7 +231,7 @@ class ColorProperty extends AbstractProperty
      * @throws InvalidArgumentException If the color can not be parsed.
      * @return array The parsed `[r,g,b,a]` color array.
      */
-    private function parseRgb($val)
+    private function parseRgb(string $val): array
     {
         $match = preg_match('/rgb\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)/i', $val, $m);
         if (!$match) {
@@ -263,7 +253,7 @@ class ColorProperty extends AbstractProperty
      * @throws InvalidArgumentException If The colors string is invalid (does not match rgba format).
      * @return array The parsed `[r,g,b,a]` color array.
      */
-    private function parseRgba($val)
+    private function parseRgba(string $val): array
     {
         $match = preg_match('/rgba\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\(\d+)\s*\)/i', $val, $m);
         if (!$match) {
@@ -284,11 +274,11 @@ class ColorProperty extends AbstractProperty
      * @throws InvalidArgumentException If the string is not an existing SVG color.
      * @return array The parsed `[r,g,b,a]` color array.
      */
-    private function parseNamedColor($val)
+    private function parseNamedColor(string|array $val)
     {
         static $colors;
         if (!$colors) {
-            $colors = include 'data/colors.php';
+            $colors = include __DIR__ . '/data/colors.php';
         }
         $val = strtolower($val);
         if (in_array($val, array_keys($colors))) {

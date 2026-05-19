@@ -41,9 +41,6 @@ class CollectionTest extends AbstractTestCase
      */
     protected $map;
 
-    /**
-     * @return void
-     */
     protected function setUp(): void
     {
         $this->map = [
@@ -66,97 +63,66 @@ class CollectionTest extends AbstractTestCase
 
     // Test \Charcoal\Model\CollectionInterface
     // =============================================================================================
-
-    /**
-     * @return void
-     */
-    public function testCollectionIsConstructed()
+    public function testCollectionIsConstructed(): void
     {
         $c = new Collection;
         $this->assertSame([], $c->all());
 
-        $c = new Collection(null);
+        $c = new Collection();
         $this->assertSame([], $c->all());
     }
 
-    /**
-     * @return void
-     */
-    public function testConstructMethodWithAcceptableData()
+    public function testConstructMethodWithAcceptableData(): void
     {
         [$o1] = $this->arr;
         $c = new Collection($o1);
         $this->assertSame([ self::OBJ_1 => $o1 ], $c->all());
     }
 
-    /**
-     * @return void
-     */
-    public function testConstructMethodWithUnacceptableData()
+    public function testConstructMethodWithUnacceptableData(): void
     {
         $this->expectException(InvalidArgumentException::class);
-        $c = new Collection('foo');
+        new Collection('foo');
     }
 
-    /**
-     * @return void
-     */
-    public function testConstructMethodFromArray()
+    public function testConstructMethodFromArray(): void
     {
         $c = new Collection($this->arr);
         $this->assertEquals($this->map, $c->all());
     }
 
-    /**
-     * @return void
-     */
-    public function testConstructMethodFromTraversable()
+    public function testConstructMethodFromTraversable(): void
     {
         $c = new Collection(new ArrayObject($this->arr));
         $this->assertEquals($this->map, $c->all());
     }
 
-    /**
-     * @return void
-     */
-    public function testConstructMethodFromCollection()
+    public function testConstructMethodFromCollection(): void
     {
         $c = new Collection(new Collection($this->arr));
         $this->assertEquals($this->map, $c->all());
     }
 
-    /**
-     * @return void
-     */
-    public function testValues()
+    public function testValues(): void
     {
         $c = new Collection($this->arr);
         $this->assertEquals($this->arr, $c->values());
     }
 
-    /**
-     * @return void
-     */
-    public function testKeys()
+    public function testKeys(): void
     {
         $c = new Collection($this->arr);
         $this->assertEquals(array_keys($this->map), $c->keys());
     }
 
-    /**
-     * @return void
-     */
-    public function testBaseCollection()
+    public function testBaseCollection(): void
     {
         $c = new Collection($this->arr);
 
         $this->assertInstanceOf(Collection::class, $c->toBase());
     }
 
-    /**
-     * @return void
-     */
-    public function testEmptyCollection()
+    public function testEmptyCollection(): void
     {
         $c = new Collection;
 
@@ -165,10 +131,7 @@ class CollectionTest extends AbstractTestCase
         $this->assertEquals(null, $c->last());
     }
 
-    /**
-     * @return void
-     */
-    public function testFirstItemInCollection()
+    public function testFirstItemInCollection(): void
     {
         [$o1, $o2, $o3, $o4, $o5] = $this->arr;
         $c = new Collection($this->arr);
@@ -176,10 +139,7 @@ class CollectionTest extends AbstractTestCase
         $this->assertEquals($o1, $c->first());
     }
 
-    /**
-     * @return void
-     */
-    public function testLastItemInCollection()
+    public function testLastItemInCollection(): void
     {
         [$o1, $o2, $o3, $o4, $o5] = $this->arr;
         $c = new Collection($this->arr);
@@ -187,16 +147,12 @@ class CollectionTest extends AbstractTestCase
         $this->assertEquals($o5, $c->last());
     }
 
-    /**
-     * @return void
-     */
-    public function testArrayableItems()
+    public function testArrayableItems(): void
     {
         $c = new Collection;
 
         $class = new ReflectionClass($c);
         $method = $class->getMethod('asArray');
-        $method->setAccessible(true);
 
         $items = new Collection($this->arr);
         $array = $method->invokeArgs($c, [ $items ]);
@@ -211,10 +167,7 @@ class CollectionTest extends AbstractTestCase
         $this->assertSame($this->arr, $array);
     }
 
-    /**
-     * @return void
-     */
-    public function testRemoveKey()
+    public function testRemoveKey(): void
     {
         [$o1] = $this->arr;
 
@@ -227,30 +180,21 @@ class CollectionTest extends AbstractTestCase
         $this->assertFalse(isset($c[self::OBJ_1]));
     }
 
-    /**
-     * @return void
-     */
-    public function testAddAcceptableData()
+    public function testAddAcceptableData(): void
     {
         [$o1] = $this->arr;
         $c = new Collection;
         $this->assertSame([ $o1->id() => $o1 ], $c->add($o1)->all());
     }
 
-    /**
-     * @return void
-     */
-    public function testAddUnacceptableData()
+    public function testAddUnacceptableData(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $c = new Collection;
         $c->add('foo');
     }
 
-    /**
-     * @return void
-     */
-    public function testGet()
+    public function testGet(): void
     {
         [$o1, $o2, $o3, $o4, $o5] = $this->arr;
         $c = new Collection($this->arr);
@@ -258,10 +202,7 @@ class CollectionTest extends AbstractTestCase
         $this->assertSame($o1, $c->get($o1));
     }
 
-    /**
-     * @return void
-     */
-    public function testHas()
+    public function testHas(): void
     {
         [$o1, $o2, $o3, $o4, $o5] = $this->arr;
         $c = new Collection($this->arr);
@@ -270,28 +211,19 @@ class CollectionTest extends AbstractTestCase
         $this->assertFalse($c->offsetExists('missing'));
     }
 
-    /**
-     * @return void
-     */
-    public function testClear()
+    public function testClear(): void
     {
         $c = new Collection($this->arr);
         $this->assertSame([], $c->clear()->all());
     }
 
-    /**
-     * @return void
-     */
-    public function testMergeNull()
+    public function testMergeNull(): void
     {
         $c = new Collection($this->arr);
         $this->assertEquals($this->map, $c->merge(null)->all());
     }
 
-    /**
-     * @return void
-     */
-    public function testMergeArray()
+    public function testMergeArray(): void
     {
         [$o1, $o2, $o3, $o4, $o5] = $this->arr;
         $c = new Collection([ $o1, $o2, $o3, $o4 ]);
@@ -299,10 +231,7 @@ class CollectionTest extends AbstractTestCase
         $this->assertEquals($this->map, $c->merge([ $o5 ])->all());
     }
 
-    /**
-     * @return void
-     */
-    public function testMergeCollection()
+    public function testMergeCollection(): void
     {
         [$o1, $o2, $o3, $o4, $o5] = $this->arr;
         $c1 = new Collection([ $o1, $o2, $o3, $o4 ]);
@@ -313,11 +242,7 @@ class CollectionTest extends AbstractTestCase
 
     // Test \IteratorAggregate
     // =============================================================================================
-
-    /**
-     * @return void
-     */
-    public function testIterable()
+    public function testIterable(): void
     {
         $c = new Collection($this->arr);
 
@@ -326,10 +251,7 @@ class CollectionTest extends AbstractTestCase
         $this->assertEquals($this->map, $i->getArrayCopy());
     }
 
-    /**
-     * @return void
-     */
-    public function testCachingIterator()
+    public function testCachingIterator(): void
     {
         [$o1, $o2, $o3, $o4, $o5] = $this->arr;
         $c = new Collection($this->arr);
@@ -353,11 +275,7 @@ class CollectionTest extends AbstractTestCase
 
     // Test \Countable
     // =============================================================================================
-
-    /**
-     * @return void
-     */
-    public function testCountable()
+    public function testCountable(): void
     {
         $c = new Collection($this->arr);
         $this->assertCount(count($this->arr), $c);
@@ -365,11 +283,7 @@ class CollectionTest extends AbstractTestCase
 
     // Test \ArrayAccess
     // =============================================================================================
-
-    /**
-     * @return void
-     */
-    public function testArrayAccess()
+    public function testArrayAccess(): void
     {
         [$o1, $o2, $o3, $o4, $o5] = $this->arr;
 
@@ -390,10 +304,7 @@ class CollectionTest extends AbstractTestCase
         $this->assertEquals($o4, $c[-1]);
     }
 
-    /**
-     * @return void
-     */
-    public function testArrayAccessOffsetExists()
+    public function testArrayAccessOffsetExists(): void
     {
         $c = new Collection($this->arr);
         $this->assertTrue($c->offsetExists(0));
@@ -401,10 +312,7 @@ class CollectionTest extends AbstractTestCase
         $this->assertFalse($c->offsetExists(5));
     }
 
-    /**
-     * @return void
-     */
-    public function testArrayAccessOffsetGet()
+    public function testArrayAccessOffsetGet(): void
     {
         [$o1, $o2] = $this->arr;
 
@@ -413,10 +321,7 @@ class CollectionTest extends AbstractTestCase
         $this->assertEquals($o2, $c->offsetGet(1));
     }
 
-    /**
-     * @return void
-     */
-    public function testArrayAccessOffsetGetWithNegativeOffset()
+    public function testArrayAccessOffsetGetWithNegativeOffset(): void
     {
         [$o1, $o2, $o3, $o4, $o5] = $this->arr;
 
@@ -426,19 +331,13 @@ class CollectionTest extends AbstractTestCase
         $this->assertEquals($o3, $c->offsetGet(-1));
     }
 
-    /**
-     * @return void
-     */
-    public function testArrayAccessOffsetGetOnNonExist()
+    public function testArrayAccessOffsetGetOnNonExist(): void
     {
         $c = new Collection($this->arr);
         $this->assertEquals(null, $c->offsetGet(10));
     }
 
-    /**
-     * @return void
-     */
-    public function testArrayAccessOffsetSet()
+    public function testArrayAccessOffsetSet(): void
     {
         [$o1, $o2] = $this->arr;
         $c = new Collection($o1);
@@ -447,11 +346,7 @@ class CollectionTest extends AbstractTestCase
         $this->assertEquals($o2, $c[1]);
     }
 
-    /**
-     *
-     * @return void
-     */
-    public function testArrayAccessOffsetSetWithOffset()
+    public function testArrayAccessOffsetSetWithOffset(): void
     {
         $this->expectException(LogicException::class);
         [$o1] = $this->arr;
@@ -460,11 +355,7 @@ class CollectionTest extends AbstractTestCase
         $c->offsetSet(1, $o1);
     }
 
-    /**
-     *
-     * @return void
-     */
-    public function testArrayAccessOffsetSetWithKey()
+    public function testArrayAccessOffsetSetWithKey(): void
     {
         $this->expectException(LogicException::class);
         [$o1] = $this->arr;
@@ -473,10 +364,7 @@ class CollectionTest extends AbstractTestCase
         $c->offsetSet(self::OBJ_1, $o1);
     }
 
-    /**
-     * @return void
-     */
-    public function testArrayAccessOffsetUnset()
+    public function testArrayAccessOffsetUnset(): void
     {
         $c = new Collection($this->arr);
 
@@ -484,10 +372,7 @@ class CollectionTest extends AbstractTestCase
         $this->assertEquals(null, $c[self::OBJ_2]);
     }
 
-    /**
-     * @return void
-     */
-    public function testArrayAccessOffsetUnsetWithKey()
+    public function testArrayAccessOffsetUnsetWithKey(): void
     {
         $c = new Collection($this->arr);
 

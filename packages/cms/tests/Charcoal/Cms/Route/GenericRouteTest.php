@@ -21,10 +21,9 @@ class GenericRouteTest extends SectionRouteTest
      * with a 500 status code if the resolved model does not have a template identifier.
      *
      * The route's config throws an Exception when a model's template controller is invalid.
-     *
-     * @return void
      */
-    public function testInvokeOnExistingModelWithoutTemplateIdent()
+    #[\Override]
+    public function testInvokeOnExistingModelWithoutTemplateIdent(): void
     {
         $this->insertMockRoutableContextObjects([
             'templateIdent' => '',
@@ -43,16 +42,14 @@ class GenericRouteTest extends SectionRouteTest
 
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Route view controller must be a string.');
-        $response = $router($container, $request, $response);
+        $router($container, $request, $response);
     }
 
     /**
      * Asserts that `SectionRoute::__invoke()` method returns an HTTP Response object
      * with a 404 status code if the path does resolve but the routable model does not.
-     *
-     * @return void
      */
-    public function testInvokeOnExistingObjectRouteWithMissingModel()
+    public function testInvokeOnExistingObjectRouteWithMissingModel(): void
     {
         $container = $this->getContainer();
 
@@ -85,7 +82,8 @@ class GenericRouteTest extends SectionRouteTest
      * @param  array $data The dynamic route dependencies.
      * @return GenericRoute
      */
-    protected function createRouter(array $data = [])
+    #[\Override]
+    protected function createRouter(array $data = []): \Charcoal\Cms\Route\SectionRoute
     {
         return new GenericRoute($data + [
             'config' => [],

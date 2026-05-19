@@ -20,9 +20,6 @@ class AbstractFormGroupTest extends AbstractTestCase
      */
     public $obj;
 
-    /**
-     * @return void
-     */
     protected function setUp(): void
     {
         $container = $this->getContainer();
@@ -44,23 +41,15 @@ class AbstractFormGroupTest extends AbstractTestCase
         ]);
     }
 
-    /**
-     * @return void
-     */
-    public function testSetInputCallback()
+    public function testSetInputCallback(): void
     {
         $obj = $this->obj;
-        $cb = function($o) {
-            return 'foo';
-        };
+        $cb = (fn($o): string => 'foo');
         $ret = $obj->setInputCallback($cb);
         $this->assertSame($ret, $obj);
     }
 
-    /**
-     * @return void
-     */
-    public function testSetInputs()
+    public function testSetInputs(): void
     {
         $obj = $this->obj;
         $ret = $obj->setInputs([
@@ -69,10 +58,7 @@ class AbstractFormGroupTest extends AbstractTestCase
         $this->assertSame($ret, $obj);
     }
 
-    /**
-     * @return void
-     */
-    public function testSetPriority()
+    public function testSetPriority(): void
     {
         $this->assertEquals(0, $this->obj->priority());
 
@@ -86,40 +72,31 @@ class AbstractFormGroupTest extends AbstractTestCase
         $this->obj->setPriority('foobar');
     }
 
-    /**
-     * @return void
-     */
-    public function testSetL10nMode()
+    public function testSetL10nMode(): void
     {
         $ret = $this->obj->setL10nMode('loop');
         $this->assertSame($ret, $this->obj);
         $this->assertEquals('loop', $this->obj->l10nMode());
     }
 
-    /**
-     * @return void
-     */
-    public function testHasInputs()
+    public function testHasInputs(): void
     {
         $obj = $this->obj;
         $this->assertFalse($obj->hasInputs());
 
-        $ret = $obj->setInputs([
+        $obj->setInputs([
             'test' => []
         ]);
 
         $this->assertTrue($obj->hasInputs());
     }
 
-    /**
-     * @return void
-     */
-    public function testNumInput()
+    public function testNumInput(): void
     {
         $obj = $this->obj;
         $this->assertEquals(0, $obj->numInputs());
 
-        $ret = $obj->setInputs([
+        $obj->setInputs([
             'test'   => [],
             'foobar' => []
         ]);

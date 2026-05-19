@@ -34,17 +34,15 @@ abstract class AbstractMenu extends AbstractUiItem implements
 
     /**
      * Store a menu builder instance.
-     *
-     * @var MenuItemBuilder $menuItemBuilder
      */
-    private $menuItemBuilder;
+    private \Charcoal\Ui\MenuItem\MenuItemBuilder $menuItemBuilder;
 
     /**
      * Return a new menu.
      *
      * @param array|\ArrayAccess $data Class dependencies.
      */
-    public function __construct($data)
+    public function __construct(?array $data)
     {
         parent::__construct($data);
 
@@ -126,12 +124,12 @@ abstract class AbstractMenu extends AbstractUiItem implements
      * @param callable $itemCallback Optional. Item callback.
      * @return MenuItemInterface[]
      */
-    public function items(callable $itemCallback = null)
+    public function items(?callable $itemCallback = null)
     {
         $items = $this->items;
-        uasort($items, [ $this, 'sortItemsByPriority' ]);
+        uasort($items, $this->sortItemsByPriority(...));
 
-        $itemCallback = isset($itemCallback) ? $itemCallback : $this->itemCallback;
+        $itemCallback ??= $this->itemCallback;
         foreach ($items as $item) {
             if ($itemCallback) {
                 $itemCallback($item);

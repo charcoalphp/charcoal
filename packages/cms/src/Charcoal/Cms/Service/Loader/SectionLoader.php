@@ -77,7 +77,7 @@ class SectionLoader extends AbstractLoader
     /**
      * @return \ArrayAccess|\Traversable
      */
-    public function masters()
+    public function masters(): \ArrayAccess|array
     {
         $loader = $this->all();
         $operator = [];
@@ -92,7 +92,7 @@ class SectionLoader extends AbstractLoader
     /**
      * @return \ArrayAccess|\Traversable
      */
-    public function children()
+    public function children(): array
     {
         $masters = $this->masters();
 
@@ -144,7 +144,7 @@ class SectionLoader extends AbstractLoader
         $loader->setModel($proto);
 
         $filters = [];
-        foreach ($sectionTypes as $key => $val) {
+        foreach ($sectionTypes as $val) {
             $filters[] = 'route_obj_type = \'' . $val . '\'';
         }
         $q = 'SELECT * FROM `' . $proto->source()->table() . '`
@@ -213,9 +213,7 @@ class SectionLoader extends AbstractLoader
             return '';
         }
 
-        $sId = $routes['routes'][$route];
-
-        return $sId;
+        return $routes['routes'][$route];
     }
 
     /**
@@ -244,9 +242,8 @@ class SectionLoader extends AbstractLoader
 
     /**
      * @param object $objType The object type.
-     * @return self
      */
-    public function setObjType($objType)
+    public function setObjType($objType): static
     {
         $this->objType = $objType;
 
@@ -255,9 +252,8 @@ class SectionLoader extends AbstractLoader
 
     /**
      * @param integer $baseSection The base section id.
-     * @return self
      */
-    public function setBaseSection($baseSection)
+    public function setBaseSection($baseSection): static
     {
         $this->baseSection = $baseSection;
 
@@ -266,9 +262,8 @@ class SectionLoader extends AbstractLoader
 
     /**
      * @param  array|null $sectionTypes Available section types.
-     * @return self
      */
-    public function setSectionTypes(array $sectionTypes = null)
+    public function setSectionTypes(?array $sectionTypes = null): static
     {
         $this->sectionTypes = $sectionTypes;
 
@@ -282,7 +277,7 @@ class SectionLoader extends AbstractLoader
      * @param  string $delimiter The word delimiter.
      * @return string
      */
-    public static function snake($value, $delimiter = '-')
+    public static function snake($value, string $delimiter = '-')
     {
         $key = $value;
         if (isset(static::$snakeCache[$key][$delimiter])) {
@@ -290,7 +285,7 @@ class SectionLoader extends AbstractLoader
         }
         if (!ctype_lower($value)) {
             $value = preg_replace('/\s+/u', '', $value);
-            $value = mb_strtolower(preg_replace('/(.)(?=[A-Z])/u', '$1' . $delimiter, $value), 'UTF-8');
+            $value = mb_strtolower((string) preg_replace('/(.)(?=[A-Z])/u', '$1' . $delimiter, (string) $value), 'UTF-8');
         }
         static::$snakeCache[$key][$delimiter] = $value;
 

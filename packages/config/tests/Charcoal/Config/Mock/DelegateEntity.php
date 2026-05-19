@@ -33,7 +33,8 @@ class DelegateEntity extends Entity implements DelegatesAwareInterface
      * @throws InvalidArgumentException If the $key is not a string or is a numeric value.
      * @return boolean TRUE if $key exists and has a value other than NULL, FALSE otherwise.
      */
-    public function offsetExists($key)
+    #[\Override]
+    public function offsetExists($key): bool
     {
         if (is_numeric($key)) {
             throw new InvalidArgumentException(
@@ -67,7 +68,8 @@ class DelegateEntity extends Entity implements DelegatesAwareInterface
      * @throws InvalidArgumentException If the $key is not a string or is a numeric value.
      * @return mixed Value of the requested $key on success, NULL if the $key is not set.
      */
-    public function offsetGet($key)
+    #[\Override]
+    public function offsetGet($key): mixed
     {
         if (is_numeric($key)) {
             throw new InvalidArgumentException(
@@ -84,12 +86,10 @@ class DelegateEntity extends Entity implements DelegatesAwareInterface
 
         if (is_callable([ $this, $key ])) {
             return $this->{$key}();
+        } elseif (isset($this->{$key})) {
+            return $this->{$key};
         } else {
-            if (isset($this->{$key})) {
-                return $this->{$key};
-            } else {
-                return $this->getInDelegates($key);
-            }
+            return $this->getInDelegates($key);
         }
     }
 }

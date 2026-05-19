@@ -48,7 +48,7 @@ class App extends SlimApp implements
     public static function instance($container = [])
     {
         if (!isset(static::$instance)) {
-            $called_class = get_called_class();
+            $called_class = static::class;
 
             static::$instance = new $called_class($container);
         }
@@ -79,7 +79,7 @@ class App extends SlimApp implements
             throw new LogicException(
                 sprintf(
                     '"%s" is a singleton. Use static instance() method.',
-                    get_called_class()
+                    static::class
                 )
             );
         }
@@ -107,6 +107,7 @@ class App extends SlimApp implements
      * @param  boolean $silent If true, will run in silent mode (no response).
      * @return ResponseInterface The PSR7 HTTP response.
      */
+    #[\Override]
     public function run($silent = false)
     {
         $this->setup();
@@ -116,10 +117,8 @@ class App extends SlimApp implements
 
     /**
      * Registers the default services and features that Charcoal needs to work.
-     *
-     * @return void
      */
-    private function setup()
+    private function setup(): void
     {
         $config = $this->config();
         date_default_timezone_set($config['timezone']);
@@ -150,9 +149,9 @@ class App extends SlimApp implements
      */
     private function routeManager()
     {
-        if (!isset($this->routeManager)) {
+        if ($this->routeManager === null) {
             $config = $this->config();
-            $routesConfig = (isset($config['routes']) ? $config['routes'] : [] );
+            $routesConfig = ($config['routes'] ?? [] );
 
             $this->routeManager = new RouteManager([
                 'config' => $routesConfig,
@@ -163,10 +162,7 @@ class App extends SlimApp implements
         return $this->routeManager;
     }
 
-    /**
-     * @return void
-     */
-    private function setupModules()
+    private function setupModules(): void
     {
         $container = $this->getContainer();
         $modules = $container['config']['modules'];
@@ -180,10 +176,8 @@ class App extends SlimApp implements
      * Setup the application's "global" routables.
      *
      * Routables can only be defined globally (app-level) for now.
-     *
-     * @return void
      */
-    private function setupRoutables()
+    private function setupRoutables(): void
     {
         $app = $this;
 
@@ -198,7 +192,7 @@ class App extends SlimApp implements
                 $config    = $app->config();
                 $routables = $config['routables'];
 
-                if (is_array($routables) && !empty($routables)) {
+                if (is_array($routables) && $routables !== []) {
                     $routeFactory = $this['route/factory'];
                     foreach ($routables as $routableType => $routableOptions) {
                         $route = $routeFactory->create($routableType, [
@@ -222,9 +216,8 @@ class App extends SlimApp implements
 
     /**
      * @throws RuntimeException If the middleware was not set properly on the container.
-     * @return void
      */
-    private function setupMiddlewares()
+    private function setupMiddlewares(): void
     {
         $container = $this->getContainer();
         $middlewaresConfig = $container['config']['middlewares'];
@@ -258,29 +251,26 @@ class App extends SlimApp implements
 
     /**
      * @throws LogicException If trying to clone an instance of a singleton.
-     * @return void
      */
     final public function __clone()
     {
         throw new LogicException(
             sprintf(
                 'Cloning "%s" is not allowed.',
-                get_called_class()
+                static::class
             )
         );
     }
 
     /**
      * @throws LogicException If trying to unserialize an instance of a singleton.
-     * @return void
      */
-    final public function __wakeup()
+    final public function __unserialize(array $data): void
     {
-        throw new LogicException(
-            sprintf(
-                'Unserializing "%s" is not allowed.',
-                get_called_class()
-            )
-        );
+        foreach ($data as $property => $value) {
+            if (property_exists($this, $property)) {
+                $this->{$property} = $value;
+            }
+        }
     }
 }

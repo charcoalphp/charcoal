@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Charcoal\Tests\Property;
 
 // From 'charcoal-property'
@@ -13,14 +15,8 @@ class PasswordPropertyTest extends AbstractTestCase
 {
     use \Charcoal\Tests\Property\ContainerIntegrationTrait;
 
-    /**
-     * @var PasswordProperty
-     */
-    private $obj;
+    private \Charcoal\Property\PasswordProperty $obj;
 
-    /**
-     * @return void
-     */
     protected function setUp(): void
     {
         $container = $this->getContainer();
@@ -31,15 +27,12 @@ class PasswordPropertyTest extends AbstractTestCase
             'translator' => $container['translator']
         ]);
     }
-    /**
-     * @return void
-     */
-    public function testType()
+    public function testType(): void
     {
         $this->assertEquals('password', $this->obj->type());
     }
 
-    public function testSave()
+    public function testSave(): void
     {
         $v1 = $this->obj->save('xxx');
         $this->assertNotEquals($v1, 'xxx');

@@ -32,6 +32,10 @@ use Charcoal\Admin\Template\ElfinderTemplate;
  */
 class ElfinderConnectorAction extends AdminAction
 {
+    /**
+     * @var \elFinderConnector
+     */
+    public $connector;
     use CallableResolverAwareTrait;
 
     /**
@@ -123,9 +127,9 @@ class ElfinderConnectorAction extends AdminAction
      * Sets the action data from a PSR Request object.
      *
      * @param  RequestInterface $request A PSR-7 compatible Request instance.
-     * @return self
      */
-    protected function setDataFromRequest(RequestInterface $request)
+    #[\Override]
+    protected function setDataFromRequest(RequestInterface $request): static
     {
         $keys = $this->validDataFromRequest();
         $data = $request->getParams($keys);
@@ -150,7 +154,8 @@ class ElfinderConnectorAction extends AdminAction
      *
      * @return string[]
      */
-    protected function validDataFromRequest()
+    #[\Override]
+    protected function validDataFromRequest(): array
     {
         return [
             'obj_type',
@@ -162,9 +167,8 @@ class ElfinderConnectorAction extends AdminAction
     /**
      * @param  RequestInterface  $request  A PSR-7 compatible Request instance.
      * @param  ResponseInterface $response A PSR-7 compatible Response instance.
-     * @return ResponseInterface
      */
-    public function run(RequestInterface $request, ResponseInterface $response)
+    public function run(RequestInterface $request, ResponseInterface $response): ResponseInterface
     {
         unset($request);
 
@@ -177,9 +181,8 @@ class ElfinderConnectorAction extends AdminAction
      * Setup the elFinder connector.
      *
      * @param  array|null $extraOptions Additional settings to pass to elFinder.
-     * @return elFinderConnector
      */
-    public function setupElfinder(array $extraOptions = [])
+    public function setupElfinder(array $extraOptions = []): \elFinderConnector
     {
         if (!defined('ELFINDER_IMG_PARENT_URL')) {
             // Ensure images injected by elFinder are relative to its assets directory
@@ -219,9 +222,8 @@ class ElfinderConnectorAction extends AdminAction
      *     your application's admin configuration.
      *
      * @param  array $extraOptions Additional settings to pass to elFinder.
-     * @return array
      */
-    public function buildConnectorOptions(array $extraOptions = [])
+    public function buildConnectorOptions(array $extraOptions = []): array
     {
         $options = [
             'debug' => false,
@@ -251,7 +253,7 @@ class ElfinderConnectorAction extends AdminAction
      * @param  array $options2 The settings from which data is extracted.
      * @return array The merged settings.
      */
-    protected function mergeConnectorOptions(array $options1, array $options2)
+    protected function mergeConnectorOptions(array $options1, array $options2): array
     {
         return array_replace_recursive($options1, $options2);
     }
@@ -262,7 +264,7 @@ class ElfinderConnectorAction extends AdminAction
      * @param  array $options The admin settings to parse.
      * @return array The parsed settings.
      */
-    protected function parseAdminOptionsForConnectorBuild(array $options)
+    protected function parseAdminOptionsForConnectorBuild(array $options): array
     {
         // Root settings are already merged when retrieving available roots.
         unset($options['roots']);
@@ -276,7 +278,7 @@ class ElfinderConnectorAction extends AdminAction
      * @param  array $options The extra settings to parse.
      * @return array The parsed settings.
      */
-    protected function parseExtraOptionsForConnectorBuild(array $options)
+    protected function parseExtraOptionsForConnectorBuild(array $options): array
     {
         // Resolve callbacks on extra options
         if (isset($options['roots'])) {
@@ -290,10 +292,8 @@ class ElfinderConnectorAction extends AdminAction
      * Retrieve the admin's elFinder Connector options.
      *
      * Path: `config.admin.elfinder.connector`
-     *
-     * @return array
      */
-    public function getAdminConnectorOptions()
+    public function getAdminConnectorOptions(): array
     {
         $config = $this->elfinderConfig('connector');
         if (!is_array($config)) {
@@ -305,10 +305,8 @@ class ElfinderConnectorAction extends AdminAction
 
     /**
      * Retrieve the default elFinder Connector options.
-     *
-     * @return array
      */
-    protected function getDefaultElfinderRootSettings()
+    protected function getDefaultElfinderRootSettings(): array
     {
         return [
             'driver'          => 'LocalFileSystem',
@@ -322,17 +320,15 @@ class ElfinderConnectorAction extends AdminAction
             'uploadDeny'      => $this->defaultUploadDeny(),
             'uploadAllow'     => $this->defaultUploadAllow(),
             'uploadOrder'     => [ 'deny', 'allow' ],
-            'accessControl'   => [ $this, 'checkAccess' ],
+            'accessControl'   => $this->checkAccess(...),
             'duplicateSuffix' => '_%s_',
         ];
     }
 
     /**
      * Retrieve the default Flysystem / elFinder options.
-     *
-     * @return array
      */
-    protected function getDefaultFlysystemRootSettings()
+    protected function getDefaultFlysystemRootSettings(): array
     {
         return [
             'driver'       => 'Flysystem',
@@ -348,18 +344,13 @@ class ElfinderConnectorAction extends AdminAction
      * Retrieve the default Flysystem / elFinder options.
      *
      * @param  string $ident The disk identifier.
-     * @return array
      */
-    protected function resolveFallbackRootSettings($ident)
+    protected function resolveFallbackRootSettings($ident): array
     {
         $fsConfig   = $this->getFilesystemConfig($ident);
         $uploadPath = $this->defaultUploadPath();
 
-        if (isset($fsConfig['base_url'])) {
-            $baseUrl = rtrim($fsConfig['base_url'], '/') . '/';
-        } else {
-            $baseUrl = $this->baseUrl();
-        }
+        $baseUrl = isset($fsConfig['base_url']) ? rtrim($fsConfig['base_url'], '/') . '/' : $this->baseUrl();
 
         return [
             'URL'     => $baseUrl . '/' . $uploadPath,
@@ -378,14 +369,14 @@ class ElfinderConnectorAction extends AdminAction
      * @param  string $ident The disk identifier.
      * @return array|null Returns an elFinder root structure or NULL.
      */
-    public function getNamedRoot($ident)
+    public function getNamedRoot($ident): ?array
     {
         if ($this->hasFilesystem($ident) === false) {
             return null;
         }
 
-        $filesystem = $this->getFilesystem($ident);
-        $fsConfig   = $this->getFilesystemConfig($ident);
+        $this->getFilesystem($ident);
+        $this->getFilesystemConfig($ident);
         $elfConfig  = $this->getFilesystemAdminConfig($ident);
 
         $immutableSettings = [
@@ -410,10 +401,8 @@ class ElfinderConnectorAction extends AdminAction
 
     /**
      * Retrieve only the public elFinder root volumes.
-     *
-     * @return array
      */
-    public function getPublicRoots()
+    public function getPublicRoots(): array
     {
         $roots = [];
         foreach ($this->filesystems->keys() as $ident) {
@@ -430,10 +419,8 @@ class ElfinderConnectorAction extends AdminAction
 
     /**
      * Retrieve all elFinder root volumes.
-     *
-     * @return array
      */
-    public function getAllRoots()
+    public function getAllRoots(): array
     {
         $roots = [];
         foreach ($this->filesystems->keys() as $ident) {
@@ -452,7 +439,7 @@ class ElfinderConnectorAction extends AdminAction
      * @return array Returns all public root volumes
      *     or a subset if the context has a related form property.
      */
-    public function getCurrentRoots()
+    public function getCurrentRoots(): array
     {
         $formProperty     = $this->formProperty();
         $targetFilesystem = $formProperty ? $formProperty['filesystem'] : null;
@@ -475,9 +462,7 @@ class ElfinderConnectorAction extends AdminAction
 
             if ($acceptedMimetypes) {
                 $disk['uploadAllow'] = array_merge(
-                    isset($disk['uploadAllow'])
-                        ? $disk['uploadAllow']
-                        : [],
+                    $disk['uploadAllow'] ?? [],
                     $acceptedMimetypes
                 );
             }
@@ -493,7 +478,7 @@ class ElfinderConnectorAction extends AdminAction
      * @param  array $roots One or many roots with possible unresolved callables.
      * @return array Returns the root(s) with resolved callables.
      */
-    protected function resolveCallbacksForRoots(array $roots)
+    protected function resolveCallbacksForRoots(array $roots): array
     {
         foreach ($roots as $i => $root) {
             $roots[$i] = $this->resolveCallbacksForRoot($root);
@@ -508,7 +493,7 @@ class ElfinderConnectorAction extends AdminAction
      * @param  array $root A root structure with possible unresolved callables.
      * @return array Returns the root with resolved callables.
      */
-    protected function resolveCallbacksForRoot(array $root)
+    protected function resolveCallbacksForRoot(array $root): array
     {
         if (isset($root['accessControl'])) {
             $callable = $root['accessControl'];
@@ -526,14 +511,14 @@ class ElfinderConnectorAction extends AdminAction
      * @param  array $toResolve One or many pairs of callbacks.
      * @return array Returns the parsed event listeners.
      */
-    protected function resolveCallbacksForBindOption(array $toResolve)
+    protected function resolveCallbacksForBindOption(array $toResolve): array
     {
         $resolved = $toResolve;
 
         foreach ($toResolve as $actions => $callables) {
             foreach ($callables as $i => $callable) {
                 if (!is_callable($callable) && is_string($callable)) {
-                    if (0 === strpos($callable, 'Plugin.')) {
+                    if (str_starts_with($callable, 'Plugin.')) {
                         continue;
                     }
 
@@ -557,9 +542,8 @@ class ElfinderConnectorAction extends AdminAction
      * @param  array    $args      The command arguments from the client.
      * @param  object   $elfinder  The elFinder instance.
      * @param  object   $volume    The current volume instance.
-     * @return void|bool|array
      */
-    public function translateDirectoriesOnAnyCommand($cmd, &$result, $args, $elfinder, $volume)
+    public function translateDirectoriesOnAnyCommand($cmd, array &$result, $args, object $elfinder, $volume): void
     {
         // To please PHPCS
         unset($cmd, $args, $volume);
@@ -587,7 +571,6 @@ class ElfinderConnectorAction extends AdminAction
      * @param  array  $stat     The directory reference.
      * @param  object $elfinder The elFinder instance or volume instance.
      * @throws UnexpectedValueException If the related volume is not found.
-     * @return array
      */
     protected function translateDirectoryStat(array $stat, object $elfinder): array
     {
@@ -608,7 +591,6 @@ class ElfinderConnectorAction extends AdminAction
      * @param  object $elfinder The elFinder instance or volume instance.
      * @throws InvalidArgumentException If the elFinder client or volume is not provided.
      * @throws UnexpectedValueException If the related volume is not found.
-     * @return ?string
      */
     protected function getVolumeNameFromHash(string $hash, object $elfinder): ?string
     {
@@ -635,7 +617,6 @@ class ElfinderConnectorAction extends AdminAction
      * Attempts to retrieve the filesystem name.
      *
      * @param  string $ident The filesystem identifier.
-     * @return ?string
      */
     protected function getFilesystemName(string $ident): ?string
     {
@@ -655,7 +636,6 @@ class ElfinderConnectorAction extends AdminAction
      * Attempts to localize the filesystem identifier.
      *
      * @param  string $ident The filesystem identifier.
-     * @return ?string
      */
     protected function translateFilesystemName(string $ident): ?string
     {
@@ -684,7 +664,7 @@ class ElfinderConnectorAction extends AdminAction
      * @param  object $volume   The current volume instance.
      * @return void|bool|array
      */
-    public function sanitizeOnUploadPreSave(&$path, &$name, $src, $elfinder, $volume)
+    public function sanitizeOnUploadPreSave(&$path, &$name, $src, $elfinder, $volume): bool
     {
         // To please PHPCS
         unset($path, $src, $elfinder, $volume);
@@ -712,11 +692,7 @@ class ElfinderConnectorAction extends AdminAction
      */
     protected function sanitizeFileName(string $name, array $options): string
     {
-        if (is_array($options['replace'])) {
-            $mask = implode($options['replace']);
-        } else {
-            $mask = $options['replace'];
-        }
+        $mask = is_array($options['replace']) ? implode('', $options['replace']) : $options['replace'];
 
         $ext = '.' . pathinfo($name, PATHINFO_EXTENSION);
 
@@ -725,8 +701,8 @@ class ElfinderConnectorAction extends AdminAction
 
         // Squeeze multiple delimiters and whitespace with a single separator
         $name = preg_replace(
-            '![' . preg_quote($mask, '!') . '\.\s]{2,}!',
-            $options['replace'],
+            '![' . preg_quote((string) $mask, '!') . '\.\s]{2,}!',
+            (string) $options['replace'],
             $name
         );
 
@@ -751,7 +727,7 @@ class ElfinderConnectorAction extends AdminAction
      *     started with directory separator.
      * @return boolean|null TRUE to allow, FALSE to deny, NULL to let elFinder decide.
      **/
-    public function checkAccess($attr, $path, $data, elFinderVolumeDriver $volume, $isDir, $relPath)
+    public function checkAccess($attr, $path, $data, elFinderVolumeDriver $volume, $isDir, $relPath): ?bool
     {
         unset($data, $volume, $isDir);
 
@@ -763,7 +739,7 @@ class ElfinderConnectorAction extends AdminAction
          * set to NULL to let elFinder decide itself.
          */
         return ($basename[0] === '.' && strlen($relPath) !== 1)
-                ? !($attr === 'read' || $attr === 'write')
+                ? $attr !== 'read' && $attr !== 'write'
                 :  null;
     }
 
@@ -825,20 +801,16 @@ class ElfinderConnectorAction extends AdminAction
 
     /**
      * Retrieve the default root path.
-     *
-     * @return string
      */
-    public function defaultUploadPath()
+    public function defaultUploadPath(): string
     {
         return self::DEFAULT_STORAGE_PATH;
     }
 
     /**
      * Allow upload for a subset MIME types.
-     *
-     * @return array
      */
-    protected function defaultUploadAllow()
+    protected function defaultUploadAllow(): array
     {
         // By default, all images, PDF, and plain-text files are allowed.
         return [
@@ -850,10 +822,8 @@ class ElfinderConnectorAction extends AdminAction
 
     /**
      * Deny upload for all MIME types.
-     *
-     * @return array
      */
-    protected function defaultUploadDeny()
+    protected function defaultUploadDeny(): array
     {
         // By default, all files are rejected.
         return [
@@ -863,10 +833,8 @@ class ElfinderConnectorAction extends AdminAction
 
     /**
      * Default attributes for files and directories.
-     *
-     * @return array
      */
-    protected function attributesForHiddenFiles()
+    protected function attributesForHiddenFiles(): array
     {
         return [
             // Block access to all hidden files and directories (anything starting with ".")
@@ -882,9 +850,9 @@ class ElfinderConnectorAction extends AdminAction
      * Inject dependencies from a DI Container.
      *
      * @param  Container $container A dependencies container instance.
-     * @return void
      */
-    public function setDependencies(Container $container)
+    #[\Override]
+    public function setDependencies(Container $container): void
     {
         parent::setDependencies($container);
 
@@ -908,11 +876,7 @@ class ElfinderConnectorAction extends AdminAction
      */
     protected function getFilesystem($ident)
     {
-        if (isset($this->filesystems[$ident])) {
-            return $this->filesystems[$ident];
-        }
-
-        return null;
+        return $this->filesystems[$ident] ?? null;
     }
 
     /**
@@ -921,7 +885,7 @@ class ElfinderConnectorAction extends AdminAction
      * @param  string $ident The filesystem identifier.
      * @return boolean TRUE if the filesystem instance exists, otherwise FALSE.
      */
-    protected function hasFilesystem($ident)
+    protected function hasFilesystem($ident): bool
     {
         return ($this->getFilesystem($ident) !== null);
     }
@@ -939,11 +903,7 @@ class ElfinderConnectorAction extends AdminAction
             return null;
         }
 
-        if (isset($this->filesystemConfig['connections'][$ident])) {
-            return $this->filesystemConfig['connections'][$ident];
-        }
-
-        return [];
+        return $this->filesystemConfig['connections'][$ident] ?? [];
     }
 
     /**
@@ -959,11 +919,7 @@ class ElfinderConnectorAction extends AdminAction
         }
 
         $config = $this->getFilesystemConfig($ident);
-        if (isset($config['public']) && $config['public'] === false) {
-            return false;
-        }
-
-        return true;
+        return !(isset($config['public']) && $config['public'] === false);
     }
 
     /**
@@ -980,11 +936,8 @@ class ElfinderConnectorAction extends AdminAction
         }
 
         $elfConfig = $this->getAdminConnectorOptions();
-        if (isset($elfConfig['roots'][$ident])) {
-            return $elfConfig['roots'][$ident];
-        }
 
-        return [];
+        return $elfConfig['roots'][$ident] ?? [];
     }
 
     /**
@@ -1010,12 +963,10 @@ class ElfinderConnectorAction extends AdminAction
         if ($key) {
             if (isset($this->elfinderConfig[$key])) {
                 return $this->elfinderConfig[$key];
+            } elseif (!is_string($default) && is_callable($default)) {
+                return $default();
             } else {
-                if (!is_string($default) && is_callable($default)) {
-                    return $default();
-                } else {
-                    return $default;
-                }
+                return $default;
             }
         }
 

@@ -40,19 +40,15 @@ class CardCollectionWidget extends TableWidget
 
     /**
      * @param integer $numColumns NumColumns for CardCollectionWidget.
-     * @return self
      */
-    public function setNumColumns($numColumns)
+    public function setNumColumns($numColumns): static
     {
         $this->numColumns = $numColumns;
 
         return $this;
     }
 
-    /**
-     * @return float|integer
-     */
-    public function bsColRatio()
+    public function bsColRatio(): float|int
     {
         return abs(12 / ($this->numColumns() ?: 12));
     }
@@ -67,9 +63,8 @@ class CardCollectionWidget extends TableWidget
 
     /**
      * @param string $cardTemplate CardTemplate for CardCollectionWidget.
-     * @return self
      */
-    public function setCardTemplate($cardTemplate)
+    public function setCardTemplate($cardTemplate): static
     {
         $this->cardTemplate = $cardTemplate;
 
@@ -94,13 +89,13 @@ class CardCollectionWidget extends TableWidget
      *
      * @param  ModelInterface $object           The current row's object.
      * @param  array          $objectProperties The $object's display properties.
-     * @return array
      */
-    protected function parseObjectRow(ModelInterface $object, array $objectProperties)
+    #[\Override]
+    protected function parseObjectRow(ModelInterface $object, array $objectProperties): array
     {
         $row = $this->parseCollectionObjectRow($object, $objectProperties);
         $objProps = $row['objectProperties'];
-        array_walk($objProps, function ($value) use (&$row) {
+        array_walk($objProps, function (array $value) use (&$row): void {
             $row['objectProperties'][$value['ident']] = $value['val'];
 
             if (!method_exists($row['object'], 'isChipSuccess')) {
@@ -113,20 +108,17 @@ class CardCollectionWidget extends TableWidget
 
     /**
      * Retrieve the widget's data options for JavaScript components.
-     *
-     * @return array
      */
-    public function widgetDataForJs()
+    #[\Override]
+    public function widgetDataForJs(): array
     {
-        $data = array_merge_recursive(
+        return array_merge_recursive(
             parent::widgetDataForJs(),
             [
                 'card_template' => $this->cardTemplate(),
                 'num_columns' => $this->numColumns()
             ]
         );
-
-        return $data;
     }
 
     /**
@@ -161,9 +153,8 @@ class CardCollectionWidget extends TableWidget
 
     /**
      * @param boolean $showFooterChip ShowFooterChip for CardCollectionWidget.
-     * @return self
      */
-    public function setShowFooterChip($showFooterChip)
+    public function setShowFooterChip($showFooterChip): static
     {
         $this->showFooterChip = $showFooterChip;
 
@@ -192,9 +183,8 @@ class CardCollectionWidget extends TableWidget
 
     /**
      * @param Translation|string $chipTitle ChipTitle for CardCollectionWidget.
-     * @return self
      */
-    public function setChipTitle($chipTitle)
+    public function setChipTitle($chipTitle): static
     {
         $this->chipTitle = $this->translator()->translation($chipTitle);
 

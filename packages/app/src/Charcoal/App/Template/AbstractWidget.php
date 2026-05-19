@@ -26,10 +26,7 @@ abstract class AbstractWidget extends AbstractEntity implements
     use LoggerAwareTrait;
     use ViewableTrait;
 
-    /**
-     * @var boolean $active
-     */
-    private $active = true;
+    private bool $active = true;
 
     /**
      * @param array|\ArrayAccess $data Optional dependencies.
@@ -49,7 +46,7 @@ abstract class AbstractWidget extends AbstractEntity implements
      */
     public function setActive($active)
     {
-        $this->active = !!$active;
+        $this->active = (bool) $active;
         return $this;
     }
 

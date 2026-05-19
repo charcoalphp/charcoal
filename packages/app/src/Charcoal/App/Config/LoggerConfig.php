@@ -15,42 +15,33 @@ class LoggerConfig extends AbstractConfig
 
     /**
      * Whether to enable or disable the logger service.
-     *
-     * @var boolean
      */
-    private $active;
+    private ?bool $active = null;
 
     /**
      * Record handler(s) to use.
      *
      * Whenever you add a record to the logger, it traverses the handler stack.
-     *
-     * @var array
      */
-    private $handlers;
+    private ?array $handlers = null;
 
     /**
      * Record processor(s) to use.
      *
      * For customizing records added to the logger.
-     *
-     * @var array
      */
-    private $processors;
+    private ?array $processors = null;
 
     /**
      * Channel name.
-     *
-     * @var string
      */
-    private $channel = self::DEFAULT_CHANNEL;
+    private string $channel = self::DEFAULT_CHANNEL;
 
     /**
      * Retrieve the default values.
-     *
-     * @return array
      */
-    public function defaults()
+    #[\Override]
+    public function defaults(): array
     {
         return [
             'active'    => true,
@@ -88,9 +79,9 @@ class LoggerConfig extends AbstractConfig
      *     TRUE to enable, FALSE to disable.
      * @return LoggerConfig Chainable
      */
-    public function setActive($active)
+    public function setActive($active): static
     {
-        $this->active = !!$active;
+        $this->active = (bool) $active;
         return $this;
     }
 
@@ -99,7 +90,7 @@ class LoggerConfig extends AbstractConfig
      *
      * @return boolean TRUE if enabled, FALSE if disabled.
      */
-    public function active()
+    public function active(): ?bool
     {
         return $this->active;
     }
@@ -108,9 +99,8 @@ class LoggerConfig extends AbstractConfig
      * Set the record handler(s) to use.
      *
      * @param  array $handlers One or more (Monolog) record handlers; used as a stack.
-     * @return self
      */
-    public function setHandlers(array $handlers)
+    public function setHandlers(array $handlers): static
     {
         $this->handlers = [];
         $this->addHandlers($handlers);
@@ -121,9 +111,8 @@ class LoggerConfig extends AbstractConfig
      * Add record handler(s) to use.
      *
      * @param  string[] $handlers One or more (Monolog) handlers to stack.
-     * @return self
      */
-    public function addHandlers(array $handlers)
+    public function addHandlers(array $handlers): static
     {
         foreach ($handlers as $key => $handler) {
             $this->addHandler($handler, $key);
@@ -137,9 +126,8 @@ class LoggerConfig extends AbstractConfig
      * @param  array       $handler The record handler structure.
      * @param  string|null $key     The handler's key.
      * @throws InvalidArgumentException If the handler is invalid.
-     * @return self
      */
-    public function addHandler(array $handler, $key = null)
+    public function addHandler(array $handler, $key = null): static
     {
         if (!isset($handler['type'])) {
             throw new InvalidArgumentException(
@@ -161,7 +149,7 @@ class LoggerConfig extends AbstractConfig
      *
      * @return array
      */
-    public function handlers()
+    public function handlers(): ?array
     {
         return $this->handlers;
     }
@@ -170,9 +158,8 @@ class LoggerConfig extends AbstractConfig
      * Set the record processor(s) to use.
      *
      * @param  array $processors One or more (Monolog) record processors; used as a stack.
-     * @return self
      */
-    public function setProcessors(array $processors)
+    public function setProcessors(array $processors): static
     {
         $this->processors = [];
         $this->addProcessors($processors);
@@ -183,9 +170,8 @@ class LoggerConfig extends AbstractConfig
      * Add record processor(s) to use.
      *
      * @param  string[] $processors One or more (Monolog) processors to stack.
-     * @return self
      */
-    public function addProcessors(array $processors)
+    public function addProcessors(array $processors): static
     {
         foreach ($processors as $key => $processor) {
             $this->addProcessor($processor, $key);
@@ -199,9 +185,8 @@ class LoggerConfig extends AbstractConfig
      * @param  array       $processor The record processor structure.
      * @param  string|null $key       The processor's key.
      * @throws InvalidArgumentException If the processor is invalid.
-     * @return self
      */
-    public function addProcessor(array $processor, $key = null)
+    public function addProcessor(array $processor, $key = null): static
     {
         if (!isset($processor['type'])) {
             throw new InvalidArgumentException(
@@ -223,7 +208,7 @@ class LoggerConfig extends AbstractConfig
      *
      * @return array
      */
-    public function processors()
+    public function processors(): ?array
     {
         return $this->processors;
     }
@@ -233,9 +218,8 @@ class LoggerConfig extends AbstractConfig
      *
      * @param  string $name The channe name (namespace).
      * @throws InvalidArgumentException If the channel name is not a string.
-     * @return self
      */
-    public function setChannel($name)
+    public function setChannel($name): static
     {
         if (!is_string($name)) {
             throw new InvalidArgumentException(
@@ -249,10 +233,8 @@ class LoggerConfig extends AbstractConfig
 
     /**
      * Retrieve the cache namespace.
-     *
-     * @return string
      */
-    public function channel()
+    public function channel(): string
     {
         return $this->channel;
     }

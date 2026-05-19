@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Charcoal\Image\Effect;
 
 use Charcoal\Image\AbstractEffect;
@@ -10,10 +12,7 @@ use Charcoal\Image\AbstractEffect;
  */
 abstract class AbstractCompressionEffect extends AbstractEffect
 {
-    /**
-     * @var int $quality
-     */
-    private $quality = 100;
+    private int $quality = 100;
 
     /**
      * @param int $quality Image quality from 1 to 100

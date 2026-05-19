@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Charcoal\Admin\Property\Display;
 
 use InvalidArgumentException;
@@ -28,7 +30,7 @@ class ChoiceDisplay extends AbstractPropertyDisplay
      * @throws InvalidArgumentException If the choice structure is invalid.
      * @return PropertyInputInterface Chainable
      */
-    public function setEmptyChoice($choice)
+    public function setEmptyChoice($choice): static
     {
         if (is_string($choice) || ($choice instanceof Translation)) {
             $choice = [
@@ -44,7 +46,7 @@ class ChoiceDisplay extends AbstractPropertyDisplay
         } else {
             throw new InvalidArgumentException(sprintf(
                 'Empty choice must be an array, received %s',
-                (is_object($choice) ? get_class($choice) : gettype($choice))
+                (get_debug_type($choice))
             ));
         }
 
@@ -76,9 +78,8 @@ class ChoiceDisplay extends AbstractPropertyDisplay
      * Retrieve the default empty option structure.
      *
      * @see    \Charcoal\Admin\Property\AbstractSelectableInput::defaultEmptyChoice()
-     * @return array
      */
-    protected function defaultEmptyChoice()
+    protected function defaultEmptyChoice(): array
     {
         return [
             'value' => '',
@@ -91,6 +92,7 @@ class ChoiceDisplay extends AbstractPropertyDisplay
      *
      * @return string
      */
+    #[\Override]
     public function displayVal()
     {
         $prop = $this->p();

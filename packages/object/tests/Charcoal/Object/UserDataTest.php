@@ -19,22 +19,16 @@ class UserDataTest extends AbstractTestCase
 {
     /**
      * Tested Class.
-     *
-     * @var UserData
      */
-    private $obj;
+    private \Charcoal\Object\UserData $obj;
 
     /**
      * Store the service container.
-     *
-     * @var Container
      */
-    private $container;
+    private ?\Pimple\Container $container = null;
 
     /**
      * Set up the test.
-     *
-     * @return void
      */
     public function setUp(): void
     {
@@ -43,20 +37,14 @@ class UserDataTest extends AbstractTestCase
         $this->obj = $container['model/factory']->create(UserData::class);
     }
 
-    /**
-     * @return void
-     */
-    public function testDefaults()
+    public function testDefaults(): void
     {
         $this->assertNull($this->obj['ip']);
         $this->assertNull($this->obj['lang']);
         $this->assertNull($this->obj['ts']);
     }
 
-    /**
-     * @return void
-     */
-    public function testSetData()
+    public function testSetData(): void
     {
         $ret = $this->obj->setData([
             'ip'=>'192.168.1.1',
@@ -70,12 +58,8 @@ class UserDataTest extends AbstractTestCase
         $this->assertEquals($expected, $this->obj['ts']);
     }
 
-    /**
-     * @return void
-     */
-    public function testSetIp()
+    public function testSetIp(): void
     {
-        $this->obj = $this->obj;
         $ret = $this->obj->setIp('1.1.1.1');
         $this->assertSame($ret, $this->obj);
         $this->assertEquals(ip2long('1.1.1.1'), $this->obj['ip']);
@@ -84,12 +68,8 @@ class UserDataTest extends AbstractTestCase
         $this->assertEquals(2349255, $this->obj['ip']);
     }
 
-    /**
-     * @return void
-     */
-    public function testSetLang()
+    public function testSetLang(): void
     {
-        $this->obj = $this->obj;
         $ret = $this->obj->setLang('en');
         $this->assertSame($ret, $this->obj);
         $this->assertEquals('en', $this->obj['lang']);
@@ -98,12 +78,8 @@ class UserDataTest extends AbstractTestCase
         $this->obj->setLang(false);
     }
 
-    /**
-     * @return void
-     */
-    public function testSetTs()
+    public function testSetTs(): void
     {
-        $this->obj = $this->obj;
         $ret = $this->obj->setTs('July 1st, 2014');
         $this->assertSame($ret, $this->obj);
         $expected = new DateTime('July 1st, 2014');
@@ -115,12 +91,10 @@ class UserDataTest extends AbstractTestCase
 
     /**
      * Set up the service container.
-     *
-     * @return Container
      */
-    private function container()
+    private function container(): \Pimple\Container
     {
-        if ($this->container === null) {
+        if (!$this->container instanceof \Pimple\Container) {
             $container = new Container();
             $containerProvider = new ContainerProvider();
             $containerProvider->registerBaseServices($container);

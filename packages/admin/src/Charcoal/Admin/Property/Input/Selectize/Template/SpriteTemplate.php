@@ -30,6 +30,7 @@ class SpriteTemplate extends AbstractTemplate
      * @param Container $container A Pimple DI container.
      * @return void
      */
+    #[\Override]
     protected function setDependencies(Container $container)
     {
         parent::setDependencies($container);
@@ -47,9 +48,8 @@ class SpriteTemplate extends AbstractTemplate
 
     /**
      * @param boolean $flag Show the sprite id besides the icon.
-     * @return self
      */
-    public function setShowSpriteId($flag)
+    public function setShowSpriteId($flag): static
     {
         $this->showSpriteId = $flag;
 

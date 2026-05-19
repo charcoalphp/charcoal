@@ -16,7 +16,7 @@ trait DescribableTrait
     /**
      * @var MetadataLoader $metadataLoader
      */
-    protected $metadataLoader = null;
+    protected $metadataLoader;
 
     /**
      * @var MetadataInterface $metadata
@@ -150,7 +150,7 @@ trait DescribableTrait
     {
         if (!$this->metadataLoader) {
             throw new RuntimeException(
-                sprintf('Metadata loader was not set for "%s"', get_class($this))
+                sprintf('Metadata loader was not set for "%s"', $this::class)
             );
         }
         return $this->metadataLoader;
@@ -160,13 +160,10 @@ trait DescribableTrait
      * Generate a metadata identifier from this object's class name (FQN).
      *
      * Converts the short class name and converts it from camelCase to kebab-case.
-     *
-     * @return string
      */
-    protected function generateMetadataIdent()
+    protected function generateMetadataIdent(): string
     {
         $ident = preg_replace('/([a-z])([A-Z])/', '$1-$2', static::class);
-        $ident = strtolower(str_replace('\\', '/', $ident));
-        return $ident;
+        return strtolower(str_replace('\\', '/', $ident));
     }
 }

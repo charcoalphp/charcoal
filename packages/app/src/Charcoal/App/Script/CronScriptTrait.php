@@ -26,7 +26,7 @@ trait CronScriptTrait
      */
     public function setUseLock($useLock)
     {
-        $this->useLock = !!$useLock;
+        $this->useLock = (bool) $useLock;
         return $this;
     }
 
@@ -40,9 +40,8 @@ trait CronScriptTrait
 
     /**
      * @throws Exception If the lock file can not be opened or the script is already locked.
-     * @return boolean
      */
-    public function startLock()
+    public function startLock(): bool
     {
         $lockFile = $this->getLockFileName();
         $this->lockFilePointer = fopen($lockFile, 'w');
@@ -60,10 +59,7 @@ trait CronScriptTrait
         }
     }
 
-    /**
-     * @return void
-     */
-    public function stopLock()
+    public function stopLock(): void
     {
         if ($this->lockFilePointer) {
             flock($this->lockFilePointer, LOCK_UN);
@@ -71,10 +67,7 @@ trait CronScriptTrait
         }
     }
 
-    /**
-     * @return string
-     */
-    private function getLockFileName()
+    private function getLockFileName(): string
     {
         $lockName = str_replace('\\', '-', static::class);
         $lockName .= md5(__DIR__);

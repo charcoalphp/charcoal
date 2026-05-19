@@ -38,7 +38,7 @@ trait HttpAwareTrait
         if ($this->httpRequest === null) {
             throw new RuntimeException(sprintf(
                 'PSR-7 HTTP Request is not defined for "%s"',
-                get_class($this)
+                $this::class
             ));
         }
 
@@ -47,10 +47,8 @@ trait HttpAwareTrait
 
     /**
      * Determine if a HTTP request object is set.
-     *
-     * @return boolean
      */
-    public function hasHttpRequest()
+    public function hasHttpRequest(): bool
     {
         return $this->httpRequest instanceof RequestInterface;
     }
@@ -77,7 +75,7 @@ trait HttpAwareTrait
         if ($this->httpResponse === null) {
             throw new RuntimeException(sprintf(
                 'PSR-7 HTTP Response is not defined for "%s"',
-                get_class($this)
+                $this::class
             ));
         }
 
@@ -86,10 +84,8 @@ trait HttpAwareTrait
 
     /**
      * Determine if a HTTP response object is set.
-     *
-     * @return boolean
      */
-    public function hasHttpResponse()
+    public function hasHttpResponse(): bool
     {
         return $this->httpResponse instanceof ResponseInterface;
     }
@@ -124,10 +120,8 @@ trait HttpAwareTrait
 
     /**
      * Is this response successful?
-     *
-     * @return boolean
      */
-    protected function isHttpResponseSuccessful()
+    protected function isHttpResponseSuccessful(): bool
     {
         $response = $this->httpResponse();
 

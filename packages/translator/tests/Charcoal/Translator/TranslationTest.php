@@ -15,17 +15,11 @@ use Charcoal\Tests\Translator\AbstractTestCase;
  */
 class TranslationTest extends AbstractTestCase
 {
-    /**
-     * @var LocalesManager
-     */
-    private $localesManager;
+    private ?\Charcoal\Translator\LocalesManager $localesManager = null;
 
-    /**
-     * @return LocalesManager
-     */
-    private function localesManager()
+    private function localesManager(): \Charcoal\Translator\LocalesManager
     {
-        if ($this->localesManager === null) {
+        if (!$this->localesManager instanceof \Charcoal\Translator\LocalesManager) {
             $this->localesManager = new LocalesManager([
                 'locales' => [
                     'en' => [
@@ -44,10 +38,7 @@ class TranslationTest extends AbstractTestCase
         return $this->localesManager;
     }
 
-    /**
-     * @return void
-     */
-    public function testConstructorWithStringParam()
+    public function testConstructorWithStringParam(): void
     {
         $obj = new Translation('Hello!', $this->localesManager());
 
@@ -58,10 +49,7 @@ class TranslationTest extends AbstractTestCase
         $this->assertFalse(isset($obj['fr']));
     }
 
-    /**
-     * @return void
-     */
-    public function testConstructorWithArrayParam()
+    public function testConstructorWithArrayParam(): void
     {
         $obj = new Translation([ 'en' => 'Hello!', 'fr' => 'Bonjour!' ], $this->localesManager());
 
@@ -74,10 +62,7 @@ class TranslationTest extends AbstractTestCase
         $this->assertFalse(isset($obj['es']));
     }
 
-    /**
-     * @return void
-     */
-    public function testConstructorWithObjectParam()
+    public function testConstructorWithObjectParam(): void
     {
         $trans = new Translation([ 'en' => 'Hello!', 'fr' => 'Bonjour!' ], $this->localesManager());
         $obj   = new Translation($trans, $this->localesManager());
@@ -91,19 +76,13 @@ class TranslationTest extends AbstractTestCase
         $this->assertFalse(isset($obj['es']));
     }
 
-    /**
-     * @return void
-     */
-    public function testConstructorWithInvalidParam()
+    public function testConstructorWithInvalidParam(): void
     {
         $this->expectException(InvalidArgumentException::class);
-        $obj = new Translation(false, $this->localesManager());
+        new Translation(false, $this->localesManager());
     }
 
-    /**
-     * @return void
-     */
-    public function testToString()
+    public function testToString(): void
     {
         $manager = $this->localesManager();
 
@@ -118,10 +97,7 @@ class TranslationTest extends AbstractTestCase
         $this->assertEquals('', (string)$obj);
     }
 
-    /**
-     * @return void
-     */
-    public function testArraySet()
+    public function testArraySet(): void
     {
         $obj = new Translation('Hello!', $this->localesManager());
         $this->assertEquals('Hello!', (string)$obj);
@@ -130,19 +106,13 @@ class TranslationTest extends AbstractTestCase
         $this->assertEquals('Charcoal', (string)$obj);
     }
 
-    /**
-     * @return void
-     */
-    public function testArrayGet()
+    public function testArrayGet(): void
     {
         $obj = new Translation('Charcoal', $this->localesManager());
         $this->assertEquals('Charcoal', $obj['en']);
     }
 
-    /**
-     * @return void
-     */
-    public function testArrayUnset()
+    public function testArrayUnset(): void
     {
         $obj = new Translation('Hello!', $this->localesManager());
         $this->assertTrue(isset($obj['en']));
@@ -151,102 +121,70 @@ class TranslationTest extends AbstractTestCase
         $this->assertFalse(isset($obj['en']));
     }
 
-    /**
-     * @return void
-     */
-    public function testOffsetGetThrowsException()
+    public function testOffsetGetThrowsException(): void
     {
         $this->expectException(InvalidArgumentException::class);
-        $obj = new Translation('Hello!', $this->localesManager());
-        $ret = $obj[0];
+        new Translation('Hello!', $this->localesManager());
     }
 
-    /**
-     * @return void
-     */
-    public function testOffsetGetThrowsException2()
+    public function testOffsetGetThrowsException2(): void
     {
         $this->expectException(DomainException::class);
-        $obj = new Translation('Hello!', $this->localesManager());
-        $ret = $obj['fr'];
+        new Translation('Hello!', $this->localesManager());
     }
 
-    /**
-     * @return void
-     */
-    public function testOffsetSetThrowsException()
+    public function testOffsetSetThrowsException(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $obj = new Translation('Hello!', $this->localesManager());
         $obj[0] = 'en';
     }
 
-    /**
-     * @return void
-     */
-    public function testOffsetSetThrowsException2()
+    public function testOffsetSetThrowsException2(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $obj = new Translation('Hello!', $this->localesManager());
         $obj['en'] = [];
     }
 
-    /**
-     * @return void
-     */
-    public function testOffsetExistThrowsException()
+    public function testOffsetExistThrowsException(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $obj = new Translation('Hello!', $this->localesManager());
-        isset($obj[0]);
+        $obj[0];
     }
 
-    /**
-     * @return void
-     */
-    public function testOffsetUnsetThrowsException()
+    public function testOffsetUnsetThrowsException(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $obj = new Translation('Hello!', $this->localesManager());
         unset($obj[0]);
     }
 
-    /**
-     * @return void
-     */
-    public function testInvalidValueThrowsException()
+    public function testInvalidValueThrowsException(): void
     {
         $this->expectException(InvalidArgumentException::class);
-        $obj = new Translation([ 'en' ], $this->localesManager());
+        new Translation([ 'en' ], $this->localesManager());
     }
 
-    /**
-     * @return void
-     */
-    public function testSanitize()
+    public function testSanitize(): void
     {
         $obj = new Translation('  Hello!  ', $this->localesManager());
         $obj->sanitize('trim');
         $this->assertEquals([ 'en' => 'Hello!' ], $obj->data());
     }
 
-    /**
-     * @return void
-     */
-    public function testEach()
+    public function testEach(): void
     {
         $obj = new Translation('  Hello!  ', $this->localesManager());
-        $obj->each(function ($val, $lang) {
+        $obj->each(function ($val, $lang): string {
             $this->assertEquals('en', $lang);
             return trim($val);
         });
         $this->assertEquals([ 'en' => 'Hello!' ], $obj->data());
     }
 
-    /**
-     * @return void
-     */
-    public function testJsonSerialize()
+    public function testJsonSerialize(): void
     {
         $obj = new Translation('Hello!', $this->localesManager());
         $ret = json_encode($obj);

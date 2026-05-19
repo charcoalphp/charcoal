@@ -14,9 +14,10 @@ use Charcoal\Tests\AssertionsTrait;
 
 /**
  * Test data merging in AbstractConfig
- *
- * @coversDefaultClass \Charcoal\Config\AbstractConfig
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\Charcoal\Config\AbstractConfig::class)]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Config\AbstractConfig::class, 'offsetReplace()')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Config\AbstractConfig::class, 'merge()')]
 class ConfigArrayMergeTest extends AbstractConfigTestCase
 {
     use AssertionsTrait;
@@ -28,8 +29,6 @@ class ConfigArrayMergeTest extends AbstractConfigTestCase
 
     /**
      * Create a concrete GenericConfig instance.
-     *
-     * @return void
      */
     protected function setUp(): void
     {
@@ -41,23 +40,18 @@ class ConfigArrayMergeTest extends AbstractConfigTestCase
      *
      * @param  mixed $data      Data to pre-populate the object.
      * @param  array $delegates Delegates to pre-populate the object.
-     * @return GenericConfig
      */
-    public function createConfig($data = null, array $delegates = null)
+    #[\Override]
+    public function createConfig($data = null, ?array $delegates = null): \Charcoal\Config\GenericConfig
     {
         return new GenericConfig($data, $delegates);
     }
 
     // =========================================================================
-
     /**
      * Test {@see AbstractEntity::merge()} with array.
-     *
-     * @covers ::offsetReplace()
-     * @covers ::merge()
-     * @return void
      */
-    public function testMergeDataWithArray()
+    public function testMergeDataWithArray(): void
     {
         $cfg = $this->cfg;
 
@@ -74,12 +68,8 @@ class ConfigArrayMergeTest extends AbstractConfigTestCase
 
     /**
      * Test {@see AbstractEntity::merge()} with another Config instance.
-     *
-     * @covers ::offsetReplace()
-     * @covers ::merge()
-     * @return void
      */
-    public function testMergeDataWithConfigInstance()
+    public function testMergeDataWithConfigInstance(): void
     {
         $cfg = $this->cfg;
 
@@ -95,10 +85,8 @@ class ConfigArrayMergeTest extends AbstractConfigTestCase
 
     /**
      * Gets the intiial Config data.
-     *
-     * @return array
      */
-    public function getInitialConfigData()
+    public function getInitialConfigData(): array
     {
         return [
             'name'     => 'vendor/my-cool-app',
@@ -116,10 +104,8 @@ class ConfigArrayMergeTest extends AbstractConfigTestCase
 
     /**
      * Gets the mutations for the Config.
-     *
-     * @return array
      */
-    public function getMutatedConfigData()
+    public function getMutatedConfigData(): array
     {
         return [
             'name'     => 'vendor/my-awesome-app',
@@ -138,10 +124,8 @@ class ConfigArrayMergeTest extends AbstractConfigTestCase
 
     /**
      * Gets the expected Config data.
-     *
-     * @return array
      */
-    public function getExpectedConfigData()
+    public function getExpectedConfigData(): array
     {
         return [
             'name'     => 'vendor/my-awesome-app',
@@ -159,15 +143,11 @@ class ConfigArrayMergeTest extends AbstractConfigTestCase
     }
 
     // =========================================================================
-
     /**
      * Asserts that the container assigns a value to the endpoint
      * {@see SeparatorAwareTrait::setWithSeparator() of the keypath}.
-     *
-     * @covers ::offsetReplace()
-     * @return void
      */
-    public function testOffsetMergeOnEndKeyPath()
+    public function testOffsetMergeOnEndKeyPath(): void
     {
         $cfg = $this->cfg;
 
@@ -185,11 +165,8 @@ class ConfigArrayMergeTest extends AbstractConfigTestCase
     /**
      * Asserts that the container assigns a value to the endpoint of a nonexistent midpoint
      * {@see SeparatorAwareTrait::setWithSeparator() in the keypath}.
-     *
-     * @covers ::offsetReplace()
-     * @return void
      */
-    public function testOffsetMergeOnNonexistentMidKeyPath()
+    public function testOffsetMergeOnNonexistentMidKeyPath(): void
     {
         $cfg = $this->cfg;
 
@@ -206,22 +183,13 @@ class ConfigArrayMergeTest extends AbstractConfigTestCase
     }
 
     // =========================================================================
-
-    /**
-     * @covers ::offsetReplace()
-     * @return void
-     */
-    public function testOffsetMergeIgnoredOnZeroLengthKey()
+    public function testOffsetMergeIgnoredOnZeroLengthKey(): void
     {
         $this->cfg->offsetReplace('', 'waldo');
         $this->assertNull($this->cfg['']);
     }
 
-    /**
-     * @covers ::offsetReplace()
-     * @return void
-     */
-    public function testOffsetMergeIgnoredOnUnderscoreKey()
+    public function testOffsetMergeIgnoredOnUnderscoreKey(): void
     {
         $this->cfg->offsetReplace('_', 'waldo');
         $this->assertNull($this->cfg['_']);
@@ -229,11 +197,8 @@ class ConfigArrayMergeTest extends AbstractConfigTestCase
 
     /**
      * Asserts that a numeric key throws an exception, when merging a value.
-     *
-     * @covers ::offsetReplace()
-     * @return void
      */
-    public function testOffsetMergeThrowsExceptionOnNumericKey()
+    public function testOffsetMergeThrowsExceptionOnNumericKey(): void
     {
         $this->expectExceptionMessage("Entity array access only supports non-numeric keys");
         $this->expectException(InvalidArgumentException::class);

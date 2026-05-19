@@ -23,24 +23,22 @@ class PhpLoader extends AbstractLoader implements LoaderInterface
      *
      * @todo   Add support for custom delimiters.
      * @param  string $ident The template being evaluated.
-     * @return boolean
      */
+    #[\Override]
     protected function isTemplateString(string $ident): bool
     {
-        return strpos($ident, '<?') !== false || parent::isTemplateString($ident);
+        return str_contains($ident, '<?') || parent::isTemplateString($ident);
     }
 
     /**
      * Convert an identifier to a file path.
      *
      * @param string $ident The identifier to convert.
-     * @return string
      */
     protected function filenameFromIdent(string $ident): string
     {
         $filename = str_replace([ '\\' ], '.', $ident);
-        $filename .= '.php';
 
-        return $filename;
+        return $filename . '.php';
     }
 }

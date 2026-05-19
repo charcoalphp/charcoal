@@ -142,17 +142,13 @@ class Attachment extends Content implements AttachableInterface
 
     /**
      * The base URI.
-     *
-     * @var UriInterface|null
      */
-    private $baseUrl;
+    private ?\Psr\Http\Message\UriInterface $baseUrl = null;
 
     /**
      * Whether the attachment acts like a presenter (TRUE) or data model (FALSE).
-     *
-     * @var boolean
      */
-    private $presentable = false;
+    private bool $presentable = false;
 
     /**
      * The attachment's parent container instance.
@@ -170,10 +166,8 @@ class Attachment extends Content implements AttachableInterface
 
     /**
      * Store the collection loader for the current class.
-     *
-     * @var CollectionLoader
      */
-    private $collectionLoader;
+    private ?\Charcoal\Loader\CollectionLoader $collectionLoader = null;
 
     /**
      * @var ModelInterface $presenter
@@ -185,11 +179,11 @@ class Attachment extends Content implements AttachableInterface
      *
      * @param array $data Dependencies.
      */
-    public function __construct(array $data = null)
+    public function __construct(?array $data = null)
     {
         parent::__construct($data);
 
-        if (is_callable([ $this, 'defaultData' ])) {
+        if (is_callable($this->defaultData(...))) {
             $defaultData = $this->metadata()->defaultData();
             if ($defaultData) {
                 $this->setData($defaultData);
@@ -203,6 +197,7 @@ class Attachment extends Content implements AttachableInterface
      * @param  Container $container A dependencies container instance.
      * @return void
      */
+    #[\Override]
     protected function setDependencies(Container $container)
     {
         parent::setDependencies($container);
@@ -217,7 +212,7 @@ class Attachment extends Content implements AttachableInterface
      * @param  boolean $presenter The presenter flag.
      * @return boolean Returns TRUE if model is used for presentation; FALSE for editing.
      */
-    public function isPresentable($presenter = null)
+    public function isPresentable($presenter = null): bool
     {
         if (is_bool($presenter)) {
             $this->presentable = $presenter;
@@ -245,10 +240,8 @@ class Attachment extends Content implements AttachableInterface
 
     /**
      * Determine if the attachment belongs to a container.
-     *
-     * @return boolean
      */
-    public function hasContainerObj()
+    public function hasContainerObj(): bool
     {
         return boolval($this->containerObj);
     }
@@ -268,9 +261,8 @@ class Attachment extends Content implements AttachableInterface
      *
      * @param  AttachmentContainerInterface|null $obj The container object or NULL.
      * @throws InvalidArgumentException If the given object is invalid.
-     * @return Attachment
      */
-    public function setContainerObj($obj)
+    public function setContainerObj($obj): static
     {
         if ($obj === null) {
             $this->containerObj = null;
@@ -282,14 +274,14 @@ class Attachment extends Content implements AttachableInterface
             throw new InvalidArgumentException(sprintf(
                 'Container object must be an instance of %s; received %s',
                 AttachmentContainerInterface::class,
-                (is_object($obj) ? get_class($obj) : gettype($obj))
+                (get_debug_type($obj))
             ));
         }
 
         if (!$obj->id()) {
             throw new InvalidArgumentException(sprintf(
                 'Container object must have an ID.',
-                (is_object($obj) ? get_class($obj) : gettype($obj))
+                (get_debug_type($obj))
             ));
         }
 
@@ -319,7 +311,7 @@ class Attachment extends Content implements AttachableInterface
      * @throws InvalidArgumentException If provided argument is not of type 'string'.
      * @return string
      */
-    public function setType($type)
+    public function setType($type): static
     {
         if (!is_string($type)) {
             throw new InvalidArgumentException('Attachment type must be a string.');
@@ -354,7 +346,7 @@ class Attachment extends Content implements AttachableInterface
      */
     public function microType()
     {
-        $classname = get_called_class();
+        $classname = static::class;
 
         if (!isset(static::$resolvedType[$classname])) {
             $reflect = new ReflectionClass($this);
@@ -367,10 +359,8 @@ class Attachment extends Content implements AttachableInterface
 
     /**
      * Retrieve the image attachment type.
-     *
-     * @return string
      */
-    public function imageType()
+    public function imageType(): string
     {
         return self::IMAGE_TYPE;
     }
@@ -384,7 +374,7 @@ class Attachment extends Content implements AttachableInterface
     {
         $heading = $this->renderTemplate((string)$this->heading);
 
-        if (!$heading) {
+        if ($heading === '' || $heading === '0') {
             $heading = $this->translator()->translation('{{ objType }} #{{ id }}', [
                 '{{ objType }}' => $this->typeLabel(),
                 '{{ id }}'      => $this->id()
@@ -410,7 +400,7 @@ class Attachment extends Content implements AttachableInterface
      * @param  string $template The attachment heading.
      * @return Attachment Chainable
      */
-    public function setHeading($template)
+    public function setHeading($template): static
     {
         $this->heading = $this->translator()->translation($template);
 
@@ -422,7 +412,7 @@ class Attachment extends Content implements AttachableInterface
      *
      * @return Translation|string|null
      */
-    public function preview()
+    public function preview(): string
     {
         if ($this->preview) {
             return $this->renderTemplate((string)$this->preview);
@@ -447,7 +437,7 @@ class Attachment extends Content implements AttachableInterface
      * @param  string $template The attachment preview.
      * @return Attachment Chainable
      */
-    public function setPreview($template)
+    public function setPreview($template): static
     {
         $this->preview = $this->translator()->translation($template);
 
@@ -456,90 +446,72 @@ class Attachment extends Content implements AttachableInterface
 
     /**
      * Determine if the attachment type is an image.
-     *
-     * @return boolean
      */
-    public function isImage()
+    public function isImage(): bool
     {
         return ($this->microType() === 'image');
     }
 
     /**
      * Determine if the attachment type is an embed object.
-     *
-     * @return boolean
      */
-    public function isEmbed()
+    public function isEmbed(): bool
     {
         return ($this->microType() === 'embed');
     }
 
     /**
      * Determine if the attachment type is a video.
-     *
-     * @return boolean
      */
-    public function isVideo()
+    public function isVideo(): bool
     {
         return ($this->microType() === 'video');
     }
 
     /**
      * Determine if the attachment type is a file attachment.
-     *
-     * @return boolean
      */
-    public function isFile()
+    public function isFile(): bool
     {
         return ($this->microType() === 'file');
     }
 
     /**
      * Determine if the attachment type is a text-area.
-     *
-     * @return boolean
      */
-    public function isText()
+    public function isText(): bool
     {
         return ($this->microType() === 'text');
     }
 
     /**
      * Determine if the attachment type is an image gallery.
-     *
-     * @return boolean
      */
-    public function isGallery()
+    public function isGallery(): bool
     {
         return ($this->microType() === 'gallery');
     }
 
     /**
      * Determine if the attachment type is an accordion.
-     *
-     * @return boolean
      */
-    public function isAccordion()
+    public function isAccordion(): bool
     {
         return ($this->microType() === 'accordion');
     }
 
     /**
      * Determine if the attachment type is a link.
-     *
-     * @return boolean
      */
-    public function isLink()
+    public function isLink(): bool
     {
         return ($this->microType() === 'link');
     }
 
     /**
      * Determine if this attachment is a container.
-     *
-     * @return boolean
      */
-    public function isAttachmentContainer()
+    public function isAttachmentContainer(): bool
     {
         return ($this instanceof AttachmentContainerInterface);
     }
@@ -553,9 +525,9 @@ class Attachment extends Content implements AttachableInterface
      * @param  boolean $show Show (TRUE) or hide (FALSE) the title.
      * @return UiItemInterface Chainable
      */
-    public function setShowTitle($show)
+    public function setShowTitle($show): static
     {
-        $this->showTitle = !!$show;
+        $this->showTitle = (bool) $show;
 
         return $this;
     }
@@ -564,9 +536,8 @@ class Attachment extends Content implements AttachableInterface
      * Set the attachment's title.
      *
      * @param  string $title The object title.
-     * @return self
      */
-    public function setTitle($title)
+    public function setTitle($title): static
     {
         $this->title = $this->translator()->translation($title);
 
@@ -577,9 +548,8 @@ class Attachment extends Content implements AttachableInterface
      * Set the attachment's sub-title.
      *
      * @param  string $title The object title.
-     * @return self
      */
-    public function setSubtitle($title)
+    public function setSubtitle($title): static
     {
         $this->subtitle = $this->translator()->translation($title);
 
@@ -590,9 +560,8 @@ class Attachment extends Content implements AttachableInterface
      * Set the attachment's description.
      *
      * @param  string $description The description of the object.
-     * @return self
      */
-    public function setDescription($description)
+    public function setDescription($description): static
     {
         $this->description = $this->translator()->translation($description);
 
@@ -609,9 +578,8 @@ class Attachment extends Content implements AttachableInterface
      * Set the attachment's keywords.
      *
      * @param  string|string[] $keywords One or more entries.
-     * @return self
      */
-    public function setKeywords($keywords)
+    public function setKeywords($keywords): static
     {
         $this->keywords = $keywords;
 
@@ -622,9 +590,8 @@ class Attachment extends Content implements AttachableInterface
      * Set the path to the thumbnail associated with the object.
      *
      * @param  string $path A path to an image.
-     * @return self
      */
-    public function setThumbnail($path)
+    public function setThumbnail($path): static
     {
         $this->thumbnail = $this->translator()->translation($path);
 
@@ -635,9 +602,8 @@ class Attachment extends Content implements AttachableInterface
      * Set the path to the attached file.
      *
      * @param  string $path A path to a file.
-     * @return self
      */
-    public function setFile($path)
+    public function setFile($path): static
     {
         $this->file = $this->translator()->translation($path);
 
@@ -648,9 +614,8 @@ class Attachment extends Content implements AttachableInterface
      * Set the URL.
      *
      * @param  string $link An external url.
-     * @return self
      */
-    public function setLink($link)
+    public function setLink($link): static
     {
         $this->link = $this->translator()->translation($link);
 
@@ -661,9 +626,8 @@ class Attachment extends Content implements AttachableInterface
      * Set the file label.
      *
      * @param  string $label A descriptor.
-     * @return self
      */
-    public function setFileLabel($label)
+    public function setFileLabel($label): static
     {
         $this->fileLabel = $this->translator()->translation($label);
 
@@ -674,9 +638,8 @@ class Attachment extends Content implements AttachableInterface
      * Set the link label.
      *
      * @param  string $label A descriptor.
-     * @return self
      */
-    public function setLinkLabel($label)
+    public function setLinkLabel($label): static
     {
         $this->linkLabel = $this->translator()->translation($label);
 
@@ -688,9 +651,8 @@ class Attachment extends Content implements AttachableInterface
      *
      * @param  integer|float $size A file size in bytes; the one of the attached.
      * @throws InvalidArgumentException If provided argument is not of type 'integer' or 'float'.
-     * @return self
      */
-    public function setFileSize($size)
+    public function setFileSize($size): static
     {
         if ($size === null) {
             $this->fileSize = null;
@@ -711,9 +673,8 @@ class Attachment extends Content implements AttachableInterface
      * Set file extension.
      *
      * @param  string $type File extension.
-     * @return self
      */
-    public function setFileType($type)
+    public function setFileType($type): static
     {
         $this->fileType = $type;
 
@@ -725,9 +686,8 @@ class Attachment extends Content implements AttachableInterface
      *
      * @param  string $embed A URI or an HTML media element.
      * @throws InvalidArgumentException If provided argument is not of type 'string'.
-     * @return self
      */
-    public function setEmbed($embed)
+    public function setEmbed($embed): static
     {
         $this->embed = $this->translator()->translation($embed);
 
@@ -736,9 +696,8 @@ class Attachment extends Content implements AttachableInterface
 
     /**
      * @param string|\string[] $categories Category elements.
-     * @return self
      */
-    public function setCategories($categories)
+    public function setCategories($categories): static
     {
         $this->categories = $categories;
 
@@ -758,7 +717,7 @@ class Attachment extends Content implements AttachableInterface
         if (is_bool($this->showTitle)) {
             return $this->showTitle;
         } else {
-            return !!$this->title();
+            return (bool) $this->title();
         }
     }
 
@@ -847,7 +806,7 @@ class Attachment extends Content implements AttachableInterface
      *
      * @return string[]|null
      */
-    public function fileAndLink()
+    public function fileAndLink(): array
     {
         $prop  = $this->property('file');
         $files = $prop->parseValAsFileList($this['file']);
@@ -855,16 +814,15 @@ class Attachment extends Content implements AttachableInterface
 
         $items = array_merge($files, $links);
         $items = array_unique($items);
-        $items = array_values($items);
 
-        return $items;
+        return array_values($items);
     }
 
     /**
      * Basename of the associated file.
      * @return string Basename of file.
      */
-    public function basename()
+    public function basename(): string
     {
         if (!$this->file()) {
             return '';
@@ -940,9 +898,8 @@ class Attachment extends Content implements AttachableInterface
 
     /**
      * @param ModelInterface|mixed $presenter Presenter for Attachment.
-     * @return self
      */
-    public function setPresenter($presenter)
+    public function setPresenter($presenter): static
     {
         $this->presenter = $presenter;
 
@@ -951,15 +908,14 @@ class Attachment extends Content implements AttachableInterface
 
     // Events
     // =============================================================================
-
     /**
      * Event called before _deleting_ the attachment.
      *
      * @see    Charcoal\Source\StorableTrait::preDelete() For the "create" Event.
      * @see    Charcoal\Attachment\Traits\AttachmentAwareTrait::removeJoins
-     * @return boolean
      */
-    public function preDelete()
+    #[\Override]
+    public function preDelete(): bool
     {
         $joinCollection = $this->collectionLoader()
             ->reset()
@@ -976,15 +932,13 @@ class Attachment extends Content implements AttachableInterface
 
     // Utilities
     // =============================================================================
-
     /**
      * Set the base URI of the project.
      *
      * @see    \Charcoal\Admin\Support\setBaseUrl::baseUrl()
      * @param  UriInterface $uri The base URI.
-     * @return self
      */
-    protected function setBaseUrl(UriInterface $uri)
+    protected function setBaseUrl(UriInterface $uri): static
     {
         $this->baseUrl = $uri;
 
@@ -995,14 +949,13 @@ class Attachment extends Content implements AttachableInterface
      * Retrieve the base URI of the project.
      *
      * @throws RuntimeException If the base URI is missing.
-     * @return UriInterface|null
      */
-    public function baseUrl()
+    public function baseUrl(): \Psr\Http\Message\UriInterface
     {
-        if (!isset($this->baseUrl)) {
+        if (!$this->baseUrl instanceof \Psr\Http\Message\UriInterface) {
             throw new RuntimeException(sprintf(
                 'The base URI is not defined for [%s]',
-                get_class($this)
+                static::class
             ));
         }
 
@@ -1024,9 +977,9 @@ class Attachment extends Content implements AttachableInterface
         $uri = strval($uri);
         if ($this->isRelativeUri($uri)) {
             $parts = parse_url($uri);
-            $path  = isset($parts['path']) ? $parts['path'] : '';
-            $query = isset($parts['query']) ? $parts['query'] : '';
-            $hash  = isset($parts['fragment']) ? $parts['fragment'] : '';
+            $path  = $parts['path'] ?? '';
+            $query = $parts['query'] ?? '';
+            $hash  = $parts['fragment'] ?? '';
 
             return $this->baseUrl()->withPath($path)->withQuery($query)->withFragment($hash);
         }
@@ -1040,7 +993,7 @@ class Attachment extends Content implements AttachableInterface
      * @param  string $text A string to parse relative URIs.
      * @return UriInterface|null
      */
-    protected function resolveUrls($text)
+    protected function resolveUrls($text): ?string
     {
         static $search;
 
@@ -1050,20 +1003,16 @@ class Attachment extends Content implements AttachableInterface
 
             $search = sprintf(
                 '(?<=%1$s=")(?!%2$s)(\S+)(?=")',
-                implode('="|', array_map('preg_quote', $attr, [ '~' ])),
-                implode('|', array_map('preg_quote', $scheme, [ '~' ]))
+                implode('="|', array_map(preg_quote(...), $attr, [ '~' ])),
+                implode('|', array_map(preg_quote(...), $scheme, [ '~' ]))
             );
         }
 
-        $text = preg_replace_callback(
+        return preg_replace_callback(
             '~' . $search . '~i',
-            function ($matches) {
-                return $this->createAbsoluteUrl($matches[1]);
-            },
+            fn($matches) => $this->createAbsoluteUrl($matches[1]),
             $text
         );
-
-        return $text;
     }
 
     /**
@@ -1082,21 +1031,15 @@ class Attachment extends Content implements AttachableInterface
         if (\parse_url($uri, PHP_URL_SCHEME)) {
             return false;
         }
-
-        if (\preg_match('/^([\/\#\?]|[a-z][a-z0-9+.-]*:)/i', $uri)) {
-            return false;
-        }
-
-        return true;
+        return !\preg_match('/^([\/\#\?]|[a-z][a-z0-9+.-]*:)/i', $uri);
     }
 
     /**
      * Set a model collection loader.
      *
      * @param  CollectionLoader $loader The collection loader.
-     * @return self
      */
-    protected function setCollectionLoader(CollectionLoader $loader)
+    protected function setCollectionLoader(CollectionLoader $loader): static
     {
         $this->collectionLoader = $loader;
 
@@ -1107,14 +1050,13 @@ class Attachment extends Content implements AttachableInterface
      * Retrieve the model collection loader.
      *
      * @throws Exception If the collection loader was not previously set.
-     * @return CollectionLoader
      */
-    public function collectionLoader()
+    public function collectionLoader(): \Charcoal\Loader\CollectionLoader
     {
-        if (!isset($this->collectionLoader)) {
+        if (!$this->collectionLoader instanceof \Charcoal\Loader\CollectionLoader) {
             throw new Exception(sprintf(
                 'Collection Loader is not defined for "%s"',
-                get_class($this)
+                static::class
             ));
         }
 

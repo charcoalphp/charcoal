@@ -19,28 +19,23 @@ class ApiModule extends AbstractModule
 {
     public const BASE_PATH = '/email/v1';
 
-    /**
-     * @return self
-     */
-    public function setUp()
+    #[\Override]
+    public function setUp(): static
     {
         $this->setupPublicRoutes();
 
         return $this;
     }
 
-    /**
-     * @return void
-     */
-    private function setupPublicRoutes()
+    private function setupPublicRoutes(): void
     {
         $container = $this->app()->getContainer();
 
-        $this->app()->group(self::BASE_PATH, function () use ($container) {
+        $this->app()->group(self::BASE_PATH, function () use ($container): void {
 
             $group = $this;
 
-            $group->get('/link/{linkId}', function (Request $request, Response $response, array $args) use ($container) {
+            $group->get('/link/{linkId}', function (Request $request, Response $response, array $args) use ($container): \Psr\Http\Message\ResponseInterface {
                 $action = new LinkAction(
                     $args['linkId'],
                     $container['email/tracker'],
@@ -49,7 +44,7 @@ class ApiModule extends AbstractModule
                 return $action($request, $response);
             });
 
-            $group->get('/open/{emailId}[.png]', function (Request $request, Response $response, array $args) use ($container) {
+            $group->get('/open/{emailId}[.png]', function (Request $request, Response $response, array $args) use ($container): \Psr\Http\Message\ResponseInterface {
                 $action = new OpenAction(
                     $args['emailId'],
                     $container['email/tracker']

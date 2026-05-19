@@ -17,15 +17,11 @@ class NewsCategoryTest extends AbstractTestCase
 
     /**
      * Tested Class.
-     *
-     * @var NewsCategory
      */
-    private $obj;
+    private \Charcoal\Cms\NewsCategory $obj;
 
     /**
      * Set up the test.
-     *
-     * @return void
      */
     protected function setUp(): void
     {
@@ -34,10 +30,7 @@ class NewsCategoryTest extends AbstractTestCase
         $this->obj = new NewsCategory($dependencies);
     }
 
-    /**
-     * @return void
-     */
-    public function testItemType()
+    public function testItemType(): void
     {
         $this->assertEquals(News::class, $this->obj->itemType());
     }

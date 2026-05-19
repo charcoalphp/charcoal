@@ -64,7 +64,7 @@ trait SeparatorAwareTrait
      * @param  string $key The key-path to check.
      * @return boolean TRUE if $key exists and has a value other than NULL, FALSE otherwise.
      */
-    final protected function hasWithSeparator($key)
+    final protected function hasWithSeparator($key): bool
     {
         $structure = $this;
         $splitKeys = explode($this->separator, $key);

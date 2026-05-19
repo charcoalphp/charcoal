@@ -29,10 +29,8 @@ trait MacroTrait
 
     /**
      * Legacy getter.
-
-     * @return string
      */
-    public function foo()
+    public function foo(): string
     {
         return 'foo is '.$this->foo;
     }

@@ -35,7 +35,7 @@ trait RevisionableTrait
      */
     public function setRevisionEnabled($enabled)
     {
-        $this->revisionEnabled = !!$enabled;
+        $this->revisionEnabled = (bool) $enabled;
         return $this;
     }
 
@@ -49,18 +49,14 @@ trait RevisionableTrait
 
     /**
      * Create a revision collection loader.
-     *
-     * @return CollectionLoader
      */
-    public function createRevisionObjectCollectionLoader()
+    public function createRevisionObjectCollectionLoader(): \Charcoal\Loader\CollectionLoader
     {
-        $loader = new CollectionLoader([
+        return new CollectionLoader([
             'logger'  => $this->logger,
             'factory' => $this->modelFactory(),
             'model'   => $this->getRevisionObjectPrototype(),
         ]);
-
-        return $loader;
     }
 
     /**
@@ -70,9 +66,7 @@ trait RevisionableTrait
      */
     public function createRevisionObject()
     {
-        $rev = $this->modelFactory()->create($this->getObjectRevisionClass());
-
-        return $rev;
+        return $this->modelFactory()->create($this->getObjectRevisionClass());
     }
 
     /**
@@ -82,9 +76,7 @@ trait RevisionableTrait
      */
     public function getRevisionObjectPrototype()
     {
-        $proto = $this->modelFactory()->get($this->getObjectRevisionClass());
-
-        return $proto;
+        return $this->modelFactory()->get($this->getObjectRevisionClass());
     }
 
     /**
@@ -149,9 +141,8 @@ trait RevisionableTrait
     public function latestRevision()
     {
         $rev = $this->createRevisionObject();
-        $rev = $rev->lastObjectRevision($this);
 
-        return $rev;
+        return $rev->lastObjectRevision($this);
     }
 
     /**
@@ -165,9 +156,8 @@ trait RevisionableTrait
     public function revisionNum($revNum)
     {
         $rev = $this->createRevisionObject();
-        $rev = $rev->objectRevisionNum($this, intval($revNum));
 
-        return $rev;
+        return $rev->objectRevisionNum($this, intval($revNum));
     }
 
     /**
@@ -176,7 +166,7 @@ trait RevisionableTrait
      * @param  callable $callback Optional object callback.
      * @return array
      */
-    public function allRevisions(callable $callback = null)
+    public function allRevisions(?callable $callback = null)
     {
         $loader = $this->createRevisionObjectCollectionLoader();
         $loader
@@ -205,7 +195,7 @@ trait RevisionableTrait
      * @throws InvalidArgumentException If revision number is invalid.
      * @return boolean Success / Failure.
      */
-    public function revertToRevision($revNum)
+    public function revertToRevision($revNum): bool
     {
         if (!$revNum) {
             throw new InvalidArgumentException(

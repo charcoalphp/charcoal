@@ -28,6 +28,7 @@ class DashboardWidget extends AdminWidget implements
      * @param Container $container The DI container.
      * @return void
      */
+    #[\Override]
     protected function setDependencies(Container $container)
     {
         parent::setDependencies($container);

@@ -19,10 +19,7 @@ use Charcoal\Tests\AbstractTestCase;
  */
 class ViewServiceProviderTest extends AbstractTestCase
 {
-    /**
-     * @return void
-     */
-    public function testProvider()
+    public function testProvider(): void
     {
         $container = new Container([
             'config' => [],
@@ -37,17 +34,14 @@ class ViewServiceProviderTest extends AbstractTestCase
         $this->assertTrue(isset($container['view']));
     }
 
-    /**
-     * @return void
-     */
-    public function testExtraViewPaths()
+    public function testExtraViewPaths(): void
     {
         $container = new Container([
             'config' => [
                 'base_path' => dirname(__DIR__, 3),
             ],
             'module/classes' => [
-                'Charcoal\\Tests\\View\\Mock\\MockModule',
+                \Charcoal\Tests\View\Mock\MockModule::class,
             ],
         ]);
 
@@ -58,10 +52,7 @@ class ViewServiceProviderTest extends AbstractTestCase
         $this->assertContains('tests/Charcoal/View/Mock/templates', $viewConfig->paths());
     }
 
-    /**
-     * @return void
-     */
-    public function testProviderTwig()
+    public function testProviderTwig(): void
     {
         $container = new Container([
             'debug' => false,
@@ -80,17 +71,14 @@ class ViewServiceProviderTest extends AbstractTestCase
         $provider->register($container);
 
         $ret = $container['view']->render('foo', [ 'foo' => 'Bar' ]);
-        $this->assertEquals('Hello Bar', trim($ret));
+        $this->assertEquals('Hello Bar', trim((string) $ret));
 
         $response = new Response();
         $ret = $container['view/renderer']->render($response, 'foo', [ 'foo' => 'Baz' ]);
         $this->assertEquals('Hello Baz', trim((string)$ret->getBody()));
     }
 
-    /**
-     * @return void
-     */
-    public function testProviderMustache()
+    public function testProviderMustache(): void
     {
         $container = new Container([
             'translator' => null,
@@ -106,17 +94,14 @@ class ViewServiceProviderTest extends AbstractTestCase
         $provider->register($container);
 
         $ret = $container['view']->render('foo', [ 'foo' => 'Bar' ]);
-        $this->assertEquals('Hello Bar', trim($ret));
+        $this->assertEquals('Hello Bar', trim((string) $ret));
 
         $response = new Response();
         $ret = $container['view/renderer']->render($response, 'foo', [ 'foo' => 'Baz' ]);
         $this->assertEquals('Hello Baz', trim((string)$ret->getBody()));
     }
 
-    /**
-     * @return void
-     */
-    public function testProviderPhp()
+    public function testProviderPhp(): void
     {
         $container = new Container([
             'config' => new AppConfig ([
@@ -131,7 +116,7 @@ class ViewServiceProviderTest extends AbstractTestCase
         $provider->register($container);
 
         $ret = $container['view']->render('foo', [ 'foo' => 'Bar' ]);
-        $this->assertEquals('Hello Bar', trim($ret));
+        $this->assertEquals('Hello Bar', trim((string) $ret));
 
         $response = new Response();
         $ret = $container['view/renderer']->render($response, 'foo', [ 'foo' => 'Baz' ]);

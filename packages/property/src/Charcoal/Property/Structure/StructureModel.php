@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Charcoal\Property\Structure;
 
 use Charcoal\Model\AbstractModel;

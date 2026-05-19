@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Charcoal\Tests\Config\Mock;
 
 // From 'charcoal-config'
@@ -13,10 +15,8 @@ class MacroConfig extends AbstractConfig
 {
     use MacroTrait;
 
-    /**
-     * @return array
-     */
-    public function defaults()
+    #[\Override]
+    public function defaults(): array
     {
         return [
             'foo' => -3,

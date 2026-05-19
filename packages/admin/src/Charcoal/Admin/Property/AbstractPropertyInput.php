@@ -33,6 +33,7 @@ abstract class AbstractPropertyInput extends AbstractProperty implements
     /**
      * @var string $inputName
      */
+    #[\Override]
     protected $inputName;
 
     /**
@@ -97,6 +98,7 @@ abstract class AbstractPropertyInput extends AbstractProperty implements
      * @param  PropertyInterface $property The property.
      * @return self
      */
+    #[\Override]
     public function setProperty(PropertyInterface $property)
     {
         parent::setProperty($property);
@@ -212,11 +214,7 @@ abstract class AbstractPropertyInput extends AbstractProperty implements
      */
     public function inputName()
     {
-        if ($this->inputName) {
-            $name = $this->inputName;
-        } else {
-            $name = $this->propertyIdent();
-        }
+        $name = $this->inputName ?: $this->propertyIdent();
 
         if ($this->p()['l10n']) {
             $name .= '[' . $this->lang() . ']';
@@ -253,11 +251,7 @@ abstract class AbstractPropertyInput extends AbstractProperty implements
     {
         $options = $this->getInputOptions();
 
-        if (isset($options[$key])) {
-            return $options[$key];
-        }
-
-        return $default;
+        return $options[$key] ?? $default;
     }
 
     /**
@@ -342,6 +336,7 @@ abstract class AbstractPropertyInput extends AbstractProperty implements
      * @throws InvalidArgumentException If the value to escape is not a string.
      * @return string
      */
+    #[\Override]
     public function escapeVal($val, array $options = [])
     {
         if (!is_string($val)) {
@@ -379,8 +374,6 @@ abstract class AbstractPropertyInput extends AbstractProperty implements
     /**
      * Overridable.
      * Makes it easier to pass InputVal options from children input types.
-     *
-     * @return array
      **/
     public function getInputValOptions(): array
     {
@@ -409,7 +402,7 @@ abstract class AbstractPropertyInput extends AbstractProperty implements
         if (!is_scalar($val)) {
             throw new UnexpectedValueException(sprintf(
                 'Property Input Value must be a string, received %s',
-                (is_object($val) ? get_class($val) : gettype($val))
+                (get_debug_type($val))
             ));
         }
 
@@ -510,7 +503,7 @@ abstract class AbstractPropertyInput extends AbstractProperty implements
     public function inputPrefix()
     {
         if ($this->inputPrefix instanceof Translation) {
-            if (isset($this->inputPrefix->isRendered) && $this->inputPrefix->isRendered === false) {
+            if (property_exists($this->inputPrefix, 'isRendered') && $this->inputPrefix->isRendered !== null && $this->inputPrefix->isRendered === false) {
                 $this->inputPrefix = $this->renderTranslatableTemplate($this->inputPrefix);
             }
 
@@ -561,7 +554,7 @@ abstract class AbstractPropertyInput extends AbstractProperty implements
     public function inputSuffix()
     {
         if ($this->inputSuffix instanceof Translation) {
-            if (isset($this->inputSuffix->isRendered) && $this->inputSuffix->isRendered === false) {
+            if (property_exists($this->inputSuffix, 'isRendered') && $this->inputSuffix->isRendered !== null && $this->inputSuffix->isRendered === false) {
                 $this->inputSuffix = $this->renderTranslatableTemplate($this->inputSuffix);
             }
 
@@ -578,13 +571,7 @@ abstract class AbstractPropertyInput extends AbstractProperty implements
      */
     public function hidden()
     {
-        if ($this->p()['l10n']) {
-            if ($this->lang() != $this->translator()->getLocale()) {
-                return true;
-            }
-        }
-
-        return false;
+        return $this->p()['l10n'] && $this->lang() != $this->translator()->getLocale();
     }
 
     /**
@@ -593,7 +580,7 @@ abstract class AbstractPropertyInput extends AbstractProperty implements
      */
     public function setReadOnly($readOnly)
     {
-        $this->readOnly = !!$readOnly;
+        $this->readOnly = (bool) $readOnly;
         return $this;
     }
 
@@ -611,7 +598,7 @@ abstract class AbstractPropertyInput extends AbstractProperty implements
      */
     public function setRequired($required)
     {
-        $this->required = !!$required;
+        $this->required = (bool) $required;
         return $this;
     }
 
@@ -629,7 +616,7 @@ abstract class AbstractPropertyInput extends AbstractProperty implements
      */
     public function setDisabled($disabled)
     {
-        $this->disabled = !!$disabled;
+        $this->disabled = (bool) $disabled;
         return $this;
     }
 
@@ -689,7 +676,7 @@ abstract class AbstractPropertyInput extends AbstractProperty implements
         }
 
         if ($this->placeholder instanceof Translation) {
-            if (isset($this->placeholder->isRendered) && $this->placeholder->isRendered === false) {
+            if (property_exists($this->placeholder, 'isRendered') && $this->placeholder->isRendered !== null && $this->placeholder->isRendered === false) {
                 $this->placeholder = $this->renderTranslatableTemplate($this->placeholder);
             }
 
@@ -721,7 +708,7 @@ abstract class AbstractPropertyInput extends AbstractProperty implements
         $options = (JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 
         if ($this->debug()) {
-            $options = ($options | JSON_PRETTY_PRINT);
+            $options |= JSON_PRETTY_PRINT;
         }
 
         return json_encode($this->controlDataForJs(), $options);

@@ -14,17 +14,13 @@ class ActionRouteTest extends AbstractTestCase
 {
     /**
      * Tested Class.
-     *
-     * @var ActionRoute
      */
-    private $obj;
+    private \Charcoal\App\Route\ActionRoute $obj;
 
     /**
      * Store the service container.
-     *
-     * @var Container
      */
-    private $container;
+    private ?\Pimple\Container $container = null;
 
     /**
      * Set up the test.
@@ -39,19 +35,17 @@ class ActionRouteTest extends AbstractTestCase
         ]);
     }
 
-    public function testConstructor()
+    public function testConstructor(): void
     {
         $this->assertInstanceOf(ActionRoute::class, $this->obj);
     }
 
     /**
      * Set up the service container.
-     *
-     * @return Container
      */
-    private function container()
+    private function container(): \Pimple\Container
     {
-        if ($this->container === null) {
+        if (!$this->container instanceof \Pimple\Container) {
             $container = new Container();
             $containerProvider = new ContainerProvider();
             $containerProvider->registerLogger($container);

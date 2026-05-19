@@ -69,14 +69,13 @@ trait ObjectContainerTrait
 
     /**
      * @throws Exception If the model factory was not set before being accessed.
-     * @return FactoryInterface
      */
-    protected function modelFactory()
+    protected function modelFactory(): FactoryInterface
     {
         if ($this->modelFactory === null) {
             throw new Exception(sprintf(
                 'Model factory not set for %s',
-                get_class($this)
+                $this::class
             ));
         }
         return $this->modelFactory;
@@ -94,7 +93,7 @@ trait ObjectContainerTrait
         if (!is_string($objType)) {
             throw new InvalidArgumentException(sprintf(
                 'Object type must be a string, received %s.',
-                (is_object($objType) ? get_class($objType) : gettype($objType))
+                (get_debug_type($objType))
             ));
         }
 
@@ -125,7 +124,7 @@ trait ObjectContainerTrait
         if (!is_scalar($objId)) {
             throw new InvalidArgumentException(sprintf(
                 'Object ID must be a string or numerical value, received %s.',
-                (is_object($objId) ? get_class($objId) : gettype($objId))
+                (get_debug_type($objId))
             ));
         }
 
@@ -151,7 +150,7 @@ trait ObjectContainerTrait
      *
      * @return string Escaped ID.
      */
-    public function objIdWithSlashes()
+    public function objIdWithSlashes(): string
     {
         return addslashes($this->objId());
     }
@@ -198,10 +197,8 @@ trait ObjectContainerTrait
 
     /**
      * Determine if the class has a concrete object.
-     *
-     * @return boolean
      */
-    public function hasObj()
+    public function hasObj(): bool
     {
         return ($this->obj() && $this->obj()->id());
     }
@@ -216,11 +213,7 @@ trait ObjectContainerTrait
         if ($this->obj === null) {
             $this->obj = $this->createOrLoadObj();
 
-            if ($this->obj instanceof ModelInterface) {
-                $this->objId = $this->obj->id();
-            } else {
-                $this->objId = null;
-            }
+            $this->objId = $this->obj instanceof ModelInterface ? $this->obj->id() : null;
         }
 
         return $this->obj;
@@ -255,7 +248,7 @@ trait ObjectContainerTrait
         if (empty($cloneId)) {
             throw new Exception(sprintf(
                 '%1$s cannot clone object. Clone ID missing from request.',
-                get_class($this)
+                $this::class
             ));
         }
 
@@ -285,7 +278,7 @@ trait ObjectContainerTrait
         if (empty($bpId)) {
             throw new Exception(sprintf(
                 '%1$s cannot create object from blueprint. Blueprint ID missing from request.',
-                get_class($this)
+                $this::class
             ));
         }
 
@@ -320,30 +313,28 @@ trait ObjectContainerTrait
                 if ($objBaseClass) {
                     $message = sprintf(
                         '[%1$s] can not create object: Object type [%2$s] does not match [%3$s]',
-                        get_class($this),
+                        $this::class,
                         $objType,
                         $objBaseClass
                     );
                 } else {
                     $message = sprintf(
                         '[%1$s] can not create object: Invalid object type [%2$s]',
-                        get_class($this),
+                        $this::class,
                         $objType
                     );
                 }
             } else {
                 $message = sprintf(
                     '[%1$s] can not create object: Missing object type',
-                    get_class($this)
+                    $this::class
                 );
             }
 
             throw new Exception($message);
         }
 
-        $obj = $this->modelFactory()->create($objType);
-
-        return $obj;
+        return $this->modelFactory()->create($objType);
     }
 
     /**
@@ -377,16 +368,15 @@ trait ObjectContainerTrait
             }
 
             return $this->validateObjBaseClass($this->proto());
-        } catch (Exception $e) {
+        } catch (Exception) {
             return false;
         }
     }
 
     /**
      * @param mixed $obj Object to validate.
-     * @return boolean
      */
-    protected function validateObjBaseClass($obj)
+    protected function validateObjBaseClass($obj): bool
     {
         $objBaseClass = $this->objBaseClass();
         if (!$objBaseClass) {
@@ -396,7 +386,7 @@ trait ObjectContainerTrait
 
         try {
             return ($obj instanceof $objBaseClass);
-        } catch (Exception $e) {
+        } catch (Exception) {
             return false;
         }
     }
@@ -409,7 +399,7 @@ trait ObjectContainerTrait
      */
     protected function getSingularLabelFromObj(ModelInterface $obj)
     {
-        $key = get_class($obj);
+        $key = $obj::class;
 
         if (isset(static::$labelCache[$key])) {
             return static::$labelCache[$key];
@@ -425,11 +415,7 @@ trait ObjectContainerTrait
             $label = null;
         }
 
-        if (is_array($label)) {
-            $label = reset($label);
-        } else {
-            $label = (new ReflectionClass($obj))->getShortName();
-        }
+        $label = is_array($label) ? reset($label) : new ReflectionClass($obj)->getShortName();
 
         static::$labelCache[$key] = $label;
 
@@ -453,7 +439,7 @@ trait ObjectContainerTrait
             return false;
         }
 
-        $key = get_class($obj);
+        $key = $obj::class;
 
         if (isset(static::$objRenderableCache[$key])) {
             return static::$objRenderableCache[$key];

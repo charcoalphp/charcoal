@@ -17,19 +17,10 @@ use Charcoal\Tests\AbstractTestCase;
  */
 class MarkdownHelpersTest extends AbstractTestCase
 {
-    /**
-     * @var MarkdownHelpers
-     */
-    private $obj;
+    private \Charcoal\View\Mustache\MarkdownHelpers $obj;
 
-    /**
-     * @var MustacheEngine
-     */
-    private $mustache;
+    private \Mustache_Engine $mustache;
 
-    /**
-     * @return void
-     */
     public function setUp(): void
     {
         $parsedown = new Parsedown();
@@ -42,10 +33,7 @@ class MarkdownHelpersTest extends AbstractTestCase
         ]);
     }
 
-    /**
-     * @return void
-     */
-    public function testMarkdown()
+    public function testMarkdown(): void
     {
         $template = $this->mustache->loadTemplate(
             '{{# markdown }}**test**{{/ markdown }}'

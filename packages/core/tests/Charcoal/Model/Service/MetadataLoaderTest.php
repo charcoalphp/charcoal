@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Charcoal\Tests\Service;
 
 // From 'charcoal-core'
@@ -18,9 +20,6 @@ class MetadataLoaderTest extends AbstractTestCase
      */
     public $obj;
 
-    /**
-     * @return void
-     */
     protected function setUp(): void
     {
         $container = $this->getContainer();
@@ -33,10 +32,7 @@ class MetadataLoaderTest extends AbstractTestCase
         ]);
     }
 
-    /**
-     * @return void
-     */
-    public function testLoadData()
+    public function testLoadData(): void
     {
         $this->assertInstanceOf(MetadataLoader::class, $this->obj);
         //$ret = $this->obj->load('test', $this->);

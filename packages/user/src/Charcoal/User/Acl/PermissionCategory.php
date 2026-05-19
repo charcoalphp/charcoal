@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Charcoal\User\Acl;
 
 // From 'charcoal-object'
@@ -21,9 +23,8 @@ class PermissionCategory extends Content implements CategoryInterface
 
     /**
      * @param mixed $name The news category name (localized).
-     * @return self
      */
-    public function setName($name)
+    public function setName($name): static
     {
         $this->name = $this->translator()->translation($name);
         return $this;
@@ -37,10 +38,7 @@ class PermissionCategory extends Content implements CategoryInterface
         return $this->name;
     }
 
-    /**
-     * @return array
-     */
-    public function loadCategoryItems()
+    public function loadCategoryItems(): array
     {
         return [];
     }

@@ -16,10 +16,8 @@ class SectionRouteTest extends AbstractRouteTestCase
     /**
      * Asserts that `SectionRoute::__invoke()` method returns an HTTP Response object
      * with a 404 status code if the path does not resolve to any routable model.
-     *
-     * @return void
      */
-    public function testInvokeOnNonexistentModel()
+    public function testInvokeOnNonexistentModel(): void
     {
         $container = $this->getContainer();
         $router    = $this->createRouter([
@@ -43,10 +41,8 @@ class SectionRouteTest extends AbstractRouteTestCase
      *
      * The "config.view.defaultController" option ensures the "template/factory" service
      * does not throw an Exception when a model's template controller can not be found.
-     *
-     * @return void
      */
-    public function testInvokeOnExistingModelWithMissingTemplateController()
+    public function testInvokeOnExistingModelWithMissingTemplateController(): void
     {
         $this->insertMockRoutableContextObjects([
             'templateIdent' => 'nonexistent',
@@ -70,10 +66,8 @@ class SectionRouteTest extends AbstractRouteTestCase
     /**
      * Asserts that `SectionRoute::__invoke()` method returns an HTTP Response object
      * with a 500 status code if the resolved model does not have a template identifier.
-     *
-     * @return void
      */
-    public function testInvokeOnExistingModelWithoutTemplateIdent()
+    public function testInvokeOnExistingModelWithoutTemplateIdent(): void
     {
         $this->insertMockRoutableContextObjects([
             'templateIdent' => '',
@@ -97,10 +91,8 @@ class SectionRouteTest extends AbstractRouteTestCase
     /**
      * Asserts that `SectionRoute::__invoke()` method returns an HTTP Response object
      * with a 500 status code if the resolved model does not have a rendered template view.
-     *
-     * @return void
      */
-    public function testInvokeOnExistingModelWithBadTemplateIdent()
+    public function testInvokeOnExistingModelWithBadTemplateIdent(): void
     {
         $this->insertMockRoutableContextObjects([
             'templateIdent' => 'charcoal/tests/cms/mock/broken',
@@ -124,10 +116,8 @@ class SectionRouteTest extends AbstractRouteTestCase
     /**
      * Asserts that `SectionRoute::__invoke()` method returns an HTTP Response object
      * with a 2XX status code if the path does resolve to a specific routable model.
-     *
-     * @return void
      */
-    public function testInvokeOnExistingModelWithTemplateIdent()
+    public function testInvokeOnExistingModelWithTemplateIdent(): void
     {
         $this->insertMockRoutableContextObjects([
             'templateIdent' => 'charcoal/tests/cms/mock/home',
@@ -153,9 +143,8 @@ class SectionRouteTest extends AbstractRouteTestCase
      * Create the dynamic route to test.
      *
      * @param  array $data The dynamic route dependencies.
-     * @return SectionRoute
      */
-    protected function createRouter(array $data = [])
+    protected function createRouter(array $data = []): \Charcoal\Cms\Route\SectionRoute
     {
         return new SectionRoute($data + [
             'config' => [],

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Charcoal\Admin\Property\Input;
 
 use InvalidArgumentException;
@@ -11,32 +13,20 @@ use UnexpectedValueException;
  */
 class TextareaInput extends AbstractPropertyInput
 {
-    /**
-     * @var integer $cols
-     */
-    private $cols;
+    private ?int $cols = null;
 
-    /**
-     * @var integer $rows
-     */
-    private $rows;
+    private ?int $rows = null;
 
-    /**
-     * @var integer $minLength
-     */
-    private $minLength = 0;
+    private int $minLength = 0;
 
-    /**
-     * @var integer $maxLength
-     */
-    private $maxLength = 0;
+    private int $maxLength = 0;
 
     /**
      * @param integer $cols The number of columns (html cols attribute).
      * @throws InvalidArgumentException  If the argument is not a number.
      * @return Text Chainable
      */
-    public function setCols($cols)
+    public function setCols($cols): static
     {
         if (!is_numeric($cols)) {
             throw new InvalidArgumentException(
@@ -50,7 +40,7 @@ class TextareaInput extends AbstractPropertyInput
     /**
      * @return integer
      */
-    public function cols()
+    public function cols(): ?int
     {
         return $this->cols;
     }
@@ -60,7 +50,7 @@ class TextareaInput extends AbstractPropertyInput
      * @throws InvalidArgumentException If the argument is not a number.
      * @return Text Chainable
      */
-    public function setRows($rows)
+    public function setRows($rows): static
     {
         if (!is_numeric($rows)) {
             throw new InvalidArgumentException(
@@ -74,7 +64,7 @@ class TextareaInput extends AbstractPropertyInput
     /**
      * @return integer
      */
-    public function rows()
+    public function rows(): ?int
     {
         return $this->rows;
     }
@@ -84,7 +74,7 @@ class TextareaInput extends AbstractPropertyInput
      * @throws InvalidArgumentException If the argument is not a number.
      * @return Text Chainable
      */
-    public function setMinLength($minLength)
+    public function setMinLength($minLength): static
     {
         if (!is_numeric($minLength)) {
             throw new InvalidArgumentException(
@@ -95,10 +85,7 @@ class TextareaInput extends AbstractPropertyInput
         return $this;
     }
 
-    /**
-     * @return integer
-     */
-    public function minLength()
+    public function minLength(): int
     {
         return $this->minLength;
     }
@@ -108,7 +95,7 @@ class TextareaInput extends AbstractPropertyInput
      * @throws InvalidArgumentException If the argument is not a number.
      * @return Text Chainable
      */
-    public function setMaxLength($maxLength)
+    public function setMaxLength($maxLength): static
     {
         if (!is_numeric($maxLength)) {
             throw new InvalidArgumentException(
@@ -119,9 +106,7 @@ class TextareaInput extends AbstractPropertyInput
         return $this;
     }
 
-    /**
-    * @return array
-    */
+    #[\Override]
     public function getInputValOptions(): array
     {
         return [
@@ -129,10 +114,7 @@ class TextareaInput extends AbstractPropertyInput
         ];
     }
 
-    /**
-     * @return integer
-     */
-    public function maxLength()
+    public function maxLength(): int
     {
         return $this->maxLength;
     }

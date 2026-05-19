@@ -16,14 +16,8 @@ use Charcoal\Tests\AbstractTestCase;
  */
 class TwigLoaderTest extends AbstractTestCase
 {
-    /**
-     * @var TwigLoader
-     */
-    private $obj;
+    private \Charcoal\View\Twig\TwigLoader $obj;
 
-    /**
-     * @return void
-     */
     public function setUp(): void
     {
         $this->obj = new TwigLoader([
@@ -32,10 +26,7 @@ class TwigLoaderTest extends AbstractTestCase
         ]);
     }
 
-    /**
-     * @return void
-     */
-    public function testLoad()
+    public function testLoad(): void
     {
         $ret = $this->obj->load('foo');
 
@@ -43,10 +34,7 @@ class TwigLoaderTest extends AbstractTestCase
         $this->assertEquals($expected, $ret);
     }
 
-    /**
-     * @return void
-     */
-    public function testGetSourceContext()
+    public function testGetSourceContext(): void
     {
         $name = 'foo';
         $ret = $this->obj->getSourceContext($name);
@@ -56,10 +44,7 @@ class TwigLoaderTest extends AbstractTestCase
         $this->assertEquals($expected, $ret);
     }
 
-    /**
-     * @return void
-     */
-    public function testLoadDynamic()
+    public function testLoadDynamic(): void
     {
         $this->obj->setDynamicTemplate('widget_template', 'foo');
         $ret = $this->obj->load('$widget_template');
@@ -68,28 +53,19 @@ class TwigLoaderTest extends AbstractTestCase
         $this->assertEquals($expected, $ret);
     }
 
-    /**
-     * @return void
-     */
-    public function testLoadNotExisting()
+    public function testLoadNotExisting(): void
     {
         $ret = $this->obj->load('foo/bar/foobar');
         $this->assertEquals('foo/bar/foobar', $ret);
     }
 
-    /**
-     * @return void
-     */
-    public function testExists()
+    public function testExists(): void
     {
         $this->assertTrue($this->obj->exists('foo'));
         $this->assertFalse($this->obj->exists('foobaz'));
     }
 
-    /**
-     * @return void
-     */
-    public function testIsFresh()
+    public function testIsFresh(): void
     {
         $date = new DateTime('2000-01-01');
         $time = $date->getTimestamp();

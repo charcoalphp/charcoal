@@ -227,7 +227,6 @@ abstract class AbstractSource implements
      * - as 3 parameters: `property`, `value` and `options`
      *   - `addFilter('foo', 42, ['operator' => '<=']);`
      *
-     * @deprecated 0.3 To be replaced with FilterCollectionTrait::addFilter()
      *
      * @uses   self::parseFilterWithModel()
      * @uses   FilterCollectionTrait::processFilter()
@@ -240,7 +239,8 @@ abstract class AbstractSource implements
      * @throws InvalidArgumentException If the $param argument is invalid.
      * @return self
      */
-    public function addFilter($param, $value = null, array $options = null)
+    #[\Deprecated(message: '0.3 To be replaced with FilterCollectionTrait::addFilter()')]
+    public function addFilter($param, $value = null, ?array $options = null)
     {
         if (is_string($param) && $value !== null) {
             $expr = $this->createFilter();
@@ -292,7 +292,7 @@ abstract class AbstractSource implements
             }
 
             if ($filter instanceof FilterCollectionInterface) {
-                $filter->traverseFilters(function (FilterInterface $expr) {
+                $filter->traverseFilters(function (FilterInterface $expr): void {
                     $this->parseFilterWithModel($expr);
                 });
             }
@@ -308,7 +308,7 @@ abstract class AbstractSource implements
      * @param  array $data Optional expression data.
      * @return FilterInterface A new filter expression object.
      */
-    protected function createFilter(array $data = null)
+    protected function createFilter(?array $data = null)
     {
         $filter = new Filter();
         if ($data !== null) {
@@ -320,7 +320,6 @@ abstract class AbstractSource implements
     /**
      * Append a query order on the source.
      *
-     * @deprecated 0.3 To be replaced with OrderCollectionTrait::addOrder()
      *
      * @uses   self::parseOrderWithModel()
      * @uses   OrderCollectionTrait::processOrder()
@@ -333,7 +332,8 @@ abstract class AbstractSource implements
      * @throws InvalidArgumentException If the $param argument is invalid.
      * @return self
      */
-    public function addOrder($param, $mode = 'asc', array $options = null)
+    #[\Deprecated(message: '0.3 To be replaced with OrderCollectionTrait::addOrder()')]
+    public function addOrder($param, $mode = 'asc', ?array $options = null)
     {
         if (is_string($param) && $mode !== null) {
             $expr = $this->createOrder();
@@ -380,7 +380,7 @@ abstract class AbstractSource implements
             }
 
             if ($order instanceof OrderCollectionInterface) {
-                $order->traverseOrders(function (OrderInterface $expr) {
+                $order->traverseOrders(function (OrderInterface $expr): void {
                     $this->parseOrderWithModel($expr);
                 });
             }
@@ -395,7 +395,7 @@ abstract class AbstractSource implements
      * @param  array $data Optional expression data.
      * @return OrderInterface
      */
-    protected function createOrder(array $data = null)
+    protected function createOrder(?array $data = null)
     {
         $order = new Order();
         if ($data !== null) {
@@ -467,7 +467,7 @@ abstract class AbstractSource implements
      * @param  array $data Optional clause data.
      * @return PaginationInterface
      */
-    protected function createPagination(array $data = null)
+    protected function createPagination(?array $data = null)
     {
         $pagination = new Pagination();
         if ($data !== null) {
@@ -529,10 +529,9 @@ abstract class AbstractSource implements
      * @param  array $data Optional data.
      * @return SourceConfig
      */
-    public function createConfig(array $data = null)
+    public function createConfig(?array $data = null)
     {
-        $config = new SourceConfig($data);
-        return $config;
+        return new SourceConfig($data);
     }
 
     /**
@@ -542,7 +541,7 @@ abstract class AbstractSource implements
      * @param  StorableInterface $item  Optional item to load into.
      * @return StorableInterface
      */
-    abstract public function loadItem($ident, StorableInterface $item = null);
+    abstract public function loadItem($ident, ?StorableInterface $item = null);
 
     /**
      * Load items for the given model.
@@ -550,7 +549,7 @@ abstract class AbstractSource implements
      * @param  StorableInterface|null $item Optional model.
      * @return StorableInterface[]
      */
-    abstract public function loadItems(StorableInterface $item = null);
+    abstract public function loadItems(?StorableInterface $item = null);
 
     /**
      * Save an item (create a new row) in storage.
@@ -568,7 +567,7 @@ abstract class AbstractSource implements
      * @param  array             $properties The list of properties to update, if not all.
      * @return boolean TRUE if the item was updated, otherwise FALSE.
      */
-    abstract public function updateItem(StorableInterface $item, array $properties = null);
+    abstract public function updateItem(StorableInterface $item, ?array $properties = null);
 
     /**
      * Delete an item from storage.
@@ -577,7 +576,7 @@ abstract class AbstractSource implements
      * @throws UnexpectedValueException If the item does not have an ID.
      * @return boolean TRUE if the item was deleted, otherwise FALSE.
      */
-    abstract public function deleteItem(StorableInterface $item = null);
+    abstract public function deleteItem(?StorableInterface $item = null);
 
     /**
      * Allow an object to define how the key getter are called.
@@ -597,7 +596,7 @@ abstract class AbstractSource implements
      * @param  string $key The key to get the setter from.
      * @return string The setter method name, for a given key.
      */
-    protected function setter($key)
+    protected function setter(string $key)
     {
         $setter = 'set_' . $key;
         return $this->camelize($setter);
@@ -611,7 +610,7 @@ abstract class AbstractSource implements
      */
     protected function camelize($str)
     {
-        return lcfirst(implode('', array_map('ucfirst', explode('_', $str))));
+        return lcfirst(implode('', array_map(ucfirst(...), explode('_', $str))));
     }
 
     /**
@@ -620,7 +619,7 @@ abstract class AbstractSource implements
     protected function getModelClassForException()
     {
         if ($this->hasModel()) {
-            return get_class($this->model());
+            return $this->model()::class;
         }
 
         return 'Unknown Model';

@@ -29,22 +29,16 @@ class ClearCacheActionTest extends AbstractTestCase
 
     /**
      * Tested Class.
-     *
-     * @var ClearCacheAction
      */
-    private $obj;
+    private \Charcoal\Admin\Action\System\ClearCacheAction $obj;
 
     /**
      * Store the service container.
-     *
-     * @var Container
      */
-    private $container;
+    private ?\Pimple\Container $container = null;
 
     /**
      * Set up the test.
-     *
-     * @return void
      */
     public function setUp(): void
     {
@@ -56,19 +50,13 @@ class ClearCacheActionTest extends AbstractTestCase
         ]);
     }
 
-    /**
-     * @return void
-     */
-    public function testAuthRequiredIsTrue()
+    public function testAuthRequiredIsTrue(): void
     {
         $res = $this->callMethod($this->obj, 'authRequired');
         $this->assertTrue($res);
     }
 
-    /**
-     * @return void
-     */
-    public function testRun()
+    public function testRun(): void
     {
         $request  = Request::createFromEnvironment(Environment::mock());
         $response = new Response();
@@ -82,12 +70,10 @@ class ClearCacheActionTest extends AbstractTestCase
 
     /**
      * Set up the service container.
-     *
-     * @return Container
      */
-    protected function container()
+    protected function container(): \Pimple\Container
     {
-        if ($this->container === null) {
+        if (!$this->container instanceof \Pimple\Container) {
             $container = new Container();
             $containerProvider = new ContainerProvider();
             $containerProvider->registerActionDependencies($container);

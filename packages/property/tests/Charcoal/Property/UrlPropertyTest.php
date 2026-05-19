@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Charcoal\Tests\Property;
 
 use Charcoal\Property\UrlProperty;
@@ -17,9 +19,6 @@ class UrlPropertyTest extends AbstractTestCase
      */
     public $obj;
 
-    /**
-     * @return void
-     */
     protected function setUp(): void
     {
         $container = $this->getContainer();
@@ -33,15 +32,13 @@ class UrlPropertyTest extends AbstractTestCase
 
     /**
      * Asserts that the `type()` method returns "url".
-     *
-     * @return void
      */
-    public function testType()
+    public function testType(): void
     {
         $this->assertEquals('url', $this->obj->type());
     }
 
-    public function testParseOne()
+    public function testParseOne(): void
     {
         $this->assertEquals('example.com', $this->obj->parseOne('example.com'));
         $this->assertEquals('https://example.com:2020', $this->obj->parseOne('<script></script>https:// example.com:2020 '));

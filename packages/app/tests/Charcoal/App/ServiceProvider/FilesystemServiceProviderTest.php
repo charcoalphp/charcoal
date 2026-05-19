@@ -30,14 +30,14 @@ use Charcoal\Tests\AbstractTestCase;
  */
 class FilesystemServiceProviderTest extends AbstractTestCase
 {
-    private $obj;
+    private \Charcoal\App\ServiceProvider\FilesystemServiceProvider $obj;
 
     public function setUp(): void
     {
         $this->obj = new FilesystemServiceProvider();
     }
 
-    public function testProvider()
+    public function testProvider(): void
     {
         $container = $this->getContainer([
             'config' => $this->createAppConfig([
@@ -54,7 +54,7 @@ class FilesystemServiceProviderTest extends AbstractTestCase
         $this->assertInstanceOf(Container::class, $container['filesystems']);
     }
 
-    public function testProviderDefaultAdapters()
+    public function testProviderDefaultAdapters(): void
     {
         $container = $this->getContainer([
             'config' => $this->createAppConfig([
@@ -69,7 +69,7 @@ class FilesystemServiceProviderTest extends AbstractTestCase
         $this->assertInstanceOf(Filesystem::class, $container['filesystems']['public']);
     }
 
-    public function testProviderLocalAdapter()
+    public function testProviderLocalAdapter(): void
     {
         $container = $this->getContainer([
             'config' => $this->createAppConfig([
@@ -88,7 +88,7 @@ class FilesystemServiceProviderTest extends AbstractTestCase
         $this->assertInstanceOf(Filesystem::class, $container['filesystems']['local']);
     }
 
-    public function testProviderS3Adapter()
+    public function testProviderS3Adapter(): void
     {
         $container = $this->getContainer([
             'config' => $this->createAppConfig([
@@ -110,7 +110,7 @@ class FilesystemServiceProviderTest extends AbstractTestCase
         $this->assertInstanceOf(Filesystem::class, $container['filesystems']['s3']);
     }
 
-    public function testProviderFtpAdapter()
+    public function testProviderFtpAdapter(): void
     {
         $container = $this->getContainer([
             'config' => $this->createAppConfig([
@@ -131,7 +131,7 @@ class FilesystemServiceProviderTest extends AbstractTestCase
         $this->assertInstanceOf(Filesystem::class, $container['filesystems']['ftp']);
     }
 
-    public function testProviderSftpAdapter()
+    public function testProviderSftpAdapter(): void
     {
         $container = $this->getContainer([
             'config' => $this->createAppConfig([
@@ -152,7 +152,7 @@ class FilesystemServiceProviderTest extends AbstractTestCase
         $this->assertInstanceOf(Filesystem::class, $container['filesystems']['sftp']);
     }
 
-    public function testProviderMemorypAdapter()
+    public function testProviderMemorypAdapter(): void
     {
         $container = $this->getContainer([
             'config' => $this->createAppConfig([
@@ -171,7 +171,7 @@ class FilesystemServiceProviderTest extends AbstractTestCase
         $this->assertInstanceOf(Filesystem::class, $container['filesystems']['memory']);
     }
 
-    public function testProviderNullAdapter()
+    public function testProviderNullAdapter(): void
     {
         $container = $this->getContainer([
             'config' => $this->createAppConfig([
@@ -189,10 +189,10 @@ class FilesystemServiceProviderTest extends AbstractTestCase
         $this->assertInstanceOf(Filesystem::class, $container['filesystems']['test']);
     }
 
-    public function testConfigWithoutTypeThrowsException()
+    public function testConfigWithoutTypeThrowsException(): void
     {
         $this->expectException('\Exception');
-        $container = $this->getContainer([
+        $this->getContainer([
             'config' => $this->createAppConfig([
                 'filesystem' => [
                     'connections' => [
@@ -201,16 +201,14 @@ class FilesystemServiceProviderTest extends AbstractTestCase
                 ]
             ])
         ]);
-
-        $test = $container['filesystem/test'];
     }
 
-    private function createAppConfig($defaults = null)
+    private function createAppConfig($defaults = null): \Charcoal\App\AppConfig
     {
         return new AppConfig(array_replace(['base_path' => sys_get_temp_dir()], $defaults));
     }
 
-    private function getContainer($defaults = null)
+    private function getContainer($defaults = null): \Pimple\Container
     {
         $container = new Container($defaults);
         $this->obj->register($container);

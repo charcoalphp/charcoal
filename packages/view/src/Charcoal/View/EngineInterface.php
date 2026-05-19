@@ -13,7 +13,6 @@ interface EngineInterface
      * Load a template (from identifier).
      *
      * @param string $templateIdent The template identifier to load.
-     * @return string
      */
     public function loadTemplate(string $templateIdent): string;
 
@@ -38,7 +37,6 @@ interface EngineInterface
     /**
      * @param string      $varName       The name of the variable to set this template unto.
      * @param string|null $templateIdent The "dynamic template" to set. null to clear.
-     * @return void
      */
     public function setDynamicTemplate(string $varName, ?string $templateIdent): void;
 }

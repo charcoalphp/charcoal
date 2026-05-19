@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Charcoal\Property;
 
 use InvalidArgumentException;
@@ -13,10 +15,8 @@ class PropertyMetadata extends AbstractMetadata
 {
     /**
      * The metadata identifier.
-     *
-     * @var string
      */
-    private $ident;
+    private ?string $ident = null;
 
     /**
      * The actual config data.
@@ -30,16 +30,15 @@ class PropertyMetadata extends AbstractMetadata
      *
      * @param  string $ident The metadata identifier.
      * @throws InvalidArgumentException If identifier is not a string.
-     * @return self
      */
-    public function setIdent($ident)
+    public function setIdent($ident): static
     {
         if (!is_string($ident)) {
             throw new InvalidArgumentException(
                 sprintf(
                     '[%s] Identifier must be a string; received %s',
-                    get_called_class(),
-                    (is_object($ident) ? get_class($ident) : gettype($ident))
+                    static::class,
+                    (get_debug_type($ident))
                 )
             );
         }
@@ -54,7 +53,7 @@ class PropertyMetadata extends AbstractMetadata
      *
      * @return string
      */
-    public function ident()
+    public function ident(): ?string
     {
         return $this->ident;
     }

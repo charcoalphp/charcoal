@@ -11,20 +11,15 @@ class ImagemagickMirrorEffect extends AbstractMirrorEffect
 {
     /**
      * @param array $data The effect data, if available.
-     * @return self
      */
-    public function process(array $data = null)
+    public function process(?array $data = null): static
     {
         if ($data !== null) {
             $this->setData($data);
         }
 
         $axis = $this->axis();
-        if ($axis == 'x') {
-            $cmd = '-flip';
-        } else {
-            $cmd = '-flop';
-        }
+        $cmd = $axis == 'x' ? '-flip' : '-flop';
         $this->image()->applyCmd($cmd);
         return $this;
     }

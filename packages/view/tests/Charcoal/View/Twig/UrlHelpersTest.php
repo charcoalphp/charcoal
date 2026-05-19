@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Charcoal\Tests\View\Twig;
 
 use LogicException;
@@ -25,30 +27,14 @@ use Charcoal\View\Twig\TwigLoader;
  */
 class UrlHelpersTest extends AbstractTestCase
 {
-    /**
-     * @var Uri
-     */
-    private $baseUrl;
-
-    /**
-     * @var TwigEngine
-     */
-    private $twig;
-
-    /**
-     * @return void
-     */
     public function setUp(): void
     {
-        $this->baseUrl = [];
-        $this->twig   = $this->createTwigEngine($this->baseUrl);
     }
 
     /**
      * @param  Uri|null $baseUrl The base Url.
-     * @return TwigEnvironment
      */
-    public function createTwigEngine($baseUrl = null)
+    public function createTwigEngine($baseUrl = null): \Twig\Environment
     {
         $loader = new TwigLoader([
             'base_path' => __DIR__,

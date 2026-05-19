@@ -28,17 +28,13 @@ class StructureProperty extends AbstractProperty
 {
     /**
      * The SQL data type.
-     *
-     * @var string
      */
     private string $sqlType = 'TEXT';
 
     /**
      * Retrieve the property's type identifier.
-     *
-     * @return string
      */
-    public function type()
+    public function type(): string
     {
         return 'structure';
     }
@@ -48,6 +44,7 @@ class StructureProperty extends AbstractProperty
      * @param  array $options Optional display options.
      * @return string
      */
+    #[\Override]
     public function displayVal($val, array $options = [])
     {
         if ($val === null || $val === '') {
@@ -82,6 +79,7 @@ class StructureProperty extends AbstractProperty
      * @param  mixed $val Optional. The value to convert to storage value.
      * @return mixed
      */
+    #[\Override]
     public function storageVal($val)
     {
         if ($val === null || $val === '') {
@@ -111,14 +109,11 @@ class StructureProperty extends AbstractProperty
      * @param  mixed $lang The language to return the value in.
      * @return mixed|null
      */
+    #[\Override]
     protected function l10nVal($val, $lang = null)
     {
         if (!is_string($lang)) {
-            if (is_array($lang) && isset($lang['lang'])) {
-                $lang = $lang['lang'];
-            } else {
-                $lang = $this->translator()->getLocale();
-            }
+            $lang = is_array($lang) && isset($lang['lang']) ? $lang['lang'] : $this->translator()->getLocale();
         }
 
         if ($val instanceof TranslatableValue) {
@@ -156,6 +151,7 @@ class StructureProperty extends AbstractProperty
      * @throws InvalidArgumentException If the value is invalid.
      * @return array
      */
+    #[\Override]
     public function parseOne($val)
     {
         if ($val === null || $val === '') {
@@ -182,6 +178,7 @@ class StructureProperty extends AbstractProperty
      * @param mixed $val A L10N variable.
      * @return TranslatableInterface|null The translation value.
      */
+    #[\Override]
     public function parseValAsL10n($val): ?TranslatableInterface
     {
         return new TranslatableValue($val);
@@ -192,9 +189,8 @@ class StructureProperty extends AbstractProperty
      *
      * @param string $sqlType The field SQL column type.
      * @throws InvalidArgumentException If the SQL type is invalid.
-     * @return self
      */
-    public function setSqlType($sqlType)
+    public function setSqlType($sqlType): static
     {
         if (!is_string($sqlType)) {
             throw new InvalidArgumentException(
@@ -202,31 +198,15 @@ class StructureProperty extends AbstractProperty
             );
         }
 
-        switch (strtoupper($sqlType)) {
-            case 'TEXT':
-                $sqlType = 'TEXT';
-                break;
-
-            case 'TINY':
-            case 'TINYTEXT':
-                $sqlType = 'TINYTEXT';
-                break;
-
-            case 'MEDIUM':
-            case 'MEDIUMTEXT':
-                $sqlType = 'MEDIUMTEXT';
-                break;
-
-            case 'LONG':
-            case 'LONGTEXT':
-                $sqlType = 'LONGTEXT';
-                break;
-
-            default:
-                throw new InvalidArgumentException(
-                    'SQL Type must be one of TEXT, TINYTEXT, MEDIUMTEXT, LONGTEXT.'
-                );
-        }
+        $sqlType = match (strtoupper($sqlType)) {
+            'TEXT' => 'TEXT',
+            'TINY', 'TINYTEXT' => 'TINYTEXT',
+            'MEDIUM', 'MEDIUMTEXT' => 'MEDIUMTEXT',
+            'LONG', 'LONGTEXT' => 'LONGTEXT',
+            default => throw new InvalidArgumentException(
+                'SQL Type must be one of TEXT, TINYTEXT, MEDIUMTEXT, LONGTEXT.'
+            ),
+        };
 
         $this->sqlType = $sqlType;
 
@@ -239,7 +219,6 @@ class StructureProperty extends AbstractProperty
      * For a lack of better array support in mysql, data is stored as encoded JSON in a TEXT.
      *
      * @see StorableProperyTrait::sqlType()
-     * @return string
      */
     public function sqlType(): string
     {
@@ -250,9 +229,8 @@ class StructureProperty extends AbstractProperty
      * Retrieve the property's PDO data type.
      *
      * @see StorablePropertyTrait::sqlPdoType()
-     * @return integer
      */
-    public function sqlPdoType()
+    public function sqlPdoType(): int
     {
         return PDO::PARAM_STR;
     }

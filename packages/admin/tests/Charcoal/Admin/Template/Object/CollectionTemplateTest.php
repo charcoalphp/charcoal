@@ -22,22 +22,16 @@ class CollectionTemplateTest extends AbstractTestCase
 
     /**
      * Tested Class.
-     *
-     * @var CollectionTemplate
      */
-    private $obj;
+    private \Charcoal\Admin\Template\Object\CollectionTemplate $obj;
 
     /**
      * Store the service container.
-     *
-     * @var Container
      */
-    private $container;
+    private ?\Pimple\Container $container = null;
 
     /**
      * Set up the test.
-     *
-     * @return void
      */
     public function setUp(): void
     {
@@ -50,28 +44,19 @@ class CollectionTemplateTest extends AbstractTestCase
         ]);
     }
 
-    /**
-     * @return void
-     */
-    public function testAuthRequiredIsTrue()
+    public function testAuthRequiredIsTrue(): void
     {
         $res = $this->callMethod($this->obj, 'authRequired');
         $this->assertTrue($res);
     }
 
-    /**
-     * @return void
-     */
-    public function testInit()
+    public function testInit(): void
     {
         //$ret = $this->obj->init();
         $this->assertTrue(true);
     }
 
-    /**
-     * @return void
-     */
-    public function testTitle()
+    public function testTitle(): void
     {
         $this->obj->setObjType('charcoal/admin/user');
         $ret = $this->obj->title();
@@ -82,12 +67,10 @@ class CollectionTemplateTest extends AbstractTestCase
 
     /**
      * Set up the service container.
-     *
-     * @return Container
      */
-    protected function container()
+    protected function container(): \Pimple\Container
     {
-        if ($this->container === null) {
+        if (!$this->container instanceof \Pimple\Container) {
             $container = new Container();
             $containerProvider = new ContainerProvider();
             $containerProvider->registerTemplateDependencies($container);

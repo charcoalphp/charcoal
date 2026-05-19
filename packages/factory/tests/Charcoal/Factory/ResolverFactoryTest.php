@@ -15,18 +15,12 @@ class ResolverFactoryTest extends AbstractTestCase
      */
     public $obj;
 
-    /**
-     * @return void
-     */
     protected function setUp(): void
     {
         $this->obj = new ResolverFactory();
     }
 
-    /**
-     * @return void
-     */
-    public function testSetResolverPrefix()
+    public function testSetResolverPrefix(): void
     {
         $this->assertEquals('', $this->obj->resolverPrefix());
         $ret = $this->obj->setResolverPrefix('foo');
@@ -37,10 +31,7 @@ class ResolverFactoryTest extends AbstractTestCase
         $this->obj->setResolverPrefix(false);
     }
 
-    /**
-     * @return void
-     */
-    public function testSetResolverSuffix()
+    public function testSetResolverSuffix(): void
     {
         $this->assertEquals('', $this->obj->resolverSuffix());
         $ret = $this->obj->setResolverSuffix('foo');
@@ -51,10 +42,7 @@ class ResolverFactoryTest extends AbstractTestCase
         $this->obj->setResolverSuffix(false);
     }
 
-    /**
-     * @return void
-     */
-    public function testSetResolverCapitals()
+    public function testSetResolverCapitals(): void
     {
         $ret = $this->obj->setResolverCapitals(['$']);
         $this->assertSame($ret, $this->obj);
@@ -63,10 +51,7 @@ class ResolverFactoryTest extends AbstractTestCase
         $this->assertEquals('\$Abc$De', $this->obj->resolve('$abc$de'));
     }
 
-    /**
-     * @return void
-     */
-    public function testSetResoverReplacements()
+    public function testSetResoverReplacements(): void
     {
         $ret = $this->obj->setResolverReplacements(['$'=>'_']);
         $this->assertSame($ret, $this->obj);
@@ -76,13 +61,12 @@ class ResolverFactoryTest extends AbstractTestCase
     }
 
     /**
-     * @dataProvider providerResolve
      *
      * @param  string $type      Factory key.
      * @param  string $classname Factory class name.
-     * @return void
      */
-    public function testResolve($type, $classname)
+    #[\PHPUnit\Framework\Attributes\DataProvider('providerResolve')]
+    public function testResolve(string $type, string $classname): void
     {
         $this->assertEquals($classname, $this->obj->resolve($type));
 
@@ -91,19 +75,13 @@ class ResolverFactoryTest extends AbstractTestCase
         $this->assertEquals($classname.'Test', $this->obj->resolve($type));
     }
 
-    /**
-     * @return void
-     */
-    public function testResolveWithoutStringThrowsException()
+    public function testResolveWithoutStringThrowsException(): void
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->obj->resolve(false);
     }
 
-    /**
-     * @return void
-     */
-    public function testIsResolvable()
+    public function testIsResolvable(): void
     {
         $this->assertFalse($this->obj->isResolvable('foo'));
         $this->assertTrue($this->obj->isResolvable('charcoal/factory/map-factory'));
@@ -112,19 +90,13 @@ class ResolverFactoryTest extends AbstractTestCase
         $this->obj->isResolvable(false);
     }
 
-    /**
-     * @return void
-     */
-    public function testCreate()
+    public function testCreate(): void
     {
         $ret = $this->obj->create('charcoal/factory/map-factory');
-        $this->assertInstanceOf('\Charcoal\Factory\MapFactory', $ret);
+        $this->assertInstanceOf(\Charcoal\Factory\MapFactory::class, $ret);
     }
 
-    /**
-     * @return array
-     */
-    public function providerResolve()
+    public static function providerResolve(): array
     {
         return [
             ['foo', '\Foo'],
@@ -133,7 +105,7 @@ class ResolverFactoryTest extends AbstractTestCase
             ['foo-bar', '\FooBar'],
             ['foo.bar', '\Foo_Bar'],
             ['foo.bar\baz_baz-baz/foo\\', '\Foo_Bar\Baz_BazBaz\Foo'],
-            ['charcoal/factory/map-factory', '\Charcoal\Factory\MapFactory']
+            ['charcoal/factory/map-factory', \Charcoal\Factory\MapFactory::class]
         ];
     }
 }

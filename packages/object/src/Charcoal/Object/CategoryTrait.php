@@ -74,11 +74,7 @@ trait CategoryTrait
     {
         if ($this->numCategoryItems === null) {
             $items = $this->getCategoryItems();
-            if (is_array($items) || ($items instanceof \Countable)) {
-                $count = count($items);
-            } else {
-                $count = 0;
-            }
+            $count = is_countable($items) ? count($items) : 0;
 
             $this->numCategoryItems = $count;
         }
@@ -98,10 +94,8 @@ trait CategoryTrait
 
     /**
      * Gets wether the category has any items, directly within it.
-     *
-     * @return boolean
      */
-    public function hasCategoryItems()
+    public function hasCategoryItems(): bool
     {
         $numItems = $this->getNumCategoryItems();
         return ($numItems > 0);

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Charcoal\Image\Effect;
 
 use InvalidArgumentException;
@@ -17,9 +19,8 @@ abstract class AbstractMaskEffect extends AbstractEffect implements LayerEffectI
 
     /**
      * The mask image source
-     * @var string $mask
      */
-    private $mask;
+    private ?string $mask = null;
 
     /**
      * @param string $mask The mask image source.

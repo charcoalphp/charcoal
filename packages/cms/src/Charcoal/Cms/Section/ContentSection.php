@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Charcoal\Cms\Section;
 
 // From 'charcoal-cms'
@@ -11,10 +13,8 @@ use Charcoal\Cms\Mixin\ContentSectionInterface;
  */
 class ContentSection extends AbstractSection
 {
-    /**
-     * @return string
-     */
-    public function sectionType()
+    #[\Override]
+    public function sectionType(): string
     {
         return AbstractSection::TYPE_CONTENT;
     }

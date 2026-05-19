@@ -21,9 +21,8 @@ class AddJoinAction extends AdminAction
     /**
      * @param RequestInterface  $request  A PSR-7 compatible Request instance.
      * @param ResponseInterface $response A PSR-7 compatible Response instance.
-     * @return ResponseInterface
      */
-    public function run(RequestInterface $request, ResponseInterface $response)
+    public function run(RequestInterface $request, ResponseInterface $response): ResponseInterface
     {
         $params = $request->getParams();
 
@@ -44,7 +43,7 @@ class AddJoinAction extends AdminAction
         $group       = $params['group'];
 
         // Need more attachments...
-        if (!count($attachments)) {
+        if (count($attachments) === 0) {
             $this->setSuccess(false);
 
             return $response;
@@ -53,7 +52,7 @@ class AddJoinAction extends AdminAction
         // Try loading the object
         try {
             $obj = $this->modelFactory()->create($objType)->load($objId);
-        } catch (Exception $e) {
+        } catch (Exception) {
             $this->setSuccess(false);
 
             return $response;

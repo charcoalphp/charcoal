@@ -21,10 +21,8 @@ trait SocialNetworksAwareTrait
 
     /**
      * Determine if the website has a social presence.
-     *
-     * @return integer|boolean
      */
-    public function hasSocialNetworks()
+    public function hasSocialNetworks(): int
     {
         return count($this->socialNetworks());
     }
@@ -41,7 +39,7 @@ trait SocialNetworksAwareTrait
             return $this->socialNetworks;
         }
 
-        $socials = json_decode($this->cmsConfig()['social_medias'], true);
+        $socials = json_decode((string) $this->cmsConfig()['social_medias'], true);
         $configMeta = $this->configModel()->p('social_medias')->structureMetadata();
 
         foreach ($socials as $ident => $account) {

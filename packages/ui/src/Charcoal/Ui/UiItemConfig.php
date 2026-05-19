@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Charcoal\Ui;
 
 use InvalidArgumentException;
@@ -13,24 +15,18 @@ class UiItemConfig extends AbstractConfig
 {
     /**
      * The UI item type.
-     *
-     * @var string|null
      */
-    private $type;
+    private ?string $type = null;
 
     /**
      * The UI item's template.
-     *
-     * @var string|null
      */
-    private $template;
+    private ?string $template = null;
 
     /**
      * The FQN of a view controller.
-     *
-     * @var string|null
      */
-    private $controller;
+    private ?string $controller = null;
 
     /**
      * Set the UI item type.
@@ -42,7 +38,7 @@ class UiItemConfig extends AbstractConfig
      * @throws InvalidArgumentException If the type is not a string.
      * @return UiItemConfig Chainable
      */
-    public function setType($type)
+    public function setType($type): static
     {
         if (is_string($type) || $type === null) {
             $this->type = $type;
@@ -60,7 +56,7 @@ class UiItemConfig extends AbstractConfig
      *
      * @return string
      */
-    public function type()
+    public function type(): ?string
     {
         return $this->type;
     }
@@ -74,7 +70,7 @@ class UiItemConfig extends AbstractConfig
      * @throws InvalidArgumentException If the template is not a string.
      * @return UiItemInterface Chainable
      */
-    public function setTemplate($template)
+    public function setTemplate($template): static
     {
         if (!is_string($template)) {
             throw new InvalidArgumentException(
@@ -92,7 +88,7 @@ class UiItemConfig extends AbstractConfig
      *
      * @return string If unset, returns the UI item type.
      */
-    public function template()
+    public function template(): ?string
     {
         if ($this->template === null) {
             return $this->type();
@@ -108,7 +104,7 @@ class UiItemConfig extends AbstractConfig
      * @throws InvalidArgumentException If the controller is not a string.
      * @return UiItemInterface Chainable
      */
-    public function setController($controller)
+    public function setController($controller): static
     {
         if (!is_string($controller)) {
             throw new InvalidArgumentException(
@@ -126,7 +122,7 @@ class UiItemConfig extends AbstractConfig
      *
      * @return string If unset, returns the UI item type.
      */
-    public function controller()
+    public function controller(): ?string
     {
         if ($this->controller === null) {
             return $this->type();

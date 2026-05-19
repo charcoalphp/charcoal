@@ -19,22 +19,16 @@ class AuthTokenTest extends AbstractTestCase
 {
     /**
      * Tested Class.
-     *
-     * @var AuthToken
      */
-    private $obj;
+    private \Charcoal\User\AuthToken $obj;
 
     /**
      * Store the service container.
-     *
-     * @var Container
      */
-    private $container;
+    private ?\Pimple\Container $container = null;
 
     /**
      * Set up the test.
-     *
-     * @return void
      */
     protected function setUp(): void
     {
@@ -47,38 +41,26 @@ class AuthTokenTest extends AbstractTestCase
         ]);
     }
 
-    /**
-     * @return void
-     */
-    public function testSetKeyIsIdent()
+    public function testSetKeyIsIdent(): void
     {
         $this->assertEquals('ident', $this->obj->key());
     }
 
-    /**
-     * @return void
-     */
-    public function testSetIdent()
+    public function testSetIdent(): void
     {
         $ret = $this->obj->setIdent('foo');
         $this->assertSame($ret, $this->obj);
         $this->assertEquals('foo', $this->obj['ident']);
     }
 
-    /**
-     * @return void
-     */
-    public function testSetToken()
+    public function testSetToken(): void
     {
         $ret = $this->obj->setToken('foo');
         $this->assertSame($ret, $this->obj);
         $this->assertEquals('foo', $this->obj['token']);
     }
 
-    /**
-     * @return void
-     */
-    public function testSetUserId()
+    public function testSetUserId(): void
     {
         $ret = $this->obj->setUserId('foo');
         $this->assertSame($ret, $this->obj);
@@ -88,10 +70,7 @@ class AuthTokenTest extends AbstractTestCase
         $this->obj->setUserId([]);
     }
 
-    /**
-     * @return void
-     */
-    public function testSetExpiry()
+    public function testSetExpiry(): void
     {
         $date = new DateTime('tomorrow');
         $ret = $this->obj->setExpiry($date);
@@ -102,10 +81,7 @@ class AuthTokenTest extends AbstractTestCase
         $this->obj->setExpiry('fsdjkfsadg');
     }
 
-    /**
-     * @return void
-     */
-    public function testSetCreated()
+    public function testSetCreated(): void
     {
         $date = new DateTime('tomorrow');
         $ret = $this->obj->setCreated($date);
@@ -116,10 +92,7 @@ class AuthTokenTest extends AbstractTestCase
         $this->obj->setCreated('fsdjkfsadg');
     }
 
-    /**
-     * @return void
-     */
-    public function testSetLastModified()
+    public function testSetLastModified(): void
     {
         $date = new DateTime('tomorrow');
         $ret = $this->obj->setLastModified($date);
@@ -132,12 +105,10 @@ class AuthTokenTest extends AbstractTestCase
 
     /**
      * Set up the service container.
-     *
-     * @return Container
      */
-    private function container()
+    private function container(): \Pimple\Container
     {
-        if ($this->container === null) {
+        if (!$this->container instanceof \Pimple\Container) {
             $container = new Container();
             $containerProvider = new ContainerProvider();
             $containerProvider->registerBaseServices($container);

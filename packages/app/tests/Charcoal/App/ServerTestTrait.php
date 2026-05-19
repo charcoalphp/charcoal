@@ -14,7 +14,7 @@ trait ServerTestTrait
     /**
      * @var mixed The process identifier of the built-in PHP server.
      */
-    static private $serverProcess = null;
+    static private $serverProcess;
 
     /**
      * @var string The hostname for the built-in PHP server.
@@ -29,7 +29,7 @@ trait ServerTestTrait
     /**
      * @var null|string The server root directory, where it should be ran from.
      */
-    static protected $serverRoot = null;
+    static protected $serverRoot;
 
     /**
      * @var string The APPLICATION_ENV environment variable.
@@ -44,15 +44,13 @@ trait ServerTestTrait
      * @param  boolean                   $checkForObjectIdentity Unused.
      * @param  string                    $message                The error to report.
      * @throws InvalidArgumentException
-     * @return void
      */
     abstract public function assertArraySubset($subset, $array, $checkForObjectIdentity = false, $message = ''): void;
 
     /**
      * Retrieve the built-in PHP server URL.
-     * @return string
      */
-    protected static function serverURL()
+    protected static function serverURL(): string
     {
         return static::$serverHost.':'.static::$serverPort;
     }
@@ -71,18 +69,17 @@ trait ServerTestTrait
 
     /**
      * Retrieve wether the tests are run on windows or not.
-     * @return boolean
      */
-    protected static function isWindows()
+    protected static function isWindows(): bool
     {
         return (stristr(php_uname('s'), 'win') !== false);
     }
 
     /**
      * Start a built-in PHP server process.
-     * @beforeClass
      */
-    public static function bootUpBuiltInServer()
+    #[\PHPUnit\Framework\Attributes\BeforeClass]
+    public static function bootUpBuiltInServer(): void
     {
         $command = sprintf(
             'php -S %s -t %s',
@@ -110,18 +107,17 @@ trait ServerTestTrait
 
     /**
      * Terminates the built-in PHP server process.
-     * @afterClass
      */
-    public static function turnDownBuiltInServer()
+    #[\PHPUnit\Framework\Attributes\AfterClass]
+    public static function turnDownBuiltInServer(): void
     {
         pclose(static::$serverProcess);
     }
 
     /**
      * @param array $request The request data (method, route, options).
-     * @return \Psr\Http\Message\ResponseInterface
      */
-    protected function callRequest(array $request)
+    protected function callRequest(array $request): \Psr\Http\Message\ResponseInterface
     {
         $route = str_replace('.', '', $request['route']);
         $client = new HttpClient();
@@ -132,10 +128,6 @@ trait ServerTestTrait
         );
     }
 
-    /**
-     * @param array             $expected
-     * @param ResponseInterface $response
-     */
     protected function assertResponseMatchesExpected(array $expected, ResponseInterface $response)
     {
         if (isset($expected['statusCode']) && $expected['statusCode']) {
@@ -157,7 +149,6 @@ trait ServerTestTrait
 
     /**
      * @param integer           $expectedStatusCode
-     * @param ResponseInterface $response
      */
     protected function assertResponseHasStatusCode($expectedStatusCode, ResponseInterface $response)
     {
@@ -166,7 +157,6 @@ trait ServerTestTrait
 
     /**
      * @param array|string      $json
-     * @param ResponseInterface $response
      */
     protected function assertResponseBodyMatchesJson($json, ResponseInterface $response)
     {
@@ -187,7 +177,6 @@ trait ServerTestTrait
 
     /**
      * @param string            $pattern
-     * @param ResponseInterface $response
      */
     protected function assertResponseBodyRegExp($pattern, ResponseInterface $response)
     {

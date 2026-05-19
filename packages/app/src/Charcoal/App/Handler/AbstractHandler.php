@@ -98,8 +98,6 @@ abstract class AbstractHandler implements
 
     /**
      * String representation of the handler.
-     *
-     * @return string
      */
     public function __toString(): string
     {
@@ -183,7 +181,7 @@ abstract class AbstractHandler implements
         if ($this->templateFactory === null) {
             throw new RuntimeException(sprintf(
                 'Template Factory is not defined for [%s]',
-                get_class($this)
+                static::class
             ));
         }
 
@@ -216,7 +214,7 @@ abstract class AbstractHandler implements
         if ($this->httpRequest === null) {
             throw new RuntimeException(sprintf(
                 'HTTP Request is not defined for "%s"',
-                get_class($this)
+                static::class
             ));
         }
 
@@ -276,9 +274,8 @@ abstract class AbstractHandler implements
      * Set an template factory.
      *
      * @param  FactoryInterface $factory The factory to create templates.
-     * @return void
      */
-    private function setTemplateFactory(FactoryInterface $factory)
+    private function setTemplateFactory(FactoryInterface $factory): void
     {
         $this->templateFactory = $factory;
     }
@@ -287,9 +284,8 @@ abstract class AbstractHandler implements
      * Set container for use with the template controller
      *
      * @param  Container $container A dependencies container instance.
-     * @return void
      */
-    private function setContainer(Container $container)
+    private function setContainer(Container $container): void
     {
         $this->container = $container;
     }

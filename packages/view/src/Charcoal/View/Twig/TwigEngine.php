@@ -17,26 +17,18 @@ use Twig\Loader\FilesystemLoader as TwigFilesystemLoader;
  */
 class TwigEngine extends AbstractEngine
 {
+    public $helpers;
     public const DEFAULT_CACHE_PATH = '../cache/twig';
 
-    /**
-     * @var TwigEnvironment $twig
-     */
-    private $twig;
+    private ?\Twig\Environment $twig = null;
 
-    /**
-     * @var ViewConfig $config
-     */
-    private $config;
+    private \Charcoal\View\ViewConfig $config;
 
     /**
      * @var boolean $debug
      */
     private $debug;
 
-    /**
-     * @return string
-     */
     public function type(): string
     {
         return 'twig';
@@ -65,7 +57,7 @@ class TwigEngine extends AbstractEngine
      * @throws InvalidArgumentException If the given helper(s) are invalid.
      * @return TwigEngine Chainable
      */
-    public function setHelpers($helpers)
+    public function setHelpers($helpers): static
     {
         if ($helpers instanceof HelpersInterface) {
             $helpers = $helpers->toArray();
@@ -74,7 +66,7 @@ class TwigEngine extends AbstractEngine
         if (!is_iterable($helpers)) {
             throw new InvalidArgumentException(sprintf(
                 'setHelpers expects an array of helpers, received %s',
-                (is_object($helpers) ? get_class($helpers) : gettype($helpers))
+                (get_debug_type($helpers))
             ));
         }
 
@@ -93,7 +85,7 @@ class TwigEngine extends AbstractEngine
      * @throws InvalidArgumentException If the given helper(s) are invalid.
      * @return TwigEngine Chainable
      */
-    public function mergeHelpers($helpers)
+    public function mergeHelpers($helpers): static
     {
         if ($helpers instanceof HelpersInterface) {
             $helpers = $helpers->toArray();
@@ -102,7 +94,7 @@ class TwigEngine extends AbstractEngine
         if (!is_iterable($helpers)) {
             throw new InvalidArgumentException(sprintf(
                 'mergeHelpers expects an array of helpers, received %s',
-                (is_object($helpers) ? get_class($helpers) : gettype($helpers))
+                (get_debug_type($helpers))
             ));
         }
 
@@ -121,9 +113,9 @@ class TwigEngine extends AbstractEngine
      * @throws RuntimeException If the twig engine was already initialized.
      * @return TwigEngine Chainable
      */
-    public function addHelper($name, $helper)
+    public function addHelper($name, $helper): static
     {
-        if ($this->twig !== null) {
+        if ($this->twig instanceof \Twig\Environment) {
             throw new RuntimeException(
                 'Can not add helper to Twig engine: the engine has already been initialized.'
             );
@@ -149,7 +141,7 @@ class TwigEngine extends AbstractEngine
      */
     public function twig(): TwigEnvironment
     {
-        if ($this->twig === null) {
+        if (!$this->twig instanceof \Twig\Environment) {
             $this->twig = $this->createTwig();
         }
         return $this->twig;
@@ -160,6 +152,7 @@ class TwigEngine extends AbstractEngine
      * @param mixed  $context       The rendering context.
      * @return string The rendered template string.
      */
+    #[\Override]
     public function render(string $templateIdent, $context): string
     {
         $arrayContext = json_decode(json_encode($context), true);
@@ -199,8 +192,8 @@ class TwigEngine extends AbstractEngine
      * Set the engine's cache implementation.
      *
      * @param  mixed $cache A Twig cache option.
-     * @return void
      */
+    #[\Override]
     protected function setCache($cache): void
     {
         /**

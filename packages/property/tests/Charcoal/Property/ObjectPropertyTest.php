@@ -48,8 +48,6 @@ class ObjectPropertyTest extends AbstractTestCase
 
     /**
      * Set up the test.
-     *
-     * @return void
      */
     protected function setUp(): void
     {
@@ -72,7 +70,7 @@ class ObjectPropertyTest extends AbstractTestCase
      *     collection of models for testing.
      * @return array Returns the collection of object data for testing.
      */
-    public function setUpObjects(&$models = null)
+    public function setUpObjects(&$models = null): array
     {
         $container  = $this->getContainer();
         $translator = $container['translator'];
@@ -104,13 +102,12 @@ class ObjectPropertyTest extends AbstractTestCase
     }
 
     /**
-     * @dataProvider provideMissingDependencies
      *
      * @param  string $method            The name of a method accessor.
      * @param  string $expectedException The expected Exception thrown by $method.
-     * @return void
      */
-    public function testConstructorWithoutDependencies($method, $expectedException)
+    #[\PHPUnit\Framework\Attributes\DataProvider('provideMissingDependencies')]
+    public function testConstructorWithoutDependencies(string $method, string $expectedException): void
     {
         $container = $this->getContainer();
 
@@ -124,10 +121,7 @@ class ObjectPropertyTest extends AbstractTestCase
         $this->callMethod($prop, $method);
     }
 
-    /**
-     * @return array
-     */
-    public function provideMissingDependencies()
+    public static function provideMissingDependencies(): array
     {
         return [
             [ 'modelFactory',     RuntimeException::class ],
@@ -137,24 +131,20 @@ class ObjectPropertyTest extends AbstractTestCase
     }
 
     /**
-     * @dataProvider provideSatisfiedDependencies
      *
      * @param  string $method         The name of a method accessor.
      * @param  string $expectedObject The expected instance returned by $method.
-     * @return void
      */
-    public function testConstructorWithDependencies($method, $expectedObject)
+    #[\PHPUnit\Framework\Attributes\DataProvider('provideSatisfiedDependencies')]
+    public function testConstructorWithDependencies(string $method, string $expectedObject): void
     {
-        $container = $this->getContainer();
+        $this->getContainer();
 
         $dependency = $this->callMethod($this->obj, $method);
         $this->assertInstanceOf($expectedObject, $dependency);
     }
 
-    /**
-     * @return array
-     */
-    public function provideSatisfiedDependencies()
+    public static function provideSatisfiedDependencies(): array
     {
         return [
             [ 'modelFactory',     FactoryInterface::class ],
@@ -163,26 +153,17 @@ class ObjectPropertyTest extends AbstractTestCase
         ];
     }
 
-    /**
-     * @return void
-     */
-    public function testType()
+    public function testType(): void
     {
         $this->assertEquals('object', $this->obj->type());
     }
 
-    /**
-     * @return void
-     */
-    public function testSqlExtra()
+    public function testSqlExtra(): void
     {
         $this->assertEquals('', $this->obj->sqlExtra());
     }
 
-    /**
-     * @return void
-     */
-    public function testSqlType()
+    public function testSqlType(): void
     {
         $this->obj->setObjType(GenericModel::class);
         $this->assertEquals('CHAR(13)', $this->obj->sqlType());
@@ -191,19 +172,13 @@ class ObjectPropertyTest extends AbstractTestCase
         $this->assertEquals('TEXT', $this->obj->sqlType());
     }
 
-    /**
-     * @return void
-     */
-    public function testSqlPdoType()
+    public function testSqlPdoType(): void
     {
         $this->obj->setObjType(GenericModel::class);
         $this->assertEquals(PDO::PARAM_STR, $this->obj->sqlPdoType());
     }
 
-    /**
-     * @return void
-     */
-    public function testSetObjType()
+    public function testSetObjType(): void
     {
         $return = $this->obj->setObjType('foo');
         $this->assertSame($return, $this->obj);
@@ -213,19 +188,13 @@ class ObjectPropertyTest extends AbstractTestCase
         $this->obj->setObjType(false);
     }
 
-    /**
-     * @return void
-     */
-    public function testAccessingObjTypeBeforeSetterThrowsException()
+    public function testAccessingObjTypeBeforeSetterThrowsException(): void
     {
         $this->expectException('\Exception');
         $this->obj['objType'];
     }
 
-    /**
-     * @return void
-     */
-    public function testSetPattern()
+    public function testSetPattern(): void
     {
         $return = $this->obj->setPattern('{{foo}}');
         $this->assertSame($return, $this->obj);
@@ -235,10 +204,7 @@ class ObjectPropertyTest extends AbstractTestCase
         $this->obj->setPattern([]);
     }
 
-    /**
-     * @return void
-     */
-    public function testParseOneWithScalarValue()
+    public function testParseOneWithScalarValue(): void
     {
         $this->assertEquals('foobar', $this->obj->parseOne('foobar'));
 
@@ -252,19 +218,13 @@ class ObjectPropertyTest extends AbstractTestCase
         $this->assertEquals('foo', $this->obj->parseOne($mock));
     }
 
-    /**
-     * @return void
-     */
-    public function testParseOneWithObjectWithoutIdReturnsNull()
+    public function testParseOneWithObjectWithoutIdReturnsNull(): void
     {
-        $mock = $this->createMock(StorableInterface::class);
+        $mock = $this->createStub(StorableInterface::class);
         $this->assertNull($this->obj->parseOne($mock));
     }
 
-    /**
-     * @return void
-     */
-    public function testParseOneWithObjectWithIdReturnsId()
+    public function testParseOneWithObjectWithIdReturnsId(): void
     {
         $mock = $this->createMock(StorableInterface::class);
         $mock->expects($this->any())
@@ -273,10 +233,7 @@ class ObjectPropertyTest extends AbstractTestCase
         $this->assertEquals('foo', $this->obj->parseOne($mock));
     }
 
-    /**
-     * @return void
-     */
-    public function testDisplayVal()
+    public function testDisplayVal(): void
     {
         $objs  = $this->setUpObjects($models);
         $first = $models[self::OBJ_1];
@@ -323,10 +280,7 @@ class ObjectPropertyTest extends AbstractTestCase
         $this->assertEquals($expected, $actual);
     }
 
-    /**
-     * @return void
-     */
-    public function testInputVal()
+    public function testInputVal(): void
     {
         $container = $this->getContainer();
 
@@ -345,10 +299,7 @@ class ObjectPropertyTest extends AbstractTestCase
         $this->assertEquals('foo,baz,qux', $this->obj->inputVal([ 'foo', 'baz', 'qux' ]));
     }
 
-    /**
-     * @return void
-     */
-    public function testStorageVal()
+    public function testStorageVal(): void
     {
         $container = $this->getContainer();
 
@@ -367,12 +318,9 @@ class ObjectPropertyTest extends AbstractTestCase
         $this->assertEquals('foo,baz,qux', $this->obj->storageVal([ 'foo', 'baz', 'qux' ]));
     }
 
-    /**
-     * @return void
-     */
-    public function testRenderObjPattern()
+    public function testRenderObjPattern(): void
     {
-        $objs = $this->setUpObjects($models);
+        $this->setUpObjects($models);
 
         $return = $this->callMethod($this->obj, 'renderObjPattern', [ $models[self::OBJ_1], '' ]);
         $this->assertEmpty($return);
@@ -388,10 +336,7 @@ class ObjectPropertyTest extends AbstractTestCase
         $this->assertEquals($models[self::OBJ_1]['name']['en'], $return);
     }
 
-    /**
-     * @return void
-     */
-    public function testRenderViewableObjPattern()
+    public function testRenderViewableObjPattern(): void
     {
         $container = $this->getContainer();
         $this->getContainerProvider()->registerView($container);
@@ -403,43 +348,34 @@ class ObjectPropertyTest extends AbstractTestCase
 
         $factory->setArguments($depends);
 
-        $objs = $this->setUpObjects($models);
+        $this->setUpObjects($models);
 
         /** Test 'charcoal-view' renderer */
         $return = $this->callMethod($this->obj, 'renderObjPattern', [ $models[self::OBJ_1] ]);
         $this->assertEquals($models[self::OBJ_1]['name']['en'], $return);
     }
 
-    /**
-     * @return void
-     */
-    public function testRenderObjPatternThrowsExceptionWithBadPattern()
+    public function testRenderObjPatternThrowsExceptionWithBadPattern(): void
     {
         $container = $this->getContainer();
 
         $model = $container['model/factory']->create(GenericModel::class);
 
         $this->expectException(InvalidArgumentException::class);
-        $return = $this->callMethod($this->obj, 'renderObjPattern', [ $model, false ]);
+        $this->callMethod($this->obj, 'renderObjPattern', [ $model, false ]);
     }
 
-    /**
-     * @return void
-     */
-    public function testRenderObjPatternThrowsExceptionWithBadLang()
+    public function testRenderObjPatternThrowsExceptionWithBadLang(): void
     {
         $container = $this->getContainer();
 
         $model = $container['model/factory']->create(GenericModel::class);
 
         $this->expectException(InvalidArgumentException::class);
-        $return = $this->callMethod($this->obj, 'renderObjPattern', [ $model, null, false ]);
+        $this->callMethod($this->obj, 'renderObjPattern', [ $model, null, false ]);
     }
 
-    /**
-     * @return void
-     */
-    public function testChoices()
+    public function testChoices(): void
     {
         $this->obj->setObjType(GenericModel::class);
 
@@ -448,7 +384,7 @@ class ObjectPropertyTest extends AbstractTestCase
         $this->assertEmpty($this->obj->choices());
 
         /** Database table created */
-        $objs = $this->setUpObjects($models);
+        $this->setUpObjects($models);
 
         /** Test available choices */
         $this->assertTrue($this->obj->hasChoices());
@@ -480,31 +416,21 @@ class ObjectPropertyTest extends AbstractTestCase
         $this->assertEquals($fakeId, $this->obj->choiceLabel($fakeId));
     }
 
-    /**
-     * @return void
-     */
-    public function testChoiceLabelStructException()
+    public function testChoiceLabelStructException(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->obj->choiceLabel([]);
     }
 
-    /**
-     * @return void
-     */
-    public function testParseChoicesThrowsException()
+    public function testParseChoicesThrowsException(): void
     {
         $this->expectException(InvalidArgumentException::class);
-        $return = $this->callMethod($this->obj, 'parseChoices', [ false ]);
+        $this->callMethod($this->obj, 'parseChoices', [ false ]);
     }
 
-    /**
-     * @return void
-     */
-    public function testCollectionLoading()
+    public function testCollectionLoading(): void
     {
-        $container  = $this->getContainer();
-        $translator = $container['translator'];
+        $this->getContainer();
 
         $this->setUpObjects();
 
@@ -533,10 +459,7 @@ class ObjectPropertyTest extends AbstractTestCase
         $this->assertEquals($expectedCollection, $collection->keys());
     }
 
-    /**
-     * @return void
-     */
-    public function testLoadObject()
+    public function testLoadObject(): void
     {
         $container = $this->getContainer();
 
@@ -557,12 +480,9 @@ class ObjectPropertyTest extends AbstractTestCase
         $this->assertNull($return);
     }
 
-    /**
-     * @return void
-     */
-    public function testModelLoader()
+    public function testModelLoader(): void
     {
-        $objs = $this->setUpObjects();
+        $this->setUpObjects();
 
         $this->obj->setObjType(GenericModel::class);
 
@@ -570,14 +490,11 @@ class ObjectPropertyTest extends AbstractTestCase
         $this->assertInstanceOf(ModelLoader::class, $return);
     }
 
-    /**
-     * @return void
-     */
-    public function testModelLoaderThrowsException()
+    public function testModelLoaderThrowsException(): void
     {
         $this->obj->setObjType(GenericModel::class);
 
         $this->expectException(InvalidArgumentException::class);
-        $return = $this->callMethod($this->obj, 'modelLoader', [ false ]);
+        $this->callMethod($this->obj, 'modelLoader', [ false ]);
     }
 }

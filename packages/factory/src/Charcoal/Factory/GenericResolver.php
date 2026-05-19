@@ -32,7 +32,7 @@ class GenericResolver
     /**
      * @param array $data Optional class dependencies. Will use default values if none are provided.
      */
-    public function __construct(array $data = null)
+    public function __construct(?array $data = null)
     {
         if (!isset($data['prefix'])) {
             $data['prefix'] = '';
@@ -68,7 +68,7 @@ class GenericResolver
      * @param string $type The "type" of object to resolve (the object ident).
      * @return string The resolved class name (FQN).
      */
-    public function __invoke($type)
+    public function __invoke($type): string
     {
         return $this->resolve($type);
     }
@@ -80,7 +80,7 @@ class GenericResolver
      * @throws InvalidArgumentException If the type parameter is not a string.
      * @return string The resolved class name (FQN).
      */
-    public function resolve($type)
+    public function resolve($type): string
     {
         if (!is_string($type)) {
             throw new InvalidArgumentException(
@@ -91,7 +91,7 @@ class GenericResolver
         // Normalize requested type with prefix / suffix, if applicable.
         $type = $this->prefix . $type . $this->suffix;
 
-        $capitalizeNext = function (&$i) {
+        $capitalizeNext = function (&$i): void {
             $i = ucfirst($i);
         };
 
@@ -107,8 +107,6 @@ class GenericResolver
             $type = str_replace($rep, $target, $type);
         }
 
-        $class = '\\' . trim($type, '\\');
-
-        return $class;
+        return '\\' . trim($type, '\\');
     }
 }

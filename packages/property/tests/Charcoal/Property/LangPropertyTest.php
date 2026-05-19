@@ -25,8 +25,6 @@ class LangPropertyTest extends AbstractTestCase
 
     /**
      * Set up the test.
-     *
-     * @return void
      */
     protected function setUp(): void
     {
@@ -42,26 +40,17 @@ class LangPropertyTest extends AbstractTestCase
         ]);
     }
 
-    /**
-     * @return void
-     */
-    public function testType()
+    public function testType(): void
     {
         $this->assertEquals('lang', $this->obj->type());
     }
 
-    /**
-     * @return void
-     */
-    public function testSqlExtra()
+    public function testSqlExtra(): void
     {
         $this->assertEquals('', $this->obj->sqlExtra());
     }
 
-    /**
-     * @return void
-     */
-    public function testSqlType()
+    public function testSqlType(): void
     {
         $this->obj->setMultiple(false);
         $this->assertEquals('CHAR(2)', $this->obj->sqlType());
@@ -70,18 +59,12 @@ class LangPropertyTest extends AbstractTestCase
         $this->assertEquals('TEXT', $this->obj->sqlType());
     }
 
-    /**
-     * @return void
-     */
-    public function testSqlPdoType()
+    public function testSqlPdoType(): void
     {
         $this->assertEquals(PDO::PARAM_STR, $this->obj->sqlPdoType());
     }
 
-    /**
-     * @return void
-     */
-    public function testChoices()
+    public function testChoices(): void
     {
         $container  = $this->getContainer();
         $translator = $container['translator'];
@@ -99,10 +82,7 @@ class LangPropertyTest extends AbstractTestCase
         $this->assertEquals(array_keys($locales), array_keys($choices));
     }
 
-    /**
-     * @return void
-     */
-    public function testDisplayVal()
+    public function testDisplayVal(): void
     {
         $container  = $this->getContainer();
         $translator = $container['translator'];

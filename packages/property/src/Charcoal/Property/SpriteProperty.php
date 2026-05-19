@@ -24,20 +24,15 @@ class SpriteProperty extends AbstractProperty implements SelectablePropertyInter
 
     /**
      * The sprite svg to build the choices from.
-     *
-     * @var string
      */
-    private $sprite;
+    private ?string $sprite = null;
 
     /**
      * @var ViewInterface
      */
     private $view;
 
-    /**
-     * @return string
-     */
-    public function type()
+    public function type(): string
     {
         return 'sprite';
     }
@@ -47,9 +42,9 @@ class SpriteProperty extends AbstractProperty implements SelectablePropertyInter
      *
      * @uses   self::offsetSet()
      * @param  array $data Key-value array of data to append.
-     * @return self
      */
-    public function setData(array $data)
+    #[\Override]
+    public function setData(array $data): static
     {
         parent::setData($data);
 
@@ -60,10 +55,8 @@ class SpriteProperty extends AbstractProperty implements SelectablePropertyInter
 
     /**
      * Retrievs the spritesheet SVG file path.
-     *
-     * @return string|null
      */
-    public function getSprite()
+    public function getSprite(): ?string
     {
         return $this->sprite;
     }
@@ -73,9 +66,8 @@ class SpriteProperty extends AbstractProperty implements SelectablePropertyInter
      *
      * @param  string $sprite The SVG file path.
      * @throws InvalidArgumentException If the argument is not a string.
-     * @return self
      */
-    public function setSprite($sprite)
+    public function setSprite($sprite): static
     {
         if (!is_string($sprite)) {
             throw new InvalidArgumentException(
@@ -95,7 +87,7 @@ class SpriteProperty extends AbstractProperty implements SelectablePropertyInter
      *
      * @return string The SQL type
      */
-    public function sqlType()
+    public function sqlType(): string
     {
         // Multiple strings are always stored as TEXT because they can hold multiple values
         if ($this['multiple']) {
@@ -105,10 +97,7 @@ class SpriteProperty extends AbstractProperty implements SelectablePropertyInter
         return 'VARCHAR(255)';
     }
 
-    /**
-     * @return integer
-     */
-    public function sqlPdoType()
+    public function sqlPdoType(): int
     {
         return PDO::PARAM_STR;
     }
@@ -117,9 +106,8 @@ class SpriteProperty extends AbstractProperty implements SelectablePropertyInter
      * Retrieve the available choice structures.
      *
      * @see    SelectablePropertyInterface::choices()
-     * @return array
      */
-    public function buildChoicesFromSprite()
+    public function buildChoicesFromSprite(): array
     {
         $spritePath = $this['sprite'];
 
@@ -134,8 +122,8 @@ class SpriteProperty extends AbstractProperty implements SelectablePropertyInter
 
             $choices = [];
 
-            if (!isset($xml->symbol)) {
-                if (isset($xml->defs->symbol)) {
+            if (!property_exists($xml, 'symbol') || $xml->symbol === null) {
+                if (property_exists($xml->defs, 'symbol') && $xml->defs->symbol !== null) {
                     $xml = $xml->defs;
                 } else {
                     throw new RuntimeException(
@@ -150,7 +138,7 @@ class SpriteProperty extends AbstractProperty implements SelectablePropertyInter
 
                 $id = (string)$node->attributes()->id;
 
-                if (!$id) {
+                if ($id === '' || $id === '0') {
                     $this->logger->warning(sprintf(
                         'Invalid SVG/XML spritesheet: Missing or empty ID attribute on: %s',
                         $node->asXML()
@@ -200,6 +188,7 @@ class SpriteProperty extends AbstractProperty implements SelectablePropertyInter
      * @see AbstractPropery::displayVal()
      * @return string
      */
+    #[\Override]
     public function displayVal($val, array $options = [])
     {
         $val = parent::displayVal($val, $options);
@@ -244,6 +233,7 @@ class SpriteProperty extends AbstractProperty implements SelectablePropertyInter
      * @param Container $container A Pimple DI container.
      * @return void
      */
+    #[\Override]
     protected function setDependencies(Container $container)
     {
         parent::setDependencies($container);
@@ -279,11 +269,11 @@ class SpriteProperty extends AbstractProperty implements SelectablePropertyInter
             }
 
             if (!isset($choice['spritePathWithHash'])) {
-                $choice['spritePathWithHash'] = (string)$this['sprite'] . '#' . $choiceIdent;
+                $choice['spritePathWithHash'] = $this['sprite'] . '#' . $choiceIdent;
             }
 
             if (!isset($choice['spritePathWithHash'])) {
-                $choice['spritePathWithHash'] = (string)$this['sprite'] . '#' . $choiceIdent;
+                $choice['spritePathWithHash'] = $this['sprite'] . '#' . $choiceIdent;
                 $choice['label']              = $this->translator()->translation($choiceIdent);
             }
         } else {

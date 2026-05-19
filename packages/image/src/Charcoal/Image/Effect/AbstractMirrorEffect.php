@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Charcoal\Image\Effect;
 
 use InvalidArgumentException;
@@ -12,9 +14,8 @@ abstract class AbstractMirrorEffect extends AbstractEffect
 {
     /**
      * Axis can be "x" (flip) or "y" (flop)
-     * @var string $axis
      */
-    private $axis = 'y';
+    private string $axis = 'y';
 
     /**
      * @param string $axis The mirror axis.

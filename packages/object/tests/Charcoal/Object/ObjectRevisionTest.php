@@ -19,22 +19,16 @@ class ObjectRevisionTest extends AbstractTestCase
 {
     /**
      * Tested Class.
-     *
-     * @var ObjectRevision
      */
-    private $obj;
+    private \Charcoal\Object\ObjectRevision $obj;
 
     /**
      * Store the service container.
-     *
-     * @var Container
      */
-    private $container;
+    private ?\Pimple\Container $container = null;
 
     /**
      * Set up the test.
-     *
-     * @return void
      */
     public function setUp(): void
     {
@@ -43,10 +37,7 @@ class ObjectRevisionTest extends AbstractTestCase
         $this->obj = $container['model/factory']->create(ObjectRevision::class);
     }
 
-    /**
-     * @return void
-     */
-    public function testSetObjType()
+    public function testSetObjType(): void
     {
         $this->assertNull($this->obj['targetType']);
         $ret = $this->obj->setTargetType('foobar');
@@ -57,10 +48,7 @@ class ObjectRevisionTest extends AbstractTestCase
         $this->obj->setTargetType(false);
     }
 
-    /**
-     * @return void
-     */
-    public function testSetObjId()
+    public function testSetObjId(): void
     {
         $this->assertNull($this->obj['targetId']);
         $ret = $this->obj->setTargetId(42);
@@ -68,10 +56,7 @@ class ObjectRevisionTest extends AbstractTestCase
         $this->assertEquals(42, $this->obj['targetId']);
     }
 
-    /**
-     * @return void
-     */
-    public function testSetRevNum()
+    public function testSetRevNum(): void
     {
         $this->assertNull($this->obj['revNum']);
         $ret = $this->obj->setRevNum(66);
@@ -85,10 +70,7 @@ class ObjectRevisionTest extends AbstractTestCase
         $this->obj->setRevNum([]);
     }
 
-    /**
-     * @return void
-     */
-    public function testSetRevTs()
+    public function testSetRevTs(): void
     {
         $obj = $this->obj;
         $this->assertNull($obj['revTs']);
@@ -104,10 +86,7 @@ class ObjectRevisionTest extends AbstractTestCase
         $obj->setRevTs(false);
     }
 
-    /**
-     * @return void
-     */
-    public function testSetRevUser()
+    public function testSetRevUser(): void
     {
         $this->assertNull($this->obj['revUser']);
         $ret = $this->obj->setRevUser('me');
@@ -121,10 +100,7 @@ class ObjectRevisionTest extends AbstractTestCase
         $this->obj->setRevUser(false);
     }
 
-    /**
-     * @return void
-     */
-    public function testSetDataPrev()
+    public function testSetDataPrev(): void
     {
         $this->assertNull($this->obj['dataPrev']);
         $ret = $this->obj->setDataPrev(['foo'=>1]);
@@ -135,10 +111,7 @@ class ObjectRevisionTest extends AbstractTestCase
         $this->assertEquals([], $this->obj->setDataPrev(null)['dataPrev']);
     }
 
-    /**
-     * @return void
-     */
-    public function testSetDataObj()
+    public function testSetDataObj(): void
     {
         $this->assertNull($this->obj['dataObj']);
         $ret = $this->obj->setDataObj(['foo'=>1]);
@@ -149,10 +122,7 @@ class ObjectRevisionTest extends AbstractTestCase
         $this->assertEquals([], $this->obj->setDataObj(null)['dataObj']);
     }
 
-    /**
-     * @return void
-     */
-    public function testSetDataDiff()
+    public function testSetDataDiff(): void
     {
         $this->assertNull($this->obj['dataDiff']);
         $ret = $this->obj->setDataDiff(['foo'=>1]);
@@ -163,10 +133,7 @@ class ObjectRevisionTest extends AbstractTestCase
         $this->assertEquals([], $this->obj->setDataDiff(null)['dataDiff']);
     }
 
-    /**
-     * @return void
-     */
-    public function testCreateDiff()
+    public function testCreateDiff(): void
     {
         $this->assertEquals([], $this->obj->createDiff([], []));
         $ret = $this->obj->createDiff(['foo'=>1], ['foo'=>2]);
@@ -185,12 +152,10 @@ class ObjectRevisionTest extends AbstractTestCase
 
     /**
      * Set up the service container.
-     *
-     * @return Container
      */
-    private function container()
+    private function container(): \Pimple\Container
     {
-        if ($this->container === null) {
+        if (!$this->container instanceof \Pimple\Container) {
             $container = new Container();
             $containerProvider = new ContainerProvider();
             $containerProvider->registerBaseServices($container);

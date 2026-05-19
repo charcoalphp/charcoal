@@ -26,8 +26,6 @@ abstract class AbstractRouteTestCase extends AbstractTestCase
 
     /**
      * Set up the test.
-     *
-     * @return void
      */
     protected function setUp(): void
     {
@@ -86,10 +84,8 @@ abstract class AbstractRouteTestCase extends AbstractTestCase
 
     /**
      * Assertion when given an empty path.
-     *
-     * @return void
      */
-    public function testPathResolvableOnEmptyPath()
+    public function testPathResolvableOnEmptyPath(): void
     {
         $container = $this->getContainer();
         $router    = $this->createRouter([

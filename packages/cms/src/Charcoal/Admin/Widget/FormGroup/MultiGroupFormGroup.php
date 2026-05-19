@@ -22,24 +22,19 @@ class MultiGroupFormGroup extends MultiGroupWidget implements
     use FormGroupTrait;
     use UiItemTrait;
 
-    /**
-     * @return string
-     */
-    public function template()
+    #[\Override]
+    public function template(): string
     {
         return 'charcoal/admin/widget/multi-group';
     }
 
-    /**
-     * @return array
-     */
-    public function dataFromObject()
+    public function dataFromObject(): array
     {
         $obj         = $this->obj();
         $objMetadata = $obj->metadata();
 
-        $adminMetadata   = (isset($objMetadata['admin']) ? $objMetadata['admin'] : null);
-        $adminFormGroups = (isset($adminMetadata['form_groups']) ? $adminMetadata['form_groups'] : null);
+        $adminMetadata   = ($objMetadata['admin'] ?? null);
+        $adminFormGroups = ($adminMetadata['form_groups'] ?? null);
 
         $groups = $this->groups();
 
@@ -70,8 +65,8 @@ class MultiGroupFormGroup extends MultiGroupWidget implements
             return [];
         }
 
-        $adminMetadata   = (isset($data['admin']) ? $data['admin'] : null);
-        $adminFormGroups = (isset($adminMetadata['form_groups']) ? $adminMetadata['form_groups'] : null);
+        $adminMetadata   = ($data['admin'] ?? null);
+        $adminFormGroups = ($adminMetadata['form_groups'] ?? null);
 
         if (isset($data['groups']) && isset($adminFormGroups)) {
             $extraFormGroups = array_intersect(
@@ -100,10 +95,10 @@ class MultiGroupFormGroup extends MultiGroupWidget implements
      * @throws \UnexpectedValueException If a property data is invalid.
      * @return FormPropertyWidget[]
      */
-    public function formProperties(array $group = null)
+    public function formProperties(?array $group = null): array
     {
         if (
-            !key_exists(self::DATA_SOURCE_METADATA, array_flip($this->dataSources())) ||
+            !array_key_exists(self::DATA_SOURCE_METADATA, array_flip($this->dataSources())) ||
             !$this->widgetMetadata()
         ) {
             return iterator_to_array($this->form()->formProperties());
@@ -114,7 +109,7 @@ class MultiGroupFormGroup extends MultiGroupWidget implements
 
         try {
             $store = $this->storageProperty();
-        } catch (\Exception $e) {
+        } catch (\Exception) {
             $store = null;
         }
 
@@ -128,7 +123,7 @@ class MultiGroupFormGroup extends MultiGroupWidget implements
         $props = $this->widgetMetadata()['properties'];
 
         // We need to sort form properties by form group property order if a group exists
-        if (!empty($group)) {
+        if ($group !== null && $group !== []) {
             $props = array_merge(array_flip($group), $props);
         }
 
@@ -139,7 +134,7 @@ class MultiGroupFormGroup extends MultiGroupWidget implements
                 throw new \UnexpectedValueException(sprintf(
                     'Invalid property data for "%1$s", received %2$s',
                     $propertyIdent,
-                    (is_object($propertyMetadata) ? get_class($propertyMetadata) : gettype($propertyMetadata))
+                    (get_debug_type($propertyMetadata))
                 ));
             }
 
@@ -172,9 +167,10 @@ class MultiGroupFormGroup extends MultiGroupWidget implements
      *
      * @return FormInterface|self
      */
+    #[\Override]
     protected function formWidget()
     {
-        if (!key_exists(self::DATA_SOURCE_METADATA, array_flip($this->dataSources()))) {
+        if (!array_key_exists(self::DATA_SOURCE_METADATA, array_flip($this->dataSources()))) {
             return $this->form();
         }
 

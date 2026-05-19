@@ -25,14 +25,14 @@ class DatabaseOrder extends Order implements
      *
      * @var string
      */
+    #[\Override]
     protected $table = DatabaseSource::DEFAULT_TABLE_ALIAS;
 
     /**
      * Retrieve the default values for sorting.
-     *
-     * @return array
      */
-    public function defaultData()
+    #[\Override]
+    public function defaultData(): array
     {
         $defaults = parent::defaultData();
         $defaults['table'] = DatabaseSource::DEFAULT_TABLE_ALIAS;
@@ -77,10 +77,8 @@ class DatabaseOrder extends Order implements
 
     /**
      * Retrieve the ORDER BY clause for the {@see self::MODE_RANDOM} mode.
-     *
-     * @return string
      */
-    protected function byRandom()
+    protected function byRandom(): string
     {
         return 'RAND()';
     }
@@ -89,12 +87,11 @@ class DatabaseOrder extends Order implements
      * Generate the ORDER BY clause(s) for the direction mode.
      *
      * @throws UnexpectedValueException If any required property is empty.
-     * @return string
      */
-    protected function byProperty()
+    protected function byProperty(): string
     {
         $fields = $this->fieldIdentifiers();
-        if (empty($fields)) {
+        if ($fields === []) {
             throw new UnexpectedValueException(
                 'Property is required.'
             );
@@ -127,19 +124,18 @@ class DatabaseOrder extends Order implements
      * Retrieve the ORDER BY clause for the {@see self::MODE_VALUES} mode.
      *
      * @throws UnexpectedValueException If any required property or values is empty.
-     * @return string
      */
-    protected function byValues()
+    protected function byValues(): string
     {
         $fields = $this->fieldIdentifiers();
-        if (empty($fields)) {
+        if ($fields === []) {
             throw new UnexpectedValueException(
                 'Property is required.'
             );
         }
 
         $values = $this->prepareValues($this->values());
-        if (empty($values)) {
+        if ($values === []) {
             throw new UnexpectedValueException(sprintf(
                 'Value can not be empty on fields: %s',
                 implode(', ', $fields)
@@ -164,7 +160,7 @@ class DatabaseOrder extends Order implements
      * @param  mixed $values The value to be normalized.
      * @return array Returns a collection of parsed values.
      */
-    public function prepareValues($values)
+    public function prepareValues($values): array
     {
         if (empty($values)) {
             return [];
@@ -174,9 +170,8 @@ class DatabaseOrder extends Order implements
             $values = (array)$values;
         }
 
-        $values = array_filter($values, 'is_scalar');
-        $values = array_map('self::quoteValue', $values);
+        $values = array_filter($values, is_scalar(...));
 
-        return $values;
+        return array_map(self::quoteValue(...), $values);
     }
 }

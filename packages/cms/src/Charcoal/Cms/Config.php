@@ -53,11 +53,11 @@ class Config extends Content implements
      * Section constructor.
      * @param array $data The data.
      */
-    public function __construct(array $data = null)
+    public function __construct(?array $data = null)
     {
         parent::__construct($data);
 
-        if (is_callable([$this, 'defaultData'])) {
+        if (is_callable($this->defaultData(...))) {
             $this->setData($this->defaultData());
         }
     }
@@ -65,12 +65,10 @@ class Config extends Content implements
     // ==========================================================================
     // SETTERS
     // ==========================================================================
-
     /**
      * @param mixed $defaultMetaTitle The default meta title.
-     * @return self
      */
-    public function setDefaultMetaTitle($defaultMetaTitle)
+    public function setDefaultMetaTitle($defaultMetaTitle): static
     {
         $this->defaultMetaTitle = $this->translator()->translation($defaultMetaTitle);
 
@@ -79,9 +77,8 @@ class Config extends Content implements
 
     /**
      * @param mixed $defaultMetaDescription The default meta description.
-     * @return self
      */
-    public function setDefaultMetaDescription($defaultMetaDescription)
+    public function setDefaultMetaDescription($defaultMetaDescription): static
     {
         $this->defaultMetaDescription = $this->translator()->translation($defaultMetaDescription);
 
@@ -90,9 +87,8 @@ class Config extends Content implements
 
     /**
      * @param mixed $defaultMetaImage The default meta image.
-     * @return self
      */
-    public function setDefaultMetaImage($defaultMetaImage)
+    public function setDefaultMetaImage($defaultMetaImage): static
     {
         $this->defaultMetaImage = $defaultMetaImage;
 
@@ -101,9 +97,8 @@ class Config extends Content implements
 
     /**
      * @param mixed $defaultMetaUrl The default meta url.
-     * @return self
      */
-    public function setDefaultMetaUrl($defaultMetaUrl)
+    public function setDefaultMetaUrl($defaultMetaUrl): static
     {
         $this->defaultMetaUrl = $this->translator()->translation($defaultMetaUrl);
 
@@ -112,9 +107,8 @@ class Config extends Content implements
 
     /**
      * @param array|StructureMetadata|mixed $socialMedias The social media array.
-     * @return self
      */
-    public function setSocialMedias($socialMedias)
+    public function setSocialMedias($socialMedias): static
     {
         $this->socialMedias = $socialMedias;
 
@@ -123,9 +117,8 @@ class Config extends Content implements
 
     /**
      * @param string $defaultFromEmail The default email to send from.
-     * @return self
      */
-    public function setDefaultFromEmail($defaultFromEmail)
+    public function setDefaultFromEmail($defaultFromEmail): static
     {
         $this->defaultFromEmail = $defaultFromEmail;
 

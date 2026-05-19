@@ -56,14 +56,14 @@ trait UserProviderTrait
      * @param  string $email The email to lookup.
      * @return User
      */
-    protected function userExists($email)
+    protected function userExists($email): bool
     {
         $container = $this->container();
 
         $user = $container['model/factory']->create($this->userClass);
         $user->loadFrom('email', $email);
 
-        return !!$user->id();
+        return (bool) $user->id();
     }
 
     /**

@@ -26,25 +26,23 @@ class TwigLoader extends AbstractLoader implements
      *
      * @todo   Add support for custom delimiters.
      * @param  string $ident The template being evaluated.
-     * @return boolean
      */
+    #[\Override]
     protected function isTemplateString(string $ident): bool
     {
-        return strpos($ident, '{%') !== false || parent::isTemplateString($ident);
+        return str_contains($ident, '{%') || parent::isTemplateString($ident);
     }
 
     /**
      * Convert an identifier to a file path.
      *
      * @param  string $ident The identifier to convert.
-     * @return string
      */
     protected function filenameFromIdent(string $ident): string
     {
         $filename = str_replace([ '\\' ], '.', $ident);
-        $filename .= '.twig';
 
-        return $filename;
+        return $filename . '.twig';
     }
 
     /**
@@ -67,11 +65,10 @@ class TwigLoader extends AbstractLoader implements
      * @see Twig\Loader\LoaderInterface::exists()
      *
      * @param  string $name The name of the template to load.
-     * @return boolean
      */
     public function exists(string $name): bool
     {
-        return !!$this->findTemplateFile($name);
+        return (bool) $this->findTemplateFile($name);
     }
 
     /**
@@ -103,12 +100,10 @@ class TwigLoader extends AbstractLoader implements
      *
      * @param  string  $name The template name.
      * @param  integer $time The last modification time of the cached template.
-     * @return boolean
      */
     public function isFresh(string $name, int $time): bool
     {
         $file = $this->findTemplateFile($name);
-        $fresh = (filemtime($file) <= $time);
-        return $fresh;
+        return filemtime($file) <= $time;
     }
 }

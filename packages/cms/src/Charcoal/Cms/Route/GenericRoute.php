@@ -58,17 +58,13 @@ class GenericRoute extends TemplateRoute
 
     /**
      * Store the factory instance for the current class.
-     *
-     * @var FactoryInterface
      */
-    private $modelFactory;
+    private ?\Charcoal\Factory\FactoryInterface $modelFactory = null;
 
     /**
      * Store the collection loader for the current class.
-     *
-     * @var CollectionLoader
      */
-    private $collectionLoader;
+    private ?\Charcoal\Loader\CollectionLoader $collectionLoader = null;
 
     /**
      * Track the state of required dependencies.
@@ -103,7 +99,7 @@ class GenericRoute extends TemplateRoute
     {
         parent::__construct($data);
 
-        $this->setPath(ltrim($data['path'], '/'));
+        $this->setPath(ltrim((string) $data['path'], '/'));
     }
 
     /**
@@ -124,11 +120,7 @@ class GenericRoute extends TemplateRoute
         }
 
         $contextObject = $this->getContextObject();
-        if (!$contextObject || !$this->isValidContextObject($contextObject)) {
-            return false;
-        }
-
-        return true;
+        return $contextObject && $this->isValidContextObject($contextObject);
     }
 
     /**
@@ -139,6 +131,7 @@ class GenericRoute extends TemplateRoute
      * @param  ResponseInterface $response  A PSR-7 compatible Response instance.
      * @return ResponseInterface
      */
+    #[\Override]
     public function __invoke(
         Container $container,
         RequestInterface $request,
@@ -173,8 +166,8 @@ class GenericRoute extends TemplateRoute
             if ($templateContent === $templateIdent || $templateContent === '') {
                 $container['logger']->warning(sprintf(
                     '[%s] Missing or bad template identifier on model [%s] for ID [%s]',
-                    get_class($this),
-                    get_class($this->getContextObject()),
+                    static::class,
+                    $this->getContextObject()::class,
                     $templateIdent
                 ));
                 return $response->withStatus(500);
@@ -193,9 +186,7 @@ class GenericRoute extends TemplateRoute
      */
     public function createRouteObject()
     {
-        $route = $this->modelFactory()->create($this->objectRouteClass());
-
-        return $route;
+        return $this->modelFactory()->create($this->objectRouteClass());
     }
 
     /**
@@ -253,10 +244,7 @@ class GenericRoute extends TemplateRoute
         return $response;
     }
 
-    /**
-     * @return self
-     */
-    protected function resolveTemplateContextObject()
+    protected function resolveTemplateContextObject(): static
     {
         $config = $this->config();
 
@@ -320,10 +308,8 @@ class GenericRoute extends TemplateRoute
         }
 
         // Overwrite from custom object template_options
-        if ($contextObject instanceof TemplateableInterface) {
-            if (!empty($contextObject['templateOptions'])) {
-                $templateOptions = $contextObject['templateOptions'];
-            }
+        if ($contextObject instanceof TemplateableInterface && !empty($contextObject['templateOptions'])) {
+            $templateOptions = $contextObject['templateOptions'];
         }
 
         if (isset($templateOptions) && $templateOptions) {
@@ -347,6 +333,7 @@ class GenericRoute extends TemplateRoute
      * @param  RequestInterface $request   The request to intialize the template with.
      * @return string
      */
+    #[\Override]
     protected function createTemplate(Container $container, RequestInterface $request)
     {
         $template = parent::createTemplate($container, $request);
@@ -362,9 +349,8 @@ class GenericRoute extends TemplateRoute
      *
      * @param  string $className The class name of the object route model.
      * @throws InvalidArgumentException If the class name is not a string.
-     * @return self
      */
-    protected function setObjectRouteClass($className)
+    protected function setObjectRouteClass($className): static
     {
         if (!is_string($className)) {
             throw new InvalidArgumentException(
@@ -402,16 +388,7 @@ class GenericRoute extends TemplateRoute
         if (!$contextObject->id()) {
             return false;
         }
-
-        if ($contextObject instanceof RoutableInterface) {
-            return $contextObject->isActiveRoute();
-        }
-
-        if (isset($contextObject['active'])) {
-            return (bool)$contextObject['active'];
-        }
-
-        return true;
+        return $contextObject->isActiveRoute();
     }
 
     /**
@@ -467,9 +444,8 @@ class GenericRoute extends TemplateRoute
      * Determine if the object route is valid.
      *
      * @param  ObjectRouteInterface $route An object route to test.
-     * @return boolean
      */
-    protected function isValidObjectRoute(ObjectRouteInterface $route)
+    protected function isValidObjectRoute(ObjectRouteInterface $route): bool
     {
         return ($route->id() && $route->getRouteObjType() && $route->getRouteObjId());
     }
@@ -552,14 +528,12 @@ class GenericRoute extends TemplateRoute
     /**
      * SETTERS
      */
-
     /**
      * Set the specified URI path.
      *
      * @param string $path The path to use for route resolution.
-     * @return self
      */
-    protected function setPath($path)
+    protected function setPath($path): static
     {
         $this->path = $path;
 
@@ -570,9 +544,8 @@ class GenericRoute extends TemplateRoute
      * Set an object model factory.
      *
      * @param FactoryInterface $factory The model factory, to create objects.
-     * @return self
      */
-    protected function setModelFactory(FactoryInterface $factory)
+    protected function setModelFactory(FactoryInterface $factory): static
     {
         $this->modelFactory = $factory;
 
@@ -583,9 +556,8 @@ class GenericRoute extends TemplateRoute
      * Set a model collection loader.
      *
      * @param CollectionLoader $loader The collection loader.
-     * @return self
      */
-    public function setCollectionLoader(CollectionLoader $loader)
+    public function setCollectionLoader(CollectionLoader $loader): static
     {
         $this->collectionLoader = $loader;
 
@@ -617,14 +589,14 @@ class GenericRoute extends TemplateRoute
                     $choices = (array)$locale['locales'];
                     array_push($locales, ...$choices);
                 } elseif (isset($locale['locale'])) {
-                    array_push($locales, $locale['locale']);
+                    $locales[] = $locale['locale'];
                 }
             }
         }
 
         $locales = array_unique($locales);
 
-        if ($locales) {
+        if ($locales !== []) {
             setlocale(LC_ALL, $locales);
         }
     }
@@ -647,13 +619,12 @@ class GenericRoute extends TemplateRoute
      * Retrieve the object model factory.
      *
      * @throws RuntimeException If the model factory was not previously set.
-     * @return FactoryInterface
      */
-    public function modelFactory()
+    public function modelFactory(): \Charcoal\Factory\FactoryInterface
     {
-        if (!isset($this->modelFactory)) {
+        if (!$this->modelFactory instanceof \Charcoal\Factory\FactoryInterface) {
             throw new RuntimeException(
-                sprintf('Model Factory is not defined for "%s"', get_class($this))
+                sprintf('Model Factory is not defined for "%s"', static::class)
             );
         }
 
@@ -664,13 +635,12 @@ class GenericRoute extends TemplateRoute
      * Retrieve the model collection loader.
      *
      * @throws RuntimeException If the collection loader was not previously set.
-     * @return CollectionLoader
      */
-    protected function collectionLoader()
+    protected function collectionLoader(): \Charcoal\Loader\CollectionLoader
     {
-        if (!isset($this->collectionLoader)) {
+        if (!$this->collectionLoader instanceof \Charcoal\Loader\CollectionLoader) {
             throw new RuntimeException(
-                sprintf('Collection Loader is not defined for "%s"', get_class($this))
+                sprintf('Collection Loader is not defined for "%s"', static::class)
             );
         }
 
@@ -680,6 +650,7 @@ class GenericRoute extends TemplateRoute
     /**
      * @return boolean
      */
+    #[\Override]
     protected function cacheEnabled()
     {
         $obj = $this->getContextObject();
@@ -689,16 +660,15 @@ class GenericRoute extends TemplateRoute
     /**
      * @return integer
      */
+    #[\Override]
     protected function cacheTtl()
     {
         $obj = $this->getContextObject();
         return $obj['cache_ttl'] ?: 0;
     }
 
-    /**
-     * @return string
-     */
-    protected function cacheIdent()
+    #[\Override]
+    protected function cacheIdent(): string
     {
         $obj = $this->getContextObject();
         return $obj->objType() . '.' . $obj->id();

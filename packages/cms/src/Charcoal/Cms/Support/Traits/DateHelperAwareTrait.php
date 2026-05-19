@@ -26,7 +26,7 @@ trait DateHelperAwareTrait
         if (!$this->dateHelper instanceof DateHelper) {
             throw new ContainerException(sprintf(
                 'Missing dependency for %s: %s',
-                get_called_class(),
+                static::class,
                 DateHelper::class
             ));
         }

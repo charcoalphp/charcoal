@@ -27,30 +27,16 @@ abstract class AbstractTimeGraphWidget extends AbstractGraphWidget implements Ti
 
     /**
      * The date grouping type can be "hour", "day" or "month".
-     *
-     * @var string $groupingType
      */
-    private $groupingType;
+    private ?string $groupingType = null;
 
-    /**
-     * @var string $dateFirnat
-     */
-    private $dateFormat;
+    private ?string $dateFormat = null;
 
-    /**
-     * @var string $sqlDateFormat
-     */
-    private $sqlDateFormat;
+    private ?string $sqlDateFormat = null;
 
-    /**
-     * @var DateTimeInterface $startDate
-     */
-    private $startDate;
+    private ?\DateTimeInterface $startDate = null;
 
-    /**
-     * @var DateTimeInterface $endDate
-     */
-    private $endDate;
+    private ?\DateTimeInterface $endDate = null;
 
     /**
      * @var DateInterval $dateInterval
@@ -150,7 +136,7 @@ abstract class AbstractTimeGraphWidget extends AbstractGraphWidget implements Ti
                 throw new InvalidArgumentException(sprintf(
                     'Invalid start date: %s',
                     $e->getMessage()
-                ), $e);
+                ), $e, $e);
             }
         }
         if (!($ts instanceof DateTimeInterface)) {
@@ -184,7 +170,7 @@ abstract class AbstractTimeGraphWidget extends AbstractGraphWidget implements Ti
                 throw new InvalidArgumentException(sprintf(
                     'Invalid end date: %s',
                     $e->getMessage()
-                ), $e);
+                ), $e, $e);
             }
         }
         if (!($ts instanceof DateTimeInterface)) {

@@ -15,9 +15,11 @@ use InvalidArgumentException;
 
 /**
  * Test ConfigurableTrait
- *
- * @coversDefaultClass \Charcoal\Config\ConfigurableTrait
  */
+#[\PHPUnit\Framework\Attributes\CoversTrait(\Charcoal\Config\ConfigurableTrait::class)]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Config\ConfigurableTrait::class, 'createConfig()')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Config\ConfigurableTrait::class, 'setConfig()')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Config\ConfigurableTrait::class, 'config()')]
 class ConfigurableTest extends AbstractTestCase
 {
     use AssertionsTrait;
@@ -40,8 +42,6 @@ class ConfigurableTest extends AbstractTestCase
 
     /**
      * Create a ConfigurableObject instance.
-     *
-     * @return void
      */
     protected function setUp(): void
     {
@@ -58,10 +58,8 @@ class ConfigurableTest extends AbstractTestCase
 
     /**
      * Create a ConfigurableObject instance.
-     *
-     * @return ConfigurableObject
      */
-    public function createObject()
+    public function createObject(): \Charcoal\Tests\Config\Mock\ConfigurableObject
     {
         return new ConfigurableObject();
     }
@@ -71,20 +69,17 @@ class ConfigurableTest extends AbstractTestCase
      *
      * @param  mixed $data      Data to pre-populate the object.
      * @param  array $delegates Delegates to pre-populate the object.
-     * @return GenericConfig
      */
-    public function createConfig($data = null, array $delegates = null)
+    public function createConfig($data = null, ?array $delegates = null): \Charcoal\Config\GenericConfig
     {
         return new GenericConfig($data, $delegates);
     }
 
     /**
      * Asserts that the object implements ConfigurableInterface.
-     *
-     * @coversNothing
-     * @return void
      */
-    public function testConfigurableInterface()
+    #[\PHPUnit\Framework\Attributes\CoversNothing]
+    public function testConfigurableInterface(): void
     {
         $this->assertInstanceOf(ConfigurableInterface::class, $this->obj);
         $this->assertInstanceOf(ConfigInterface::class, $this->obj->createConfig());
@@ -93,13 +88,7 @@ class ConfigurableTest extends AbstractTestCase
 
     // Test SetConfig
     // =========================================================================
-
-    /**
-     * @covers ::createConfig()
-     * @covers ::setConfig()
-     * @return void
-     */
-    public function testSetConfigWithString()
+    public function testSetConfigWithString(): void
     {
         $path = $this->getPathToFixture('pass/valid.json');
         $that = $this->obj->setConfig($path);
@@ -111,8 +100,6 @@ class ConfigurableTest extends AbstractTestCase
     }
 
     /**
-     * @covers ::createConfig()
-     * @covers ::setConfig()
      * @return ConfigurableInterface
      */
     public function testSetConfigWithArray()
@@ -126,12 +113,7 @@ class ConfigurableTest extends AbstractTestCase
         return $this->obj;
     }
 
-    /**
-     * @covers ::createConfig()
-     * @covers ::setConfig()
-     * @return void
-     */
-    public function testSetConfigWithConfigInstance()
+    public function testSetConfigWithConfigInstance(): void
     {
         $this->obj->setConfig($this->cfg);
 
@@ -140,11 +122,7 @@ class ConfigurableTest extends AbstractTestCase
         $this->assertArraySubsets($this->data, $cfg->data());
     }
 
-    /**
-     * @covers ::setConfig()
-     * @return void
-     */
-    public function testSetConfigWithInvalidData()
+    public function testSetConfigWithInvalidData(): void
     {
         $this->expectExceptionMessage('Configset must be an associative array, a file path, or an instance of Charcoal\Config\ConfigInterface');
         $this->expectException(InvalidArgumentException::class);
@@ -157,107 +135,79 @@ class ConfigurableTest extends AbstractTestCase
 
     // Test GetConfig
     // =========================================================================
-
     /**
      * Asserts that the object will create a new Config
      * if one has not been assigned to object.
-     *
-     * @covers ::createConfig()
-     * @covers ::config()
-     * @return void
      */
-    public function testGetConfigCreatesConfig()
+    public function testGetConfigCreatesConfig(): void
     {
         $cfg = $this->obj->config();
         $this->assertInstanceOf(GenericConfig::class, $cfg);
     }
 
     /**
-     * @covers  ::config()
-     * @depends testSetConfigWithArray
-     *
      * @param  ConfigurableInterface $obj The ConfigurableInterface implementation to test.
-     * @return void
      */
-    public function testGetConfigReturnsConfigOnNullKey(ConfigurableInterface $obj)
+    #[\PHPUnit\Framework\Attributes\Depends('testSetConfigWithArray')]
+    public function testGetConfigReturnsConfigOnNullKey(ConfigurableInterface $obj): void
     {
-        $cfg = $obj->config(null);
+        $cfg = $obj->config();
         $this->assertInstanceOf(GenericConfig::class, $cfg);
     }
 
     /**
-     * @covers  ::config()
-     * @depends testSetConfigWithArray
-     *
      * @param  ConfigurableInterface $obj The ConfigurableInterface implementation to test.
-     * @return void
      */
-    public function testGetConfigReturnsValueOnKey(ConfigurableInterface $obj)
+    #[\PHPUnit\Framework\Attributes\Depends('testSetConfigWithArray')]
+    public function testGetConfigReturnsValueOnKey(ConfigurableInterface $obj): void
     {
         $this->assertEquals($this->data['name'], $obj->config('name'));
     }
 
     /**
-     * @covers  ::config()
-     * @depends testSetConfigWithArray
-     *
      * @param  ConfigurableInterface $obj The ConfigurableInterface implementation to test.
-     * @return void
      */
-    public function testGetConfigReturnsNullOnNonexistentKey(ConfigurableInterface $obj)
+    #[\PHPUnit\Framework\Attributes\Depends('testSetConfigWithArray')]
+    public function testGetConfigReturnsNullOnNonexistentKey(ConfigurableInterface $obj): void
     {
         $this->assertNull($obj->config('charset'));
     }
 
     /**
-     * @covers  ::config()
-     * @depends testSetConfigWithArray
-     *
      * @param  ConfigurableInterface $obj The ConfigurableInterface implementation to test.
-     * @return void
      */
-    public function testGetConfigReturnsDefaultValueOnNonexistentKey(ConfigurableInterface $obj)
+    #[\PHPUnit\Framework\Attributes\Depends('testSetConfigWithArray')]
+    public function testGetConfigReturnsDefaultValueOnNonexistentKey(ConfigurableInterface $obj): void
     {
         $val = $obj->config('charset', 'utf8mb4');
         $this->assertEquals('utf8mb4', $val);
     }
 
     /**
-     * @covers  ::config()
-     * @depends testSetConfigWithArray
-     *
      * @param  ConfigurableInterface $obj The ConfigurableInterface implementation to test.
-     * @return void
      */
-    public function testGetConfigReturnsFallbackClosureOnNonexistentKey(ConfigurableInterface $obj)
+    #[\PHPUnit\Framework\Attributes\Depends('testSetConfigWithArray')]
+    public function testGetConfigReturnsFallbackClosureOnNonexistentKey(ConfigurableInterface $obj): void
     {
-        $val = $obj->config('charset', function () {
-            return 'utf8mb4';
-        });
+        $val = $obj->config('charset', fn(): string => 'utf8mb4');
         $this->assertEquals('utf8mb4', $val);
     }
 
     /**
-     * @covers  ::config()
-     * @depends testSetConfigWithArray
-     *
      * @param  ConfigurableInterface $obj The ConfigurableInterface implementation to test.
-     * @return void
      */
-    public function testGetConfigReturnsFallbackMethodOnNonexistentKey(ConfigurableInterface $obj)
+    #[\PHPUnit\Framework\Attributes\Depends('testSetConfigWithArray')]
+    public function testGetConfigReturnsFallbackMethodOnNonexistentKey(ConfigurableInterface $obj): void
     {
         $val = $obj->config('charset', [ $this, 'getName' ]);
         $this->assertEquals('testGetConfigReturnsFallbackMethodOnNonexistentKey', $val);
     }
 
     /**
-     * @covers  ::config()
-     * @depends testSetConfigWithArray
-     *
      * @param  ConfigurableInterface $obj The ConfigurableInterface implementation to test.
-     * @return void
      */
-    public function testGetConfigReturnsFallbackFunctionOnNonexistentKey(ConfigurableInterface $obj)
+    #[\PHPUnit\Framework\Attributes\Depends('testSetConfigWithArray')]
+    public function testGetConfigReturnsFallbackFunctionOnNonexistentKey(ConfigurableInterface $obj): void
     {
         $val = $obj->config('charset', 'getcwd');
         $this->assertEquals('getcwd', $val);

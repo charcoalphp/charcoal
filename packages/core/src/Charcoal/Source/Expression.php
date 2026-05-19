@@ -26,9 +26,9 @@ class Expression extends AbstractExpression implements
      *
      * @param  array<string,mixed> $data The expression data;
      *     as an associative array.
-     * @return self
      */
-    public function setData(array $data)
+    #[\Override]
+    public function setData(array $data): static
     {
         parent::setData($data);
 
@@ -44,7 +44,7 @@ class Expression extends AbstractExpression implements
      *
      * @return array<string,mixed> An associative array.
      */
-    public function defaultData()
+    public function defaultData(): array
     {
         return [
             'condition' => null,
@@ -58,7 +58,7 @@ class Expression extends AbstractExpression implements
      *
      * @return array<string,mixed> An associative array.
      */
-    public function data()
+    public function data(): array
     {
         return [
             'condition' => $this->condition(),
@@ -72,9 +72,8 @@ class Expression extends AbstractExpression implements
      *
      * @param  string|null $condition The custom query expression.
      * @throws InvalidArgumentException If the parameter is not a valid string expression.
-     * @return self
      */
-    public function setCondition($condition)
+    public function setCondition($condition): static
     {
         if ($condition === null) {
             $this->condition = $condition;
@@ -98,10 +97,8 @@ class Expression extends AbstractExpression implements
 
     /**
      * Determine if the expression has a custom condition.
-     *
-     * @return boolean
      */
-    public function hasCondition()
+    public function hasCondition(): bool
     {
         return !(empty($this->condition) && !is_numeric($this->condition));
     }

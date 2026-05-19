@@ -80,10 +80,8 @@ class FormPropertyWidget extends AdminWidget implements
 
     /**
      * The model property's metadata.
-     *
-     * @var array
      */
-    private $propertyData = [];
+    private array $propertyData = [];
 
     /**
      * Store the property control instance.
@@ -164,31 +162,23 @@ class FormPropertyWidget extends AdminWidget implements
 
     /**
      * Store the model property factory.
-     *
-     * @var FactoryInterface
      */
-    private $propertyFactory;
+    private ?\Charcoal\Factory\FactoryInterface $propertyFactory = null;
 
     /**
      * Store the property form control factory.
-     *
-     * @var FactoryInterface
      */
-    private $propertyInputFactory;
+    private ?\Charcoal\Factory\FactoryInterface $propertyInputFactory = null;
 
     /**
      * Store the property display factory.
-     *
-     * @var FactoryInterface
      */
-    private $propertyDisplayFactory;
+    private ?\Charcoal\Factory\FactoryInterface $propertyDisplayFactory = null;
 
     /**
      * Track the state of data merging.
-     *
-     * @var boolean
      */
-    private $isMergingWidgetData = false;
+    private bool $isMergingWidgetData = false;
 
     /**
      * The UI item's icon.
@@ -204,11 +194,10 @@ class FormPropertyWidget extends AdminWidget implements
      * Retrieve the property factory.
      *
      * @throws RuntimeException If the property factory is missing.
-     * @return FactoryInterface
      */
-    public function propertyFactory()
+    public function propertyFactory(): \Charcoal\Factory\FactoryInterface
     {
-        if ($this->propertyFactory === null) {
+        if (!$this->propertyFactory instanceof \Charcoal\Factory\FactoryInterface) {
             throw new RuntimeException(
                 'Missing Property Factory'
             );
@@ -221,11 +210,10 @@ class FormPropertyWidget extends AdminWidget implements
      * Retrieve the property control factory.
      *
      * @throws RuntimeException If the property control factory is missing.
-     * @return FactoryInterface
      */
-    public function propertyInputFactory()
+    public function propertyInputFactory(): \Charcoal\Factory\FactoryInterface
     {
-        if ($this->propertyInputFactory === null) {
+        if (!$this->propertyInputFactory instanceof \Charcoal\Factory\FactoryInterface) {
             throw new RuntimeException(
                 'Missing Property Input Factory'
             );
@@ -238,11 +226,10 @@ class FormPropertyWidget extends AdminWidget implements
      * Retrieve the property display factory.
      *
      * @throws RuntimeException If the property display factory is missing.
-     * @return FactoryInterface
      */
-    public function propertyDisplayFactory()
+    public function propertyDisplayFactory(): \Charcoal\Factory\FactoryInterface
     {
-        if ($this->propertyDisplayFactory === null) {
+        if (!$this->propertyDisplayFactory instanceof \Charcoal\Factory\FactoryInterface) {
             throw new RuntimeException(
                 'Missing Property Display Factory'
             );
@@ -256,6 +243,7 @@ class FormPropertyWidget extends AdminWidget implements
      *
      * @return string
      */
+    #[\Override]
     public function widgetId()
     {
         $type = $this->outputType();
@@ -281,7 +269,8 @@ class FormPropertyWidget extends AdminWidget implements
      * @throws InvalidArgumentException If the argument is not a string.
      * @return FormPropertyWidget Chainable
      */
-    public function setType($type)
+    #[\Override]
+    public function setType($type): static
     {
         if (empty($type)) {
             $this->type = null;
@@ -313,7 +302,7 @@ class FormPropertyWidget extends AdminWidget implements
      * @throws InvalidArgumentException If the argument is not a string.
      * @return FormPropertyWidget Chainable
      */
-    public function setOutputType($type)
+    public function setOutputType($type): static
     {
         if (empty($type)) {
             $this->outputType = static::DEFAULT_OUTPUT;
@@ -368,10 +357,8 @@ class FormPropertyWidget extends AdminWidget implements
 
     /**
      * Retrieve the supported property output types.
-     *
-     * @return array
      */
-    public function supportedOutputTypes()
+    public function supportedOutputTypes(): array
     {
         return [ static::PROPERTY_CONTROL, static::PROPERTY_DISPLAY ];
     }
@@ -382,7 +369,7 @@ class FormPropertyWidget extends AdminWidget implements
      * @param  FormGroupInterface $formGroup The parent form group object.
      * @return FormPropertyWidget Chainable
      */
-    public function setFormGroup(FormGroupInterface $formGroup)
+    public function setFormGroup(FormGroupInterface $formGroup): static
     {
         $this->formGroup = $formGroup;
 
@@ -404,7 +391,7 @@ class FormPropertyWidget extends AdminWidget implements
      *
      * @return FormPropertyWidget Chainable
      */
-    public function clearFormGroup()
+    public function clearFormGroup(): static
     {
         $this->formGroup = null;
 
@@ -417,7 +404,8 @@ class FormPropertyWidget extends AdminWidget implements
      * @param  array|ArrayAccess $data Widget and property data.
      * @return FormPropertyWidget Chainable
      */
-    public function setData(array $data)
+    #[\Override]
+    public function setData(array $data): static
     {
         $this->isMergingWidgetData = true;
 
@@ -439,7 +427,7 @@ class FormPropertyWidget extends AdminWidget implements
      * @param  array $data Widget and property data.
      * @return FormPropertyWidget Chainable
      */
-    public function merge(array $data)
+    public function merge(array $data): static
     {
         $this->isMergingWidgetData = true;
 
@@ -459,7 +447,7 @@ class FormPropertyWidget extends AdminWidget implements
      * @throws InvalidArgumentException If the argument is not a string.
      * @return FormPropertyWidget Chainable
      */
-    public function setPropertyType($type)
+    public function setPropertyType($type): static
     {
         if (empty($type)) {
             $this->propertyType = null;
@@ -494,7 +482,7 @@ class FormPropertyWidget extends AdminWidget implements
      * @throws InvalidArgumentException If the property ident is not a string.
      * @return FormPropertyWidget Chainable
      */
-    public function setPropertyIdent($propertyIdent)
+    public function setPropertyIdent($propertyIdent): static
     {
         if (!is_string($propertyIdent)) {
             throw new InvalidArgumentException(
@@ -523,7 +511,7 @@ class FormPropertyWidget extends AdminWidget implements
      * @param  array $data The property configset.
      * @return FormPropertyWidget Chainable
      */
-    public function setPropertyData(array $data)
+    public function setPropertyData(array $data): static
     {
         $this->propertyData = $data;
 
@@ -544,7 +532,7 @@ class FormPropertyWidget extends AdminWidget implements
      * @param  array $data The property configset.
      * @return FormPropertyWidget Chainable
      */
-    public function mergePropertyData(array $data)
+    public function mergePropertyData(array $data): static
     {
         $this->propertyData = array_replace($this->propertyData, $data);
 
@@ -561,10 +549,8 @@ class FormPropertyWidget extends AdminWidget implements
 
     /**
      * Retrieve the property metadata.
-     *
-     * @return array
      */
-    public function propertyData()
+    public function propertyData(): array
     {
         return $this->propertyData;
     }
@@ -575,7 +561,7 @@ class FormPropertyWidget extends AdminWidget implements
      * @param  mixed $propertyVal The property value.
      * @return FormPropertyWidget Chainable
      */
-    public function setPropertyVal($propertyVal)
+    public function setPropertyVal($propertyVal): static
     {
         $this->propertyVal = $propertyVal;
 
@@ -598,9 +584,10 @@ class FormPropertyWidget extends AdminWidget implements
      * @param  boolean $show Show (TRUE) or hide (FALSE) the label.
      * @return FormPropertyWidget Chainable
      */
-    public function setShowLabel($show)
+    #[\Override]
+    public function setShowLabel($show): static
     {
-        $this->showLabel = !!$show;
+        $this->showLabel = (bool) $show;
 
         return $this;
     }
@@ -610,20 +597,17 @@ class FormPropertyWidget extends AdminWidget implements
      *
      * @return boolean If TRUE or unset, check if there is a label.
      */
+    #[\Override]
     public function showLabel()
     {
         if ($this->showLabel === null) {
             $prop = $this->property();
             $show = $prop['show_label'];
-            if ($show !== null) {
-                $this->showLabel = $show;
-            } else {
-                $this->showLabel = true;
-            }
+            $this->showLabel = $show ?? true;
         }
 
         if ($this->showLabel !== false) {
-            return !!strval($this->property()['label']);
+            return (bool) strval($this->property()['label']);
         } else {
             return false;
         }
@@ -635,9 +619,9 @@ class FormPropertyWidget extends AdminWidget implements
      * @param  boolean $show Show (TRUE) or hide (FALSE) the description.
      * @return FormPropertyWidget Chainable
      */
-    public function setShowDescription($show)
+    public function setShowDescription($show): static
     {
-        $this->showDescription = !!$show;
+        $this->showDescription = (bool) $show;
 
         return $this;
     }
@@ -652,15 +636,11 @@ class FormPropertyWidget extends AdminWidget implements
         if ($this->showDescription === null) {
             $prop = $this->property();
             $show = $prop['show_description'];
-            if ($show !== null) {
-                $this->showDescription = $show;
-            } else {
-                $this->showDescription = true;
-            }
+            $this->showDescription = $show ?? true;
         }
 
         if ($this->showDescription !== false) {
-            return !!strval($this->property()['description']);
+            return (bool) strval($this->property()['description']);
         } else {
             return false;
         }
@@ -672,9 +652,9 @@ class FormPropertyWidget extends AdminWidget implements
      * @param  boolean|string $show Show (TRUE) or hide (FALSE) the notes.
      * @return FormPropertyWidget Chainable
      */
-    public function setShowNotes($show)
+    public function setShowNotes($show): static
     {
-        $this->showNotes = ($show === 'above' ? $show : !!$show);
+        $this->showNotes = ($show === 'above' ? $show : (bool) $show);
 
         return $this;
     }
@@ -689,15 +669,11 @@ class FormPropertyWidget extends AdminWidget implements
         if ($this->showNotes === null) {
             $prop = $this->property();
             $show = $prop['show_notes'];
-            if ($show !== null) {
-                $this->showNotes = $show;
-            } else {
-                $this->showNotes = true;
-            }
+            $this->showNotes = $show ?? true;
         }
 
         if ($this->showNotes !== false) {
-            return !!strval($this->property()['notes']);
+            return (bool) strval($this->property()['notes']);
         } else {
             return false;
         }
@@ -720,13 +696,13 @@ class FormPropertyWidget extends AdminWidget implements
 
         $notes = $this->property()['notes'];
 
-        return !!$notes;
+        return (bool) $notes;
     }
 
     /**
      * @return Translation|string|null
      */
-    public function description()
+    public function description(): string
     {
         return $this->renderTemplate((string)$this->property()['description']);
     }
@@ -734,23 +710,17 @@ class FormPropertyWidget extends AdminWidget implements
     /**
      * @return Translation|string|null
      */
-    public function notes()
+    public function notes(): string
     {
         return $this->renderTemplate((string)$this->property()['notes']);
     }
 
-    /**
-     * @return boolean
-     */
-    public function hidden()
+    public function hidden(): bool
     {
         return ($this->inputType() === static::HIDDEN_FORM_CONTROL || $this->property()['hidden']);
     }
 
-    /**
-     * @return boolean
-     */
-    public function editable()
+    public function editable(): bool
     {
         return ($this->inputType() !== static::READONLY_FORM_CONTROL && $this->outputType() === static::PROPERTY_CONTROL);
     }
@@ -765,34 +735,22 @@ class FormPropertyWidget extends AdminWidget implements
         return $this->property()['required'];
     }
 
-    /**
-     * @return string
-     */
-    public function inputId()
+    public function inputId(): string
     {
         return 'input_id';
     }
 
-    /**
-     * @return string
-     */
-    public function inputName()
+    public function inputName(): string
     {
         return 'input_name';
     }
 
-    /**
-     * @return string
-     */
-    public function displayId()
+    public function displayId(): string
     {
         return 'display_id';
     }
 
-    /**
-     * @return string
-     */
-    public function displayName()
+    public function displayName(): string
     {
         return 'display_name';
     }
@@ -804,7 +762,7 @@ class FormPropertyWidget extends AdminWidget implements
      * @throws InvalidArgumentException If the argument is not a string.
      * @return FormPropertyWidget Chainable
      */
-    public function setInputType($type)
+    public function setInputType($type): static
     {
         if (empty($type)) {
             $this->inputType = null;
@@ -843,7 +801,7 @@ class FormPropertyWidget extends AdminWidget implements
      * @throws InvalidArgumentException If the argument is not a string.
      * @return FormPropertyWidget Chainable
      */
-    public function setDisplayType($type)
+    public function setDisplayType($type): static
     {
         if (empty($type)) {
             $this->displayType = null;
@@ -881,7 +839,7 @@ class FormPropertyWidget extends AdminWidget implements
      * @param  PropertyInterface $property The property.
      * @return FormPropertyWidget Chainable
      */
-    public function setProperty(PropertyInterface $property)
+    public function setProperty(PropertyInterface $property): static
     {
         $this->property      = $property;
         $this->propertyType  = $property->type();
@@ -926,10 +884,8 @@ class FormPropertyWidget extends AdminWidget implements
 
     /**
      * Determine if the form control's active language should be displayed.
-     *
-     * @return boolean
      */
-    public function showActiveLanguage()
+    public function showActiveLanguage(): bool
     {
         $property = $this->property();
         $locales  = count($this->translator()->availableLocales());
@@ -945,18 +901,16 @@ class FormPropertyWidget extends AdminWidget implements
     public function inputNameAsCssClass()
     {
         $name = str_replace([ ']', '[' ], [ '', '-' ], $this->propertyIdent());
-        $name = $this->camelize($name);
 
-        return $name;
+        return $this->camelize($name);
     }
 
     /**
      * Set the CSS class name(s) for the `.form-field`.
      *
      * @param  mixed $cssClass One or more CSS class names.
-     * @return self
      */
-    public function setFormFieldCssClass($cssClass)
+    public function setFormFieldCssClass($cssClass): static
     {
         $cssClass = array_merge($this->defaultFormFieldCssClasses(), $this->parseCssClasses($cssClass));
         $this->formFieldCssClass = array_unique($cssClass);
@@ -967,11 +921,10 @@ class FormPropertyWidget extends AdminWidget implements
      * Add CSS class name(s) for the `.form-field`.
      *
      * @param  mixed $cssClass One or more CSS class names.
-     * @return self
      */
-    public function addFormFieldCssClass($cssClass)
+    public function addFormFieldCssClass($cssClass): static
     {
-        if (empty($this->formFieldCssClass)) {
+        if ($this->formFieldCssClass === []) {
             $this->formFieldCssClass = $this->defaultFormFieldCssClasses();
         }
 
@@ -982,12 +935,10 @@ class FormPropertyWidget extends AdminWidget implements
 
     /**
      * Retrieve the CSS class name(s) for the `.form-field`.
-     *
-     * @return string
      */
-    public function formFieldCssClass()
+    public function formFieldCssClass(): string
     {
-        if (empty($this->formFieldCssClass)) {
+        if ($this->formFieldCssClass === []) {
             $this->formFieldCssClass = $this->defaultFormFieldCssClasses();
         }
 
@@ -998,9 +949,8 @@ class FormPropertyWidget extends AdminWidget implements
      * Set the CSS class name(s) for the `.form-group`.
      *
      * @param  mixed $cssClass One or more CSS class names.
-     * @return self
      */
-    public function setFormGroupCssClass($cssClass)
+    public function setFormGroupCssClass($cssClass): static
     {
         $cssClass = array_merge($this->defaultFormGroupCssClasses(), $this->parseCssClasses($cssClass));
         $this->formGroupCssClass = array_unique($cssClass);
@@ -1011,11 +961,10 @@ class FormPropertyWidget extends AdminWidget implements
      * Add CSS class name(s) for the `.form-group`.
      *
      * @param  mixed $cssClass One or more CSS class names.
-     * @return self
      */
-    public function addFormGroupCssClass($cssClass)
+    public function addFormGroupCssClass($cssClass): static
     {
-        if (empty($this->formGroupCssClass)) {
+        if ($this->formGroupCssClass === []) {
             $this->formGroupCssClass = $this->defaultFormGroupCssClasses();
         }
 
@@ -1026,12 +975,10 @@ class FormPropertyWidget extends AdminWidget implements
 
     /**
      * Retrieve the CSS class name(s) for the `.form-group`.
-     *
-     * @return string
      */
-    public function formGroupCssClass()
+    public function formGroupCssClass(): string
     {
-        if (empty($this->formGroupCssClass)) {
+        if ($this->formGroupCssClass === []) {
             $this->formGroupCssClass = $this->defaultFormGroupCssClasses();
         }
 
@@ -1044,7 +991,7 @@ class FormPropertyWidget extends AdminWidget implements
      * @param  string $mode The L10N display mode.
      * @return FormPropertyWidget Chainable
      */
-    public function setL10nMode($mode)
+    public function setL10nMode($mode): static
     {
         $this->l10nMode = $mode;
         return $this;
@@ -1062,10 +1009,8 @@ class FormPropertyWidget extends AdminWidget implements
 
     /**
      * Determine if the property should output for each language.
-     *
-     * @return boolean
      */
-    public function loopL10n()
+    public function loopL10n(): bool
     {
         return ($this->l10nMode() === 'loop_inputs');
     }
@@ -1159,6 +1104,7 @@ class FormPropertyWidget extends AdminWidget implements
      * @param  Container $container Service container.
      * @return void
      */
+    #[\Override]
     protected function setDependencies(Container $container)
     {
         parent::setDependencies($container);
@@ -1175,7 +1121,7 @@ class FormPropertyWidget extends AdminWidget implements
      * @param  FactoryInterface $factory The factory to create property values.
      * @return FormPropertyWidget Chainable
      */
-    protected function setPropertyFactory(FactoryInterface $factory)
+    protected function setPropertyFactory(FactoryInterface $factory): static
     {
         $this->propertyFactory = $factory;
 
@@ -1188,7 +1134,7 @@ class FormPropertyWidget extends AdminWidget implements
      * @param  FactoryInterface $factory The factory to create form controls for property values.
      * @return FormPropertyWidget Chainable
      */
-    protected function setPropertyInputFactory(FactoryInterface $factory)
+    protected function setPropertyInputFactory(FactoryInterface $factory): static
     {
         $this->propertyInputFactory = $factory;
 
@@ -1201,7 +1147,7 @@ class FormPropertyWidget extends AdminWidget implements
      * @param  FactoryInterface $factory The factory to create displayable property values.
      * @return FormPropertyWidget Chainable
      */
-    protected function setPropertyDisplayFactory(FactoryInterface $factory)
+    protected function setPropertyDisplayFactory(FactoryInterface $factory): static
     {
         $this->propertyDisplayFactory = $factory;
 
@@ -1229,7 +1175,7 @@ class FormPropertyWidget extends AdminWidget implements
         } else {
             throw new InvalidArgumentException(sprintf(
                 'Invalid form property output type, received %s',
-                is_object($type) ? get_class($type) : gettype($type)
+                get_debug_type($type)
             ));
         }
     }
@@ -1255,7 +1201,7 @@ class FormPropertyWidget extends AdminWidget implements
      *
      * @return string[]
      */
-    protected function defaultFormFieldCssClasses()
+    protected function defaultFormFieldCssClasses(): array
     {
         $classes = [ 'form-field', 'form-field-' . $this->widgetId() ];
 
@@ -1287,7 +1233,7 @@ class FormPropertyWidget extends AdminWidget implements
      *
      * @return string[]
      */
-    protected function defaultFormGroupCssClasses()
+    protected function defaultFormGroupCssClasses(): array
     {
         return [ 'form-group' ];
     }
@@ -1299,7 +1245,7 @@ class FormPropertyWidget extends AdminWidget implements
      * @throws InvalidArgumentException If a class name is not a string.
      * @return string[]
      */
-    protected function parseCssClasses($classes)
+    protected function parseCssClasses($classes): array
     {
         if (is_string($classes)) {
             $classes = explode(' ', $classes);
@@ -1309,7 +1255,7 @@ class FormPropertyWidget extends AdminWidget implements
             throw new InvalidArgumentException('CSS Class(es) must be a space-delimited string or an array');
         }
 
-        return array_filter($classes, 'strlen');
+        return array_filter($classes, strlen(...));
     }
 
     /**
@@ -1318,7 +1264,7 @@ class FormPropertyWidget extends AdminWidget implements
      * @param  array $data The widget and property data.
      * @return array Returns the remaining dataset.
      */
-    private function setCoreData(array $data)
+    private function setCoreData(array $data): array
     {
         if (isset($data['ident'])) {
             $this->setPropertyIdent($data['ident']);
@@ -1370,7 +1316,7 @@ class FormPropertyWidget extends AdminWidget implements
 
         /** Attempt input type resolution without instantiating the property, at first. */
         $metadata = $this->propertyData();
-        if ($metadata) {
+        if ($metadata !== []) {
             if (isset($metadata['hidden']) && $metadata['hidden']) {
                 $type = static::HIDDEN_FORM_CONTROL;
             }
@@ -1415,10 +1361,8 @@ class FormPropertyWidget extends AdminWidget implements
 
         /** Attempt display type resolution without instantiating the property, at first. */
         $metadata = $this->propertyData();
-        if ($metadata) {
-            if (isset($metadata['display_type'])) {
-                $type = $metadata['display_type'];
-            }
+        if ($metadata && isset($metadata['display_type'])) {
+            $type = $metadata['display_type'];
         }
 
         if ($this->propertyType || $this->property) {
@@ -1443,7 +1387,7 @@ class FormPropertyWidget extends AdminWidget implements
             if ($ident && is_string($ident)) {
                 $message = sprintf('Missing property type for property "%s"', $ident);
             } else {
-                $message = sprintf('Missing property type');
+                $message = 'Missing property type';
             }
             throw new UnexpectedValueException($message);
         }
@@ -1534,7 +1478,7 @@ class FormPropertyWidget extends AdminWidget implements
      * @param  array $data The widget and property data.
      * @return array Returns the remaining dataset.
      */
-    protected function filterInputPropertyData(array $data)
+    protected function filterInputPropertyData(array $data): array
     {
         unset(
             $data['formFieldCssClass'],
@@ -1552,7 +1496,7 @@ class FormPropertyWidget extends AdminWidget implements
      * @param  array $data The widget and property data.
      * @return array Returns the remaining dataset.
      */
-    protected function filterDisplayPropertyData(array $data)
+    protected function filterDisplayPropertyData(array $data): array
     {
         return $data;
     }
@@ -1571,9 +1515,8 @@ class FormPropertyWidget extends AdminWidget implements
      * Set the path to the item's icon associated with the object.
      *
      * @param  string $icon A path to an image.
-     * @return self
      */
-    public function setIcon($icon)
+    public function setIcon($icon): static
     {
         $this->icon = $icon;
 
@@ -1582,15 +1525,13 @@ class FormPropertyWidget extends AdminWidget implements
 
     /**
      * Check for icon(s)
-     *
-     * @return boolean
      */
-    public function hasIcon()
+    public function hasIcon(): bool
     {
         if (is_array($this->icon())) {
-            return !!count($this->icon());
+            return (bool) count($this->icon());
         }
 
-        return !!$this->icon();
+        return (bool) $this->icon();
     }
 }

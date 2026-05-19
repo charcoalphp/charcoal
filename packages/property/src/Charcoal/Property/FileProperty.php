@@ -37,17 +37,13 @@ class FileProperty extends AbstractProperty
 
     /**
      * Whether uploaded files should be accessible from the web root.
-     *
-     * @var boolean
      */
-    private $publicAccess = self::DEFAULT_PUBLIC_ACCESS;
+    private bool $publicAccess = self::DEFAULT_PUBLIC_ACCESS;
 
     /**
      * The relative path to the storage directory.
-     *
-     * @var string
      */
-    private $uploadPath = self::DEFAULT_UPLOAD_PATH;
+    private string $uploadPath = self::DEFAULT_UPLOAD_PATH;
 
     /**
      * The base path for the Charcoal installation.
@@ -65,24 +61,20 @@ class FileProperty extends AbstractProperty
 
     /**
      * Whether existing destinations should be overwritten.
-     *
-     * @var boolean
      */
-    private $overwrite = self::DEFAULT_OVERWRITE;
+    private bool $overwrite = self::DEFAULT_OVERWRITE;
 
     /**
      * Collection of accepted MIME types.
      *
      * @var string[]
      */
-    private $acceptedMimetypes;
+    private ?array $acceptedMimetypes = null;
 
     /**
      * Current file mimetype
-     *
-     * @var string
      */
-    private $mimetype;
+    private ?string $mimetype = null;
 
     /**
      * Maximum allowed file size, in bytes.
@@ -117,10 +109,7 @@ class FileProperty extends AbstractProperty
      */
     protected static $normalizePathCache = [];
 
-    /**
-     * @return string
-     */
-    public function type()
+    public function type(): string
     {
         return 'file';
     }
@@ -129,21 +118,18 @@ class FileProperty extends AbstractProperty
      * Set whether uploaded files should be publicly available.
      *
      * @param  boolean $public Whether uploaded files should be accessible (TRUE) or not (FALSE) from the web root.
-     * @return self
      */
-    public function setPublicAccess($public)
+    public function setPublicAccess($public): static
     {
-        $this->publicAccess = !!$public;
+        $this->publicAccess = (bool) $public;
 
         return $this;
     }
 
     /**
      * Determine if uploaded files should be publicly available.
-     *
-     * @return boolean
      */
-    public function getPublicAccess()
+    public function getPublicAccess(): bool
     {
         return $this->publicAccess;
     }
@@ -155,9 +141,8 @@ class FileProperty extends AbstractProperty
      *
      * @param  string $path The destination directory, relative to project's root.
      * @throws InvalidArgumentException If the path is not a string.
-     * @return self
      */
-    public function setUploadPath($path)
+    public function setUploadPath($path): static
     {
         if (!is_string($path)) {
             throw new InvalidArgumentException(
@@ -173,10 +158,8 @@ class FileProperty extends AbstractProperty
 
     /**
      * Retrieve the destination for the uploaded file(s).
-     *
-     * @return string
      */
-    public function getUploadPath()
+    public function getUploadPath(): string
     {
         return $this->uploadPath;
     }
@@ -185,21 +168,18 @@ class FileProperty extends AbstractProperty
      * Set whether existing destinations should be overwritten.
      *
      * @param  boolean $overwrite Whether existing destinations should be overwritten (TRUE) or not (FALSE).
-     * @return self
      */
-    public function setOverwrite($overwrite)
+    public function setOverwrite($overwrite): static
     {
-        $this->overwrite = !!$overwrite;
+        $this->overwrite = (bool) $overwrite;
 
         return $this;
     }
 
     /**
      * Determine if existing destinations should be overwritten.
-     *
-     * @return boolean
      */
-    public function getOverwrite()
+    public function getOverwrite(): bool
     {
         return $this->overwrite;
     }
@@ -209,14 +189,13 @@ class FileProperty extends AbstractProperty
      *
      * @param  mixed $types One or many MIME types.
      * @throws InvalidArgumentException If the $types argument is not NULL or a list.
-     * @return self
      */
-    public function setAcceptedMimetypes($types)
+    public function setAcceptedMimetypes($types): static
     {
         if (is_array($types)) {
             $types = array_filter($types);
 
-            if (empty($types)) {
+            if ($types === []) {
                 $types = null;
             }
         }
@@ -238,11 +217,11 @@ class FileProperty extends AbstractProperty
      */
     public function hasAcceptedMimetypes()
     {
-        if (!empty($this->acceptedMimetypes)) {
+        if ($this->acceptedMimetypes !== null && $this->acceptedMimetypes !== []) {
             return true;
         }
 
-        return !empty($this->getDefaultAcceptedMimetypes());
+        return $this->getDefaultAcceptedMimetypes() !== [];
     }
 
     /**
@@ -266,7 +245,7 @@ class FileProperty extends AbstractProperty
      *
      * @return string[]
      */
-    public function getDefaultAcceptedMimetypes()
+    public function getDefaultAcceptedMimetypes(): array
     {
         return [];
     }
@@ -278,7 +257,7 @@ class FileProperty extends AbstractProperty
      * @throws InvalidArgumentException If the MIME type argument is not a string.
      * @return FileProperty Chainable
      */
-    public function setMimetype($type)
+    public function setMimetype($type): static
     {
         if ($type === null || $type === false) {
             $this->mimetype = null;
@@ -302,11 +281,11 @@ class FileProperty extends AbstractProperty
      *
      * @return integer Returns the MIME type for the first value.
      */
-    public function getMimetype()
+    public function getMimetype(): ?string
     {
         if ($this->mimetype === null) {
             $files = $this->parseValAsFileList($this->val());
-            if (empty($files)) {
+            if ($files === []) {
                 return null;
             }
 
@@ -355,7 +334,7 @@ class FileProperty extends AbstractProperty
      * @throws InvalidArgumentException If the size argument is not an integer.
      * @return FileProperty Chainable
      */
-    public function setMaxFilesize($size)
+    public function setMaxFilesize($size): static
     {
         $this->maxFilesize = $this->parseIniSize($size);
 
@@ -371,7 +350,7 @@ class FileProperty extends AbstractProperty
      */
     public function getMaxFilesize()
     {
-        if (!isset($this->maxFilesize)) {
+        if ($this->maxFilesize === null) {
             return $this->maxFilesizeAllowedByPhp();
         }
 
@@ -407,7 +386,7 @@ class FileProperty extends AbstractProperty
      * @throws InvalidArgumentException If the size argument is not an integer.
      * @return FileProperty Chainable
      */
-    public function setFilesize($size)
+    public function setFilesize($size): static
     {
         if (!is_int($size) && $size !== null) {
             throw new InvalidArgumentException(
@@ -430,7 +409,7 @@ class FileProperty extends AbstractProperty
     {
         if ($this->filesize === null) {
             $files = $this->parseValAsFileList($this->val());
-            if (empty($files)) {
+            if ($files === []) {
                 return 0;
             }
 
@@ -453,7 +432,7 @@ class FileProperty extends AbstractProperty
      * @return integer|null Returns the file size in bytes,
      *     or NULL in case of an error or the file is missing.
      */
-    public function getFilesizeFor($file)
+    public function getFilesizeFor($file): ?int
     {
         if (!$this->isAbsolutePath($file)) {
             $file = $this->pathFor($file);
@@ -478,13 +457,9 @@ class FileProperty extends AbstractProperty
      * @param  integer $decimals Precision of number of decimal places. Default 0.
      * @return string|null Returns the formatted number or NULL.
      */
-    public function formatFilesize($bytes, $decimals = 2)
+    public function formatFilesize($bytes, $decimals = 2): string
     {
-        if ($bytes === 0) {
-            $factor = 0;
-        } else {
-            $factor = floor((strlen($bytes) - 1) / 3);
-        }
+        $factor = $bytes === 0 ? 0 : floor((strlen((string) $bytes) - 1) / 3);
 
         $unit = [ 'B', 'kB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB' ];
 
@@ -494,13 +469,11 @@ class FileProperty extends AbstractProperty
             $factor = 0;
         }
 
-        return sprintf('%.' . $decimals . 'f', ($bytes / pow(1024, $factor))) . ' ' . $unit[$factor];
+        return sprintf('%.' . $decimals . 'f', ($bytes / 1024 ** $factor)) . ' ' . $unit[$factor];
     }
 
-    /**
-     * @return array
-     */
-    public function validationMethods()
+    #[\Override]
+    public function validationMethods(): array
     {
         $parentMethods = parent::validationMethods();
 
@@ -526,7 +499,7 @@ class FileProperty extends AbstractProperty
 
         $files = $this->parseValAsFileList($this->val());
 
-        if (empty($files)) {
+        if ($files === []) {
             return true;
         }
 
@@ -572,7 +545,7 @@ class FileProperty extends AbstractProperty
 
         $files = $this->parseValAsFileList($this->val());
 
-        if (empty($files)) {
+        if ($files === []) {
             return true;
         }
 
@@ -611,7 +584,7 @@ class FileProperty extends AbstractProperty
      * @param  mixed $value A multi-dimensional variable.
      * @return string[] The array of values.
      */
-    public function parseValAsFileList($value)
+    public function parseValAsFileList($value): array
     {
         $files = [];
 
@@ -620,14 +593,12 @@ class FileProperty extends AbstractProperty
         }
 
         $array = $this->parseValAsMultiple($value);
-        array_walk_recursive($array, function ($item) use (&$files) {
+        array_walk_recursive($array, function ($item) use (&$files): void {
             $array = $this->parseValAsMultiple($item);
             $files = array_merge($files, $array);
         });
 
-        $files = array_filter($files, function ($file) {
-            return is_string($file) && isset($file[0]);
-        });
+        $files = array_filter($files, fn($file): bool => is_string($file) && isset($file[0]));
         $files = array_unique($files);
         $files = array_values($files);
 
@@ -642,7 +613,7 @@ class FileProperty extends AbstractProperty
      * @see StorablePropertyTrait::sqlType()
      * @return string The SQL type
      */
-    public function sqlType()
+    public function sqlType(): string
     {
         // Multiple strings are always stored as TEXT because they can hold multiple values
         if ($this['multiple']) {
@@ -654,9 +625,8 @@ class FileProperty extends AbstractProperty
 
     /**
      * @see StorablePropertyTrait::sqlPdoType()
-     * @return integer
      */
-    public function sqlPdoType()
+    public function sqlPdoType(): int
     {
         return PDO::PARAM_STR;
     }
@@ -667,13 +637,10 @@ class FileProperty extends AbstractProperty
      * @param  mixed $val The value, at time of saving.
      * @return mixed
      */
+    #[\Override]
     public function save($val)
     {
-        if ($val instanceof Translation) {
-            $values = $val->data();
-        } else {
-            $values = $val;
-        }
+        $values = $val instanceof Translation ? $val->data() : $val;
 
         $uploadedFiles = $this->getUploadedFiles();
 
@@ -689,7 +656,7 @@ class FileProperty extends AbstractProperty
                     $parsedFiles = $this->saveFileUploads($uploadedFiles[$lang]);
                 }
 
-                if (empty($parsedFiles)) {
+                if ($parsedFiles === []) {
                     $parsedFiles = $this->saveDataUploads($values[$lang]);
                 }
 
@@ -702,7 +669,7 @@ class FileProperty extends AbstractProperty
                 $parsedFiles = $this->saveFileUploads($uploadedFiles);
             }
 
-            if (empty($parsedFiles)) {
+            if ($parsedFiles === []) {
                 $parsedFiles = $this->saveDataUploads($values);
             }
 
@@ -719,7 +686,7 @@ class FileProperty extends AbstractProperty
      * @param  mixed $values One or more data URIs, data entries, or processed file paths.
      * @return string|string[] One or more paths to the processed uploaded files.
      */
-    protected function saveDataUploads($values)
+    protected function saveDataUploads($values): array
     {
         // Bag value if singular
         if (!is_array($values) || isset($values['id'])) {
@@ -731,21 +698,18 @@ class FileProperty extends AbstractProperty
             if ($this->isDataArr($value) || $this->isDataUri($value)) {
                 try {
                     $path = $this->dataUpload($value);
-                    if ($path !== null) {
-                        $parsed[] = $path;
-
-                        $this->logger->notice(sprintf(
-                            'File [%s] uploaded succesfully',
-                            $path
-                        ));
-                    }
+                    $parsed[] = $path;
+                    $this->logger->notice(sprintf(
+                        'File [%s] uploaded succesfully',
+                        $path
+                    ));
                 } catch (Exception $e) {
                     $this->logger->warning(sprintf(
                         'Upload error on data URI: %s',
                         $e->getMessage()
                     ));
                 }
-            } elseif (is_string($value) && !empty($value)) {
+            } elseif (is_string($value) && ($value !== '' && $value !== '0')) {
                 $parsed[] = $value;
             }
         }
@@ -759,7 +723,7 @@ class FileProperty extends AbstractProperty
      * @param  mixed $files One or more normalized $_FILE entries.
      * @return string[] One or more paths to the processed uploaded files.
      */
-    protected function saveFileUploads($files)
+    protected function saveFileUploads(array $files): array
     {
         // Bag value if singular
         if (isset($files['error'])) {
@@ -771,14 +735,11 @@ class FileProperty extends AbstractProperty
             if (isset($file['error'])) {
                 try {
                     $path = $this->fileUpload($file);
-                    if ($path !== null) {
-                        $parsed[] = $path;
-
-                        $this->logger->notice(sprintf(
-                            'File [%s] uploaded succesfully',
-                            $path
-                        ));
-                    }
+                    $parsed[] = $path;
+                    $this->logger->notice(sprintf(
+                        'File [%s] uploaded succesfully',
+                        $path
+                    ));
                 } catch (Exception $e) {
                     $this->logger->warning(sprintf(
                         'Upload error on file [%s]: %s',
@@ -807,10 +768,8 @@ class FileProperty extends AbstractProperty
             if (!is_array($values)) {
                 $values = empty($values) && !is_numeric($values) ? [] : [ $values ];
             }
-        } else {
-            if (is_array($values)) {
-                $values = reset($values);
-            }
+        } elseif (is_array($values)) {
+            $values = reset($values);
         }
 
         return $values;
@@ -825,7 +784,7 @@ class FileProperty extends AbstractProperty
      * @throws Exception If the upload fails or the $data is bad.
      * @return string|null The file path to the uploaded data.
      */
-    public function dataUpload($data)
+    public function dataUpload($data): string
     {
         $filename = null;
         $contents = false;
@@ -849,7 +808,7 @@ class FileProperty extends AbstractProperty
 
             $contents = file_get_contents($tmpFile);
 
-            if (strlen($data['name']) > 0) {
+            if ((string) $data['name'] !== '') {
                 $filename = $data['name'];
             }
 
@@ -898,9 +857,8 @@ class FileProperty extends AbstractProperty
         }
 
         $basePath   = $this->basePath();
-        $targetPath = str_replace($basePath, '', $targetPath);
 
-        return $targetPath;
+        return str_replace($basePath, '', $targetPath);
     }
 
     /**
@@ -914,7 +872,7 @@ class FileProperty extends AbstractProperty
      * @throws Exception If the upload fails or the $file is bad.
      * @return string|null The file path to the uploaded file.
      */
-    public function fileUpload(array $file)
+    public function fileUpload(array $file): string
     {
         if (!isset($file['tmp_name'], $file['name'], $file['size'], $file['error'])) {
             throw new InvalidArgumentException(
@@ -970,9 +928,8 @@ class FileProperty extends AbstractProperty
         }
 
         $basePath   = $this->basePath();
-        $targetPath = str_replace($basePath, '', $targetPath);
 
-        return $targetPath;
+        return str_replace($basePath, '', $targetPath);
     }
 
     /**
@@ -983,19 +940,14 @@ class FileProperty extends AbstractProperty
      *
      * @param  string|null $filename Optional. The filename to save as.
      *     If NULL, a default filename will be generated.
-     * @return string
      */
-    public function uploadTarget($filename = null)
+    public function uploadTarget($filename = null): string
     {
         $this->assertValidUploadPath();
 
         $uploadPath = $this->pathFor($this['uploadPath']);
 
-        if ($filename === null) {
-            $filename = $this->generateFilename();
-        } else {
-            $filename = $this->sanitizeFilename($filename);
-        }
+        $filename = $filename === null ? $this->generateFilename() : $this->sanitizeFilename($filename);
 
         $targetPath = $uploadPath . '/' . $filename;
 
@@ -1021,9 +973,8 @@ class FileProperty extends AbstractProperty
      *
      * @param  string  $file            The full file to check.
      * @param  boolean $caseInsensitive Case-insensitive by default.
-     * @return boolean
      */
-    public function fileExists($file, $caseInsensitive = true)
+    public function fileExists($file, $caseInsensitive = true): bool
     {
         $file = (string)$file;
 
@@ -1059,7 +1010,7 @@ class FileProperty extends AbstractProperty
      * @throws Exception If the filename is invalid.
      * @return string The sanitized filename.
      */
-    public function sanitizeFilename($filename)
+    public function sanitizeFilename($filename): string
     {
         // Remove blacklisted caharacters
         $blacklist = [ '/', '\\', '\0', '*', ':', '?', '"', '<', '>', '|', '#', '&', '!', '`', ' ' ];
@@ -1068,7 +1019,7 @@ class FileProperty extends AbstractProperty
         // Avoid hidden file or trailing dot
         $filename = trim($filename, '.');
 
-        if (strlen($filename) === 0) {
+        if ($filename === '') {
             throw new Exception(
                 'Bad file name after sanitization'
             );
@@ -1090,19 +1041,19 @@ class FileProperty extends AbstractProperty
      * @throws UnexpectedValueException If the renaming failed.
      * @return string Returns the rendered target.
      */
-    public function renderFileRenamePattern($from, $to, $args = null)
+    public function renderFileRenamePattern($from, $to, $args = null): string
     {
         if (!is_string($from)) {
             throw new InvalidArgumentException(sprintf(
                 'The target to rename must be a string, received %s',
-                (is_object($from) ? get_class($from) : gettype($from))
+                (get_debug_type($from))
             ));
         }
 
         if (!is_string($to)) {
             throw new InvalidArgumentException(sprintf(
                 'The rename pattern must be a string, received %s',
-                (is_object($to) ? get_class($to) : gettype($to))
+                (get_debug_type($to))
             ));
         }
 
@@ -1110,7 +1061,7 @@ class FileProperty extends AbstractProperty
         $args = $this->renamePatternArgs($info, $args);
 
         $to = strtr($to, $args);
-        if (strpos($to, '{{') !== false) {
+        if (str_contains($to, '{{')) {
             preg_match_all('~\{\{\s*(.*?)\s*\}\}~i', $to, $matches);
 
             throw new UnexpectedValueException(sprintf(
@@ -1119,18 +1070,15 @@ class FileProperty extends AbstractProperty
             ));
         }
 
-        $to = str_replace($info['basename'], $to, $from);
-
-        return $to;
+        return str_replace($info['basename'], $to, $from);
     }
 
     /**
      * Generate a new filename from the property.
      *
      * @param  string|null $extension An extension to append to the generated filename.
-     * @return string
      */
-    public function generateFilename($extension = null)
+    public function generateFilename($extension = null): string
     {
         $filename = $this->sanitizeFilename($this['fallbackFilename']);
         $filename = $filename . ' ' . date('Y-m-d\TH-i-s');
@@ -1147,26 +1095,21 @@ class FileProperty extends AbstractProperty
      *
      * @param  string|array $filename The filename to alter.
      * @throws InvalidArgumentException If the given filename is invalid.
-     * @return string
      */
-    public function generateUniqueFilename($filename)
+    public function generateUniqueFilename($filename): string
     {
-        if (is_string($filename)) {
-            $info = pathinfo($filename);
-        } else {
-            $info = $filename;
-        }
+        $info = is_string($filename) ? pathinfo($filename) : $filename;
 
-        if (!isset($info['filename']) || strlen($info['filename']) === 0) {
+        if (!isset($info['filename']) || (string) $info['filename'] === '') {
             throw new InvalidArgumentException(sprintf(
                 'File must be a string [file path] or an array [pathfino()], received %s',
-                (is_object($filename) ? get_class($filename) : gettype($filename))
+                (get_debug_type($filename))
             ));
         }
 
         $filename = $info['filename'] . '-' . uniqid();
 
-        if (isset($info['extension']) && strlen($info['extension']) > 0) {
+        if (isset($info['extension']) && (string) $info['extension'] !== '') {
             $filename .= '.' . $info['extension'];
         }
 
@@ -1180,7 +1123,7 @@ class FileProperty extends AbstractProperty
      *
      * @return string Returns the file extension based on the MIME type for the first value.
      */
-    public function generateExtension()
+    public function generateExtension(): ?string
     {
         $type = $this->getMimetype();
 
@@ -1213,7 +1156,7 @@ class FileProperty extends AbstractProperty
             return null;
         }
 
-        if (strpos($ext, '/') !== false) {
+        if (str_contains($ext, '/')) {
             $ext = explode('/', $ext);
             $ext = reset($ext);
         }
@@ -1227,7 +1170,7 @@ class FileProperty extends AbstractProperty
      * @param  string $type The MIME type to parse.
      * @return string|null The extension based on the MIME type.
      */
-    public function generateExtensionFromMimeType($type)
+    public function generateExtensionFromMimeType($type): ?string
     {
         if (in_array($type, $this->getAcceptedMimetypes())) {
             return $this->resolveExtensionFromMimeType($type);
@@ -1244,21 +1187,18 @@ class FileProperty extends AbstractProperty
      * @param  string $type The MIME type to resolve.
      * @return string|null The extension based on the MIME type.
      */
-    protected function resolveExtensionFromMimeType($type)
+    protected function resolveExtensionFromMimeType($type): ?string
     {
-        switch ($type) {
-            case 'text/plain':
-                return 'txt';
-        }
-
-        return null;
+        return match ($type) {
+            'text/plain' => 'txt',
+            default => null,
+        };
     }
 
     /**
      * @param  mixed $fallback The fallback filename.
-     * @return self
      */
-    public function setFallbackFilename($fallback)
+    public function setFallbackFilename($fallback): static
     {
         $this->fallbackFilename = $this->translator()->translation($fallback);
         return $this;
@@ -1286,9 +1226,8 @@ class FileProperty extends AbstractProperty
 
     /**
      * @param string $filesystem The file system.
-     * @return self
      */
-    public function setFilesystem($filesystem)
+    public function setFilesystem($filesystem): static
     {
         $this->filesystem = $filesystem;
 
@@ -1301,6 +1240,7 @@ class FileProperty extends AbstractProperty
      * @param  Container $container A dependencies container instance.
      * @return void
      */
+    #[\Override]
     protected function setDependencies(Container $container)
     {
         parent::setDependencies($container);
@@ -1332,9 +1272,8 @@ class FileProperty extends AbstractProperty
      * it will be prepended.
      *
      * @param  string $path The end path.
-     * @return string
      */
-    protected function pathFor($path)
+    protected function pathFor($path): string
     {
         $path       = trim($path, '/');
 
@@ -1392,7 +1331,7 @@ class FileProperty extends AbstractProperty
         $size = preg_replace('/[^0-9\.]/', '', $size);
 
         if ($unit) {
-            $size = ($size * pow(1024, stripos($quant, $unit[0])));
+            $size *= 1024 ** stripos($quant, $unit[0]);
         }
 
         return round($size);
@@ -1407,7 +1346,7 @@ class FileProperty extends AbstractProperty
      * @return boolean Returns TRUE if the MIME type is acceptable.
      *     Otherwise, returns FALSE.
      */
-    protected function isAcceptedMimeType($type, array $accepted = null)
+    protected function isAcceptedMimeType($type, ?array $accepted = null)
     {
         if ($accepted === null) {
             $accepted = $this['acceptedMimetypes'];
@@ -1452,7 +1391,7 @@ class FileProperty extends AbstractProperty
      * @param  string $file A file path.
      * @return boolean Returns TRUE if the given path is absolute. Otherwise, returns FALSE.
      */
-    protected function isAbsolutePath($file)
+    protected function isAbsolutePath($file): bool
     {
         $file = (string)$file;
 
@@ -1468,9 +1407,8 @@ class FileProperty extends AbstractProperty
      * Determine if the given value is a data URI.
      *
      * @param  mixed $val The value to check.
-     * @return boolean
      */
-    protected function isDataUri($val)
+    protected function isDataUri($val): bool
     {
         return is_string($val) && preg_match('/^data:/i', $val);
     }
@@ -1479,9 +1417,8 @@ class FileProperty extends AbstractProperty
      * Determine if the given value is a data array.
      *
      * @param  mixed $val The value to check.
-     * @return boolean
      */
-    protected function isDataArr($val)
+    protected function isDataArr($val): bool
     {
         return is_array($val) && isset($val['id']);
     }
@@ -1495,20 +1432,16 @@ class FileProperty extends AbstractProperty
      * @throws UnexpectedValueException If the given path is invalid.
      * @return string Returns the rendered target.
      */
-    private function renamePatternArgs($path, $args = null)
+    private function renamePatternArgs(string|array $path, $args = null)
     {
         if (!is_string($path) && !is_array($path)) {
             throw new InvalidArgumentException(sprintf(
                 'The target must be a string or an array from [pathfino()], received %s',
-                (is_object($path) ? get_class($path) : gettype($path))
+                (get_debug_type($path))
             ));
         }
 
-        if (is_string($path)) {
-            $info = pathinfo($path);
-        } else {
-            $info = $path;
-        }
+        $info = is_string($path) ? pathinfo($path) : $path;
 
         if (!isset($info['basename']) || $info['basename'] === '') {
             throw new UnexpectedValueException(
@@ -1554,7 +1487,7 @@ class FileProperty extends AbstractProperty
             } else {
                 throw new InvalidArgumentException(sprintf(
                     'Arguments must be an array or a callable that returns an array, received %s',
-                    (is_object($args) ? get_class($args) : gettype($args))
+                    (get_debug_type($args))
                 ));
             }
         }
@@ -1571,12 +1504,9 @@ class FileProperty extends AbstractProperty
     {
         $propIdent = $this->ident();
 
-        $filterErrNoFile = function (array $file) {
-            return $file['error'] !== UPLOAD_ERR_NO_FILE;
-        };
-        $uploadedFiles = static::parseUploadedFiles($_FILES, $filterErrNoFile, $propIdent);
+        $filterErrNoFile = (fn(array $file): bool => $file['error'] !== UPLOAD_ERR_NO_FILE);
 
-        return $uploadedFiles;
+        return static::parseUploadedFiles($_FILES, $filterErrNoFile, $propIdent);
     }
 
     /**
@@ -1592,7 +1522,7 @@ class FileProperty extends AbstractProperty
      * @param  mixed    $searchKey      If specified, then only top-level keys containing these values are returned.
      * @return array A tree of normalized $_FILE entries.
      */
-    public static function parseUploadedFiles(array $uploadedFiles, callable $filterCallback = null, $searchKey = null)
+    public static function parseUploadedFiles(array $uploadedFiles, ?callable $filterCallback = null, $searchKey = null)
     {
         if ($searchKey !== null) {
             if (is_array($searchKey)) {
@@ -1637,15 +1567,15 @@ class FileProperty extends AbstractProperty
 
                     $parsedFiles[$field] = [
                         'tmp_name' => $uploadedFile['tmp_name'],
-                        'name'     => isset($uploadedFile['name']) ? $uploadedFile['name'] : null,
-                        'type'     => isset($uploadedFile['type']) ? $uploadedFile['type'] : null,
-                        'size'     => isset($uploadedFile['size']) ? $uploadedFile['size'] : null,
+                        'name'     => $uploadedFile['name'] ?? null,
+                        'type'     => $uploadedFile['type'] ?? null,
+                        'size'     => $uploadedFile['size'] ?? null,
                         'error'    => $uploadedFile['error'],
                     ];
                 }
             } else {
                 $subArray = [];
-                foreach ($uploadedFile['error'] as $fileIdx => $error) {
+                foreach (array_keys($uploadedFile['error']) as $fileIdx) {
                     // normalise subarray and re-parse to move the input's keyname up a level
                     $subArray[$fileIdx] = [
                         'tmp_name' => $uploadedFile['tmp_name'][$fileIdx],
@@ -1682,7 +1612,7 @@ class FileProperty extends AbstractProperty
      * @param  string $encoding The name of the path iconv() encoding.
      * @return string The path, normalised.
      */
-    public static function normalizePath($path, $encoding = 'UTF-8')
+    public static function normalizePath($path, string $encoding = 'UTF-8'): string|false
     {
         $key = $path;
 
@@ -1693,12 +1623,12 @@ class FileProperty extends AbstractProperty
         // Attempt to avoid path encoding problems.
         $path = iconv($encoding, $encoding . '//IGNORE//TRANSLIT', $path);
 
-        if (strpos($path, '..') !== false || strpos($path, './') !== false) {
+        if (str_contains($path, '..') || str_contains($path, './')) {
             // Process the components
             $parts = explode('/', $path);
             $safe = [];
-            foreach ($parts as $idx => $part) {
-                if ((empty($part) && !is_numeric($part)) || ($part === '.')) {
+            foreach ($parts as $part) {
+                if ((($part === '' || $part === '0') && !is_numeric($part)) || ($part === '.')) {
                     continue;
                 } elseif ($part === '..') {
                     array_pop($safe);

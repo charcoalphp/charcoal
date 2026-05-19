@@ -24,9 +24,9 @@ use Charcoal\Tests\Mocks\DefaultsAwareCacheMiddlewares as CacheMiddleware;
 
 /**
  * Test CacheMiddleware
- *
- * @coversDefaultClass \Charcoal\Cache\Middleware\CacheMiddleware
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\Charcoal\Cache\Middleware\CacheMiddleware::class)]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Cache\Middleware\CacheMiddleware::class, 'disableCacheHeadersOnResponse')]
 abstract class AbstractCacheMiddlewareTest extends AbstractTestCase
 {
     use CachePoolTrait;
@@ -41,9 +41,7 @@ abstract class AbstractCacheMiddlewareTest extends AbstractTestCase
     {
         if (!isset($args['cache'])) {
             $args['cache'] = static::getCachePool();
-            $args['processCacheKeyCallback'] = function ($key) {
-                return $key;
-            };
+            $args['processCacheKeyCallback'] = (fn($key) => $key);
         }
 
         return new CacheMiddleware($args);
@@ -56,9 +54,7 @@ abstract class AbstractCacheMiddlewareTest extends AbstractTestCase
      */
     protected function mockNextMiddleware()
     {
-        return function ($request, $response) {
-            return $response;
-        };
+        return fn($request, $response) => $response;
     }
 
     /**
@@ -120,9 +116,7 @@ abstract class AbstractCacheMiddlewareTest extends AbstractTestCase
         if ($query !== null) {
             $env['QUERY_STRING'] = is_array($query) ? http_build_query($query) : $query;
         }
-
-        $request = Request::createFromEnvironment($env);
-        return $request;
+        return Request::createFromEnvironment($env);
     }
 
     /**
@@ -156,19 +150,16 @@ abstract class AbstractCacheMiddlewareTest extends AbstractTestCase
         }
 
         $headers  = new Headers([ 'Content-Type' => 'text/html; charset=UTF-8' ]);
-        $response = new Response($status, $headers, $body);
-        return $response;
+        return new Response($status, $headers, $body);
     }
 
     /**
      * Reports an error if the HTTP response headers does not have disabled cache headers.
      *
-     * @covers ::disableCacheHeadersOnResponse
      *
      * @param  array $headers The HTTP response headers to test.
-     * @return void
      */
-    public function assertResponseHasDisabledCacheHeaders(array $headers)
+    public function assertResponseHasDisabledCacheHeaders(array $headers): void
     {
         $this->assertArrayHasKey('Cache-Control', $headers);
         $this->assertContains('no-cache, no-store, must-revalidate', $headers['Cache-Control']);

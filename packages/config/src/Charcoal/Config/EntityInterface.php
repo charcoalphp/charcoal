@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Charcoal\Config;
 
 use ArrayAccess;
@@ -11,8 +13,7 @@ use Serializable;
  */
 interface EntityInterface extends
     ArrayAccess,
-    JsonSerializable,
-    Serializable
+    JsonSerializable
 {
     /**
      * Gets the data keys on this entity.
@@ -27,7 +28,7 @@ interface EntityInterface extends
      * @param  string[] $keys Optional. Extracts only the requested data.
      * @return array An associative array.
      */
-    public function data(array $keys = null);
+    public function data(?array $keys = null);
 
     /**
      * Sets data on this entity.

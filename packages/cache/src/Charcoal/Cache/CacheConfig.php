@@ -33,40 +33,31 @@ class CacheConfig extends AbstractConfig
      * Note:
      * - When TRUE, the {@see self::$types} are used.
      * - When FALSE, the "memory" type is used.
-     *
-     * @var boolean
      */
-    private $active = true;
+    private bool $active = true;
 
     /**
      * Cache type(s) to use.
      *
      * Represents a cache driver.
-     *
-     * @var array
      */
-    private $types;
+    private ?array $types = null;
 
     /**
      * Default maximum time an item will be cached.
-     *
-     * @var integer
      */
-    private $defaultTtl = self::WEEK_IN_SECONDS;
+    private int $defaultTtl = self::WEEK_IN_SECONDS;
 
     /**
      * Cache namespace.
-     *
-     * @var string
      */
-    private $prefix = self::DEFAULT_NAMESPACE;
+    private string $prefix = self::DEFAULT_NAMESPACE;
 
     /**
      * Retrieve the default values.
-     *
-     * @return array
      */
-    public function defaults()
+    #[\Override]
+    public function defaults(): array
     {
         return [
             'active'      => true,
@@ -83,9 +74,9 @@ class CacheConfig extends AbstractConfig
      *     TRUE to enable, FALSE to disable.
      * @return CacheConfig Chainable
      */
-    public function setActive($active)
+    public function setActive($active): static
     {
-        $this->active = !!$active;
+        $this->active = (bool) $active;
         return $this;
     }
 
@@ -94,7 +85,7 @@ class CacheConfig extends AbstractConfig
      *
      * @return boolean TRUE if enabled, FALSE if disabled.
      */
-    public function active()
+    public function active(): bool
     {
         return $this->active;
     }
@@ -107,7 +98,7 @@ class CacheConfig extends AbstractConfig
      * @param  string[] $types One or more types to try as cache driver until success.
      * @return CacheConfig Chainable
      */
-    public function setTypes(array $types)
+    public function setTypes(array $types): static
     {
         $this->types = [];
         $this->addTypes($types);
@@ -120,7 +111,7 @@ class CacheConfig extends AbstractConfig
      * @param  string[] $types One or more types to try as cache driver until success.
      * @return CacheConfig Chainable
      */
-    public function addTypes(array $types)
+    public function addTypes(array $types): static
     {
         foreach ($types as $type) {
             $this->addType($type);
@@ -135,7 +126,7 @@ class CacheConfig extends AbstractConfig
      * @throws InvalidArgumentException If the type is not a string or unsupported.
      * @return CacheConfig Chainable
      */
-    public function addType($type)
+    public function addType($type): static
     {
         if (!in_array($type, $this->validTypes())) {
             throw new InvalidArgumentException(
@@ -153,10 +144,8 @@ class CacheConfig extends AbstractConfig
      * Note:
      * 1. The default cache type is always appended.
      * 2. Duplicate types are removed.
-     *
-     * @return array
      */
-    public function types()
+    public function types(): array
     {
         $types = ($this->types + self::DEFAULT_TYPES);
         return array_keys($types);
@@ -167,7 +156,7 @@ class CacheConfig extends AbstractConfig
      *
      * @return string[]
      */
-    public function defaultTypes()
+    public function defaultTypes(): array
     {
         return array_keys(self::DEFAULT_TYPES);
     }
@@ -177,7 +166,7 @@ class CacheConfig extends AbstractConfig
      *
      * @return string[]
      */
-    public function validTypes()
+    public function validTypes(): array
     {
         return [
             'apc',
@@ -197,7 +186,7 @@ class CacheConfig extends AbstractConfig
      * @throws InvalidArgumentException If the TTL is not numeric.
      * @return CacheConfig Chainable
      */
-    public function setDefaultTtl($ttl)
+    public function setDefaultTtl($ttl): static
     {
         if (!is_numeric($ttl)) {
             throw new InvalidArgumentException(
@@ -211,10 +200,8 @@ class CacheConfig extends AbstractConfig
 
     /**
      * Retrieve the default time-to-live for cached items.
-     *
-     * @return integer
      */
-    public function defaultTtl()
+    public function defaultTtl(): int
     {
         return $this->defaultTtl;
     }
@@ -226,7 +213,7 @@ class CacheConfig extends AbstractConfig
      * @throws InvalidArgumentException If the prefix is not a string.
      * @return CacheConfig Chainable
      */
-    public function setPrefix($prefix)
+    public function setPrefix($prefix): static
     {
         if (!is_string($prefix)) {
             throw new InvalidArgumentException(
@@ -247,10 +234,8 @@ class CacheConfig extends AbstractConfig
 
     /**
      * Retrieve the cache namespace.
-     *
-     * @return string
      */
-    public function prefix()
+    public function prefix(): string
     {
         return $this->prefix;
     }

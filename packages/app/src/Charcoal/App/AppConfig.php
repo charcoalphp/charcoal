@@ -19,19 +19,15 @@ class AppConfig extends AbstractConfig
 {
     /**
      * The application's timezone.
-     *
-     * @var string|null
      */
-    private $timezone;
+    private ?string $timezone = null;
 
     /**
      * The application's name.
      *
      * For internal usage.
-     *
-     * @var string|null
      */
-    private $projectName;
+    private ?string $projectName = null;
 
     /**
      * The base URL (public) for the Charcoal installation.
@@ -42,94 +38,68 @@ class AppConfig extends AbstractConfig
 
     /**
      * The base path for the Charcoal installation.
-     *
-     * @var string|null
      */
-    private $basePath;
+    private ?string $basePath = null;
 
     /**
      * The path to the public / web directory.
-     *
-     * @var string|null
      */
-    private $publicPath;
+    private ?string $publicPath = null;
 
     /**
      * The path to the cache directory.
-     *
-     * @var string|null
      */
-    private $cachePath;
+    private ?string $cachePath = null;
 
     /**
      * The path to the logs directory.
-     *
-     * @var string|null
      */
-    private $logsPath;
+    private ?string $logsPath = null;
 
     /**
      * Whether the debug mode is enabled (TRUE) or not (FALSE).
-     *
-     * @var boolean
      */
-    private $devMode = false;
+    private bool $devMode = false;
 
     /**
      * The application's routes.
-     *
-     * @var array
      */
-    private $routes = [];
+    private array $routes = [];
 
     /**
      * The application's dynamic routes.
-     *
-     * @var array|boolean
      */
-    private $routables = [];
+    private array|bool $routables = [];
 
     /**
      * The application's HTTP middleware.
-     *
-     * @var array
      */
-    private $middlewares = [];
+    private array $middlewares = [];
 
     /**
      * The application's handlers.
-     *
-     * @var array
      */
-    private $handlers = [];
+    private array $handlers = [];
 
     /**
      * The application's modules.
-     *
-     * @var array
      */
-    private $modules = [];
+    private array $modules = [];
 
     /**
      * The application's API credentials and service configsets.
-     *
-     * @var array
      */
-    private $apis = [];
+    private array $apis = [];
 
     /**
      * The application's caching configset.
-     *
-     * @var array
      */
-    private $cache;
+    private ?array $cache = null;
 
     /**
      * The application's logging configset.
-     *
-     * @var array
      */
-    private $logger;
+    private ?array $logger = null;
 
     /**
      * The application's view/rendering configset.
@@ -140,34 +110,26 @@ class AppConfig extends AbstractConfig
 
     /**
      * The application's database configsets.
-     *
-     * @var array
      */
-    private $databases = [];
+    private array $databases = [];
 
     /**
      * The application's default database configset.
-     *
-     * @var string
      */
-    private $defaultDatabase;
+    private ?string $defaultDatabase = null;
 
     /**
      * The application's filesystem configset.
-     *
-     * @var array
      */
-    private $filesystem;
+    private ?array $filesystem = null;
 
     /**
      * Default app-config values.
-     *
-     * @return array
      */
-    public function defaults()
+    #[\Override]
+    public function defaults(): array
     {
-        /** @var string $baseDir Presume that Charcoal App _is_ the application */
-        $baseDir = rtrim(realpath(__DIR__ . '/../../../'), '/') . '/';
+        rtrim(realpath(__DIR__ . '/../../../'), '/');
 
         return [
             'project_name'     => '',
@@ -188,11 +150,10 @@ class AppConfig extends AbstractConfig
 
     /**
      * @param array $values Array of values to resolve.
-     * @return array
      */
     public function resolveValues(array $values): array
     {
-        return array_map([$this, 'resolveValue'], $values);
+        return array_map($this->resolveValue(...), $values);
     }
 
     /**
@@ -213,7 +174,7 @@ class AppConfig extends AbstractConfig
         ];
 
         if (is_string($value)) {
-            return preg_replace_callback('/%%|%([^%\s]+)%/', function ($match) use ($tags, $value) {
+            return preg_replace_callback('/%%|%([^%\s]+)%/', function (array $match) use ($tags, $value): string|float|int {
                 // skip escaped %%
                 if (!isset($match[1])) {
                     return '%%';
@@ -224,7 +185,7 @@ class AppConfig extends AbstractConfig
                 $resolved = ($tags[$tag] ?? null);
 
                 if (!is_string($resolved) && !is_numeric($resolved)) {
-                    $resolvedType = (is_object($resolved) ? get_class($resolved) : gettype($resolved));
+                    $resolvedType = (get_debug_type($resolved));
 
                     throw new UnexpectedValueException(sprintf(
                         'Invalid config parameter "%s" inside string value "%s";' .
@@ -251,6 +212,7 @@ class AppConfig extends AbstractConfig
      * @param  string $path The file to load and add.
      * @return self
      */
+    #[\Override]
     public function addFile($path)
     {
         $path = $this->resolveValue($path);
@@ -265,9 +227,8 @@ class AppConfig extends AbstractConfig
      *
      * @param  string $path The absolute path to the application's root directory.
      * @throws InvalidArgumentException If the argument is not a string.
-     * @return self
      */
-    public function setBasePath($path)
+    public function setBasePath($path): static
     {
         if ($path === null) {
             throw new InvalidArgumentException(
@@ -290,7 +251,7 @@ class AppConfig extends AbstractConfig
      *
      * @return string|null The absolute path to the application's root directory.
      */
-    public function basePath()
+    public function basePath(): ?string
     {
         return $this->basePath;
     }
@@ -300,9 +261,8 @@ class AppConfig extends AbstractConfig
      *
      * @param  string $path The path to the application's public directory.
      * @throws InvalidArgumentException If the argument is not a string.
-     * @return self
      */
-    public function setPublicPath($path)
+    public function setPublicPath($path): static
     {
         if ($path === null) {
             $this->publicPath = null;
@@ -324,7 +284,7 @@ class AppConfig extends AbstractConfig
      *
      * @return string The absolute path to the application's public directory.
      */
-    public function publicPath()
+    public function publicPath(): string
     {
         if ($this->publicPath === null) {
             $this->publicPath = $this->basePath() . DIRECTORY_SEPARATOR . 'www';
@@ -338,9 +298,8 @@ class AppConfig extends AbstractConfig
      *
      * @param  string $path The path to the application's cache directory.
      * @throws InvalidArgumentException If the argument is not a string.
-     * @return self
      */
-    public function setCachePath($path)
+    public function setCachePath($path): static
     {
         if ($path === null) {
             $this->cachePath = null;
@@ -362,7 +321,7 @@ class AppConfig extends AbstractConfig
      *
      * @return string The absolute path to the application's cache directory.
      */
-    public function cachePath()
+    public function cachePath(): string
     {
         if ($this->cachePath === null) {
             $this->cachePath = $this->basePath() . DIRECTORY_SEPARATOR . 'var' . DIRECTORY_SEPARATOR . 'cache';
@@ -376,9 +335,8 @@ class AppConfig extends AbstractConfig
      *
      * @param  string $path The path to the application's logs directory.
      * @throws InvalidArgumentException If the argument is not a string.
-     * @return self
      */
-    public function setLogsPath($path)
+    public function setLogsPath($path): static
     {
         if ($path === null) {
             $this->logsPath = null;
@@ -400,7 +358,7 @@ class AppConfig extends AbstractConfig
      *
      * @return string The absolute path to the application's logs directory.
      */
-    public function logsPath()
+    public function logsPath(): string
     {
         if ($this->logsPath === null) {
             $this->logsPath = $this->basePath() . DIRECTORY_SEPARATOR . 'var' . DIRECTORY_SEPARATOR . 'logs';
@@ -413,15 +371,10 @@ class AppConfig extends AbstractConfig
      * Set the application's fully qualified base URL to the public web directory.
      *
      * @param  UriInterface|string $uri The base URI to the application's web directory.
-     * @return self
      */
-    public function setBaseUrl($uri)
+    public function setBaseUrl($uri): static
     {
-        if (is_string($uri)) {
-            $this->baseUrl = Uri::createFromString($uri);
-        } else {
-            $this->baseUrl = $uri;
-        }
+        $this->baseUrl = is_string($uri) ? Uri::createFromString($uri) : $uri;
         return $this;
     }
 
@@ -440,9 +393,8 @@ class AppConfig extends AbstractConfig
      *
      * @param  string $timezone The timezone string.
      * @throws InvalidArgumentException If the argument is not a string.
-     * @return self
      */
-    public function setTimezone($timezone)
+    public function setTimezone($timezone): static
     {
         if (!is_string($timezone)) {
             throw new InvalidArgumentException(
@@ -458,12 +410,10 @@ class AppConfig extends AbstractConfig
      * Retrieve the application's default timezone.
      *
      * Will be used by the PHP date and date-time functions.
-     *
-     * @return string
      */
-    public function timezone()
+    public function timezone(): string
     {
-        if (isset($this->timezone)) {
+        if ($this->timezone !== null) {
             return $this->timezone;
         } else {
             return 'UTC';
@@ -475,9 +425,8 @@ class AppConfig extends AbstractConfig
      *
      * @param string|null $projectName The project name.
      * @throws InvalidArgumentException If the project argument is not a string (or null).
-     * @return self
      */
-    public function setProjectName($projectName)
+    public function setProjectName($projectName): static
     {
         if ($projectName === null) {
             $this->projectName = null;
@@ -510,20 +459,16 @@ class AppConfig extends AbstractConfig
 
     /**
      * @param boolean $devMode The "dev mode" flag.
-     * @return self
      */
-    public function setDevMode($devMode)
+    public function setDevMode($devMode): static
     {
-        $this->devMode = !!$devMode;
+        $this->devMode = (bool) $devMode;
         return $this;
     }
 
-    /**
-     * @return boolean
-     */
-    public function devMode()
+    public function devMode(): bool
     {
-        return !!$this->devMode;
+        return $this->devMode;
     }
 
     /**
@@ -531,9 +476,8 @@ class AppConfig extends AbstractConfig
      *
      * @param  array $view The global configset for the application's view service.
      * @throws InvalidArgumentException If the argument is not a configset.
-     * @return self
      */
-    public function setView(array $view)
+    public function setView(array $view): static
     {
         $this->view = $view;
         return $this;
@@ -553,18 +497,14 @@ class AppConfig extends AbstractConfig
      * Parse the application's API configuration.
      *
      * @param  array $apis The API configuration structure to set.
-     * @return self
      */
-    public function setApis(array $apis)
+    public function setApis(array $apis): static
     {
         $this->apis = $apis;
         return $this;
     }
 
-    /**
-     * @return array
-     */
-    public function apis()
+    public function apis(): array
     {
         return $this->apis;
     }
@@ -574,42 +514,32 @@ class AppConfig extends AbstractConfig
      *
      * @see    \Charcoal\Admin\Config::setRoutes() For a similar implementation.
      * @param  array $routes The route configuration structure to set.
-     * @return self
      */
-    public function setRoutes(array $routes)
+    public function setRoutes(array $routes): static
     {
         $this->routes = $routes;
         return $this;
     }
 
-    /**
-     * @return array
-     */
-    public function routes()
+    public function routes(): array
     {
         return $this->routes;
     }
 
     /**
      * @param  array|boolean $routables The routable configuration structure to set or FALSE to disable dynamic routing.
-     * @return self
      */
-    public function setRoutables($routables)
+    public function setRoutables($routables): static
     {
-        if ($routables !== false) {
-            if (!is_array($routables) || empty($routables)) {
-                $routables = [];
-            }
+        if ($routables !== false && (!is_array($routables) || $routables === [])) {
+            $routables = [];
         }
 
         $this->routables = $routables;
         return $this;
     }
 
-    /**
-     * @return array|boolean
-     */
-    public function routables()
+    public function routables(): bool|array
     {
         return $this->routables;
     }
@@ -618,18 +548,14 @@ class AppConfig extends AbstractConfig
      * Parse the application's HTTP middleware.
      *
      * @param  array $middlewares The middleware configuration structure to set.
-     * @return self
      */
-    public function setMiddlewares(array $middlewares)
+    public function setMiddlewares(array $middlewares): static
     {
         $this->middlewares = $middlewares;
         return $this;
     }
 
-    /**
-     * @return array
-     */
-    public function middlewares()
+    public function middlewares(): array
     {
         return $this->middlewares;
     }
@@ -645,18 +571,14 @@ class AppConfig extends AbstractConfig
      * - "phpErrorHandler"
      *
      * @param  array $handlers The handlers configuration structure to set.
-     * @return self
      */
-    public function setHandlers(array $handlers)
+    public function setHandlers(array $handlers): static
     {
         $this->handlers = $handlers;
         return $this;
     }
 
-    /**
-     * @return array
-     */
-    public function handlers()
+    public function handlers(): array
     {
         return $this->handlers;
     }
@@ -665,18 +587,14 @@ class AppConfig extends AbstractConfig
      * Set the configuration modules.
      *
      * @param array $modules The module configuration structure to set.
-     * @return self
      */
-    public function setModules(array $modules)
+    public function setModules(array $modules): static
     {
         $this->modules = $modules;
         return $this;
     }
 
-    /**
-     * @return array
-     */
-    public function modules()
+    public function modules(): array
     {
         return $this->modules;
     }
@@ -686,9 +604,8 @@ class AppConfig extends AbstractConfig
      *
      * @param  array $cache The global config for the application's cache service.
      * @throws InvalidArgumentException If the argument is not a configset.
-     * @return self
      */
-    public function setCache(array $cache)
+    public function setCache(array $cache): static
     {
         $this->cache = $cache;
         return $this;
@@ -699,7 +616,7 @@ class AppConfig extends AbstractConfig
      *
      * @return array
      */
-    public function cache()
+    public function cache(): ?array
     {
         return $this->cache;
     }
@@ -709,9 +626,8 @@ class AppConfig extends AbstractConfig
      *
      * @param  array $logger The global config for the application's logger service.
      * @throws InvalidArgumentException If the argument is not a configset.
-     * @return self
      */
-    public function setLogger(array $logger)
+    public function setLogger(array $logger): static
     {
         $this->logger = $logger;
         return $this;
@@ -722,16 +638,15 @@ class AppConfig extends AbstractConfig
      *
      * @return array
      */
-    public function logger()
+    public function logger(): ?array
     {
         return $this->logger;
     }
 
     /**
      * @param array $databases The avaiable databases config.
-     * @return self
      */
-    public function setDatabases(array $databases)
+    public function setDatabases(array $databases): static
     {
         $this->databases = $databases;
         return $this;
@@ -739,9 +654,8 @@ class AppConfig extends AbstractConfig
 
     /**
      * @throws Exception If trying to access this method and no databases were set.
-     * @return array
      */
-    public function databases()
+    public function databases(): array
     {
         if ($this->databases === null) {
             throw new Exception(
@@ -776,9 +690,8 @@ class AppConfig extends AbstractConfig
     /**
      * @param string $defaultDatabase The default database ident.
      * @throws InvalidArgumentException If the argument is not a string.
-     * @return self
      */
-    public function setDefaultDatabase($defaultDatabase)
+    public function setDefaultDatabase($defaultDatabase): static
     {
         if (!is_string($defaultDatabase)) {
             throw new InvalidArgumentException(
@@ -793,9 +706,8 @@ class AppConfig extends AbstractConfig
      * @param string $ident  The database ident.
      * @param array  $config The database options.
      * @throws InvalidArgumentException If the arguments are invalid.
-     * @return self
      */
-    public function addDatabase($ident, array $config)
+    public function addDatabase($ident, array $config): static
     {
         if (!is_string($ident)) {
             throw new InvalidArgumentException(
@@ -812,9 +724,8 @@ class AppConfig extends AbstractConfig
 
     /**
      * @throws Exception If trying to access this method before a setter.
-     * @return mixed
      */
-    public function defaultDatabase()
+    public function defaultDatabase(): string
     {
         if ($this->defaultDatabase === null) {
             throw new Exception(
@@ -829,9 +740,8 @@ class AppConfig extends AbstractConfig
      *
      * @param  array $filesystem The global config for the application's file system.
      * @throws InvalidArgumentException If the argument is not a configset.
-     * @return self
      */
-    public function setFilesystem(array $filesystem)
+    public function setFilesystem(array $filesystem): static
     {
         $this->filesystem = $filesystem;
         return $this;
@@ -842,7 +752,7 @@ class AppConfig extends AbstractConfig
      *
      * @return array
      */
-    public function filesystem()
+    public function filesystem(): ?array
     {
         return $this->filesystem;
     }

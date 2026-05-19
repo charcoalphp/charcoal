@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Charcoal\Cms;
 
 /**
@@ -10,9 +12,8 @@ final class Event extends AbstractEvent
     /**
      *
      * @see CategorizableTrait::$ategoryType()
-     * @return string
      */
-    public function categoryType()
+    public function categoryType(): string
     {
         return EventCategory::class;
     }

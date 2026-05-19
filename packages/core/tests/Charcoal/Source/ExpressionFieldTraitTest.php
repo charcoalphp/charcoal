@@ -23,8 +23,6 @@ class ExpressionFieldTraitTest extends AbstractTestCase
 
     /**
      * Set up the test.
-     *
-     * @return void
      */
     protected function setUp(): void
     {
@@ -40,9 +38,7 @@ class ExpressionFieldTraitTest extends AbstractTestCase
      */
     final public function createField()
     {
-        $obj = $this->getMockForTrait(ExpressionFieldTrait::class);
-
-        return $obj;
+        return $this->getMockForTrait(ExpressionFieldTrait::class);
     }
 
     /**
@@ -69,10 +65,8 @@ class ExpressionFieldTraitTest extends AbstractTestCase
      * 3. Chainable method
      * 4. Accepts Property
      * 5. Accepts NULL
-     *
-     * @return void
      */
-    public function testProperty()
+    public function testProperty(): void
     {
         $obj = $this->createField();
 
@@ -100,10 +94,8 @@ class ExpressionFieldTraitTest extends AbstractTestCase
 
     /**
      * Test the "property" determiner.
-     *
-     * @return void
      */
-    public function testHasProperty()
+    public function testHasProperty(): void
     {
         $obj = $this->createField();
         $this->assertFalse($obj->hasProperty());
@@ -114,10 +106,8 @@ class ExpressionFieldTraitTest extends AbstractTestCase
 
     /**
      * Test "property" property with blank value.
-     *
-     * @return void
      */
-    public function testPropertyWithBlankValue()
+    public function testPropertyWithBlankValue(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->createField()->setProperty('');
@@ -125,10 +115,8 @@ class ExpressionFieldTraitTest extends AbstractTestCase
 
     /**
      * Test "property" property with invalid property.
-     *
-     * @return void
      */
-    public function testPropertyWithInvalidProperty()
+    public function testPropertyWithInvalidProperty(): void
     {
         $container = $this->getContainer();
         $property  = $container['property/factory']->create('generic');
@@ -139,10 +127,8 @@ class ExpressionFieldTraitTest extends AbstractTestCase
 
     /**
      * Test "property" property with invalid value.
-     *
-     * @return void
      */
-    public function testPropertyWithInvalidValue()
+    public function testPropertyWithInvalidValue(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->createField()->setProperty([]);
@@ -156,10 +142,8 @@ class ExpressionFieldTraitTest extends AbstractTestCase
      * 2. Mutated state
      * 3. Chainable method
      * 4. Accepts NULL
-     *
-     * @return void
      */
-    public function testTable()
+    public function testTable(): void
     {
         $obj = $this->createField();
 
@@ -181,10 +165,8 @@ class ExpressionFieldTraitTest extends AbstractTestCase
 
     /**
      * Test the "table" determiner.
-     *
-     * @return void
      */
-    public function testHasTable()
+    public function testHasTable(): void
     {
         $obj = $this->createField();
         $this->assertFalse($obj->hasTable());
@@ -195,10 +177,8 @@ class ExpressionFieldTraitTest extends AbstractTestCase
 
     /**
      * Test "table" property with blank value.
-     *
-     * @return void
      */
-    public function testTableWithBlankValue()
+    public function testTableWithBlankValue(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->createField()->setTable('');
@@ -206,10 +186,8 @@ class ExpressionFieldTraitTest extends AbstractTestCase
 
     /**
      * Test "table" property with invalid value.
-     *
-     * @return void
      */
-    public function testTableWithInvalidValue()
+    public function testTableWithInvalidValue(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->createField()->setTable([]);
@@ -222,10 +200,8 @@ class ExpressionFieldTraitTest extends AbstractTestCase
      * 1. Default state
      * 2. With column name
      * 3. With property instance
-     *
-     * @return void
      */
-    public function testFieldNames()
+    public function testFieldNames(): void
     {
         $obj = $this->createField();
 
@@ -252,10 +228,8 @@ class ExpressionFieldTraitTest extends AbstractTestCase
      * 1. Default state
      * 2. With column name
      * 3. With property instance
-     *
-     * @return void
      */
-    public function testFieldName()
+    public function testFieldName(): void
     {
         $obj = $this->createField();
 
@@ -282,10 +256,8 @@ class ExpressionFieldTraitTest extends AbstractTestCase
      * 1. Default state
      * 2. With column name
      * 3. With table name
-     *
-     * @return void
      */
-    public function testFieldIdentifiers()
+    public function testFieldIdentifiers(): void
     {
         $obj = $this->createField();
 
@@ -310,10 +282,8 @@ class ExpressionFieldTraitTest extends AbstractTestCase
      * 1. Default state
      * 2. With column name
      * 3. With table name
-     *
-     * @return void
      */
-    public function testFieldIdentifier()
+    public function testFieldIdentifier(): void
     {
         $obj = $this->createField();
 

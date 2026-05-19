@@ -19,9 +19,9 @@ class Authenticator extends AbstractAuthenticator
      *
      * @param  AuthenticatableInterface $user     The authenticated user to log in.
      * @param  boolean                  $remember Whether to "remember" the user or not.
-     * @return void
      */
-    public function login(AuthenticatableInterface $user, $remember = false)
+    #[\Override]
+    public function login(AuthenticatableInterface $user, $remember = false): void
     {
         parent::login($user, $remember);
 
@@ -36,12 +36,11 @@ class Authenticator extends AbstractAuthenticator
      * @param  AuthenticatableInterface $user The user to validate.
      * @return boolean
      */
+    #[\Override]
     public function validateAuthentication(AuthenticatableInterface $user)
     {
-        if ($user instanceof ContentInterface) {
-            if (!$user['active']) {
-                return false;
-            }
+        if ($user instanceof ContentInterface && !$user['active']) {
+            return false;
         }
 
         return parent::validateAuthentication($user);
@@ -70,7 +69,7 @@ class Authenticator extends AbstractAuthenticator
         $userId = $user->getAuthId();
 
         if ($update && $userId) {
-            $userClass = get_class($user);
+            $userClass = $user::class;
 
             $this->logger->info(sprintf(
                 'Updating last login fields for user "%s" (%s)',
@@ -80,7 +79,7 @@ class Authenticator extends AbstractAuthenticator
         }
 
         $user['lastLoginDate'] = 'now';
-        $user['lastLoginIp']   = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : null;
+        $user['lastLoginIp']   = $_SERVER['REMOTE_ADDR'] ?? null;
 
         if ($update && $userId) {
             $result = $user->update([
@@ -115,6 +114,7 @@ class Authenticator extends AbstractAuthenticator
      * @throws InvalidArgumentException If the password is invalid.
      * @return boolean Returns TRUE if the password was changed, or FALSE otherwise.
      */
+    #[\Override]
     public function changeUserPassword(AuthenticatableInterface $user, $password, $update = true)
     {
         if (!($user instanceof UserInterface)) {
@@ -130,7 +130,7 @@ class Authenticator extends AbstractAuthenticator
         $userId = $user->getAuthId();
 
         if ($update && $userId) {
-            $userClass = get_class($user);
+            $userClass = $user::class;
 
             $this->logger->info(sprintf(
                 '[Authenticator] Changing password for user "%s" (%s)',
@@ -143,7 +143,7 @@ class Authenticator extends AbstractAuthenticator
 
         $user[$passwordKey]       = password_hash($password, PASSWORD_DEFAULT);
         $user['lastPasswordDate'] = 'now';
-        $user['lastPasswordIp']   = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : null;
+        $user['lastPasswordIp']   = $_SERVER['REMOTE_ADDR'] ?? null;
 
         if ($update && $userId) {
             $result = $user->update([

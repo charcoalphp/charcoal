@@ -21,9 +21,6 @@ class PropertyFieldTest extends AbstractTestCase
      */
     public $obj;
 
-    /**
-     * @return void
-     */
     protected function setUp(): void
     {
         $container = $this->getContainer();
@@ -33,10 +30,7 @@ class PropertyFieldTest extends AbstractTestCase
         ]);
     }
 
-    /**
-     * @return void
-     */
-    public function testData()
+    public function testData(): void
     {
         $data = [
             'ident'       => 'test',
@@ -65,10 +59,7 @@ class PropertyFieldTest extends AbstractTestCase
         $this->assertEquals($sql, $this->obj->sql());
     }
 
-    /**
-     * @return void
-     */
-    public function testIdent()
+    public function testIdent(): void
     {
         $ret = $this->obj->setIdent('title');
         $this->assertSame($this->obj, $ret);
@@ -79,19 +70,13 @@ class PropertyFieldTest extends AbstractTestCase
         $this->obj->setIdent(null);
     }
 
-    /**
-     * @return void
-     */
-    public function testSqlReturnsEmptyIfEmptyIdent()
+    public function testSqlReturnsEmptyIfEmptyIdent(): void
     {
         $this->obj->setIdent('');
         $this->assertEquals('', $this->obj->sql());
     }
 
-    /**
-     * @return void
-     */
-    public function testLabel()
+    public function testLabel(): void
     {
         $this->assertEquals(null, $this->obj->label());
 
@@ -100,13 +85,10 @@ class PropertyFieldTest extends AbstractTestCase
 
         $label = $this->obj->label();
         $this->assertIsString($label);
-        $this->assertEquals('Cooking', (string)$label);
+        $this->assertEquals('Cooking', $label);
     }
 
-    /**
-     * @return void
-     */
-    public function testPdoType()
+    public function testPdoType(): void
     {
         $this->assertEquals(PDO::PARAM_NULL, $this->obj->sqlPdoType());
 
@@ -122,10 +104,7 @@ class PropertyFieldTest extends AbstractTestCase
         $this->obj->setSqlPdoType(null);
     }
 
-    /**
-     * @return void
-     */
-    public function testSqlType()
+    public function testSqlType(): void
     {
         $ret = $this->obj->setSqlType('INT(10)');
         $this->assertSame($this->obj, $ret);
@@ -136,10 +115,7 @@ class PropertyFieldTest extends AbstractTestCase
         $this->obj->setSqlType(0);
     }
 
-    /**
-     * @return void
-     */
-    public function testSqlExtra()
+    public function testSqlExtra(): void
     {
         $this->assertEquals(null, $this->obj->extra());
 
@@ -152,10 +128,7 @@ class PropertyFieldTest extends AbstractTestCase
         $this->obj->setExtra(0);
     }
 
-    /**
-     * @return void
-     */
-    public function testSqlEncoding()
+    public function testSqlEncoding(): void
     {
         $this->assertEquals(null, $this->obj->sqlEncoding());
 

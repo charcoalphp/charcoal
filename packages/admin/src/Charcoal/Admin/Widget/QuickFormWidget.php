@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Charcoal\Admin\Widget;
 
 use Charcoal\Admin\Widget\ObjectFormWidget;
@@ -30,9 +32,9 @@ class QuickFormWidget extends ObjectFormWidget implements
 
     /**
      * @param  array $data The widget data.
-     * @return self
      */
-    public function setData(array $data)
+    #[\Override]
+    public function setData(array $data): static
     {
         parent::setData($data);
 
@@ -49,6 +51,7 @@ class QuickFormWidget extends ObjectFormWidget implements
      * @see    ObjectFormWidget::formIdentFallback()
      * @return string
      */
+    #[\Override]
     public function formIdentFallback()
     {
         $metadata = $this->obj()->metadata();
@@ -60,7 +63,7 @@ class QuickFormWidget extends ObjectFormWidget implements
         if (isset($this->formData()['form_ident'])) {
             $ident = $this->formData()['form_ident'];
 
-            if (is_string($ident) && !empty($ident)) {
+            if (is_string($ident) && ($ident !== '' && $ident !== '0')) {
                 return $ident;
             }
         }
@@ -70,10 +73,9 @@ class QuickFormWidget extends ObjectFormWidget implements
 
     /**
      * Retrieve the widget's data options for JavaScript components.
-     *
-     * @return array
      */
-    public function widgetDataForJs()
+    #[\Override]
+    public function widgetDataForJs(): array
     {
         return array_merge_recursive(
             parent::widgetDataForJs(),
@@ -89,6 +91,7 @@ class QuickFormWidget extends ObjectFormWidget implements
      *
      * @return \Charcoal\Translator\Translation|string|null
      */
+    #[\Override]
     public function submitLabel()
     {
         if (isset($this->formData()['submit_label'])) {
@@ -101,37 +104,30 @@ class QuickFormWidget extends ObjectFormWidget implements
 
     /**
      * @see    HasLanguageSwitcherTrait::showLanguageSwitch()
-     * @return boolean
      */
-    protected function resolveShowLanguageSwitch()
+    protected function resolveShowLanguageSwitch(): bool
     {
         return $this->supportsLanguageSwitch();
     }
 
     /**
      * Determine if content groups are to be displayed as languages tabbable panes.
-     *
-     * @return boolean
      */
-    public function isDisplayModeLang()
+    public function isDisplayModeLang(): bool
     {
         return ($this->groupDisplayMode() === self::DISPLAY_MODE_LANG);
     }
 
     /**
      * Determine if content groups are to be displayed as tabbable panes.
-     *
-     * @return boolean
      */
-    public function isTabbable()
+    #[\Override]
+    public function isTabbable(): bool
     {
         return in_array($this->groupDisplayMode(), $this->getTabbableDisplayModes());
     }
 
-    /**
-     * @return array
-     */
-    public function getTabbableDisplayModes()
+    public function getTabbableDisplayModes(): array
     {
         return [
             self::DISPLAY_MODE_TAB,
@@ -147,16 +143,14 @@ class QuickFormWidget extends ObjectFormWidget implements
         $options = (JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 
         if ($this->debug()) {
-            $options = ($options | JSON_PRETTY_PRINT);
+            $options |= JSON_PRETTY_PRINT;
         }
 
         return json_encode($this->languages(), $options);
     }
 
-    /**
-     * @return string
-     */
-    public function defaultFormTabsTemplate()
+    #[\Override]
+    public function defaultFormTabsTemplate(): string
     {
         return 'charcoal/admin/template/form/nav-tabs';
     }

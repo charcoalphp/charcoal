@@ -10,10 +10,7 @@ use Charcoal\Admin\Property\AbstractPropertyInput;
  */
 class TextInput extends AbstractPropertyInput
 {
-    /**
-     * @var integer $size
-     */
-    private $size = 0;
+    private int $size = 0;
 
     /**
      * The minimum number of characters allowed.
@@ -21,10 +18,8 @@ class TextInput extends AbstractPropertyInput
      * Note:
      * - In Unicode code points.
      * - If zero or a negative value is specified, the length is ignored.
-     *
-     * @var integer
      */
-    private $minLength = 0;
+    private int $minLength = 0;
 
     /**
      * The maximum number of characters allowed.
@@ -33,22 +28,15 @@ class TextInput extends AbstractPropertyInput
      * - In UTF-16 code units.
      * - If it is not specified, the control allows an unlimited number of characters.
      * - If zero or a negative value is specified, the length is ignored.
-     *
-     * @var integer
      */
-    private $maxLength = 0;
+    private int $maxLength = 0;
 
-    /**
-     * @var string $pattern
-     */
-    private $pattern = '';
+    private string $pattern = '';
 
     /**
      * Retrieve the control type for the HTML element `<input>`.
-     *
-     * @return string
      */
-    public function type()
+    public function type(): string
     {
         return 'text';
     }
@@ -61,7 +49,8 @@ class TextInput extends AbstractPropertyInput
      * @see    AbstractPropertyInput::inputVal()
      * @return string
      */
-    public function inputVal()
+    #[\Override]
+    public function inputVal(): ?string
     {
         return preg_replace('~[\n\r]~', '', parent::inputVal());
     }
@@ -71,7 +60,7 @@ class TextInput extends AbstractPropertyInput
      * @throws InvalidArgumentException If the argument is not a number.
      * @return Text Chainable
      */
-    public function setMinLength($minLength)
+    public function setMinLength($minLength): static
     {
         if (!is_numeric($minLength)) {
             throw new InvalidArgumentException(
@@ -83,10 +72,7 @@ class TextInput extends AbstractPropertyInput
         return $this;
     }
 
-    /**
-     * @return integer
-     */
-    public function minLength()
+    public function minLength(): int
     {
         return $this->minLength;
     }
@@ -96,7 +82,7 @@ class TextInput extends AbstractPropertyInput
      * @throws InvalidArgumentException If the argument is not a number.
      * @return Text Chainable
      */
-    public function setMaxLength($maxLength)
+    public function setMaxLength($maxLength): static
     {
         if (!is_numeric($maxLength)) {
             throw new InvalidArgumentException(
@@ -108,10 +94,7 @@ class TextInput extends AbstractPropertyInput
         return $this;
     }
 
-    /**
-     * @return integer
-     */
-    public function maxLength()
+    public function maxLength(): int
     {
         return $this->maxLength;
     }
@@ -121,7 +104,7 @@ class TextInput extends AbstractPropertyInput
      * @throws InvalidArgumentException If the argument is not a number.
      * @return Text Chainable
      */
-    public function setSize($size)
+    public function setSize($size): static
     {
         if (!is_numeric($size)) {
             throw new InvalidArgumentException(
@@ -132,10 +115,7 @@ class TextInput extends AbstractPropertyInput
         return $this;
     }
 
-    /**
-     * @return integer
-     */
-    public function size()
+    public function size(): int
     {
         return $this->size;
     }
@@ -145,7 +125,7 @@ class TextInput extends AbstractPropertyInput
      * @throws InvalidArgumentException If the argument is not a string.
      * @return Text Chainable
      */
-    public function setPattern($pattern)
+    public function setPattern($pattern): static
     {
         if (!is_string($pattern)) {
             throw new InvalidArgumentException(
@@ -156,20 +136,16 @@ class TextInput extends AbstractPropertyInput
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function pattern()
+    public function pattern(): string
     {
         return $this->pattern;
     }
 
     /**
      * Retrieve the control's data options for JavaScript components.
-     *
-     * @return array
      */
-    public function controlDataForJs()
+    #[\Override]
+    public function controlDataForJs(): array
     {
         return [
             // Text Control

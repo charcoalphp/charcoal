@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Charcoal\Image\Effect;
 
 use InvalidArgumentException;
@@ -10,14 +12,8 @@ use Charcoal\Image\AbstractEffect;
  */
 abstract class AbstractDitherEffect extends AbstractEffect
 {
-    /**
-     * @var integer $colors
-     */
-    private $colors = 16;
-    /**
-     * @var string $mode
-     */
-    private $mode = '';
+    private int $colors = 16;
+    private string $mode = '';
 
     /**
      * @param integer $colors The numver of dither colors.

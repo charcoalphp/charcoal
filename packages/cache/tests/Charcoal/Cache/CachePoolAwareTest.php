@@ -11,16 +11,13 @@ use Charcoal\Tests\Mocks\CachePoolAware;
 
 /**
  * Test CachePoolAwareTrait
- *
- * @coversDefaultClass \Charcoal\Cache\CachePoolAwareTrait
  */
+#[\PHPUnit\Framework\Attributes\CoversTrait(\Charcoal\Cache\CachePoolAwareTrait::class)]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Cache\CachePoolAwareTrait::class, 'setCachePool')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Cache\CachePoolAwareTrait::class, 'cachePool')]
 class CachePoolAwareTest extends AbstractTestCase
 {
-    /**
-     * @covers ::setCachePool
-     * @covers ::cachePool
-     */
-    public function testCachePool()
+    public function testCachePool(): void
     {
         $obj  = new CachePoolAware();
         $pool = new Pool();
@@ -31,9 +28,8 @@ class CachePoolAwareTest extends AbstractTestCase
 
     /**
      * testSetPrefixOnInvalidValue
-     * @covers ::cachePool
      */
-    public function testMissingPool()
+    public function testMissingPool(): void
     {
         $this->expectExceptionMessage('Cache Pool is not defined for "Charcoal\Tests\Mocks\CachePoolAware"');
         $this->expectException(\RuntimeException::class);

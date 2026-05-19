@@ -26,14 +26,9 @@ class MustacheEngine extends AbstractEngine
 
     /**
      * The renderering framework.
-     *
-     * @var Mustache_Engine
      */
-    private $mustache;
+    private ?\Mustache_Engine $mustache = null;
 
-    /**
-     * @return string
-     */
     public function type(): string
     {
         return 'mustache';
@@ -58,9 +53,8 @@ class MustacheEngine extends AbstractEngine
      *
      * @param  array|Traversable|HelpersInterface $helpers Mustache helpers.
      * @throws InvalidArgumentException If the given helper(s) are invalid.
-     * @return self
      */
-    public function setHelpers($helpers)
+    public function setHelpers($helpers): static
     {
         if ($helpers instanceof HelpersInterface) {
             $helpers = $helpers->toArray();
@@ -69,7 +63,7 @@ class MustacheEngine extends AbstractEngine
         if (!is_array($helpers) && !$helpers instanceof Traversable) {
             throw new InvalidArgumentException(sprintf(
                 'setHelpers expects an array of helpers, received %s',
-                (is_object($helpers) ? get_class($helpers) : gettype($helpers))
+                (get_debug_type($helpers))
             ));
         }
 
@@ -86,9 +80,8 @@ class MustacheEngine extends AbstractEngine
      *
      * @param  array|Traversable|HelpersInterface $helpers Mustache helpers.
      * @throws InvalidArgumentException If the given helper(s) are invalid.
-     * @return self
      */
-    public function mergeHelpers($helpers)
+    public function mergeHelpers($helpers): static
     {
         if ($helpers instanceof HelpersInterface) {
             $helpers = $helpers->toArray();
@@ -97,7 +90,7 @@ class MustacheEngine extends AbstractEngine
         if (!is_array($helpers) && !$helpers instanceof Traversable) {
             throw new InvalidArgumentException(sprintf(
                 'mergeHelpers expects an array of helpers, received %s',
-                (is_object($helpers) ? get_class($helpers) : gettype($helpers))
+                (get_debug_type($helpers))
             ));
         }
 
@@ -114,11 +107,10 @@ class MustacheEngine extends AbstractEngine
      * @param  string $name   The tag name.
      * @param  mixed  $helper The tag value.
      * @throws RuntimeException If the mustache engine was already initialized.
-     * @return self
      */
-    public function addHelper(string $name, $helper)
+    public function addHelper(string $name, $helper): static
     {
-        if ($this->mustache !== null) {
+        if ($this->mustache instanceof \Mustache_Engine) {
             throw new RuntimeException(
                 'Can not add helper to Mustache engine: the engine has already been initialized.'
             );
@@ -131,8 +123,6 @@ class MustacheEngine extends AbstractEngine
 
     /**
      * Retrieve the engine's helpers.
-     *
-     * @return array
      */
     public function helpers(): array
     {
@@ -144,6 +134,7 @@ class MustacheEngine extends AbstractEngine
      * @param mixed  $context       The rendering context.
      * @return string The rendered template string.
      */
+    #[\Override]
     public function render(string $templateIdent, $context): string
     {
         return $this->mustache()->render($templateIdent, $context);
@@ -159,40 +150,32 @@ class MustacheEngine extends AbstractEngine
         return $this->mustache()->render($templateString, $context);
     }
 
-    /**
-     * @return Mustache_Engine
-     */
     protected function mustache(): Mustache_Engine
     {
-        if ($this->mustache === null) {
+        if (!$this->mustache instanceof \Mustache_Engine) {
             $this->mustache = $this->createMustache();
         }
 
         return $this->mustache;
     }
 
-    /**
-     * @return Mustache_Engine
-     */
     protected function createMustache(): Mustache_Engine
     {
-        $mustache = new Mustache_Engine([
+        return new Mustache_Engine([
             'cache'             => $this->cache(),
             'loader'            => $this->loader(),
             'partials_loader'   => $this->loader(),
             'strict_callables'  => true,
             'helpers'           => $this->helpers()
         ]);
-
-        return $mustache;
     }
 
     /**
      * Set the engine's cache implementation.
      *
      * @param  mixed $cache A Mustache cache option.
-     * @return void
      */
+    #[\Override]
     protected function setCache($cache): void
     {
         /**

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Charcoal\Tests\Cms\Mock;
 
 // From 'charcoal-app'
@@ -13,24 +15,20 @@ use Charcoal\Cms\NewsInterface;
  */
 class NewsTemplate extends AbstractTemplate
 {
-    /**
-     * @var NewsInterface $news
-     */
-    private $news;
+    private ?\Charcoal\Cms\NewsInterface $news = null;
 
     /**
      * @return NewsInterface
      */
-    public function news()
+    public function news(): ?\Charcoal\Cms\NewsInterface
     {
         return $this->news;
     }
 
     /**
      * @param  NewsInterface $news The current news.
-     * @return self
      */
-    public function setNews(NewsInterface $news)
+    public function setNews(NewsInterface $news): static
     {
         $this->news = $news;
 

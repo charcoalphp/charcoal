@@ -22,17 +22,11 @@ class GridStackWidgetDecorator
     protected $gridStack = [];
 
     /**
-     * @var WidgetInterface
-     */
-    protected $widget;
-
-    /**
      * GridStackWidgetDecorator constructor.
      * @param WidgetInterface $widget The widget to decorate.
      */
-    public function __construct(WidgetInterface $widget)
+    public function __construct(protected \Charcoal\App\Template\WidgetInterface $widget)
     {
-        $this->widget = $widget;
     }
 
     /**
@@ -60,10 +54,8 @@ class GridStackWidgetDecorator
 
     /**
      * The default Grid Stack dataset.
-     *
-     * @return array
      */
-    private function defaultGridStack()
+    private function defaultGridStack(): array
     {
         return [
             'width' => self::GS_WIDTH,

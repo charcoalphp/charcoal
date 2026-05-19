@@ -72,7 +72,7 @@ class TranslatableValue implements
 
         throw new InvalidArgumentException(\sprintf(
             'Expected at least one localized value, received %s',
-            (\is_object($value) ? \get_class($value) : \gettype($value))
+            (get_debug_type($value))
         ));
     }
 
@@ -84,9 +84,6 @@ class TranslatableValue implements
         return $this->translations;
     }
 
-    /**
-     * @return string
-     */
     public function __toString(): string
     {
         return $this->toJson();
@@ -94,7 +91,6 @@ class TranslatableValue implements
 
     /**
      * @param integer $options From {@see \json_encode()} flags.
-     * @return string
      */
     public function toJson(int $options = 0): string
     {
@@ -128,10 +124,8 @@ class TranslatableValue implements
      * This method is to maintain compatibility with {@see Translation}.
      *
      * @param (callable(mixed, string): mixed) $callback Function to apply to each value.
-     * @return self
-     *
-     * @deprecated Will be removed in future version in favor of keeping this class Immutable.
      */
+    #[\Deprecated(message: 'Will be removed in future version in favor of keeping this class Immutable.')]
     public function each(callable $callback): self
     {
         foreach ($this->translations as $locale => $translation) {
@@ -146,10 +140,8 @@ class TranslatableValue implements
      * This method is to maintain compatibility with {@see Translation}.
      *
      * @param (callable(mixed): mixed) $callback Function to apply to each value.
-     * @return self
-     *
-     * @deprecated Will be removed in future version in favor of keeping this class Immutable.
      */
+    #[\Deprecated(message: 'Will be removed in future version in favor of keeping this class Immutable.')]
     public function sanitize(callable $callback): self
     {
         foreach ($this->translations as $locale => $translation) {
@@ -181,7 +173,6 @@ class TranslatableValue implements
 
     /**
      * @param string $offset The requested offset to test.
-     * @return boolean
      * @throws InvalidArgumentException If array key isn't a string.
      * @see    ArrayAccess::offsetExists()
      */
@@ -190,7 +181,7 @@ class TranslatableValue implements
         if (!is_string($offset)) {
             throw new InvalidArgumentException(sprintf(
                 'Invalid language; must be a string, received %s',
-                (is_object($offset) ? get_class($offset) : gettype($offset))
+                (get_debug_type($offset))
             ));
         }
 
@@ -209,7 +200,7 @@ class TranslatableValue implements
         if (!is_string($offset)) {
             throw new InvalidArgumentException(sprintf(
                 'Invalid language; must be a string, received %s',
-                (is_object($offset) ? get_class($offset) : gettype($offset))
+                (get_debug_type($offset))
             ));
         }
 
@@ -226,23 +217,22 @@ class TranslatableValue implements
     /**
      * @param string $offset The lang offset to set.
      * @param mixed  $value  The value to store.
-     * @return void
      * @throws InvalidArgumentException If array key isn't a string.
      * @see    ArrayAccess::offsetSet()
      */
-    public function offsetSet($offset, $value)
+    public function offsetSet($offset, $value): void
     {
         if (!is_string($offset)) {
             throw new InvalidArgumentException(sprintf(
                 'Invalid language; must be a string, received %s',
-                (is_object($offset) ? get_class($offset) : gettype($offset))
+                (get_debug_type($offset))
             ));
         }
 
         if (!is_string($value)) {
             throw new InvalidArgumentException(sprintf(
                 'Translation must be a string, received %s',
-                (is_object($value) ? get_class($value) : gettype($value))
+                (get_debug_type($value))
             ));
         }
 
@@ -251,15 +241,14 @@ class TranslatableValue implements
 
     /**
      * @param  string $offset The language offset to unset.
-     * @return void
      * @throws InvalidArgumentException If array key isn't a string.
      */
-    public function offsetUnset($offset)
+    public function offsetUnset($offset): void
     {
         if (!is_string($offset)) {
             throw new InvalidArgumentException(sprintf(
                 'Invalid language; must be a string, received %s',
-                (is_object($offset) ? get_class($offset) : gettype($offset))
+                (get_debug_type($offset))
             ));
         }
 

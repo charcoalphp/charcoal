@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Charcoal\Tests\App\Route;
 
 
@@ -42,12 +44,12 @@ class RouteManagerTest extends AbstractTestCase
         $this->obj->setupRoutes();
     }
 
-    public function testConstructor()
+    public function testConstructor(): void
     {
         $this->assertInstanceOf(RouteManager::class, $this->obj);
     }
 
-    public function testSetupTemplate()
+    public function testSetupTemplate(): void
     {
         $config = [
             'templates' => [
@@ -64,14 +66,13 @@ class RouteManagerTest extends AbstractTestCase
 
         $reflector = new \ReflectionObject($obj);
         $method = $reflector->getMethod('setupTemplate');
-        $method->setAccessible(true);
         foreach($config['templates'] as $routeIdent => $templateConfig) {
             $ret = $method->invoke($obj, $routeIdent, $templateConfig);
             $this->assertInstanceOf(RouteInterface::class, $ret);
         }
     }
 
-    public function testSetupAction()
+    public function testSetupAction(): void
     {
         $config = [
             'actions' => [
@@ -88,14 +89,13 @@ class RouteManagerTest extends AbstractTestCase
 
         $reflector = new \ReflectionObject($obj);
         $method = $reflector->getMethod('setupAction');
-        $method->setAccessible(true);
         foreach($config['actions'] as $routeIdent => $actionConfig) {
             $ret = $method->invoke($obj, $routeIdent, $actionConfig);
             $this->assertInstanceOf(RouteInterface::class, $ret);
         }
     }
 
-    public function testSetupScript()
+    public function testSetupScript(): void
     {
         $config = [
             'scripts' => [
@@ -112,7 +112,6 @@ class RouteManagerTest extends AbstractTestCase
 
         $reflector = new \ReflectionObject($obj);
         $method = $reflector->getMethod('setupScript');
-        $method->setAccessible(true);
         foreach($config['scripts'] as $routeIdent => $scriptConfig) {
             $ret = $method->invoke($obj, $routeIdent, $scriptConfig);
             $this->assertInstanceOf(RouteInterface::class, $ret);

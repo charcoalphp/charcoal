@@ -23,10 +23,8 @@ class DualSelectInput extends AbstractSelectableInput
 
     /**
      * How the dual-select controls should be displayed.
-     *
-     * @var string|null
      */
-    private $inputLayout;
+    private ?string $inputLayout = null;
 
     /**
      * Whether the lists can be filtered.
@@ -44,10 +42,8 @@ class DualSelectInput extends AbstractSelectableInput
 
     /**
      * Settings for {@link http://crlcu.github.io/multiselect/ Multiselect}.
-     *
-     * @var array
      */
-    private $dualSelectOptions;
+    private ?array $dualSelectOptions = null;
 
     /**
      * Retrieve the unselected options.
@@ -123,11 +119,7 @@ class DualSelectInput extends AbstractSelectableInput
                             $placeholder = $searchable['placeholder'];
                         }
 
-                        if (isset($placeholder)) {
-                            $searchable[$ident]['placeholder'] = $this->translator()->translation($placeholder);
-                        } else {
-                            $searchable[$ident]['placeholder'] = $label;
-                        }
+                        $searchable[$ident]['placeholder'] = isset($placeholder) ? $this->translator()->translation($placeholder) : $label;
                     }
                 } else {
                     $searchable = false;
@@ -168,7 +160,7 @@ class DualSelectInput extends AbstractSelectableInput
      * @throws OutOfBoundsException If the given layout is unsupported.
      * @return AbstractTickableInput Chainable
      */
-    public function setInputLayout($layout)
+    public function setInputLayout($layout): static
     {
         if ($layout === null) {
             $this->inputLayout = null;
@@ -179,7 +171,7 @@ class DualSelectInput extends AbstractSelectableInput
         if (!is_string($layout)) {
             throw new InvalidArgumentException(sprintf(
                 'Layout must be a string, received %s',
-                (is_object($layout) ? get_class($layout) : gettype($layout))
+                (get_debug_type($layout))
             ));
         }
 
@@ -213,10 +205,8 @@ class DualSelectInput extends AbstractSelectableInput
 
     /**
      * Retrieve the input layouts; for templating.
-     *
-     * @return array
      */
-    public function inputLayouts()
+    public function inputLayouts(): array
     {
         $supported = $this->supportedInputLayouts();
         $layouts   = [];
@@ -229,10 +219,8 @@ class DualSelectInput extends AbstractSelectableInput
 
     /**
      * Retrieve the supported input layouts.
-     *
-     * @return array
      */
-    protected function supportedInputLayouts()
+    protected function supportedInputLayouts(): array
     {
         return [
             self::COLS_INPUT_LAYOUT,
@@ -258,7 +246,7 @@ class DualSelectInput extends AbstractSelectableInput
      * @param  array $settings The dual-select options.
      * @return Selectinput Chainable
      */
-    public function setDualSelectOptions(array $settings)
+    public function setDualSelectOptions(array $settings): static
     {
         $this->dualSelectOptions = array_merge($this->defaultDualSelectOptions(), $settings);
 
@@ -271,7 +259,7 @@ class DualSelectInput extends AbstractSelectableInput
      * @param  array $settings The dual-select options.
      * @return Selectinput Chainable
      */
-    public function mergeDualSelectOptions(array $settings)
+    public function mergeDualSelectOptions(array $settings): static
     {
         $this->dualSelectOptions = array_merge($this->dualSelectOptions, $settings);
 
@@ -286,7 +274,7 @@ class DualSelectInput extends AbstractSelectableInput
      * @throws InvalidArgumentException If the identifier is not a string.
      * @return Selectinput Chainable
      */
-    public function addSelectOption($key, $val)
+    public function addSelectOption($key, $val): static
     {
         if (!is_string($key)) {
             throw new InvalidArgumentException(
@@ -306,10 +294,8 @@ class DualSelectInput extends AbstractSelectableInput
 
     /**
      * Retrieve the dual-select's options.
-     *
-     * @return array
      */
-    public function dualSelectOptions()
+    public function dualSelectOptions(): array
     {
         if ($this->dualSelectOptions === null) {
             $this->dualSelectOptions = $this->defaultDualSelectOptions();
@@ -320,10 +306,8 @@ class DualSelectInput extends AbstractSelectableInput
 
     /**
      * Retrieve the default dual-select options.
-     *
-     * @return array
      */
-    public function defaultDualSelectOptions()
+    public function defaultDualSelectOptions(): array
     {
         return [];
     }

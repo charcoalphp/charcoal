@@ -19,12 +19,9 @@ class DocFormPropertyWidget extends FormPropertyWidget
      */
     protected $displayOptions;
 
-    /**
-     * @return boolean
-     */
-    public function hasExtraData()
+    public function hasExtraData(): bool
     {
-        return !!count($this->extraData());
+        return (bool) count($this->extraData());
     }
 
     /**
@@ -34,7 +31,7 @@ class DocFormPropertyWidget extends FormPropertyWidget
     {
         $displayOps = $this->displayOptions();
 
-        return isset($displayOps['collapsible']) ? $displayOps['collapsible'] : false;
+        return $displayOps['collapsible'] ?? false;
     }
 
     /**
@@ -44,7 +41,7 @@ class DocFormPropertyWidget extends FormPropertyWidget
     {
         $displayOps = $this->displayOptions();
 
-        return isset($displayOps['collapsed']) ? $displayOps['collapsed'] : false;
+        return $displayOps['collapsed'] ?? false;
     }
 
     /**
@@ -54,7 +51,7 @@ class DocFormPropertyWidget extends FormPropertyWidget
     {
         $displayOps = $this->displayOptions();
 
-        return isset($displayOps['parented']) ? $displayOps['parented'] : false;
+        return $displayOps['parented'] ?? false;
     }
 
     /**
@@ -64,34 +61,25 @@ class DocFormPropertyWidget extends FormPropertyWidget
     {
         $type = $this->prop()->type();
 
-        switch ($type) {
-            case 'boolean':
-                return $this->translator()->translation('
+        return match ($type) {
+            'boolean' => $this->translator()->translation('
                     The field is a TRUE | FALSE statement
-                ');
-            case 'image':
-            case 'audio':
-            case 'file':
-                return $this->translator()->translation('
+                '),
+            'image', 'audio', 'file' => $this->translator()->translation('
                     The field will ask to upload a file using the file manager
-                ');
-            case 'string':
-            case 'text':
-                return $this->translator()->translation('
+                '),
+            'string', 'text' => $this->translator()->translation('
                     The field is a simple text input
-                ');
-            case 'object':
-                return $this->translator()->translation('
+                '),
+            'object' => $this->translator()->translation('
                     The field is a relation to another object in the back-end (ex: a category object)
-                ');
-            case 'date-time':
-                return $this->translator()->translation('
+                '),
+            'date-time' => $this->translator()->translation('
                     The field requires a date and will prompt a date picker<br>
                     as an easy way to provide it in a supported format
-                ');
-            default:
-                return '';
-        }
+                '),
+            default => '',
+        };
     }
 
     /**
@@ -99,7 +87,7 @@ class DocFormPropertyWidget extends FormPropertyWidget
      */
     public function extraData()
     {
-        if (isset($this->extraData)) {
+        if ($this->extraData !== null) {
             return $this->extraData;
         }
 
@@ -147,9 +135,8 @@ class DocFormPropertyWidget extends FormPropertyWidget
     /**
      * @param array|mixed $displayOptions The display options array.
      * @throws \InvalidArgumentException If argument is not of type "array".
-     * @return self
      */
-    public function setDisplayOptions($displayOptions)
+    public function setDisplayOptions($displayOptions): static
     {
         if (!is_array($displayOptions)) {
             throw new \InvalidArgumentException('display_options should be of type array');

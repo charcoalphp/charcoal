@@ -20,9 +20,8 @@ class UiServiceProvider implements ServiceProviderInterface
 {
     /**
      * @param Container $container A Pimple DI container.
-     * @return void
      */
-    public function register(Container $container)
+    public function register(Container $container): void
     {
         $container->register(new AuthServiceProvider());
         $container->register(new DashboardServiceProvider());

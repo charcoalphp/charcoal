@@ -51,6 +51,8 @@ abstract class AbstractProperty implements
      */
     private $property;
 
+    protected $inputName;
+
     /**
      * @var array $propertyData
      */
@@ -371,9 +373,7 @@ abstract class AbstractProperty implements
      */
     protected function wrapEscapeFunction(callable $callback)
     {
-        return function ($value) use ($callback) {
-            return call_user_func_array($callback, func_get_args());
-        };
+        return fn($value): mixed => call_user_func_array($callback, func_get_args());
     }
 
     /**
@@ -385,19 +385,17 @@ abstract class AbstractProperty implements
      */
     protected function assertValidEscapeFunction($escape)
     {
-        if (is_string($escape)) {
-            if (!function_exists($escape)) {
-                throw new InvalidArgumentException(sprintf(
-                    'Undefined escape function named "%s"',
-                    $escape
-                ));
-            }
+        if (is_string($escape) && !function_exists($escape)) {
+            throw new InvalidArgumentException(sprintf(
+                'Undefined escape function named "%s"',
+                $escape
+            ));
         }
 
         if (!is_callable($escape)) {
             throw new InvalidArgumentException(sprintf(
                 'Expected escape function name or function expression, received "%s"',
-                is_object($escape) ? get_class($escape) : gettype($escape)
+                get_debug_type($escape)
             ));
         }
     }
@@ -420,7 +418,7 @@ abstract class AbstractProperty implements
      */
     public function setMultiple($multiple)
     {
-        $this->multiple = !!$multiple;
+        $this->multiple = (bool) $multiple;
         return $this;
     }
 
@@ -453,9 +451,7 @@ abstract class AbstractProperty implements
                 if (!$isBlank) {
                     $this->translator()->setLocale($lang);
                     $translation = $this->renderTemplate($translation);
-                    if ($translation !== null) {
-                        $templateString[$lang] = $translation;
-                    }
+                    $templateString[$lang] = $translation;
                 }
             }
             $this->translator()->setLocale($origLang);
@@ -463,7 +459,7 @@ abstract class AbstractProperty implements
 
             return $templateString;
         } elseif (is_string($templateString)) {
-            $isBlank = empty($templateString) && !is_numeric($templateString);
+            $isBlank = ($templateString === '' || $templateString === '0') && !is_numeric($templateString);
             if (!$isBlank) {
                 return $this->renderTemplate($templateString);
             }
@@ -495,7 +491,7 @@ abstract class AbstractProperty implements
             return false;
         }
 
-        $key = get_class($obj);
+        $key = $obj::class;
 
         if (isset(static::$objRenderableCache[$key])) {
             return static::$objRenderableCache[$key];
@@ -542,7 +538,7 @@ abstract class AbstractProperty implements
      * @param  array $data Optional metadata to merge on the object.
      * @return PropertyMetadata
      */
-    protected function createMetadata(array $data = null)
+    protected function createMetadata(?array $data = null)
     {
         $class = $this->metadataClass();
         return new $class($data);
@@ -576,7 +572,7 @@ abstract class AbstractProperty implements
      * @param string $key The key to get the setter from.
      * @return string The setter method name, for a given key.
      */
-    protected function setter($key)
+    protected function setter(string $key)
     {
         $setter = 'set_' . $key;
         return $this->camelize($setter);
@@ -588,8 +584,8 @@ abstract class AbstractProperty implements
      * @param string $str The snake_case string to camelize.
      * @return string The camelCase string.
      */
-    private function camelize($str)
+    private function camelize($str): string
     {
-        return lcfirst(implode('', array_map('ucfirst', explode('_', $str))));
+        return lcfirst(implode('', array_map(ucfirst(...), explode('_', $str))));
     }
 }

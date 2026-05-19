@@ -15,9 +15,9 @@ trait ArrayAccessTestTrait
     /**
      * Asserts that the object implements ArrayAccess.
      *
-     * @coversNothing
      * @return ArrayAccess The ArrayAccess implementation to test.
      */
+    #[\PHPUnit\Framework\Attributes\CoversNothing]
     abstract public function testArrayAccess();
 
     /**
@@ -48,15 +48,13 @@ trait ArrayAccessTestTrait
 
     // Test Nonexistent Key
     // =========================================================================
-
     /**
      * @covers  ::offsetGet()
      * @depends testArrayAccess
      *
      * @param  ArrayAccess $obj The ArrayAccess implementation to test.
-     * @return void
      */
-    public function testOffsetGetReturnsNullOnNonexistentKey(ArrayAccess $obj)
+    public function testOffsetGetReturnsNullOnNonexistentKey(ArrayAccess $obj): void
     {
         $this->assertNull($obj['xyz']);
     }
@@ -66,9 +64,8 @@ trait ArrayAccessTestTrait
      * @depends testArrayAccess
      *
      * @param  ArrayAccess $obj The ArrayAccess implementation to test.
-     * @return void
      */
-    public function testOffsetExistsReturnsFalseOnNonexistentKey(ArrayAccess $obj)
+    public function testOffsetExistsReturnsFalseOnNonexistentKey(ArrayAccess $obj): void
     {
         $this->assertFalse(isset($obj['xyz']));
     }
@@ -77,15 +74,13 @@ trait ArrayAccessTestTrait
 
     // Test Zero-Length Key
     // =========================================================================
-
     /**
      * @covers  ::offsetGet()
      * @depends testArrayAccess
      *
      * @param  ArrayAccess $obj The ArrayAccess implementation to test.
-     * @return void
      */
-    public function testOffsetGetReturnsNullOnZeroLengthKey(ArrayAccess $obj)
+    public function testOffsetGetReturnsNullOnZeroLengthKey(ArrayAccess $obj): void
     {
         $this->assertNull($obj['']);
     }
@@ -95,9 +90,8 @@ trait ArrayAccessTestTrait
      * @depends testArrayAccess
      *
      * @param  ArrayAccess $obj The ArrayAccess implementation to test.
-     * @return void
      */
-    public function testOffsetExistsReturnsFalseOnZeroLengthKey(ArrayAccess $obj)
+    public function testOffsetExistsReturnsFalseOnZeroLengthKey(ArrayAccess $obj): void
     {
         $this->assertFalse(isset($obj['']));
     }
@@ -107,9 +101,8 @@ trait ArrayAccessTestTrait
      * @depends testArrayAccess
      *
      * @param  ArrayAccess $obj The ArrayAccess implementation to test.
-     * @return void
      */
-    public function testOffsetSetIgnoredOnZeroLengthKey(ArrayAccess $obj)
+    public function testOffsetSetIgnoredOnZeroLengthKey(ArrayAccess $obj): void
     {
         $obj[''] = 'waldo';
         $this->assertNull($obj['']);
@@ -120,9 +113,8 @@ trait ArrayAccessTestTrait
      * @depends testArrayAccess
      *
      * @param  ArrayAccess $obj The ArrayAccess implementation to test.
-     * @return void
      */
-    public function testOffsetUnsetIgnoredOnZeroLengthKey(ArrayAccess $obj)
+    public function testOffsetUnsetIgnoredOnZeroLengthKey(ArrayAccess $obj): void
     {
         unset($obj['']);
         $this->assertNull($obj['']);
@@ -132,15 +124,13 @@ trait ArrayAccessTestTrait
 
     // Test Snake-Case Delimiter Key
     // =========================================================================
-
     /**
      * @covers  ::offsetGet()
      * @depends testArrayAccess
      *
      * @param  ArrayAccess $obj The ArrayAccess implementation to test.
-     * @return void
      */
-    public function testOffsetGetReturnsNullOnUnderscoreKey(ArrayAccess $obj)
+    public function testOffsetGetReturnsNullOnUnderscoreKey(ArrayAccess $obj): void
     {
         $this->assertNull($obj['_']);
     }
@@ -150,9 +140,8 @@ trait ArrayAccessTestTrait
      * @depends testArrayAccess
      *
      * @param  ArrayAccess $obj The ArrayAccess implementation to test.
-     * @return void
      */
-    public function testOffsetExistsReturnsFalseOnUnderscoreKey(ArrayAccess $obj)
+    public function testOffsetExistsReturnsFalseOnUnderscoreKey(ArrayAccess $obj): void
     {
         $this->assertFalse(isset($obj['_']));
     }
@@ -162,9 +151,8 @@ trait ArrayAccessTestTrait
      * @depends testArrayAccess
      *
      * @param  ArrayAccess $obj The ArrayAccess implementation to test.
-     * @return void
      */
-    public function testOffsetSetIgnoredOnUnderscoreKey(ArrayAccess $obj)
+    public function testOffsetSetIgnoredOnUnderscoreKey(ArrayAccess $obj): void
     {
         $obj['_'] = 'waldo';
         $this->assertNull($obj['_']);
@@ -175,9 +163,8 @@ trait ArrayAccessTestTrait
      * @depends testArrayAccess
      *
      * @param  ArrayAccess $obj The ArrayAccess implementation to test.
-     * @return void
      */
-    public function testOffsetUnsetIgnoredOnUnderscoreKey(ArrayAccess $obj)
+    public function testOffsetUnsetIgnoredOnUnderscoreKey(ArrayAccess $obj): void
     {
         unset($obj['']);
         $this->assertNull($obj['_']);
@@ -186,7 +173,6 @@ trait ArrayAccessTestTrait
 
     // Test Numeric Key
     // =========================================================================
-
     /**
      * Asserts that a numeric key throws an exception, when retrieving a value.
      *
@@ -194,9 +180,8 @@ trait ArrayAccessTestTrait
      * @depends testArrayAccess
      *
      * @param  ArrayAccess $obj The ArrayAccess implementation to test.
-     * @return void
      */
-    public function testOffsetGetThrowsExceptionOnNumericKey(ArrayAccess $obj)
+    public function testOffsetGetThrowsExceptionOnNumericKey(ArrayAccess $obj): void
     {
         $this->expectException(InvalidArgumentException::class);
         $obj[0];
@@ -209,9 +194,8 @@ trait ArrayAccessTestTrait
      * @depends testArrayAccess
      *
      * @param  ArrayAccess $obj The ArrayAccess implementation to test.
-     * @return void
      */
-    public function testOffsetSetThrowsExceptionOnNumericKey(ArrayAccess $obj)
+    public function testOffsetSetThrowsExceptionOnNumericKey(ArrayAccess $obj): void
     {
         $this->expectException(InvalidArgumentException::class);
         $obj[0] = 'waldo';
@@ -224,12 +208,11 @@ trait ArrayAccessTestTrait
      * @depends testArrayAccess
      *
      * @param  ArrayAccess $obj The ArrayAccess implementation to test.
-     * @return void
      */
-    public function testOffsetExistsThrowsExceptionOnNumericKey(ArrayAccess $obj)
+    public function testOffsetExistsThrowsExceptionOnNumericKey(ArrayAccess $obj): void
     {
         $this->expectException(InvalidArgumentException::class);
-        isset($obj[0]);
+        $obj[0];
     }
 
     /**
@@ -239,9 +222,8 @@ trait ArrayAccessTestTrait
      * @depends testArrayAccess
      *
      * @param  ArrayAccess $obj The ArrayAccess implementation to test.
-     * @return void
      */
-    public function testOffsetUnsetThrowsExceptionOnNumericKey(ArrayAccess $obj)
+    public function testOffsetUnsetThrowsExceptionOnNumericKey(ArrayAccess $obj): void
     {
         $this->expectException(InvalidArgumentException::class);
         unset($obj[0]);

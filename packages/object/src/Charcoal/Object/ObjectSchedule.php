@@ -25,17 +25,13 @@ class ObjectSchedule extends AbstractModel implements ObjectScheduleInterface
 {
     /**
      * Store the factory instance for the current class.
-     *
-     * @var FactoryInterface
      */
-    private $modelFactory;
+    private ?\Charcoal\Factory\FactoryInterface $modelFactory = null;
 
     /**
      * The object type of the scheduled object (required).
-     *
-     * @var string
      */
-    private $targetType;
+    private ?string $targetType = null;
 
     /**
      * The object ID of the scheduled object (required).
@@ -49,10 +45,8 @@ class ObjectSchedule extends AbstractModel implements ObjectScheduleInterface
      *
      * The date/time at which this queue item job should be ran.
      * If NULL, 0, or a past date/time, then it should be performed immediately.
-     *
-     * @var DateTimeInterface $scheduledDate
      */
-    private $scheduledDate;
+    private ?\DateTimeInterface $scheduledDate = null;
 
     /**
      * The property identifier of the scheduled object (required).
@@ -63,17 +57,13 @@ class ObjectSchedule extends AbstractModel implements ObjectScheduleInterface
 
     /**
      * Whether the item has been processed.
-     *
-     * @var boolean $processed
      */
-    private $processed = false;
+    private bool $processed = false;
 
     /**
      * When the item was processed.
-     *
-     * @var DateTimeInterface $processedDate
      */
-    private $processedDate;
+    private ?\DateTimeInterface $processedDate = null;
 
     /**
      * Set an object model factory.
@@ -81,7 +71,7 @@ class ObjectSchedule extends AbstractModel implements ObjectScheduleInterface
      * @param FactoryInterface $factory The model factory, to create objects.
      * @return ObjectScheduleInterface Chainable
      */
-    public function setModelFactory(FactoryInterface $factory)
+    public function setModelFactory(FactoryInterface $factory): static
     {
         $this->modelFactory = $factory;
 
@@ -92,14 +82,13 @@ class ObjectSchedule extends AbstractModel implements ObjectScheduleInterface
      * Retrieve the object model factory.
      *
      * @throws RuntimeException If the model factory was not previously set.
-     * @return FactoryInterface
      */
-    protected function modelFactory()
+    protected function modelFactory(): \Charcoal\Factory\FactoryInterface
     {
-        if (!isset($this->modelFactory)) {
+        if (!$this->modelFactory instanceof \Charcoal\Factory\FactoryInterface) {
             throw new RuntimeException(sprintf(
                 'Model Factory is not defined for "%s"',
-                get_class($this)
+                static::class
             ));
         }
 
@@ -113,7 +102,7 @@ class ObjectSchedule extends AbstractModel implements ObjectScheduleInterface
      * @throws InvalidArgumentException If the object type parameter is not a string.
      * @return ObjectScheduleInterface Chainable
      */
-    public function setTargetType($targetType)
+    public function setTargetType($targetType): static
     {
         if (!is_string($targetType)) {
             throw new InvalidArgumentException(
@@ -131,7 +120,7 @@ class ObjectSchedule extends AbstractModel implements ObjectScheduleInterface
      *
      * @return string
      */
-    public function getTargetType()
+    public function getTargetType(): ?string
     {
         return $this->targetType;
     }
@@ -142,7 +131,7 @@ class ObjectSchedule extends AbstractModel implements ObjectScheduleInterface
      * @param mixed $targetId The object ID.
      * @return ObjectScheduleInterface Chainable
      */
-    public function setTargetId($targetId)
+    public function setTargetId($targetId): static
     {
         $this->targetId = $targetId;
 
@@ -163,7 +152,7 @@ class ObjectSchedule extends AbstractModel implements ObjectScheduleInterface
      * @param array|string $data The data diff.
      * @return ObjectRevision
      */
-    public function setDataDiff($data)
+    public function setDataDiff($data): static
     {
         if (!is_array($data)) {
             $data = json_decode($data, true);
@@ -189,19 +178,17 @@ class ObjectSchedule extends AbstractModel implements ObjectScheduleInterface
      * @param boolean $processed Whether the schedule has been processed.
      * @return ObjectScheduleInterface Chainable
      */
-    public function setProcessed($processed)
+    public function setProcessed($processed): static
     {
-        $this->processed = !!$processed;
+        $this->processed = (bool) $processed;
 
         return $this;
     }
 
     /**
      * Determine if the schedule has been processed.
-     *
-     * @return boolean
      */
-    public function getProcessed()
+    public function getProcessed(): bool
     {
         return $this->processed;
     }
@@ -213,7 +200,7 @@ class ObjectSchedule extends AbstractModel implements ObjectScheduleInterface
      * @throws InvalidArgumentException If the date/time is invalid.
      * @return ObjectScheduleInterface Chainable
      */
-    public function setScheduledDate($ts)
+    public function setScheduledDate($ts): static
     {
         if ($ts === null) {
             $this->scheduledDate = null;
@@ -245,10 +232,8 @@ class ObjectSchedule extends AbstractModel implements ObjectScheduleInterface
 
     /**
      * Retrieve the date/time the item should be processed at.
-     *
-     * @return null|DateTimeInterface
      */
-    public function getScheduledDate()
+    public function getScheduledDate(): ?\DateTimeInterface
     {
         return $this->scheduledDate;
     }
@@ -260,7 +245,7 @@ class ObjectSchedule extends AbstractModel implements ObjectScheduleInterface
      * @throws InvalidArgumentException If the date/time is invalid.
      * @return ObjectScheduleInterface Chainable
      */
-    public function setProcessedDate($ts)
+    public function setProcessedDate($ts): static
     {
         if ($ts === null) {
             $this->processedDate = null;
@@ -292,10 +277,8 @@ class ObjectSchedule extends AbstractModel implements ObjectScheduleInterface
 
     /**
      * Retrieve the date/time the item was processed at.
-     *
-     * @return null|DateTimeInterface
      */
-    public function getProcessedDate()
+    public function getProcessedDate(): ?\DateTimeInterface
     {
         return $this->processedDate;
     }
@@ -304,10 +287,9 @@ class ObjectSchedule extends AbstractModel implements ObjectScheduleInterface
      * Hook called before saving the item.
      *
      * Presets the item as _to-be_ processed and queued now.
-     *
-     * @return boolean
      */
-    protected function preSave()
+    #[\Override]
+    protected function preSave(): bool
     {
         parent::preSave();
 
@@ -325,12 +307,12 @@ class ObjectSchedule extends AbstractModel implements ObjectScheduleInterface
      * @return boolean|null  Success / Failure, or null in case of a skipped item.
      */
     public function process(
-        callable $callback = null,
-        callable $successCallback = null,
-        callable $failureCallback = null
+        ?callable $callback = null,
+        ?callable $successCallback = null,
+        ?callable $failureCallback = null
     ) {
 
-        if ($this->getProcessed() === true) {
+        if ($this->getProcessed()) {
             // Do not process twice, ever.
             return null;
         }
@@ -369,14 +351,11 @@ class ObjectSchedule extends AbstractModel implements ObjectScheduleInterface
             $this->setProcessed(true);
             $this->setProcessedDate('now');
             $this->update([ 'processed', 'processed_date' ]);
-
             if ($successCallback !== null) {
                 $successCallback($this);
             }
-        } else {
-            if ($failureCallback !== null) {
-                $failureCallback($this);
-            }
+        } elseif ($failureCallback !== null) {
+            $failureCallback($this);
         }
 
         if ($callback !== null) {

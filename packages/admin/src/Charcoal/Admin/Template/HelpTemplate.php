@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Charcoal\Admin\Template;
 
 // From 'charcoal-admin'
@@ -12,10 +14,9 @@ class HelpTemplate extends AdminTemplate
 {
     /**
      * Help is available to all users, no login required.
-     *
-     * @return boolean
      */
-    protected function authRequired()
+    #[\Override]
+    protected function authRequired(): bool
     {
         return false;
     }
@@ -25,6 +26,7 @@ class HelpTemplate extends AdminTemplate
      *
      * @return \Charcoal\Translator\Translation|string|null
      */
+    #[\Override]
     public function title()
     {
         if ($this->title === null) {

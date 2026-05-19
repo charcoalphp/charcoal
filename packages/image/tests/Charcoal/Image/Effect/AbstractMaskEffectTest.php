@@ -8,13 +8,13 @@ class AbstractMaskEffectTest extends \PHPUnit\Framework\TestCase
 
     protected function setUp(): void
     {
-        $img = $this->getMockForAbstractClass('\Charcoal\Image\AbstractImage');
+        $img = $this->getMockForAbstractClass(\Charcoal\Image\AbstractImage::class);
         $img->method('driverType')->willReturn('imagick');
-        $this->obj = $this->getMockForAbstractClass('\Charcoal\Image\Effect\AbstractMaskEffect');
+        $this->obj = $this->getMockForAbstractClass(\Charcoal\Image\Effect\AbstractMaskEffect::class);
         $this->obj->setImage($img);
     }
 
-    public function testDefaults()
+    public function testDefaults(): void
     {
         $obj = $this->obj;
 
@@ -24,7 +24,7 @@ class AbstractMaskEffectTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(0, $obj->y());
     }
 
-    public function testSetData()
+    public function testSetData(): void
     {
         $obj = $this->obj;
         $ret = $obj->setData(
@@ -45,7 +45,7 @@ class AbstractMaskEffectTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(20, $obj->y());
     }
 
-    public function testSetMask()
+    public function testSetMask(): void
     {
         $obj = $this->obj;
         $ret = $obj->setMask('bar/baz.png');
@@ -56,7 +56,7 @@ class AbstractMaskEffectTest extends \PHPUnit\Framework\TestCase
         $obj->setMask(false);
     }
 
-    public function testSetOpacity()
+    public function testSetOpacity(): void
     {
         $obj = $this->obj;
         $ret = $obj->setOpacity(0.42);
@@ -67,7 +67,7 @@ class AbstractMaskEffectTest extends \PHPUnit\Framework\TestCase
         $obj->setOpacity(false);
     }
 
-    public function testSetGravity()
+    public function testSetGravity(): void
     {
         $obj = $this->obj;
         $ret = $obj->setGravity('se');
@@ -78,7 +78,7 @@ class AbstractMaskEffectTest extends \PHPUnit\Framework\TestCase
         $obj->setGravity('foobar');
     }
 
-    public function testSetX()
+    public function testSetX(): void
     {
         $obj = $this->obj;
         $ret = $obj->setX(15);
@@ -89,7 +89,7 @@ class AbstractMaskEffectTest extends \PHPUnit\Framework\TestCase
         $obj->setX(false);
     }
 
-    public function testSetY()
+    public function testSetY(): void
     {
         $obj = $this->obj;
         $ret = $obj->setY(15);

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Charcoal\Admin\Property\Input;
 
 // From 'charcoal-admin'
@@ -18,20 +20,17 @@ class CheckboxInput extends AbstractTickableInput
 {
     /**
      * Retrieve the control type for the HTML element `<input>`.
-     *
-     * @return string
      */
-    public function type()
+    public function type(): string
     {
         return 'checkbox';
     }
 
     /**
      * Always accept multiple values.
-     *
-     * @return boolean
      */
-    public function multiple()
+    #[\Override]
+    public function multiple(): bool
     {
         return true;
     }

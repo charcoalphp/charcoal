@@ -107,9 +107,8 @@ class CollectionLoader implements
      * Set an object model factory.
      *
      * @param  FactoryInterface $factory The model factory, to create objects.
-     * @return self
      */
-    public function setFactory(FactoryInterface $factory)
+    public function setFactory(FactoryInterface $factory): static
     {
         $this->factory = $factory;
 
@@ -126,7 +125,7 @@ class CollectionLoader implements
     {
         if ($this->factory === null) {
             throw new RuntimeException(
-                sprintf('Model Factory is not defined for "%s"', get_class($this))
+                sprintf('Model Factory is not defined for "%s"', static::class)
             );
         }
 
@@ -140,8 +139,7 @@ class CollectionLoader implements
      */
     public function createModel()
     {
-        $obj = $this->factory()->create($this->modelClass());
-        return $obj;
+        return $this->factory()->create($this->modelClass());
     }
 
     /**
@@ -152,17 +150,15 @@ class CollectionLoader implements
      */
     protected function createModelFromData(array $data)
     {
-        $obj = $this->factory()->create($this->dynamicModelClass($data));
-        return $obj;
+        return $this->factory()->create($this->dynamicModelClass($data));
     }
 
     /**
      * Set the loader settings.
      *
      * @param  array $data Data to assign to the loader.
-     * @return self
      */
-    public function setData(array $data)
+    public function setData(array $data): static
     {
         foreach ($data as $key => $val) {
             $setter = $this->setter($key);
@@ -195,9 +191,8 @@ class CollectionLoader implements
      * Set the source to load objects from.
      *
      * @param  SourceInterface $source A data source.
-     * @return self
      */
-    public function setSource(SourceInterface $source)
+    public function setSource(SourceInterface $source): static
     {
         $source->reset();
 
@@ -208,10 +203,8 @@ class CollectionLoader implements
 
     /**
      * Reset everything but the model.
-     *
-     * @return self
      */
-    public function reset()
+    public function reset(): static
     {
         if ($this->source) {
             $this->source()->reset();
@@ -240,12 +233,10 @@ class CollectionLoader implements
 
     /**
      * Determine if the loader has an object model.
-     *
-     * @return boolean
      */
-    public function hasModel()
+    public function hasModel(): bool
     {
-        return !!$this->model;
+        return (bool) $this->model;
     }
 
     /**
@@ -253,9 +244,8 @@ class CollectionLoader implements
      *
      * @param  string|ModelInterface $model An object model.
      * @throws InvalidArgumentException If the given argument is not a model.
-     * @return self
      */
-    public function setModel($model)
+    public function setModel($model): static
     {
         if (is_string($model)) {
             $model = $this->factory()->get($model);
@@ -279,12 +269,10 @@ class CollectionLoader implements
 
     /**
      * Retrieve the model class.
-     *
-     * @return string
      */
-    public function modelClass()
+    public function modelClass(): string
     {
-        return get_class($this->model());
+        return $this->model()::class;
     }
 
     /**
@@ -313,20 +301,17 @@ class CollectionLoader implements
 
     /**
      * Determine if the model has a dynamic object type.
-     *
-     * @return boolean
      */
-    public function hasDynamicTypeField()
+    public function hasDynamicTypeField(): bool
     {
-        return !!$this->dynamicTypeField;
+        return (bool) $this->dynamicTypeField;
     }
 
     /**
      * @param  string $field The field to use for dynamic object type.
      * @throws InvalidArgumentException If the field is not a string.
-     * @return self
      */
-    public function setDynamicTypeField($field)
+    public function setDynamicTypeField($field): static
     {
         if (!is_string($field)) {
             throw new InvalidArgumentException(
@@ -353,9 +338,8 @@ class CollectionLoader implements
      * Alias of {@see SourceInterface::setProperties()}
      *
      * @param  array $properties An array of property identifiers.
-     * @return self
      */
-    public function setProperties(array $properties)
+    public function setProperties(array $properties): static
     {
         $this->source()->setProperties($properties);
 
@@ -366,9 +350,8 @@ class CollectionLoader implements
      * Alias of {@see SourceInterface::addProperty()}
      *
      * @param  string $property A property identifier.
-     * @return self
      */
-    public function addProperty($property)
+    public function addProperty($property): static
     {
         $this->source()->addProperty($property);
 
@@ -380,9 +363,8 @@ class CollectionLoader implements
      *
      * @param  array $keywords An array of keywords and properties.
      *     Expected format: `[ "search query", [ "field names…" ] ]`.
-     * @return self
      */
-    public function setKeywords(array $keywords)
+    public function setKeywords(array $keywords): static
     {
         foreach ($keywords as $query) {
             $keyword    = $query[0];
@@ -398,9 +380,8 @@ class CollectionLoader implements
      *
      * @param  string $keyword    A value to match among $properties.
      * @param  array  $properties One or more of properties to search amongst.
-     * @return self
      */
-    public function addKeyword($keyword, array $properties = null)
+    public function addKeyword(string $keyword, ?array $properties = null): static
     {
         if ($properties === null) {
             $properties = [];
@@ -443,9 +424,8 @@ class CollectionLoader implements
      * Alias of {@see SourceInterface::setFilters()}
      *
      * @param  array $filters An array of filters.
-     * @return self
      */
-    public function setFilters(array $filters)
+    public function setFilters(array $filters): static
     {
         $this->source()->setFilters($filters);
         return $this;
@@ -455,9 +435,8 @@ class CollectionLoader implements
      * Alias of {@see SourceInterface::addFilters()}
      *
      * @param  array $filters An array of filters.
-     * @return self
      */
-    public function addFilters(array $filters)
+    public function addFilters(array $filters): static
     {
         foreach ($filters as $f) {
             $this->addFilter($f);
@@ -474,9 +453,8 @@ class CollectionLoader implements
      * @param  mixed $value   Optional value for the property to compare against.
      *     Only used if the first argument is a string.
      * @param  array $options Optional extra settings to apply on the filter.
-     * @return self
      */
-    public function addFilter($param, $value = null, array $options = null)
+    public function addFilter($param, $value = null, ?array $options = null): static
     {
         $this->source()->addFilter($param, $value, $options);
         return $this;
@@ -506,9 +484,8 @@ class CollectionLoader implements
      * Alias of {@see SourceInterface::setOrders()}
      *
      * @param  array $orders An array of orders.
-     * @return self
      */
-    public function setOrders(array $orders)
+    public function setOrders(array $orders): static
     {
         $this->source()->setOrders($orders);
         return $this;
@@ -518,9 +495,8 @@ class CollectionLoader implements
      * Alias of {@see SourceInterface::addOrders()}
      *
      * @param  array $orders An array of orders.
-     * @return self
      */
-    public function addOrders(array $orders)
+    public function addOrders(array $orders): static
     {
         foreach ($orders as $o) {
             $this->addOrder($o);
@@ -537,9 +513,8 @@ class CollectionLoader implements
      * @param  string $mode    Optional sorting mode.
      *     Defaults to ascending if a property is provided.
      * @param  array  $options Optional extra settings to apply on the order.
-     * @return self
      */
-    public function addOrder($param, $mode = 'asc', array $options = null)
+    public function addOrder($param, $mode = 'asc', ?array $options = null): static
     {
         $this->source()->addOrder($param, $mode, $options);
         return $this;
@@ -559,9 +534,8 @@ class CollectionLoader implements
      * Alias of {@see SourceInterface::setPagination()}
      *
      * @param  mixed $param An associative array of pagination settings.
-     * @return self
      */
-    public function setPagination($param)
+    public function setPagination($param): static
     {
         $this->source()->setPagination($param);
 
@@ -582,9 +556,8 @@ class CollectionLoader implements
      * Alias of {@see PaginationInterface::pagination()}
      *
      * @param  integer $page A page number.
-     * @return self
      */
-    public function setPage($page)
+    public function setPage($page): static
     {
         $this->pagination()->setPage($page);
 
@@ -605,9 +578,8 @@ class CollectionLoader implements
      * Alias of {@see PaginationInterface::setNumPerPage()}
      *
      * @param  integer $num The number of items to display per page.
-     * @return self
      */
-    public function setNumPerPage($num)
+    public function setNumPerPage($num): static
     {
         $this->pagination()->setNumPerPage($num);
 
@@ -618,9 +590,8 @@ class CollectionLoader implements
      * Set the callback routine applied to every object added to the collection.
      *
      * @param  callable $callback The callback routine.
-     * @return self
      */
-    public function setCallback(callable $callback)
+    public function setCallback(callable $callback): static
     {
         $this->callback = $callback;
 
@@ -647,7 +618,7 @@ class CollectionLoader implements
      * @throws Exception If the database connection fails.
      * @return ModelInterface[]|ArrayAccess
      */
-    public function load($ident = null, callable $callback = null, callable $before = null)
+    public function load($ident = null, ?callable $callback = null, ?callable $before = null): \ArrayAccess|array
     {
         // Unused.
         unset($ident);
@@ -661,9 +632,8 @@ class CollectionLoader implements
      * Get the total number of items for this collection query.
      *
      * @throws RuntimeException If the database connection fails.
-     * @return integer
      */
-    public function loadCount()
+    public function loadCount(): int
     {
         $query = $this->source()->sqlLoadCount();
 
@@ -707,7 +677,7 @@ class CollectionLoader implements
      * @throws InvalidArgumentException If the SQL string/set is invalid.
      * @return ModelInterface[]|ArrayAccess
      */
-    public function loadFromQuery($query, callable $callback = null, callable $before = null)
+    public function loadFromQuery($query, ?callable $callback = null, ?callable $before = null): \ArrayAccess|array
     {
         $db = $this->source()->db();
 
@@ -723,14 +693,14 @@ class CollectionLoader implements
             $sth = $db->prepare($query);
             $sth->execute();
         } elseif (is_array($query)) {
-            list($query, $binds, $types) = array_pad($query, 3, []);
+            [$query, $binds, $types] = array_pad($query, 3, []);
             $sth = $this->source()->dbQuery($query, $binds, $types);
         } else {
             throw new InvalidArgumentException(sprintf(
                 'The SQL query must be a string or an array: ' .
                 '[ string $query, array $binds, array $dataTypes ]; ' .
                 'received %s',
-                is_object($query) ? get_class($query) : $query
+                is_object($query) ? $query::class : $query
             ));
         }
 
@@ -751,7 +721,7 @@ class CollectionLoader implements
      * @param  callable|null       $after   Process each entity after applying raw data.
      * @return ModelInterface[]|ArrayAccess
      */
-    protected function processCollection($results, callable $before = null, callable $after = null)
+    protected function processCollection($results, ?callable $before = null, ?callable $after = null): \ArrayAccess|array
     {
         $collection = $this->createCollection();
         foreach ($results as $objData) {
@@ -773,7 +743,7 @@ class CollectionLoader implements
      * @param  callable|null $after   Process each entity after applying raw data.
      * @return ModelInterface|ArrayAccess|null
      */
-    protected function processModel($objData, callable $before = null, callable $after = null)
+    protected function processModel(array $objData, ?callable $before = null, ?callable $after = null)
     {
         $obj = $this->createModelFromData($objData);
 
@@ -794,9 +764,8 @@ class CollectionLoader implements
      * Create a collection class or array.
      *
      * @throws RuntimeException If the collection class is invalid.
-     * @return array|ArrayAccess
      */
-    public function createCollection()
+    public function createCollection(): array|\ArrayAccess
     {
         $collectClass = $this->collectionClass();
         if ($collectClass === 'array') {
@@ -817,9 +786,7 @@ class CollectionLoader implements
             ));
         }
 
-        $collection = new $collectClass();
-
-        return $collection;
+        return new $collectClass();
     }
 
     /**
@@ -827,9 +794,8 @@ class CollectionLoader implements
      *
      * @param  string $className The class name of the collection.
      * @throws InvalidArgumentException If the class name is not a string.
-     * @return self
      */
-    public function setCollectionClass($className)
+    public function setCollectionClass($className): static
     {
         if (!is_string($className)) {
             throw new InvalidArgumentException(
@@ -858,7 +824,7 @@ class CollectionLoader implements
      * @param  string $key The key to get the getter from.
      * @return string The getter method name, for a given key.
      */
-    protected function getter($key)
+    protected function getter($key): string
     {
         $getter = $key;
         return $this->camelize($getter);
@@ -870,7 +836,7 @@ class CollectionLoader implements
      * @param  string $key The key to get the setter from.
      * @return string The setter method name, for a given key.
      */
-    protected function setter($key)
+    protected function setter(string $key): string
     {
         $setter = 'set_' . $key;
         return $this->camelize($setter);
@@ -882,8 +848,8 @@ class CollectionLoader implements
      * @param  string $str The snake_case string to camelize.
      * @return string The camelcase'd string.
      */
-    protected function camelize($str)
+    protected function camelize($str): string
     {
-        return lcfirst(implode('', array_map('ucfirst', explode('_', $str))));
+        return lcfirst(implode('', array_map(ucfirst(...), explode('_', $str))));
     }
 }

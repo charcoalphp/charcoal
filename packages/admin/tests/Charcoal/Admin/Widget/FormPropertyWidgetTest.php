@@ -18,9 +18,7 @@ use Charcoal\Tests\Admin\ContainerProvider;
  */
 class FormPropertyWidgetTest extends AbstractTestCase
 {
-    /**
-     * @return void
-     */
+    public $obj;
     public function setUp(): void
     {
         $container = new Container();
@@ -36,18 +34,12 @@ class FormPropertyWidgetTest extends AbstractTestCase
         ]);
     }
 
-    /**
-     * @return void
-     */
-    public function testConstructor()
+    public function testConstructor(): void
     {
         $this->assertInstanceOf(FormPropertyWidget::class, $this->obj);
     }
 
-    /**
-     * @return void
-     */
-    public function testSetOutputType()
+    public function testSetOutputType(): void
     {
         //$this->assertEquals(FormPropertyWidget::DEFAULT_OUTPUT, $this->obj->outputType());
 
@@ -68,10 +60,7 @@ class FormPropertyWidgetTest extends AbstractTestCase
         $this->obj->setOutputType('foobar');
     }
 
-    /**
-     * @return void
-     */
-    public function testPropertyType()
+    public function testPropertyType(): void
     {
         $this->assertNull($this->obj->propertyType());
 

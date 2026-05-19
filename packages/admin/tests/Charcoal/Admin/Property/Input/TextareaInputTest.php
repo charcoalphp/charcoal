@@ -17,21 +17,14 @@ class TextareaInputTest extends AbstractTestCase
 {
     /**
      * Tested Class.
-     *
-     * @var TextareaInput
      */
-    private $obj;
+    private \Charcoal\Admin\Property\Input\TextareaInput $obj;
 
     /**
      * Store the service container.
-     *
-     * @var Container
      */
-    private $container;
+    private ?\Pimple\Container $container = null;
 
-    /**
-     * @return void
-     */
     public function setUp(): void
     {
         $container = $this->container();
@@ -42,10 +35,7 @@ class TextareaInputTest extends AbstractTestCase
         ]);
     }
 
-    /**
-     * @return void
-     */
-    public function testSetData()
+    public function testSetData(): void
     {
         $obj = $this->obj;
         $ret = $obj->setData([
@@ -57,10 +47,7 @@ class TextareaInputTest extends AbstractTestCase
         $this->assertEquals(84, $obj->rows());
     }
 
-    /**
-     * @return void
-     */
-    public function testSetCols()
+    public function testSetCols(): void
     {
         $obj = $this->obj;
         $ret = $obj->setCols(42);
@@ -72,10 +59,7 @@ class TextareaInputTest extends AbstractTestCase
         $obj->setCols('foo');
     }
 
-    /**
-     * @return void
-     */
-    public function testSetRows()
+    public function testSetRows(): void
     {
         $obj = $this->obj;
         $ret = $obj->setRows(42);
@@ -89,12 +73,10 @@ class TextareaInputTest extends AbstractTestCase
 
     /**
      * Set up the service container.
-     *
-     * @return Container
      */
-    protected function container()
+    protected function container(): \Pimple\Container
     {
-        if ($this->container === null) {
+        if (!$this->container instanceof \Pimple\Container) {
             $container = new Container();
             $containerProvider = new ContainerProvider();
             $containerProvider->registerInputDependencies($container);

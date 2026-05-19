@@ -17,22 +17,16 @@ class PermissionCategoryTest extends AbstractTestCase
 {
     /**
      * Tested Class.
-     *
-     * @var PermissionCategory
      */
-    private $obj;
+    private \Charcoal\User\Acl\PermissionCategory $obj;
 
     /**
      * Store the service container.
-     *
-     * @var Container
      */
-    private $container;
+    private ?\Pimple\Container $container = null;
 
     /**
      * Set up the test.
-     *
-     * @return void
      */
     protected function setUp(): void
     {
@@ -44,10 +38,7 @@ class PermissionCategoryTest extends AbstractTestCase
         ]);
     }
 
-    /**
-     * @return void
-     */
-    public function testSetName()
+    public function testSetName(): void
     {
         $ret = $this->obj->setName('foobar');
         $this->assertSame($ret, $this->obj);
@@ -56,12 +47,10 @@ class PermissionCategoryTest extends AbstractTestCase
 
     /**
      * Set up the service container.
-     *
-     * @return Container
      */
-    private function container()
+    private function container(): \Pimple\Container
     {
-        if ($this->container === null) {
+        if (!$this->container instanceof \Pimple\Container) {
             $container = new Container();
             $containerProvider = new ContainerProvider();
             $containerProvider->registerBaseServices($container);

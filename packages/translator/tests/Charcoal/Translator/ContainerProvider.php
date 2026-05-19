@@ -55,9 +55,8 @@ class ContainerProvider
      * Register the unit tests required services.
      *
      * @param  Container $container A DI container.
-     * @return void
      */
-    public function registerBaseServices(Container $container)
+    public function registerBaseServices(Container $container): void
     {
         $this->registerConfig($container);
         $this->registerBaseUrl($container);
@@ -70,9 +69,8 @@ class ContainerProvider
      * Register the unit tests required services.
      *
      * @param  Container $container A DI container.
-     * @return void
      */
-    public function registerModelServices(Container $container)
+    public function registerModelServices(Container $container): void
     {
         $this->registerLogger($container);
         $this->registerTranslator($container);
@@ -86,9 +84,8 @@ class ContainerProvider
      * Register the unit tests required services.
      *
      * @param  Container $container A DI container.
-     * @return void
      */
-    public function registerAdminServices(Container $container)
+    public function registerAdminServices(Container $container): void
     {
         $this->registerClimate($container);
         $this->registerAdminBaseUrl($container);
@@ -98,71 +95,62 @@ class ContainerProvider
      * Setup the application's base URI.
      *
      * @param  Container $container A DI container.
-     * @return void
      */
-    public function registerBaseUrl(Container $container)
+    public function registerBaseUrl(Container $container): void
     {
-        $container['base-url'] = function () {
-            return Uri::createFromString('https://example.com:8080/foo/bar?abc=123');
-        };
+        $container['base-url'] = (fn() => Uri::createFromString('https://example.com:8080/foo/bar?abc=123'));
     }
 
     /**
      * Setup the admin's base URI.
      *
      * @param  Container $container A DI container.
-     * @return void
      */
-    public function registerAdminBaseUrl(Container $container)
+    public function registerAdminBaseUrl(Container $container): void
     {
-        $container['admin/base-url'] = function () {
-            return Uri::createFromString('https://example.com:8080/admin/qux?abc=123');
-        };
+        $container['admin/base-url'] = (fn() => Uri::createFromString('https://example.com:8080/admin/qux?abc=123'));
     }
 
     /**
      * Setup the application configset.
      *
      * @param  Container $container A DI container.
-     * @return void
      */
-    public function registerConfig(Container $container)
+    public function registerConfig(Container $container): void
     {
-        $container['config'] = function () {
-            return new AppConfig([
-                'base_path' => realpath(__DIR__ . '/../../..'),
-                'locales'   => [
-                    'languages' => [
-                        'en' => [ 'locale' => 'en-US', 'locales' => [ 'en_US.UTF-8', 'en_US.utf8', 'en_US' ] ],
-                        'fr' => [ 'locale' => 'fr-FR' ]
-                    ],
-                    'default_language'   => 'en',
-                    'fallback_languages' => [ 'en' ]
+        $container['config'] = (fn(): \Charcoal\App\AppConfig => new AppConfig([
+            'base_path' => realpath(__DIR__ . '/../../..'),
+            'locales'   => [
+                'languages' => [
+                    'en' => [ 'locale' => 'en-US', 'locales' => [ 'en_US.UTF-8', 'en_US.utf8', 'en_US' ] ],
+                    'fr' => [ 'locale' => 'fr-FR' ]
                 ],
-                'translator' => [
-                    'paths' => [
-                        '/Charcoal/Translator/Fixture/translations'
-                    ],
-                    'translations' => [
-                        'messages' => [
-                            'en' => [
-                                'foo' => 'FOO'
-                            ],
-                            'fr' => [
-                                'foo' => 'OOF'
-                            ]
+                'default_language'   => 'en',
+                'fallback_languages' => [ 'en' ]
+            ],
+            'translator' => [
+                'paths' => [
+                    '/Charcoal/Translator/Fixture/translations'
+                ],
+                'translations' => [
+                    'messages' => [
+                        'en' => [
+                            'foo' => 'FOO'
+                        ],
+                        'fr' => [
+                            'foo' => 'OOF'
                         ]
-                    ],
-                    'auto_detect' => true,
-                    'debug' => false
-                ],
-                'view' => [
-                    'paths' => [
-                        '/Charcoal/Translator/Fixture/views'
                     ]
+                ],
+                'auto_detect' => true,
+                'debug' => false
+            ],
+            'view' => [
+                'paths' => [
+                    '/Charcoal/Translator/Fixture/views'
                 ]
-            ]);
-        };
+            ]
+        ]));
     }
 
     /**
@@ -171,11 +159,10 @@ class ContainerProvider
      * Note: Uses SQLite to create a database in memory.
      *
      * @param  Container $container A DI container.
-     * @return void
      */
-    public function registerSource(Container $container)
+    public function registerSource(Container $container): void
     {
-        $container['database'] = function () {
+        $container['database'] = function (): \PDO {
             $pdo = new PDO('sqlite::memory:');
             $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             return $pdo;
@@ -186,53 +173,40 @@ class ContainerProvider
      * Setup the application's logging interface.
      *
      * @param  Container $container A DI container.
-     * @return void
      */
-    public function registerLogger(Container $container)
+    public function registerLogger(Container $container): void
     {
-        $container['logger'] = function () {
-            return new NullLogger();
-        };
+        $container['logger'] = (fn(): \Psr\Log\NullLogger => new NullLogger());
     }
 
     /**
      * Setup the application's caching interface.
      *
      * @param  Container $container A DI container.
-     * @return void
      */
-    public function registerCache(Container $container)
+    public function registerCache(Container $container): void
     {
-        $container['cache'] = function () {
-            return new Pool(new Ephemeral());
-        };
+        $container['cache'] = (fn(): \Stash\Pool => new Pool(new Ephemeral()));
     }
 
     /**
      * Setup the application's translator service.
      *
      * @param  Container $container A DI container.
-     * @return void
      */
-    public function registerTranslator(Container $container)
+    public function registerTranslator(Container $container): void
     {
-        $container['locales/config'] = function (Container $container) {
-            return new LocalesConfig($container['config']['locales']);
-        };
+        $container['locales/config'] = (fn(Container $container): \Charcoal\Translator\LocalesConfig => new LocalesConfig($container['config']['locales']));
 
-        $container['locales/manager'] = function (Container $container) {
-            return new LocalesManager([
-                'locales'            => $container['locales/config']['languages'],
-                'default_language'   => $container['locales/config']['default_language'],
-                'fallback_languages' => $container['locales/config']['fallback_languages']
-            ]);
-        };
+        $container['locales/manager'] = (fn(Container $container): \Charcoal\Translator\LocalesManager => new LocalesManager([
+            'locales'            => $container['locales/config']['languages'],
+            'default_language'   => $container['locales/config']['default_language'],
+            'fallback_languages' => $container['locales/config']['fallback_languages']
+        ]));
 
-        $container['translator/config'] = function (Container $container) {
-            return new TranslatorConfig($container['config']['translator']);
-        };
+        $container['translator/config'] = (fn(Container $container): \Charcoal\Translator\TranslatorConfig => new TranslatorConfig($container['config']['translator']));
 
-        $container['translator'] = function (Container $container) {
+        $container['translator'] = function (Container $container): \Charcoal\Translator\Translator {
             $translator = new Translator([
                 'manager'          => $container['locales/manager'],
                 'message_selector' => new MessageSelector(),
@@ -250,100 +224,87 @@ class ContainerProvider
      * Setup the framework's metadata loader interface.
      *
      * @param  Container $container A DI container.
-     * @return void
      */
-    public function registerMetadataLoader(Container $container)
+    public function registerMetadataLoader(Container $container): void
     {
-        $container['metadata/loader'] = function (Container $container) {
-            return new MetadataLoader([
-                'cache'     => $container['cache'],
-                'logger'    => $container['logger'],
-                'base_path' => $container['config']['base_path'],
-                'paths'     => [
-                    'metadata',
-                    // Standalone
-                    'vendor/charcoal/property/metadata',
-                    // Monorepo
-                    '/../property/metadata'
-                ]
-            ]);
-        };
+        $container['metadata/loader'] = (fn(Container $container): \Charcoal\Model\Service\MetadataLoader => new MetadataLoader([
+            'cache'     => $container['cache'],
+            'logger'    => $container['logger'],
+            'base_path' => $container['config']['base_path'],
+            'paths'     => [
+                'metadata',
+                // Standalone
+                'vendor/charcoal/property/metadata',
+                // Monorepo
+                '/../property/metadata'
+            ]
+        ]));
     }
 
     /**
      * Setup the framework's data source factory.
      *
      * @param  Container $container A DI container.
-     * @return void
      */
-    public function registerSourceFactory(Container $container)
+    public function registerSourceFactory(Container $container): void
     {
-        $container['source/factory'] = function (Container $container) {
-            return new Factory([
-                'map' => [
-                    'database' => DatabaseSource::class
-                ],
-                'arguments'  => [[
-                    'logger' => $container['logger'],
-                    'cache'  => $container['cache'],
-                    'pdo'    => $container['database']
-                ]]
-            ]);
-        };
+        $container['source/factory'] = (fn(Container $container): \Charcoal\Factory\GenericFactory => new Factory([
+            'map' => [
+                'database' => DatabaseSource::class
+            ],
+            'arguments'  => [[
+                'logger' => $container['logger'],
+                'cache'  => $container['cache'],
+                'pdo'    => $container['database']
+            ]]
+        ]));
     }
 
     /**
      * Setup the framework's model factory.
      *
      * @param  Container $container A DI container.
-     * @return void
      */
-    public function registerModelFactory(Container $container)
+    public function registerModelFactory(Container $container): void
     {
-        $container['model/factory'] = function (Container $container) {
-            return new Factory([
-                'arguments' => [[
-                    'container'         => $container,
-                    'logger'            => $container['logger'],
-                    'metadata_loader'   => $container['metadata/loader'],
-                    'source_factory'    => $container['source/factory'],
-                    'property_factory'  => $container['property/factory']
-                ]]
-            ]);
-        };
+        $container['model/factory'] = (fn(Container $container): \Charcoal\Factory\GenericFactory => new Factory([
+            'arguments' => [[
+                'container'         => $container,
+                'logger'            => $container['logger'],
+                'metadata_loader'   => $container['metadata/loader'],
+                'source_factory'    => $container['source/factory'],
+                'property_factory'  => $container['property/factory']
+            ]]
+        ]));
     }
 
     /**
      * Setup the framework's property factory.
      *
      * @param  Container $container A DI container.
-     * @return void
      */
-    public function registerPropertyFactory(Container $container)
+    public function registerPropertyFactory(Container $container): void
     {
-        $container['property/factory'] = function (Container $container) {
-            return new Factory([
-                'resolver_options' => [
-                    'prefix' => '\\Charcoal\\Property\\',
-                    'suffix' => 'Property'
-                ],
-                'arguments' => [[
-                    'container'  => $container,
-                    'database'   => $container['database'],
-                    'logger'     => $container['logger'],
-                    'translator' => $container['translator']
-                ]]
-            ]);
-        };
+        $container['property/factory'] = (fn(Container $container): \Charcoal\Factory\GenericFactory => new Factory([
+            'resolver_options' => [
+                'prefix' => '\\Charcoal\\Property\\',
+                'suffix' => 'Property'
+            ],
+            'arguments' => [[
+                'container'  => $container,
+                'database'   => $container['database'],
+                'logger'     => $container['logger'],
+                'translator' => $container['translator']
+            ]]
+        ]));
     }
 
     /**
      * Setup the CLImate library.
      *
      * @param  Container $container A DI container.
-     * @return void
      */
-    public function registerClimate(Container $container)
+    public function registerClimate(Container $container): void
     {
         $container['climate/system'] = function () {
             $system = Mockery::mock(Linux::class);
@@ -370,11 +331,9 @@ class ContainerProvider
             return $reader;
         };
 
-        $container['climate/util'] = function (Container $container) {
-            return new UtilFactory($container['climate/system']);
-        };
+        $container['climate/util'] = (fn(Container $container): \League\CLImate\Util\UtilFactory => new UtilFactory($container['climate/system']));
 
-        $container['climate'] = function (Container $container) {
+        $container['climate'] = function (Container $container): \League\CLImate\CLImate {
             $climate = new CLImate();
 
             $climate->setOutput($container['climate/output']);

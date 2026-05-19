@@ -15,9 +15,8 @@ trait AssertionsTrait
      * @param  array  $expected The expected haystack.
      * @param  array  $haystack The actual haystack.
      * @param  string $message  The error to report.
-     * @return void
      */
-    public function assertArrayEquals(array $expected, array $haystack, $message = '')
+    public function assertArrayEquals(array $expected, array $haystack, $message = ''): void
     {
         $this->assertCount(count($expected), $haystack, $message);
         $this->assertEquals($expected, $haystack, $message);
@@ -29,9 +28,8 @@ trait AssertionsTrait
      * @param  array  $expected The expected haystack.
      * @param  array  $haystack The actual haystack.
      * @param  string $message  The error to report.
-     * @return void
      */
-    public function assertArrayContains(array $expected, array $haystack, $message = '')
+    public function assertArrayContains(array $expected, array $haystack, $message = ''): void
     {
         foreach ($expected as $item) {
             $this->assertContains($item, $haystack, $message);
@@ -44,9 +42,8 @@ trait AssertionsTrait
      * @param  array  $expected The expected haystack.
      * @param  array  $haystack The actual haystack.
      * @param  string $message  The error to report.
-     * @return void
      */
-    public function assertArrayHasKeys(array $expected, array $haystack, $message = '')
+    public function assertArrayHasKeys(array $expected, array $haystack, $message = ''): void
     {
         foreach ($expected as $item) {
             $this->assertArrayHasKey($item, $haystack, $message);
@@ -60,14 +57,13 @@ trait AssertionsTrait
      * @param  array   $haystack The actual haystack.
      * @param  boolean $strict   Whether to check for object identity.
      * @param  string  $message  The error to report.
-     * @return void
      */
     public function assertArraySubsets(
         array $expected,
         array $haystack,
         $strict = false,
         $message = ''
-    ) {
+    ): void {
         foreach ($expected as $key => $val) {
             $this->assertArraySubset([ $key => $val ], $haystack, $strict, $message);
         }
@@ -84,17 +80,16 @@ trait AssertionsTrait
      * @param  boolean                   $checkForObjectIdentity Unused.
      * @param  string                    $message                The error to report.
      * @throws InvalidArgumentException
-     * @return void
      */
     public function assertArraySubset($subset, $array, $checkForObjectIdentity = false, $message = ''): void
     {
-        if (!(is_array($subset) || $subset instanceof ArrayAccess)) {
+        if (!is_array($subset) && !$subset instanceof ArrayAccess) {
             throw InvalidArgumentException::create(
                 1,
                 'array or ArrayAccess'
             );
         }
-        if (!(is_array($array) || $array instanceof ArrayAccess)) {
+        if (!is_array($array) && !$array instanceof ArrayAccess) {
             throw InvalidArgumentException::create(
                 2,
                 'array or ArrayAccess'

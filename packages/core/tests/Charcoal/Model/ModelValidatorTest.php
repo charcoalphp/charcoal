@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Charcoal\Tests\Model;
 
 use PDO;
@@ -16,10 +18,7 @@ class ModelValidatorTest extends AbstractTestCase
 {
     use \Charcoal\Tests\CoreContainerIntegrationTrait;
 
-    /**
-     * @return Model
-     */
-    protected function model()
+    protected function model(): \Charcoal\Model\Model
     {
         $container = $this->getContainer();
 
@@ -31,20 +30,14 @@ class ModelValidatorTest extends AbstractTestCase
         ]);
     }
 
-    /**
-     * @return void
-     */
-    public function testConstructor()
+    public function testConstructor(): void
     {
         $model = $this->model();
         $obj = new ModelValidator($model);
         $this->assertInstanceOf(ModelValidator::class, $obj);
     }
 
-    /**
-     * @return void
-     */
-    public function testValidateModel()
+    public function testValidateModel(): void
     {
         $model = $this->model();
         $model->setMetadata([

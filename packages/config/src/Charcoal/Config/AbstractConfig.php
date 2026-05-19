@@ -41,7 +41,7 @@ abstract class AbstractConfig extends AbstractEntity implements
      * @param  EntityInterface[] $delegates An array of delegates (config) to set.
      * @throws InvalidArgumentException If $data is invalid.
      */
-    final public function __construct($data = null, array $delegates = null)
+    final public function __construct($data = null, ?array $delegates = null)
     {
         // Always set the default chaining notation
         $this->setSeparator(self::DEFAULT_SEPARATOR);
@@ -110,7 +110,7 @@ abstract class AbstractConfig extends AbstractEntity implements
      * @see    IteratorAggregate
      * @return ArrayIterator
      */
-    public function getIterator()
+    public function getIterator(): ArrayIterator
     {
         return new ArrayIterator($this->data());
     }
@@ -131,7 +131,8 @@ abstract class AbstractConfig extends AbstractEntity implements
      * @throws InvalidArgumentException If the $key is not a string or is a numeric value.
      * @return boolean TRUE if $key exists and has a value other than NULL, FALSE otherwise.
      */
-    public function offsetExists($key)
+    #[\Override]
+    public function offsetExists($key): bool
     {
         if (is_numeric($key)) {
             throw new InvalidArgumentException(
@@ -192,7 +193,8 @@ abstract class AbstractConfig extends AbstractEntity implements
      * @throws InvalidArgumentException If the $key is not a string or is a numeric value.
      * @return mixed Value of the requested $key on success, NULL if the $key is not set.
      */
-    public function offsetGet($key)
+    #[\Override]
+    public function offsetGet($key): mixed
     {
         if (is_numeric($key)) {
             throw new InvalidArgumentException(
@@ -228,13 +230,8 @@ abstract class AbstractConfig extends AbstractEntity implements
         if ($this->mutatorCache[$key]) {
             return $this->{$key}();
         }
-        // -- END DEPRECATED
 
-        if (isset($this->{$key})) {
-            return $this->{$key};
-        }
-
-        return $this->getInDelegates($key);
+        return $this->{$key} ?? $this->getInDelegates($key);
     }
 
     /**
@@ -249,9 +246,9 @@ abstract class AbstractConfig extends AbstractEntity implements
      * @param  string $key   The data key to assign $value to.
      * @param  mixed  $value The data value to assign to $key.
      * @throws InvalidArgumentException If the $key is not a string or is a numeric value.
-     * @return void
      */
-    public function offsetSet($key, $value)
+    #[\Override]
+    public function offsetSet($key, $value): void
     {
         if (is_numeric($key)) {
             throw new InvalidArgumentException(
@@ -298,9 +295,8 @@ abstract class AbstractConfig extends AbstractEntity implements
      * @param  string $key   The data key to assign or merge $value to.
      * @param  mixed  $value The data value to assign to or merge with $key.
      * @throws InvalidArgumentException If the $key is not a string or is a numeric value.
-     * @return void
      */
-    public function offsetReplace($key, $value)
+    public function offsetReplace($key, $value): void
     {
         if (is_numeric($key)) {
             throw new InvalidArgumentException(

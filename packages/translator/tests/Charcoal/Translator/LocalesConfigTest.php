@@ -15,25 +15,18 @@ class LocalesConfigTest extends AbstractTestCase
 {
     /**
      * Tested Class.
-     *
-     * @var LocalesConfig
      */
-    private $obj;
+    private \Charcoal\Translator\LocalesConfig|array $obj;
 
     /**
      * Set up the test.
-     *
-     * @return void
      */
     protected function setUp(): void
     {
         $this->obj = new LocalesConfig();
     }
 
-    /**
-     * @return void
-     */
-    public function testDefaultsArrayAccess()
+    public function testDefaultsArrayAccess(): void
     {
         $this->assertArrayHasKey('en', $this->obj['languages']);
         $this->assertEquals('en', $this->obj['default_language']);
@@ -41,10 +34,7 @@ class LocalesConfigTest extends AbstractTestCase
         $this->assertFalse($this->obj['auto_detect']);
     }
 
-    /**
-     * @return void
-     */
-    public function testSetLanguages()
+    public function testSetLanguages(): void
     {
         $langs = [
             'foo' => [
@@ -64,10 +54,7 @@ class LocalesConfigTest extends AbstractTestCase
         $this->assertEquals($langs, $this->obj['languages']);
     }
 
-    /**
-     * @return void
-     */
-    public function testSetDefaultLanguage()
+    public function testSetDefaultLanguage(): void
     {
         $ret = $this->obj->setDefaultLanguage('foo');
         $this->assertSame($ret, $this->obj);
@@ -80,10 +67,7 @@ class LocalesConfigTest extends AbstractTestCase
         $this->obj->setDefaultLanguage(false);
     }
 
-    /**
-     * @return void
-     */
-    public function testSetFallbackLanguages()
+    public function testSetFallbackLanguages(): void
     {
         $ret = $this->obj->setFallbackLanguages(['foo']);
         $this->assertSame($ret, $this->obj);
