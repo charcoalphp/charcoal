@@ -15,7 +15,7 @@ NC='\033[0m' # No Color
 #######
 
 get_packages() {
-    vendor/bin/monorepo-builder packages-json
+     ./monorepo packages
 }
 
 ######
@@ -101,12 +101,6 @@ if [[ -z "$package" ]]; then
     # Testing all packages
     packages="$(get_packages)"
     echo "Testing all packages..."
-    # Cleaning get_packages output for array conversion
-    packages=${packages//,/ }
-    packages=${packages//[/}
-    packages=${packages//]/}
-    packages=${packages//\"/}
-
     packages=($packages)
 
     for i in "${packages[@]}"; do
