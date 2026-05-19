@@ -1,4 +1,6 @@
 .phpunit.result.cache
+phpunit.xml.dist.bak
+.phpunit.cache
 charcoal_test
 node_modules/
 packages/**/composer.lock
@@ -7,3 +9,4 @@ phpstan.neon
 phpunit.xml
 psalm.xml
 vendor/
+tests/logs
