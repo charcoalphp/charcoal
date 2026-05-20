@@ -22,6 +22,7 @@ use Charcoal\Source\Expression;
 /**
  * Database Source Handler, through PDO.
  */
+#[\AllowDynamicProperties]
 class DatabaseSource extends AbstractSource implements
     DatabaseSourceInterface
 {
@@ -31,6 +32,8 @@ class DatabaseSource extends AbstractSource implements
 
     public const MYSQL_DRIVER_NAME   = 'mysql';
     public const SQLITE_DRIVER_NAME  = 'sqlite';
+
+    protected array $tableExistsCache = [];
 
     /**
      * The database connector.
@@ -258,8 +261,8 @@ class DatabaseSource extends AbstractSource implements
         $dbh    = $this->db();
         $table  = $this->table();
 
-        if (property_exists($dbh, 'tableExists') && $dbh->tableExists !== null) {
-            return $dbh->tableExists[$table];
+        if (isset($this->tableExistsCache[$table])) {
+            return $this->tableExistsCache[$table];
         }
 
         $exists = $this->performTableExists();
@@ -300,14 +303,9 @@ class DatabaseSource extends AbstractSource implements
      */
     protected function setTableExists($exists = true)
     {
-        $dbh   = $this->db();
         $table = $this->table();
 
-        if (!property_exists($dbh, 'tableExists') || $dbh->tableExists === null) {
-            $dbh->tableExists = [];
-        }
-
-        $dbh->tableExists[$table] = $exists;
+        $this->tableExistsCache[$table] = $exists;
     }
 
     /**
