@@ -58,7 +58,7 @@
         "slim/slim": "^3.7",
         "studio-42/elfinder": "^2.1.64",
         "symfony/polyfill-php85": "^1.37",
-        "symfony/translation": "^3.4",
+        "symfony/translation": "^7.2",
         "tedivm/stash": "~0.16",
         "vlucas/phpdotenv": "^5.4"
     },
@@ -75,7 +75,7 @@
         "phpunit/phpunit": "^12.5",
         "rector/rector": "^2.4",
         "squizlabs/php_codesniffer": "^3.5",
-        "symfony/yaml": "^3.0",
+        "symfony/yaml": "^7.2",
         "symplify/monorepo-builder": "^12.7",
         "twig/twig": "^3.4",
         "yoast/phpunit-polyfills": "^4.0"
