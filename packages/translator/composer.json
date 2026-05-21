@@ -25,7 +25,7 @@
     "require": {
         "php": "^8.3",
         "charcoal/config": "^5.1",
-        "symfony/translation": "^3.4",
+        "symfony/translation": "^7.2",
         "pimple/pimple": "^3.0"
     },
     "require-dev": {

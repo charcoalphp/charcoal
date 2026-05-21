@@ -23,7 +23,7 @@
         "ext-pdo": "*",
         "ext-simplexml": "*",
         "psr/log": "^1.0",
-        "psr/cache": "^1.0",
+        "psr/cache": "^2.0",
         "charcoal/config": "^5.1",
         "charcoal/core": "^5.1",
         "charcoal/factory": "^5.1",
@@ -36,7 +36,7 @@
         "php-coveralls/php-coveralls": "^2.2",
         "cache/void-adapter": "^1.0",
         "mustache/mustache": "^2.11",
-        "tedivm/stash": "~0.16",
+        "tedivm/stash": "^1.1",
         "pimple/pimple": "^3.0"
     },
     "autoload": {

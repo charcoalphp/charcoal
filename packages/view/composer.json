@@ -31,7 +31,7 @@
         "mustache/mustache": "^2.11",
         "twig/twig": "^3.4",
         "pimple/pimple": "^3.0",
-        "slim/slim": "^3.7",
+        "slim/slim": "^3.13",
         "charcoal/translator": "^5.1",
         "phpstan/phpstan": "^2.0",
         "charcoal/app": "^5.1"

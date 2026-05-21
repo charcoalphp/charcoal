@@ -25,7 +25,7 @@
         "ext-pdo": "*",
         "ext-mbstring": "*",
         "psr/log": "^1.0",
-        "psr/cache": "^1.0",
+        "psr/cache": "^2.0",
         "pimple/pimple": "^3.0",
         "charcoal/cache": "^5.1",
         "charcoal/config": "^5.1",
@@ -38,7 +38,7 @@
         "squizlabs/php_codesniffer": "^3.5",
         "php-coveralls/php-coveralls": "^2.2",
         "cache/void-adapter": "^1.0",
-        "tedivm/stash": "~0.16",
+        "tedivm/stash": "^1.1",
         "mockery/mockery": "^1.0",
         "charcoal/app": "^5.1"
     },
