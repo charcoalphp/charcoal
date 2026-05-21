@@ -349,7 +349,7 @@ class ModelStructureProperty extends StructureProperty
                 $structureInterfaces = (array)$this->getStructureModelType();
             }
 
-            if ($structureInterfaces !== []) {
+            if (is_array($structureInterfaces) && $structureInterfaces !== []) {
                 $metadataLoader = $this->metadataLoader();
                 $metadataClass  = $this->getStructureMetadataClass();
 
