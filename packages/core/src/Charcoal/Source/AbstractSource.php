@@ -228,6 +228,7 @@ abstract class AbstractSource implements
      * - as 3 parameters: `property`, `value` and `options`
      *   - `addFilter('foo', 42, ['operator' => '<=']);`
      *
+     * @deprecated 0.3 To be replaced with FilterCollectionTrait::addFilter()
      *
      * @uses   self::parseFilterWithModel()
      * @uses   FilterCollectionTrait::processFilter()
@@ -239,8 +240,9 @@ abstract class AbstractSource implements
      * @param  array $options Optional extra settings to apply on the filter.
      * @throws InvalidArgumentException If the $param argument is invalid.
      * @return self
+     *
      */
-    #[\Deprecated(message: '0.3 To be replaced with FilterCollectionTrait::addFilter()')]
+    #![\Deprecated(message: '0.3 To be replaced with FilterCollectionTrait::addFilter()')]
     public function addFilter($param, $value = null, ?array $options = null)
     {
         if (is_string($param) && $value !== null) {
@@ -321,6 +323,7 @@ abstract class AbstractSource implements
     /**
      * Append a query order on the source.
      *
+     * @deprecated 0.3 To be replaced with OrderCollectionTrait::addOrder()
      *
      * @uses   self::parseOrderWithModel()
      * @uses   OrderCollectionTrait::processOrder()
@@ -333,7 +336,7 @@ abstract class AbstractSource implements
      * @throws InvalidArgumentException If the $param argument is invalid.
      * @return self
      */
-    #[\Deprecated(message: '0.3 To be replaced with OrderCollectionTrait::addOrder()')]
+    #![\Deprecated(message: '0.3 To be replaced with OrderCollectionTrait::addOrder()')]
     public function addOrder($param, $mode = 'asc', ?array $options = null)
     {
         if (is_string($param) && $mode !== null) {

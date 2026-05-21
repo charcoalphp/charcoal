@@ -50,7 +50,7 @@ class TranslatorHelpers extends AbstractExtension implements
      * @param  string|null $locale    The locale or NULL to use the default.
      * @return string The translated string
      */
-    public function trans($message, array $arguments = [], $domain = null, $locale = null): string
+    public function trans(?string $message, array $arguments = [], ?string $domain = null, ?string $locale = null): string
     {
         if (!$this->translator instanceof \Charcoal\Translator\Translator) {
             return strtr($message, $arguments);

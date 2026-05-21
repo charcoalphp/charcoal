@@ -447,7 +447,7 @@ abstract class AbstractProperty implements
                     continue;
                 }
                 $translation = $templateString[$lang];
-                $isBlank = empty($translation) && !is_numeric($translation);
+                $isBlank = ($translation === '' || $translation === '0') && !is_numeric($translation);
                 if (!$isBlank) {
                     $this->translator()->setLocale($lang);
                     $translation = $this->renderTemplate($translation);

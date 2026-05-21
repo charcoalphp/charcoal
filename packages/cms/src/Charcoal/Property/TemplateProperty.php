@@ -186,7 +186,7 @@ class TemplateProperty extends AbstractProperty implements SelectablePropertyInt
         return '';
     }
 
-    public function sqlExtra(): string
+    public function sqlExtra(): ?string
     {
         return '';
     }

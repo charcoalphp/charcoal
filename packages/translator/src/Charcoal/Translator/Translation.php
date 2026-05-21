@@ -62,7 +62,6 @@ class Translation implements
 
     /**
      * @param  string $lang A language identifier.
-     * @return boolean
      * @see    ArrayAccess::offsetExists()
      * @throws InvalidArgumentException If array key isn't a string.
      */

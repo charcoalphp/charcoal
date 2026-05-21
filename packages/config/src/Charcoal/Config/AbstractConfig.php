@@ -108,7 +108,6 @@ abstract class AbstractConfig extends AbstractEntity implements
      * Create a new iterator from the configuration instance.
      *
      * @see    IteratorAggregate
-     * @return ArrayIterator
      */
     public function getIterator(): ArrayIterator
     {

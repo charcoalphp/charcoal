@@ -6,7 +6,6 @@ use RuntimeException;
 // From 'symfony/translation'
 use Symfony\Component\Translation\Formatter\MessageFormatter;
 use Symfony\Component\Translation\Formatter\MessageFormatterInterface;
-use Symfony\Component\Translation\MessageSelector;
 use Symfony\Component\Translation\Translator as SymfonyTranslator;
 // From 'charcoal-translator'
 use Charcoal\Translator\LocalesManager;
@@ -26,11 +25,6 @@ class Translator extends SymfonyTranslator
     private \Charcoal\Translator\LocalesManager $manager;
 
     /**
-     * The message selector.
-     */
-    private \Symfony\Component\Translation\MessageSelector $selector;
-
-    /**
      * The message formatter.
      */
     private \Symfony\Component\Translation\Formatter\MessageFormatterInterface $formatter;
@@ -40,7 +34,7 @@ class Translator extends SymfonyTranslator
      *
      * @var string[]
      */
-    private $domains = [ 'messages' ];
+    private array $domains = [ 'messages' ];
 
     /**
      * @param array $data Translator dependencies.
@@ -49,15 +43,9 @@ class Translator extends SymfonyTranslator
     {
         $this->setManager($data['manager']);
 
-        // Ensure Charcoal has control of the message selector.
-        if (!isset($data['message_selector'])) {
-            $data['message_selector'] = new MessageSelector();
-        }
-        $this->setSelector($data['message_selector']);
-
         // Ensure Charcoal has control of the message formatter.
         if (!isset($data['message_formatter'])) {
-            $data['message_formatter'] = new MessageFormatter($data['message_selector']);
+            $data['message_formatter'] = new MessageFormatter();
         }
         $this->setFormatter($data['message_formatter']);
 
@@ -91,7 +79,7 @@ class Translator extends SymfonyTranslator
      * @param  string|null $domain   The domain.
      */
     #[\Override]
-    public function addResource($format, $resource, $locale, $domain = null): void
+    public function addResource(string $format, mixed $resource, string $locale, ?string $domain = null): void
     {
         if (null !== $domain) {
             $this->domains[] = $domain;
@@ -119,7 +107,7 @@ class Translator extends SymfonyTranslator
      * @param  string|null $domain     The domain for the message or NULL to use the default.
      * @return Translation|null The translation object or NULL if the value is not translatable.
      */
-    public function translation($val, array $parameters = [], $domain = null): ?\Charcoal\Translator\Translation
+    public function translation($val, array $parameters = [], ?string $domain = null): ?\Charcoal\Translator\Translation
     {
         if ($this->isValidTranslation($val) === false) {
             return null;
@@ -152,7 +140,7 @@ class Translator extends SymfonyTranslator
      * @param  string|null $locale     The locale or NULL to use the default.
      * @return string The translated string
      */
-    public function translate($val, array $parameters = [], $domain = null, $locale = null)
+    public function translate($val, array $parameters = [], $domain = null, $locale = null): string
     {
         if ($locale === null) {
             $locale = $this->getLocale();
@@ -206,12 +194,9 @@ class Translator extends SymfonyTranslator
         $localized   = (string)$translation;
         foreach ($this->availableLocales() as $lang) {
             if (!isset($translation[$lang]) || $translation[$lang] === $val) {
-                $translation[$lang] = $this->transChoice($localized, $number, $parameters, $domain, $lang);
+                $translation[$lang] = $this->trans($localized, $parameters, $domain, $lang);
             } else {
-                $translation[$lang] = strtr(
-                    $this->selector()->choose($translation[$lang], (int)$number, $lang),
-                    $parameters
-                );
+                $translation[$lang] = $this->formatter()->format($translation[$lang], $lang, $parameters);
             }
         }
 
@@ -241,10 +226,7 @@ class Translator extends SymfonyTranslator
                 '%count%' => $number,
             ], $parameters);
 
-            return strtr(
-                $this->selector()->choose($val[$locale], (int)$number, $locale),
-                $parameters
-            );
+            return $this->formatter()->format($val[$locale], $locale, $parameters);
         }
 
         if (is_object($val) && method_exists($val, '__toString')) {
@@ -253,7 +235,7 @@ class Translator extends SymfonyTranslator
 
         if (is_string($val)) {
             if ($val !== '') {
-                return $this->transChoice($val, $number, $parameters, $domain, $locale);
+                return $this->trans($val, array_merge(['%count%' => $number], $parameters), $domain, $locale);
             }
 
             return '';
@@ -294,7 +276,7 @@ class Translator extends SymfonyTranslator
      * @param  string $locale The locale.
      */
     #[\Override]
-    public function setLocale($locale): void
+    public function setLocale(string $locale): void
     {
         parent::setLocale($locale);
 
@@ -317,27 +299,6 @@ class Translator extends SymfonyTranslator
     protected function manager(): \Charcoal\Translator\LocalesManager
     {
         return $this->manager;
-    }
-
-    /**
-     * Set the message selector.
-     *
-     * The {@see SymfonyTranslator} keeps the message selector private (as of 3.3.2),
-     * thus we must explicitly require it in this class to guarantee access.
-     *
-     * @param  MessageSelector $selector The selector.
-     */
-    public function setSelector(MessageSelector $selector): void
-    {
-        $this->selector = $selector;
-    }
-
-    /**
-     * Retrieve the message selector.
-     */
-    protected function selector(): \Symfony\Component\Translation\MessageSelector
-    {
-        return $this->selector;
     }
 
     /**
@@ -369,7 +330,7 @@ class Translator extends SymfonyTranslator
      * @param  string|null $locale The locale or NULL to use the default.
      * @return boolean TRUE if the message has a translation, FALSE otherwise.
      */
-    public function hasTrans($id, $domain = null, $locale = null)
+    public function hasTrans(string $id, $domain = null, ?string $locale = null): bool
     {
         if (null === $domain) {
             $domain = 'messages';
@@ -386,7 +347,7 @@ class Translator extends SymfonyTranslator
      * @param  string|null $locale The locale or NULL to use the default.
      * @return boolean TRUE if the message has a translation, FALSE otherwise.
      */
-    public function transExists($id, $domain = null, $locale = null)
+    public function transExists(string $id, $domain = null, ?string $locale = null): bool
     {
         if (null === $domain) {
             $domain = 'messages';

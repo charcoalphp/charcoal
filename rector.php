@@ -3,6 +3,8 @@
 use Rector\Config\RectorConfig;
 use Rector\PHPUnit\Set\PHPUnitSetList;
 use Rector\ValueObject\PhpVersion;
+use Rector\Symfony\Set\SymfonySetList;
+use Rector\Doctrine\Set\DoctrineSetList;
 
 return RectorConfig::configure()
     ->withComposerBased(phpunit: true, symfony: true)
@@ -13,6 +15,15 @@ return RectorConfig::configure()
     ])->withSkip([
         __DIR__ . '/packages/*/tests/*/*/Fixture/*',
     ])
+//    ->withSymfonyContainerXml(__DIR__ . '/var/cache/dev/App_KernelDevDebugContainer.xml')
+    ->withSets([
+        SymfonySetList::SYMFONY_CODE_QUALITY,
+        SymfonySetList::SYMFONY_CONSTRUCTOR_INJECTION,
+    ])
+    ->withAttributesSets(
+        symfony: true,
+        doctrine: true
+    )
     ->withPhpVersion(PhpVersion::PHP_85)
     ->withSets([
         \Rector\Set\ValueObject\LevelSetList::UP_TO_PHP_85,

@@ -258,7 +258,7 @@ class DatabaseSource extends AbstractSource implements
      */
     public function tableExists()
     {
-        $dbh    = $this->db();
+        $this->db();
         $table  = $this->table();
 
         if (isset($this->tableExistsCache[$table])) {

@@ -19,7 +19,6 @@ use Symfony\Component\Translation\Loader\XliffFileLoader;
 use Symfony\Component\Translation\Loader\JsonFileLoader;
 use Symfony\Component\Translation\Loader\YamlFileLoader;
 use Symfony\Component\Translation\Formatter\MessageFormatter;
-use Symfony\Component\Translation\MessageSelector;
 // From 'charcoal-translator'
 use Charcoal\Translator\LocalesConfig;
 use Charcoal\Translator\LocalesManager;
@@ -224,19 +223,11 @@ class TranslatorServiceProvider implements ServiceProviderInterface
         };
 
         /**
-         * Instance of the Message Selector, that is used to resolve a translation.
-         *
-         * @return MessageSelector
-         */
-        $container['translator/message-selector'] = (fn(): \Symfony\Component\Translation\MessageSelector => new MessageSelector());
-
-        /**
          * Instance of the Message Formatter, that is used to format a localized message.
          *
-         * @param  Container $container Pimple DI container.
          * @return MessageFormatter
          */
-        $container['translator/message-formatter'] = (fn(Container $container): \Symfony\Component\Translation\Formatter\MessageFormatter => new MessageFormatter($container['translator/message-selector']));
+        $container['translator/message-formatter'] = (fn(): \Symfony\Component\Translation\Formatter\MessageFormatter => new MessageFormatter());
 
         /**
          * Instance of the Translator, that is used for translation.
@@ -249,7 +240,6 @@ class TranslatorServiceProvider implements ServiceProviderInterface
             $transConfig = $container['translator/config'];
             $translator  = new Translator([
                 'manager'           => $container['locales/manager'],
-                'message_selector'  => $container['translator/message-selector'],
                 'message_formatter' => $container['translator/message-formatter'],
                 'cache_dir'         => $transConfig['cache_dir'],
                 'debug'             => $transConfig['debug'],

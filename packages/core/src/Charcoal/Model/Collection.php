@@ -228,7 +228,7 @@ class Collection implements CollectionInterface
      * @param  mixed $offset The object primary key or array offset.
      * @return boolean
      */
-    public function offsetExists($offset)
+    public function offsetExists($offset): bool
     {
         if (is_int($offset)) {
             $offset  = $this->resolveOffset($offset);
@@ -247,7 +247,7 @@ class Collection implements CollectionInterface
      * @param  mixed $offset The object primary key or array offset.
      * @return mixed Returns the requested object or NULL if not in the collection.
      */
-    public function offsetGet($offset)
+    public function offsetGet($offset): mixed
     {
         if (is_int($offset)) {
             $offset  = $this->resolveOffset($offset);
@@ -325,7 +325,7 @@ class Collection implements CollectionInterface
      * @see    \Countable
      * @return integer
      */
-    public function count()
+    public function count(): int
     {
         return count($this->objects);
     }
@@ -339,7 +339,7 @@ class Collection implements CollectionInterface
      * @see    \IteratorAggregate
      * @return \ArrayIterator
      */
-    public function getIterator()
+    public function getIterator(): \ArrayIterator
     {
         return new ArrayIterator($this->objects);
     }

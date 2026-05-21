@@ -479,10 +479,8 @@ class AdminTemplate extends AbstractTemplate implements
 
     /**
      * Retrieve the current language.
-     *
-     * @return string
      */
-    public function lang()
+    public function lang(): string
     {
         return $this->translator()->getLocale();
     }

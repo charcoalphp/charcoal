@@ -341,7 +341,7 @@ trait StorablePropertyTrait
     /**
      * @return string|null
      */
-    public function sqlExtra(): null
+    public function sqlExtra(): ?string
     {
         return null;
     }

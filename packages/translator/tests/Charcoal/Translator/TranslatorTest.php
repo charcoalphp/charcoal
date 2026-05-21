@@ -7,7 +7,6 @@ use ReflectionClass;
 // From 'symfony/translation'
 use Symfony\Component\Translation\Formatter\MessageFormatter;
 use Symfony\Component\Translation\Loader\ArrayLoader;
-use Symfony\Component\Translation\MessageSelector;
 
 // From 'charcoal-translator'
 use Charcoal\Translator\LocalesManager;
@@ -43,16 +42,12 @@ class TranslatorTest extends AbstractTestCase
      */
     protected function setUp(): void
     {
-        $selector  = new MessageSelector();
-        $formatter = new MessageFormatter($selector);
-
         $this->obj = new Translator([
             'locale'            => 'en',
             'cache_dir'         => null,
             'debug'             => false,
             'manager'           => $this->localesManager(),
-            'message_selector'  => $selector,
-            'message_formatter' => $formatter,
+            'message_formatter' => new MessageFormatter(),
         ]);
 
         $this->obj->addLoader('array', new ArrayLoader());
@@ -93,33 +88,6 @@ class TranslatorTest extends AbstractTestCase
         }
 
         return $this->localesManager;
-    }
-
-    public function testConstructorWithMessageSelector(): void
-    {
-        $selector   = new MessageSelector();
-        $translator = new Translator([
-            'locale'           => 'en',
-            'cache_dir'        => null,
-            'debug'            => false,
-            'manager'          => $this->localesManager(),
-            'message_selector' => $selector,
-        ]);
-
-        $this->assertSame($selector, $this->callMethod($translator, 'selector'));
-    }
-
-    public function testConstructorWithoutMessageSelector(): void
-    {
-        $translator = new Translator([
-            'locale'           => 'en',
-            'cache_dir'        => null,
-            'debug'            => false,
-            'manager'          => $this->localesManager(),
-            'message_selector' => null,
-        ]);
-
-        $this->assertInstanceOf(MessageSelector::class, $this->callMethod($translator, 'selector'));
     }
 
     public function testConstructorWithMessageFormatter(): void

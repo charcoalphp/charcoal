@@ -248,7 +248,7 @@ class TranslationParserScript extends AdminScript
     /**
      * @return string Current locale.
      */
-    protected function locale()
+    protected function locale(): string
     {
         return $this->translator()->getLocale();
     }
