@@ -7,7 +7,7 @@ use Charcoal\Translator\LocalesManager;
 use DomainException;
 use InvalidArgumentException;
 use JsonSerializable;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * A translation object holds a localized message in all available locales.

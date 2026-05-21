@@ -166,7 +166,7 @@ trait LocaleAwareTrait
      * @param  array $localeStruct The currently iterated language.
      * @return array Returns a link structure.
      */
-    protected function formatAlternateTranslation(array $context, array $localeStruct): array
+    protected function formatAlternateTranslation(\ArrayAccess|array $context, array $localeStruct): array
     {
         return [
             'id'       => ($context['id']) ? : $this->templateName(),

@@ -60,7 +60,6 @@ class Filter extends Expression implements
      * Count the filters stored in this expression.
      *
      * @see    Countable
-     * @return integer
      */
     public function count(): int
     {

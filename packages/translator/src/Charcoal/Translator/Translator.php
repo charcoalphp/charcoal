@@ -93,7 +93,7 @@ class Translator extends SymfonyTranslator
      *
      * @return string[]
      */
-    public function availableDomains()
+    public function availableDomains(): array
     {
         return $this->domains;
     }
@@ -140,7 +140,7 @@ class Translator extends SymfonyTranslator
      * @param  string|null $locale     The locale or NULL to use the default.
      * @return string The translated string
      */
-    public function translate($val, array $parameters = [], $domain = null, $locale = null): string
+    public function translate($val, array $parameters = [], ?string $domain = null, $locale = null): string
     {
         if ($locale === null) {
             $locale = $this->getLocale();
@@ -180,7 +180,7 @@ class Translator extends SymfonyTranslator
      * @param  string|null $domain     The domain for the message or NULL to use the default.
      * @return Translation|null The translation object or NULL if the value is not translatable.
      */
-    public function translationChoice($val, $number, array $parameters = [], $domain = null): ?\Charcoal\Translator\Translation
+    public function translationChoice($val, $number, array $parameters = [], ?string $domain = null): ?\Charcoal\Translator\Translation
     {
         if ($this->isValidTranslation($val) === false) {
             return null;
@@ -215,7 +215,7 @@ class Translator extends SymfonyTranslator
      * @param  string|null $locale     The locale or NULL to use the default.
      * @return string The translated string
      */
-    public function translateChoice($val, $number, array $parameters = [], $domain = null, $locale = null)
+    public function translateChoice($val, $number, array $parameters = [], $domain = null, $locale = null): string
     {
         if ($locale === null) {
             $locale = $this->getLocale();

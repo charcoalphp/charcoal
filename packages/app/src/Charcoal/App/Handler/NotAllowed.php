@@ -163,10 +163,8 @@ class NotAllowed extends AbstractHandler
 
     /**
      * Retrieve the handler's summary.
-     *
-     * @return string
      */
-    public function getSummary()
+    public function getSummary(): string
     {
         return $this->translator()->translate('Method not allowed.', [], 'charcoal');
     }

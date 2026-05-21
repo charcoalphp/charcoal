@@ -132,16 +132,14 @@ final class ModelLoader implements ArrayAccess
 
     // Satisfies ArrayAccess
     // =============================================================================================
-
     /**
      * Determine if an object exists by its key.
      *
      * @todo   Needs implementation
      * @see    ArrayAccess::offsetExists
      * @param  string $ident The object identifier to lookup.
-     * @return boolean
      */
-    public function offsetExists($ident)
+    public function offsetExists($ident): bool
     {
         return true;
     }
@@ -166,7 +164,7 @@ final class ModelLoader implements ArrayAccess
      * @param  mixed          $obj   The object to add.
      * @throws LogicException This method should never be called.
      */
-    public function offsetSet($ident, $obj): void
+    public function offsetSet($ident, $obj): never
     {
         throw new LogicException(
             'Can not set value on a loader'
@@ -180,7 +178,7 @@ final class ModelLoader implements ArrayAccess
      * @param  string|integer $ident The object identifier to remove.
      * @throws LogicException This method should never be called.
      */
-    public function offsetUnset($ident): void
+    public function offsetUnset($ident): never
     {
         throw new LogicException(
             'Can not unset value on a loader'

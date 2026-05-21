@@ -338,9 +338,6 @@ trait StorablePropertyTrait
         return $this->sqlEncoding;
     }
 
-    /**
-     * @return string|null
-     */
     public function sqlExtra(): ?string
     {
         return null;

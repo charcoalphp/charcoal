@@ -425,7 +425,7 @@ class AdminServiceProvider implements ServiceProviderInterface
          * @param  Container $container The Pimple DI Container.
          * @return ConfigInterface
          */
-        $container['elfinder/config'] = (fn(Container $container) => $container['admin/config']['elfinder']);
+        $container['elfinder/config'] = (fn(Container $container): mixed => $container['admin/config']['elfinder']);
     }
 
     /**

@@ -220,13 +220,11 @@ class Collection implements CollectionInterface
 
     // Satisfies ArrayAccess
     // =============================================================================================
-
     /**
      * Alias of {@see CollectionInterface::has()}.
      *
      * @see    \ArrayAccess
      * @param  mixed $offset The object primary key or array offset.
-     * @return boolean
      */
     public function offsetExists($offset): bool
     {
@@ -318,12 +316,10 @@ class Collection implements CollectionInterface
 
     // Satisfies Countable
     // =============================================================================================
-
     /**
      * Get number of objects in collection
      *
      * @see    \Countable
-     * @return integer
      */
     public function count(): int
     {
@@ -332,12 +328,10 @@ class Collection implements CollectionInterface
 
     // Satisfies IteratorAggregate
     // =============================================================================================
-
     /**
      * Retrieve an external iterator.
      *
      * @see    \IteratorAggregate
-     * @return \ArrayIterator
      */
     public function getIterator(): \ArrayIterator
     {

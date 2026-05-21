@@ -173,10 +173,7 @@ class CardCollectionWidget extends TableWidget
         return $this->chipTitle;
     }
 
-    /**
-     * @return string
-     */
-    private function defaultChipTitle()
+    private function defaultChipTitle(): string
     {
         return $this->translator()->translate('Active');
     }

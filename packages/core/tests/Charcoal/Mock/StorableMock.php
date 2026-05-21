@@ -70,7 +70,7 @@ class StorableMock implements
      * @param  mixed $offset The offset to check for.
      * @return boolean Returns TRUE on success or FALSE on failure.
      */
-    public function offsetExists($offset)
+    public function offsetExists($offset): bool
     {
         return isset($this->data[$offset]);
     }

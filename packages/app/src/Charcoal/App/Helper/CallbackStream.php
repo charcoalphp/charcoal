@@ -73,7 +73,7 @@ class CallbackStream implements StreamInterface
     /**
      * @return integer|null Returns the size in bytes if known, or null if unknown.
      */
-    public function getSize()
+    public function getSize(): null
     {
         return null;
     }
@@ -81,23 +81,17 @@ class CallbackStream implements StreamInterface
     /**
      * @return integer|boolean Position of the file pointer or false on error.
      */
-    public function tell()
+    public function tell(): int
     {
         return 0;
     }
 
-    /**
-     * @return boolean
-     */
-    public function eof()
+    public function eof(): bool
     {
         return $this->called;
     }
 
-    /**
-     * @return boolean
-     */
-    public function isSeekable()
+    public function isSeekable(): bool
     {
         return false;
     }
@@ -112,7 +106,7 @@ class CallbackStream implements StreamInterface
      *                    SEEK_END: Set position to end-of-stream plus offset.
      * @return boolean Returns TRUE on success or FALSE on failure.
      */
-    public function seek($offset, $whence = SEEK_SET)
+    public function seek($offset, $whence = SEEK_SET): bool
     {
         return false;
     }
@@ -122,15 +116,12 @@ class CallbackStream implements StreamInterface
      * @link http://www.php.net/manual/en/function.fseek.php 1
      * @return boolean Returns TRUE on success or FALSE on failure.
      */
-    public function rewind()
+    public function rewind(): bool
     {
         return false;
     }
 
-    /**
-     * @return boolean
-     */
-    public function isWritable()
+    public function isWritable(): bool
     {
         return false;
     }
@@ -140,15 +131,12 @@ class CallbackStream implements StreamInterface
      * @return integer|boolean Returns the number of bytes written to the stream on
      *                       success or FALSE on failure.
      */
-    public function write($string)
+    public function write($string): bool
     {
         return false;
     }
 
-    /**
-     * @return boolean
-     */
-    public function isReadable()
+    public function isReadable(): bool
     {
         return true;
     }
@@ -181,7 +169,7 @@ class CallbackStream implements StreamInterface
      *                    provided. Returns a specific key value if a key is provided and the
      *                    value is found, or null if the key is not found.
      */
-    public function getMetadata($key = null)
+    public function getMetadata($key = null): ?array
     {
         if ($key === null) {
             return [];

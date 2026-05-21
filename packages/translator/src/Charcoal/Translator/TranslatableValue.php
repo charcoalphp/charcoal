@@ -7,7 +7,7 @@ use DomainException;
 use InvalidArgumentException;
 use JsonSerializable;
 use Stringable;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Translatable Value

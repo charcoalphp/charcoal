@@ -52,10 +52,9 @@ class BooleanProperty extends AbstractProperty
      *
      * @param  mixed $val     The value to to convert for display.
      * @param  array $options Optional display options.
-     * @return string
      */
     #[\Override]
-    public function displayVal($val, array $options = [])
+    public function displayVal($val, array $options = []): string
     {
         if ($val === true) {
             $label = $options['true_label'] ?? $this['trueLabel'];

@@ -570,7 +570,7 @@ class GenericRoute extends TemplateRoute
      * @param  string $langCode The locale's language code.
      * @return void
      */
-    protected function setLocale($langCode)
+    protected function setLocale(string $langCode)
     {
         $translator = $this->translator();
         $translator->setLocale($langCode);

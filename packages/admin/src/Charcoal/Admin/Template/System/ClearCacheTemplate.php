@@ -134,7 +134,7 @@ class ClearCacheTemplate extends AdminTemplate
     /**
      * @return string
      */
-    private function getCacheNamespace()
+    private function getCacheNamespace(): bool|string
     {
         return $this->cache->getNamespace();
     }

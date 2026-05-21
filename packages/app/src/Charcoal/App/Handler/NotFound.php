@@ -103,20 +103,16 @@ class NotFound extends AbstractHandler
 
     /**
      * Retrieve the handler's summary.
-     *
-     * @return string
      */
-    public function getSummary()
+    public function getSummary(): string
     {
         return $this->translator()->translate('Page Not Found', [], 'charcoal');
     }
 
     /**
      * Retrieve the handler's message.
-     *
-     * @return string
      */
-    public function getMessage()
+    public function getMessage(): string
     {
         return $this->translator()->translate(
             'The page you are looking for could not be found.',
