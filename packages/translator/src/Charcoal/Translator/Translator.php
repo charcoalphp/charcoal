@@ -2,6 +2,7 @@
 
 namespace Charcoal\Translator;
 
+use AllowDynamicProperties;
 use RuntimeException;
 // From 'symfony/translation'
 use Symfony\Component\Translation\Formatter\MessageFormatter;
@@ -17,6 +18,7 @@ use Charcoal\Translator\Translation;
  * Extends the Symfony translator to allow returned values in a "Translation" oject,
  * containing localizations for all locales.
  */
+#[AllowDynamicProperties]
 class Translator extends SymfonyTranslator
 {
     /**
