@@ -75,7 +75,7 @@ final class RouteManager implements
      */
     private function setupTemplate($routeIdent, $templateConfig)
     {
-        $routePattern = ($templateConfig['route'] ?? '/') . ltrim($routeIdent, '/');
+        $routePattern = ($templateConfig['route'] ?? '/' . ltrim($routeIdent, '/'));
 
         $templateConfig['route'] = $routePattern;
 
