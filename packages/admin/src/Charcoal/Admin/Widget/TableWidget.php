@@ -1249,7 +1249,7 @@ class TableWidget extends AdminWidget implements CollectionContainerInterface
     protected function parsePropertyCell(
         ModelInterface $object,
         PropertyInterface $property,
-        $propertyValue
+        string $propertyValue
     ): array {
         $cell    = $this->parseCollectionPropertyCell($object, $property, $propertyValue);
         $ident   = $property->ident();
