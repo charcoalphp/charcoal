@@ -301,7 +301,7 @@ abstract class AbstractGraphWidget extends AdminWidget implements
 
             if (is_array($action['actions'])) {
                 $action['actions']    = $this->parseAsGraphActions($action['actions']);
-                $action['hasActions'] = (bool) array_filter($action['actions'], fn(array $action): mixed => $action['active']);
+                $action['hasActions'] = (bool)array_filter($action['actions'], fn(array $action): mixed => $action['active']);
             }
 
             if (isset($graphActions[$ident])) {

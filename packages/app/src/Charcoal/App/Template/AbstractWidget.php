@@ -46,7 +46,7 @@ abstract class AbstractWidget extends AbstractEntity implements
      */
     public function setActive($active)
     {
-        $this->active = (bool) $active;
+        $this->active = (bool)$active;
         return $this;
     }
 

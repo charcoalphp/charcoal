@@ -135,7 +135,7 @@ trait PathScriptTrait
                 throw new InvalidArgumentException('The target file is not writeable.');
             }
         } else {
-            $info = pathinfo((string) $path);
+            $info = pathinfo((string)$path);
             $path = $this->filterWritablePath($info['dirname'], $info['basename']);
         }
 

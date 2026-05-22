@@ -40,12 +40,10 @@ class StructureProperty extends AbstractProperty
     }
 
     /**
-     * @param  mixed $val     The value to convert for display.
-     * @param  array $options Optional display options.
-     * @return string
+     * @param mixed $val     The value to convert for display.
      */
     #[\Override]
-    public function displayVal($val, array $options = [])
+    public function displayVal($val, array $options = []): string
     {
         if ($val === null || $val === '') {
             return '';
@@ -76,11 +74,10 @@ class StructureProperty extends AbstractProperty
     /**
      * Get the property's value in a format suitable for storage.
      *
-     * @param  mixed $val Optional. The value to convert to storage value.
-     * @return mixed
+     * @param mixed $val Optional. The value to convert to storage value.
      */
     #[\Override]
-    public function storageVal($val)
+    public function storageVal(mixed $val): mixed
     {
         if ($val === null || $val === '') {
             // Do not serialize NULL values
@@ -147,12 +144,12 @@ class StructureProperty extends AbstractProperty
     /**
      * AbstractProperty > setVal(). Ensure val is an array
      *
-     * @param  string|array $val The value to set.
-     * @throws InvalidArgumentException If the value is invalid.
+     * @param mixed $val The value to set.
      * @return array
+     * @throws InvalidArgumentException If the value is invalid.
      */
     #[\Override]
-    public function parseOne($val)
+    public function parseOne(mixed $val): mixed
     {
         if ($val === null || $val === '') {
             if ($this['allowNull']) {

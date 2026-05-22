@@ -203,7 +203,7 @@ abstract class AbstractPropertyDisplay extends AbstractProperty implements
     {
         $options = $this->getDisplayOptions();
 
-        return $options[$key] ?? $default;
+        return ($options[$key] ?? $default);
     }
 
     /**

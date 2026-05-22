@@ -250,7 +250,7 @@ class TableWidget extends AdminWidget implements CollectionContainerInterface
             return [];
         }
 
-        $objListData = $adminMetadata['lists'][$collectionIdent] ?? [];
+        $objListData = ($adminMetadata['lists'][$collectionIdent] ?? []);
 
         $collectionConfig = [];
 
@@ -361,7 +361,7 @@ class TableWidget extends AdminWidget implements CollectionContainerInterface
             if ($listProperties) {
                 $props = [];
                 foreach ($listProperties as $k => $v) {
-                    $k = lcfirst(implode('', array_map(ucfirst(...), explode('_', (string) $k))));
+                    $k = lcfirst(implode('', array_map(ucfirst(...), explode('_', (string)$k))));
                     $props[$k] = $v;
                 }
                 // Replacing values of listProperties from index to actual property values
@@ -384,7 +384,7 @@ class TableWidget extends AdminWidget implements CollectionContainerInterface
     {
         $collectionConfig = $this->collectionConfig();
 
-        return $collectionConfig['properties'] ?? [];
+        return ($collectionConfig['properties'] ?? []);
     }
 
     /**
@@ -496,7 +496,7 @@ class TableWidget extends AdminWidget implements CollectionContainerInterface
      */
     public function setShowObjectActions($show): static
     {
-        $this->showObjectActions = (bool) $show;
+        $this->showObjectActions = (bool)$show;
 
         return $this;
     }
@@ -541,7 +541,7 @@ class TableWidget extends AdminWidget implements CollectionContainerInterface
             $parsed = $this->parsedObjectActions;
 
             $collectionConfig = $this->collectionConfig();
-            $actions = $collectionConfig['object_actions'] ?? [];
+            $actions = ($collectionConfig['object_actions'] ?? []);
 
             $this->setObjectActions($actions);
 
@@ -619,7 +619,7 @@ class TableWidget extends AdminWidget implements CollectionContainerInterface
 
             if ($action['actions']) {
                 $action['actions']    = $this->parseAsObjectActions($action['actions']);
-                $action['hasActions'] = (bool) array_filter($action['actions'], fn(array $action): mixed => $action['active']);
+                $action['hasActions'] = (bool)array_filter($action['actions'], fn(array $action): mixed => $action['active']);
             }
 
             $objectActions[] = $action;
@@ -658,7 +658,7 @@ class TableWidget extends AdminWidget implements CollectionContainerInterface
      */
     public function setShowListActions($show): static
     {
-        $this->showListActions = (bool) $show;
+        $this->showListActions = (bool)$show;
 
         return $this;
     }
@@ -684,7 +684,7 @@ class TableWidget extends AdminWidget implements CollectionContainerInterface
     {
         if ($this->listActions === null) {
             $collectionConfig = $this->collectionConfig();
-            $actions = $collectionConfig['list_actions'] ?? [];
+            $actions = ($collectionConfig['list_actions'] ?? []);
             $this->setListActions($actions);
         }
 
@@ -718,7 +718,7 @@ class TableWidget extends AdminWidget implements CollectionContainerInterface
      */
     public function setShowTableHeader($show): static
     {
-        $this->showTableHeader = (bool) $show;
+        $this->showTableHeader = (bool)$show;
 
         return $this;
     }
@@ -737,7 +737,7 @@ class TableWidget extends AdminWidget implements CollectionContainerInterface
      */
     public function setShowTableHead($show): static
     {
-        $this->showTableHead = (bool) $show;
+        $this->showTableHead = (bool)$show;
 
         return $this;
     }
@@ -756,7 +756,7 @@ class TableWidget extends AdminWidget implements CollectionContainerInterface
      */
     public function setShowTableFoot($show): static
     {
-        $this->showTableFoot = (bool) $show;
+        $this->showTableFoot = (bool)$show;
 
         return $this;
     }
@@ -775,7 +775,7 @@ class TableWidget extends AdminWidget implements CollectionContainerInterface
      */
     public function setSortable($sortable): static
     {
-        $this->sortable = (bool) $sortable;
+        $this->sortable = (bool)$sortable;
 
         return $this;
     }
@@ -824,7 +824,7 @@ class TableWidget extends AdminWidget implements CollectionContainerInterface
         if ($this->isObjRenderable($model)) {
             $url = $model->render($url);
         } else {
-            $url = preg_replace('~{{\s*id\s*}}~', (string) $this->currentObjId, $url);
+            $url = preg_replace('~{{\s*id\s*}}~', (string)$this->currentObjId, $url);
         }
 
         return $url;
@@ -844,7 +844,7 @@ class TableWidget extends AdminWidget implements CollectionContainerInterface
                     if ($this->isObjRenderable($model)) {
                         $action['url'] = $model->render((string)$action['url']);
                     } else {
-                        $action['url'] = preg_replace('~{{\s*id\s*}}~', (string) $this->currentObjId, $action['url']);
+                        $action['url'] = preg_replace('~{{\s*id\s*}}~', (string)$this->currentObjId, $action['url']);
                     }
                     return $action['url'];
                 }
@@ -1157,7 +1157,7 @@ class TableWidget extends AdminWidget implements CollectionContainerInterface
 
             if (is_array($action['actions'])) {
                 $action['actions']    = $this->parseAsListActions($action['actions']);
-                $action['hasActions'] = (bool) array_filter($action['actions'], fn(array $action): mixed => $action['active']);
+                $action['hasActions'] = (bool)array_filter($action['actions'], fn(array $action): mixed => $action['active']);
             }
 
             if (isset($listActions[$ident])) {
@@ -1328,7 +1328,7 @@ class TableWidget extends AdminWidget implements CollectionContainerInterface
     {
         $row = $this->parseCollectionObjectRow($object, $objectProperties);
         $row['objectActions'] = $this->objectActions();
-        $row['showObjectActions'] = ($this->showObjectActions() === false) ? false : (bool) $row['objectActions'];
+        $row['showObjectActions'] = ($this->showObjectActions() === false) ? false : (bool)$row['objectActions'];
 
         $row['attr'] = [
             'class' => []

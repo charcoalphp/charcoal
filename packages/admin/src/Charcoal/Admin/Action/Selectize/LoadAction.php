@@ -77,7 +77,7 @@ class LoadAction extends BaseLoadAction
                     $searchProperties = (array)$options['searchProperties'];
                 } elseif (
                     !empty($choiceMap['label']) &&
-                    !str_contains((string) $choiceMap['label'], '{{')
+                    !str_contains((string)$choiceMap['label'], '{{')
                 ) {
                     $searchProperties = [ $choiceMap['label'] ];
                 } else {

@@ -307,7 +307,7 @@ class EventManager extends AbstractManager
             return null;
         }
 
-        $ids = explode(',', (string) $ids);
+        $ids = explode(',', (string)$ids);
 
         $loader->addFilter('id', $ids, [ 'operator' => 'in' ])
             ->addOrder('id', 'values', [ 'values' => $ids ]);
@@ -447,7 +447,7 @@ class EventManager extends AbstractManager
         $month = $date->format('m');
         $day = $date->format('d');
 
-        return $map[$year][$month][$day] ?? [];
+        return ($map[$year][$month][$day] ?? []);
     }
 
     /**
@@ -484,7 +484,7 @@ class EventManager extends AbstractManager
      */
     public function numEvent(): bool
     {
-        return (bool) count($this->entries());
+        return (bool)count($this->entries());
     }
 
     /**

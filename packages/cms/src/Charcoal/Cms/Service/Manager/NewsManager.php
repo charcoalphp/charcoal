@@ -230,7 +230,7 @@ class NewsManager extends AbstractManager
             return null;
         }
 
-        $ids = explode(',', (string) $ids);
+        $ids = explode(',', (string)$ids);
 
         $loader->addFilter('id', $ids, [ 'operator' => 'in' ])
             ->addOrder('id', 'values', [ 'values' => $ids ]);
@@ -390,7 +390,7 @@ class NewsManager extends AbstractManager
      */
     public function numNews(): bool
     {
-        return (bool) count($this->entries());
+        return (bool)count($this->entries());
     }
 
     /**

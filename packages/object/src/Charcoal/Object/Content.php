@@ -90,7 +90,7 @@ class Content extends AbstractModel implements
      */
     public function setActive($active): static
     {
-        $this->active = (bool) $active;
+        $this->active = (bool)$active;
         return $this;
     }
 

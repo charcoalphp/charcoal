@@ -465,7 +465,7 @@ abstract class AbstractAuthenticator implements
 
         // Validate password
         $hashedPassword = $user->getAuthPassword();
-        if (password_verify($password, (string) $hashedPassword)) {
+        if (password_verify($password, (string)$hashedPassword)) {
             if (password_needs_rehash($hashedPassword, PASSWORD_DEFAULT)) {
                 $this->rehashUserPassword($user, $password);
             }

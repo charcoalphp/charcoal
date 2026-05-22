@@ -77,7 +77,7 @@ trait SelectizeRendererAwareTrait
     protected function selectizeInput()
     {
         $prop = $this->selectizeProperty();
-        $type = $prop['input_type'] ?? SelectizeInput::class;
+        $type = ($prop['input_type'] ?? SelectizeInput::class);
 
         $input = $this->propertyInputFactory()->create($type);
         $input->setInputType($type);

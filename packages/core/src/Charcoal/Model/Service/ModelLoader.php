@@ -273,7 +273,7 @@ final class ModelLoader implements ArrayAccess
         }
 
         $objType = preg_replace('/([a-z])([A-Z])/', '$1-$2', $objType);
-        $objType = strtolower(str_replace('\\', '/', trim((string) $objType, '\\/')));
+        $objType = strtolower(str_replace('\\', '/', trim((string)$objType, '\\/')));
 
         $this->objType = $objType;
         return $this;

@@ -180,7 +180,7 @@ class ObjectSchedule extends AbstractModel implements ObjectScheduleInterface
      */
     public function setProcessed($processed): static
     {
-        $this->processed = (bool) $processed;
+        $this->processed = (bool)$processed;
 
         return $this;
     }

@@ -271,7 +271,7 @@ class PropertyField
      */
     public function setAllowNull($allowNull): static
     {
-        $this->allowNull = (bool) $allowNull;
+        $this->allowNull = (bool)$allowNull;
         return $this;
     }
 
@@ -319,7 +319,7 @@ class PropertyField
 
         $default = $this->defaultVal();
         if ($default) {
-            $parts[] = sprintf('DEFAULT \'%s\'', addslashes((string) $default));
+            $parts[] = sprintf('DEFAULT \'%s\'', addslashes((string)$default));
         }
 
         $comment = $this->label();
@@ -344,7 +344,7 @@ class PropertyField
             return static::$snakeCache[$key];
         }
 
-        $value = strtolower((string) preg_replace('/(?<!^)[A-Z]/', '_$0', $value));
+        $value = strtolower((string)preg_replace('/(?<!^)[A-Z]/', '_$0', $value));
 
         static::$snakeCache[$key] = $value;
 

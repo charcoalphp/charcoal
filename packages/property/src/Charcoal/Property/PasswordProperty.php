@@ -23,19 +23,19 @@ class PasswordProperty extends StringProperty
      *
      * If the hash is corruped or the algorithm is not recognized, the value will be rehashed.
      *
-     * @todo   Implement proper hashing/rehashing/validation.
      * @param  mixed $val The value, at time of saving.
      * @return string
+     * @todo   Implement proper hashing/rehashing/validation.
      */
     #[\Override]
-    public function save($val)
+    public function save(mixed $val)
     {
         if ($val === null || $val === '') {
             return $val;
         }
 
         if (!$this->isHashed($val)) {
-            $val = password_hash((string) $val, PASSWORD_DEFAULT);
+            $val = password_hash((string)$val, PASSWORD_DEFAULT);
         }
 
         return $val;
@@ -61,7 +61,7 @@ class PasswordProperty extends StringProperty
     public function isHashed($hash): bool
     {
         $info = password_get_info($hash);
-        return strtolower((string) $info['algoName']) !== 'unknown';
+        return strtolower((string)$info['algoName']) !== 'unknown';
     }
 
     /**

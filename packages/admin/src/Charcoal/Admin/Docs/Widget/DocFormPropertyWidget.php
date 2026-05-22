@@ -21,7 +21,7 @@ class DocFormPropertyWidget extends FormPropertyWidget
 
     public function hasExtraData(): bool
     {
-        return (bool) count($this->extraData());
+        return (bool)count($this->extraData());
     }
 
     /**

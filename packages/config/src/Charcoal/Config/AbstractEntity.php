@@ -68,7 +68,7 @@ abstract class AbstractEntity implements EntityInterface
 
         $data = [];
         foreach ($keys as $key) {
-            if (strtolower((string) $key) === 'data') {
+            if (strtolower((string)$key) === 'data') {
                 /** @internal Edge Case: Avoid recursive call */
                 continue;
             }
@@ -90,7 +90,7 @@ abstract class AbstractEntity implements EntityInterface
     public function setData(array $data)
     {
         foreach ($data as $key => $value) {
-            if (strtolower((string) $key) === 'data') {
+            if (strtolower((string)$key) === 'data') {
                 /** @internal Edge Case: Avoid recursive call */
                 continue;
             }

@@ -58,7 +58,7 @@ class Container extends Attachment implements
         $attachments = call_user_func_array($this->getAttachments(...), $args);
 
         foreach ($attachments as $attachment) {
-            $attachment->attachmentType = $attachables[$attachment->objType()] ?? [];
+            $attachment->attachmentType = ($attachables[$attachment->objType()] ?? []);
         }
 
         return $attachments;

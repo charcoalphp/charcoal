@@ -163,7 +163,7 @@ class Role extends AbstractModel
      */
     public function setSuperuser($isSuper): static
     {
-        $this->superuser = (bool) $isSuper;
+        $this->superuser = (bool)$isSuper;
         return $this;
     }
 

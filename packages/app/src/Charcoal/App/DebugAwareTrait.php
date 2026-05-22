@@ -22,7 +22,7 @@ trait DebugAwareTrait
      */
     protected function setDebug($debug)
     {
-        $this->debug = (bool) $debug;
+        $this->debug = (bool)$debug;
     }
 
     /**

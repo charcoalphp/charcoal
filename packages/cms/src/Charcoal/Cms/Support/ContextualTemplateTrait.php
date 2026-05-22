@@ -138,7 +138,7 @@ trait ContextualTemplateTrait
 
                 $base = $uri->getBasePath();
                 $path = $uri->getPath();
-                $path = $base . '/' . ltrim((string) $path, '/');
+                $path = $base . '/' . ltrim((string)$path, '/');
 
                 $endpoint[$lang] = $path;
             }
@@ -181,7 +181,7 @@ trait ContextualTemplateTrait
         $group = $this->translator()->translation($path);
 
         foreach ($this->translator()->availableLocales() as $lang) {
-            $group[$lang] = trim((string) $group[$lang], '/');
+            $group[$lang] = trim((string)$group[$lang], '/');
         }
 
         $this->routeGroup = $group;
@@ -200,7 +200,7 @@ trait ContextualTemplateTrait
         $endpoint = $this->translator()->translation($path);
 
         foreach ($this->translator()->availableLocales() as $lang) {
-            $endpoint[$lang] = trim((string) $endpoint[$lang], '/');
+            $endpoint[$lang] = trim((string)$endpoint[$lang], '/');
         }
 
         $this->routeEndpoint = $endpoint;

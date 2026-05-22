@@ -121,7 +121,7 @@ class FileProperty extends AbstractProperty
      */
     public function setPublicAccess($public): static
     {
-        $this->publicAccess = (bool) $public;
+        $this->publicAccess = (bool)$public;
 
         return $this;
     }
@@ -171,7 +171,7 @@ class FileProperty extends AbstractProperty
      */
     public function setOverwrite($overwrite): static
     {
-        $this->overwrite = (bool) $overwrite;
+        $this->overwrite = (bool)$overwrite;
 
         return $this;
     }
@@ -459,7 +459,7 @@ class FileProperty extends AbstractProperty
      */
     public function formatFilesize($bytes, $decimals = 2): string
     {
-        $factor = $bytes === 0 ? 0 : floor((strlen((string) $bytes) - 1) / 3);
+        $factor = $bytes === 0 ? 0 : floor((strlen((string)$bytes) - 1) / 3);
 
         $unit = [ 'B', 'kB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB' ];
 
@@ -634,11 +634,10 @@ class FileProperty extends AbstractProperty
     /**
      * Process file uploads {@see AbstractProperty::save() parsing values}.
      *
-     * @param  mixed $val The value, at time of saving.
-     * @return mixed
+     * @param mixed $val The value, at time of saving.
      */
     #[\Override]
-    public function save($val)
+    public function save(mixed $val): mixed
     {
         $values = $val instanceof Translation ? $val->data() : $val;
 
@@ -808,7 +807,7 @@ class FileProperty extends AbstractProperty
 
             $contents = file_get_contents($tmpFile);
 
-            if ((string) $data['name'] !== '') {
+            if ((string)$data['name'] !== '') {
                 $filename = $data['name'];
             }
 
@@ -1100,7 +1099,7 @@ class FileProperty extends AbstractProperty
     {
         $info = is_string($filename) ? pathinfo($filename) : $filename;
 
-        if (!isset($info['filename']) || (string) $info['filename'] === '') {
+        if (!isset($info['filename']) || (string)$info['filename'] === '') {
             throw new InvalidArgumentException(sprintf(
                 'File must be a string [file path] or an array [pathfino()], received %s',
                 (get_debug_type($filename))
@@ -1109,7 +1108,7 @@ class FileProperty extends AbstractProperty
 
         $filename = $info['filename'] . '-' . uniqid();
 
-        if (isset($info['extension']) && (string) $info['extension'] !== '') {
+        if (isset($info['extension']) && (string)$info['extension'] !== '') {
             $filename .= '.' . $info['extension'];
         }
 
@@ -1331,7 +1330,7 @@ class FileProperty extends AbstractProperty
         $size = preg_replace('/[^0-9\.]/', '', $size);
 
         if ($unit) {
-            $size *= 1024 ** stripos($quant, $unit[0]);
+            $size *= (1024 ** stripos($quant, $unit[0]));
         }
 
         return round($size);

@@ -258,7 +258,7 @@ class LostPasswordAction extends AdminAction
                 'adminUrl'         => $this->adminUrl(),
                 'urlResetPassword' => $this->adminUrl() . 'account/reset-password/' . $token->id(),
                 'expiry'           => $token->expiry()->format('Y-m-d H:i:s'),
-                'ipAddress'        => $_SERVER['REMOTE_ADDR'] ?? '',
+                'ipAddress'        => ($_SERVER['REMOTE_ADDR'] ?? ''),
             ],
         ]);
         $emailObj->send();

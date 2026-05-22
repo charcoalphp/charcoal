@@ -132,7 +132,7 @@ trait FileAwareTrait
     {
         try {
             $data = include $path;
-        } catch (Exception|Throwable $e) {
+        } catch (Exception | Throwable $e) {
             $message = sprintf('PHP file "%s" could not be parsed: %s', $path, $e->getMessage());
             throw new UnexpectedValueException($message, 0, $e);
         }

@@ -131,7 +131,7 @@ final class ModelBuilder
             );
         }
 
-        $sourceType = $sourceConfig['type'] ?? self::DEFAULT_SOURCE_TYPE;
+        $sourceType = ($sourceConfig['type'] ?? self::DEFAULT_SOURCE_TYPE);
         $source = $this->sourceFactory->create($sourceType);
         $source->setData($sourceConfig);
 

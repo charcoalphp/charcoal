@@ -30,7 +30,7 @@ class TextProperty extends StringProperty
      */
     public function setLong($long): static
     {
-        $this->long = (bool) $long;
+        $this->long = (bool)$long;
         return $this;
     }
 

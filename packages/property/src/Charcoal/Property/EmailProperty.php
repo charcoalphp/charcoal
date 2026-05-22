@@ -53,15 +53,15 @@ class EmailProperty extends StringProperty
     }
 
     /**
-     * @see AbstractProperty::parseOne()
-     * @see AbstractProperty::parseVal()
-     *
      * @param  mixed $val A single value to parse.
      * @return string
+     *@see AbstractProperty::parseOne()
+     * @see AbstractProperty::parseVal()
+     *
      */
     #[\Override]
-    public function parseOne($val): string|false
+    public function parseOne(mixed $val): string|false
     {
-        return filter_var(strip_tags((string) $val), FILTER_SANITIZE_EMAIL);
+        return filter_var(strip_tags((string)$val), FILTER_SANITIZE_EMAIL);
     }
 }

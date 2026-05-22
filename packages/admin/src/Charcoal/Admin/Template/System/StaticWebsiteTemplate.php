@@ -64,7 +64,7 @@ class StaticWebsiteTemplate extends AdminTemplate
                 'size'      => $this->formatBytes(filesize($file)),
                 'mtime'     => date(DATE_ATOM, filemtime($file)),
                 'generated' => date('Y-m-d H:i:s', filemtime($file)),
-                'type'      => pathinfo((string) $file, PATHINFO_EXTENSION)
+                'type'      => pathinfo((string)$file, PATHINFO_EXTENSION)
             ];
         }
     }
@@ -94,7 +94,7 @@ class StaticWebsiteTemplate extends AdminTemplate
         $suffixes = [ 'bytes', 'k', 'M', 'G', 'T' ];
 
         $floor = floor($base);
-        return round(1024 ** ($base - $floor), 2) . ' ' . $suffixes[$floor];
+        return round((1024 ** ($base - $floor)), 2) . ' ' . $suffixes[$floor];
     }
 
     /**

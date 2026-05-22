@@ -162,7 +162,7 @@ abstract class AbstractMenuItem extends AbstractUiItem implements MenuItemInterf
      */
     public function hasUrl()
     {
-        return (bool) $this->url();
+        return (bool)$this->url();
     }
 
     /**

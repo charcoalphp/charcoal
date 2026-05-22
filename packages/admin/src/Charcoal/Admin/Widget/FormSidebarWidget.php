@@ -421,7 +421,7 @@ class FormSidebarWidget extends AdminWidget implements
 
             if ($action['actions']) {
                 $action['actions']    = $this->parseAsSidebarActions($action['actions']);
-                $action['hasActions'] = (bool) array_filter($action['actions'], fn(array $action): mixed => $action['active']);
+                $action['hasActions'] = (bool)array_filter($action['actions'], fn(array $action): mixed => $action['active']);
             }
 
             if (isset($sidebarActions[$ident])) {
@@ -494,7 +494,7 @@ class FormSidebarWidget extends AdminWidget implements
                 $this->isObjDeletable = false;
             } else {
                 $obj = $this->form()->obj();
-                $this->isObjDeletable = (bool) $obj->id();
+                $this->isObjDeletable = (bool)$obj->id();
 
                 $method = [ $obj, 'isDeletable' ];
                 if (is_callable($method)) {
@@ -528,7 +528,7 @@ class FormSidebarWidget extends AdminWidget implements
                 }
 
                 if ($obj instanceof RevisionableInterface && $obj['revisionEnabled']) {
-                    $this->isObjRevisionable = (bool) count($obj->allRevisions());
+                    $this->isObjRevisionable = (bool)count($obj->allRevisions());
                 }
             }
         }
@@ -609,7 +609,7 @@ class FormSidebarWidget extends AdminWidget implements
                 $this->isObjViewable = false;
             } else {
                 $obj = $this->form()->obj();
-                $this->isObjViewable = (bool) $obj->id();
+                $this->isObjViewable = (bool)$obj->id();
 
                 $method = [ $obj, 'isViewable' ];
                 if (is_callable($method)) {
@@ -629,7 +629,7 @@ class FormSidebarWidget extends AdminWidget implements
      */
     public function setShowTitle($show): static
     {
-        $this->showTitle = (bool) $show;
+        $this->showTitle = (bool)$show;
 
         return $this;
     }
@@ -644,7 +644,7 @@ class FormSidebarWidget extends AdminWidget implements
         if ($this->showTitle === false) {
             return false;
         } else {
-            return (bool) $this->title();
+            return (bool)$this->title();
         }
     }
 
@@ -677,7 +677,7 @@ class FormSidebarWidget extends AdminWidget implements
      */
     public function setShowSubtitle($show): static
     {
-        $this->showSubtitle = (bool) $show;
+        $this->showSubtitle = (bool)$show;
         return $this;
     }
 
@@ -689,7 +689,7 @@ class FormSidebarWidget extends AdminWidget implements
         if ($this->showSubtitle === false) {
             return false;
         } else {
-            return (bool) $this->subtitle();
+            return (bool)$this->subtitle();
         }
     }
 
@@ -739,7 +739,7 @@ class FormSidebarWidget extends AdminWidget implements
      */
     public function setShowFooter($show): static
     {
-        $this->showFooter = (bool) $show;
+        $this->showFooter = (bool)$show;
 
         return $this;
     }
@@ -785,18 +785,18 @@ class FormSidebarWidget extends AdminWidget implements
     {
         $renderer = $this->getActionRenderer();
         if ($renderer && is_callable([ $renderer, $condition ])) {
-            return (bool) $renderer->{$condition}();
+            return (bool)$renderer->{$condition}();
         } elseif (is_callable([ $this, $condition ])) {
-            return (bool) $this->{$condition}();
+            return (bool)$this->{$condition}();
         } elseif (is_callable($condition)) {
-            return (bool) $condition();
+            return (bool)$condition();
         } elseif ($renderer instanceof \Charcoal\View\ViewableInterface) {
-            return (bool) $renderer->renderTemplate($condition);
+            return (bool)$renderer->renderTemplate($condition);
         } elseif ($this->view() instanceof \Charcoal\View\ViewInterface) {
-            return (bool) $this->renderTemplate($condition);
+            return (bool)$this->renderTemplate($condition);
         }
 
-        return (bool) $condition;
+        return (bool)$condition;
     }
 
     // ACL Permissions
@@ -855,6 +855,6 @@ class FormSidebarWidget extends AdminWidget implements
             return false;
         }
 
-        return (bool) array_filter($array, is_string(...), ARRAY_FILTER_USE_KEY);
+        return (bool)array_filter($array, is_string(...), ARRAY_FILTER_USE_KEY);
     }
 }

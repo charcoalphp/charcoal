@@ -69,7 +69,7 @@ class GridStackDashboardWidget extends AdminWidget implements
 
         // Load gridStack from user preferences
         $user = $this->adminUser();
-        $userGridStack = json_decode((string) $user->preferences(), true)['grid_stack'] ?: [];
+        $userGridStack = json_decode((string)$user->preferences(), true)['grid_stack'] ?: [];
         $parsedUserGridStack = [];
 
         array_walk($userGridStack, function (array $item) use (&$parsedUserGridStack): void {
@@ -82,7 +82,7 @@ class GridStackDashboardWidget extends AdminWidget implements
                 $widget->setActive($this->hasPermissions($widget['permissions']));
             }
 
-            if ((bool) count($parsedUserGridStack)) {
+            if ((bool)count($parsedUserGridStack)) {
                 if (isset($parsedUserGridStack[$widget->ident()])) {
                     $widget->setData([
                         'grid_stack' => $parsedUserGridStack[$widget->ident()]

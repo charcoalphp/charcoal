@@ -301,7 +301,7 @@ class AdminTemplate extends AbstractTemplate implements
      */
     public function setShowMainMenu($show): static
     {
-        $this->showMainMenu = (bool) $show;
+        $this->showMainMenu = (bool)$show;
         return $this;
     }
 
@@ -340,7 +340,7 @@ class AdminTemplate extends AbstractTemplate implements
      */
     public function setShowSystemMenu($show): static
     {
-        $this->showSystemMenu = (bool) $show;
+        $this->showSystemMenu = (bool)$show;
         return $this;
     }
 
@@ -367,7 +367,7 @@ class AdminTemplate extends AbstractTemplate implements
      */
     public function setShowSecondaryMenu($show): static
     {
-        $this->showSecondaryMenu = (bool) $show;
+        $this->showSecondaryMenu = (bool)$show;
         return $this;
     }
 
@@ -965,7 +965,7 @@ class AdminTemplate extends AbstractTemplate implements
 
         if (!empty($menuItem['url'])) {
             $url = $menuItem['url'];
-            if ($url && !str_contains((string) $url, ':') && !in_array($url[0], [ '/', '#', '?' ])) {
+            if ($url && !str_contains((string)$url, ':') && !in_array($url[0], [ '/', '#', '?' ])) {
                 $url = $this->adminUrl() . $url;
             }
         } else {
@@ -976,7 +976,7 @@ class AdminTemplate extends AbstractTemplate implements
 
         if (isset($menuItem['icon'])) {
             $icon = $menuItem['icon'];
-            if ($icon && !str_contains((string) $icon, ':') && !in_array($icon[0], [ '/', '#', '?' ])) {
+            if ($icon && !str_contains((string)$icon, ':') && !in_array($icon[0], [ '/', '#', '?' ])) {
                 $icon = $svgUri . $icon;
             }
         } else {
@@ -995,7 +995,7 @@ class AdminTemplate extends AbstractTemplate implements
             $menuItem['label'] = $this->translator()->translation($menuItem['label']);
         }
 
-        $menuItem['show_label'] = (isset($menuItem['show_label']) ? (bool) $menuItem['show_label'] : true);
+        $menuItem['show_label'] = (isset($menuItem['show_label']) ? (bool)$menuItem['show_label'] : true);
 
         $menuItem['selected'] = ($menuItem['ident'] === $currentIdent);
 
@@ -1034,7 +1034,7 @@ class AdminTemplate extends AbstractTemplate implements
 
         if (!empty($menuItem['url'])) {
             $url = $menuItem['url'];
-            if ($url && !str_contains((string) $url, ':') && !in_array($url[0], [ '/', '#', '?' ])) {
+            if ($url && !str_contains((string)$url, ':') && !in_array($url[0], [ '/', '#', '?' ])) {
                 $url = $this->adminUrl() . $url;
             }
         } else {

@@ -235,7 +235,7 @@ abstract class AbstractAuthToken extends AbstractModel implements
         }
 
         // Validate encrypted token
-        if (!password_verify($token, (string) $this['token'])) {
+        if (!password_verify($token, (string)$this['token'])) {
             $this->panic();
             $this->delete();
             return null;
@@ -323,7 +323,7 @@ abstract class AbstractAuthToken extends AbstractModel implements
     {
         $token = $this['token'];
         if (password_needs_rehash($token, PASSWORD_DEFAULT)) {
-            $this['token'] = password_hash((string) $token, PASSWORD_DEFAULT);
+            $this['token'] = password_hash((string)$token, PASSWORD_DEFAULT);
         }
     }
 

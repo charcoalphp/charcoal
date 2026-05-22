@@ -141,7 +141,7 @@ abstract class AbstractSaveAction extends AdminAction implements ObjectContainer
                 $propertyLabel = (string)$obj->property($prop)['label'];
                 $resultMessage = $result->message();
 
-                if (!str_contains((string) $resultMessage, $propertyLabel)) {
+                if (!str_contains((string)$resultMessage, $propertyLabel)) {
                     $resultMessage = strtr($this->translator()->translation('{{ errorMessage }}: {{ errorThrown }}'), [
                         '{{ errorMessage }}' => $propertyLabel,
                         '{{ errorThrown }}'  => $resultMessage,

@@ -112,7 +112,7 @@ class ClearCacheTemplate extends AdminTemplate
         if ($this->cacheInfo === null || $force === true) {
             $flip      = array_flip($this->availableCacheDrivers);
             $driver    = $this->cache->getDriver()::class;
-            $cacheType = $flip['\\' . $driver] ?? $driver;
+            $cacheType = ($flip['\\' . $driver] ?? $driver);
 
             $globalItems = $this->globalCacheItems();
             $this->cacheInfo = [
@@ -503,7 +503,7 @@ class ClearCacheTemplate extends AdminTemplate
         $base  = log($bytes, 1024);
         $floor = floor($base);
         $unit  = $units[$floor];
-        $size  = round(1024 ** ($base - $floor), 2);
+        $size  = round((1024 ** ($base - $floor)), 2);
 
         $locale = localeconv();
         $size   = number_format($size, 2, $locale['decimal_point'], $locale['thousands_sep']);

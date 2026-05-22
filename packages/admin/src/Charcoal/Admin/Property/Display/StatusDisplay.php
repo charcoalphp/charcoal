@@ -143,7 +143,7 @@ class StatusDisplay extends AbstractPropertyDisplay implements ViewableInterface
                 $result = is_string($conditions) && $result = $this->testConditionWithOperator($conditions);
 
                 $result = !$result && is_array($conditions) ?
-                    (bool) count(array_filter($conditions, $this->testConditionWithOperator(...))) : $result;
+                    (bool)count(array_filter($conditions, $this->testConditionWithOperator(...))) : $result;
 
                 if ($result && in_array($stateIdent, static::SUPPORTED_STATES)) {
                     return $stateIdent;

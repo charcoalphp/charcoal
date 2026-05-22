@@ -189,19 +189,16 @@ abstract class AbstractProperty extends AbstractEntity implements
      *
      * ## Notes
      * - Type can not be set, so it must be explicitely provided by each implementing property classes.
-     *
-     * @return string
      */
-    abstract public function type();
+    abstract public function type(): string;
 
     /**
      * Set the property's identifier.
      *
-     * @param  string $ident The property identifier.
+     * @param string $ident The property identifier.
      * @throws InvalidArgumentException  If the identifier is not a string.
-     * @return self
      */
-    public function setIdent($ident)
+    public function setIdent(string $ident): static
     {
         if (!is_string($ident)) {
             throw new InvalidArgumentException(
@@ -218,7 +215,7 @@ abstract class AbstractProperty extends AbstractEntity implements
      *
      * @return string
      */
-    public function getIdent()
+    public function getIdent(): string
     {
         return $this->ident;
     }
@@ -236,13 +233,12 @@ abstract class AbstractProperty extends AbstractEntity implements
     /**
      * Retrieve the property's localized identifier.
      *
-     * @param  string|null $lang The language code to return the identifier with.
-     * @throws LogicException If the property is not multilingual.
+     * @param string|null $lang The language code to return the identifier with.
      * @throws RuntimeException If the property has no identifier.
      * @throws InvalidArgumentException If the language code is invalid.
-     * @return string
+     * @throws LogicException If the property is not multilingual.
      */
-    public function l10nIdent($lang = null)
+    public function l10nIdent(?string $lang = null): string
     {
         if ($this->ident === '') {
             throw new RuntimeException('Missing Property Identifier');
@@ -265,6 +261,31 @@ abstract class AbstractProperty extends AbstractEntity implements
         }
 
         return sprintf('%1$s_%2$s', $this->ident, $lang);
+    }
+
+    /**
+     * Retrieve the property's identifier formatted for field names.
+     *
+     * Overrides {@see StorablePropertyTrait::fieldIdent()} to satisfy
+     * {@see StorablePropertyInterface} which requires a non-nullable string.
+     *
+     * @param string|null $key The field key to suffix to the property identifier.
+     */
+    public function fieldIdent(?string $key = null): string
+    {
+        if ($this->fieldIdent === null) {
+            $this->fieldIdent = $this->snakeize($this['ident']);
+        }
+
+        if ($key === null || $key === '') {
+            return $this->fieldIdent;
+        }
+
+        if ($this->isValidFieldKey($key)) {
+            return $this->fieldIdent . '_' . $this->snakeize($key);
+        }
+
+        return '';
     }
 
     /**
@@ -318,11 +339,11 @@ abstract class AbstractProperty extends AbstractEntity implements
      * > Other properties can reimplement this method to parse their values,
      * > such as {@see \Charcoal\Property\ObjectProperty::parseVal()} who could parse objects into object IDs.
      *
-     * @param  mixed $val The value to be parsed (normalized).
-     * @throws InvalidArgumentException If the value does not match property settings.
+     * @param mixed $val The value to be parsed (normalized).
      * @return mixed Returns the parsed value.
+     * @throws InvalidArgumentException If the value does not match property settings.
      */
-    final public function parseVal($val)
+    final public function parseVal(mixed $val): mixed
     {
         if ($this['allowNull']) {
             if ($val === null || $val === '') {
@@ -364,7 +385,7 @@ abstract class AbstractProperty extends AbstractEntity implements
      * @param mixed $val A single value to parse.
      * @return mixed The parsed value.
      */
-    public function parseOne($val)
+    public function parseOne(mixed $val): mixed
     {
         return $val;
     }
@@ -372,9 +393,8 @@ abstract class AbstractProperty extends AbstractEntity implements
     /**
      * @param   mixed $val     Optional. The value to to convert for input.
      * @param   array $options Optional input options.
-     * @return  string
      */
-    public function inputVal($val, array $options = [])
+    public function inputVal($val, array $options = []): string
     {
         if ($val === null) {
             return '';
@@ -418,9 +438,8 @@ abstract class AbstractProperty extends AbstractEntity implements
     /**
      * @param  mixed $val     The value to to convert for display.
      * @param  array $options Optional display options.
-     * @return string
      */
-    public function displayVal($val, array $options = [])
+    public function displayVal($val, array $options = []): string
     {
         if ($val === null || $val === '') {
             return '';
@@ -457,19 +476,15 @@ abstract class AbstractProperty extends AbstractEntity implements
 
     /**
      * @param mixed $label The property label.
-     * @return self
      */
-    public function setLabel($label)
+    public function setLabel(mixed $label): static
     {
         $this->label = $this->translator()->translation($label);
 
         return $this;
     }
 
-    /**
-     * @return Translation
-     */
-    public function getLabel()
+    public function getLabel(): mixed
     {
         if ($this->label === null) {
             return ucwords(str_replace([ '.', '_' ], ' ', $this->ident()));
@@ -480,21 +495,18 @@ abstract class AbstractProperty extends AbstractEntity implements
 
     /**
      * @param boolean $l10n The l10n, or "translatable" flag.
-     * @return self
      */
-    public function setL10n($l10n)
+    public function setL10n(bool $l10n): static
     {
-        $this->l10n = (bool) $l10n;
+        $this->l10n = (bool)$l10n;
 
         return $this;
     }
 
     /**
      * The l10n flag sets the property as being translatable, meaning the data is held for multple languages.
-     *
-     * @return boolean
      */
-    public function getL10n()
+    public function getL10n(): bool
     {
         return $this->l10n;
     }
@@ -510,11 +522,10 @@ abstract class AbstractProperty extends AbstractEntity implements
 
     /**
      * @param boolean $hidden The hidden flag.
-     * @return self
      */
-    public function setHidden($hidden)
+    public function setHidden(bool $hidden): static
     {
-        $this->hidden = (bool) $hidden;
+        $this->hidden = (bool)$hidden;
 
         return $this;
     }
@@ -522,7 +533,7 @@ abstract class AbstractProperty extends AbstractEntity implements
     /**
      * @return boolean
      */
-    public function getHidden()
+    public function getHidden(): bool
     {
         return $this->hidden;
     }
@@ -530,10 +541,9 @@ abstract class AbstractProperty extends AbstractEntity implements
     /**
      * Set whether this property accepts multiple values or a single value.
      *
-     * @param  boolean $multiple The multiple flag.
-     * @return self
+     * @param boolean $multiple The multiple flag.
      */
-    public function setMultiple($multiple)
+    public function setMultiple(bool $multiple): static
     {
         if (!is_bool($multiple)) {
             if (is_array($multiple)) {
@@ -562,7 +572,7 @@ abstract class AbstractProperty extends AbstractEntity implements
      *
      * @return boolean
      */
-    public function getMultiple()
+    public function getMultiple(): bool
     {
         return $this->multiple;
     }
@@ -576,9 +586,8 @@ abstract class AbstractProperty extends AbstractEntity implements
      * - `max` (integer) The maximum number of values. (0 = no limit).
      *
      * @param array $multipleOptions The property multiple options.
-     * @return self
      */
-    public function setMultipleOptions(array $multipleOptions)
+    public function setMultipleOptions(array $multipleOptions): static
     {
         // The options are always merged with the defaults, to ensure minimum required array structure.
         $options = array_merge($this->defaultMultipleOptions(), $multipleOptions);
@@ -590,11 +599,11 @@ abstract class AbstractProperty extends AbstractEntity implements
     /**
      * The options defining the property behavior when the multiple flag is set to true.
      *
-     * @see    self::defaultMultipleOptions
      * @param  string|null $key Optional setting to retrieve from the options.
-     * @return array|mixed|null
+     * @see    self::defaultMultipleOptions
      */
-    public function getMultipleOptions($key = null)
+    #[\Override ]
+    public function getMultipleOptions(?string $key = null): mixed
     {
         if ($this->multipleOptions === null) {
             $this->multipleOptions = $this->defaultMultipleOptions();
@@ -640,7 +649,7 @@ abstract class AbstractProperty extends AbstractEntity implements
      *
      * @return string
      */
-    public function multipleSeparator()
+    public function multipleSeparator(): string
     {
         return $this->getMultipleOptions('separator');
     }
@@ -668,11 +677,10 @@ abstract class AbstractProperty extends AbstractEntity implements
 
     /**
      * @param boolean $allow The property allow null flag.
-     * @return self
      */
-    public function setAllowNull($allow)
+    public function setAllowNull(bool $allow): static
     {
-        $this->allowNull = (bool) $allow;
+        $this->allowNull = (bool)$allow;
 
         return $this;
     }
@@ -682,21 +690,18 @@ abstract class AbstractProperty extends AbstractEntity implements
      *
      * ## Notes
      * - This flag typically modifies the storage database to also allow null values.
-     *
-     * @return boolean
      */
-    public function getAllowNull()
+    public function getAllowNull(): bool
     {
         return $this->allowNull;
     }
 
     /**
      * @param boolean $required The property required flag.
-     * @return self
      */
-    public function setRequired($required)
+    public function setRequired(bool $required): static
     {
-        $this->required = (bool) $required;
+        $this->required = (bool)$required;
 
         return $this;
     }
@@ -706,132 +711,104 @@ abstract class AbstractProperty extends AbstractEntity implements
      *
      * ## Notes
      * - The actual meaning of "required" might be different for implementing property class.
-     *
-     * @return boolean
      */
-    public function getRequired()
+    public function getRequired(): bool
     {
         return $this->required;
     }
 
     /**
      * @param boolean $unique The property unique flag.
-     * @return self
      */
-    public function setUnique($unique)
+    public function setUnique(bool $unique): static
     {
-        $this->unique = (bool) $unique;
+        $this->unique = (bool)$unique;
 
         return $this;
     }
 
-    /**
-     * @return boolean
-     */
-    public function getUnique()
+    public function getUnique(): bool
     {
         return $this->unique;
     }
 
     /**
      * @param boolean $active The property active flag. Inactive properties should have no effects.
-     * @return self
      */
-    public function setActive($active)
+    public function setActive(bool $active): static
     {
-        $this->active = (bool) $active;
+        $this->active = (bool)$active;
 
         return $this;
     }
 
-    /**
-     * @return boolean
-     */
-    public function getActive()
+    public function getActive(): bool
     {
         return $this->active;
     }
 
     /**
      * Legacy support of active() instead of getActive().
-     *
-     * @return string
      */
-    public function active()
+    public function active(): bool|string
     {
         return $this->getActive();
     }
 
     /**
      * @param  boolean $validatable The validatable flag.
-     * @return self
      */
-    public function setValidatable($validatable)
+    public function setValidatable($validatable): static
     {
-        $this->validatable = (bool) $validatable;
+        $this->validatable = (bool)$validatable;
 
         return $this;
     }
 
-    /**
-     * @return boolean
-     */
-    public function getValidatable()
+    public function getValidatable(): bool
     {
         return $this->validatable;
     }
 
     /**
      * @param boolean $storable The storable flag.
-     * @return self
      */
-    public function setStorable($storable)
+    public function setStorable(bool $storable): static
     {
-        $this->storable = (bool) $storable;
+        $this->storable = (bool)$storable;
 
         return $this;
     }
 
-    /**
-     * @return boolean
-     */
-    public function getStorable()
+    public function getStorable(): bool
     {
         return $this->storable;
     }
 
     /**
      * @param mixed $description The property description.
-     * @return self
      */
-    public function setDescription($description)
+    public function setDescription($description): static
     {
         $this->description = $this->translator()->translation($description);
         return $this;
     }
 
-    /**
-     * @return Translation|null
-     */
-    public function getDescription()
+    public function getDescription(): ?Translation
     {
         return $this->description;
     }
 
     /**
      * @param mixed $notes The property notes.
-     * @return self
      */
-    public function setNotes($notes)
+    public function setNotes($notes): static
     {
         $this->notes = $this->translator()->translation($notes);
         return $this;
     }
 
-    /**
-     * @return Translation|null
-     */
-    public function getNotes()
+    public function getNotes(): ?Translation
     {
         return $this->notes;
     }
@@ -848,7 +825,7 @@ abstract class AbstractProperty extends AbstractEntity implements
      *
      * @return string[]
      */
-    public function validationMethods()
+    public function validationMethods(): array
     {
         return [
             'required',
@@ -857,10 +834,7 @@ abstract class AbstractProperty extends AbstractEntity implements
         ];
     }
 
-    /**
-     * @return boolean
-     */
-    public function validateRequired()
+    public function validateRequired(): bool
     {
         $val = $this->val();
         if ($this['required'] && empty($val) && !is_numeric($val)) {
@@ -872,19 +846,13 @@ abstract class AbstractProperty extends AbstractEntity implements
         return true;
     }
 
-    /**
-     * @return boolean
-     */
-    public function validateUnique()
+    public function validateUnique(): bool
     {
         /** @todo Check in the model's storage if the value already exists. */
         return true;
     }
 
-    /**
-     * @return boolean
-     */
-    public function validateAllowNull()
+    public function validateAllowNull(): bool
     {
         $val = $this->val();
         if (!$this['allowNull'] && $val === null) {
@@ -898,9 +866,8 @@ abstract class AbstractProperty extends AbstractEntity implements
 
     /**
      * @param mixed $val The value, at time of saving.
-     * @return mixed
      */
-    public function save($val)
+    public function save(mixed $val): mixed
     {
         // By default, nothing to do
         return $this->parseVal($val);
@@ -908,19 +875,15 @@ abstract class AbstractProperty extends AbstractEntity implements
 
     /**
      * @param string $type The display type.
-     * @return self
      */
-    public function setDisplayType($type)
+    public function setDisplayType($type): static
     {
         $this->displayType = $type;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getDisplayType()
+    public function getDisplayType(): string
     {
         if (!$this->displayType) {
             $meta = $this->metadata();

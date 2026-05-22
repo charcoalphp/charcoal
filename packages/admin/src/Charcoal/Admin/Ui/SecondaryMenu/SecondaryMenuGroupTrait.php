@@ -207,7 +207,7 @@ trait SecondaryMenuGroupTrait
             $permissions = [];
 
             if (isset($link['active'])) {
-                $active = (bool) $link['active'];
+                $active = (bool)$link['active'];
             }
 
             if (isset($link['name'])) {
@@ -283,7 +283,7 @@ trait SecondaryMenuGroupTrait
      */
     public function hasLinks(): bool
     {
-        return (bool) $this->numLinks();
+        return (bool)$this->numLinks();
     }
 
     /**
@@ -319,7 +319,7 @@ trait SecondaryMenuGroupTrait
     public function isSelected($flag = null)
     {
         if ($flag !== null) {
-            $this->isSelected = (bool) $flag;
+            $this->isSelected = (bool)$flag;
 
             $this->setCollapsed(!$flag);
         }
@@ -351,7 +351,7 @@ trait SecondaryMenuGroupTrait
      */
     public function setCollapsed($flag)
     {
-        $this->collapsed = (bool) $flag;
+        $this->collapsed = (bool)$flag;
 
         return $this;
     }
@@ -384,7 +384,7 @@ trait SecondaryMenuGroupTrait
      */
     public function setParented($flag)
     {
-        $this->parented = (bool) $flag;
+        $this->parented = (bool)$flag;
 
         return $this;
     }
@@ -430,7 +430,7 @@ trait SecondaryMenuGroupTrait
      */
     public function setActive($active)
     {
-        $this->active = (bool) $active;
+        $this->active = (bool)$active;
 
         return $this;
     }

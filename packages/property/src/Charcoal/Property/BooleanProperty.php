@@ -36,18 +36,19 @@ class BooleanProperty extends AbstractProperty
     }
 
     /**
-     * @see AbstractProperty::parseOne()
-     * @see AbstractProperty::parseVal()
-     *
      * @param  mixed $val A single value to parse.
+     *@see AbstractProperty::parseVal()
+     *
+     * @see AbstractProperty::parseOne()
      */
     #[\Override]
-    public function parseOne($val): bool
+    public function parseOne(mixed $val): bool
     {
-        return (bool) $val;
+        return (bool)$val;
     }
 
     /**
+     * @param  mixed $val     The value to to convert for display.
      * @see AbstractProperty::displayVal()
      *
      * @param  mixed $val     The value to to convert for display.
@@ -57,7 +58,7 @@ class BooleanProperty extends AbstractProperty
     public function displayVal($val, array $options = []): string
     {
         if ($val === true) {
-            $label = $options['true_label'] ?? $this['trueLabel'];
+            $label = ($options['true_label'] ?? $this['trueLabel']);
         } elseif (isset($options['false_label'])) {
             $label = $options['false_label'];
         } else {
@@ -70,15 +71,15 @@ class BooleanProperty extends AbstractProperty
     /**
      * Ensure multiple can never be true for boolean property.
      *
-     * @see AbstractProperty::setMultiple()
-     *
      * @param  boolean $multiple The multiple flag.
      * @throws InvalidArgumentException If multiple is true. (must be false for boolean properties).
+     * @see AbstractProperty::setMultiple()
+     *
      */
     #[\Override]
-    public function setMultiple($multiple): static
+    public function setMultiple(bool $multiple): static
     {
-        $multiple = (bool) $multiple;
+        $multiple = (bool)$multiple;
         if ($multiple) {
             throw new InvalidArgumentException(
                 'Multiple can not be true for boolean property.'
@@ -176,7 +177,7 @@ class BooleanProperty extends AbstractProperty
         return [
             [
                 'label'    => $this['trueLabel'],
-                'selected' => (bool) $val,
+                'selected' => (bool)$val,
                 'value'    => 1,
             ],
             [

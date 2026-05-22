@@ -33,15 +33,15 @@ class DateTimeProperty extends AbstractProperty
     /**
      * Ensure multiple can not be true for DateTime property.
      *
-     * @see AbstractProperty::setMultiple()
-     *
      * @param  boolean $multiple Multiple flag.
      * @throws InvalidArgumentException If the multiple argument is true (must be false).
+     *@see AbstractProperty::setMultiple()
+     *
      */
     #[\Override]
-    public function setMultiple($multiple): static
+    public function setMultiple(bool $multiple): static
     {
-        $multiple = (bool) $multiple;
+        $multiple = (bool)$multiple;
         if ($multiple) {
             throw new InvalidArgumentException(
                 'Multiple can not be TRUE for date/time property.'
@@ -64,13 +64,13 @@ class DateTimeProperty extends AbstractProperty
     /**
      * Ensure `DateTime` object in val.
      *
-     * @see AbstractProperty::parseOne()
-     * @see AbstractProperty::parseVal()
+     * @param  mixed $val The value to set.
+     *@see AbstractProperty::parseVal()
      *
-     * @param  string|DateTimeInterface $val The value to set.
+     * @see AbstractProperty::parseOne()
      */
     #[\Override]
-    public function parseOne($val): ?\DateTimeInterface
+    public function parseOne(mixed $val): ?\DateTimeInterface
     {
         return $this->dateTimeVal($val);
     }
@@ -78,11 +78,11 @@ class DateTimeProperty extends AbstractProperty
     /**
      * Convert `DateTime` to input-friendly string.
      *
-     * @see AbstractProperty::inputVal()
-     *
      * @param  mixed $val     The value to to convert for input.
      * @param  array $options Unused, optional options.
      * @throws Exception If the date/time is invalid.
+     *@see AbstractProperty::inputVal()
+     *
      */
     #[\Override]
     public function inputVal($val, array $options = []): string
@@ -100,13 +100,13 @@ class DateTimeProperty extends AbstractProperty
     /**
      * Convert `DateTime` to SQL-friendly string.
      *
+     * @param  mixed $val Optional. Value to convert to storage format.
+     * @throws Exception If the date/time is invalid.
      * @see StorablePropertyTrait::storageVal()
      *
-     * @param  string|DateTime $val Optional. Value to convert to storage format.
-     * @throws Exception If the date/time is invalid.
      */
     #[\Override]
-    public function storageVal($val): ?string
+    public function storageVal(mixed $val): ?string
     {
         $val = $this->dateTimeVal($val);
 
@@ -126,6 +126,7 @@ class DateTimeProperty extends AbstractProperty
     /**
      * Format a date/time object to string.
      *
+     * @param  mixed $val     The value to to convert for display.
      * @see AbstractProperty::displayVal()
      *
      * @param  mixed $val     The value to to convert for display.
@@ -139,7 +140,7 @@ class DateTimeProperty extends AbstractProperty
             return '';
         }
 
-        $format = $options['format'] ?? $this->getFormat();
+        $format = ($options['format'] ?? $this->getFormat());
 
         return $val->format($format);
     }

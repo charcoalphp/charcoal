@@ -299,7 +299,7 @@ abstract class AbstractResizeEffect extends AbstractEffect
      */
     public function setAdaptive($adaptive)
     {
-        $this->adaptive = (bool) $adaptive;
+        $this->adaptive = (bool)$adaptive;
         return $this;
     }
 

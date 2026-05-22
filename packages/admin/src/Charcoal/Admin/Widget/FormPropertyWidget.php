@@ -587,7 +587,7 @@ class FormPropertyWidget extends AdminWidget implements
     #[\Override]
     public function setShowLabel($show): static
     {
-        $this->showLabel = (bool) $show;
+        $this->showLabel = (bool)$show;
 
         return $this;
     }
@@ -607,7 +607,7 @@ class FormPropertyWidget extends AdminWidget implements
         }
 
         if ($this->showLabel !== false) {
-            return (bool) strval($this->property()['label']);
+            return (bool)strval($this->property()['label']);
         } else {
             return false;
         }
@@ -621,7 +621,7 @@ class FormPropertyWidget extends AdminWidget implements
      */
     public function setShowDescription($show): static
     {
-        $this->showDescription = (bool) $show;
+        $this->showDescription = (bool)$show;
 
         return $this;
     }
@@ -640,7 +640,7 @@ class FormPropertyWidget extends AdminWidget implements
         }
 
         if ($this->showDescription !== false) {
-            return (bool) strval($this->property()['description']);
+            return (bool)strval($this->property()['description']);
         } else {
             return false;
         }
@@ -654,7 +654,7 @@ class FormPropertyWidget extends AdminWidget implements
      */
     public function setShowNotes($show): static
     {
-        $this->showNotes = ($show === 'above' ? $show : (bool) $show);
+        $this->showNotes = ($show === 'above' ? $show : (bool)$show);
 
         return $this;
     }
@@ -673,7 +673,7 @@ class FormPropertyWidget extends AdminWidget implements
         }
 
         if ($this->showNotes !== false) {
-            return (bool) strval($this->property()['notes']);
+            return (bool)strval($this->property()['notes']);
         } else {
             return false;
         }
@@ -696,7 +696,7 @@ class FormPropertyWidget extends AdminWidget implements
 
         $notes = $this->property()['notes'];
 
-        return (bool) $notes;
+        return (bool)$notes;
     }
 
     /**
@@ -1529,9 +1529,9 @@ class FormPropertyWidget extends AdminWidget implements
     public function hasIcon(): bool
     {
         if (is_array($this->icon())) {
-            return (bool) count($this->icon());
+            return (bool)count($this->icon());
         }
 
-        return (bool) $this->icon();
+        return (bool)$this->icon();
     }
 }

@@ -462,7 +462,7 @@ class AppConfig extends AbstractConfig
      */
     public function setDevMode($devMode): static
     {
-        $this->devMode = (bool) $devMode;
+        $this->devMode = (bool)$devMode;
         return $this;
     }
 

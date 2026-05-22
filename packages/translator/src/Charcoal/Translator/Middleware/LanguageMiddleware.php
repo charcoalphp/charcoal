@@ -72,22 +72,22 @@ class LanguageMiddleware
         $this->defaultLanguage = $data['default_language'];
         $this->browserLanguage = $data['browser_language'];
 
-        $this->usePath      = (bool) $data['use_path'];
+        $this->usePath      = (bool)$data['use_path'];
         $this->excludedPath = (array)$data['excluded_path'];
         $this->pathRegexp   = $data['path_regexp'];
 
-        $this->useParams    = (bool) $data['use_params'];
+        $this->useParams    = (bool)$data['use_params'];
         $this->paramKey     = (array)$data['param_key'];
 
-        $this->useSession   = (bool) $data['use_session'];
+        $this->useSession   = (bool)$data['use_session'];
         $this->sessionKey   = (array)$data['session_key'];
 
-        $this->useBrowser   = (bool) $data['use_browser'];
+        $this->useBrowser   = (bool)$data['use_browser'];
 
-        $this->useHost      = (bool) $data['use_host'];
+        $this->useHost      = (bool)$data['use_host'];
         $this->hostMap      = (array)$data['host_map'];
 
-        $this->setLocale    = (bool) $data['set_locale'];
+        $this->setLocale    = (bool)$data['set_locale'];
     }
 
     /**
@@ -193,7 +193,7 @@ class LanguageMiddleware
     {
         $uriHost = $request->getUri()->getHost();
         foreach ($this->hostMap as $lang => $host) {
-            if (stripos($uriHost, (string) $host) !== false) {
+            if (stripos($uriHost, (string)$host) !== false) {
                 return $lang;
             }
         }

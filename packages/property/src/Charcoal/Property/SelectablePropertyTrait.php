@@ -70,7 +70,7 @@ trait SelectablePropertyTrait
      */
     public function hasChoices(): bool
     {
-        return (bool) $this->choices;
+        return (bool)$this->choices;
     }
 
     /**

@@ -121,7 +121,7 @@ class TagsInput extends AbstractSelectableInput
      */
     public function setAllowClipboardCopy($flag): static
     {
-        $this->allowClipboardCopy = (bool) $flag;
+        $this->allowClipboardCopy = (bool)$flag;
 
         return $this;
     }

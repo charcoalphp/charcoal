@@ -19,7 +19,7 @@ class ImagickCompressionEffect extends AbstractCompressionEffect
         }
 
         $this->image()->target();
-        $extension = strtolower((string) $this->image()->imagick()->getImageFormat());
+        $extension = strtolower((string)$this->image()->imagick()->getImageFormat());
 
         $invalidExtensions = [ 'gif', 'bmp' ];
 

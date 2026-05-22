@@ -63,8 +63,8 @@ class UrlProperty extends StringProperty
      * @return mixed The parsed value.
      */
     #[\Override]
-    public function parseOne($val): string|false
+    public function parseOne(mixed $val): string|false
     {
-        return filter_var(strip_tags((string) $val), FILTER_SANITIZE_URL);
+        return filter_var(strip_tags((string)$val), FILTER_SANITIZE_URL);
     }
 }

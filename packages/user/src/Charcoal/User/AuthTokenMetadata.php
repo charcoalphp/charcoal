@@ -40,7 +40,7 @@ class AuthTokenMetadata extends ModelMetadata
      */
     public function setEnabled($enabled): static
     {
-        $this->enabled = (bool) $enabled;
+        $this->enabled = (bool)$enabled;
         return $this;
     }
 
@@ -57,7 +57,7 @@ class AuthTokenMetadata extends ModelMetadata
      */
     public function setHttpsOnly($httpsOnly): static
     {
-        $this->httpsOnly = (bool) $httpsOnly;
+        $this->httpsOnly = (bool)$httpsOnly;
         return $this;
     }
 

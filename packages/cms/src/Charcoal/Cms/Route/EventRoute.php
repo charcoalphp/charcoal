@@ -47,7 +47,7 @@ class EventRoute extends TemplateRoute
     public function __construct(array $data)
     {
         parent::__construct($data);
-        $this->path = ltrim((string) $data['path'], '/');
+        $this->path = ltrim((string)$data['path'], '/');
     }
 
     /**

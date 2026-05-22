@@ -341,7 +341,7 @@ trait FormTrait
      */
     protected function createFormGroup(?array $data = null)
     {
-        $type = $data['type'] ?? $this->defaultGroupType();
+        $type = ($data['type'] ?? $this->defaultGroupType());
 
         $group = $this->formGroupFactory()->create($type);
         $group->setForm($this->formWidget());

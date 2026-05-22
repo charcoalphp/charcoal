@@ -126,11 +126,11 @@ class FileInput extends AbstractPropertyInput
     public function abridgedInputVal(): string|array|null
     {
         $val = (string)$this->inputVal();
-        $val = preg_replace('!^' . preg_quote((string) $this->p()['uploadPath'], '!') . '!', '', $val);
+        $val = preg_replace('!^' . preg_quote((string)$this->p()['uploadPath'], '!') . '!', '', $val);
 
-        if (str_contains((string) $val, '://')) {
-            $host = parse_url((string) $val, PHP_URL_HOST);
-            $path = ltrim(substr((string) $val, (strpos((string) $val, (string) $host) + strlen($host) + 1)), '/');
+        if (str_contains((string)$val, '://')) {
+            $host = parse_url((string)$val, PHP_URL_HOST);
+            $path = ltrim(substr((string)$val, (strpos((string)$val, (string)$host) + strlen($host) + 1)), '/');
             if (mb_strlen($path) > 30) {
                 $a = 12;
                 $z = 12;
@@ -167,8 +167,8 @@ class FileInput extends AbstractPropertyInput
         $parts = parse_url($val);
         if (empty($parts['scheme']) && !in_array($val[0], [ '/', '#', '?' ])) {
             $path  = isset($parts['path']) ? ltrim($parts['path'], '/') : '';
-            $query = $parts['query'] ?? '';
-            $hash  = $parts['fragment'] ?? '';
+            $query = ($parts['query'] ?? '');
+            $hash  = ($parts['fragment'] ?? '');
             $val   = $this->baseUrl->withPath($path)->withQuery($query)->withFragment($hash);
         }
 
@@ -190,8 +190,8 @@ class FileInput extends AbstractPropertyInput
         $parts = parse_url($val);
         if (empty($parts['scheme']) && !in_array($val[0], [ '/', '#', '?' ])) {
             $path  = isset($parts['path']) ? ltrim($parts['path'], '/') : '';
-            $query = $parts['query'] ?? '';
-            $hash  = $parts['fragment'] ?? '';
+            $query = ($parts['query'] ?? '');
+            $hash  = ($parts['fragment'] ?? '');
             $val   = $this->baseUrl->withPath($path)->withQuery($query)->withFragment($hash);
         }
 
@@ -204,7 +204,7 @@ class FileInput extends AbstractPropertyInput
      */
     public function setShowFilePreview($show): static
     {
-        $this->showFilePreview = (bool) $show;
+        $this->showFilePreview = (bool)$show;
 
         return $this;
     }
@@ -220,7 +220,7 @@ class FileInput extends AbstractPropertyInput
      */
     public function setShowFileUpload($show): static
     {
-        $this->showFileUpload = (bool) $show;
+        $this->showFileUpload = (bool)$show;
 
         return $this;
     }
@@ -243,7 +243,7 @@ class FileInput extends AbstractPropertyInput
      */
     public function setShowFilePicker($show): static
     {
-        $this->showFilePicker = (bool) $show;
+        $this->showFilePicker = (bool)$show;
 
         return $this;
     }

@@ -138,7 +138,7 @@ class DatabaseFilter extends Filter implements
                 $filter = $filter->sql();
             }
 
-            if ($filter && (string) $filter !== '') {
+            if ($filter && (string)$filter !== '') {
                 $conditions[] = $filter;
             }
         }

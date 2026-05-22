@@ -364,7 +364,7 @@ class AdminWidget extends AbstractWidget implements
      */
     public function setShowActions($show): static
     {
-        $this->showActions = (bool) $show;
+        $this->showActions = (bool)$show;
         return $this;
     }
 
@@ -385,7 +385,7 @@ class AdminWidget extends AbstractWidget implements
      */
     public function setShowLabel($show): static
     {
-        $this->showLabel = (bool) $show;
+        $this->showLabel = (bool)$show;
         return $this;
     }
 
@@ -395,7 +395,7 @@ class AdminWidget extends AbstractWidget implements
     public function showLabel()
     {
         if ($this->showLabel !== false) {
-            return (bool) strval($this->label());
+            return (bool)strval($this->label());
         } else {
             return false;
         }
@@ -457,14 +457,14 @@ class AdminWidget extends AbstractWidget implements
     protected function resolveConditionalLogic($condition): bool
     {
         if (is_callable([ $this, $condition ])) {
-            return (bool) $this->{$condition}();
+            return (bool)$this->{$condition}();
         } elseif (is_callable($condition)) {
-            return (bool) $condition();
+            return (bool)$condition();
         } elseif ($this->view() instanceof \Charcoal\View\ViewInterface) {
-            return (bool) $this->renderTemplate($condition);
+            return (bool)$this->renderTemplate($condition);
         }
 
-        return (bool) $condition;
+        return (bool)$condition;
     }
 
     /**

@@ -27,7 +27,7 @@ trait HasContentBlocksTrait
      */
     public function hasContentBlocks(): bool
     {
-        return (bool) $this->numContentBlocks();
+        return (bool)$this->numContentBlocks();
     }
 
     /**

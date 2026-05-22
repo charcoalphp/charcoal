@@ -119,7 +119,7 @@ trait StructureContainerTrait
      */
     public function setShowEmpty($show)
     {
-        $this->showEmpty = (bool) $show;
+        $this->showEmpty = (bool)$show;
 
         return $this;
     }

@@ -33,17 +33,17 @@ class IpProperty extends AbstractProperty
     /**
      * Ensure multiple can not be TRUE for ID property.
      *
-     * @param  boolean $flag The multiple flag.
-     * @throws InvalidArgumentException If the multiple argument is TRUE (must be FALSE).
-     * @see    AbstractProperty::setMultiple()
+     * @param boolean $multiple The multiple flag.
      * @return IdProperty Chainable
+     *@throws InvalidArgumentException If the multiple argument is TRUE (must be FALSE).
+     * @see    AbstractProperty::setMultiple()
      */
     #[\Override]
-    public function setMultiple($flag): static
+    public function setMultiple(bool $multiple): static
     {
-        $flag = (bool) $flag;
+        $multiple = (bool)$multiple;
 
-        if ($flag) {
+        if ($multiple) {
             throw new InvalidArgumentException(
                 'The ID property does not support multiple values.'
             );
@@ -66,17 +66,17 @@ class IpProperty extends AbstractProperty
     /**
      * Ensure l10n can not be TRUE for IP property.
      *
-     * @param  boolean $flag The l10n, or "translatable" flag.
-     * @throws InvalidArgumentException If the L10N argument is TRUE (must be FALSE).
-     * @see    AbstractProperty::setL10n()
+     * @param boolean $l10n The l10n, or "translatable" flag.
      * @return IdProperty Chainable
+     *@throws InvalidArgumentException If the L10N argument is TRUE (must be FALSE).
+     * @see    AbstractProperty::setL10n()
      */
     #[\Override]
-    public function setL10n($flag): static
+    public function setL10n(bool $l10n): static
     {
-        $flag = (bool) $flag;
+        $l10n = (bool)$l10n;
 
-        if ($flag) {
+        if ($l10n) {
             throw new InvalidArgumentException(
                 'The ID property is not translatable.'
             );
@@ -153,11 +153,11 @@ class IpProperty extends AbstractProperty
      * Get the IP value in the suitable format for storage.
      *
      * @param mixed $val The value to convert to string.
-     * @see StorablePropertyTrait::storageVal()
      * @return string
+     *@see StorablePropertyTrait::storageVal()
      */
     #[\Override]
-    public function storageVal($val): int|false|string
+    public function storageVal(mixed $val): int|false|string
     {
         $mode = $this->getStorageMode();
 

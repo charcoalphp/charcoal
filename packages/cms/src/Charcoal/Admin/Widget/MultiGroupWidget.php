@@ -84,7 +84,7 @@ class MultiGroupWidget extends AdminWidget implements
     ): int {
         $priorityA = $a->priority();
         $priorityB = $b->priority();
-        return $priorityA <=> $priorityB;
+        return ($priorityA <=> $priorityB);
     }
 
     /**

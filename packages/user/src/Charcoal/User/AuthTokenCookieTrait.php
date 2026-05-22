@@ -63,7 +63,7 @@ trait AuthTokenCookieTrait
         }
 
         $cookie = $_COOKIE[$name];
-        $data   = array_pad(explode(';', (string) $cookie), 2, null);
+        $data   = array_pad(explode(';', (string)$cookie), 2, null);
         if (!isset($data[0]) || !isset($data[1])) {
             return null;
         }

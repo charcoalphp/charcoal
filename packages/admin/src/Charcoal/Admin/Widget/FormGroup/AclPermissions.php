@@ -181,8 +181,8 @@ class AclPermissions extends AdminWidget implements
             $sth->execute();
             $permissions = $sth->fetch(PDO::FETCH_ASSOC);
 
-            $this->roleAllowed = explode(',', trim((string) $permissions['allowed']));
-            $this->roleDenied  = explode(',', trim((string) $permissions['denied']));
+            $this->roleAllowed = explode(',', trim((string)$permissions['allowed']));
+            $this->roleDenied  = explode(',', trim((string)$permissions['denied']));
 
             foreach ($this->roleAllowed as $allowed) {
                 $this->roleAcl->allow($id, 'admin', $allowed);

@@ -75,11 +75,11 @@ final class RouteManager implements
      */
     private function setupTemplate($routeIdent, $templateConfig)
     {
-        $routePattern = $templateConfig['route'] ?? '/' . ltrim($routeIdent, '/');
+        $routePattern = ($templateConfig['route'] ?? '/') . ltrim($routeIdent, '/');
 
         $templateConfig['route'] = $routePattern;
 
-        $methods = $templateConfig['methods'] ?? [ 'GET' ];
+        $methods = ($templateConfig['methods'] ?? [ 'GET' ]);
 
         $routeHandler = $this->app->map(
             $methods,
@@ -113,7 +113,7 @@ final class RouteManager implements
                 }
 
                 $defaultController = $this['route/controller/template/class'];
-                $routeController   = $templateConfig['route_controller'] ?? $defaultController;
+                $routeController   = ($templateConfig['route_controller'] ?? $defaultController);
 
                 $routeFactory = $this['route/factory'];
                 $routeFactory->setDefaultClass($defaultController);
@@ -145,11 +145,11 @@ final class RouteManager implements
      */
     private function setupAction($routeIdent, $actionConfig)
     {
-        $routePattern = $actionConfig['route'] ?? '/' . ltrim($routeIdent, '/');
+        $routePattern = ($actionConfig['route'] ?? '/') . ltrim($routeIdent, '/');
 
         $actionConfig['route'] = $routePattern;
 
-        $methods = $actionConfig['methods'] ?? [ 'POST' ];
+        $methods = ($actionConfig['methods'] ?? [ 'POST' ]);
 
         $routeHandler = $this->app->map(
             $methods,
@@ -183,7 +183,7 @@ final class RouteManager implements
                 }
 
                 $defaultController = $this['route/controller/action/class'];
-                $routeController   = $actionConfig['route_controller'] ?? $defaultController;
+                $routeController   = ($actionConfig['route_controller'] ?? $defaultController);
 
                 $routeFactory = $this['route/factory'];
                 $routeFactory->setDefaultClass($defaultController);
@@ -215,11 +215,11 @@ final class RouteManager implements
      */
     private function setupScript($routeIdent, $scriptConfig)
     {
-        $routePattern = $scriptConfig['route'] ?? '/' . ltrim($routeIdent, '/');
+        $routePattern = ($scriptConfig['route'] ?? '/') . ltrim($routeIdent, '/');
 
         $scriptConfig['route'] = $routePattern;
 
-        $methods = $scriptConfig['methods'] ?? [ 'GET' ];
+        $methods = ($scriptConfig['methods'] ?? [ 'GET' ]);
 
         $routeHandler = $this->app->map(
             $methods,
@@ -253,7 +253,7 @@ final class RouteManager implements
                 }
 
                 $defaultController = $this['route/controller/script/class'];
-                $routeController   = $scriptConfig['route_controller'] ?? $defaultController;
+                $routeController   = ($scriptConfig['route_controller'] ?? $defaultController);
 
                 $routeFactory = $this['route/factory'];
                 $routeFactory->setDefaultClass($defaultController);

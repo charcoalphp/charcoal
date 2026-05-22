@@ -35,7 +35,7 @@ trait RevisionableTrait
      */
     public function setRevisionEnabled($enabled)
     {
-        $this->revisionEnabled = (bool) $enabled;
+        $this->revisionEnabled = (bool)$enabled;
         return $this;
     }
 

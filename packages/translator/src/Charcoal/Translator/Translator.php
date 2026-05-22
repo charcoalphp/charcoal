@@ -379,7 +379,7 @@ class Translator extends SymfonyTranslator
         }
 
         if (is_array($val)) {
-            return (bool) array_filter(
+            return (bool)array_filter(
                 $val,
                 fn($v, $k): bool => is_string($k) && $k !== '' && (is_string($v) && $v !== ''),
                 ARRAY_FILTER_USE_BOTH

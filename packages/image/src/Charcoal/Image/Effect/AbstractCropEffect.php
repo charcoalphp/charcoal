@@ -186,7 +186,7 @@ abstract class AbstractCropEffect extends AbstractEffect
      */
     public function setRepage($repage)
     {
-        $this->repage = (bool) $repage;
+        $this->repage = (bool)$repage;
         return $this;
     }
 

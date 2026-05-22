@@ -81,7 +81,7 @@ class LoggerConfig extends AbstractConfig
      */
     public function setActive($active): static
     {
-        $this->active = (bool) $active;
+        $this->active = (bool)$active;
         return $this;
     }
 

@@ -105,11 +105,11 @@ class AppServiceProvider implements ServiceProviderInterface
              */
             $container['debug'] = function (Container $container): bool {
                 if (isset($container['config']['debug'])) {
-                    return (bool) $container['config']['debug'];
+                    return (bool)$container['config']['debug'];
                 }
 
                 if (isset($container['config']['dev_mode'])) {
-                    return (bool) $container['config']['dev_mode'];
+                    return (bool)$container['config']['dev_mode'];
                 }
 
                 return false;
@@ -495,9 +495,9 @@ class AppServiceProvider implements ServiceProviderInterface
                     } else {
                         $parts = parse_url($uri);
                         if (!isset($parts['scheme']) && !in_array($uri[0], [ '/', '#', '?' ])) {
-                            $path  = $parts['path'] ?? '';
-                            $query = $parts['query'] ?? '';
-                            $hash  = $parts['fragment'] ?? '';
+                            $path  = ($parts['path'] ?? '');
+                            $query = ($parts['query'] ?? '');
+                            $hash  = ($parts['fragment'] ?? '');
                             $uri = $baseUrl->withPath($path)
                                            ->withQuery($query)
                                            ->withFragment($hash);

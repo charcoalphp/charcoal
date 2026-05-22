@@ -145,7 +145,7 @@ class LoadAction extends AdminAction
         if ($keys) {
             $subset = [];
             foreach ($keys as $key) {
-                if (array_key_exists((string) $key, $params)) {
+                if (array_key_exists((string)$key, $params)) {
                     $subset[$key] = $params[$key];
                 }
             }
@@ -222,7 +222,7 @@ class LoadAction extends AdminAction
         }
 
         try {
-            $filename    = $name ?? basename((string) $path);
+            $filename    = ($name ?? basename((string)$path));
             $disposition = $this->generateHttpDisposition($disp, $filename);
             $resource    = $handler->readStream();
             $stream      = new Stream($resource);

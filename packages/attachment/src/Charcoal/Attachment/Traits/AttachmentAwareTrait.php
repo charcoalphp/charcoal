@@ -194,7 +194,7 @@ trait AttachmentAwareTrait
      */
     public function hasAttachments(): bool
     {
-        return (bool) $this->numAttachments();
+        return (bool)$this->numAttachments();
     }
 
     /**

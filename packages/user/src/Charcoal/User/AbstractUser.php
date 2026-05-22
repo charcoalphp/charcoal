@@ -514,7 +514,7 @@ abstract class AbstractUser extends Content implements
 
         $originalUser = $factory->create($objType)->load($this->getAuthId());
 
-        if (mb_strtolower((string) $originalUser->getAuthIdentifier()) !== mb_strtolower((string) $userLogin)) {
+        if (mb_strtolower((string)$originalUser->getAuthIdentifier()) !== mb_strtolower((string)$userLogin)) {
             $existingUser = $factory->create($objType)->loadFrom($userKey, $userLogin);
             /** Check for existing user with given email. */
             if (!empty($existingUser->getAuthId())) {

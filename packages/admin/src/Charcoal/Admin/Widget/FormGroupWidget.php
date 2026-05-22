@@ -152,7 +152,7 @@ class FormGroupWidget extends AbstractUiItem implements
      */
     public function hasFormProperties(): bool
     {
-        return (bool) count($this->parsedFormProperties());
+        return (bool)count($this->parsedFormProperties());
     }
 
     /**
@@ -231,7 +231,7 @@ class FormGroupWidget extends AbstractUiItem implements
             } else {
                 $trans = 'locale.' . $locale;
                 if ($trans === $this->translator()->translate($trans)) {
-                    $label = strtoupper((string) $locale);
+                    $label = strtoupper((string)$locale);
                 } else {
                     $label = $this->translator()->translation($trans);
                 }

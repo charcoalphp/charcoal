@@ -84,7 +84,7 @@ class LangProperty extends AbstractProperty implements SelectablePropertyInterfa
      */
     public function hasChoices(): bool
     {
-        return (bool) $this->translator()->locales();
+        return (bool)$this->translator()->locales();
     }
 
     /**
@@ -126,7 +126,7 @@ class LangProperty extends AbstractProperty implements SelectablePropertyInterfa
                     } else {
                         $trans = 'locale.' . $langCode;
                         if ($trans === $this->translator()->translate($trans)) {
-                            $label = strtoupper((string) $langCode);
+                            $label = strtoupper((string)$langCode);
                         } else {
                             $label = $this->translator()->translation($trans);
                         }
@@ -149,12 +149,11 @@ class LangProperty extends AbstractProperty implements SelectablePropertyInterfa
     /**
      * Format the given value for display.
      *
-     * @param  mixed $val     The value to to convert for display.
-     * @param  array $options Optional display options.
+     * @param mixed $val     The value to to convert for display.
      * @return string
      */
     #[\Override]
-    public function displayVal($val, array $options = [])
+    public function displayVal(mixed $val)
     {
         if ($val === null || $val === '') {
             return '';

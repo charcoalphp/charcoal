@@ -227,7 +227,7 @@ class StringProperty extends AbstractProperty implements SelectablePropertyInter
      */
     public function setAllowEmpty($allowEmpty): static
     {
-        $this->allowEmpty = (bool) $allowEmpty;
+        $this->allowEmpty = (bool)$allowEmpty;
 
         return $this;
     }
@@ -247,7 +247,7 @@ class StringProperty extends AbstractProperty implements SelectablePropertyInter
      */
     public function setAllowHtml($allowHtml): static
     {
-        $this->allowHtml = (bool) $allowHtml;
+        $this->allowHtml = (bool)$allowHtml;
 
         return $this;
     }
@@ -318,7 +318,7 @@ class StringProperty extends AbstractProperty implements SelectablePropertyInter
         } else {
             $valid = true;
             foreach ($val as $v) {
-                $valid = (mb_strlen((string) $v) <= $maxLength);
+                $valid = (mb_strlen((string)$v) <= $maxLength);
                 if (!$valid) {
                     $this->validator()->error('Maximum length error', 'maxLength');
                     return $valid;
@@ -361,7 +361,7 @@ class StringProperty extends AbstractProperty implements SelectablePropertyInter
         } else {
             $valid = true;
             foreach ($val as $v) {
-                $valid = (mb_strlen((string) $v) >= $minLength);
+                $valid = (mb_strlen((string)$v) >= $minLength);
                 if (!$valid) {
                     $this->validator()->error('Minimum length error', 'minLength');
                     return $valid;
@@ -386,7 +386,7 @@ class StringProperty extends AbstractProperty implements SelectablePropertyInter
             return true;
         }
 
-        $valid = (bool) preg_match($regexp, (string) $val);
+        $valid = (bool)preg_match($regexp, (string)$val);
         if (!$valid) {
             $this->validator()->error('Regexp error', 'regexp');
         }
@@ -414,13 +414,13 @@ class StringProperty extends AbstractProperty implements SelectablePropertyInter
      *
      * Strip HTML if it is not allowed.
      *
-     * @see AbstractProperty::parseVal()
-     *
      * @param mixed $val A single value to parse.
      * @return mixed The parsed value.
+     * @see AbstractProperty::parseVal()
+     *
      */
     #[\Override]
-    public function parseOne($val)
+    public function parseOne(mixed $val): mixed
     {
         if ($this['allowHtml'] === false && is_string($val)) {
             return strip_tags($val);

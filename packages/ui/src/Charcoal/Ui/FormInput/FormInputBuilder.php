@@ -37,7 +37,7 @@ class FormInputBuilder
     public function build($options)
     {
         $container = $this->container;
-        $objType = $options['type'] ?? self::DEFAULT_TYPE;
+        $objType = ($options['type'] ?? self::DEFAULT_TYPE);
 
         $obj = $this->factory->create($objType, [
             'logger' => $container['logger'],

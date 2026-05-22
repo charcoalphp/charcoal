@@ -357,7 +357,7 @@ class CleanupScript extends AbstractScript implements
         $this->indent    = str_repeat(' ', (($length * 2) + 4));
 
         $prop = $attach->property($attach->key());
-        if ($prop && preg_match('~\b\w+\((?<length>\d+)\)~', (string) $prop->sqlType(), $matches)) {
+        if ($prop && preg_match('~\b\w+\((?<length>\d+)\)~', (string)$prop->sqlType(), $matches)) {
             $pad = (intval($matches['length']) + 5);
         } else {
             $pad = 20;
@@ -387,7 +387,7 @@ class CleanupScript extends AbstractScript implements
 
             if ($ask) {
                 $type  = sprintf('[%s]', $obj->microType());
-                $label = sprintf('#%1$s %2$s', str_pad((string) $objId, $pad), str_pad($type, 20));
+                $label = sprintf('#%1$s %2$s', str_pad((string)$objId, $pad), str_pad($type, 20));
                 if ($title !== '' && $title !== '0') {
                     $label = sprintf('%1$s "%2$s"', $label, $title);
                 }

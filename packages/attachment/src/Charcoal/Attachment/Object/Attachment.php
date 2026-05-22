@@ -527,7 +527,7 @@ class Attachment extends Content implements AttachableInterface
      */
     public function setShowTitle($show): static
     {
-        $this->showTitle = (bool) $show;
+        $this->showTitle = (bool)$show;
 
         return $this;
     }
@@ -717,7 +717,7 @@ class Attachment extends Content implements AttachableInterface
         if (is_bool($this->showTitle)) {
             return $this->showTitle;
         } else {
-            return (bool) $this->title();
+            return (bool)$this->title();
         }
     }
 
@@ -977,9 +977,9 @@ class Attachment extends Content implements AttachableInterface
         $uri = strval($uri);
         if ($this->isRelativeUri($uri)) {
             $parts = parse_url($uri);
-            $path  = $parts['path'] ?? '';
-            $query = $parts['query'] ?? '';
-            $hash  = $parts['fragment'] ?? '';
+            $path  = ($parts['path'] ?? '');
+            $query = ($parts['query'] ?? '');
+            $hash  = ($parts['fragment'] ?? '');
 
             return $this->baseUrl()->withPath($path)->withQuery($query)->withFragment($hash);
         }

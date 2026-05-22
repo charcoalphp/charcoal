@@ -26,7 +26,7 @@ trait CronScriptTrait
      */
     public function setUseLock($useLock)
     {
-        $this->useLock = (bool) $useLock;
+        $this->useLock = (bool)$useLock;
         return $this;
     }
 

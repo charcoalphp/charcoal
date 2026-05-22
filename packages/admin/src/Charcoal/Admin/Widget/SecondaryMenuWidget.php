@@ -265,7 +265,7 @@ class SecondaryMenuWidget extends AdminWidget implements
 
         $matches = array_intersect((array)$linkIdent, $context);
 
-        return (bool) $matches;
+        return (bool)$matches;
     }
 
     /**
@@ -285,7 +285,7 @@ class SecondaryMenuWidget extends AdminWidget implements
      */
     public function setShowTitle($show): static
     {
-        $this->showTitle = (bool) $show;
+        $this->showTitle = (bool)$show;
 
         return $this;
     }
@@ -300,7 +300,7 @@ class SecondaryMenuWidget extends AdminWidget implements
         if ($this->showTitle === false) {
             return false;
         } else {
-            return (bool) $this->title();
+            return (bool)$this->title();
         }
     }
 
@@ -381,7 +381,7 @@ class SecondaryMenuWidget extends AdminWidget implements
             }
 
             if (isset($link['active'])) {
-                $active = (bool) $link['active'];
+                $active = (bool)$link['active'];
             }
 
             if (isset($link['name'])) {
@@ -718,7 +718,7 @@ class SecondaryMenuWidget extends AdminWidget implements
      */
     public function hasLinks(): bool
     {
-        return (bool) $this->numLinks();
+        return (bool)$this->numLinks();
     }
 
     /**
@@ -750,7 +750,7 @@ class SecondaryMenuWidget extends AdminWidget implements
      */
     public function hasGroups(): bool
     {
-        return (bool) $this->numGroups();
+        return (bool)$this->numGroups();
     }
 
     /**
@@ -789,7 +789,7 @@ class SecondaryMenuWidget extends AdminWidget implements
         if ($this->secondaryMenuActions === null) {
             $ident    = $this->ident();
             $metadata = $this->adminSecondaryMenu();
-            $actions = $metadata[$ident]['actions'] ?? [];
+            $actions = ($metadata[$ident]['actions'] ?? []);
             $this->setSecondaryMenuActions($actions);
         }
 
@@ -841,7 +841,7 @@ class SecondaryMenuWidget extends AdminWidget implements
      */
     public function setShowDescription($show): static
     {
-        $this->showDescription = (bool) $show;
+        $this->showDescription = (bool)$show;
         return $this;
     }
 
@@ -855,7 +855,7 @@ class SecondaryMenuWidget extends AdminWidget implements
         if ($this->showDescription === false) {
             return false;
         } else {
-            return (bool) $this->description();
+            return (bool)$this->description();
         }
     }
 

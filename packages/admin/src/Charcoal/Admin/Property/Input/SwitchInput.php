@@ -24,7 +24,7 @@ class SwitchInput extends AbstractPropertyInput
 
     public function checked(): bool
     {
-        return (bool) $this->inputVal();
+        return (bool)$this->inputVal();
     }
 
     public function value(): int

@@ -163,7 +163,7 @@ trait QueueItemTrait
      */
     public function setProcessed($processed)
     {
-        $this->processed = (bool) $processed;
+        $this->processed = (bool)$processed;
         return $this;
     }
 

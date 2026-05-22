@@ -204,7 +204,7 @@ abstract class AbstractScript extends AbstractEntity implements
      */
     public function setQuiet($quiet)
     {
-        $this->quiet = (bool) $quiet;
+        $this->quiet = (bool)$quiet;
         return $this;
     }
 
@@ -222,7 +222,7 @@ abstract class AbstractScript extends AbstractEntity implements
      */
     public function setVerbose($verbose)
     {
-        $this->verbose = (bool) $verbose;
+        $this->verbose = (bool)$verbose;
         return $this;
     }
 
@@ -240,7 +240,7 @@ abstract class AbstractScript extends AbstractEntity implements
      */
     public function setInteractive($interactive)
     {
-        $this->interactive = (bool) $interactive;
+        $this->interactive = (bool)$interactive;
         return $this;
     }
 
@@ -258,7 +258,7 @@ abstract class AbstractScript extends AbstractEntity implements
      */
     public function setDryRun($simulate)
     {
-        $this->dryRun = (bool) $simulate;
+        $this->dryRun = (bool)$simulate;
         return $this;
     }
 
@@ -448,7 +448,7 @@ abstract class AbstractScript extends AbstractEntity implements
             }
             if ($default && is_string($default) || is_numeric($default)) {
                 $pattern = '/[\(\[\<]' . preg_quote($default, '/') . '[\)\]\>]/';
-                if (!preg_match($pattern, (string) $prompt)) {
+                if (!preg_match($pattern, (string)$prompt)) {
                     $prompt .= ' (' . $default . ')';
                 }
             }

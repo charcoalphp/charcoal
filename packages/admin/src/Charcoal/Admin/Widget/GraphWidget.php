@@ -54,7 +54,7 @@ class GraphWidget extends AdminWidget
      */
     public function setShowAsCard($show): static
     {
-        $this->showAsCard = (bool) $show;
+        $this->showAsCard = (bool)$show;
 
         return $this;
     }
@@ -90,7 +90,7 @@ class GraphWidget extends AdminWidget
     {
         $options = $this->getGraphOptions();
 
-        return $options[$key] ?? $default;
+        return ($options[$key] ?? $default);
     }
 
     /**

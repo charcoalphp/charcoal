@@ -207,7 +207,7 @@ class ModelServiceProvider implements ServiceProviderInterface
              * @return MetadataConfig
              */
             $container['metadata/config'] = function (Container $container): \Charcoal\Model\Service\MetadataConfig {
-                $appConfig  = $container['config'] ?? [];
+                $appConfig  = ($container['config'] ?? []);
                 $metaConfig = $appConfig['metadata'] ?? null;
                 $metaConfig = new MetadataConfig($metaConfig);
 
@@ -217,7 +217,7 @@ class ModelServiceProvider implements ServiceProviderInterface
                     $modules    = $container['module/classes'];
                     foreach ($modules as $module) {
                         if (defined(sprintf('%s::APP_CONFIG', $module))) {
-                            $configPath = ltrim((string) $module::APP_CONFIG, '/');
+                            $configPath = ltrim((string)$module::APP_CONFIG, '/');
                             $configPath = $basePath . DIRECTORY_SEPARATOR . $configPath;
 
                             $configData = $metaConfig->loadFile($configPath);

@@ -166,7 +166,7 @@ abstract class AbstractNotificationScript extends AdminScript implements CronScr
         $objectsByTypes = [];
         $numTotal = 0;
         foreach ($notification->targetTypes() as $objType) {
-            $objType = trim((string) $objType);
+            $objType = trim((string)$objType);
             $objects = $this->updatedObjects($objType);
             $num = count($objects);
             if ($num === 0) {
@@ -176,7 +176,7 @@ abstract class AbstractNotificationScript extends AdminScript implements CronScr
             $obj['objects'] = $objects;
             $obj['num'] = $num;
             $obj['type'] = $objType;
-            $obj['typeLabel'] = $objects[0]['targetTypeLabel'] ?? $objType;
+            $obj['typeLabel'] = ($objects[0]['targetTypeLabel'] ?? $objType);
 
             $objectsByTypes[$objType] = $obj;
             $numTotal += $num;

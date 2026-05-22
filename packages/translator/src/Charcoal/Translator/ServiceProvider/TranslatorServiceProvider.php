@@ -56,7 +56,7 @@ class TranslatorServiceProvider implements ServiceProviderInterface
          * @return LocalesConfig
          */
         $container['locales/config'] = function (Container $container): \Charcoal\Translator\LocalesConfig {
-            $appConfig     = $container['config'] ?? [];
+            $appConfig     = ($container['config'] ?? []);
             $localesConfig = $appConfig['locales'] ?? null;
             return new LocalesConfig($localesConfig);
         };
@@ -101,7 +101,7 @@ class TranslatorServiceProvider implements ServiceProviderInterface
             $localesConfig    = $container['locales/config'];
             $supportedLocales = array_filter($localesConfig['languages'], fn(array $locale): bool => !(isset($locale['active']) && !$locale['active']));
 
-            $acceptableLanguages = explode(',', (string) $_SERVER['HTTP_ACCEPT_LANGUAGE']);
+            $acceptableLanguages = explode(',', (string)$_SERVER['HTTP_ACCEPT_LANGUAGE']);
             foreach ($acceptableLanguages as $acceptedLang) {
                 $lang = explode(';', $acceptedLang);
                 $lang = trim($lang[0]);
@@ -175,7 +175,7 @@ class TranslatorServiceProvider implements ServiceProviderInterface
          * @return TranslatorConfig
          */
         $container['translator/config'] = function (Container $container): \Charcoal\Translator\TranslatorConfig {
-            $appConfig   = $container['config'] ?? [];
+            $appConfig   = ($container['config'] ?? []);
             $transConfig = $appConfig['translator'] ?? null;
 
             if (isset($transConfig['paths'])) {
@@ -190,7 +190,7 @@ class TranslatorServiceProvider implements ServiceProviderInterface
                 $modules    = $container['module/classes'];
                 foreach ($modules as $module) {
                     if (defined(sprintf('%s::APP_CONFIG', $module))) {
-                        $configPath = ltrim((string) $module::APP_CONFIG, '/');
+                        $configPath = ltrim((string)$module::APP_CONFIG, '/');
                         $configPath = $basePath . DIRECTORY_SEPARATOR . $configPath;
 
                         $configData = $appConfig->loadFile($configPath);

@@ -318,7 +318,7 @@ trait TemplateableTrait
                         if (isset($choice[$key])) {
                             $interface = $choice[$key];
 
-                            if (($key === 'template' || $key === 'controller') && !str_ends_with((string) $interface, '-template')) {
+                            if (($key === 'template' || $key === 'controller') && !str_ends_with((string)$interface, '-template')) {
                                 $interface .= '-template';
                             }
 

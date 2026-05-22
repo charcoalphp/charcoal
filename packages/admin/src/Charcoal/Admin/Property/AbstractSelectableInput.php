@@ -140,7 +140,7 @@ abstract class AbstractSelectableInput extends AbstractPropertyInput implements
             // Doing this in the parseVal method of abstract property
             // was causing multiple && l10n properties not to save.
             if (!is_array($val) && $this->p()['multiple']) {
-                $val = explode($this->p()->multipleSeparator(), (string) $val);
+                $val = explode($this->p()->multipleSeparator(), (string)$val);
             }
 
             $this->parsedVal[$this->lang()] = $val;
@@ -268,7 +268,7 @@ abstract class AbstractSelectableInput extends AbstractPropertyInput implements
             return $obj->renderTemplate($prop);
         } else {
             $callback = function ($matches) use ($obj) {
-                $prop = trim((string) $matches[1]);
+                $prop = trim((string)$matches[1]);
                 if (isset($obj[$prop])) {
                     return $this->parseChoiceVal($obj[$prop]);
                 }

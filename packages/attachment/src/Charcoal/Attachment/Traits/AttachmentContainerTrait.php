@@ -163,7 +163,7 @@ trait AttachmentContainerTrait
                     if (isset($attMeta['label'])) {
                         $attMeta['label'] = $this->translator()->translation($attMeta['label']);
                     } else {
-                        $attMeta['label'] = ucfirst(basename((string) $attType));
+                        $attMeta['label'] = ucfirst(basename((string)$attType));
                     }
 
                     $faIcon = '';
@@ -172,7 +172,7 @@ trait AttachmentContainerTrait
                     }
 
                     $attMeta['faIcon'] = $faIcon;
-                    $attMeta['hasFaIcon'] = (bool) $faIcon;
+                    $attMeta['hasFaIcon'] = (bool)$faIcon;
 
                     // Custom forms
                     $attMeta['formIdent'] = $attMeta['form_ident'] ?? null;

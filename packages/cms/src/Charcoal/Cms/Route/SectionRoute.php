@@ -48,7 +48,7 @@ class SectionRoute extends TemplateRoute
     {
         parent::__construct($data);
 
-        $this->path = ltrim((string) $data['path'], '/');
+        $this->path = ltrim((string)$data['path'], '/');
     }
 
     /**

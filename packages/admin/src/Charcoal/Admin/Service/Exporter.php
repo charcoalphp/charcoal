@@ -334,7 +334,7 @@ class Exporter
                 continue;
             }
 
-            $label = isset($prop['label']) ? $this->translator()->translation($prop['label']) : ucfirst((string) $p);
+            $label = isset($prop['label']) ? $this->translator()->translation($prop['label']) : ucfirst((string)$p);
             $out[] = $label;
         }
 
@@ -408,7 +408,7 @@ class Exporter
      */
     private function setConvertBrToNewlines($bool): static
     {
-        $this->convertBrToNewlines = (bool) $bool;
+        $this->convertBrToNewlines = (bool)$bool;
         return $this;
     }
 
@@ -419,7 +419,7 @@ class Exporter
      */
     private function setStripTags($bool): static
     {
-        $this->stripTags = (bool) $bool;
+        $this->stripTags = (bool)$bool;
         return $this;
     }
 

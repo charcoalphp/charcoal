@@ -45,7 +45,7 @@ class TextWidget extends AdminWidget
      */
     public function setShowTitle($show): static
     {
-        $this->showTitle = (bool) $show;
+        $this->showTitle = (bool)$show;
         return $this;
     }
 
@@ -57,7 +57,7 @@ class TextWidget extends AdminWidget
         if ($this->showTitle === false) {
             return false;
         } else {
-            return (bool) $this->title();
+            return (bool)$this->title();
         }
     }
 
@@ -66,7 +66,7 @@ class TextWidget extends AdminWidget
      */
     public function setShowSubtitle($show): static
     {
-        $this->showSubtitle = (bool) $show;
+        $this->showSubtitle = (bool)$show;
         return $this;
     }
 
@@ -78,7 +78,7 @@ class TextWidget extends AdminWidget
         if ($this->showSubtitle === false) {
             return false;
         } else {
-            return (bool) $this->subtitle();
+            return (bool)$this->subtitle();
         }
     }
 
@@ -87,7 +87,7 @@ class TextWidget extends AdminWidget
      */
     public function setShowDescription($show): static
     {
-        $this->showDescription = (bool) $show;
+        $this->showDescription = (bool)$show;
         return $this;
     }
 
@@ -99,7 +99,7 @@ class TextWidget extends AdminWidget
         if ($this->showDescription === false) {
             return false;
         } else {
-            return (bool) $this->description();
+            return (bool)$this->description();
         }
     }
 
@@ -108,7 +108,7 @@ class TextWidget extends AdminWidget
      */
     public function setShowNotes($show): static
     {
-        $this->showNotes = (bool) $show;
+        $this->showNotes = (bool)$show;
         return $this;
     }
 
@@ -120,7 +120,7 @@ class TextWidget extends AdminWidget
         if ($this->showNotes === false) {
             return false;
         } else {
-            return (bool) $this->notes();
+            return (bool)$this->notes();
         }
     }
 

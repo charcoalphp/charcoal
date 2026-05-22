@@ -192,7 +192,7 @@ class CacheServiceProvider implements ServiceProviderInterface
          * @return CacheConfig
          */
         $container['cache/config'] = function (Container $container): \Charcoal\Cache\CacheConfig {
-            $appConfig   = $container['config'] ?? [];
+            $appConfig   = ($container['config'] ?? []);
             $cacheConfig = $appConfig['cache'] ?? null;
             return new CacheConfig($cacheConfig);
         };
@@ -268,7 +268,7 @@ class CacheServiceProvider implements ServiceProviderInterface
          * @return array
          */
         $container['cache/middleware/config'] = function (Container $container) {
-            $appConfig = $container['config'] ?? [];
+            $appConfig = ($container['config'] ?? []);
 
             if (isset($appConfig['middlewares']['charcoal/cache/middleware/cache'])) {
                 $wareConfig = $appConfig['middlewares']['charcoal/cache/middleware/cache'];

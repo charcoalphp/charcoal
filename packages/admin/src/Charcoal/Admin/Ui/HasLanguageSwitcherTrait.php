@@ -47,7 +47,7 @@ trait HasLanguageSwitcherTrait
                 $label = $this->translator()->translation($localeStruct['name']);
             } else {
                 $trans = 'locale.' . $locale;
-                $label = $trans === $this->translator()->trans($trans) ? strtoupper((string) $locale) : $this->translator()->translation($trans);
+                $label = $trans === $this->translator()->trans($trans) ? strtoupper((string)$locale) : $this->translator()->translation($trans);
             }
 
             $isCurrent = ($locale === $currentLocale);

@@ -164,7 +164,7 @@ class ReadonlyInput extends AbstractPropertyInput
      */
     public function setShowPlaceholder($show): static
     {
-        $this->showPlaceholder = (bool) $show;
+        $this->showPlaceholder = (bool)$show;
 
         return $this;
     }

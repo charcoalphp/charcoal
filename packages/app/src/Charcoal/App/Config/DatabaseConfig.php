@@ -180,7 +180,7 @@ class DatabaseConfig extends AbstractConfig
      */
     public function setDisableUtf8($disableUtf8): static
     {
-        $this->disableUtf8 = (bool) $disableUtf8;
+        $this->disableUtf8 = (bool)$disableUtf8;
         return $this;
     }
 

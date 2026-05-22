@@ -37,7 +37,7 @@ class MenuItemBuilder
      */
     public function build($options)
     {
-        $objType = $options['type'] ?? self::DEFAULT_TYPE;
+        $objType = ($options['type'] ?? self::DEFAULT_TYPE);
 
         $obj = $this->factory->create($objType);
         $obj->setData($options);

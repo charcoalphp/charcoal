@@ -818,7 +818,7 @@ class FormWidget extends AdminWidget implements
     ): int {
         $priorityA = $a->priority();
         $priorityB = $b->priority();
-        return $priorityA <=> $priorityB;
+        return ($priorityA <=> $priorityB);
     }
 
     /**
@@ -834,6 +834,6 @@ class FormWidget extends AdminWidget implements
     ): int {
         $a = $a->priority();
         $b = $b->priority();
-        return $a <=> $b;
+        return ($a <=> $b);
     }
 }

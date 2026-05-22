@@ -251,7 +251,7 @@ abstract class AbstractPropertyInput extends AbstractProperty implements
     {
         $options = $this->getInputOptions();
 
-        return $options[$key] ?? $default;
+        return ($options[$key] ?? $default);
     }
 
     /**
@@ -580,7 +580,7 @@ abstract class AbstractPropertyInput extends AbstractProperty implements
      */
     public function setReadOnly($readOnly)
     {
-        $this->readOnly = (bool) $readOnly;
+        $this->readOnly = (bool)$readOnly;
         return $this;
     }
 
@@ -598,7 +598,7 @@ abstract class AbstractPropertyInput extends AbstractProperty implements
      */
     public function setRequired($required)
     {
-        $this->required = (bool) $required;
+        $this->required = (bool)$required;
         return $this;
     }
 
@@ -616,7 +616,7 @@ abstract class AbstractPropertyInput extends AbstractProperty implements
      */
     public function setDisabled($disabled)
     {
-        $this->disabled = (bool) $disabled;
+        $this->disabled = (bool)$disabled;
         return $this;
     }
 

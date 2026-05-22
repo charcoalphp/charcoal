@@ -183,13 +183,12 @@ class SpriteProperty extends AbstractProperty implements SelectablePropertyInter
     }
 
     /**
-     * @param  mixed $val     The value to to convert for display.
-     * @param  array $options Optional display options.
-     * @see AbstractPropery::displayVal()
+     * @param mixed $val     The value to to convert for display.
      * @return string
+     *@see AbstractPropery::displayVal()
      */
     #[\Override]
-    public function displayVal($val, array $options = [])
+    public function displayVal(mixed $val)
     {
         $val = parent::displayVal($val, $options);
 

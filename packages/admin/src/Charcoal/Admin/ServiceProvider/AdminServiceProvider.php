@@ -154,7 +154,7 @@ class AdminServiceProvider implements ServiceProviderInterface
                     $adminUrl = clone $container['base-url'];
                     if ($adminConfig['base_path']) {
                         $basePath  = rtrim($adminUrl->getBasePath(), '/');
-                        $adminPath = ltrim((string) $adminConfig['base_path'], '/');
+                        $adminPath = ltrim((string)$adminConfig['base_path'], '/');
                         $adminUrl  = $adminUrl->withBasePath($basePath . '/' . $adminPath);
                     }
                 }
@@ -272,7 +272,7 @@ class AdminServiceProvider implements ServiceProviderInterface
          */
         $container->extend('metadata/config', function (MetadataConfig $metaConfig, Container $container): \Charcoal\Model\Service\MetadataConfig {
             $adminConfig = $container['admin/config'];
-            $adminDir    = '/' . trim((string) $adminConfig['base_path'], '/');
+            $adminDir    = '/' . trim((string)$adminConfig['base_path'], '/');
 
             $metaPaths   = $metaConfig->paths();
             $parsedPaths = [];
@@ -383,8 +383,8 @@ class AdminServiceProvider implements ServiceProviderInterface
                         $parts = parse_url($uri);
                         if (!isset($parts['scheme']) && !in_array($uri[0], ['/', '#', '?'])) {
                             $path  = isset($parts['path']) ? ltrim($parts['path'], '/') : '';
-                            $query = $parts['query'] ?? '';
-                            $hash  = $parts['fragment'] ?? '';
+                            $query = ($parts['query'] ?? '');
+                            $hash  = ($parts['fragment'] ?? '');
                             return $adminUrl->withPath($path)
                                             ->withQuery($query)
                                             ->withFragment($hash);

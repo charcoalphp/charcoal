@@ -213,7 +213,7 @@ class ObjectRevision extends AbstractModel implements ObjectRevisionInterface
     public function setDataPrev($data): static
     {
         if (!is_array($data)) {
-            $data = json_decode((string) $data, true);
+            $data = json_decode((string)$data, true);
         }
         if ($data === null) {
             $data = [];
@@ -237,7 +237,7 @@ class ObjectRevision extends AbstractModel implements ObjectRevisionInterface
     public function setDataObj($data): static
     {
         if (!is_array($data)) {
-            $data = json_decode((string) $data, true);
+            $data = json_decode((string)$data, true);
         }
         if ($data === null) {
             $data = [];

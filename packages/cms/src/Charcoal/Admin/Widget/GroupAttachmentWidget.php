@@ -58,7 +58,7 @@ class GroupAttachmentWidget extends AttachmentWidget implements
     ): int {
         $priorityA = $a->priority();
         $priorityB = $b->priority();
-        return $priorityA <=> $priorityB;
+        return ($priorityA <=> $priorityB);
     }
 
     /**

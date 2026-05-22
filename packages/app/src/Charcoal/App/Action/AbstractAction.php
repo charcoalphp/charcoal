@@ -148,7 +148,7 @@ abstract class AbstractAction extends AbstractEntity implements
      */
     public function setSuccess($success)
     {
-        $this->success = (bool) $success;
+        $this->success = (bool)$success;
 
         return $this;
     }

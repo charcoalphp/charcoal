@@ -73,7 +73,7 @@ abstract class AbstractTintEffect extends AbstractEffect
      */
     public function setMidtone($midtone)
     {
-        $this->midtone = (bool) $midtone;
+        $this->midtone = (bool)$midtone;
         return $this;
     }
 

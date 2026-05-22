@@ -39,7 +39,7 @@ trait SocialNetworksAwareTrait
             return $this->socialNetworks;
         }
 
-        $socials = json_decode((string) $this->cmsConfig()['social_medias'], true);
+        $socials = json_decode((string)$this->cmsConfig()['social_medias'], true);
         $configMeta = $this->configModel()->p('social_medias')->structureMetadata();
 
         foreach ($socials as $ident => $account) {

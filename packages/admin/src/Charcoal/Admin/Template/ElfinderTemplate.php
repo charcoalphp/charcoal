@@ -106,7 +106,7 @@ class ElfinderTemplate extends AdminTemplate
         }
 
         if (isset($data['assets'])) {
-            $this->showAssets = (bool) $data['assets'];
+            $this->showAssets = (bool)$data['assets'];
         }
 
         if (isset($data['callback'])) {
@@ -224,7 +224,7 @@ class ElfinderTemplate extends AdminTemplate
      */
     public function hasLocalizations(): bool
     {
-        return (bool) $this->numLocalizations();
+        return (bool)$this->numLocalizations();
     }
 
     /**
@@ -257,7 +257,7 @@ class ElfinderTemplate extends AdminTemplate
             ));
         }
 
-        return $this->localizations[$ident] ?? $ident;
+        return ($this->localizations[$ident] ?? $ident);
     }
 
     /**

@@ -418,7 +418,7 @@ abstract class AbstractProperty implements
      */
     public function setMultiple($multiple)
     {
-        $this->multiple = (bool) $multiple;
+        $this->multiple = (bool)$multiple;
         return $this;
     }
 

@@ -285,7 +285,7 @@ class SectionLoader extends AbstractLoader
         }
         if (!ctype_lower($value)) {
             $value = preg_replace('/\s+/u', '', $value);
-            $value = mb_strtolower((string) preg_replace('/(.)(?=[A-Z])/u', '$1' . $delimiter, (string) $value), 'UTF-8');
+            $value = mb_strtolower((string)preg_replace('/(.)(?=[A-Z])/u', '$1' . $delimiter, (string)$value), 'UTF-8');
         }
         static::$snakeCache[$key][$delimiter] = $value;
 

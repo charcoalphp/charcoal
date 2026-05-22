@@ -576,7 +576,7 @@ class DocWidget extends FormWidget implements
             $formIdent = $obj->render($formIdent);
         }
 
-        $objFormData = $adminMetadata['forms'][$formIdent] ?? [];
+        $objFormData = ($adminMetadata['forms'][$formIdent] ?? []);
 
         if (isset($objFormData['groups']) && isset($adminMetadata['form_groups'])) {
             $extraFormGroups = array_intersect(

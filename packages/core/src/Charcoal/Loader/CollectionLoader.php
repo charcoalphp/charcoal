@@ -236,7 +236,7 @@ class CollectionLoader implements
      */
     public function hasModel(): bool
     {
-        return (bool) $this->model;
+        return (bool)$this->model;
     }
 
     /**
@@ -304,7 +304,7 @@ class CollectionLoader implements
      */
     public function hasDynamicTypeField(): bool
     {
-        return (bool) $this->dynamicTypeField;
+        return (bool)$this->dynamicTypeField;
     }
 
     /**

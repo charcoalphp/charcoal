@@ -498,9 +498,9 @@ abstract class AbstractWebTemplate extends AbstractTemplate
         } else {
             $parts = parse_url($uri);
             if (!isset($parts['scheme']) && !in_array($uri[0], [ '/', '#', '?' ])) {
-                $path  = $parts['path'] ?? '';
-                $query = $parts['query'] ?? '';
-                $hash  = $parts['fragment'] ?? '';
+                $path  = ($parts['path'] ?? '');
+                $query = ($parts['query'] ?? '');
+                $hash  = ($parts['fragment'] ?? '');
                 $uri   = $this->baseUrl()->withPath($path)->withQuery($query)->withFragment($hash);
             }
         }

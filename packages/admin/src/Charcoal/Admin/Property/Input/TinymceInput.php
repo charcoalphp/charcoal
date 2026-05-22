@@ -116,7 +116,7 @@ class TinymceInput extends TextareaInput
     {
         $defaultData = $this->metadata()->defaultData();
 
-        return $defaultData['editor_options'] ?? [];
+        return ($defaultData['editor_options'] ?? []);
     }
 
     /**
@@ -171,7 +171,7 @@ class TinymceInput extends TextareaInput
      */
     public function setShowFilePicker($show): static
     {
-        $this->showFilePicker = (bool) $show;
+        $this->showFilePicker = (bool)$show;
 
         return $this;
     }

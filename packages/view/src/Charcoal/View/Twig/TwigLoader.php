@@ -68,7 +68,7 @@ class TwigLoader extends AbstractLoader implements
      */
     public function exists(string $name): bool
     {
-        return (bool) $this->findTemplateFile($name);
+        return (bool)$this->findTemplateFile($name);
     }
 
     /**

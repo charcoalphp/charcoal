@@ -303,7 +303,7 @@ trait NestedWidgetContainerTrait
             $token = $token[1];
         }
 
-        $token = trim((string) $token);
+        $token = trim((string)$token);
         $method = [ $this, $token ];
 
         if (is_callable($method)) {

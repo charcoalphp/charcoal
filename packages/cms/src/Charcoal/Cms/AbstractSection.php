@@ -116,7 +116,7 @@ abstract class AbstractSection extends Content implements SectionInterface
      */
     public function isDeletable()
     {
-        return (bool) $this->id() && !$this->locked();
+        return (bool)$this->id() && !$this->locked();
     }
 
     /**

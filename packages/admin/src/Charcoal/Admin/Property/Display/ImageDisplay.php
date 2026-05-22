@@ -39,8 +39,8 @@ class ImageDisplay extends AbstractPropertyDisplay
         $parts = parse_url($val);
         if (empty($parts['scheme']) && !in_array($val[0], [ '/', '#', '?' ])) {
             $path  = isset($parts['path']) ? ltrim($parts['path'], '/') : '';
-            $query = $parts['query'] ?? '';
-            $hash  = $parts['fragment'] ?? '';
+            $query = ($parts['query'] ?? '');
+            $hash  = ($parts['fragment'] ?? '');
             $val   = $this->baseUrl->withPath($path)->withQuery($query)->withFragment($hash);
         }
 

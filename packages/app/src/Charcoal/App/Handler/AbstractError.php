@@ -48,7 +48,7 @@ abstract class AbstractError extends AbstractHandler
      */
     public function hasThrown()
     {
-        return (bool) $this->thrown;
+        return (bool)$this->thrown;
     }
 
     /**
@@ -143,7 +143,7 @@ abstract class AbstractError extends AbstractHandler
      */
     protected function setDisplayErrorDetails($state)
     {
-        $this->displayErrorDetails = (bool) $state;
+        $this->displayErrorDetails = (bool)$state;
 
         return $this;
     }

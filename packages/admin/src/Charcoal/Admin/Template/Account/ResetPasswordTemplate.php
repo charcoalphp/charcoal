@@ -37,7 +37,7 @@ class ResetPasswordTemplate extends AdminTemplate
         // Undocumented Slim 3 feature: The route attributes are stored in routeInfo[2].
         $routeInfo = $request->getAttribute('routeInfo');
 
-        $this->lostPasswordToken = $routeInfo[2]['token'] ?? $request->getParam('token');
+        $this->lostPasswordToken = ($routeInfo[2]['token'] ?? $request->getParam('token'));
 
         if ($this->lostPasswordToken && $this->validateToken($this->lostPasswordToken)) {
             return true;
@@ -91,7 +91,7 @@ class ResetPasswordTemplate extends AdminTemplate
             'token' => $token
         ]);
 
-        return (bool) $obj->token();
+        return (bool)$obj->token();
     }
 
     /**

@@ -247,7 +247,7 @@ trait ExpressionFieldTrait
             return static::$snakeCache[$key];
         }
 
-        $value = strtolower((string) preg_replace('/(?<!^)[A-Z]/', '_$0', $value));
+        $value = strtolower((string)preg_replace('/(?<!^)[A-Z]/', '_$0', $value));
 
         static::$snakeCache[$key] = $value;
 

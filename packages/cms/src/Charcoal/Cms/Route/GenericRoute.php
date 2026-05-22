@@ -99,7 +99,7 @@ class GenericRoute extends TemplateRoute
     {
         parent::__construct($data);
 
-        $this->setPath(ltrim((string) $data['path'], '/'));
+        $this->setPath(ltrim((string)$data['path'], '/'));
     }
 
     /**

@@ -114,10 +114,9 @@ class TemplateProperty extends AbstractProperty implements SelectablePropertyInt
      *
      * @param  mixed $val     The value to to convert for display.
      * @param  array $options Optional display options.
-     * @return string
      */
     #[\Override]
-    public function displayVal($val, array $options = [])
+    public function displayVal($val, array $options = []): string
     {
         if ($val === null || $val === '') {
             return '';
@@ -139,7 +138,7 @@ class TemplateProperty extends AbstractProperty implements SelectablePropertyInt
 
         /** Parse multiple values / ensure they are of array type. */
         if ($this['multiple'] && !is_array($propertyValue)) {
-            $propertyValue = explode($separator, (string) $propertyValue);
+            $propertyValue = explode($separator, (string)$propertyValue);
         }
 
         if ($separator === ',') {
@@ -178,7 +177,7 @@ class TemplateProperty extends AbstractProperty implements SelectablePropertyInt
             $keys   = [ 'controller', 'template', 'class' ];
             foreach ($keys as $key) {
                 if (isset($choice[$key])) {
-                    return (string) $choice[$key];
+                    return (string)$choice[$key];
                 }
             }
         }

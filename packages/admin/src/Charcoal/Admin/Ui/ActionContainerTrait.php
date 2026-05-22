@@ -100,7 +100,7 @@ trait ActionContainerTrait
 
                 if (isset($unique[$ident])) {
                     if (static::compareActions($action, $unique[$ident])) {
-                        if ($hasActions && (bool) $unique[$ident]['actions']) {
+                        if ($hasActions && (bool)$unique[$ident]['actions']) {
                             $action['actions'] = $this->mergeActions(
                                 $unique[$ident]['actions'],
                                 $action['actions']
@@ -109,7 +109,7 @@ trait ActionContainerTrait
                         }
                         $unique[$ident] = array_replace($unique[$ident], $action);
                     } else {
-                        if ($hasActions && (bool) $unique[$ident]['actions']) {
+                        if ($hasActions && (bool)$unique[$ident]['actions']) {
                             $unique[$ident]['actions'] = $this->mergeActions(
                                 $unique[$ident]['actions'],
                                 $action['actions']
@@ -136,7 +136,7 @@ trait ActionContainerTrait
      */
     protected function parseActionIdent($ident, array $action)
     {
-        return $action['ident'] ?? $ident;
+        return ($action['ident'] ?? $ident);
     }
 
     /**
@@ -232,7 +232,7 @@ trait ActionContainerTrait
 
             if (isset($action['actions']) && is_array($action['actions'])) {
                 $action['actions']    = $this->parseActions($action['actions']);
-                $action['hasActions'] = (bool) array_filter($action['actions'], fn(array $action): mixed => $action['active']);
+                $action['hasActions'] = (bool)array_filter($action['actions'], fn(array $action): mixed => $action['active']);
             } else {
                 $action['actions']    = [];
                 $action['hasActions'] = false;
@@ -279,7 +279,7 @@ trait ActionContainerTrait
         }
 
         if ($this instanceof CollectionContainerInterface) {
-            $obj = $this->currentObj ?? $this->proto();
+            $obj = ($this->currentObj ?? $this->proto());
         }
 
         if (($obj instanceof ViewableInterface) && ($obj->view() instanceof ViewInterface)) {
@@ -349,13 +349,13 @@ trait ActionContainerTrait
 
             $result = null;
             if ($renderer && is_callable([ $renderer, $condition ])) {
-                $result = (bool) $renderer->{$condition}();
+                $result = (bool)$renderer->{$condition}();
             } elseif (is_callable([ $this, $condition ])) {
-                $result = (bool) $this->{$condition}();
+                $result = (bool)$this->{$condition}();
             } elseif (is_callable($condition)) {
-                $result = (bool) $condition();
+                $result = (bool)$condition();
             } elseif ($renderer) {
-                $result = (bool) $renderer->renderTemplate($condition);
+                $result = (bool)$renderer->renderTemplate($condition);
             }
 
             if ($result !== null) {
@@ -402,7 +402,7 @@ trait ActionContainerTrait
             /** @todo Shame! Force `{{ type }}` to use "obj_type" GET parameter… */
             $objType = filter_input(INPUT_GET, 'obj_type', FILTER_SANITIZE_STRING);
             if ($objType) {
-                $url = preg_replace('~\{\{\s*(obj_)?type\s*\}\}~', $objType, (string) $url);
+                $url = preg_replace('~\{\{\s*(obj_)?type\s*\}\}~', $objType, (string)$url);
             }
 
             if ($url && !str_contains($url, ':') && !in_array($url[0], [ '/', '#', '?' ])) {
@@ -503,8 +503,8 @@ trait ActionContainerTrait
      */
     protected function compareActions(array $a, array $b): bool
     {
-        $a = $a['priority'] ?? 0;
-        $b = $b['priority'] ?? 0;
+        $a = ($a['priority'] ?? 0);
+        $b = ($b['priority'] ?? 0);
         $c = isset($action['isSubmittable']) && $action['isSubmittable'];
 
         return ($c || ($a === 0) || ($a >= $b));

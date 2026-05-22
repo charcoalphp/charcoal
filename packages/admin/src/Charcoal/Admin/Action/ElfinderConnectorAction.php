@@ -462,7 +462,7 @@ class ElfinderConnectorAction extends AdminAction
 
             if ($acceptedMimetypes) {
                 $disk['uploadAllow'] = array_merge(
-                    $disk['uploadAllow'] ?? [],
+                    ($disk['uploadAllow'] ?? []),
                     $acceptedMimetypes
                 );
             }
@@ -701,8 +701,8 @@ class ElfinderConnectorAction extends AdminAction
 
         // Squeeze multiple delimiters and whitespace with a single separator
         $name = preg_replace(
-            '![' . preg_quote((string) $mask, '!') . '\.\s]{2,}!',
-            (string) $options['replace'],
+            '![' . preg_quote((string)$mask, '!') . '\.\s]{2,}!',
+            (string)$options['replace'],
             $name
         );
 
@@ -903,7 +903,7 @@ class ElfinderConnectorAction extends AdminAction
             return null;
         }
 
-        return $this->filesystemConfig['connections'][$ident] ?? [];
+        return ($this->filesystemConfig['connections'][$ident] ?? []);
     }
 
     /**
@@ -937,7 +937,7 @@ class ElfinderConnectorAction extends AdminAction
 
         $elfConfig = $this->getAdminConnectorOptions();
 
-        return $elfConfig['roots'][$ident] ?? [];
+        return ($elfConfig['roots'][$ident] ?? []);
     }
 
     /**

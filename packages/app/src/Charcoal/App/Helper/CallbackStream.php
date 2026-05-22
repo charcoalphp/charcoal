@@ -33,7 +33,7 @@ class CallbackStream implements StreamInterface
 
     public function __toString(): string
     {
-        return (string) $this->output();
+        return (string)$this->output();
     }
 
     /**

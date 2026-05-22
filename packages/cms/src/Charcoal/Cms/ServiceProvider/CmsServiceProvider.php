@@ -71,7 +71,7 @@ class CmsServiceProvider implements ServiceProviderInterface
                 $model = $container['model/factory']->create($configType);
                 $model->load($configId);
 
-                if ((bool) $model->id()) {
+                if ((bool)$model->id()) {
                     $cmsConfig->addModel($model);
                 }
             }

@@ -75,13 +75,13 @@ class UploadImageAction extends AdminAction
     {
         $path = $request->getParam('upload_path');
 
-        if ((bool) $path) {
+        if ((bool)$path) {
             $this->setUploadPath($path);
         }
 
         $this->uploadedPath = $this->fileUpload($_FILES['file']);
 
-        $this->setSuccess((bool) $this->uploadedPath);
+        $this->setSuccess((bool)$this->uploadedPath);
 
         return $response;
     }
@@ -291,7 +291,7 @@ class UploadImageAction extends AdminAction
      */
     public function setPublicAccess($public): static
     {
-        $this->publicAccess = (bool) $public;
+        $this->publicAccess = (bool)$public;
 
         return $this;
     }
@@ -311,7 +311,7 @@ class UploadImageAction extends AdminAction
      */
     public function setOverwrite($overwrite): static
     {
-        $this->overwrite = (bool) $overwrite;
+        $this->overwrite = (bool)$overwrite;
 
         return $this;
     }

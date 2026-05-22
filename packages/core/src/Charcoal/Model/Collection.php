@@ -158,7 +158,7 @@ class Collection implements CollectionInterface
             $key = $this->modelKey($key);
         }
 
-        return array_key_exists((string) $key, $this->objects);
+        return array_key_exists((string)$key, $this->objects);
     }
 
     /**

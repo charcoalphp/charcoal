@@ -175,7 +175,7 @@ class DatabaseSource extends AbstractSource implements
         /** @todo Add indexes for all defined list constraints (yea... tough job...) */
         if ($driver === self::MYSQL_DRIVER_NAME) {
             $engine = 'InnoDB';
-            $query .= ') ENGINE=' . $engine . ' DEFAULT CHARSET=utf8 COMMENT="' . addslashes((string) $metadata['name']) . '";';
+            $query .= ') ENGINE=' . $engine . ' DEFAULT CHARSET=utf8 COMMENT="' . addslashes((string)$metadata['name']) . '";';
         } else {
             $query .= ');';
         }
@@ -206,7 +206,7 @@ class DatabaseSource extends AbstractSource implements
         foreach ($fields as $field) {
             $ident = $field->ident();
 
-            if (!array_key_exists((string) $ident, $cols)) {
+            if (!array_key_exists((string)$ident, $cols)) {
                 $fieldSql = $field->sql();
                 if ($fieldSql) {
                     // The key does not exist at all.
@@ -223,11 +223,11 @@ class DatabaseSource extends AbstractSource implements
                 // The key exists. Validate.
                 $col   = $cols[$ident];
                 $alter = true;
-                if (strtolower((string) $col['Type']) !== strtolower($field->sqlType())) {
+                if (strtolower((string)$col['Type']) !== strtolower($field->sqlType())) {
                     $alter = true;
                 }
 
-                if ((strtolower((string) $col['Null']) !== 'no') !== $field->allowNull()) {
+                if ((strtolower((string)$col['Null']) !== 'no') !== $field->allowNull()) {
                     $alter = true;
                 }
 
@@ -898,7 +898,7 @@ class DatabaseSource extends AbstractSource implements
         ]);
 
         $sql = $criteria->sql();
-        if ($sql && (string) $sql !== '') {
+        if ($sql && (string)$sql !== '') {
             $sql = ' WHERE ' . $sql;
         }
 
@@ -921,7 +921,7 @@ class DatabaseSource extends AbstractSource implements
             }
 
             $sql = $order->sql();
-            if ($sql && (string) $sql !== '') {
+            if ($sql && (string)$sql !== '') {
                 $parts[] = $sql;
             }
         }

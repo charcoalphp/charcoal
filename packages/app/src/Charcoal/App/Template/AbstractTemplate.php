@@ -56,7 +56,7 @@ abstract class AbstractTemplate extends AbstractEntity implements
 
             if (!ctype_lower($value)) {
                 $value = preg_replace('/\s+/u', '', $value);
-                $value = mb_strtolower((string) preg_replace('/(.)(?=[A-Z])/u', '$1-', (string) $value), 'UTF-8');
+                $value = mb_strtolower((string)preg_replace('/(.)(?=[A-Z])/u', '$1-', (string)$value), 'UTF-8');
             }
 
             $value = str_replace(

@@ -97,7 +97,7 @@ class AudioWidgetInput extends AudioInput
      */
     public function setTextEnabled($textEnabled): static
     {
-        $this->textEnabled = (bool) $textEnabled;
+        $this->textEnabled = (bool)$textEnabled;
         return $this;
     }
 
@@ -111,7 +111,7 @@ class AudioWidgetInput extends AudioInput
      */
     public function setCaptureEnabled($captureEnabled): static
     {
-        $this->captureEnabled = (bool) $captureEnabled;
+        $this->captureEnabled = (bool)$captureEnabled;
         return $this;
     }
 
@@ -127,7 +127,7 @@ class AudioWidgetInput extends AudioInput
     #[\Deprecated(message: 'In favour of {@see self::setCaptureEnabled()}')]
     public function setRecordingEnabled($recordingEnabled): static
     {
-        $this->captureEnabled = (bool) $recordingEnabled;
+        $this->captureEnabled = (bool)$recordingEnabled;
         return $this;
     }
 
@@ -142,7 +142,7 @@ class AudioWidgetInput extends AudioInput
      */
     public function setUploadEnabled($uploadEnabled): static
     {
-        $this->uploadEnabled = (bool) $uploadEnabled;
+        $this->uploadEnabled = (bool)$uploadEnabled;
         return $this;
     }
 
@@ -158,7 +158,7 @@ class AudioWidgetInput extends AudioInput
     #[\Deprecated(message: 'In favour of {@see self::setUploadEnabled()}')]
     public function setFileEnabled($fileEnabled): static
     {
-        $this->uploadEnabled = (bool) $fileEnabled;
+        $this->uploadEnabled = (bool)$fileEnabled;
         return $this;
     }
 

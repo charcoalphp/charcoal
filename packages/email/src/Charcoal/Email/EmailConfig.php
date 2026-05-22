@@ -102,7 +102,7 @@ class EmailConfig extends AbstractConfig
      */
     public function setSmtp($smtp): static
     {
-        $this->smtp = (bool) $smtp;
+        $this->smtp = (bool)$smtp;
         return $this;
     }
 
@@ -179,7 +179,7 @@ class EmailConfig extends AbstractConfig
      */
     public function setSmtpAuth($auth): static
     {
-        $this->smtpAuth = (bool) $auth;
+        $this->smtpAuth = (bool)$auth;
         return $this;
     }
 
@@ -330,7 +330,7 @@ class EmailConfig extends AbstractConfig
      */
     public function setDefaultLogEnabled($log): static
     {
-        $this->defaultLogEnabled = (bool) $log;
+        $this->defaultLogEnabled = (bool)$log;
         return $this;
     }
 
@@ -351,7 +351,7 @@ class EmailConfig extends AbstractConfig
      */
     public function setDefaultTrackOpenEnabled($track): static
     {
-        $this->defaultTrackOpenEnabled = (bool) $track;
+        $this->defaultTrackOpenEnabled = (bool)$track;
         return $this;
     }
 
@@ -372,7 +372,7 @@ class EmailConfig extends AbstractConfig
      */
     public function setDefaultTrackLinksEnabled($track): static
     {
-        $this->defaultTrackLinksEnabled = (bool) $track;
+        $this->defaultTrackLinksEnabled = (bool)$track;
         return $this;
     }
 

@@ -329,7 +329,7 @@ class CollectionMapWidget extends AdminWidget implements CollectionContainerInte
             return [];
         }
 
-        $objListData = $adminMetadata['lists'][$collectionIdent] ?? [];
+        $objListData = ($adminMetadata['lists'][$collectionIdent] ?? []);
 
         $collectionConfig = [];
 

@@ -96,7 +96,7 @@ class JsonEditorInput extends TextareaInput
     {
         $defaultData = $this->metadata()->defaultData();
 
-        return $defaultData['editor_options'] ?? [];
+        return ($defaultData['editor_options'] ?? []);
     }
 
     #[\Override]

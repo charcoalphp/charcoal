@@ -122,8 +122,8 @@ trait BaseUrlTrait
         } elseif ($this->isRelativeUri($targetPath)) {
             $parts = parse_url($targetPath);
             $path  = isset($parts['path']) ? ltrim($parts['path'], '/') : '';
-            $query = $parts['query'] ?? '';
-            $hash  = $parts['fragment'] ?? '';
+            $query = ($parts['query'] ?? '');
+            $hash  = ($parts['fragment'] ?? '');
             $targetPath = $basePath->withPath($path)->withQuery($query)->withFragment($hash);
         }
 

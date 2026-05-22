@@ -476,7 +476,7 @@ final class MetadataLoader implements LoggerAwareInterface
             return self::$snakeCache[$key];
         }
 
-        $ident = strtolower((string) preg_replace('/([a-z])([A-Z])/', '$1-$2', $class));
+        $ident = strtolower((string)preg_replace('/([a-z])([A-Z])/', '$1-$2', $class));
         $ident = str_replace('\\', '/', strtolower($ident));
         $ident = ltrim($ident, '/');
 

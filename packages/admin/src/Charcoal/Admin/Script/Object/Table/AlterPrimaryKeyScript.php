@@ -280,11 +280,11 @@ class AlterPrimaryKeyScript extends AdminScript
                 );
             }
 
-            if (preg_match('~\bINT\(?(?:$|\b)~i', (string) $col['Type'])) {
+            if (preg_match('~\bINT\(?(?:$|\b)~i', (string)$col['Type'])) {
                 $oldProp->setMode(IdProperty::MODE_AUTO_INCREMENT);
-            } elseif (preg_match('~(?:^|\b)(?:VAR)?CHAR\(13\)(?:$|\b)~i', (string) $col['Type'])) {
+            } elseif (preg_match('~(?:^|\b)(?:VAR)?CHAR\(13\)(?:$|\b)~i', (string)$col['Type'])) {
                 $oldProp->setMode(IdProperty::MODE_UNIQID);
-            } elseif (preg_match('~(?:^|\b)(?:VAR)?CHAR\(36\)(?:$|\b)~i', (string) $col['Type'])) {
+            } elseif (preg_match('~(?:^|\b)(?:VAR)?CHAR\(36\)(?:$|\b)~i', (string)$col['Type'])) {
                 $oldProp->setMode(IdProperty::MODE_UUID);
             } else {
                 $oldProp->setMode(IdProperty::MODE_CUSTOM);
@@ -885,7 +885,7 @@ class AlterPrimaryKeyScript extends AdminScript
             $validateCallback = (fn($response): bool => is_string($response) && (strpos($callable, '::') > 1 || function_exists($response)));
 
             $validateModel = function ($response): bool {
-                if ((string) $response === '') {
+                if ((string)$response === '') {
                     return false;
                 }
 
@@ -901,7 +901,7 @@ class AlterPrimaryKeyScript extends AdminScript
             };
 
             $validateModels = function ($response): bool {
-                if ((string) $response === '') {
+                if ((string)$response === '') {
                     return false;
                 }
 

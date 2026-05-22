@@ -252,7 +252,7 @@ abstract class AbstractImage implements ImageInterface
                 'Ratio can not be calculated. Invalid image dimensions'
             );
         }
-        return $width / $height;
+        return ($width / $height);
     }
 
     /**
@@ -315,7 +315,7 @@ abstract class AbstractImage implements ImageInterface
                 );
             }
             $fxType = $effect['type'];
-            if (!str_contains((string) $fxType, '/')) {
+            if (!str_contains((string)$fxType, '/')) {
                 // Core effects do not need to be namespaced
                 $driver = $this->driverType();
                 $fxType = 'charcoal/image/' . $driver . '/effect/' . $driver . '-' . $fxType . '-effect';

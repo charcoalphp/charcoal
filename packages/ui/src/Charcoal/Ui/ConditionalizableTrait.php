@@ -107,33 +107,33 @@ trait ConditionalizableTrait
     protected function resolveConditionalLogic($condition): bool
     {
         if (is_callable([ $this, $condition ])) {
-            return (bool) $this->{$condition}();
+            return (bool)$this->{$condition}();
         }
 
         if (is_callable($condition)) {
-            return (bool) $condition();
+            return (bool)$condition();
         }
 
         if (is_callable([ $this, 'form' ])) {
             $form = $this->form();
 
             if (is_callable([ $form, $condition ])) {
-                return (bool) $form->{$condition}();
+                return (bool)$form->{$condition}();
             }
 
             if (is_callable([ $form, 'obj' ])) {
                 $obj = $form->obj();
 
                 if (is_callable([ $obj, $condition ])) {
-                    return (bool) $obj->{$condition}();
+                    return (bool)$obj->{$condition}();
                 }
 
                 if (($obj instanceof ViewableInterface) && ($obj->view() instanceof ViewInterface)) {
-                    return (bool) $obj->renderTemplate($condition);
+                    return (bool)$obj->renderTemplate($condition);
                 }
             }
         }
 
-        return (bool) $condition;
+        return (bool)$condition;
     }
 }

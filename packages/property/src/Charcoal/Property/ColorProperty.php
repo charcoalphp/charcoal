@@ -27,7 +27,7 @@ class ColorProperty extends AbstractProperty
      */
     public function setSupportAlpha($support): static
     {
-        $this->supportAlpha = (bool) $support;
+        $this->supportAlpha = (bool)$support;
         return $this;
     }
 
@@ -37,15 +37,15 @@ class ColorProperty extends AbstractProperty
     }
 
     /**
-     * @see AbstractProperty::parseOne()
+     * @param  mixed $val The value to set.
+     * @return string|null
+     *@throws InvalidArgumentException If the value does not match property's options.
      * @see AbstractProperty::parseVal()
      *
-     * @param  mixed $val The value to set.
-     * @throws InvalidArgumentException If the value does not match property's options.
-     * @return string|null
+     * @see AbstractProperty::parseOne()
      */
     #[\Override]
-    public function parseOne($val): null|array|float|int|string|false
+    public function parseOne(mixed $val): null|array|float|int|string|false
     {
         if ($val === null || $val === '') {
             if ($this['allowNull']) {
@@ -158,12 +158,12 @@ class ColorProperty extends AbstractProperty
             $r = $val['r'];
             $g = $val['g'];
             $b = $val['b'];
-            $a = $val['a'] ?? 0;
+            $a = ($val['a'] ?? 0);
         } else {
             $r = $val[0];
             $g = $val[1];
             $b = $val[2];
-            $a = $val[3] ?? 0;
+            $a = ($val[3] ?? 0);
         }
 
         return [

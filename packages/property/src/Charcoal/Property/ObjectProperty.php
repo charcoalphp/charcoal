@@ -33,7 +33,7 @@ use Charcoal\Property\SelectablePropertyInterface;
  */
 class ObjectProperty extends AbstractProperty implements SelectablePropertyInterface
 {
-    public const DEFAULT_PATTERN = '{{name}}';
+    public const string DEFAULT_PATTERN = '{{name}}';
 
     /**
      * The object type to build the choices from.
@@ -173,7 +173,7 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
     /**
      * @return string
      */
-    public function sqlType()
+    public function sqlType(): string
     {
         if ($this['multiple'] === true) {
             return 'TEXT';
@@ -186,10 +186,7 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
         }
     }
 
-    /**
-     * @return integer
-     */
-    public function sqlPdoType()
+    public function sqlPdoType(): int
     {
         if ($this['multiple'] === true) {
             return PDO::PARAM_STR;
@@ -205,11 +202,10 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
     /**
      * Always return IDs.
      *
-     * @param  mixed $val Value to be parsed.
-     * @return mixed
+     * @param mixed $val Value to be parsed.
      */
     #[\Override]
-    public function parseOne($val)
+    public function parseOne(mixed $val): mixed
     {
         if ($val instanceof StorableInterface) {
             return $val->id();
@@ -221,11 +217,10 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
     /**
      * Get the property's value in a format suitable for storage.
      *
-     * @param  mixed $val Optional. The value to convert to storage value.
-     * @return mixed
+     * @param mixed $val Optional. The value to convert to storage value.
      */
     #[\Override]
-    public function storageVal($val)
+    public function storageVal(mixed $val): mixed
     {
         if ($val === null || $val === '') {
             // Do not serialize NULL values
@@ -258,10 +253,9 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
     /**
      * @param  mixed $val     Optional. The value to to convert for input.
      * @param  array $options Unused input options.
-     * @return string
      */
     #[\Override]
-    public function inputVal($val, array $options = [])
+    public function inputVal($val, array $options = []): string
     {
         unset($options);
 
@@ -289,10 +283,9 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
     /**
      * @param  mixed $val     The value to to convert for display.
      * @param  array $options Optional display options.
-     * @return string
      */
     #[\Override]
-    public function displayVal($val, array $options = [])
+    public function displayVal($val, array $options = []): string
     {
         if ($val === null) {
             return '';
@@ -777,7 +770,7 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
             $output = $obj->renderTemplate($pattern);
         } else {
             $callback = function ($matches) use ($obj): string {
-                $prop = trim((string) $matches[1]);
+                $prop = trim((string)$matches[1]);
                 return (string)$obj[$prop];
             };
 

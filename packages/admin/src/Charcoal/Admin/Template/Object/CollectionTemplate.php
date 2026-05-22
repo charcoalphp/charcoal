@@ -106,7 +106,7 @@ class CollectionTemplate extends AdminTemplate implements
             $widgetData = [];
         }
 
-        $widgetType = $widgetData['type'] ?? SearchWidget::class;
+        $widgetType = ($widgetData['type'] ?? SearchWidget::class);
 
         $widget = $this->widgetFactory()->create($widgetType);
         $widget->setObjType($this->objType());
@@ -305,6 +305,6 @@ class CollectionTemplate extends AdminTemplate implements
     protected function objAdminMetadata()
     {
         $objMetadata = $this->proto()->metadata();
-        return $objMetadata['admin'] ?? [];
+        return ($objMetadata['admin'] ?? []);
     }
 }

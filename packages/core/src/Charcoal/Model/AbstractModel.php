@@ -241,7 +241,7 @@ abstract class AbstractModel extends AbstractEntity implements
             $fieldValues = [];
             $fieldNames  = $property->fieldNames();
             foreach ($fieldNames as $fieldName) {
-                if (array_key_exists((string) $fieldName, $flatData)) {
+                if (array_key_exists((string)$fieldName, $flatData)) {
                     $fieldValues[$fieldName] = $flatData[$fieldName];
                     unset($flatData[$fieldName]);
                 }
@@ -488,7 +488,7 @@ abstract class AbstractModel extends AbstractEntity implements
             ));
         }
 
-        $type   = $sourceConfig['type'] ?? self::DEFAULT_SOURCE_TYPE;
+        $type   = ($sourceConfig['type'] ?? self::DEFAULT_SOURCE_TYPE);
         $source = $this->sourceFactory()->create($type);
         $source->setModel($this);
 

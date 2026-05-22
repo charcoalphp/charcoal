@@ -287,10 +287,9 @@ class ImageProperty extends FileProperty
 
     /**
      * @param mixed $val The value, at time of saving.
-     * @return mixed
      */
     #[\Override]
-    public function save($val)
+    public function save(mixed $val): mixed
     {
         $val = parent::save($val);
 

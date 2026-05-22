@@ -170,7 +170,7 @@ trait RoutableTrait
         if ($this->isSlugEditable === null) {
             $metadata = $this->metadata();
 
-            $this->isSlugEditable = isset($metadata['routable']['editable']) && (bool) $metadata['routable']['editable'];
+            $this->isSlugEditable = isset($metadata['routable']['editable']) && (bool)$metadata['routable']['editable'];
         }
 
         return $this->isSlugEditable;
@@ -233,7 +233,7 @@ trait RoutableTrait
                 $newSlug[$lang] = $curSlug[$lang];
             } else {
                 $newSlug[$lang] = $this->generateRoutePattern($pattern);
-                if ((string) $newSlug[$lang] === '') {
+                if ((string)$newSlug[$lang] === '') {
                     throw new UnexpectedValueException(sprintf(
                         'The slug is empty. The pattern is "%s"',
                         $pattern
@@ -294,7 +294,7 @@ trait RoutableTrait
             $token = $token[1];
         }
 
-        $token = trim((string) $token);
+        $token = trim((string)$token);
         $method = [ $this, $token ];
 
         if (is_callable($method)) {
@@ -526,7 +526,7 @@ trait RoutableTrait
         }
 
         $metadata    = $this->metadata();
-        $separator   = $metadata['routable']['separator'] ?? '-';
+        $separator   = ($metadata['routable']['separator'] ?? '-');
         $delimiters  = '-_|';
         $pregDelim   = preg_quote($delimiters);
         $directories = '\\/';
@@ -536,41 +536,41 @@ trait RoutableTrait
         $slug = preg_replace('![^(\p{L}|\p{N})(\s|\/)]!u', $separator, $str);
 
         if (!isset($metadata['routable']['lowercase']) || $metadata['routable']['lowercase'] === false) {
-            $slug = mb_strtolower((string) $slug, 'UTF-8');
+            $slug = mb_strtolower((string)$slug, 'UTF-8');
         }
 
         // Strip HTML
-        $slug = strip_tags((string) $slug);
+        $slug = strip_tags((string)$slug);
 
         // Remove diacritics
         $slug = htmlentities($slug, ENT_COMPAT, 'UTF-8');
         $slug = preg_replace('!&([a-zA-Z])(uml|acute|grave|circ|tilde|cedil|ring);!', '$1', $slug);
 
         // Simplify ligatures
-        $slug = preg_replace('!&([a-zA-Z]{2})(lig);!', '$1', (string) $slug);
+        $slug = preg_replace('!&([a-zA-Z]{2})(lig);!', '$1', (string)$slug);
 
         // Remove unescaped HTML characters
         $unescaped = '!&(raquo|laquo|rsaquo|lsaquo|rdquo|ldquo|rsquo|lsquo|hellip|amp|nbsp|quot|ordf|ordm);!';
-        $slug = preg_replace($unescaped, '', (string) $slug);
+        $slug = preg_replace($unescaped, '', (string)$slug);
 
         // Unify all dashes/underscores as one separator character
         $flip = ($separator === '-') ? '_' : '-';
-        $slug = preg_replace('![' . preg_quote($flip) . ']+!u', $separator, (string) $slug);
+        $slug = preg_replace('![' . preg_quote($flip) . ']+!u', $separator, (string)$slug);
 
         // Remove all whitespace and normalize delimiters
-        $slug = preg_replace('![_\|\s|\(\)]+!', $separator, (string) $slug);
+        $slug = preg_replace('![_\|\s|\(\)]+!', $separator, (string)$slug);
 
         // Squeeze multiple delimiters and whitespace with a single separator
-        $slug = preg_replace('![' . $pregDelim . '\s]{2,}!', $separator, (string) $slug);
+        $slug = preg_replace('![' . $pregDelim . '\s]{2,}!', $separator, (string)$slug);
 
         // Squeeze multiple URI path delimiters
-        $slug = preg_replace('![' . $pregDir . ']{2,}!', $separator, (string) $slug);
+        $slug = preg_replace('![' . $pregDir . ']{2,}!', $separator, (string)$slug);
 
         // Remove delimiters surrouding URI path delimiters
-        $slug = preg_replace('!(?<=[' . $pregDir . '])[' . $pregDelim . ']|[' . $pregDelim . '](?=[' . $pregDir . '])!', '', (string) $slug);
+        $slug = preg_replace('!(?<=[' . $pregDir . '])[' . $pregDelim . ']|[' . $pregDelim . '](?=[' . $pregDir . '])!', '', (string)$slug);
 
         // Strip leading and trailing dashes or underscores
-        $slug = trim((string) $slug, $delimiters);
+        $slug = trim((string)$slug, $delimiters);
 
         // Cache the slugified string
         $sluggedArray[$str] = $slug;
@@ -594,7 +594,7 @@ trait RoutableTrait
             if ($slug === $prefix) {
                 throw new UnexpectedValueException('The slug is the same as the prefix.');
             }
-            $slug = $prefix . preg_replace('!^' . preg_quote((string) $prefix) . '\b!', '', $slug);
+            $slug = $prefix . preg_replace('!^' . preg_quote((string)$prefix) . '\b!', '', $slug);
         }
 
         $suffix = $this->slugSuffix();
@@ -603,7 +603,7 @@ trait RoutableTrait
             if ($slug === $suffix) {
                 throw new UnexpectedValueException('The slug is the same as the suffix.');
             }
-            $slug = preg_replace('!\b' . preg_quote((string) $suffix) . '$!', '', $slug) . $suffix;
+            $slug = preg_replace('!\b' . preg_quote((string)$suffix) . '$!', '', $slug) . $suffix;
         }
 
         return rtrim($slug, '/');
@@ -779,7 +779,7 @@ trait RoutableTrait
     public function isActiveRoute()
     {
         if (isset($this['active'])) {
-            return (bool) $this['active'];
+            return (bool)$this['active'];
         } else {
             return true;
         }

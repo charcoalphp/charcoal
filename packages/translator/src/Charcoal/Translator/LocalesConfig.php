@@ -107,7 +107,7 @@ class LocalesConfig extends AbstractConfig
      */
     public function setAutoDetect($autoDetect): static
     {
-        $this->autoDetect = (bool) $autoDetect;
+        $this->autoDetect = (bool)$autoDetect;
         return $this;
     }
 

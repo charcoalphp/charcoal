@@ -23,9 +23,8 @@ trait TranslatorAwareTrait
      * Set the translator service.
      *
      * @param  Translator $translator The Translator service.
-     * @return void
      */
-    protected function setTranslator(Translator $translator)
+    protected function setTranslator(Translator $translator): void
     {
         $this->translator = $translator;
     }
@@ -34,9 +33,8 @@ trait TranslatorAwareTrait
      * Retrieve the translator service.
      *
      * @throws RuntimeException If the translator is accessed before having been set.
-     * @return Translator
      */
-    protected function translator()
+    protected function translator(): Translator
     {
         if ($this->translator === null) {
             throw new RuntimeException(

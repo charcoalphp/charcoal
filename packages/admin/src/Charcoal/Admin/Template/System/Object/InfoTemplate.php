@@ -70,9 +70,9 @@ class InfoTemplate extends AdminTemplate implements
             $ret[] = $property;
         }
         usort($ret, function (array $a, array $b): int {
-            $ret = strcmp((string) $a['metadataSource'], (string) $b['metadataSource']);
+            $ret = strcmp((string)$a['metadataSource'], (string)$b['metadataSource']);
             if ($ret === 0) {
-                return strcmp((string) $a['ident'], (string) $b['ident']);
+                return strcmp((string)$a['ident'], (string)$b['ident']);
             } else {
                 return $ret;
             }

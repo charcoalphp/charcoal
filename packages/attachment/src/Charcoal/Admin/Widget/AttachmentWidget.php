@@ -175,7 +175,7 @@ class AttachmentWidget extends AdminWidget implements
                 'skipForm'       => $attMeta['skipForm'],
                 'formIdent'      => $attMeta['formIdent'],
                 'quickFormIdent' => $attMeta['quickFormIdent'],
-                'hasFaIcon'      => (bool) $attMeta['faIcon'],
+                'hasFaIcon'      => (bool)$attMeta['faIcon'],
                 'faIcon'         => $attMeta['faIcon'],
                 'label'          => $label,
                 'val'            => $attType,
@@ -586,14 +586,14 @@ class AttachmentWidget extends AdminWidget implements
                     $icon = 'fa fa-' . $icon;
                 }
             } else {
-                $attParts = explode('/', (string) $attType);
+                $attParts = explode('/', (string)$attType);
                 if (isset($this->defaultIcons[end($attParts)])) {
                     $faIcon = 'fa fa-' . $this->defaultIcons[end($attParts)];
                 }
             }
 
             if (isset($attMeta['show_icon'])) {
-                $showIcon = (bool) $attMeta['show_icon'];
+                $showIcon = (bool)$attMeta['show_icon'];
             }
 
             if (isset($attMeta['locked'])) {
@@ -610,7 +610,7 @@ class AttachmentWidget extends AdminWidget implements
                 'skipForm'         => $skipForm,
                 'formIdent'        => $formIdent,
                 'quickFormIdent'   => $quickFormIdent,
-                'hasFaIcon'        => (bool) $faIcon,
+                'hasFaIcon'        => (bool)$faIcon,
                 'faIcon'           => $faIcon,
                 'showIcon'         => $showIcon,
                 'filters'          => $filters,

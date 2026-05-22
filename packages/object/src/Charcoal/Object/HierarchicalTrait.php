@@ -172,7 +172,7 @@ trait HierarchicalTrait
     {
         $hierarchy = $this->hierarchy();
 
-        return count($hierarchy) + 1;
+        return (count($hierarchy) + 1);
     }
 
     /**

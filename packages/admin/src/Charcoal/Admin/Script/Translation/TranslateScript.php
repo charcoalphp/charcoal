@@ -366,11 +366,11 @@ class TranslateScript extends AdminScript
         }
 
         $cfg = $this->app()->config();
-        $locales = $cfg['locales'] ?? [];
-        $languages = $locales['languages'] ?? [];
-        $file = $locales['file'] ?? $this->argOrInput('output');
+        $locales = ($cfg['locales'] ?? []);
+        $languages = ($locales['languages'] ?? []);
+        $file = ($locales['file'] ?? $this->argOrInput('output'));
         // Default to FR
-        $default = $locales['default_language'] ?? 'fr';
+        $default = ($locales['default_language'] ?? 'fr');
 
         $this->locales = [
             'languages' => $languages,

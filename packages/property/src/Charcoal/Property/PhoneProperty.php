@@ -37,26 +37,25 @@ class PhoneProperty extends StringProperty
      */
     public function sanitize($val): ?string
     {
-        return preg_replace('/[^0-9]/', '', (string) $val);
+        return preg_replace('/[^0-9]/', '', (string)$val);
     }
 
     /**
+     * @param  mixed $val     The value to to convert for display.
      * @see AbstractProperty::displayVal()
      *
-     * @param  mixed $val     The value to to convert for display.
-     * @param  array $options Unused display options.
      */
     #[\Override]
-    public function displayVal($val, array $options = []): string
+    public function displayVal(mixed $val): string
     {
         unset($options);
 
         $val = $this->sanitize($val);
 
-        if (strlen((string) $val) === 10) {
-            $areaCode = substr((string) $val, 0, 3);
-            $part1 = substr((string) $val, 3, 3);
-            $part2 = substr((string) $val, 6, 4);
+        if (strlen((string)$val) === 10) {
+            $areaCode = substr((string)$val, 0, 3);
+            $part1 = substr((string)$val, 3, 3);
+            $part2 = substr((string)$val, 6, 4);
             return '(' . $areaCode . ') ' . $part1 . '-' . $part2;
         } else {
             return $val;

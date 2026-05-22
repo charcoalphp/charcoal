@@ -505,7 +505,7 @@ class ObjectFormWidget extends FormWidget implements
             $formIdent = $obj->render($formIdent);
         }
 
-        $objFormData = $adminMetadata['forms'][$formIdent] ?? [];
+        $objFormData = ($adminMetadata['forms'][$formIdent] ?? []);
 
         $formGroups = [];
 
@@ -684,7 +684,7 @@ class ObjectFormWidget extends FormWidget implements
     #[\Override]
     protected function createFormGroup(?array $data = null)
     {
-        $type = $data['type'] ?? $this->defaultGroupType();
+        $type = ($data['type'] ?? $this->defaultGroupType());
 
         $group = $this->formGroupFactory()->create($type);
         $group->setForm($this->formWidget());

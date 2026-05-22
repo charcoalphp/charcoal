@@ -182,7 +182,7 @@ class TranslatorConfig extends AbstractConfig
      */
     public function setDebug($debug): static
     {
-        $this->debug = (bool) $debug;
+        $this->debug = (bool)$debug;
         return $this;
     }
 

@@ -507,7 +507,7 @@ class Email extends AbstractEntity implements
      */
     public function setLogEnabled($log): static
     {
-        $this->logEnabled = (bool) $log;
+        $this->logEnabled = (bool)$log;
         return $this;
     }
 
@@ -529,7 +529,7 @@ class Email extends AbstractEntity implements
      */
     public function setTrackOpenEnabled($track): static
     {
-        $this->trackOpenEnabled = (bool) $track;
+        $this->trackOpenEnabled = (bool)$track;
         return $this;
     }
 
@@ -551,7 +551,7 @@ class Email extends AbstractEntity implements
      */
     public function setTrackLinksEnabled($track): static
     {
-        $this->trackLinksEnabled = (bool) $track;
+        $this->trackLinksEnabled = (bool)$track;
         return $this;
     }
 
@@ -900,16 +900,16 @@ class Email extends AbstractEntity implements
                 '#<style[^>]*?>.*?</style>#siu'
             ],
             '',
-            (string) $str
+            (string)$str
         );
-        $str = strip_tags((string) $str);
+        $str = strip_tags((string)$str);
 
         // Trim whitespace
         $str = str_replace("\t", '', $str);
         $str = preg_replace('#\n\r|\r\n#', "\n", $str);
-        $str = preg_replace('#\n{3,}#', "\n\n", (string) $str);
-        $str = preg_replace('/ {2,}/', ' ', (string) $str);
-        $str = implode("\n", array_map(trim(...), explode("\n", (string) $str)));
+        $str = preg_replace('#\n{3,}#', "\n\n", (string)$str);
+        $str = preg_replace('/ {2,}/', ' ', (string)$str);
+        $str = implode("\n", array_map(trim(...), explode("\n", (string)$str)));
         return trim($str) . "\n";
     }
 

@@ -231,7 +231,7 @@ class SaveAction extends AbstractSaveAction
         } catch (PDOException $e) {
             $this->setObj(null);
 
-            $message = $e->errorInfo[2] ?? $e->getMessage();
+            $message = ($e->errorInfo[2] ?? $e->getMessage());
 
             $this->addFeedback('error', strtr($errorThrown, [
                 '{{ errorThrown }}' => $message

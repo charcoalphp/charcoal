@@ -44,17 +44,17 @@ class IdProperty extends AbstractProperty
     /**
      * Ensure multiple can not be TRUE for ID property (ID must be unique per object).
      *
-     * @see AbstractProperty::setMultiple()
+     * @param  boolean $multiple The multiple flag.
+     * @throws InvalidArgumentException If the multiple argument is TRUE (must be FALSE).
+     *@see AbstractProperty::setMultiple()
      *
      * @see    AbstractProperty::setMultiple()
-     * @param  boolean $flag The multiple flag.
-     * @throws InvalidArgumentException If the multiple argument is TRUE (must be FALSE).
      */
     #[\Override]
-    public function setMultiple($flag): static
+    public function setMultiple(bool $multiple): static
     {
-        $flag = (bool) $flag;
-        if ($flag) {
+        $multiple = (bool)$multiple;
+        if ($multiple) {
             throw new InvalidArgumentException(
                 'The ID property does not support multiple values.'
             );
@@ -77,16 +77,16 @@ class IdProperty extends AbstractProperty
     /**
      * Ensure l10n can not be TRUE for ID property (ID must be unique per object).
      *
-     * @see    AbstractProperty::setL10n()
-     * @param  boolean $flag The l10n, or "translatable" flag.
-     * @throws InvalidArgumentException If the L10N argument is TRUE (must be FALSE).
+     * @param  boolean $l10n The l10n, or "translatable" flag.
+          * @throws InvalidArgumentException If the L10N argument is TRUE (must be FALSE).
+     *@see    AbstractProperty::setL10n()
      */
     #[\Override]
-    public function setL10n($flag): static
+    public function setL10n(bool $l10n): static
     {
-        $flag = (bool) $flag;
+        $l10n = (bool)$l10n;
 
-        if ($flag) {
+        if ($l10n) {
             throw new InvalidArgumentException(
                 'The ID property can not be translatable.'
             );
@@ -156,10 +156,9 @@ class IdProperty extends AbstractProperty
      * If no ID is set upon first save, then auto-generate it if necessary.
      *
      * @param mixed $val The value, at time of saving.
-     * @return mixed
      */
     #[\Override]
-    public function save($val)
+    public function save(mixed $val): mixed
     {
         if (!$val) {
             $val = $this->autoGenerate();
@@ -168,11 +167,8 @@ class IdProperty extends AbstractProperty
         return $val;
     }
 
-    /**
-     * @return boolean
-     */
     #[\Override]
-    public function validateRequired()
+    public function validateRequired(): bool
     {
         $mode = $this->getMode();
 

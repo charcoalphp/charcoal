@@ -281,7 +281,7 @@ class SelectizeInput extends SelectInput
      */
     public function setAllowClipboardCopy($flag): static
     {
-        $this->allowClipboardCopy = (bool) $flag;
+        $this->allowClipboardCopy = (bool)$flag;
 
         return $this;
     }
@@ -301,7 +301,7 @@ class SelectizeInput extends SelectInput
      */
     public function setAllowUpdate($allowUpdate): static
     {
-        $this->allowUpdate = (bool) $allowUpdate;
+        $this->allowUpdate = (bool)$allowUpdate;
 
         return $this;
     }
@@ -321,7 +321,7 @@ class SelectizeInput extends SelectInput
      */
     public function setAllowCreate($allowCreate): static
     {
-        $this->allowCreate = (bool) $allowCreate;
+        $this->allowCreate = (bool)$allowCreate;
 
         return $this;
     }
@@ -772,7 +772,7 @@ class SelectizeInput extends SelectInput
         $itemTemplate = $selectizeTemplates['item'] ?? null;
         $optionTemplate = $selectizeTemplates['option'] ?? null;
         $selectizeController = $selectizeTemplates['controller'] ?? null;
-        $selectizeData = $selectizeTemplates['data'] ?? [];
+        $selectizeData = ($selectizeTemplates['data'] ?? []);
 
         if ($prop instanceof ObjectProperty) {
             foreach ($val as &$v) {
@@ -911,7 +911,7 @@ class SelectizeInput extends SelectInput
                 }
 
                 foreach ($map as &$mapProp) {
-                    $props = explode(':', (string) $mapProp);
+                    $props = explode(':', (string)$mapProp);
                     foreach ($props as $p) {
                         if (isset($objProperties[$p])) {
                             $mapProp = $p;
@@ -1002,7 +1002,7 @@ class SelectizeInput extends SelectInput
                     }
 
                     foreach ($map as &$mapProp) {
-                        $props = explode(':', (string) $mapProp);
+                        $props = explode(':', (string)$mapProp);
                         foreach ($props as $p) {
                             if (isset($objProperties[$p])) {
                                 $mapProp = $p;

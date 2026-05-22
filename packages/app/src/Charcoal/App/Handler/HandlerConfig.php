@@ -284,7 +284,7 @@ class HandlerConfig extends AbstractConfig
      */
     public function setCache($cache): static
     {
-        $this->cache = (bool) $cache;
+        $this->cache = (bool)$cache;
         return $this;
     }
 
