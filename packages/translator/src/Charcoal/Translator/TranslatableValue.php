@@ -124,8 +124,9 @@ class TranslatableValue implements
      * This method is to maintain compatibility with {@see Translation}.
      *
      * @param (callable(mixed, string): mixed) $callback Function to apply to each value.
+     * @deprecated Will be removed in future version in favor of keeping this class Immutable.
      */
-    #[\Deprecated(message: 'Will be removed in future version in favor of keeping this class Immutable.')]
+    #![\Deprecated(message: 'Will be removed in future version in favor of keeping this class Immutable.')]
     public function each(callable $callback): self
     {
         foreach ($this->translations as $locale => $translation) {
@@ -140,8 +141,9 @@ class TranslatableValue implements
      * This method is to maintain compatibility with {@see Translation}.
      *
      * @param (callable(mixed): mixed) $callback Function to apply to each value.
+     * @deprecated Will be removed in future version in favor of keeping this class Immutable.
      */
-    #[\Deprecated(message: 'Will be removed in future version in favor of keeping this class Immutable.')]
+    #![\Deprecated(message: 'Will be removed in future version in favor of keeping this class Immutable.')]
     public function sanitize(callable $callback): self
     {
         foreach ($this->translations as $locale => $translation) {
@@ -195,7 +197,7 @@ class TranslatableValue implements
      * @throws DomainException If the array key is not found.
      * @see    ArrayAccess::offsetGet()
      */
-    public function offsetGet($offset)
+    public function offsetGet($offset): mixed
     {
         if (!is_string($offset)) {
             throw new InvalidArgumentException(sprintf(
