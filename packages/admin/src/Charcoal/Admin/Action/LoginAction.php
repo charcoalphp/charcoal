@@ -64,7 +64,7 @@ class LoginAction extends AdminAction
                 '{{ errorMessage }}' => $failMessage
             ]);
 
-            $ip = $_SERVER['REMOTE_ADDR'] ?? null;
+            $ip = ($_SERVER['REMOTE_ADDR'] ?? null);
 
             $email    = $request->getParam('email');
             $password = $request->getParam('password');

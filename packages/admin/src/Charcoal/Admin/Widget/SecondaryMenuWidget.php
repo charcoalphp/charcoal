@@ -24,9 +24,10 @@ use Charcoal\Admin\Ui\SecondaryMenu\SecondaryMenuGroupInterface;
 class SecondaryMenuWidget extends AdminWidget implements
     SecondaryMenuWidgetInterface
 {
-    public $isCurrent;
     use ActionContainerTrait;
     use HttpAwareTrait;
+
+    public $isCurrent;
 
     /**
      * Default sorting priority for an action.

@@ -51,7 +51,7 @@ class SearchWidget extends AdminWidget implements CollectionContainerInterface
     {
         $obj             = $this->proto();
         $metadata        = $obj->metadata();
-        $adminMetadata   = $metadata['admin'] ?? null;
+        $adminMetadata   = ($metadata['admin'] ?? null);
         $collectionIdent = $this->collectionIdent();
         if (!$collectionIdent) {
             $collectionIdent = ($adminMetadata['default_list'] ?? '');
@@ -80,7 +80,7 @@ class SearchWidget extends AdminWidget implements CollectionContainerInterface
             $collectionIdent = $this->collectionIdent();
             if ($collectionIdent) {
                 $metadata      = $model->metadata();
-                $adminMetadata = $metadata['admin'] ?? null;
+                $adminMetadata = ($metadata['admin'] ?? null);
 
                 if (isset($adminMetadata['lists'][$collectionIdent]['properties'])) {
                     // Flipping to have property ident as key

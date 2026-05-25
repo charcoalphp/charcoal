@@ -299,7 +299,7 @@ class AdminWidget extends AbstractWidget implements
 
         $filters = array_merge($this->defaultDataSourceFilters(), $this->dataSourceFilters);
 
-        return $filters[$sourceIdent] ?? null;
+        return ($filters[$sourceIdent] ?? null);
     }
 
     /**

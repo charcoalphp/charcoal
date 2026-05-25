@@ -19,9 +19,10 @@ class DocTemplate extends AdminTemplate implements
     DashboardContainerInterface,
     ObjectContainerInterface
 {
-    public $headerMenu;
     use DashboardContainerTrait;
     use ObjectContainerTrait;
+
+    public $headerMenu;
 
     /**
      * Retrieve the list of parameters to extract from the HTTP request.
@@ -197,7 +198,7 @@ class DocTemplate extends AdminTemplate implements
 
         $objMetadata = $obj->metadata();
 
-        $adminMetadata = $objMetadata['admin'] ?? null;
+        $adminMetadata = ($objMetadata['admin'] ?? null);
         if ($adminMetadata === null) {
             throw new Exception(sprintf(
                 'The object %s does not have an admin metadata.',

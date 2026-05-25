@@ -61,7 +61,7 @@ class LostPasswordAction extends AdminAction
     {
         $translator = $this->translator();
 
-        $ip = $_SERVER['REMOTE_ADDR'] ?? null;
+        $ip = ($_SERVER['REMOTE_ADDR'] ?? null);
 
         $email = $request->getParam('email');
         if (!$email) {
@@ -90,7 +90,8 @@ class LostPasswordAction extends AdminAction
             return $response;
         }
 
-        $doneMessage = $translator->translate('If a registered user matches the given email address, instructions to reset your password will be sent to the email address registered with that account.');
+        $doneMessage = $translator->translate('If a registered user matches the given email address, instructions' .
+            ' to reset your password will be sent to the email address registered with that account.');
         $failMessage = $translator->translate('An error occurred while processing the password reset request.');
 
         $authenticator = $this->authenticator();

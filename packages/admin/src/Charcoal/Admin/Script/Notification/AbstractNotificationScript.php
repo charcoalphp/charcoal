@@ -27,8 +27,9 @@ use Charcoal\Admin\User;
  */
 abstract class AbstractNotificationScript extends AdminScript implements CronScriptInterface
 {
-    public $revisionFactory;
     use CronScriptTrait;
+
+    public $revisionFactory;
 
     private ?\Charcoal\Factory\FactoryInterface $notificationFactory = null;
 

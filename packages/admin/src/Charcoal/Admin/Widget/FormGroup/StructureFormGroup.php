@@ -396,7 +396,7 @@ class StructureFormGroup extends FormGroupWidget implements
             $property = $this->storageProperty();
             $struct   = $property->getStructureMetadata();
 
-            $this->autoFormGroup = $struct['admin']['auto_form_group'] ?? true;
+            $this->autoFormGroup = ($struct['admin']['auto_form_group'] ?? true);
         }
 
         return $this->autoFormGroup;

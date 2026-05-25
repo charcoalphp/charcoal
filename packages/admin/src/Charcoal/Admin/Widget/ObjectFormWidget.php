@@ -27,11 +27,12 @@ use Charcoal\Admin\Ui\ObjectContainerTrait;
 class ObjectFormWidget extends FormWidget implements
     ObjectContainerInterface
 {
+    use ObjectContainerTrait;
+
     /**
      * @var mixed
      */
     public $nextUrl;
-    use ObjectContainerTrait;
 
     /**
      * @var string

@@ -71,7 +71,7 @@ class SelectizeRenderer
 
         if ($controllerIdent && is_string($controllerIdent)) {
             $controllerIdent    = explode('::', $controllerIdent);
-            $controllerCallable = $controllerIdent[1] ?? null;
+            $controllerCallable = ($controllerIdent[1] ?? null);
             $controllerIdent    = $controllerIdent[0];
 
             $template = $this->templateFactory->create($controllerIdent);

@@ -227,7 +227,7 @@ class EditTemplate extends AdminTemplate implements
 
         $objMetadata = $obj->metadata();
 
-        $adminMetadata = $objMetadata['admin'] ?? null;
+        $adminMetadata = ($objMetadata['admin'] ?? null);
         if ($adminMetadata === null) {
             throw new Exception(sprintf(
                 'The object %s does not have an admin metadata.',

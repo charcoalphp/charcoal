@@ -32,11 +32,12 @@ use Charcoal\Admin\Template\ElfinderTemplate;
  */
 class ElfinderConnectorAction extends AdminAction
 {
+    use CallableResolverAwareTrait;
+
     /**
      * @var \elFinderConnector
      */
     public $connector;
-    use CallableResolverAwareTrait;
 
     /**
      * The default relative path (from filesystem's root) to the storage directory.
@@ -876,7 +877,7 @@ class ElfinderConnectorAction extends AdminAction
      */
     protected function getFilesystem($ident)
     {
-        return $this->filesystems[$ident] ?? null;
+        return ($this->filesystems[$ident] ?? null);
     }
 
     /**

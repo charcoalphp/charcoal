@@ -603,7 +603,7 @@ class FormPropertyWidget extends AdminWidget implements
         if ($this->showLabel === null) {
             $prop = $this->property();
             $show = $prop['show_label'];
-            $this->showLabel = $show ?? true;
+            $this->showLabel = ($show ?? true);
         }
 
         if ($this->showLabel !== false) {
@@ -636,7 +636,7 @@ class FormPropertyWidget extends AdminWidget implements
         if ($this->showDescription === null) {
             $prop = $this->property();
             $show = $prop['show_description'];
-            $this->showDescription = $show ?? true;
+            $this->showDescription = ($show ?? true);
         }
 
         if ($this->showDescription !== false) {
@@ -669,7 +669,7 @@ class FormPropertyWidget extends AdminWidget implements
         if ($this->showNotes === null) {
             $prop = $this->property();
             $show = $prop['show_notes'];
-            $this->showNotes = $show ?? true;
+            $this->showNotes = ($show ?? true);
         }
 
         if ($this->showNotes !== false) {

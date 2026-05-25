@@ -62,7 +62,7 @@ class LogoutAction extends AdminAction
         }
 
         /** Fail silently — Never confirm or deny the existence of an account. */
-        $ip = $_SERVER['REMOTE_ADDR'] ?? null;
+        $ip = ($_SERVER['REMOTE_ADDR'] ?? null);
         if ($ip) {
             $logMessage = sprintf('[Admin] Logout attempt for unauthenticated user from %s', $ip);
         } else {

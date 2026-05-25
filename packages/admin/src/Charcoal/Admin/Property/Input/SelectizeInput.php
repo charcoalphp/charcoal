@@ -769,9 +769,9 @@ class SelectizeInput extends SelectInput
         }
 
         $selectizeTemplates = $this->selectizeTemplates();
-        $itemTemplate = $selectizeTemplates['item'] ?? null;
-        $optionTemplate = $selectizeTemplates['option'] ?? null;
-        $selectizeController = $selectizeTemplates['controller'] ?? null;
+        $itemTemplate = ($selectizeTemplates['item'] ?? null);
+        $optionTemplate = ($selectizeTemplates['option'] ?? null);
+        $selectizeController = ($selectizeTemplates['controller'] ?? null);
         $selectizeData = ($selectizeTemplates['data'] ?? []);
 
         if ($prop instanceof ObjectProperty) {

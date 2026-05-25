@@ -26,8 +26,9 @@ use Charcoal\Translator\TranslatorAwareTrait;
  */
 class Exporter
 {
-    public $logger;
     use TranslatorAwareTrait;
+
+    public $logger;
 
     /**
      * Output file name

@@ -31,7 +31,7 @@ class DocFormPropertyWidget extends FormPropertyWidget
     {
         $displayOps = $this->displayOptions();
 
-        return $displayOps['collapsible'] ?? false;
+        return ($displayOps['collapsible'] ?? false);
     }
 
     /**
@@ -41,7 +41,7 @@ class DocFormPropertyWidget extends FormPropertyWidget
     {
         $displayOps = $this->displayOptions();
 
-        return $displayOps['collapsed'] ?? false;
+        return ($displayOps['collapsed'] ?? false);
     }
 
     /**
@@ -51,7 +51,7 @@ class DocFormPropertyWidget extends FormPropertyWidget
     {
         $displayOps = $this->displayOptions();
 
-        return $displayOps['parented'] ?? false;
+        return ($displayOps['parented'] ?? false);
     }
 
     /**

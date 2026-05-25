@@ -23,10 +23,11 @@ class InfoTemplate extends AdminTemplate implements
     DashboardContainerInterface,
     ObjectContainerInterface
 {
-    public $metadataLoader;
-    public $collectionLoader;
     use DashboardContainerTrait;
     use ObjectContainerTrait;
+
+    public $metadataLoader;
+    public $collectionLoader;
 
     private ?array $metadataFiles = null;
 
