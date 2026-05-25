@@ -85,10 +85,9 @@ class ElfinderTemplate extends AdminTemplate
      * Sets the template data from a PSR Request object.
      *
      * @param  RequestInterface $request A PSR-7 compatible Request instance.
-     * @return self
      */
     #[\Override]
-    protected function setDataFromRequest(RequestInterface $request): bool
+    protected function setDataFromRequest(RequestInterface $request): static
     {
         $keys = $this->validDataFromRequest();
         $data = $request->getParams($keys);
