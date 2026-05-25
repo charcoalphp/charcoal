@@ -501,7 +501,7 @@ trait HierarchicalTrait
     {
         $objType = $this->objType();
 
-        return static::$objectCache[$objType][$id] ?? null;
+        return (static::$objectCache[$objType][$id] ?? null);
     }
 
     /**
