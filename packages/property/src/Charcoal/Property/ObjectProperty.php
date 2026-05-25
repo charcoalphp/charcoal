@@ -291,9 +291,9 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
             return '';
         }
 
-        $pattern = $options['pattern'] ?? null;
+        $pattern = ($options['pattern'] ?? null);
 
-        $lang = $options['lang'] ?? null;
+        $lang = ($options['lang'] ?? null);
 
         if ($val instanceof ModelInterface) {
             $propertyVal = $this->renderObjPattern($val, $pattern, $lang);

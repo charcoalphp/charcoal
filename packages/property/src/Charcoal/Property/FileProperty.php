@@ -1566,9 +1566,9 @@ class FileProperty extends AbstractProperty
 
                     $parsedFiles[$field] = [
                         'tmp_name' => $uploadedFile['tmp_name'],
-                        'name'     => $uploadedFile['name'] ?? null,
-                        'type'     => $uploadedFile['type'] ?? null,
-                        'size'     => $uploadedFile['size'] ?? null,
+                        'name'     => ($uploadedFile['name'] ?? null),
+                        'type'     => ($uploadedFile['type'] ?? null),
+                        'size'     => ($uploadedFile['size'] ?? null),
                         'error'    => $uploadedFile['error'],
                     ];
                 }
