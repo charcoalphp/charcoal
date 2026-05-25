@@ -79,7 +79,7 @@ class ViewServiceProvider implements ServiceProviderInterface
          */
         $container['view/config'] = function (Container $container): ViewConfig {
             $appConfig  = ($container['config'] ?? []);
-            $viewConfig = $appConfig['view'] ?? null;
+            $viewConfig = ($appConfig['view'] ?? null);
             $viewConfig = new ViewConfig($viewConfig);
 
             if (isset($container['module/classes'])) {
