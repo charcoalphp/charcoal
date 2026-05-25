@@ -85,7 +85,7 @@ abstract class AbstractFactory implements FactoryInterface
         }
 
         if (!isset($data['resolver'])) {
-            $opts = $data['resolver_options'] ?? null;
+            $opts = ($data['resolver_options'] ?? null);
             $data['resolver'] = new GenericResolver($opts);
         }
 
