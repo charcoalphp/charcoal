@@ -230,7 +230,7 @@ abstract class AbstractConfig extends AbstractEntity implements
             return $this->{$key}();
         }
 
-        return $this->{$key} ?? $this->getInDelegates($key);
+        return ($this->{$key} ?? $this->getInDelegates($key));
     }
 
     /**

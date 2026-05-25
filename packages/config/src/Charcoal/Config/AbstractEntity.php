@@ -235,7 +235,7 @@ abstract class AbstractEntity implements EntityInterface
             return $this->{$key}();
         }
 
-        return $this->{$key} ?? null;
+        return ($this->{$key} ?? null);
     }
 
     /**
