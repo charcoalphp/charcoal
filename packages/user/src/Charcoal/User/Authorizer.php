@@ -65,6 +65,7 @@ class Authorizer extends AbstractAuthorizer
     /**
      * Determine if access is granted by checking the user's role(s) for permission(s).
      *
+     * @deprecated Use {@see AbstractAuthorizer::isUserGranted()} instead.
      *
      * @param  UserInterface $user           The user to check.
      * @param  string[]      $aclPermissions The ACL privilege(s) to check.
@@ -73,7 +74,7 @@ class Authorizer extends AbstractAuthorizer
      *     Returns TRUE if an empty array of permissions is given.
      *     Returns NULL if no applicable roles or permissions could be checked.
      */
-    #[\Deprecated(message: 'In favour of AbstractAuthorizer::isUserGranted()')]
+    #![\Deprecated(message: 'In favour of AbstractAuthorizer::isUserGranted()')]
     public function userAllowed(UserInterface $user, array $aclPermissions)
     {
         if ($aclPermissions === []) {
