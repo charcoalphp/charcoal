@@ -10,7 +10,7 @@ use Psr\Http\Message\RequestInterface;
 // From Pimple
 use Pimple\Container;
 // From Mustache
-use Mustache_LambdaHelper as LambdaHelper;
+use Mustache\LambdaHelper as LambdaHelper;
 // From 'charcoal-factory'
 use Charcoal\Factory\FactoryInterface;
 // From 'charcoal-translator'
@@ -94,15 +94,15 @@ class ElfinderTemplate extends AdminTemplate
         $data = $request->getParams($keys);
 
         if (isset($data['obj_type'])) {
-            $this->objType = filter_var($data['obj_type'], FILTER_SANITIZE_STRING);
+            $this->objType = htmlspecialchars(trim($data['obj_type']), ENT_QUOTES, 'UTF-8');
         }
 
         if (isset($data['obj_id'])) {
-            $this->objId = filter_var($data['obj_id'], FILTER_SANITIZE_STRING);
+            $this->objId = htmlspecialchars(trim($data['obj_id']), ENT_QUOTES, 'UTF-8');
         }
 
         if (isset($data['property'])) {
-            $this->propertyIdent = filter_var($data['property'], FILTER_SANITIZE_STRING);
+            $this->propertyIdent = htmlspecialchars(trim($data['property']), ENT_QUOTES, 'UTF-8');
         }
 
         if (isset($data['assets'])) {
@@ -110,7 +110,7 @@ class ElfinderTemplate extends AdminTemplate
         }
 
         if (isset($data['callback'])) {
-            $this->callbackIdent = filter_var($data['callback'], FILTER_SANITIZE_STRING);
+            $this->callbackIdent = htmlspecialchars(trim($data['callback']), ENT_QUOTES, 'UTF-8');
         }
 
         if (isset($this->elfinderConfig['translations'])) {
@@ -457,7 +457,7 @@ class ElfinderTemplate extends AdminTemplate
 
         $property = $this->formProperty();
         if ($property) {
-            $mimeTypes = filter_input(INPUT_GET, 'filetype', FILTER_SANITIZE_STRING);
+            $mimeTypes = htmlspecialchars(trim($_GET['filetype'] ?? ''), ENT_QUOTES, 'UTF-8');
 
             if ($mimeTypes) {
                 if ($mimeTypes === 'file') {

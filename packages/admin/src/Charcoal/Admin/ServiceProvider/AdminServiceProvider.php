@@ -16,7 +16,7 @@ use Psr\Http\Message\UriInterface;
 // From Slim
 use Slim\Http\Uri;
 // From Mustache
-use Mustache_LambdaHelper as LambdaHelper;
+use Mustache\LambdaHelper as LambdaHelper;
 // From 'charcoal-config'
 use Charcoal\Config\ConfigInterface;
 use Charcoal\Config\GenericConfig as Config;
@@ -372,7 +372,7 @@ class AdminServiceProvider implements ServiceProviderInterface
                  * @return UriInterface|null
                  */
                 'withAdminUrl' => function ($uri, ?LambdaHelper $helper = null) use ($adminUrl) {
-                    if ($helper instanceof \Mustache_LambdaHelper) {
+                    if ($helper instanceof LambdaHelper) {
                         $uri = $helper->render($uri);
                     }
 

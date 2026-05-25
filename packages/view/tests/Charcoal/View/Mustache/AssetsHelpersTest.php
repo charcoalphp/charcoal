@@ -5,9 +5,9 @@ namespace Charcoal\Tests\View\Mustache;
 use StdClass;
 
 // From Mustache
-use Mustache_Engine as MustacheEngine;
-use Mustache_LambdaHelper as LambdaHelper;
-use Mustache_Template as MustacheTemplate;
+use Mustache\Engine as MustacheEngine;
+use Mustache\LambdaHelper as LambdaHelper;
+use Mustache\Template as MustacheTemplate;
 
 // From 'charcoal-view'
 use Charcoal\View\Mustache\AssetsHelpers;
@@ -20,7 +20,7 @@ class AssetsHelpersTest extends AbstractTestCase
 {
     private \Charcoal\View\Mustache\AssetsHelpers $obj;
 
-    private \Mustache_Engine $mustache;
+    private MustacheEngine $mustache;
 
     public function setUp(): void
     {

@@ -6,7 +6,7 @@ use Aws\signer\signerClient;
 use InvalidArgumentException;
 use UnexpectedValueException;
 // From Mustache
-use Mustache_LambdaHelper as LambdaHelper;
+use Mustache\LambdaHelper as LambdaHelper;
 // From 'charcoal-view'
 use Charcoal\View\ViewableInterface;
 // From 'charcoal-property'

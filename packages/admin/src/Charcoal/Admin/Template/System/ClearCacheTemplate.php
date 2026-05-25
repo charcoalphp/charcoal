@@ -580,7 +580,7 @@ class ClearCacheTemplate extends AdminTemplate
         $this->cacheConfig           = $container['cache/config'];
 
         $this->mustacheEngine = function () use ($container) {
-            if (class_exists('\Mustache_Engine')) {
+            if (class_exists('\Mustache\Engine')) {
                 return $container['view/engine/mustache'];
             }
 

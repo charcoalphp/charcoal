@@ -89,7 +89,7 @@ class AssetsHelpers implements HelpersInterface
      */
     public function addJs(string $js, ?LambdaHelper $helper = null): void
     {
-        if ($helper instanceof \Mustache_LambdaHelper) {
+        if ($helper instanceof LambdaHelper) {
             $js = $helper->render($js);
         }
         self::$js .= $js;
@@ -119,7 +119,7 @@ class AssetsHelpers implements HelpersInterface
         $key = md5($js);
 
         if (!isset(self::$jsRequirements[$key])) {
-            if ($helper instanceof \Mustache_LambdaHelper) {
+            if ($helper instanceof LambdaHelper) {
                 $js = $helper->render($js);
             }
 
@@ -156,7 +156,7 @@ class AssetsHelpers implements HelpersInterface
      */
     public function addCss(string $css, ?LambdaHelper $helper = null): void
     {
-        if ($helper instanceof \Mustache_LambdaHelper) {
+        if ($helper instanceof LambdaHelper) {
             $css = $helper->render($css);
         }
         self::$css .= $css;
@@ -186,7 +186,7 @@ class AssetsHelpers implements HelpersInterface
         $key = md5($css);
 
         if (!isset(self::$cssRequirements[$key])) {
-            if ($helper instanceof \Mustache_LambdaHelper) {
+            if ($helper instanceof LambdaHelper) {
                 $css = $helper->render($css);
             }
 

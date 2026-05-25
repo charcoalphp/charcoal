@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Charcoal\View\Mustache;
 
 // From Mustache
-use Mustache_LambdaHelper as LambdaHelper;
+use Mustache\LambdaHelper as LambdaHelper;
 // From 'erusev/parsedown'
 use Parsedown;
 
@@ -45,7 +45,7 @@ class MarkdownHelpers implements HelpersInterface
      */
     public function __invoke($text, ?LambdaHelper $helper = null): string
     {
-        if ($helper instanceof \Mustache_LambdaHelper) {
+        if ($helper instanceof \Mustache\LambdaHelper) {
             $text = $helper->render($text);
         }
         return $this->parsedown->text($text);

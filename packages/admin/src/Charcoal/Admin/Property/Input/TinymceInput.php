@@ -4,7 +4,7 @@ namespace Charcoal\Admin\Property\Input;
 
 use InvalidArgumentException;
 // From Mustache
-use Mustache_LambdaHelper as LambdaHelper;
+use Mustache\LambdaHelper as LambdaHelper;
 // From 'charcoal-admin'
 use Charcoal\Admin\Property\Input\TextareaInput;
 

@@ -5,7 +5,7 @@ namespace Charcoal\Tests\View\Mustache;
 use LogicException;
 
 // From Mustache
-use Mustache_Engine as MustacheEngine;
+use Mustache\Engine as MustacheEngine;
 
 // From 'symfony/translation'
 use Symfony\Component\Translation\MessageSelector;
@@ -26,7 +26,7 @@ class TranslatorHelpersTest extends AbstractTestCase
 {
     private \Charcoal\Translator\Translator $translator;
 
-    private \Mustache_Engine $mustache;
+    private MustacheEngine $mustache;
 
     public function setUp(): void
     {
@@ -162,7 +162,7 @@ class TranslatorHelpersTest extends AbstractTestCase
     /**
      * @param  Translator|null $translator The translator service for the translator helpers.
      */
-    public function createMustacheEngine($translator = null): \Mustache_Engine
+    public function createMustacheEngine($translator = null): MustacheEngine
     {
         $helper   = new TranslatorHelpers([
             'translator' => $translator,
