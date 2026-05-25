@@ -165,7 +165,7 @@ class TableWidget extends AdminWidget implements CollectionContainerInterface
      * @return TableWidget Chainable
      */
     #[\Override]
-    public function setData(array $data): static
+    public function setData(array $data)
     {
         if (isset($data['obj_type'])) {
             $this->setObjType($data['obj_type']);

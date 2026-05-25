@@ -187,7 +187,7 @@ trait RevisionableTrait
         }
 
         $revisions = $loader->load();
-        return $revisions->objects();
+        return $revisions->values();
     }
 
     /**
