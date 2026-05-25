@@ -80,7 +80,7 @@ class Manager implements LoggerAwareInterface
     {
         if (!$acl->hasRole($role)) {
             // Add role
-            $parentRole = $permissions['parent'] ?? null;
+            $parentRole = ($permissions['parent'] ?? null);
             $parentRole = $parentRole ?: null;
             $newRole = new GenericRole($role);
             $acl->addRole($newRole, $parentRole);

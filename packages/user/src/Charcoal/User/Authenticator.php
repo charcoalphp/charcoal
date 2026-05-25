@@ -79,7 +79,7 @@ class Authenticator extends AbstractAuthenticator
         }
 
         $user['lastLoginDate'] = 'now';
-        $user['lastLoginIp']   = $_SERVER['REMOTE_ADDR'] ?? null;
+        $user['lastLoginIp']   = ($_SERVER['REMOTE_ADDR'] ?? null);
 
         if ($update && $userId) {
             $result = $user->update([
@@ -143,7 +143,7 @@ class Authenticator extends AbstractAuthenticator
 
         $user[$passwordKey]       = password_hash($password, PASSWORD_DEFAULT);
         $user['lastPasswordDate'] = 'now';
-        $user['lastPasswordIp']   = $_SERVER['REMOTE_ADDR'] ?? null;
+        $user['lastPasswordIp']   = ($_SERVER['REMOTE_ADDR'] ?? null);
 
         if ($update && $userId) {
             $result = $user->update([
