@@ -1,6 +1,7 @@
 <?php
 
 use Rector\Config\RectorConfig;
+use Rector\Php84\Rector\Class_\DeprecatedAnnotationToDeprecatedAttributeRector;
 use Rector\PHPUnit\Set\PHPUnitSetList;
 use Rector\ValueObject\PhpVersion;
 use Rector\Symfony\Set\SymfonySetList;
@@ -14,6 +15,8 @@ return RectorConfig::configure()
         __DIR__ . '/packages/*/tests',
     ])->withSkip([
         __DIR__ . '/packages/*/tests/*/*/Fixture/*',
+        // Prevent converting @deprecated annotations to #[Deprecated]
+        DeprecatedAnnotationToDeprecatedAttributeRector::class,
     ])
 //    ->withSymfonyContainerXml(__DIR__ . '/var/cache/dev/App_KernelDevDebugContainer.xml')
     ->withSets([
