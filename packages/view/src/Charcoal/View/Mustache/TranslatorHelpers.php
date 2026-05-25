@@ -6,7 +6,7 @@ namespace Charcoal\View\Mustache;
 
 use LogicException;
 // From Mustache
-use Mustache_LambdaHelper as LambdaHelper;
+use Mustache\LambdaHelper as LambdaHelper;
 // From 'charcoal-translator'
 use Charcoal\Translator\Translator;
 // From 'charcoal-view'
@@ -111,7 +111,7 @@ class TranslatorHelpers implements HelpersInterface
         }
 
         /** @var string Render any Mustache tags in the translation. */
-        return $helper->render($text);
+        return (string)$helper->render($text);
     }
 
     /**

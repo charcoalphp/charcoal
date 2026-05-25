@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Charcoal\View\Mustache;
 
 // From Mustache
-use Mustache_LambdaHelper as LambdaHelper;
+use Mustache\LambdaHelper as LambdaHelper;
 
 /**
  * Mustache helpers for rendering CSS and JavaScript.

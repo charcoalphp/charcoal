@@ -6,7 +6,7 @@ use InvalidArgumentException;
 use RuntimeException;
 use Traversable;
 // From Mustache
-use Mustache_Engine;
+use Mustache\Engine as Mustache_Engine;
 // From 'charcoal-view'
 use Charcoal\View\AbstractEngine;
 
@@ -27,7 +27,7 @@ class MustacheEngine extends AbstractEngine
     /**
      * The renderering framework.
      */
-    private ?\Mustache_Engine $mustache = null;
+    private ?Mustache_Engine $mustache = null;
 
     public function type(): string
     {
@@ -110,7 +110,7 @@ class MustacheEngine extends AbstractEngine
      */
     public function addHelper(string $name, $helper): static
     {
-        if ($this->mustache instanceof \Mustache_Engine) {
+        if ($this->mustache instanceof Mustache_Engine) {
             throw new RuntimeException(
                 'Can not add helper to Mustache engine: the engine has already been initialized.'
             );
@@ -152,7 +152,7 @@ class MustacheEngine extends AbstractEngine
 
     protected function mustache(): Mustache_Engine
     {
-        if (!$this->mustache instanceof \Mustache_Engine) {
+        if (!$this->mustache instanceof Mustache_Engine) {
             $this->mustache = $this->createMustache();
         }
 
