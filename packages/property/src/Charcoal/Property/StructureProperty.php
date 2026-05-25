@@ -107,7 +107,7 @@ class StructureProperty extends AbstractProperty
      * @return mixed|null
      */
     #[\Override]
-    protected function l10nVal($val, $lang = null)
+    protected function l10nVal(mixed $val, mixed $lang = null): mixed
     {
         if (!is_string($lang)) {
             $lang = is_array($lang) && isset($lang['lang']) ? $lang['lang'] : $this->translator()->getLocale();

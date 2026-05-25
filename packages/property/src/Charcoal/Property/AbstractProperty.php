@@ -956,7 +956,7 @@ abstract class AbstractProperty extends AbstractEntity implements
      * @param  mixed $lang The language to return the value in.
      * @return string|null
      */
-    protected function l10nVal(array $val, $lang = null)
+    protected function l10nVal(mixed $val, mixed $lang = null): mixed
     {
         if (!is_string($lang)) {
             $lang = is_array($lang) && isset($lang['lang']) ? $lang['lang'] : $this->translator()->getLocale();

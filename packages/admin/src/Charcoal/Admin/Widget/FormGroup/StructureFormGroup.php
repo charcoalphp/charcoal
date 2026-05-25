@@ -214,7 +214,7 @@ class StructureFormGroup extends FormGroupWidget implements
      * @return string If unset, returns the UI item type.
      */
     #[\Override]
-    public function template()
+    public function template(): ?string
     {
         $this->setDynamicTemplate('structure_template', $this->displayTemplate());
 

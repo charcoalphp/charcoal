@@ -644,10 +644,10 @@ trait CollectionContainerTrait
 
     /**
      * @param array|null $data Optional collection data.
-     * @return ModelInterface[]
+     * @return \ArrayAccess|array|ModelInterface[]
      * @todo Integrate $data; merge with $collectionConfig
      */
-    public function createCollection(?array $data = null): array
+    public function createCollection(?array $data = null): \ArrayAccess|array
     {
         $this->getObjTypeOrFail();
 

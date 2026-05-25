@@ -39,7 +39,7 @@ class HierarchicalTableWidget extends TableWidget
     protected function setupDisplayPropertyValue(
         ModelInterface $object,
         PropertyInterface $property
-    ) {
+    ): void {
         parent::setupDisplayPropertyValue($object, $property);
 
         if ($this->display instanceof HierarchicalDisplay) {
@@ -51,10 +51,9 @@ class HierarchicalTableWidget extends TableWidget
      * Sort the objects before they are displayed as rows.
      *
      * @see \Charcoal\Admin\Ui\CollectionContainerTrait::sortObjects()
-     * @return array
      */
     #[\Override]
-    public function sortObjects()
+    public function sortObjects(): array
     {
         $collection = new HierarchicalCollection($this->objects(), false);
         $collection

@@ -159,9 +159,8 @@ trait UiItemTrait
      *
      * @param  string|null $type The UI item type.
      * @throws InvalidArgumentException If the type is not a string (or null).
-     * @return self
      */
-    public function setType($type)
+    public function setType($type): static
     {
         if (is_string($type) || $type === null) {
             $this->type = $type;
@@ -178,10 +177,8 @@ trait UiItemTrait
      * Retrieve the UI item type.
      *
      * If it is not explicitely set (or null), then return the object's FQN.
-     *
-     * @return string
      */
-    public function type()
+    public function type(): ?string
     {
         if ($this->type === null) {
             return static::class;
@@ -196,9 +193,8 @@ trait UiItemTrait
      *
      * @param  string $template A template (identifier).
      * @throws InvalidArgumentException If the template is not a string.
-     * @return self
      */
-    public function setTemplate($template)
+    public function setTemplate($template): static
     {
         if (!is_string($template)) {
             throw new InvalidArgumentException(
@@ -216,7 +212,7 @@ trait UiItemTrait
      *
      * @return string If unset, returns the UI item type.
      */
-    public function template()
+    public function template(): ?string
     {
         if ($this->template === null) {
             return $this->type();

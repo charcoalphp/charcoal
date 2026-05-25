@@ -151,7 +151,7 @@ final class ModelLoader implements ArrayAccess
      * @param  string|integer $ident The object identifier to load.
      * @return ModelInterface
      */
-    public function offsetGet($ident)
+    public function offsetGet($ident): ModelInterface
     {
         return $this->load($ident);
     }
