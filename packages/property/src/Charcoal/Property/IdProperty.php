@@ -240,7 +240,7 @@ class IdProperty extends AbstractProperty
      * @see StorablePropertyTrait::sqlExtra()
      * @return string
      */
-    public function sqlExtra(): null
+    public function sqlExtra(): ?string
     {
         $mode = $this->getMode();
 

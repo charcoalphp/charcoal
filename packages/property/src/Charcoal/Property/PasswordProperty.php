@@ -28,7 +28,7 @@ class PasswordProperty extends StringProperty
      * @todo   Implement proper hashing/rehashing/validation.
      */
     #[\Override]
-    public function save(mixed $val)
+    public function save(mixed $val): mixed
     {
         if ($val === null || $val === '') {
             return $val;
