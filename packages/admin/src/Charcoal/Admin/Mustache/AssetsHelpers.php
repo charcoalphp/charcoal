@@ -74,7 +74,7 @@ class AssetsHelpers implements HelpersInterface
         if ($helper instanceof LambdaHelper) {
             $text = $helper->render($text);
         }
-        if($this->action === null) {
+        if ($this->action === null) {
             return $text;
         }
 

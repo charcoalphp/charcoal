@@ -394,13 +394,13 @@ trait ActionContainerTrait
 
         if ($renderer === null) {
             /** @todo Shame! Force `{{ id }}` to use "obj_id" GET parameter… */
-            $objId = htmlspecialchars(trim($_GET['obj_id'] ?? ''), ENT_QUOTES, 'UTF-8');
+            $objId = htmlspecialchars(trim(($_GET['obj_id'] ?? '')), ENT_QUOTES, 'UTF-8');
             if ($objId) {
                 $url = preg_replace('~\{\{\s*(obj_)?id\s*\}\}~', $objId, $url);
             }
 
             /** @todo Shame! Force `{{ type }}` to use "obj_type" GET parameter… */
-            $objType = htmlspecialchars(trim($_GET['obj_type'] ?? ''), ENT_QUOTES, 'UTF-8');
+            $objType = htmlspecialchars(trim(($_GET['obj_type'] ?? '')), ENT_QUOTES, 'UTF-8');
             if ($objType) {
                 $url = preg_replace('~\{\{\s*(obj_)?type\s*\}\}~', $objType, (string)$url);
             }

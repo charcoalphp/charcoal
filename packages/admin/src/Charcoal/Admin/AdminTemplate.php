@@ -782,7 +782,7 @@ class AdminTemplate extends AbstractTemplate implements
             }
 
             // Get main menu from the obj_type
-            $objType = htmlspecialchars(trim($_GET['obj_type'] ?? ''), ENT_QUOTES, 'UTF-8');
+            $objType = htmlspecialchars(trim(($_GET['obj_type'] ?? '')), ENT_QUOTES, 'UTF-8');
             if ($objType) {
                 $secondaryMenuItems = $this->adminConfig('secondary_menu');
                 foreach ($secondaryMenuItems as $main => $item) {
@@ -794,7 +794,7 @@ class AdminTemplate extends AbstractTemplate implements
             }
 
             // Choose main menu with a get parameter
-            $mainMenuFromRequest = htmlspecialchars(trim($_GET['main_menu'] ?? ''), ENT_QUOTES, 'UTF-8');
+            $mainMenuFromRequest = htmlspecialchars(trim(($_GET['main_menu'] ?? '')), ENT_QUOTES, 'UTF-8');
             if ($mainMenuFromRequest) {
                 $mainMenuIdent = $mainMenuFromRequest;
             }

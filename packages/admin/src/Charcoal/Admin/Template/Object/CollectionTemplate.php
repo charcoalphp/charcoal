@@ -152,7 +152,7 @@ class CollectionTemplate extends AdminTemplate implements
         if (isset($metadata['admin']['lists'])) {
             $adminMetadata = $metadata['admin'];
 
-            $listIdent = htmlspecialchars(trim($_GET['collection_ident'] ?? ''), ENT_QUOTES, 'UTF-8');
+            $listIdent = htmlspecialchars(trim(($_GET['collection_ident'] ?? '')), ENT_QUOTES, 'UTF-8');
             if (!$listIdent) {
                 $listIdent = $this->collectionIdent();
             }
@@ -279,7 +279,7 @@ class CollectionTemplate extends AdminTemplate implements
      */
     private function metadataDashboardIdent()
     {
-        $dashboardIdent = htmlspecialchars(trim($_GET['dashboard_ident'] ?? ''), ENT_QUOTES, 'UTF-8');
+        $dashboardIdent = htmlspecialchars(trim(($_GET['dashboard_ident'] ?? '')), ENT_QUOTES, 'UTF-8');
         if ($dashboardIdent) {
             return $dashboardIdent;
         }

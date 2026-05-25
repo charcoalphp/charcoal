@@ -85,7 +85,7 @@ class EditTemplate extends AdminTemplate implements
                 if (isset($metadata['admin']['forms'])) {
                     $adminMetadata = $metadata['admin'];
 
-                    $formIdent = htmlspecialchars(trim($_GET['form_ident'] ?? ''), ENT_QUOTES, 'UTF-8');
+                    $formIdent = htmlspecialchars(trim(($_GET['form_ident'] ?? '')), ENT_QUOTES, 'UTF-8');
                     if (!$formIdent) {
                         if (isset($adminMetadata['defaultForm'])) {
                             $fomIdent = $adminMetadata['defaultForm'];
@@ -176,7 +176,7 @@ class EditTemplate extends AdminTemplate implements
         $dashboardIdent = $this->dashboardIdent();
 
         if (empty($dashboardIdent)) {
-            $dashboardIdent = htmlspecialchars(trim($_GET['dashboard_ident'] ?? ''), ENT_QUOTES, 'UTF-8');
+            $dashboardIdent = htmlspecialchars(trim(($_GET['dashboard_ident'] ?? '')), ENT_QUOTES, 'UTF-8');
         }
 
         if (empty($dashboardIdent)) {

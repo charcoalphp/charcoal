@@ -310,8 +310,8 @@ class MapWidget extends AdminWidget implements FormGroupInterface
     public function obj()
     {
         if ($this->obj === null) {
-            $objId   = htmlspecialchars(trim($_GET['obj_id'] ?? ''), ENT_QUOTES, 'UTF-8');
-            $objType = htmlspecialchars(trim($_GET['obj_type'] ?? ''), ENT_QUOTES, 'UTF-8');
+            $objId   = htmlspecialchars(trim(($_GET['obj_id'] ?? '')), ENT_QUOTES, 'UTF-8');
+            $objType = htmlspecialchars(trim(($_GET['obj_type'] ?? '')), ENT_QUOTES, 'UTF-8');
             if ($objId && $objType) {
                 $obj = $this->modelFactory()->create($objType);
                 $obj->load($objId);

@@ -457,7 +457,7 @@ class ElfinderTemplate extends AdminTemplate
 
         $property = $this->formProperty();
         if ($property) {
-            $mimeTypes = htmlspecialchars(trim($_GET['filetype'] ?? ''), ENT_QUOTES, 'UTF-8');
+            $mimeTypes = htmlspecialchars(trim(($_GET['filetype'] ?? '')), ENT_QUOTES, 'UTF-8');
 
             if ($mimeTypes) {
                 if ($mimeTypes === 'file') {
