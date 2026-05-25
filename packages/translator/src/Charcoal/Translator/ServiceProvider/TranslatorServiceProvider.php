@@ -57,7 +57,7 @@ class TranslatorServiceProvider implements ServiceProviderInterface
          */
         $container['locales/config'] = function (Container $container): \Charcoal\Translator\LocalesConfig {
             $appConfig     = ($container['config'] ?? []);
-            $localesConfig = $appConfig['locales'] ?? null;
+            $localesConfig = ($appConfig['locales'] ?? null);
             return new LocalesConfig($localesConfig);
         };
 
@@ -176,7 +176,7 @@ class TranslatorServiceProvider implements ServiceProviderInterface
          */
         $container['translator/config'] = function (Container $container): \Charcoal\Translator\TranslatorConfig {
             $appConfig   = ($container['config'] ?? []);
-            $transConfig = $appConfig['translator'] ?? null;
+            $transConfig = ($appConfig['translator'] ?? null);
 
             if (isset($transConfig['paths'])) {
                 $transConfig['paths'] = $appConfig->resolveValues($transConfig['paths']);

@@ -66,10 +66,10 @@ class LocalesManager
     {
         $this->setLocales($data['locales']);
 
-        $default = $data['default_language'] ?? null;
+        $default = ($data['default_language'] ?? null);
         $this->setDefaultLocale($default);
 
-        $current = $data['current_language'] ?? null;
+        $current = ($data['current_language'] ?? null);
         $this->setCurrentLocale($current);
     }
 
