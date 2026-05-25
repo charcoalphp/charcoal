@@ -193,7 +193,7 @@ class CacheServiceProvider implements ServiceProviderInterface
          */
         $container['cache/config'] = function (Container $container): \Charcoal\Cache\CacheConfig {
             $appConfig   = ($container['config'] ?? []);
-            $cacheConfig = $appConfig['cache'] ?? null;
+            $cacheConfig = ($appConfig['cache'] ?? null);
             return new CacheConfig($cacheConfig);
         };
 
