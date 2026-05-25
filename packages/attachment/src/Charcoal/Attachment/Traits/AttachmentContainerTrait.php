@@ -175,9 +175,9 @@ trait AttachmentContainerTrait
                     $attMeta['hasFaIcon'] = (bool)$faIcon;
 
                     // Custom forms
-                    $attMeta['formIdent'] = $attMeta['form_ident'] ?? null;
+                    $attMeta['formIdent'] = ($attMeta['form_ident'] ?? null);
 
-                    $attMeta['quickFormIdent'] = $attMeta['quick_form_ident'] ?? null;
+                    $attMeta['quickFormIdent'] = ($attMeta['quick_form_ident'] ?? null);
 
                     $this->attachableObjects[$attType] = $attMeta;
                 }

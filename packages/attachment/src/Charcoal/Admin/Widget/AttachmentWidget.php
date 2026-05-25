@@ -33,6 +33,11 @@ class AttachmentWidget extends AdminWidget implements
     ConfigurableInterface,
     ObjectContainerInterface
 {
+    use ConfigurableAttachmentsTrait;
+    use ObjectContainerTrait {
+        ObjectContainerTrait::createOrLoadObj as createOrCloneOrLoadObj;
+    }
+
     /**
      * @var int
      */
@@ -41,10 +46,6 @@ class AttachmentWidget extends AdminWidget implements
      * @var int
      */
     public $page;
-    use ConfigurableAttachmentsTrait;
-    use ObjectContainerTrait {
-        ObjectContainerTrait::createOrLoadObj as createOrCloneOrLoadObj;
-    }
 
     /**
      * The widget's title.
@@ -284,7 +285,7 @@ class AttachmentWidget extends AdminWidget implements
             $this->attachmentOptions();
         }
 
-        return $this->attachmentOptions[$key] ?? null;
+        return ($this->attachmentOptions[$key] ?? null);
     }
 
     /**
