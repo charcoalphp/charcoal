@@ -39,7 +39,7 @@ class MetadataConfig extends AbstractConfig
         ];
 
         if ($key) {
-            return $data[$key] ?? null;
+            return ($data[$key] ?? null);
         }
 
         return $data;
@@ -110,7 +110,7 @@ class MetadataConfig extends AbstractConfig
 
     public function cache(): bool|object|array
     {
-        return $this->cache ?? false;
+        return ($this->cache ?? false);
     }
 
     /**

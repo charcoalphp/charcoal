@@ -1,13 +1,13 @@
 <?php
 
-declare(strict_types=1);
-
 /**
  * Charcoal Model class file
  * Part of the `charcoal-core` package.
  *
  * @author Mathieu Ducharme <mat@locomotive.ca>
  */
+
+declare(strict_types=1);
 
 namespace Charcoal\Model;
 

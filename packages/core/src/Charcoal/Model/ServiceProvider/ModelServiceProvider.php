@@ -208,7 +208,7 @@ class ModelServiceProvider implements ServiceProviderInterface
              */
             $container['metadata/config'] = function (Container $container): \Charcoal\Model\Service\MetadataConfig {
                 $appConfig  = ($container['config'] ?? []);
-                $metaConfig = $appConfig['metadata'] ?? null;
+                $metaConfig = ($appConfig['metadata'] ?? null);
                 $metaConfig = new MetadataConfig($metaConfig);
 
                 if (isset($container['module/classes'])) {
