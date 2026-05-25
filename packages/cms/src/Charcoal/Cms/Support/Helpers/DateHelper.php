@@ -252,7 +252,7 @@ class DateHelper
         $content = $this->translator()->translation($case['content']);
 
         $formats['from'] = $case['formats']['from'];
-        $formats['to'] = $case['formats']['to'] ?? null;
+        $formats['to'] = ($case['formats']['to'] ?? null);
 
         $formats['from'] = $this->translator()->translation($formats['from']);
         $formats['to'] = $this->translator()->translation($formats['to']);
