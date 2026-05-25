@@ -69,7 +69,8 @@ class Parser
             return $email;
         }
 
-        $name = str_replace('"', '', filter_var($arr['name'], FILTER_SANITIZE_STRING));
+        $name = htmlspecialchars($arr['name'], ENT_NOQUOTES, 'UTF-8');
+        $name = str_replace('"', '', $name);
         return sprintf('"%s" <%s>', $name, $email);
     }
 }

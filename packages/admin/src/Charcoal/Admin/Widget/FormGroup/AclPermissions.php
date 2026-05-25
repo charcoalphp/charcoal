@@ -64,7 +64,7 @@ class AclPermissions extends AdminWidget implements
      */
     public function objId(): string|false|null
     {
-        return filter_input(INPUT_GET, 'obj_id', FILTER_SANITIZE_STRING);
+        return htmlspecialchars(trim($_GET['obj_id'] ?? ''), ENT_QUOTES, 'UTF-8');
     }
 
     public function permissionCategories(): array
