@@ -485,10 +485,9 @@ class AppServiceProvider implements ServiceProviderInterface
                  * @return UriInterface|null
                  */
                 'withBaseUrl' => function ($uri, ?LambdaHelper $helper = null) use ($baseUrl) {
-                    if ($helper instanceof \Mustache\LambdaHelper) {
+                    if ($helper instanceof LambdaHelper) {
                         $uri = $helper->render($uri);
                     }
-
                     $uri = strval($uri);
                     if ($uri === '') {
                         $uri = $baseUrl->withPath('');
@@ -504,7 +503,7 @@ class AppServiceProvider implements ServiceProviderInterface
                         }
                     }
 
-                    return $uri;
+                    return (string)$uri;
                 },
                 'renderContext' => fn($text, ?LambdaHelper $helper = null) => $helper->render('{{>' . $helper->render($text) . '}}'),
             ];
