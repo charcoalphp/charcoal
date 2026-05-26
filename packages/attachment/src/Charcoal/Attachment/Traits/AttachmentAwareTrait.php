@@ -95,7 +95,6 @@ trait AttachmentAwareTrait
                     get_debug_type($type)
                 ));
             }
-
             $type = preg_replace('/([a-z])([A-Z])/', '$1-$2', $type);
             $type = strtolower(str_replace('\\', '/', $type));
         }
@@ -138,7 +137,7 @@ trait AttachmentAwareTrait
                 attachment.active = 1';
         }
 
-        if ($type !== '' && $type !== '0') {
+        if ($type !== '' && $type !== 0) {
             $query .= sprintf('
             AND
                 attachment.type = "%s"', $type);
@@ -150,7 +149,7 @@ trait AttachmentAwareTrait
             AND
                 joined.object_id = "%s"', $objType, $objId);
 
-        if ($group !== '' && $group !== '0') {
+        if ($group !== '' && $group !== 0) {
             $query .= sprintf('
             AND
                 joined.group = "%s"', $group);
