@@ -48,7 +48,13 @@ jobs:
 
     strategy:
       matrix:
-        php-versions: ['8.3', '8.4', '8.5']
+        php-versions:
+          - '8.3'
+          - '8.4'
+          - '8.5'
+        include:
+          - php-versions: '8.3'
+            dependencies: 'highest'
         package: ${{fromJson(needs.provide_packages_json.outputs.matrix)}}
 
     steps:
@@ -67,6 +73,8 @@ jobs:
 
       - name: Install Composer dependencies
         uses: ramsey/composer-install@v2
+        with:
+          dependency-versions: ${{ matrix.dependencies }}
 
       - name: Install ImageMagick
         if: ${{ matrix.package == 'image' }}
