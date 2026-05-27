@@ -2,6 +2,7 @@
 
 namespace Charcoal\Tests\Cms\Route;
 
+use Charcoal\App\Route\RouteInterface;
 use InvalidArgumentException;
 
 // From 'charcoal-object'
@@ -80,10 +81,9 @@ class GenericRouteTest extends SectionRouteTest
      * Create the dynamic route to test.
      *
      * @param  array $data The dynamic route dependencies.
-     * @return GenericRoute
      */
     #[\Override]
-    protected function createRouter(array $data = []): \Charcoal\Cms\Route\SectionRoute
+    protected function createRouter(array $data = []): RouteInterface
     {
         return new GenericRoute($data + [
             'config' => [],

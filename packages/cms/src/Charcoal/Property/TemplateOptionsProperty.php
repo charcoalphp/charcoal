@@ -33,7 +33,7 @@ class TemplateOptionsProperty extends ModelStructureProperty
     {
         if ($interface instanceof TemplateProperty) {
             $interface = (string)$interface;
-            if ($interface === '0') {
+            if (empty($interface)) {
                 throw new InvalidArgumentException(
                     'Invalid template structure interface'
                 );

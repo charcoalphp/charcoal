@@ -126,7 +126,9 @@ class TemplateableTraitTest extends AbstractTestCase
     public function testMissingInterfaceDependency(): void
     {
         $this->expectException(RuntimeException::class);
-        $obj = $this->getMockForTrait(TemplateableTrait::class);
+        $obj = new class {
+            use TemplateableTrait;
+        };
         $obj->templateOptionsStructure();
     }
 

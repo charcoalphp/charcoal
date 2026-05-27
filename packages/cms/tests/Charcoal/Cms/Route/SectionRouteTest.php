@@ -2,6 +2,7 @@
 
 namespace Charcoal\Tests\Cms\Route;
 
+use Charcoal\App\Route\RouteInterface;
 use InvalidArgumentException;
 
 // From 'charcoal-cms'
@@ -144,7 +145,7 @@ class SectionRouteTest extends AbstractRouteTestCase
      *
      * @param  array $data The dynamic route dependencies.
      */
-    protected function createRouter(array $data = []): \Charcoal\Cms\Route\SectionRoute
+    protected function createRouter(array $data = []): RouteInterface
     {
         return new SectionRoute($data + [
             'config' => [],
