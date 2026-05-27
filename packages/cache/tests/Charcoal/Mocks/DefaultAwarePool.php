@@ -16,15 +16,6 @@ class DefaultAwarePool extends \Stash\Pool
     }
 
     /**
-     * @return false|string
-     */
-    #[\Override]
-    public function getNamespace(): ?string
-    {
-        return $this->namespace;
-    }
-
-    /**
      * @return Boolean|LoggerInterface
      */
     public function getLogger(): ?LoggerInterface

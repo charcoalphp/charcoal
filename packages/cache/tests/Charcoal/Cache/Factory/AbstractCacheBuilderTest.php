@@ -105,7 +105,7 @@ abstract class AbstractCacheBuilderTest extends AbstractTestCase
     public function getDefaultPoolAttributes()
     {
         return [
-            'item_class' => \Stash\Item::class,
+            'item_class' => '\Stash\Item',
             'namespace'  => null,
             'logger'     => null,
         ];
