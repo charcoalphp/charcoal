@@ -152,7 +152,7 @@ class FilesystemServiceProviderTest extends AbstractTestCase
         $this->assertInstanceOf(Filesystem::class, $container['filesystems']['sftp']);
     }
 
-    public function testProviderMemorypAdapter(): void
+    public function testProviderMemoryAdapter(): void
     {
         $container = $this->getContainer([
             'config' => $this->createAppConfig([
@@ -192,7 +192,7 @@ class FilesystemServiceProviderTest extends AbstractTestCase
     public function testConfigWithoutTypeThrowsException(): void
     {
         $this->expectException('\Exception');
-        $this->getContainer([
+        $container = $this->getContainer([
             'config' => $this->createAppConfig([
                 'filesystem' => [
                     'connections' => [
@@ -201,6 +201,7 @@ class FilesystemServiceProviderTest extends AbstractTestCase
                 ]
             ])
         ]);
+        $container['filesystems']['test'];
     }
 
     private function createAppConfig($defaults = null): \Charcoal\App\AppConfig

@@ -6,6 +6,7 @@ namespace Charcoal\Tests\App\Action;
 use Psr\Http\Message\RequestInterface;
 
 // From Slim
+use Psr\Http\Message\ResponseInterface;
 use Slim\Http\Response;
 
 // From Pimple
@@ -38,10 +39,20 @@ class AbstractActionTest extends AbstractTestCase
     {
         $container = $this->container();
 
-        $this->obj = $this->getMockForAbstractClass(AbstractAction::class, [[
+        $this->obj = new class ([
             'logger'    => $container['logger'],
             'container' => $container
-        ]]);
+        ]) extends AbstractAction {
+            public function results()
+            {
+                return ''; // Works for both JSON and XML
+            }
+
+            public function run(RequestInterface $request, ResponseInterface $response)
+            {
+                return $response;
+            }
+        };
     }
 
     public function testSetData(): void
@@ -131,10 +142,6 @@ class AbstractActionTest extends AbstractTestCase
         $request = $this->createStub(RequestInterface::class);
         $response = new Response();
 
-        $this->obj->expects($this->any())
-            ->method('run')
-            ->will($this->returnValue($response));
-
         $obj = $this->obj;
         $res = $obj($request, $response);
 
@@ -145,10 +152,6 @@ class AbstractActionTest extends AbstractTestCase
     {
         $request = $this->createStub(RequestInterface::class);
         $response = new Response();
-
-        $this->obj->expects($this->any())
-            ->method('run')
-            ->will($this->returnValue($response));
 
         $obj = $this->obj;
         $res = $obj($request, $response);
@@ -161,10 +164,6 @@ class AbstractActionTest extends AbstractTestCase
     {
         $request = $this->createStub(RequestInterface::class);
         $response = new Response();
-
-        $this->obj->expects($this->any())
-            ->method('run')
-            ->will($this->returnValue($response));
 
         $this->obj->setMode('json');
         $obj = $this->obj;
@@ -179,10 +178,6 @@ class AbstractActionTest extends AbstractTestCase
         $request = $this->createStub(RequestInterface::class);
         $response = new Response();
 
-        $this->obj->expects($this->any())
-            ->method('run')
-            ->will($this->returnValue($response));
-
         $this->obj->setMode('xml');
         $obj = $this->obj;
         $res = $obj($request, $response);
@@ -195,10 +190,6 @@ class AbstractActionTest extends AbstractTestCase
     {
         $request = $this->createStub(RequestInterface::class);
         $response = new Response();
-
-        $this->obj->expects($this->any())
-            ->method('run')
-            ->will($this->returnValue($response));
 
         $this->obj->setMode('redirect');
         $this->obj->setFailureUrl('example.com');

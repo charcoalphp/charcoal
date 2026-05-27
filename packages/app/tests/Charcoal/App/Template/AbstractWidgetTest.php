@@ -38,10 +38,10 @@ class AbstractWidgetTest extends AbstractTestCase
     {
         $container = $this->container();
 
-        $this->obj = $this->getMockForAbstractClass(AbstractWidget::class, [[
+        $this->obj = new class ([
             'logger'    => $container['logger'],
             'container' => $container
-        ]]);
+        ]) extends AbstractWidget {};
     }
 
     /**

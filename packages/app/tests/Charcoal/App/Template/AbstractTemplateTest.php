@@ -38,10 +38,10 @@ class AbstractTemplateTest extends AbstractTestCase
     {
         $container = $this->container();
 
-        $this->obj = $this->getMockForAbstractClass(AbstractTemplate::class, [[
+        $this->obj = new class ([
             'logger'    => $container['logger'],
             'container' => $container
-        ]]);
+        ]) extends AbstractTemplate {};
     }
 
     public function testInitIsTrue(): void

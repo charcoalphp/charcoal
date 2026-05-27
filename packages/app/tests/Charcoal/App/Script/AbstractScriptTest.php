@@ -36,11 +36,16 @@ class AbstractScriptTest extends AbstractTestCase
     {
         $container = $this->container();
 
-        $this->obj = $this->getMockForAbstractClass(AbstractScript::class, [[
+        $this->obj = new class ([
             'climate'   => $container['climate'],
             'logger'    => $container['logger'],
             'container' => $container
-        ]]);
+        ]) extends AbstractScript {
+            public function run(RequestInterface $request, ResponseInterface $response)
+            {
+                return $response;
+            }
+        };
     }
 
     public function testSetIdent(): void
