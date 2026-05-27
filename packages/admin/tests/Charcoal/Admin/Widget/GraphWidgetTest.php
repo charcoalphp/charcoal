@@ -18,9 +18,19 @@ class GraphWidgetTest extends AbstractTestCase
     public function setUp(): void
     {
         $logger = new NullLogger();
-        $this->obj = $this->getMockForAbstractClass(\Charcoal\Admin\Widget\Graph\AbstractGraphWidget::class, [[
-            'logger'=>$logger
-        ]]);
+
+        $this->obj = new class ([
+            'logger' => $logger
+        ]) extends AbstractGraphWidget {
+            public function categories()
+            {
+                return ['foo', 'bar'];
+            }
+            public function series()
+            {
+                return ['foo', 'bar'];
+            }
+        };
     }
 
     public function testSetData(): void

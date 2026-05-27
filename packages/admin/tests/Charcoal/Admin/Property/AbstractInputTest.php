@@ -29,12 +29,15 @@ class AbstractInputTest extends AbstractTestCase
     {
         $container = $this->container();
 
-        $this->obj = $this->getMockForAbstractClass(AbstractPropertyInput::class, [
-            [
-                'logger'          => $container['logger'],
-                'metadata_loader' => $container['metadata/loader'],
-            ],
-        ]);
+        $this->obj = new Class([
+            'logger'          => $container['logger'],
+            'metadata_loader' => $container['metadata/loader'],
+        ]) extends AbstractPropertyInput {
+            public function type(): string
+            {
+                return 'foo';
+            }
+        };
     }
 
     public function testSetData(): void

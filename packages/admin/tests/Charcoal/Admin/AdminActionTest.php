@@ -2,6 +2,7 @@
 
 namespace Charcoal\Tests\Admin;
 
+use Psr\Http\Message\ResponseInterface;
 use ReflectionClass;
 
 // From PSR-7
@@ -42,10 +43,15 @@ class AdminActionTest extends AbstractTestCase
     {
         $container = $this->container();
 
-        $this->obj = $this->getMockForAbstractClass(AdminAction::class, [[
+        $this->obj = new class([
             'logger'    => $container['logger'],
             'container' => $container
-        ]]);
+        ]) extends AdminAction {
+            public function run(RequestInterface $request, ResponseInterface $response): ResponseInterface
+            {
+                return $response;
+            }
+        };
     }
 
     /**
