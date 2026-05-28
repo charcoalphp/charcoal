@@ -153,11 +153,11 @@ class DatabaseFilterTest extends AbstractTestCase
      * @example [ [ <filters>, <SQL> ] ]
      * @used-by self::testNestedSql()
      */
-    public function providedNestedExpressions(): array
+    public static function providedNestedExpressions(): array
     {
         return [
-            'One Level'  => $this->nestedExpressionsDataset1(),
-            'Two Levels' => $this->nestedExpressionsDataset2(),
+            'One Level'  => self::nestedExpressionsDataset1(),
+            'Two Levels' => self::nestedExpressionsDataset2(),
         ];
     }
 
@@ -166,7 +166,7 @@ class DatabaseFilterTest extends AbstractTestCase
      *
      * @used-by self::providedNestedExpressions()
      */
-    protected function nestedExpressionsDataset1(): array
+    protected static function nestedExpressionsDataset1(): array
     {
         $time = new DateTime('3 days ago');
 
@@ -199,7 +199,7 @@ class DatabaseFilterTest extends AbstractTestCase
      *
      * @used-by self::providedNestedExpressions()
      */
-    protected function nestedExpressionsDataset2(): array
+    protected static function nestedExpressionsDataset2(): array
     {
         $time = date('Y-m-d');
 

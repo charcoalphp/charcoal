@@ -38,7 +38,9 @@ class ExpressionFieldTraitTest extends AbstractTestCase
      */
     final public function createField()
     {
-        return $this->getMockForTrait(ExpressionFieldTrait::class);
+        return new class implements ExpressionFieldInterface {
+            use ExpressionFieldTrait;
+        };
     }
 
     /**

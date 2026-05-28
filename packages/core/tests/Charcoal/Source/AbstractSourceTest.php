@@ -2,6 +2,8 @@
 
 namespace Charcoal\Tests\Source;
 
+use Charcoal\Source\StorableInterface;
+use Charcoal\Source\UnexpectedValueException;
 use RuntimeException;
 use InvalidArgumentException;
 
@@ -73,9 +75,15 @@ class AbstractSourceTest extends AbstractTestCase
     {
         $container = $this->getContainer();
 
-        $this->obj = $this->getMockForAbstractClass(AbstractSource::class, [[
+        $this->obj = new class ([
             'logger' => $container['logger']
-        ]]);
+        ]) extends AbstractSource {
+            public function loadItem($ident, ?StorableInterface $item = null) {}
+            public function loadItems(?StorableInterface $item = null) {}
+            public function saveItem(StorableInterface $item) {}
+            public function updateItem(StorableInterface $item, ?array $properties = null) {}
+            public function deleteItem(?StorableInterface $item = null) {}
+        };
     }
 
     /**

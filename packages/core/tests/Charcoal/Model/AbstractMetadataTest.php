@@ -18,7 +18,7 @@ class AbstractMetadataTest extends AbstractTestCase
 
     protected function setUp(): void
     {
-        $this->obj = $this->getMockForAbstractClass(AbstractMetadata::class);
+        $this->obj = new class () extends AbstractMetadata {};
     }
 
     public function testSetData(): void

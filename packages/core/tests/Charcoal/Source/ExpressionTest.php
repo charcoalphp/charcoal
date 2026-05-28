@@ -32,7 +32,7 @@ class ExpressionTest extends AbstractTestCase
      *
      * @used-by ExpressionTestTrait::testDefaultValues()
      */
-    final public function provideDefaultValues(): array
+    final public static function provideDefaultValues(): array
     {
         return [
             'condition' => [ 'condition', null ],

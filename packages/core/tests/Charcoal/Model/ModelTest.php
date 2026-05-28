@@ -217,10 +217,9 @@ class ModelTest extends AbstractTestCase
         $data = $this->getHuxleyData();
 
         $obj->setData($data);
-
         $serialized = serialize($obj);
         $this->assertEquals(
-            'C:20:"Charcoal\Model\Model":69:{a:3:{s:2:"id";i:1;s:4:"name";s:6:"Huxley";s:4:"role";s:8:"Novelist";}}',
+            'O:20:"Charcoal\Model\Model":3:{s:2:"id";i:1;s:4:"name";s:6:"Huxley";s:4:"role";s:8:"Novelist";}',
             serialize($obj)
         );
 

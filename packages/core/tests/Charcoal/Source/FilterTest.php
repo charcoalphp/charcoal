@@ -87,7 +87,7 @@ class FilterTest extends AbstractTestCase
      *
      * @used-by ExpressionTestTrait::testDefaultValues()
      */
-    final public function provideDefaultValues(): array
+    final public static function provideDefaultValues(): array
     {
         return [
             'property'    => [ 'property',     null ],
@@ -143,21 +143,12 @@ class FilterTest extends AbstractTestCase
 
     /**
      * Test "val" property deprecation notice.
-     *
-     * @used-by self::testDeprecatedValErrorInPhp7()
      */
-    public function delegatedTestDeprecatedValError(): void
+    public function testDeprecatedValError(): void
     {
+        $this->expectUserDeprecationMessage('Filter expression option "val" is deprecated in favour of "value": qux');
         $this->createExpression()->setData([ 'val' => 'qux' ]);
     }
-
-    #[\PHPUnit\Framework\Attributes\RequiresPhp('>= 7.0')]
-    public function testDeprecatedValErrorInPhp7(): void
-    {
-        $this->expectDeprecation();
-        $this->delegatedTestDeprecatedValError();
-    }
-
 
     /**
      * Test the "operator" property.
@@ -318,19 +309,11 @@ class FilterTest extends AbstractTestCase
 
     /**
      * Test "operand" property deprecation notice.
-     *
-     * @used-by self::testDeprecatedOperandErrorInPhp7()
      */
-    public function delegatedTestDeprecatedOperandError(): void
+    public function testDeprecatedOperandError(): void
     {
+        $this->expectUserDeprecationMessage('Query expression option "operand" is deprecated in favour of "conjunction": XOR');
         $this->createExpression()->setData([ 'operand' => 'XOR' ]);
-    }
-
-    #[\PHPUnit\Framework\Attributes\RequiresPhp('>= 7.0')]
-    public function testDeprecatedOperandErrorInPhp7(): void
-    {
-        $this->expectDeprecation();
-        $this->delegatedTestDeprecatedOperandError();
     }
 
     /**
@@ -478,18 +461,10 @@ class FilterTest extends AbstractTestCase
      * Test "string" property deprecation notice.
      *
      * @see OrderTest::testDeprecatedStringError()
-     *
-     * @used-by self::testDeprecatedStringErrorInPhp7()
      */
-    public function delegatedTestDeprecatedStringError(): void
+    public function testDeprecatedStringError(): void
     {
+        $this->expectUserDeprecationMessage('Filter expression option "string" is deprecated in favour of "condition": 1 = 1');
         $this->createExpression()->setData([ 'string' => '1 = 1' ]);
-    }
-
-    #[\PHPUnit\Framework\Attributes\RequiresPhp('>= 7.0')]
-    public function testDeprecatedStringErrorInPhp7(): void
-    {
-        $this->expectDeprecation();
-        $this->delegatedTestDeprecatedStringError();
     }
 }

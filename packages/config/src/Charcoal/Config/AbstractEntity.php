@@ -323,26 +323,11 @@ abstract class AbstractEntity implements EntityInterface
         return $this->data();
     }
 
-    /**
-     * Serializes the data on this entity.
-     *
-     * @see    \Serializable
-     * @return string Returns a string containing a byte-stream representation of the object.
-     */
-    public function serialize()
-    {
-        return serialize($this->data());
+    public function __serialize(): array {
+        return $this->data();
     }
 
-    /**
-     * Applies the serialized data to this entity.
-     *
-     * @see    \Serializable
-     * @param  string $data The serialized data to extract.
-     */
-    public function unserialize($data): void
-    {
-        $data = unserialize($data);
+    public function __unserialize(array $data): void {
         $this->setData($data);
     }
 

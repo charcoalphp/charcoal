@@ -48,7 +48,7 @@ class OrderTest extends AbstractTestCase
      *
      * @used-by ExpressionTestTrait::testDefaultValues()
      */
-    final public function provideDefaultValues(): array
+    final public static function provideDefaultValues(): array
     {
         return [
             'property'  => [ 'property',   null ],
@@ -328,18 +328,10 @@ class OrderTest extends AbstractTestCase
      * Test "string" property deprecation notice.
      *
      * @see FilterTest::testDeprecatedStringError()
-     *
-     * @used-by self::testDeprecatedStringErrorInPhp7()
      */
-    public function delegatedTestDeprecatedStringError(): void
+    public function testDeprecatedStringError(): void
     {
+        $this->expectUserDeprecationMessage('Sort expression option "string" is deprecated in favour of "condition": 1 = 1');
         $this->createExpression()->setData([ 'string' => '1 = 1' ]);
-    }
-
-    #[\PHPUnit\Framework\Attributes\RequiresPhp('>= 7.0')]
-    public function testDeprecatedStringErrorInPhp7(): void
-    {
-        $this->expectDeprecation();
-        $this->delegatedTestDeprecatedStringError();
     }
 }

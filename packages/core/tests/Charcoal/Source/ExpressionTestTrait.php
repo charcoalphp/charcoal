@@ -12,7 +12,7 @@ use Charcoal\Source\ExpressionInterface;
  * Shared tests for implementations of {@see AbstractExpression}
  * and {@see ExpressionInterface}.
  */
-trait ExpressionTestTrait
+trait  ExpressionTestTrait
 {
     /**
      * @return \Pimple\Container
@@ -33,7 +33,7 @@ trait ExpressionTestTrait
      * @used-by self::testDefaultValues()
      * @return  array
      */
-    abstract public function provideDefaultValues();
+    abstract public static function provideDefaultValues();
 
     /**
      * Test new instance.
@@ -71,6 +71,7 @@ trait ExpressionTestTrait
      * @param mixed $key      The data key test.
      * @param mixed $expected The expected data value.
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('provideDefaultValues')]
     final public function testDefaultValues($key, $expected): void
     {
         $obj  = $this->createExpression();
@@ -121,7 +122,7 @@ trait ExpressionTestTrait
                 'active' => false,
                 'name'   => 'foo',
             ];
-            $obj->setData($mutation);
+            $obj->setData($expected);
         }
 
         $data = $obj->data();

@@ -2,6 +2,7 @@
 
 namespace Charcoal\Tests\Source;
 
+use Charcoal\Property\DateTimeProperty;
 use stdClass;
 use DateTime;
 use InvalidArgumentException;
@@ -27,7 +28,16 @@ class AbstractExpressionTest extends AbstractTestCase
      */
     final protected function createExpression()
     {
-        return $this->getMockForAbstractClass(AbstractExpression::class);
+        return new class () extends AbstractExpression
+        {
+            public function defaultData()
+            {
+            }
+
+            public function data()
+            {
+            }
+        };
     }
 
     /**
@@ -105,6 +115,10 @@ class AbstractExpressionTest extends AbstractTestCase
     {
         $obj = $this->createExpression();
 
+        if ($value instanceof \Closure) {
+            $value = $value->call($this);
+        }
+
         $this->assertEquals($expected, $obj::parseValue($value));
     }
 
@@ -113,12 +127,15 @@ class AbstractExpressionTest extends AbstractTestCase
      *
      * @used-by self::testParseValue()
      */
-    public function provideParsableValues(): array
+    public static function provideParsableValues(): array
     {
-        $container = $this->getContainer();
+        $prop = function () {
+            $container = $this->getContainer();
+            return $container['property/factory']
+                ->create('date-time')
+                ->setVal('13 July 2004');
+        };
 
-        $prop = $container['property/factory']->create('date-time');
-        $prop->setVal('13 July 2004');
         $time = new DateTime('8 June 1995');
 
         return [

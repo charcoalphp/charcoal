@@ -6,6 +6,8 @@ namespace Charcoal\Tests\Source;
 use Charcoal\Source\ExpressionInterface;
 use Charcoal\Source\ExpressionFieldInterface;
 use Charcoal\Source\ExpressionFieldTrait;
+use Charcoal\Source\Filter;
+use Charcoal\Source\Order;
 
 /**
  * Shared tests for implementations of {@see ExpressionFieldTrait}
@@ -26,21 +28,17 @@ trait ExpressionTestFieldTrait
 
     /**
      * Test "table_name" property deprecation notice.
-     *
-     * @used-by self::testDeprecatedTableNameErrorInPhp7()
      */
-    public function delegatedTestDeprecatedTableNameError(): void
+    public function testDeprecatedTableNameError(): void
     {
-        $this->createExpression()->setData([ 'table_name' => 'foobar' ]);
-    }
-
-    /**
-     * @requires PHP >= 7.0
-     */
-    public function testDeprecatedTableNameErrorInPhp7(): void
-    {
-        $this->expectDeprecation();
-        $this->delegatedTestDeprecatedTableNameError();
+        $expression = $this->createExpression();
+        $message = match (get_class($expression)) {
+            Filter::class => 'Filter expression option "table_name" is deprecated in favour of "table": foobar',
+            Order::class => 'Sort expression option "table_name" is deprecated in favour of "table": foobar',
+            default => 'Expression option "table_name" is deprecated in favour of "table": foobar',
+        };
+        $this->expectUserDeprecationMessage($message);
+        $expression->setData([ 'table_name' => 'foobar' ]);
     }
 
     /**
@@ -56,7 +54,7 @@ trait ExpressionTestFieldTrait
                 'property' => 'col',
                 'table'    => 'tbl',
             ];
-            $obj->setData($mutation);
+            $obj->setData($expected);
         }
 
         $data = $obj->data();
