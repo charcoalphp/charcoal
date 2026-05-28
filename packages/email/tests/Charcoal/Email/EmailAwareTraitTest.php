@@ -15,7 +15,9 @@ class EmailAwareTraitTest extends AbstractTestCase
 
     protected function setUp(): void
     {
-        $this->obj = $this->getMockForTrait(\Charcoal\Email\EmailAwareTrait::class);
+        $this->obj = new class {
+            use \Charcoal\Email\EmailAwareTrait;
+        };
     }
 
     public function getMethod($obj, $name): \ReflectionMethod
