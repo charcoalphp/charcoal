@@ -23,6 +23,7 @@
     "require": {
         "php": "^8.3",
         "ext-pdo": "*",
+        "ext-pdo_mysql": "*",
         "charcoal/cache": "^5.1",
         "charcoal/config": "^5.1",
         "charcoal/factory": "^5.1",
