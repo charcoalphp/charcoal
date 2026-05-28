@@ -50,10 +50,10 @@ trait ArrayAccessTestTrait
     // =========================================================================
     /**
      * @covers  ::offsetGet()
-     * @depends testArrayAccess
      *
      * @param  ArrayAccess $obj The ArrayAccess implementation to test.
      */
+    #[\PHPUnit\Framework\Attributes\Depends('testArrayAccess')]
     public function testOffsetGetReturnsNullOnNonexistentKey(ArrayAccess $obj): void
     {
         $this->assertNull($obj['xyz']);
@@ -61,10 +61,10 @@ trait ArrayAccessTestTrait
 
     /**
      * @covers  ::offsetExists()
-     * @depends testArrayAccess
      *
      * @param  ArrayAccess $obj The ArrayAccess implementation to test.
      */
+    #[\PHPUnit\Framework\Attributes\Depends('testArrayAccess')]
     public function testOffsetExistsReturnsFalseOnNonexistentKey(ArrayAccess $obj): void
     {
         $this->assertFalse(isset($obj['xyz']));
@@ -76,10 +76,10 @@ trait ArrayAccessTestTrait
     // =========================================================================
     /**
      * @covers  ::offsetGet()
-     * @depends testArrayAccess
      *
      * @param  ArrayAccess $obj The ArrayAccess implementation to test.
      */
+    #[\PHPUnit\Framework\Attributes\Depends('testArrayAccess')]
     public function testOffsetGetReturnsNullOnZeroLengthKey(ArrayAccess $obj): void
     {
         $this->assertNull($obj['']);
@@ -87,10 +87,10 @@ trait ArrayAccessTestTrait
 
     /**
      * @covers  ::offsetExists()
-     * @depends testArrayAccess
      *
      * @param  ArrayAccess $obj The ArrayAccess implementation to test.
      */
+    #[\PHPUnit\Framework\Attributes\Depends('testArrayAccess')]
     public function testOffsetExistsReturnsFalseOnZeroLengthKey(ArrayAccess $obj): void
     {
         $this->assertFalse(isset($obj['']));
@@ -98,10 +98,10 @@ trait ArrayAccessTestTrait
 
     /**
      * @covers  ::offsetSet()
-     * @depends testArrayAccess
      *
      * @param  ArrayAccess $obj The ArrayAccess implementation to test.
      */
+    #[\PHPUnit\Framework\Attributes\Depends('testArrayAccess')]
     public function testOffsetSetIgnoredOnZeroLengthKey(ArrayAccess $obj): void
     {
         $obj[''] = 'waldo';
@@ -110,10 +110,10 @@ trait ArrayAccessTestTrait
 
     /**
      * @covers  ::offsetUnset()
-     * @depends testArrayAccess
      *
      * @param  ArrayAccess $obj The ArrayAccess implementation to test.
      */
+    #[\PHPUnit\Framework\Attributes\Depends('testArrayAccess')]
     public function testOffsetUnsetIgnoredOnZeroLengthKey(ArrayAccess $obj): void
     {
         unset($obj['']);
@@ -126,10 +126,10 @@ trait ArrayAccessTestTrait
     // =========================================================================
     /**
      * @covers  ::offsetGet()
-     * @depends testArrayAccess
      *
      * @param  ArrayAccess $obj The ArrayAccess implementation to test.
      */
+    #[\PHPUnit\Framework\Attributes\Depends('testArrayAccess')]
     public function testOffsetGetReturnsNullOnUnderscoreKey(ArrayAccess $obj): void
     {
         $this->assertNull($obj['_']);
@@ -137,10 +137,10 @@ trait ArrayAccessTestTrait
 
     /**
      * @covers  ::offsetExists()
-     * @depends testArrayAccess
      *
      * @param  ArrayAccess $obj The ArrayAccess implementation to test.
      */
+    #[\PHPUnit\Framework\Attributes\Depends('testArrayAccess')]
     public function testOffsetExistsReturnsFalseOnUnderscoreKey(ArrayAccess $obj): void
     {
         $this->assertFalse(isset($obj['_']));
@@ -148,10 +148,10 @@ trait ArrayAccessTestTrait
 
     /**
      * @covers  ::offsetSet()
-     * @depends testArrayAccess
      *
      * @param  ArrayAccess $obj The ArrayAccess implementation to test.
      */
+    #[\PHPUnit\Framework\Attributes\Depends('testArrayAccess')]
     public function testOffsetSetIgnoredOnUnderscoreKey(ArrayAccess $obj): void
     {
         $obj['_'] = 'waldo';
@@ -160,10 +160,10 @@ trait ArrayAccessTestTrait
 
     /**
      * @covers  ::offsetUnset()
-     * @depends testArrayAccess
      *
      * @param  ArrayAccess $obj The ArrayAccess implementation to test.
      */
+    #[\PHPUnit\Framework\Attributes\Depends('testArrayAccess')]
     public function testOffsetUnsetIgnoredOnUnderscoreKey(ArrayAccess $obj): void
     {
         unset($obj['']);
@@ -177,10 +177,10 @@ trait ArrayAccessTestTrait
      * Asserts that a numeric key throws an exception, when retrieving a value.
      *
      * @covers  ::offsetGet()
-     * @depends testArrayAccess
      *
      * @param  ArrayAccess $obj The ArrayAccess implementation to test.
      */
+    #[\PHPUnit\Framework\Attributes\Depends('testArrayAccess')]
     public function testOffsetGetThrowsExceptionOnNumericKey(ArrayAccess $obj): void
     {
         $this->expectException(InvalidArgumentException::class);
@@ -191,10 +191,10 @@ trait ArrayAccessTestTrait
      * Asserts that a numeric key throws an exception, when assigning a value.
      *
      * @covers  ::offsetSet()
-     * @depends testArrayAccess
      *
      * @param  ArrayAccess $obj The ArrayAccess implementation to test.
      */
+    #[\PHPUnit\Framework\Attributes\Depends('testArrayAccess')]
     public function testOffsetSetThrowsExceptionOnNumericKey(ArrayAccess $obj): void
     {
         $this->expectException(InvalidArgumentException::class);
@@ -205,10 +205,10 @@ trait ArrayAccessTestTrait
      * Asserts that a numeric key throws an exception, when looking up if a key/value exists.
      *
      * @covers  ::offsetExists()
-     * @depends testArrayAccess
      *
      * @param  ArrayAccess $obj The ArrayAccess implementation to test.
      */
+    #[\PHPUnit\Framework\Attributes\Depends('testArrayAccess')]
     public function testOffsetExistsThrowsExceptionOnNumericKey(ArrayAccess $obj): void
     {
         $this->expectException(InvalidArgumentException::class);
@@ -219,10 +219,10 @@ trait ArrayAccessTestTrait
      * Asserts that a numeric key throws an exception, when deleting a key/value.
      *
      * @covers  ::offsetUnset()
-     * @depends testArrayAccess
      *
      * @param  ArrayAccess $obj The ArrayAccess implementation to test.
      */
+    #[\PHPUnit\Framework\Attributes\Depends('testArrayAccess')]
     public function testOffsetUnsetThrowsExceptionOnNumericKey(ArrayAccess $obj): void
     {
         $this->expectException(InvalidArgumentException::class);

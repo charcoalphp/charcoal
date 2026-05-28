@@ -69,7 +69,6 @@ class YamlFileLoaderTest extends AbstractFileLoaderTestCase
             $this->markTestSkipped(
               'The Symfony YAML component was loaded before the test could run'
             );
-            return;
         }
 
         $this->expectExceptionMessage('YAML format requires the Symfony YAML component');

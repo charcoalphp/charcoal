@@ -199,7 +199,7 @@ class ConfigurableTest extends AbstractTestCase
     #[\PHPUnit\Framework\Attributes\Depends('testSetConfigWithArray')]
     public function testGetConfigReturnsFallbackMethodOnNonexistentKey(ConfigurableInterface $obj): void
     {
-        $val = $obj->config('charset', [ $this, 'getName' ]);
+        $val = $obj->config('charset', [ $this, 'name' ]);
         $this->assertEquals('testGetConfigReturnsFallbackMethodOnNonexistentKey', $val);
     }
 

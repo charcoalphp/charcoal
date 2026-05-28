@@ -63,8 +63,8 @@ class PhpFileLoaderTest extends AbstractFileLoaderTestCase
     /**
      * Asserts that a broken file is NOT ignored.
      */
-    #[\PHPUnit\Framework\Attributes\RequiresPhp('>= 7.0')]
-    public function testLoadMalformedFileInPhp7(): void
+    #[\PHPUnit\Framework\Attributes\RequiresPhp('>=8.1.0')]
+    public function testLoadMalformedFile(): void
     {
         $this->expectExceptionMessageMatches('/^PHP file ".+?" could not be parsed: .+$/');
         $this->expectException(UnexpectedValueException::class);

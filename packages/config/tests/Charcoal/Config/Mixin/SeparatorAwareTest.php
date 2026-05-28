@@ -9,6 +9,7 @@ use Charcoal\Tests\Config\Mock\TreeEntity;
 use Charcoal\Config\SeparatorAwareInterface;
 use Charcoal\Config\SeparatorAwareTrait;
 use InvalidArgumentException;
+use ValueError;
 
 /**
  * Test SeparatorAwareTrait
@@ -211,23 +212,11 @@ class SeparatorAwareTest extends AbstractTestCase
         $this->assertFalse($obj->hasWithSeparator('logging'));
     }
 
-    /**
-     * @used-by self::testHasWithSeparatorWithoutDelimiterInPhp7()
-     * @used-by self::testHasWithSeparatorWithoutDelimiterInPhp5()
-     */
-    public function delegatedTestHasWithSeparatorWithoutDelimiter(): void
+    public function testHasWithSeparatorWithoutDelimiter(): void
     {
+        $this->expectException(ValueError::class);
         $this->obj->hasWithSeparator('connections.default.host');
     }
-
-    #[\PHPUnit\Framework\Attributes\RequiresPhp('>= 7.0')]
-    public function testHasWithSeparatorWithoutDelimiterInPhp7(): void
-    {
-        $this->expectError();
-
-        $this->delegatedTestHasWithSeparatorWithoutDelimiter();
-    }
-
 
 
     // Test GetWithSeparator
@@ -304,23 +293,11 @@ class SeparatorAwareTest extends AbstractTestCase
         $this->assertNull($obj->getWithSeparator('logging'));
     }
 
-    /**
-     * @used-by self::testGetWithSeparatorWithoutDelimiterInPhp7()
-     * @used-by self::testGetWithSeparatorWithoutDelimiterInPhp5()
-     */
-    public function delegatedTestGetWithSeparatorWithoutDelimiter(): void
+    public function testGetWithSeparatorWithoutDelimiter(): void
     {
+        $this->expectException(ValueError::class);
         $this->obj->getWithSeparator('connections.default.host');
     }
-
-    #[\PHPUnit\Framework\Attributes\RequiresPhp('>= 7.0')]
-    public function testGetWithSeparatorWithoutDelimiterInPhp7(): void
-    {
-        $this->expectError();
-
-        $this->delegatedTestGetWithSeparatorWithoutDelimiter();
-    }
-
 
     // Test SetWithSeparator
     // =========================================================================
@@ -408,20 +385,9 @@ class SeparatorAwareTest extends AbstractTestCase
         );
     }
 
-    /**
-     * @used-by self::testSetWithSeparatorWithoutDelimiterInPhp7()
-     * @used-by self::testSetWithSeparatorWithoutDelimiterInPhp5()
-     */
-    public function delegatedTestSetWithSeparatorWithoutDelimiter(): void
+    public function testSetWithSeparatorWithoutDelimiter(): void
     {
+        $this->expectException(ValueError::class);
         $this->obj->setWithSeparator('connections.default.server_version', '5.7');
-    }
-
-    #[\PHPUnit\Framework\Attributes\RequiresPhp('>= 7.0')]
-    public function testSetWithSeparatorWithoutDelimiterInPhp7(): void
-    {
-        $this->expectError();
-
-        $this->delegatedTestSetWithSeparatorWithoutDelimiter();
     }
 }
