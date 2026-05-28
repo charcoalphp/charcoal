@@ -105,7 +105,7 @@ class ResolverFactoryTest extends AbstractTestCase
             ['foo-bar', '\FooBar'],
             ['foo.bar', '\Foo_Bar'],
             ['foo.bar\baz_baz-baz/foo\\', '\Foo_Bar\Baz_BazBaz\Foo'],
-            ['charcoal/factory/map-factory', \Charcoal\Factory\MapFactory::class]
+            ['charcoal/factory/map-factory', '\Charcoal\Factory\MapFactory']
         ];
     }
 }

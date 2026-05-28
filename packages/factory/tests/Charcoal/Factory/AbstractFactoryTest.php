@@ -21,54 +21,54 @@ class AbstractFactoryTest extends AbstractTestCase
 
     protected function setUp(): void
     {
-        $this->obj = $this->getMockForAbstractClass(AbstractFactory::class);
+        $this->obj = new class extends AbstractFactory {};
     }
 
     public function testConstructorBaseClassAndDefaultClass(): void
     {
-        $obj = $this->getMockForAbstractClass(AbstractFactory::class, [[
+        $obj = new class ([
             'base_class' => DateTimeInterface::class,
             'default_class' => DateTime::class
-        ]]);
+        ]) extends AbstractFactory {};
         $this->assertEquals(DateTimeInterface::class, $obj->baseClass());
         $this->assertEquals(DateTime::class, $obj->defaultClass());
     }
 
     public function testConstructorArguments(): void
     {
-        $obj = $this->getMockForAbstractClass(AbstractFactory::class, [[
+        $obj = new class ([
             'arguments' => ['2018-01-01 15:30:00']
-        ]]);
+        ]) extends AbstractFactory {};
         $ret = $obj->create(DateTime::class);
         $this->assertEquals('2018-01-01 15:30:00', $ret->format('Y-m-d H:i:s'));
     }
 
     public function testConstructorMap(): void
     {
-        $obj = $this->getMockForAbstractClass(AbstractFactory::class, [[
+        $obj = new class ([
             'map' => [
                 'foo' => DateTime::class
             ]
-        ]]);
+        ]) extends AbstractFactory {};
 
         $ret = $obj->create('foo');
         $this->assertInstanceOf(DateTime::class, $ret);
 
         $this->expectException(InvalidArgumentException::class);
-        $this->getMockForAbstractClass(AbstractFactory::class, [[
+        new class ([
             'map' => [DateTime::class]
-        ]]);
+        ]) extends AbstractFactory {};
     }
 
     public function testConstructorCallback(): void
     {
-        $obj = $this->getMockForAbstractClass(AbstractFactory::class, [[
+        $obj = new class ([
             'callback' => function ($obj) {
                 $obj->setDate(2015, 7, 8);
                 $obj->setTime(11, 59, 59);
                 return $obj;
             }
-        ]]);
+        ]) extends AbstractFactory {};
 
         $ret = $obj->create(DateTime::class);
         $this->assertEquals('2015-07-08 11:59:59', $ret->format('Y-m-d H:i:s'));
