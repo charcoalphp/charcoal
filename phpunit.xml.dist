@@ -7,7 +7,9 @@
          processIsolation="false"
          stopOnFailure="false"
          cacheDirectory=".phpunit.cache"
-         backupStaticProperties="false">
+         backupStaticProperties="false"
+         failOnWarning="false"
+         failOnNotice="false">
  <testsuites>
     <testsuite name="Charcoal Test Suite">
       <directory>./tests/Charcoal</directory>
