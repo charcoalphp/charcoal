@@ -8,7 +8,6 @@ use LogicException;
 use Mustache\Engine as MustacheEngine;
 
 // From 'symfony/translation'
-use Symfony\Component\Translation\MessageSelector;
 use Symfony\Component\Translation\Loader\ArrayLoader;
 
 // From 'charcoal-translator'
@@ -97,6 +96,7 @@ class TranslatorHelpersTest extends AbstractTestCase
         $output   = $template->render([
             'num' => 1,
         ]);
+//        die();
 
         $expected = trim("
             There are 5 apples
@@ -136,7 +136,6 @@ class TranslatorHelpersTest extends AbstractTestCase
             'locale'            => 'en',
             'cache_dir'         => null,
             'debug'             => false,
-            'message_selector'  => new MessageSelector(),
             'manager'           => new LocalesManager([
                 'locales' => [
                     'en' => [
@@ -160,9 +159,9 @@ class TranslatorHelpersTest extends AbstractTestCase
     }
 
     /**
-     * @param  Translator|null $translator The translator service for the translator helpers.
+     * @param Translator|null $translator The translator service for the translator helpers.
      */
-    public function createMustacheEngine($translator = null): MustacheEngine
+    public function createMustacheEngine(?Translator $translator = null): MustacheEngine
     {
         $helper   = new TranslatorHelpers([
             'translator' => $translator,

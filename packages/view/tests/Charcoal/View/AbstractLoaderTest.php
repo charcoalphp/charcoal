@@ -23,10 +23,12 @@ class AbstractLoaderTest extends AbstractTestCase
 
     public function setUp(): void
     {
-        $this->obj = $this->getMockForAbstractClass(AbstractLoader::class, [[
+        $this->obj = new class ([
             'base_path' => __DIR__,
             'paths'     => [ 'Mustache/templates' ],
-        ]]);
+        ]) extends AbstractLoader {
+            protected function filenameFromIdent(string $ident): string { }
+        };
     }
 
     public function testGetDynamicTemplateReturnsEmptyTemplateForUndefinedVarName(): void

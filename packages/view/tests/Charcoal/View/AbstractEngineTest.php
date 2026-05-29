@@ -25,11 +25,12 @@ class AbstractEngineTest extends AbstractTestCase
             'base_path' => __DIR__,
             'paths'     => [ 'Mustache/templates' ],
         ]);
-        $this->obj = $this->getMockForAbstractClass(AbstractEngine::class, [
-            [
-                'loader' => $loader,
-            ]
-        ]);
+        $this->obj = new class ([
+            'loader' => $loader,
+        ]) extends AbstractEngine {
+            public function type(): string { }
+            public function renderTemplate(string $templateString, $context): string { }
+        };
     }
 
     public function testLoadTemplate(): void

@@ -36,11 +36,9 @@ class AbstractViewTest extends AbstractTestCase
             'loader'  => $loader,
             'helpers' => $assets->toArray(),
         ]);
-        $this->obj = $this->getMockForAbstractClass(AbstractView::class, [
-            [
-                'engine' => $engine,
-            ],
-        ]);
+        $this->obj = new class ([
+            'engine' => $engine,
+        ]) extends AbstractView {};
     }
 
     public function testRenderTemplate(): void

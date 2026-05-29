@@ -94,17 +94,23 @@ class TranslatorHelpers implements HelpersInterface
      * @param  string            $text   The translation key.
      * @param  LambdaHelper|null $helper For rendering strings in the current context.
      */
-    public function __invoke(string $text, ?LambdaHelper $helper = null): string
+    public function __invoke(string $text = '', ?LambdaHelper $helper = null): mixed
     {
+        // Mustache v3 calls callable objects with no arguments when traversing dotted
+        // names (e.g. `_t.en`). Return $this so the traversal can continue to __get().
+        if ($text === '' && $helper === null) {
+            return $this;
+        }
+
         if ($this->translator instanceof \Charcoal\Translator\Translator) {
             if ($this->number === null) {
                 $text = $this->translator->trans($text, [], $this->domain, $this->locale);
             } else {
                 if (!is_numeric($this->number) && is_string($this->number)) {
-                    $this->number = $helper->render('{{ ' . $this->number . ' }}');
+                    $this->number = (int)$helper->render('{{ ' . $this->number . ' }}');
                 }
 
-                $text = $this->translator->transChoice($text, (int)$this->number, [], $this->domain, $this->locale);
+                $text = $this->translator->trans($text, ['%count%' => $this->number], $this->domain, $this->locale);
             }
 
             $this->reset();

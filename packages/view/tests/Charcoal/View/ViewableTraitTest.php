@@ -16,7 +16,7 @@ use Charcoal\Tests\AbstractTestCase;
  */
 class ViewableTraitTest extends AbstractTestCase
 {
-    private \Charcoal\View\ViewableTrait $obj;
+    private $obj;
 
     public function setUp(): void
     {
@@ -31,7 +31,9 @@ class ViewableTraitTest extends AbstractTestCase
             'engine'    => $engine,
         ]);
 
-        $mock = $this->getMockForTrait(MockTrait::class);
+        $mock = new class {
+            use ViewableTrait;
+        };
 
         $mock->setView($genericView);
         $this->assertSame($genericView, $mock->view());
