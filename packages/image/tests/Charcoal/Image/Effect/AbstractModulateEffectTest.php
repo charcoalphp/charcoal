@@ -1,6 +1,9 @@
 <?php
 
-namespace Charcoals\Tests\Image\Effect;
+namespace Charcoal\Tests\Image\Effect;
+
+use Charcoal\Image\Effect\AbstractModulateEffect;
+use Charcoal\Tests\Mock\ImageMock;
 
 class AbstractModulateEffectTest extends \PHPUnit\Framework\TestCase
 {
@@ -8,9 +11,10 @@ class AbstractModulateEffectTest extends \PHPUnit\Framework\TestCase
 
     protected function setUp(): void
     {
-        $img = $this->getMockForAbstractClass(\Charcoal\Image\AbstractImage::class);
-        $img->method('driverType')->willReturn('imagick');
-        $this->obj = $this->getMockForAbstractClass(\Charcoal\Image\Effect\AbstractModulateEffect::class);
+        $img = new ImageMock();
+        $this->obj = new class () extends AbstractModulateEffect {
+            public function process(?array $data = null) {}
+        };
         $this->obj->setImage($img);
     }
 

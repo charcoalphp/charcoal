@@ -1,6 +1,9 @@
 <?php
 
-namespace Charcoals\Tests\Image\Effect;
+namespace Charcoal\Tests\Image\Effect;
+
+use Charcoal\Image\Effect\AbstractWatermarkEffect;
+use Charcoal\Tests\Mock\ImageMock;
 
 class AbstractWatermarkEffectTest extends \PHPUnit\Framework\TestCase
 {
@@ -8,8 +11,10 @@ class AbstractWatermarkEffectTest extends \PHPUnit\Framework\TestCase
 
     protected function setUp(): void
     {
-        $img = $this->getMockForAbstractClass(\Charcoal\Image\AbstractImage::class);
-        $this->obj = $this->getMockForAbstractClass(\Charcoal\Image\Effect\AbstractWatermarkEffect::class);
+        $img = new ImageMock();
+        $this->obj = new class () extends AbstractWatermarkEffect {
+            public function process(?array $data = null) {}
+        };
         $this->obj->setImage($img);
     }
 

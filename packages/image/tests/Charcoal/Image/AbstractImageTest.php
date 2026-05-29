@@ -1,15 +1,15 @@
 <?php
 
-namespace Charcoals\Tests\Image;
+namespace Charcoal\Tests\Image;
 
+use Charcoal\Tests\Mock\ImageMock;
 use InvalidArgumentException;
 
 class AbstractImageTest extends \PHPUnit\Framework\TestCase
 {
-
     public function testSetData(): void
     {
-        $obj = $this->getMockForAbstractClass(\Charcoal\Image\AbstractImage::class);
+        $obj = new ImageMock();
         $ret = $obj->setData(
             [
             'source'=>__DIR__.'/test.png',
@@ -27,7 +27,7 @@ class AbstractImageTest extends \PHPUnit\Framework\TestCase
 
     public function testSetSource(): void
     {
-        $obj = $this->getMockForAbstractClass(\Charcoal\Image\AbstractImage::class);
+        $obj = new ImageMock();
         $ret = $obj->setSource('test.png');
         $this->assertSame($ret, $obj);
         $this->assertEquals('test.png', $obj->source());
@@ -38,7 +38,7 @@ class AbstractImageTest extends \PHPUnit\Framework\TestCase
 
     public function testSetTarget(): void
     {
-        $obj = $this->getMockForAbstractClass(\Charcoal\Image\AbstractImage::class);
+        $obj = new ImageMock();
         $ret = $obj->setTarget('test.png');
         $this->assertSame($ret, $obj);
         $this->assertEquals('test.png', $obj->target());

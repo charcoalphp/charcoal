@@ -1,6 +1,9 @@
 <?php
 
-namespace Charcoals\Tests\Image\Effect;
+namespace Charcoal\Tests\Image\Effect;
+
+use Charcoal\Image\Effect\AbstractSharpenEffect;
+use Charcoal\Tests\Mock\ImageMock;
 
 class AbstractSharpenEffectTest extends \PHPUnit\Framework\TestCase
 {
@@ -8,8 +11,13 @@ class AbstractSharpenEffectTest extends \PHPUnit\Framework\TestCase
 
     protected function setUp(): void
     {
-        $img = $this->getMockForAbstractClass(\Charcoal\Image\AbstractImage::class);
-        $this->obj = $this->getMockForAbstractClass(\Charcoal\Image\Effect\AbstractSharpenEffect::class);
+        $img = new ImageMock();
+        $this->obj = new class () extends AbstractSharpenEffect {
+            public function process(?array $data = null) {}
+            public function processAdaptive() {}
+            public function processUnsharp() {}
+            public function processStandard() {}
+        };
         $this->obj->setImage($img);
     }
 

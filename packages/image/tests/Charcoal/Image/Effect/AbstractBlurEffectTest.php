@@ -1,6 +1,9 @@
 <?php
 
-namespace Charcoals\Tests\Image\Effect;
+namespace Charcoal\Tests\Image\Effect;
+
+use Charcoal\Image\Effect\AbstractBlurEffect;
+use Charcoal\Tests\Mock\ImageMock;
 
 class AbstractBlurEffectTest extends \PHPUnit\Framework\TestCase
 {
@@ -8,9 +11,17 @@ class AbstractBlurEffectTest extends \PHPUnit\Framework\TestCase
 
     protected function setUp(): void
     {
-        $img = $this->getMockForAbstractClass(\Charcoal\Image\AbstractImage::class);
-        $img->method('driverType')->willReturn('imagick');
-        $this->obj = $this->getMockForAbstractClass(\Charcoal\Image\Effect\AbstractBlurEffect::class);
+        $img = new ImageMock();
+        $this->obj = new class () extends AbstractBlurEffect {
+            public function process(?array $data = null) {}
+            public function processAdaptive() {}
+            public function processGaussian() {}
+            public function processMotion() {}
+            public function processRadial() {}
+            public function processSoft() {}
+            public function processStandard() {}
+        };
+
         $this->obj->setImage($img);
     }
 

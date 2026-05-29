@@ -1,6 +1,9 @@
 <?php
 
-namespace Charcoals\Tests\Image\Effect;
+namespace Charcoal\Tests\Image\Effect;
+
+use Charcoal\Image\Effect\AbstractRotateEffect;
+use Charcoal\Tests\Mock\ImageMock;
 
 class AbstractRotateEffectTest extends \PHPUnit\Framework\TestCase
 {
@@ -8,8 +11,10 @@ class AbstractRotateEffectTest extends \PHPUnit\Framework\TestCase
 
     protected function setUp(): void
     {
-        $img = $this->getMockForAbstractClass(\Charcoal\Image\AbstractImage::class);
-        $this->obj = $this->getMockForAbstractClass(\Charcoal\Image\Effect\AbstractRotateEffect::class);
+        $img = new ImageMock();
+        $this->obj = new class () extends AbstractRotateEffect {
+            public function process(?array $data = null) {}
+        };
         $this->obj->setImage($img);
     }
 

@@ -1,6 +1,9 @@
 <?php
 
-namespace Charcoals\Tests\Image\Effect;
+namespace Charcoal\Tests\Image\Effect;
+
+use Charcoal\Image\Effect\AbstractThresholdEffect;
+use Charcoal\Tests\Mock\ImageMock;
 
 class AbstractThresholdEffectTest extends \PHPUnit\Framework\TestCase
 {
@@ -8,8 +11,10 @@ class AbstractThresholdEffectTest extends \PHPUnit\Framework\TestCase
 
     protected function setUp(): void
     {
-        $img = $this->getMockForAbstractClass(\Charcoal\Image\AbstractImage::class);
-        $this->obj = $this->getMockForAbstractClass(\Charcoal\Image\Effect\AbstractThresholdEffect::class);
+        $img = new ImageMock();
+        $this->obj = new class () extends AbstractThresholdEffect {
+            public function process(?array $data = null) {}
+        };
         $this->obj->setImage($img);
     }
 

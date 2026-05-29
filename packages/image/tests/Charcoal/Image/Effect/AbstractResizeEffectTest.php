@@ -1,6 +1,9 @@
 <?php
 
-namespace Charcoals\Tests\Image\Effect;
+namespace Charcoal\Tests\Image\Effect;
+
+use Charcoal\Image\Effect\AbstractResizeEffect;
+use Charcoal\Tests\Mock\ImageMock;
 
 class AbstractResizeEffectTest extends \PHPUnit\Framework\TestCase
 {
@@ -8,9 +11,10 @@ class AbstractResizeEffectTest extends \PHPUnit\Framework\TestCase
 
     protected function setUp(): void
     {
-        $img = $this->getMockForAbstractClass(\Charcoal\Image\AbstractImage::class);
-        $img->method('driverType')->willReturn('imagick');
-        $this->obj = $this->getMockForAbstractClass(\Charcoal\Image\Effect\AbstractResizeEffect::class);
+        $img = new ImageMock();
+        $this->obj = new class () extends AbstractResizeEffect {
+            protected function doResize($width, $height, $bestFit = false) {}
+        };
         $this->obj->setImage($img);
     }
 

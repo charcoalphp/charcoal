@@ -1,6 +1,6 @@
 <?php
 
-namespace Charcoals\Tests\Image;
+namespace Charcoal\Tests\Image;
 
 use InvalidArgumentException;
 

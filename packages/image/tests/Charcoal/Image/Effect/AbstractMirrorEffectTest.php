@@ -1,6 +1,9 @@
 <?php
 
-namespace Charcoals\Tests\Image\Effect;
+namespace Charcoal\Tests\Image\Effect;
+
+use Charcoal\Image\Effect\AbstractMirrorEffect;
+use Charcoal\Tests\Mock\ImageMock;
 
 class AbstractMirrorEffectTest extends \PHPUnit\Framework\TestCase
 {
@@ -8,9 +11,10 @@ class AbstractMirrorEffectTest extends \PHPUnit\Framework\TestCase
 
     protected function setUp(): void
     {
-        $img = $this->getMockForAbstractClass(\Charcoal\Image\AbstractImage::class);
-        $img->method('driverType')->willReturn('imagick');
-        $this->obj = $this->getMockForAbstractClass(\Charcoal\Image\Effect\AbstractMirrorEffect::class);
+        $img = new ImageMock();
+        $this->obj = new class () extends AbstractMirrorEffect {
+            public function process(?array $data = null) {}
+        };
         $this->obj->setImage($img);
     }
 
