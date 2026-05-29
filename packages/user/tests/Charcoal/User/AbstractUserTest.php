@@ -2,6 +2,7 @@
 
 namespace Charcoal\Tests\User;
 
+use Charcoal\User\GenericUser;
 use DateTime;
 use InvalidArgumentException;
 
@@ -40,24 +41,15 @@ class AbstractUserTest extends AbstractTestCase
 
         $container = $this->container();
 
-        $this->obj = $this->getMockForAbstractClass(
-            AbstractUser::class,
-            [
-                [
-                    'logger'     => $container['logger'],
-                    'translator' => $container['translator'],
-                ]
-            ],
-            '',
-            true,
-            true,
-            true,
-            [ 'sessionKey' ]
-        );
-
-        $this->obj->expects($this->any())
-            ->method('sessionKey')
-            ->will($this->returnValue('charcoal.user'));
+        $this->obj = new class ([
+            'logger'     => $container['logger'],
+            'translator' => $container['translator'],
+        ]) extends AbstractUser {
+            public static function sessionKey(): string
+            {
+                return 'charcoal.user';
+            }
+        };
     }
 
     public function testKey(): void
