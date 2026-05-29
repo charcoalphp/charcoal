@@ -115,7 +115,7 @@ class HierarchicalTraitTest extends AbstractTestCase
         $this->assertEquals([], $obj->hierarchy());
 
         $master1 = $this->createPartialMock($this->obj::class, ['getMasterObject']);
-        $master2 = $this->createTestProxy($this->obj::class);
+        $master2 = $this->obj;
 
         $obj->setMaster($master1->getId());
         $obj->method('getMasterObject')->willReturn($master1);
@@ -149,7 +149,7 @@ class HierarchicalTraitTest extends AbstractTestCase
     public function testIsMasterOf(): void
     {
         $obj = $this->obj;
-        $master = $this->createTestProxy($obj::class);
+        $master = clone($this->obj);
 
         $this->assertFalse($master->isMasterOf($obj));
         $obj->setMaster($master->getId());
@@ -185,17 +185,17 @@ class HierarchicalTraitTest extends AbstractTestCase
     public function testIsChildOf(): void
     {
         $obj = $this->obj;
-        $master = $this->createTestProxy($obj::class);
+        $master = clone($obj);
 
         $this->assertFalse($obj->isChildOf($master));
         $obj->setMaster($master->getId());
         $this->assertTrue($obj->isChildOf($master));
     }
 
-    public function testRecurisveIsChildOf(): void
+    public function testRecursiveIsChildOf(): void
     {
         $obj = $this->obj;
-        $master = $this->createTestProxy($obj::class);
+        $master = clone($obj);
 
         $this->assertFalse($obj->isChildOf($master));
         $obj->setMaster($master->getId());

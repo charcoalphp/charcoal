@@ -3,9 +3,8 @@
 namespace Charcoal\Tests\Object;
 
 // From 'charcoal-object'
-use Charcoal\Object\CategoryTrait;
 use Charcoal\Tests\AbstractTestCase;
-use Charcoal\Tests\Object\ContainerProvider;
+use Charcoal\Tests\Object\Mocks\CategoryTraitTestDouble;
 
 /**
  *
@@ -14,12 +13,10 @@ class CategoryTraitTest extends AbstractTestCase
 {
     /**
      * Set up the test.
-     *
-     * @return CategoryTrait
      */
     public function createTrait()
     {
-        return $this->getMockForTrait(CategoryTrait::class);
+        return $this->createPartialMock(CategoryTraitTestDouble::class, [ 'loadCategoryItems' ]);
     }
 
     public function testUnsetCategoryItemTypeThrowsException(): void
@@ -45,16 +42,16 @@ class CategoryTraitTest extends AbstractTestCase
     public function testNumCategoryItems(): void
     {
         $mock = $this->createTrait();
-        $mock->expects($this->any())
+        $mock->expects($this->once())
             ->method('loadCategoryItems')
-            ->will($this->returnValue([]));
+            ->willReturn([]);
 
         $this->assertEquals(0, $mock->getNumCategoryItems());
 
         $mock = $this->createTrait();
-        $mock->expects($this->any())
+        $mock->expects($this->once())
             ->method('loadCategoryItems')
-            ->will($this->returnValue([ 'item' ]));
+            ->willReturn([ 'item' ]);
 
         $this->assertEquals(1, $mock->getNumCategoryItems());
     }
@@ -62,16 +59,16 @@ class CategoryTraitTest extends AbstractTestCase
     public function testHasCategoryItems(): void
     {
         $mock = $this->createTrait();
-        $mock->expects($this->any())
+        $mock->expects($this->once())
             ->method('loadCategoryItems')
-            ->will($this->returnValue([]));
+            ->willReturn([]);
 
         $this->assertFalse($mock->hasCategoryItems());
 
         $mock = $this->createTrait();
-        $mock->expects($this->any())
+        $mock->expects($this->once())
             ->method('loadCategoryItems')
-            ->will($this->returnValue([ 'item' ]));
+            ->willReturn([ 'item' ]);
 
         $this->assertTrue($mock->hasCategoryItems());
     }
