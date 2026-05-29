@@ -20,9 +20,6 @@ use Slim\Http\Uri;
 // From Pimple
 use Pimple\Container;
 
-// From 'symfony/translation'
-use Symfony\Component\Translation\MessageSelector;
-
 // From 'league/climate'
 use League\CLImate\CLImate;
 use League\CLImate\Util\System\Linux;
@@ -209,7 +206,6 @@ class ContainerProvider
         $container['translator'] = function (Container $container): \Charcoal\Translator\Translator {
             $translator = new Translator([
                 'manager'          => $container['locales/manager'],
-                'message_selector' => new MessageSelector(),
                 'cache_dir'        => null,
                 'debug'            => $container['translator/config']['debug']
             ]);

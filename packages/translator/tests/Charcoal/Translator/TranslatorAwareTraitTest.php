@@ -18,14 +18,16 @@ class TranslatorAwareTraitTest extends AbstractTestCase
     /**
      * Tested Class.
      */
-    private \Charcoal\Translator\TranslatorAwareTrait $obj;
+    private $obj;
 
     /**
      * Set up the test.
      */
     protected function setUp(): void
     {
-        $this->obj = $this->getMockForTrait(TranslatorAwareTrait::class);
+        $this->obj = new class () {
+            use TranslatorAwareTrait;
+        };
     }
 
     public function testTranslatorWithoutSettingThrowsException(): void

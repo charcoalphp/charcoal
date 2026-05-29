@@ -106,7 +106,6 @@ class TranslatorServiceProviderTest extends AbstractTestCase
         $this->assertTrue(isset($this->container['locales/available-languages']));
         $this->assertTrue(isset($this->container['locales/default-language']));
         $this->assertTrue(isset($this->container['locales/browser-language']));
-        $this->assertTrue(isset($this->container['translator/message-selector']));
         $this->assertTrue(isset($this->container['translator']));
         $this->assertTrue(isset($this->container['middlewares/charcoal/translator/middleware/language']));
     }

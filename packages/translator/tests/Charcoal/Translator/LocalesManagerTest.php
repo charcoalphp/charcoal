@@ -87,7 +87,7 @@ class LocalesManagerTest extends AbstractTestCase
         $this->assertArrayNotHasKey('baz', $locales);
     }
 
-    #[\PHPUnit\Framework\Attributes\RequiresPhp('>= 7.0')]
+    #[\PHPUnit\Framework\Attributes\RequiresPhp('>= 8.1.0')]
     public function testSortedLocalesInPhp7(): void
     {
         $obj = $this->getLocalesManagerForSortedLocales();

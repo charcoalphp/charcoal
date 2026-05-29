@@ -35,7 +35,7 @@ class TranslatorTest extends AbstractTestCase
     /**
      * The language manager.
      */
-    private ?\Charcoal\Translator\LocalesManager $localesManager = null;
+    private static ?\Charcoal\Translator\LocalesManager $localesManager = null;
 
     /**
      * Set up the test.
@@ -69,10 +69,10 @@ class TranslatorTest extends AbstractTestCase
         }
     }
 
-    private function localesManager(): \Charcoal\Translator\LocalesManager
+    private static function localesManager(): \Charcoal\Translator\LocalesManager
     {
-        if (!$this->localesManager instanceof \Charcoal\Translator\LocalesManager) {
-            $this->localesManager = new LocalesManager([
+        if (!self::$localesManager instanceof \Charcoal\Translator\LocalesManager) {
+            self::$localesManager = new LocalesManager([
                 'locales' => [
                     'en' => [
                         'locale' => 'en_US.UTF8'
@@ -87,7 +87,7 @@ class TranslatorTest extends AbstractTestCase
             ]);
         }
 
-        return $this->localesManager;
+        return self::$localesManager;
     }
 
     public function testConstructorWithMessageFormatter(): void
@@ -306,14 +306,14 @@ class TranslatorTest extends AbstractTestCase
     /**
      * @link https://github.com/symfony/translation/blob/v3.2.3/Tests/TranslatorTest.php
      */
-    public function validTransTests(): array
+    public static function validTransTests(): array
     {
         // phpcs:disable Generic.Files.LineLength.TooLong
         return [
             [ 'Charcoal est super !', 'Charcoal is great!', 'Charcoal est super !', [], 'fr', '' ],
             [ 'Charcoal est awesome !', 'Charcoal is %what%!', 'Charcoal est %what% !', [ '%what%' => 'awesome' ], 'fr', '' ],
             [ 'Charcoal is great!', [ 'en' => 'Charcoal is great!', 'fr' => 'Charcoal est super !'], 'Charcoal est super !', [], null, '' ],
-            [ 'Charcoal est super !', new Translation([ 'en' => 'Charcoal is great!', 'fr' => 'Charcoal est super !'], $this->localesManager()), 'Charcoal est super !', [], 'fr', '' ],
+            [ 'Charcoal est super !', new Translation([ 'en' => 'Charcoal is great!', 'fr' => 'Charcoal est super !'], self::localesManager()), 'Charcoal est super !', [], 'fr', '' ],
             [ 'Charcoal est super !', new StringClass('Charcoal is great!'), 'Charcoal est super !', [], 'fr', '' ],
         ];
         // phpcs:enable
@@ -337,7 +337,7 @@ class TranslatorTest extends AbstractTestCase
     /**
      * @link https://github.com/symfony/translation/blob/v3.2.3/Tests/TranslatorTest.php
      */
-    public function validTransChoiceTests(): array
+    public static function validTransChoiceTests(): array
     {
         // phpcs:disable Generic.Files.LineLength.TooLong
         return [
@@ -358,12 +358,12 @@ class TranslatorTest extends AbstractTestCase
             [ 'Il y a 10 pommes', '{0} There are no apples|one: There is one apple|more: There is %count% apples', '{0} Il n\'y a aucune pomme|one: Il y a %count% pomme|more: Il y a %count% pommes', 10, [], 'fr', '' ],
 
             [ 'There are no appless', [ 'en' => '{0} There are no appless|{1} There is one apple|]1,Inf] There is %count% apples', 'fr' => '[0,1] Il y a %count% pomme|]1,Inf] Il y a %count% pommes' ], '[0,1] Il y a %count% pomme|]1,Inf] Il y a %count% pommes', 0, [], null, '' ],
-            [ 'Il y a 0 pomme', new Translation([ 'en' => '{0} There are no appless|{1} There is one apple|]1,Inf] There is %count% apples', 'fr' => '[0,1] Il y a %count% pomme|]1,Inf] Il y a %count% pommes' ], $this->localesManager()), '[0,1] Il y a %count% pomme|]1,Inf] Il y a %count% pommes', 0, [], 'fr', '' ],
+            [ 'Il y a 0 pomme', new Translation([ 'en' => '{0} There are no appless|{1} There is one apple|]1,Inf] There is %count% apples', 'fr' => '[0,1] Il y a %count% pomme|]1,Inf] Il y a %count% pommes' ], self::localesManager()), '[0,1] Il y a %count% pomme|]1,Inf] Il y a %count% pommes', 0, [], 'fr', '' ],
 
             [ 'Il y a 0 pomme', new StringClass('{0} There are no appless|{1} There is one apple|]1,Inf] There is %count% apples'), '[0,1] Il y a %count% pomme|]1,Inf] Il y a %count% pommes', 0, [], 'fr', '' ],
 
             // Override %count% with a custom value
-            [ 'Il y a quelques pommes', 'one: There is one apple|more: There are %count% apples', 'one: Il y a %count% pomme|more: Il y a %count% pommes', 2, [ '%count%' => 'quelques' ], 'fr', '' ],
+            [ 'Il y a quelques pommes', 'one: There is one apple|more: There are %count% apples', 'one: Il y a %count% pomme|more: Il y a %custom% pommes', 2, [ '%custom%' => 'quelques' ], 'fr', '' ],
         ];
         // phpcs:enable
     }

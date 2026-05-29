@@ -124,13 +124,15 @@ class TranslationTest extends AbstractTestCase
     public function testOffsetGetThrowsException(): void
     {
         $this->expectException(InvalidArgumentException::class);
-        new Translation('Hello!', $this->localesManager());
+        $obj = new Translation('Hello!', $this->localesManager());
+        $obj[0];
     }
 
     public function testOffsetGetThrowsException2(): void
     {
         $this->expectException(DomainException::class);
-        new Translation('Hello!', $this->localesManager());
+        $obj = new Translation('Hello!', $this->localesManager());
+        $obj['fr'];
     }
 
     public function testOffsetSetThrowsException(): void
