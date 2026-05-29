@@ -25,14 +25,12 @@ class AbstractMenuTest extends AbstractTestCase
         $container = $this->getContainer();
         $container->register(new MenuServiceProvider());
 
-        $this->obj = $this->getMockForAbstractClass(AbstractMenu::class, [
-            [
-                'container'         => $container,
-                'logger'            => $container['logger'],
-                'view'              => $container['view'],
-                'menu_item_builder' => $container['menu/item/builder'],
-            ],
-        ]);
+        $this->obj = new class ([
+            'container'         => $container,
+            'logger'            => $container['logger'],
+            'view'              => $container['view'],
+            'menu_item_builder' => $container['menu/item/builder'],
+        ]) extends AbstractMenu {};
     }
 
     public function testHasItems(): void
@@ -81,7 +79,7 @@ class AbstractMenuTest extends AbstractTestCase
 
     public function testItemCallback(): void
     {
-        $cb = function(array $item): void {
+        $cb = function($item): void {
             $item['property_from_callback'] = 'yes';
         };
         $ret = $this->obj->setItemCallback($cb);

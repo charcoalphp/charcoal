@@ -24,9 +24,11 @@ class AbstractUiItemTest extends AbstractTestCase
     {
         $container = $this->getContainer();
 
-        $this->obj = $this->getMockForAbstractClass(AbstractUiItem::class, [[
+        $this->obj = new class ([
             'container' => $container
-        ]]);
+        ]) extends AbstractUiItem {
+
+        };
 
         $method = new ReflectionMethod($this->obj, 'setAuthDependencies');
         $method->invoke($this->obj, $container);

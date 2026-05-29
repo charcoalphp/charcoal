@@ -18,7 +18,7 @@ class AbstractLayoutTest extends AbstractTestCase
 
     protected function setUp(): void
     {
-        $this->obj = $this->getMockForAbstractClass(AbstractLayout::class);
+        $this->obj = new class extends AbstractLayout {};
     }
 
     /**

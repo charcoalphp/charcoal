@@ -26,15 +26,13 @@ class AbstractFormTest extends AbstractTestCase
         $container->register(new FormServiceProvider());
         $container->register(new LayoutServiceProvider());
 
-        $this->obj = $this->getMockForAbstractClass(AbstractForm::class, [
-            [
-                'container'          => $container,
-                'logger'             => $container['logger'],
-                'view'               => $container['view'],
-                'layout_builder'     => $container['layout/builder'],
-                'form_group_factory' => $container['form/group/factory'],
-            ],
-        ]);
+        $this->obj = new class ([
+            'container'          => $container,
+            'logger'             => $container['logger'],
+            'view'               => $container['view'],
+            'layout_builder'     => $container['layout/builder'],
+            'form_group_factory' => $container['form/group/factory'],
+        ]) extends AbstractForm {};
     }
 
     public function testSetGroupCallback(): void

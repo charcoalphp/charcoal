@@ -26,14 +26,12 @@ class AbstractMenuItemTest extends AbstractTestCase
 
         $menu = $container['menu/builder']->build([]);
 
-        $this->obj = $this->getMockForAbstractClass(AbstractMenuItem::class, [
-            [
-                'menu'              => $menu,
-                'logger'            => $container['logger'],
-                'view'              => $container['view'],
-                'menu_item_builder' => $container['menu/item/builder'],
-            ],
-        ]);
+        $this->obj = new class ([
+            'menu'              => $menu,
+            'logger'            => $container['logger'],
+            'view'              => $container['view'],
+            'menu_item_builder' => $container['menu/item/builder'],
+        ]) extends AbstractMenuItem {};
     }
 
     public function testHasChildren(): void
