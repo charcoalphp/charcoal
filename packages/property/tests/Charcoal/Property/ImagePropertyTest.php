@@ -53,7 +53,7 @@ class ImagePropertyTest extends AbstractFilePropertyTestCase
     /**
      * Asserts that the property adheres to file property defaults.
      */
-    public function testDefaulAcceptedMimeTypes(): void
+    public function testDefaultAcceptedMimeTypes(): void
     {
         $this->assertIsArray($this->obj['defaultAcceptedMimetypes']);
         $this->assertNotEmpty($this->obj['defaultAcceptedMimetypes']);

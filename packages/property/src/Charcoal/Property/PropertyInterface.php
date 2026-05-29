@@ -55,7 +55,7 @@ interface PropertyInterface
     /**
      * @param  mixed $val Optional. The value to to convert for display.
      */
-    public function displayVal(mixed $val): string;
+    public function displayVal(mixed $val, array $options = []): string;
 
     /**
      * @param  mixed $label The property label.

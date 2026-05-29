@@ -50,7 +50,7 @@ abstract class AbstractFilePropertyTestCase extends AbstractTestCase
     /**
      * @var array<string, string>
      */
-    private ?array $fileMapOfFixtures = null;
+    private static ?array $fileMapOfFixtures = null;
 
     protected function setUp(): void
     {
@@ -60,16 +60,16 @@ abstract class AbstractFilePropertyTestCase extends AbstractTestCase
     /**
      * @return array<string, string>
      */
-    public function getFileMapOfFixtures()
+    public static function getFileMapOfFixtures()
     {
-        if ($this->fileMapOfFixtures === null) {
-            $this->fileMapOfFixtures = [];
+        if (self::$fileMapOfFixtures === null) {
+            self::$fileMapOfFixtures = [];
             foreach (self::FIXTURES as $filename) {
-                $this->fileMapOfFixtures[$filename] = $this->getPathToFixture('files/'.$filename);
+                self::$fileMapOfFixtures[$filename] = self::getPathToFixture('files/'.$filename);
             }
         }
 
-        return $this->fileMapOfFixtures;
+        return self::$fileMapOfFixtures;
     }
 
     /**
@@ -299,7 +299,7 @@ abstract class AbstractFilePropertyTestCase extends AbstractTestCase
      *
      * @return void
      */
-    abstract public function testDefaulAcceptedMimeTypes();
+    abstract public function testDefaultAcceptedMimeTypes();
 
     /**
      * Asserts that the property properly checks if

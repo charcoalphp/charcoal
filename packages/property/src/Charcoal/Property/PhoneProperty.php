@@ -46,7 +46,7 @@ class PhoneProperty extends StringProperty
      *
      */
     #[\Override]
-    public function displayVal(mixed $val): string
+    public function displayVal(mixed $val, array $options = []): string
     {
         unset($options);
 

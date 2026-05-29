@@ -200,11 +200,6 @@ abstract class AbstractProperty extends AbstractEntity implements
      */
     public function setIdent(string $ident): static
     {
-        if (!is_string($ident)) {
-            throw new InvalidArgumentException(
-                'Ident needs to be string.'
-            );
-        }
         $this->ident = $ident;
 
         return $this;

@@ -212,9 +212,8 @@ class ObjectPropertyTest extends AbstractTestCase
         $this->assertNull($this->obj->parseOne($mock));
 
         // Force ID to 'foo'.
-        $mock->expects($this->any())
-             ->method('id')
-             ->will($this->returnValue('foo'));
+        $mock->method('id')
+             ->willReturn('foo');
         $this->assertEquals('foo', $this->obj->parseOne($mock));
     }
 
@@ -227,9 +226,8 @@ class ObjectPropertyTest extends AbstractTestCase
     public function testParseOneWithObjectWithIdReturnsId(): void
     {
         $mock = $this->createMock(StorableInterface::class);
-        $mock->expects($this->any())
-             ->method('id')
-             ->will($this->returnValue('foo'));
+        $mock->method('id')
+             ->willReturn('foo');
         $this->assertEquals('foo', $this->obj->parseOne($mock));
     }
 

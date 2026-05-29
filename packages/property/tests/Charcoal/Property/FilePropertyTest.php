@@ -43,7 +43,7 @@ class FilePropertyTest extends AbstractFilePropertyTestCase
     /**
      * Asserts that the property adheres to file property defaults.
      */
-    public function testDefaulAcceptedMimeTypes(): void
+    public function testDefaultAcceptedMimeTypes(): void
     {
         $this->assertIsArray($this->obj['defaultAcceptedMimetypes']);
         $this->assertEmpty($this->obj['defaultAcceptedMimetypes']);
@@ -129,7 +129,7 @@ class FilePropertyTest extends AbstractFilePropertyTestCase
         $this->assertTrue($this->obj['overwrite']);
     }
 
-    public function testVaidationMethods(): void
+    public function testValidationMethods(): void
     {
         $methods = $this->obj->validationMethods();
         $this->assertContains('mimetypes', $methods);
@@ -320,9 +320,9 @@ class FilePropertyTest extends AbstractFilePropertyTestCase
      *
      * @used-by self::testValidateMimetypes()
      */
-    public function provideDataForValidateMimetypes(): array
+    public static function provideDataForValidateMimetypes(): array
     {
-        $paths = $this->getFileMapOfFixtures();
+        $paths = self::getFileMapOfFixtures();
 
         return [
             'any MIME types, no value' => [
@@ -473,9 +473,9 @@ class FilePropertyTest extends AbstractFilePropertyTestCase
      *
      * @used-by self::testValidateFilesizes()
      */
-    public function provideDataForValidateFilesizes(): array
+    public static function provideDataForValidateFilesizes(): array
     {
-        $paths = $this->getFileMapOfFixtures();
+        $paths = self::getFileMapOfFixtures();
 
         return [
             'any size, no value' => [

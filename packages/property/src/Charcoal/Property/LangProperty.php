@@ -148,12 +148,9 @@ class LangProperty extends AbstractProperty implements SelectablePropertyInterfa
 
     /**
      * Format the given value for display.
-     *
-     * @param mixed $val     The value to to convert for display.
-     * @return string
      */
     #[\Override]
-    public function displayVal(mixed $val)
+    public function displayVal(mixed $val, array $options = []): string
     {
         if ($val === null || $val === '') {
             return '';

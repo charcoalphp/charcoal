@@ -2,6 +2,7 @@
 
 namespace Charcoal\Tests\Property;
 
+use Charcoal\Tests\Property\Mocks\SelectablePropertyTestDouble;
 use ReflectionClass;
 
 // From 'charcoal-translator'
@@ -24,7 +25,7 @@ class SelectablePropertyTraitTest extends AbstractTestCase
     /**
      * Tested Class.
      */
-    private \Charcoal\Property\SelectablePropertyTrait $obj;
+    private SelectablePropertyTestDouble $obj;
 
     /**
      * Set up the test.
@@ -33,10 +34,9 @@ class SelectablePropertyTraitTest extends AbstractTestCase
     {
         $container = $this->getContainer();
 
-        $this->obj = $this->getMockForTrait(SelectablePropertyTrait::class);
-        $this->obj->expects($this->any())
-                  ->method('translator')
-                  ->will($this->returnValue($container['translator']));
+        $this->obj = $this->createPartialMock(SelectablePropertyTestDouble::class, ['translator']);
+        $this->obj->method('translator')
+                  ->willReturn($container['translator']);
     }
 
     /**

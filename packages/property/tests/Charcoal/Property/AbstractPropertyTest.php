@@ -4,6 +4,7 @@ namespace Charcoal\Tests\Property;
 
 use Exception;
 use LogicException;
+use PDO;
 use RuntimeException;
 use InvalidArgumentException;
 
@@ -28,11 +29,23 @@ class AbstractPropertyTest extends AbstractTestCase
     {
         $container = $this->getContainer();
 
-        $this->obj = $this->getMockForAbstractClass(AbstractProperty::class, [[
+        $this->obj = new class ([
             'database'   => $container['database'],
             'logger'     => $container['logger'],
             'translator' => $container['translator']
-        ]]);
+        ]) extends AbstractProperty {
+            public function type(): string {
+                return 'test';
+            }
+
+            public function sqlType(): ?string {
+                return null;
+            }
+
+            public function sqlPdoType(): int {
+                return PDO::PARAM_STR;
+            }
+        };
     }
 
     public function testDefaults(): void
@@ -60,9 +73,6 @@ class AbstractPropertyTest extends AbstractTestCase
 
         $this->obj->set('ident', 'example');
         $this->assertEquals('example', $this->obj['ident']);
-
-        $this->expectException(InvalidArgumentException::class);
-        $this->obj->setIdent([]);
     }
 
     public function testL10nIdent(): void
@@ -305,8 +315,5 @@ class AbstractPropertyTest extends AbstractTestCase
         $this->assertSame($ret, $this->obj);
 
         $this->assertEquals('CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci', $this->obj->sqlEncoding());
-
-        $this->expectException(InvalidArgumentException::class);
-        $this->obj->setSqlEncoding(false);
     }
 }
