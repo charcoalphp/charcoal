@@ -323,11 +323,13 @@ abstract class AbstractEntity implements EntityInterface
         return $this->data();
     }
 
-    public function __serialize(): array {
+    public function __serialize(): array
+    {
         return $this->data();
     }
 
-    public function __unserialize(array $data): void {
+    public function __unserialize(array $data): void
+    {
         $this->setData($data);
     }
 
