@@ -3,6 +3,7 @@
 use Rector\Config\RectorConfig;
 use Rector\Php84\Rector\Class_\DeprecatedAnnotationToDeprecatedAttributeRector;
 use Rector\PHPUnit\Set\PHPUnitSetList;
+use Rector\Set\ValueObject\DowngradeLevelSetList;
 use Rector\ValueObject\PhpVersion;
 use Rector\Symfony\Set\SymfonySetList;
 use Rector\Doctrine\Set\DoctrineSetList;
@@ -27,9 +28,9 @@ return RectorConfig::configure()
         symfony: true,
         doctrine: true
     )
-    ->withPhpVersion(PhpVersion::PHP_85)
+    ->withPhpVersion(PhpVersion::PHP_83)
     ->withSets([
-        \Rector\Set\ValueObject\LevelSetList::UP_TO_PHP_85,
+        \Rector\Set\ValueObject\LevelSetList::UP_TO_PHP_83,
         PHPUnitSetList::PHPUNIT_100,
         PHPUnitSetList::PHPUNIT_110,
         PHPUnitSetList::PHPUNIT_120
@@ -43,4 +44,4 @@ return RectorConfig::configure()
         'Serializable',
     ])
     ->withPreparedSets(typeDeclarations: true, deadCode: true, codeQuality: true)
-    ->withPhpSets(php85: true);
+    ->withPhpSets(php83: true);
