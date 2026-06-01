@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-if (($_ENV['TEST_MODE'] ?? '') === 'PACKAGE') {
+if ((getenv('TEST_MODE') ?? '') === 'PACKAGE') {
     require getcwd().'/tests/bootstrap.php';
 } else {
     /**
