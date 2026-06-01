@@ -10,3 +10,5 @@ phpunit.xml
 psalm.xml
 vendor/
 tests/logs
+build/report/
+packages/**/build/report
