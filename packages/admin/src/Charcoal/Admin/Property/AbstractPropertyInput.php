@@ -33,7 +33,6 @@ abstract class AbstractPropertyInput extends AbstractProperty implements
     /**
      * @var string $inputName
      */
-    #[\Override]
     protected $inputName;
 
     /**

@@ -336,7 +336,14 @@ class CacheMiddleware
         if (empty($this->includedPath) && !is_numeric($this->includedPath)) {
             return false;
         }
-        return array_any((array)$this->includedPath, fn($included): int|false => preg_match('@' . $included . '@', $path));
+        $found = false;
+        foreach ((array)$this->includedPath as $included) {
+            if (preg_match('@' . $included . '@', $path)) {
+                $found = true;
+                break;
+            }
+        }
+        return $found;
     }
 
     /**
@@ -353,7 +360,14 @@ class CacheMiddleware
         if (empty($this->excludedPath) && !is_numeric($this->excludedPath)) {
             return false;
         }
-        return array_any((array)$this->excludedPath, fn($excluded): int|false => preg_match('@' . $excluded . '@', $path));
+        $found = false;
+        foreach ((array)$this->excludedPath as $excluded) {
+            if (preg_match('@' . $excluded . '@', $path)) {
+                $found = true;
+                break;
+            }
+        }
+        return $found;
     }
 
     /**

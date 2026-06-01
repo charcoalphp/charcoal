@@ -54,7 +54,6 @@ class DocWidget extends FormWidget implements
      *
      * @var string
      */
-    #[\Override]
     protected $formPropertyClass = DocFormPropertyWidget::class;
 
     /**
@@ -136,7 +135,7 @@ class DocWidget extends FormWidget implements
             $metadata = $this->obj()->metadata();
             $objType  = (isset($metadata['labels']['singular_name'])
                         ? $translator->translate($metadata['labels']['singular_name'])
-                        : new ReflectionClass($obj)->getShortName());
+                        : (new ReflectionClass($this->obj()))->getShortName());
 
             $label = $translator->translate('Back to {{name}} id: {{id}}');
             $label = strtr($label, [

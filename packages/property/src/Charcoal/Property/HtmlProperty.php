@@ -19,7 +19,6 @@ class HtmlProperty extends TextProperty
     /**
      * @var boolean
      */
-    #[\Override]
     protected $long = self::DEFAULT_LONG;
 
     /**

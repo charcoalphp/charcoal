@@ -21,7 +21,6 @@ class NewsLoader extends AbstractLoader
     /**
      * @var object $objType The object to load.
      */
-    #[\Override]
     protected $objType;
 
     /**

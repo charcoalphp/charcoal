@@ -25,7 +25,6 @@ class DatabaseOrder extends Order implements
      *
      * @var string
      */
-    #[\Override]
     protected $table = DatabaseSource::DEFAULT_TABLE_ALIAS;
 
     /**
