@@ -86,6 +86,9 @@ jobs:
         with:
           redis-version: 6
 
+      - name: Set the testing variable
+        run: echo "TEST_MODE=PACKAGE" >> $GITHUB_ENV
+
       - name: Run PHPCS for all packages
         run: tests/script/phpcs --ci ${{ matrix.package }}
 
