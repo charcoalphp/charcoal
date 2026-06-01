@@ -78,18 +78,17 @@ if [[ "$1" ]]; then package=$1; fi
 
 # testing a single package
 test_package() {
-    export TEST_MODE="PACKAGE"
     echo -e "${GREEN}Testing the [${NC} $1 ${GREEN}] package..."
 
     if [[ -z "$ci" ]]; then
-        php vendor/bin/phpunit -c packages/"$1"/phpunit.xml.dist --coverage-text
+        env TEST_MODE="PACKAGE" php vendor/bin/phpunit -c packages/"$1"/phpunit.xml.dist --coverage-text
         if [[ -n "$interactive" ]]; then
             read -p 'Continue ?:[Y/n/r](Y) ' continue
             if [[ "$continue" == 'n' ]]; then exit 0; fi
             if [[ "$continue" == 'r' ]]; then test_package $1; fi
         fi
     else
-        php vendor/bin/phpunit  -c packages/"$1"/phpunit.xml.dist \
+        env TEST_MODE="PACKAGE" php vendor/bin/phpunit  -c packages/"$1"/phpunit.xml.dist \
                                 --coverage-clover "build/logs/clover.xml" \
                                 --coverage-text
         exit $?
