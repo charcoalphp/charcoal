@@ -90,4 +90,6 @@ jobs:
         run: tests/script/phpcs --ci ${{ matrix.package }}
 
       - name: Run PHPunit for all packages
+        env:
+          TEST_MODE: PACKAGE
         run: tests/script/phpunit --ci ${{ matrix.package }}
