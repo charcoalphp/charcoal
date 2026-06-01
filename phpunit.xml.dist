@@ -9,7 +9,9 @@
          cacheDirectory=".phpunit.cache"
          backupStaticProperties="false"
          failOnWarning="false"
-         failOnNotice="false">
+         failOnPhpunitWarning="false"
+         failOnNotice="false"
+         failOnDeprecation="false">
  <testsuites>
     <testsuite name="Charcoal Test Suite">
       <directory>./tests/Charcoal</directory>
