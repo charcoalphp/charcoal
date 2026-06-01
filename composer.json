@@ -127,6 +127,9 @@
                 "packages/ui/tests/Charcoal",
                 "packages/user/tests/Charcoal/",
                 "packages/view/tests/Charcoal"
+            ],
+            "Charcoal\\Rector\\Property\\": [
+                "src/Rector/Property/"
             ]
         }
     },
