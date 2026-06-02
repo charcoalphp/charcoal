@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Charcoal\Cms;
 
 // From 'charcoal-object'
@@ -16,10 +18,8 @@ final class FaqCategory extends Content implements CategoryInterface
 
     /**
      * CategoryTrait > itemType()
-     *
-     * @return string
      */
-    public function itemType()
+    public function itemType(): string
     {
         return Faq::class;
     }
@@ -27,7 +27,7 @@ final class FaqCategory extends Content implements CategoryInterface
     /**
      * @return \Charcoal\Model\Collection|array
      */
-    public function loadCategoryItems()
+    public function loadCategoryItems(): array
     {
         return [];
     }

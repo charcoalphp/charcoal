@@ -25,6 +25,24 @@ use Charcoal\Tests\ReflectionsTrait;
 /**
  * Test {@see StorableTrait} and {@see StorableInterface}.
  */
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Source\StorableTrait::class, 'setKey')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Source\StorableTrait::class, 'key')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Source\StorableTrait::class, 'setId')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Source\StorableTrait::class, 'id')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Source\StorableTrait::class, 'setSourceFactory')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Source\StorableTrait::class, 'sourceFactory')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Source\StorableTrait::class, 'createSource')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Source\StorableTrait::class, 'setSource')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Source\StorableTrait::class, 'source')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Source\StorableTrait::class, 'save')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Source\StorableTrait::class, 'preSave')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Source\StorableTrait::class, 'postSave')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Source\StorableTrait::class, 'update')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Source\StorableTrait::class, 'preUpdate')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Source\StorableTrait::class, 'postUpdate')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Source\StorableTrait::class, 'delete')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Source\StorableTrait::class, 'preDelete')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Source\StorableTrait::class, 'postDelete')]
 class StorableTraitTest extends AbstractTestCase
 {
     use ReflectionsTrait;
@@ -38,8 +56,6 @@ class StorableTraitTest extends AbstractTestCase
 
     /**
      * Setup the test.
-     *
-     * @return void
      */
     protected function setUp(): void
     {
@@ -48,10 +64,8 @@ class StorableTraitTest extends AbstractTestCase
 
     /**
      * Create datasource repository for testing.
-     *
-     * @return SourceMock
      */
-    final protected function createSource()
+    final protected function createSource(): \Charcoal\Tests\Mock\SourceMock
     {
         return new SourceMock([
             'logger' => new NullLogger()
@@ -66,12 +80,8 @@ class StorableTraitTest extends AbstractTestCase
      * 2. Mutated state
      * 3. Chainable method
      *
-     * @covers \Charcoal\Source\StorableTrait::setKey
-     * @covers \Charcoal\Source\StorableTrait::key
-     *
-     * @return void
      */
-    public function testKey()
+    public function testKey(): void
     {
         $obj = $this->obj;
 
@@ -89,11 +99,8 @@ class StorableTraitTest extends AbstractTestCase
     /**
      * Test for invalid data type when assigning a primary object key.
      *
-     * @covers \Charcoal\Source\StorableTrait::setKey
-     *
-     * @return void
      */
-    public function testKeyWithInvalidDataType()
+    public function testKeyWithInvalidDataType(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->obj->setKey(null);
@@ -102,11 +109,8 @@ class StorableTraitTest extends AbstractTestCase
     /**
      * Test for invalid character set when assigning a primary object key.
      *
-     * @covers \Charcoal\Source\StorableTrait::setKey
-     *
-     * @return void
      */
-    public function testKeyWithInvalidCharacters()
+    public function testKeyWithInvalidCharacters(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->obj->setKey('foo-bar');
@@ -120,12 +124,8 @@ class StorableTraitTest extends AbstractTestCase
      * 2. Mutated state
      * 3. Chainable method
      *
-     * @covers \Charcoal\Source\StorableTrait::setId
-     * @covers \Charcoal\Source\StorableTrait::id
-     *
-     * @return void
      */
-    public function testId()
+    public function testId(): void
     {
         $obj = $this->obj;
 
@@ -149,11 +149,8 @@ class StorableTraitTest extends AbstractTestCase
     /**
      * Test for invalid data type when assigning a unique object ID.
      *
-     * @covers \Charcoal\Source\StorableTrait::setId
-     *
-     * @return void
      */
-    public function testIdWithInvalidDataType()
+    public function testIdWithInvalidDataType(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->obj->setId(null);
@@ -162,12 +159,8 @@ class StorableTraitTest extends AbstractTestCase
     /**
      * Test the unique object ID with an alternate primary key.
      *
-     * @covers \Charcoal\Source\StorableTrait::setId
-     * @covers \Charcoal\Source\StorableTrait::id
-     *
-     * @return void
      */
-    public function testAltId()
+    public function testAltId(): void
     {
         $obj = $this->obj;
 
@@ -180,12 +173,8 @@ class StorableTraitTest extends AbstractTestCase
     /**
      * Test repository factory.
      *
-     * @covers \Charcoal\Source\StorableTrait::setSourceFactory
-     * @covers \Charcoal\Source\StorableTrait::sourceFactory
-     *
-     * @return void
      */
-    public function testSourceFactory()
+    public function testSourceFactory(): void
     {
         $obj = $this->obj;
 
@@ -203,11 +192,8 @@ class StorableTraitTest extends AbstractTestCase
     /**
      * Test for missing repository factory.
      *
-     * @covers \Charcoal\Source\StorableTrait::sourceFactory
-     *
-     * @return void
      */
-    public function testMissingSourceFactory()
+    public function testMissingSourceFactory(): void
     {
         $this->expectException(RuntimeException::class);
         $this->callMethod($this->obj, 'sourceFactory');
@@ -223,13 +209,8 @@ class StorableTraitTest extends AbstractTestCase
      * 4. Storable can create a repository
      * 5. Chainable method
      *
-     * @covers \Charcoal\Source\StorableTrait::createSource
-     * @covers \Charcoal\Source\StorableTrait::setSource
-     * @covers \Charcoal\Source\StorableTrait::source
-     *
-     * @return void
      */
-    public function testSource()
+    public function testSource(): void
     {
         $obj = $this->obj;
 
@@ -262,13 +243,8 @@ class StorableTraitTest extends AbstractTestCase
      * 2. Fail Early
      * 3. Fail Late
      *
-     * @covers \Charcoal\Source\StorableTrait::save
-     * @covers \Charcoal\Source\StorableTrait::preSave
-     * @covers \Charcoal\Source\StorableTrait::postSave
-     *
-     * @return void
      */
-    public function testSave()
+    public function testSave(): void
     {
         $src = $this->createSource();
 
@@ -296,13 +272,8 @@ class StorableTraitTest extends AbstractTestCase
      * 2. Fail Early
      * 3. Fail Late
      *
-     * @covers \Charcoal\Source\StorableTrait::update
-     * @covers \Charcoal\Source\StorableTrait::preUpdate
-     * @covers \Charcoal\Source\StorableTrait::postUpdate
-     *
-     * @return void
      */
-    public function testUpdate()
+    public function testUpdate(): void
     {
         $src = $this->createSource();
 
@@ -330,13 +301,8 @@ class StorableTraitTest extends AbstractTestCase
      * 2. Fail Early
      * 3. Fail Late
      *
-     * @covers \Charcoal\Source\StorableTrait::delete
-     * @covers \Charcoal\Source\StorableTrait::preDelete
-     * @covers \Charcoal\Source\StorableTrait::postDelete
-     *
-     * @return void
      */
-    public function testDelete()
+    public function testDelete(): void
     {
         $src = $this->createSource();
 

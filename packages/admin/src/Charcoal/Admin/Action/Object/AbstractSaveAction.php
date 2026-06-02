@@ -43,11 +43,7 @@ abstract class AbstractSaveAction extends AdminAction implements ObjectContainer
     {
         $this->obj = $obj;
 
-        if ($obj instanceof ModelInterface) {
-            $this->objId = $obj->id();
-        } else {
-            $this->objId = null;
-        }
+        $this->objId = $obj instanceof ModelInterface ? $obj->id() : null;
 
         return $this;
     }
@@ -145,7 +141,7 @@ abstract class AbstractSaveAction extends AdminAction implements ObjectContainer
                 $propertyLabel = (string)$obj->property($prop)['label'];
                 $resultMessage = $result->message();
 
-                if (strpos($resultMessage, $propertyLabel) === false) {
+                if (!str_contains((string)$resultMessage, $propertyLabel)) {
                     $resultMessage = strtr($this->translator()->translation('{{ errorMessage }}: {{ errorThrown }}'), [
                         '{{ errorMessage }}' => $propertyLabel,
                         '{{ errorThrown }}'  => $resultMessage,
@@ -161,6 +157,7 @@ abstract class AbstractSaveAction extends AdminAction implements ObjectContainer
     /**
      * @return array
      */
+    #[\Override]
     public function results()
     {
         $results =  [

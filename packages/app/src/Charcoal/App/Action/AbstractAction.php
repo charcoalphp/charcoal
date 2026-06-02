@@ -44,25 +44,13 @@ abstract class AbstractAction extends AbstractEntity implements
     public const MODE_EVENT_STREAM = 'event-stream';
     public const DEFAULT_MODE = self::MODE_JSON;
 
-    /**
-     * @var string $mode
-     */
-    private $mode = self::DEFAULT_MODE;
+    private string $mode = self::DEFAULT_MODE;
 
-    /**
-     * @var boolean $success
-     */
-    private $success = false;
+    private bool $success = false;
 
-    /**
-     * @var string|null $successUrl
-     */
-    private $successUrl;
+    private ?string $successUrl = null;
 
-    /**
-     * @var string|null $failureUrl
-     */
-    private $failureUrl;
+    private ?string $failureUrl = null;
 
     /**
      * @param array|\ArrayAccess $data The dependencies (app and logger).
@@ -116,9 +104,7 @@ abstract class AbstractAction extends AbstractEntity implements
                 break;
 
             case self::MODE_EVENT_STREAM:
-                $output = new CallbackStream(function () {
-                    return $this->results();
-                });
+                $output = new CallbackStream(fn(): mixed => $this->results());
 
                 $response = $response
                     ->withHeader('Content-Type', 'text/event-stream')
@@ -162,7 +148,7 @@ abstract class AbstractAction extends AbstractEntity implements
      */
     public function setSuccess($success)
     {
-        $this->success = !!$success;
+        $this->success = (bool)$success;
 
         return $this;
     }
@@ -248,13 +234,7 @@ abstract class AbstractAction extends AbstractEntity implements
      */
     public function redirectUrl()
     {
-        if ($this->success() === true) {
-            $url = $this->successUrl();
-        } else {
-            $url = $this->failureUrl();
-        }
-
-        return $url;
+        return $this->success() === true ? $this->successUrl() : $this->failureUrl();
     }
 
     /**

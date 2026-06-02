@@ -17,13 +17,9 @@ class FormWidgetTest extends AbstractTestCase
 {
     /**
      * Object under test
-     * @var FormWidget
      */
-    private $obj;
+    private \Charcoal\Admin\Widget\FormWidget $obj;
 
-    /**
-     * @return void
-     */
     public function setUp(): void
     {
         $logger = new NullLogger();
@@ -32,21 +28,7 @@ class FormWidgetTest extends AbstractTestCase
         ]);
     }
 
-    /**
-     * @return FormSidebarWidget
-     */
-    private function sidebarWidget()
-    {
-        $logger = new NullLogger();
-        return new FormSidebarWidget([
-            'logger' => $logger,
-        ]);
-    }
-
-    /**
-     * @return void
-     */
-    public function testConstructor()
+    public function testConstructor(): void
     {
         $this->assertInstanceOf(FormWidget::class, $this->obj);
     }

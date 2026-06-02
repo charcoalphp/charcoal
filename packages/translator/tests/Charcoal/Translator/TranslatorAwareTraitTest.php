@@ -17,34 +17,26 @@ class TranslatorAwareTraitTest extends AbstractTestCase
 {
     /**
      * Tested Class.
-     *
-     * @var TranslatorAwareTrait
      */
     private $obj;
 
     /**
      * Set up the test.
-     *
-     * @return void
      */
     protected function setUp(): void
     {
-        $this->obj = $this->getMockForTrait(TranslatorAwareTrait::class);
+        $this->obj = new class () {
+            use TranslatorAwareTrait;
+        };
     }
 
-    /**
-     * @return void
-     */
-    public function testTranslatorWithoutSettingThrowsException()
+    public function testTranslatorWithoutSettingThrowsException(): void
     {
         $this->expectException(Exception::class);
         $this->callMethod($this->obj, 'translator');
     }
 
-    /**
-     * @return void
-     */
-    public function testSetTranslator()
+    public function testSetTranslator(): void
     {
         $translator = $this->getMockBuilder(Translator::class)
             ->disableOriginalConstructor()

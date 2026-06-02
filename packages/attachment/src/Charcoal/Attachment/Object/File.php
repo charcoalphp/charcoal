@@ -26,9 +26,8 @@ class File extends Attachment
      * @todo    Generate thumbnail from config or whatever. File nodes should have a placeholder defined.
      * @used-by StorableTrait::preSave() For the "create" Event.
      * @used-by StorableTrait::preUpdate() For the "update" Event.
-     * @return  boolean
      */
-    public function generateThumbnail()
+    public function generateThumbnail(): bool
     {
         return true;
     }
@@ -36,15 +35,14 @@ class File extends Attachment
 
 
 // Events
-// =============================================================================
-
+    // =============================================================================
     /**
      * Event called before _creating_ the object.
      *
      * @see    Charcoal\Source\StorableTrait::preSave() For the "create" Event.
-     * @return boolean
      */
-    public function preSave()
+    #[\Override]
+    public function preSave(): bool
     {
         $this->generateThumbnail();
 
@@ -56,9 +54,9 @@ class File extends Attachment
      *
      * @see    StorableTrait::preUpdate() For the "update" Event.
      * @param  array $properties Optional. The list of properties to update.
-     * @return boolean
      */
-    public function preUpdate(array $properties = null)
+    #[\Override]
+    public function preUpdate(?array $properties = null): bool
     {
         $this->generateThumbnail();
 

@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 use Charcoal\MonorepoBuilder\Release\ReleaseWorker\UpdateBranchAliasReleaseWorker;
-use Symplify\ComposerJsonManipulator\ValueObject\ComposerJsonSection;
+use Symplify\MonorepoBuilder\ComposerJsonManipulator\ValueObject\ComposerJsonSection;
 use Symplify\MonorepoBuilder\Config\MBConfig;
 use Symplify\MonorepoBuilder\Release\ReleaseWorker\SetCurrentMutualDependenciesReleaseWorker;
 
@@ -13,11 +13,10 @@ return static function (MBConfig $mbConfig): void {
         // default value
         __DIR__ . '/packages',
     ]);
-
     // for "merge" command.
     $mbConfig->dataToAppend([
         ComposerJsonSection::REQUIRE_DEV => [
-            'phpunit/phpunit' => '^9.5',
+            'phpunit/phpunit' => '^12.5',
         ],
     ]);
 

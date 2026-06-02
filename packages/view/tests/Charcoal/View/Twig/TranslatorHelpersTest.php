@@ -25,29 +25,11 @@ use Charcoal\View\Twig\TwigLoader;
  */
 class TranslatorHelpersTest extends AbstractTestCase
 {
-    /**
-     * @var Translator
-     */
-    private $translator;
-
-    /**
-     * @var TwigEngine
-     */
-    private $twig;
-
-    /**
-     * @return void
-     */
     public function setUp(): void
     {
-        $this->translator = $this->createTranslator();
-        $this->twig   = $this->createTwigEngine($this->translator);
     }
 
-    /**
-     * @return Translator
-     */
-    public function createTranslator()
+    public function createTranslator(): \Charcoal\Translator\Translator
     {
         $translator = new Translator([
             'locale'            => 'en',
@@ -78,9 +60,8 @@ class TranslatorHelpersTest extends AbstractTestCase
 
     /**
      * @param  Translator|null $translator The translator service for the translator helpers.
-     * @return TwigEnvironment
      */
-    public function createTwigEngine($translator = null)
+    public function createTwigEngine($translator = null): \Twig\Environment
     {
         $loader = new TwigLoader([
             'base_path' => __DIR__,

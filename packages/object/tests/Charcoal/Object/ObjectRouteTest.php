@@ -19,22 +19,16 @@ class ObjectRouteTest extends AbstractTestCase
 {
     /**
      * Tested Class.
-     *
-     * @var ObjectRoute
      */
-    private $obj;
+    private \Charcoal\Object\ObjectRoute $obj;
 
     /**
      * Store the service container.
-     *
-     * @var Container
      */
-    private $container;
+    private ?\Pimple\Container $container = null;
 
     /**
      * Set up the test.
-     *
-     * @return void
      */
     public function setUp(): void
     {
@@ -43,18 +37,12 @@ class ObjectRouteTest extends AbstractTestCase
         $this->obj = $container['model/factory']->create(ObjectRoute::class);
     }
 
-    /**
-     * @return void
-     */
-    public function testDefaults()
+    public function testDefaults(): void
     {
         $this->assertNull($this->obj['id']);
     }
 
-    /**
-     * @return void
-     */
-    public function testSetData()
+    public function testSetData(): void
     {
         $ret = $this->obj->setData([
             'id' => 42,
@@ -82,10 +70,7 @@ class ObjectRouteTest extends AbstractTestCase
         $this->assertEquals('baz', $this->obj->getRouteTemplate());
     }
 
-    /**
-     * @return void
-     */
-    public function testSetId()
+    public function testSetId(): void
     {
         $ret = $this->obj->setId(3);
         $this->assertSame($ret, $this->obj);
@@ -98,18 +83,12 @@ class ObjectRouteTest extends AbstractTestCase
         $this->assertEquals(10, $this->obj['id']);
     }
 
-    /**
-     * @return void
-     */
-    public function testSetCreationDate()
+    public function testSetCreationDate(): void
     {
         $this->assertNull($this->obj->getCreationDate());
     }
 
-    /**
-     * @return void
-     */
-    public function testLastModificationDate()
+    public function testLastModificationDate(): void
     {
         $date = $this->obj->getLastModificationDate();
         $this->obj->update();
@@ -118,10 +97,7 @@ class ObjectRouteTest extends AbstractTestCase
         $this->assertIsBool($date2 > $date);
     }
 
-    /**
-     * @return void
-     */
-    public function testLang()
+    public function testLang(): void
     {
         $ret = $this->obj->setLang('en');
         $this->assertSame($ret, $this->obj);
@@ -134,10 +110,7 @@ class ObjectRouteTest extends AbstractTestCase
         $this->assertEquals('jp', $this->obj['lang']);
     }
 
-    /**
-     * @return void
-     */
-    public function testSetSlug()
+    public function testSetSlug(): void
     {
         $this->assertNull($this->obj['slug']);
         $ret = $this->obj->setSlug('foo');
@@ -159,12 +132,10 @@ class ObjectRouteTest extends AbstractTestCase
 
     /**
      * Set up the service container.
-     *
-     * @return Container
      */
-    private function container()
+    private function container(): \Pimple\Container
     {
-        if ($this->container === null) {
+        if (!$this->container instanceof \Pimple\Container) {
             $container = new Container();
             $containerProvider = new ContainerProvider();
             $containerProvider->registerBaseServices($container);

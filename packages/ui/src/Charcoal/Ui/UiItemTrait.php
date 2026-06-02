@@ -139,7 +139,7 @@ trait UiItemTrait
      */
     public function setActive($active)
     {
-        $this->active = !!$active;
+        $this->active = (bool)$active;
 
         return $this;
     }
@@ -159,9 +159,8 @@ trait UiItemTrait
      *
      * @param  string|null $type The UI item type.
      * @throws InvalidArgumentException If the type is not a string (or null).
-     * @return self
      */
-    public function setType($type)
+    public function setType($type): static
     {
         if (is_string($type) || $type === null) {
             $this->type = $type;
@@ -178,10 +177,8 @@ trait UiItemTrait
      * Retrieve the UI item type.
      *
      * If it is not explicitely set (or null), then return the object's FQN.
-     *
-     * @return string
      */
-    public function type()
+    public function type(): ?string
     {
         if ($this->type === null) {
             return static::class;
@@ -196,9 +193,8 @@ trait UiItemTrait
      *
      * @param  string $template A template (identifier).
      * @throws InvalidArgumentException If the template is not a string.
-     * @return self
      */
-    public function setTemplate($template)
+    public function setTemplate($template): static
     {
         if (!is_string($template)) {
             throw new InvalidArgumentException(
@@ -216,7 +212,7 @@ trait UiItemTrait
      *
      * @return string If unset, returns the UI item type.
      */
-    public function template()
+    public function template(): ?string
     {
         if ($this->template === null) {
             return $this->type();
@@ -266,7 +262,7 @@ trait UiItemTrait
      */
     public function tabTitle()
     {
-        return ($this->tabTitle) ? $this->tabTitle : $this->title();
+        return $this->tabTitle ?: $this->title();
     }
 
     /**
@@ -366,7 +362,7 @@ trait UiItemTrait
      */
     public function setShowTitle($show)
     {
-        $this->showTitle = !!$show;
+        $this->showTitle = (bool)$show;
 
         return $this;
     }
@@ -381,7 +377,7 @@ trait UiItemTrait
         if ($this->showTitle === false) {
             return false;
         } else {
-            return !!$this->title();
+            return (bool)$this->title();
         }
     }
 
@@ -393,7 +389,7 @@ trait UiItemTrait
      */
     public function setShowSubtitle($show)
     {
-        $this->showSubtitle = !!$show;
+        $this->showSubtitle = (bool)$show;
 
         return $this;
     }
@@ -408,7 +404,7 @@ trait UiItemTrait
         if ($this->showSubtitle === false) {
             return false;
         } else {
-            return !!$this->subtitle();
+            return (bool)$this->subtitle();
         }
     }
 
@@ -420,7 +416,7 @@ trait UiItemTrait
      */
     public function setShowDescription($show)
     {
-        $this->showDescription = !!$show;
+        $this->showDescription = (bool)$show;
 
         return $this;
     }
@@ -435,7 +431,7 @@ trait UiItemTrait
         if ($this->showDescription === false) {
             return false;
         } else {
-            return !!$this->description();
+            return (bool)$this->description();
         }
     }
 
@@ -447,7 +443,7 @@ trait UiItemTrait
      */
     public function setShowNotes($show)
     {
-        $this->showNotes = !!$show;
+        $this->showNotes = (bool)$show;
 
         return $this;
     }
@@ -462,7 +458,7 @@ trait UiItemTrait
         if ($this->showNotes === false) {
             return false;
         } else {
-            return !!$this->notes();
+            return (bool)$this->notes();
         }
     }
 
@@ -474,7 +470,7 @@ trait UiItemTrait
      */
     public function setShowIcon($show)
     {
-        $this->showIcon = !!$show;
+        $this->showIcon = (bool)$show;
 
         return $this;
     }
@@ -489,7 +485,7 @@ trait UiItemTrait
         if ($this->showIcon === false) {
             return false;
         } else {
-            return !!$this->icon();
+            return (bool)$this->icon();
         }
     }
 
@@ -501,7 +497,7 @@ trait UiItemTrait
      */
     public function setShowHeader($show)
     {
-        $this->showHeader = !!$show;
+        $this->showHeader = (bool)$show;
 
         return $this;
     }
@@ -528,7 +524,7 @@ trait UiItemTrait
      */
     public function setShowFooter($show)
     {
-        $this->showFooter = !!$show;
+        $this->showFooter = (bool)$show;
 
         return $this;
     }
@@ -553,7 +549,7 @@ trait UiItemTrait
      */
     public function setShowTabTitle($showTabTitle)
     {
-        $this->showTabTitle = !!$showTabTitle;
+        $this->showTabTitle = (bool)$showTabTitle;
 
         return $this;
     }
@@ -580,14 +576,10 @@ trait UiItemTrait
     protected function sortItemsByPriority(
         PrioritizableInterface $a,
         PrioritizableInterface $b
-    ) {
+    ): int {
         $priorityA = $a->priority();
         $priorityB = $b->priority();
-
-        if ($priorityA === $priorityB) {
-            return 0;
-        }
-        return ($priorityA < $priorityB) ? (-1) : 1;
+        return ($priorityA <=> $priorityB);
     }
 
     /**

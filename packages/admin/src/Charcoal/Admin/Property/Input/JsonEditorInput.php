@@ -27,7 +27,7 @@ class JsonEditorInput extends TextareaInput
      * @param  array $settings The editor options.
      * @return Tinymce Chainable
      */
-    public function setEditorOptions(array $settings)
+    public function setEditorOptions(array $settings): static
     {
         $this->editorOptions = array_merge($this->defaultEditorOptions(), $settings);
 
@@ -40,7 +40,7 @@ class JsonEditorInput extends TextareaInput
      * @param  array $settings The editor options.
      * @return Tinymce Chainable
      */
-    public function mergeEditorOptions(array $settings)
+    public function mergeEditorOptions(array $settings): static
     {
         $this->editorOptions = array_merge($this->editorOptions, $settings);
 
@@ -55,7 +55,7 @@ class JsonEditorInput extends TextareaInput
      * @throws InvalidArgumentException If the identifier is not a string.
      * @return Tinymce Chainable
      */
-    public function addEditorOption($key, $val)
+    public function addEditorOption($key, $val): static
     {
         if (!is_string($key)) {
             throw new InvalidArgumentException(
@@ -96,16 +96,10 @@ class JsonEditorInput extends TextareaInput
     {
         $defaultData = $this->metadata()->defaultData();
 
-        if (isset($defaultData['editor_options'])) {
-            return $defaultData['editor_options'];
-        }
-
-        return [];
+        return ($defaultData['editor_options'] ?? []);
     }
 
-    /**
-     * @return array
-     */
+    #[\Override]
     public function getInputValOptions(): array
     {
         return [

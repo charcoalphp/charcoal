@@ -75,9 +75,7 @@ class NewsLoader extends AbstractLoader
      */
     public function upcoming()
     {
-        $loader = $this->published();
-
-        return $loader;
+        return $this->published();
     }
 
     /**
@@ -86,9 +84,7 @@ class NewsLoader extends AbstractLoader
      */
     public function archive()
     {
-        $loader = $this->expired();
-
-        return $loader;
+        return $this->expired();
     }
 
     /**
@@ -109,9 +105,8 @@ class NewsLoader extends AbstractLoader
 
     /**
      * @param string $median The median between upcoming and archive.
-     * @return self
      */
-    public function setMedian($median)
+    public function setMedian($median): static
     {
         $this->median = $median;
 
@@ -120,9 +115,8 @@ class NewsLoader extends AbstractLoader
 
     /**
      * @param object $objType The object type.
-     * @return self
      */
-    public function setObjType($objType)
+    public function setObjType($objType): static
     {
         $this->objType = $objType;
 

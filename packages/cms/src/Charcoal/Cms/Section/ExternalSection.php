@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Charcoal\Cms\Section;
 
 // From 'charcoal-cms'
@@ -19,9 +21,9 @@ class ExternalSection extends AbstractSection
 
     /**
      * @param  mixed $url The external URL (localized).
-     * @return self
      */
-    public function setExternalUrl($url)
+    #[\Override]
+    public function setExternalUrl($url): static
     {
         $this->externalUrl = $this->translator()->translation($url);
 
@@ -31,6 +33,7 @@ class ExternalSection extends AbstractSection
     /**
      * @return Translation|string|null
      */
+    #[\Override]
     public function externalUrl()
     {
         return $this->externalUrl;

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Charcoal\Ui\MenuItem;
 
 use Charcoal\Factory\ResolverFactory;
@@ -11,26 +13,20 @@ use Charcoal\Ui\MenuItem\GenericMenuItem;
  */
 class MenuItemFactory extends ResolverFactory
 {
-    /**
-     * @return string
-     */
-    public function baseClass()
+    #[\Override]
+    public function baseClass(): string
     {
         return MenuItemInterface::class;
     }
 
-    /**
-     * @return string
-     */
-    public function defaultClass()
+    #[\Override]
+    public function defaultClass(): string
     {
         return GenericMenuItem::class;
     }
 
-    /**
-     * @return string
-     */
-    public function resolverSuffix()
+    #[\Override]
+    public function resolverSuffix(): string
     {
         return 'MenuItem';
     }

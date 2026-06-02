@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Charcoal\Cms\Config;
 
 // From 'charcoal-config'
@@ -40,10 +42,7 @@ class EventConfig extends AbstractConfig
      */
     private $configFeatIdent;
 
-    /**
-     * @var array
-     */
-    private $thumbnail;
+    private ?array $thumbnail = null;
 
     /**
      * l10n
@@ -103,7 +102,7 @@ class EventConfig extends AbstractConfig
     /**
      * @return array Thumbnail generation values.
      */
-    public function thumbnail()
+    public function thumbnail(): ?array
     {
         return $this->thumbnail;
     }
@@ -120,7 +119,7 @@ class EventConfig extends AbstractConfig
      * @param integer $numPerPage Number of event per page.
      * @return EventConfig
      */
-    public function setNumPerPage($numPerPage)
+    public function setNumPerPage($numPerPage): static
     {
         $this->numPerPage = $numPerPage;
 
@@ -131,7 +130,7 @@ class EventConfig extends AbstractConfig
      * @param boolean $entryCycle Cycle event or not.
      * @return EventConfig
      */
-    public function setEntryCycle($entryCycle)
+    public function setEntryCycle($entryCycle): static
     {
         $this->entryCycle = $entryCycle;
 
@@ -143,7 +142,7 @@ class EventConfig extends AbstractConfig
      * @param string $lifespan Event expiry.
      * @return EventConfig
      */
-    public function setLifespan($lifespan)
+    public function setLifespan($lifespan): static
     {
         $this->lifespan = $lifespan;
 
@@ -154,7 +153,7 @@ class EventConfig extends AbstractConfig
      * @param string $objType Event object type.
      * @return EventConfig
      */
-    public function setObjType($objType)
+    public function setObjType($objType): static
     {
         $this->objType = $objType;
 
@@ -165,7 +164,7 @@ class EventConfig extends AbstractConfig
      * @param string $category Event category object.
      * @return EventConfig
      */
-    public function setCategory($category)
+    public function setCategory($category): static
     {
         $this->category = $category;
 
@@ -177,7 +176,7 @@ class EventConfig extends AbstractConfig
      * @param string $configFeatIdent Config property containing featured event.
      * @return EventConfig
      */
-    public function setConfigFeatIdent($configFeatIdent)
+    public function setConfigFeatIdent($configFeatIdent): static
     {
         $this->configFeatIdent = $configFeatIdent;
 
@@ -189,7 +188,7 @@ class EventConfig extends AbstractConfig
      * @param array $thumbnail Event thumbnail size.
      * @return EventConfig
      */
-    public function setThumbnail(array $thumbnail)
+    public function setThumbnail(array $thumbnail): static
     {
         $this->thumbnail = $thumbnail;
 
@@ -200,7 +199,7 @@ class EventConfig extends AbstractConfig
      * @param string $parentSectionSlug Event parent section (slug).
      * @return EventConfig
      */
-    public function setParentSectionSlug($parentSectionSlug)
+    public function setParentSectionSlug($parentSectionSlug): static
     {
         $this->parentSectionSlug = $parentSectionSlug;
 

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Charcoal\View\Mustache;
 
 // From Mustache
-use Mustache_LambdaHelper as LambdaHelper;
+use Mustache\LambdaHelper as LambdaHelper;
 
 /**
  * Mustache helpers for rendering CSS and JavaScript.
@@ -14,10 +14,8 @@ class AssetsHelpers implements HelpersInterface
 {
     /**
      * A string concatenation of inline `<script>` elements.
-     *
-     * @var string
      */
-    private static $js = '';
+    private static string $js = '';
 
     /**
      * An array of `<script>` elements referencing external scripts.
@@ -28,10 +26,8 @@ class AssetsHelpers implements HelpersInterface
 
     /**
      * A string concatenation of inline `<style>` elements.
-     *
-     * @var string
      */
-    private static $css = '';
+    private static string $css = '';
 
     /**
      * An array of `<link>` elements referencing external style sheets.
@@ -42,43 +38,33 @@ class AssetsHelpers implements HelpersInterface
 
     /**
      * Retrieve the collection of helpers.
-     *
-     * @return array
      */
     public function toArray(): array
     {
         return [
-            'purgeJs' => function () {
+            'purgeJs' => function (): void {
                 $this->purgeJs();
             },
-            'addJs' => function ($js, LambdaHelper $helper) {
+            'addJs' => function (string $js, LambdaHelper $helper): void {
                 $this->addJs($js, $helper);
             },
-            'js' => function () {
-                return $this->js();
-            },
-            'addJsRequirement' => function ($js, LambdaHelper $helper) {
+            'js' => $this->js(...),
+            'addJsRequirement' => function (string $js, LambdaHelper $helper): void {
                 $this->addJsRequirement($js, $helper);
             },
-            'jsRequirements' => function () {
-                return $this->jsRequirements();
-            },
-            'addCss' => function ($css, LambdaHelper $helper) {
+            'jsRequirements' => $this->jsRequirements(...),
+            'addCss' => function (string $css, LambdaHelper $helper): void {
                 $this->addCss($css, $helper);
             },
-            'purgeCss' => function () {
+            'purgeCss' => function (): void {
                 $this->purgeCss();
             },
-            'css' => function () {
-                return $this->css();
-            },
-            'addCssRequirement' => function ($css, LambdaHelper $helper) {
+            'css' => $this->css(...),
+            'addCssRequirement' => function (string $css, LambdaHelper $helper): void {
                 $this->addCssRequirement($css, $helper);
             },
-            'cssRequirements' => function () {
-                return $this->cssRequirements();
-            },
-            'purgeAssets' => function () {
+            'cssRequirements' => $this->cssRequirements(...),
+            'purgeAssets' => function (): void {
                 $this->purgeAssets();
             },
         ];
@@ -86,8 +72,6 @@ class AssetsHelpers implements HelpersInterface
 
     /**
      * Empty the JS assets queue.
-     *
-     * @return void
      */
     public function purgeJs(): void
     {
@@ -102,11 +86,10 @@ class AssetsHelpers implements HelpersInterface
      *
      * @param string       $js     The JavaScript to add.
      * @param LambdaHelper $helper For rendering strings in the current context.
-     * @return void
      */
-    public function addJs(string $js, LambdaHelper $helper = null): void
+    public function addJs(string $js, ?LambdaHelper $helper = null): void
     {
-        if ($helper !== null) {
+        if ($helper instanceof LambdaHelper) {
             $js = $helper->render($js);
         }
         self::$js .= $js;
@@ -114,8 +97,6 @@ class AssetsHelpers implements HelpersInterface
 
     /**
      * Get the saved inline JavaScript content and purge the store.
-     *
-     * @return string
      */
     public function js(): string
     {
@@ -131,15 +112,14 @@ class AssetsHelpers implements HelpersInterface
      *
      * @param string       $js     The JavaScript to add.
      * @param LambdaHelper $helper For rendering strings in the current context.
-     * @return void
      */
-    public function addJsRequirement(string $js, LambdaHelper $helper = null): void
+    public function addJsRequirement(string $js, ?LambdaHelper $helper = null): void
     {
         $js  = trim($js);
         $key = md5($js);
 
         if (!isset(self::$jsRequirements[$key])) {
-            if ($helper !== null) {
+            if ($helper instanceof LambdaHelper) {
                 $js = $helper->render($js);
             }
 
@@ -149,8 +129,6 @@ class AssetsHelpers implements HelpersInterface
 
     /**
      * Get the JavaScript requirements and purge the store.
-     *
-     * @return string
      */
     public function jsRequirements(): string
     {
@@ -161,8 +139,6 @@ class AssetsHelpers implements HelpersInterface
 
     /**
      * Empty the CSS assets queue.
-     *
-     * @return void
      */
     public function purgeCss(): void
     {
@@ -177,11 +153,10 @@ class AssetsHelpers implements HelpersInterface
      *
      * @param string       $css    The CSS string to add.
      * @param LambdaHelper $helper For rendering strings in the current context.
-     * @return void
      */
-    public function addCss(string $css, LambdaHelper $helper = null): void
+    public function addCss(string $css, ?LambdaHelper $helper = null): void
     {
-        if ($helper !== null) {
+        if ($helper instanceof LambdaHelper) {
             $css = $helper->render($css);
         }
         self::$css .= $css;
@@ -189,8 +164,6 @@ class AssetsHelpers implements HelpersInterface
 
     /**
      * Get the saved inline CSS content and purge the store.
-     *
-     * @return string
      */
     public function css(): string
     {
@@ -206,15 +179,14 @@ class AssetsHelpers implements HelpersInterface
      *
      * @param string       $css    The CSS requirements.
      * @param LambdaHelper $helper For rendering strings in the current context.
-     * @return void
      */
-    public function addCssRequirement(string $css, LambdaHelper $helper = null): void
+    public function addCssRequirement(string $css, ?LambdaHelper $helper = null): void
     {
         $css = trim($css);
         $key = md5($css);
 
         if (!isset(self::$cssRequirements[$key])) {
-            if ($helper !== null) {
+            if ($helper instanceof LambdaHelper) {
                 $css = $helper->render($css);
             }
 
@@ -224,8 +196,6 @@ class AssetsHelpers implements HelpersInterface
 
     /**
      * Get the CSS requirements and purge the store.
-     *
-     * @return string
      */
     public function cssRequirements(): string
     {
@@ -236,8 +206,6 @@ class AssetsHelpers implements HelpersInterface
 
     /**
      * Empty the all asset queues.
-     *
-     * @return void
      */
     public function purgeAssets(): void
     {

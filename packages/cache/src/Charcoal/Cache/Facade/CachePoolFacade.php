@@ -61,7 +61,7 @@ class CachePoolFacade
      * @param  mixed         $ttl     An integer, interval, date, or NULL to use the facade's default value.
      * @return mixed The value corresponding to this cache item's $key, or NULL if not found.
      */
-    public function get($key, callable $resolve = null, $ttl = null)
+    public function get(string $key, ?callable $resolve = null, $ttl = null)
     {
         $pool = $this->cachePool();
         $item = $pool->getItem($key);
@@ -86,7 +86,7 @@ class CachePoolFacade
      * @param  string $key The key for which to check existence.
      * @return boolean TRUE if item exists in the cache, FALSE otherwise.
      */
-    public function has($key)
+    public function has(string $key)
     {
         return $this->cachePool()->getItem($key)->isHit();
     }
@@ -99,7 +99,7 @@ class CachePoolFacade
      * @param  mixed  $ttl   An integer, interval, date, or NULL to use the facade's default value.
      * @return boolean TRUE if the item was successfully persisted. FALSE if there was an error.
      */
-    public function set($key, $value, $ttl = null)
+    public function set(string $key, $value, $ttl = null)
     {
         $item = $this->cachePool()->getItem($key);
 
@@ -163,9 +163,8 @@ class CachePoolFacade
      * Set the facade's default time-to-live for cached items.
      *
      * @param  mixed $ttl An integer, date interval, or date.
-     * @return void
      */
-    public function setDefaultTtl($ttl)
+    public function setDefaultTtl($ttl): void
     {
         $this->defaultTtl = $ttl;
     }

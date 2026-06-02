@@ -77,10 +77,8 @@ trait LayoutTrait
 
     /**
      * Get the total number of rows
-     *
-     * @return integer
      */
-    public function numRows()
+    public function numRows(): int
     {
         $structure = $this->structure();
         return count($structure);
@@ -90,9 +88,8 @@ trait LayoutTrait
      * Get the row index at a certain position
      *
      * @param integer $position Optional. Forced position.
-     * @return integer|null
      */
-    public function rowIndex($position = null)
+    public function rowIndex($position = null): ?int
     {
         if ($position === null) {
             $position = $this->position();
@@ -100,7 +97,7 @@ trait LayoutTrait
 
         $i = 0;
         $p = 0;
-        foreach ($this->structure as $row_ident => $row) {
+        foreach ($this->structure as $row) {
             $numCells = count($row['columns']);
             $p += $numCells;
             if ($p > $position) {
@@ -139,7 +136,7 @@ trait LayoutTrait
      * @param integer $position Optional. Forced position.
      * @return integer|null
      */
-    public function rowNumColumns($position = null)
+    public function rowNumColumns($position = null): null|float|int
     {
         if ($position === null) {
             $position = $this->position();
@@ -161,7 +158,7 @@ trait LayoutTrait
      * @param integer $position Optional. Forced position.
      * @return integer
      */
-    public function rowNumCells($position = null)
+    public function rowNumCells($position = null): ?int
     {
         if ($position === null) {
             $position = $this->position();
@@ -169,8 +166,7 @@ trait LayoutTrait
 
         // Get the data ta position
         $row = $this->rowData($position);
-        $numCells = isset($row['columns']) ? count($row['columns']) : null;
-        return $numCells;
+        return isset($row['columns']) ? count($row['columns']) : null;
     }
 
     /**
@@ -179,7 +175,7 @@ trait LayoutTrait
      * @param integer $position Optional. Forced position.
      * @return integer
      */
-    public function rowFirstCellIndex($position = null)
+    public function rowFirstCellIndex($position = null): ?int
     {
         if ($position === null) {
             $position = $this->position();
@@ -214,7 +210,7 @@ trait LayoutTrait
      * @param integer $position Optional. Forced position.
      * @return integer
      */
-    public function cellRowIndex($position = null)
+    public function cellRowIndex($position = null): int|float
     {
         if ($position === null) {
             $position = $this->position();
@@ -226,10 +222,8 @@ trait LayoutTrait
 
     /**
      * Get the total number of cells, in all rows
-     *
-     * @return integer
      */
-    public function numCellsTotal()
+    public function numCellsTotal(): int
     {
         $numCells = 0;
         foreach ($this->structure as $row) {
@@ -243,9 +237,8 @@ trait LayoutTrait
      * Get the span number (in # of columns) of the current cell
      *
      * @param integer $position Optional. Forced position.
-     * @return integer|null
      */
-    public function cellSpan($position = null)
+    public function cellSpan($position = null): ?int
     {
         $row = $this->rowData($position);
         $cellIndex = $this->cellRowIndex($position);
@@ -260,7 +253,7 @@ trait LayoutTrait
      * @param integer $position Optional. Forced position.
      * @return integer
      */
-    public function cellSpanBy12($position = null)
+    public function cellSpanBy12($position = null): null|float|int
     {
         $numColumns =  $this->rowNumColumns($position);
         if (!$numColumns) {
@@ -273,9 +266,8 @@ trait LayoutTrait
      * Get wether or not the current cell starts a row (is the first one on the row)
      *
      * @param integer $position Optional. Forced position.
-     * @return boolean
      */
-    public function cellStartsRow($position = null)
+    public function cellStartsRow($position = null): bool
     {
         if ($position === null) {
             $position = $this->position();
@@ -288,9 +280,8 @@ trait LayoutTrait
      * Get wether or not the current cell ends a row (is the last one on the row)
      *
      * @param integer $position Optional. Forced position.
-     * @return boolean
      */
-    public function cellEndsRow($position = null)
+    public function cellEndsRow($position = null): bool
     {
         if ($position === null) {
             $position = $this->position();
@@ -302,18 +293,12 @@ trait LayoutTrait
         return ($cellNum >= ($numCells - 1));
     }
 
-    /**
-     * @return string
-     */
-    public function start()
+    public function start(): string
     {
         return '';
     }
 
-    /**
-     * @return string
-     */
-    public function end()
+    public function end(): string
     {
         $this->position++;
         return '';

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Charcoal\Image\Effect;
 
 use InvalidArgumentException;
@@ -10,10 +12,7 @@ use Charcoal\Image\AbstractEffect;
  */
 abstract class AbstractThresholdEffect extends AbstractEffect
 {
-    /**
-     * @var float $threshold
-     */
-    private $threshold = 0.5;
+    private float $threshold = 0.5;
 
     /**
      * @param float $threshold The threshold value.

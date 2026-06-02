@@ -21,9 +21,6 @@ class PaginationWidgetTest extends AbstractTestCase
      */
     public $obj;
 
-    /**
-     * @return void
-     */
     public function setUp(): void
     {
         $this->obj = new PaginationWidget([
@@ -31,10 +28,7 @@ class PaginationWidgetTest extends AbstractTestCase
         ]);
     }
 
-    /**
-     * @return void
-     */
-    public function testPageLogic()
+    public function testPageLogic(): void
     {
         $this->obj->setData([
             'page'          => 3,
@@ -67,10 +61,7 @@ class PaginationWidgetTest extends AbstractTestCase
         $this->assertEquals(1, $this->obj->pageNext());
     }
 
-    /**
-     * @return void
-     */
-    public function testSetNumTotal()
+    public function testSetNumTotal(): void
     {
         $ret = $this->obj->setNumTotal(42);
         $this->assertSame($ret, $this->obj);

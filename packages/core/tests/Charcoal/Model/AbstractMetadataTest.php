@@ -16,18 +16,12 @@ class AbstractMetadataTest extends AbstractTestCase
      */
     public $obj;
 
-    /**
-     * @return void
-     */
     protected function setUp(): void
     {
-        $this->obj = $this->getMockForAbstractClass(AbstractMetadata::class);
+        $this->obj = new class () extends AbstractMetadata {};
     }
 
-    /**
-     * @return void
-     */
-    public function testSetData()
+    public function testSetData(): void
     {
         $obj = $this->obj;
         $ret = $obj->merge([
@@ -39,10 +33,7 @@ class AbstractMetadataTest extends AbstractTestCase
         $this->assertEquals('bar', $obj->foo);
     }
 
-    /**
-     * @return void
-     */
-    public function testArrayAccessOffsetExists()
+    public function testArrayAccessOffsetExists(): void
     {
         $obj = $this->obj;
         $this->assertFalse(isset($obj['x']));

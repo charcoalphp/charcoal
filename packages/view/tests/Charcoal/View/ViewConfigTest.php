@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Charcoal\Tests\View\Mustache;
 
 // From 'charcoal-view'
@@ -14,20 +16,14 @@ class ViewConfigTest extends AbstractTestCase
     /**
      * @var MustacheEngine
      */
-    private $obj;
+    private \Charcoal\View\ViewConfig $obj;
 
-    /**
-     * @return void
-     */
     public function setUp(): void
     {
         $this->obj = new ViewConfig();
     }
 
-    /**
-     * @return void
-     */
-    public function testDefaults()
+    public function testDefaults(): void
     {
         $this->assertEquals('.', $this->obj->separator());
         $this->assertEquals([], $this->obj['paths']);
@@ -38,10 +34,7 @@ class ViewConfigTest extends AbstractTestCase
         $this->assertEquals('mustache', $this->obj['default_engine']);
     }
 
-    /**
-     * @return void
-     */
-    public function testSetPaths()
+    public function testSetPaths(): void
     {
         $ret = $this->obj->setPaths(['foo', 'bar']);
         $this->assertSame($ret, $this->obj);
@@ -49,10 +42,7 @@ class ViewConfigTest extends AbstractTestCase
         $this->assertEquals(['foo', 'bar'], $this->obj->paths());
     }
 
-    /**
-     * @return void
-     */
-    public function testSetEngines()
+    public function testSetEngines(): void
     {
         $ret = $this->obj->setEngines([ 'foo' => [] ]);
         $this->assertSame($ret, $this->obj);
@@ -60,10 +50,7 @@ class ViewConfigTest extends AbstractTestCase
         $this->assertEquals([ 'foo' => [] ], $this->obj->engines());
     }
 
-    /**
-     * @return void
-     */
-    public function testEngine()
+    public function testEngine(): void
     {
         $this->assertEquals([ 'cache' => '../cache/mustache' ], $this->obj->engine('mustache'));
 
@@ -71,28 +58,19 @@ class ViewConfigTest extends AbstractTestCase
         $this->assertEquals([ 'foo' => 'bar' ], $this->obj->engine('mustache'));
     }
 
-    /**
-     * @return void
-     */
-    public function testEngineDefaultEngine()
+    public function testEngineDefaultEngine(): void
     {
         $this->obj->addEngine('mustache', [ 'foo' => 'bar' ]);
         $this->assertEquals([ 'foo' => 'bar' ], $this->obj->engine());
     }
 
-    /**
-     * @return void
-     */
-    public function testEngineInvalid()
+    public function testEngineInvalid(): void
     {
         $this->expectException('\InvalidArgumentException');
         $this->obj->engine('foobar');
     }
 
-    /**
-     * @return void
-     */
-    public function testSetDefaultEngine()
+    public function testSetDefaultEngine(): void
     {
         $ret = $this->obj->setDefaultEngine('php');
         $this->assertSame($ret, $this->obj);

@@ -17,10 +17,7 @@ use Psr\Http\Message\ResponseInterface as Response;
  */
 class Renderer
 {
-    /**
-     * @var ViewInterface
-     */
-    private $view;
+    private \Charcoal\View\ViewInterface $view;
 
     /**
      * @param array $data The constructor dependencies.
@@ -34,7 +31,6 @@ class Renderer
      * @param Response $response      The HTTP response.
      * @param string   $templateIdent The template identifier to load and render.
      * @param mixed    $context       The view controller / context.
-     * @return Response
      */
     public function render(Response $response, string $templateIdent, $context = null): Response
     {
@@ -45,7 +41,6 @@ class Renderer
 
     /**
      * @param ViewInterface $view The view instance to use.
-     * @return void
      */
     private function setView(ViewInterface $view): void
     {

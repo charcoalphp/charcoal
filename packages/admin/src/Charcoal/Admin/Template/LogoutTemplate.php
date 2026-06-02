@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Charcoal\Admin\Template;
 
 // From PSR-7
@@ -21,6 +23,7 @@ class LogoutTemplate extends AdminTemplate
      * @param RequestInterface $request The request to initialize.
      * @return boolean
      */
+    #[\Override]
     public function init(RequestInterface $request)
     {
         $authenticator = $this->authenticator();
@@ -34,10 +37,9 @@ class LogoutTemplate extends AdminTemplate
 
     /**
      * Authentication is obviously never required for the login page.
-     *
-     * @return boolean
      */
-    protected function authRequired()
+    #[\Override]
+    protected function authRequired(): bool
     {
         return false;
     }
@@ -62,6 +64,7 @@ class LogoutTemplate extends AdminTemplate
      *
      * @return \Charcoal\Translator\Translation|string|null
      */
+    #[\Override]
     public function title()
     {
         if ($this->title === null) {
@@ -75,13 +78,11 @@ class LogoutTemplate extends AdminTemplate
 
     // Templating
     // =========================================================================
-
     /**
      * Determine if main & secondary menu should appear as mobile in a desktop resolution.
-     *
-     * @return boolean
      */
-    public function isFullscreenTemplate()
+    #[\Override]
+    public function isFullscreenTemplate(): bool
     {
         return true;
     }

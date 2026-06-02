@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Charcoal\User;
 
 /**
@@ -9,10 +11,8 @@ class GenericUser extends AbstractUser
 {
     /**
      * Retrieve the name of the session key for the user model.
-     *
-     * @return string
      */
-    public static function sessionKey()
+    public static function sessionKey(): string
     {
         return 'charcoal.user';
     }

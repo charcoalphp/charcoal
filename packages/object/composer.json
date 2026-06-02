@@ -1,5 +1,4 @@
 {
-    "type": "library",
     "name": "charcoal/object",
     "description": "Object (Content and UserData) definition and object behaviors and tools.",
     "license": "MIT",
@@ -9,13 +8,9 @@
             "email": "mat@locomotive.ca"
         }
     ],
-    "extra": {
-        "branch-alias": {
-            "dev-main": "5.x-dev"
-        }
-    },
+    "type": "library",
     "require": {
-        "php": "^7.4 || ^8.0",
+        "php": "^8.3",
         "psr/log": "^1.0",
         "charcoal/config": "^5.1",
         "charcoal/core": "^5.1",
@@ -24,11 +19,11 @@
     },
     "require-dev": {
         "php-coveralls/php-coveralls": "^2.2",
-        "phpunit/phpunit": "^9.5",
+        "phpunit/phpunit": "^12.5",
         "pimple/pimple": "^3.0",
         "seld/jsonlint": "^1.9",
         "squizlabs/php_codesniffer": "^3.5",
-        "tedivm/stash": "~0.16",
+        "tedivm/stash": "^1.1",
         "ext-json": "*"
     },
     "autoload": {
@@ -41,8 +36,10 @@
             "Charcoal\\Tests\\": "tests/Charcoal/"
         }
     },
-    "replace": {
-        "locomotivemtl/charcoal-object": "*"
+    "extra": {
+        "branch-alias": {
+            "dev-main": "5.x-dev"
+        }
     },
     "scripts": {
         "test": [
@@ -59,6 +56,9 @@
         "phpcs": "php vendor/bin/phpcs -ps --colors src/ tests/",
         "phpcbf": "php vendor/bin/phpcbf -ps --colors src/ tests/",
         "phpunit": "php vendor/bin/phpunit --coverage-text"
+    },
+    "replace": {
+        "locomotivemtl/charcoal-object": "*"
     },
     "minimum-stability": "dev",
     "prefer-stable": true

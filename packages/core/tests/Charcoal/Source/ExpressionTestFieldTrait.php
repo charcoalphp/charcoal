@@ -6,6 +6,8 @@ namespace Charcoal\Tests\Source;
 use Charcoal\Source\ExpressionInterface;
 use Charcoal\Source\ExpressionFieldInterface;
 use Charcoal\Source\ExpressionFieldTrait;
+use Charcoal\Source\Filter;
+use Charcoal\Source\Order;
 
 /**
  * Shared tests for implementations of {@see ExpressionFieldTrait}
@@ -15,10 +17,8 @@ trait ExpressionTestFieldTrait
 {
     /**
      * Test deprecated "table_name" property.
-     *
-     * @return void
      */
-    public function testDeprecatedTableNameExpression()
+    public function testDeprecatedTableNameExpression(): void
     {
         $obj = $this->createExpression();
 
@@ -28,24 +28,17 @@ trait ExpressionTestFieldTrait
 
     /**
      * Test "table_name" property deprecation notice.
-     *
-     * @used-by self::testDeprecatedTableNameErrorInPhp7()
-     *
-     * @return void
      */
-    public function delegatedTestDeprecatedTableNameError()
+    public function testDeprecatedTableNameError(): void
     {
-        $this->createExpression()->setData([ 'table_name' => 'foobar' ]);
-    }
-
-    /**
-     * @requires PHP >= 7.0
-     * @return   void
-     */
-    public function testDeprecatedTableNameErrorInPhp7()
-    {
-        $this->expectDeprecation();
-        $this->delegatedTestDeprecatedTableNameError();
+        $expression = $this->createExpression();
+        $message = match (get_class($expression)) {
+            Filter::class => 'Filter expression option "table_name" is deprecated in favour of "table": foobar',
+            Order::class => 'Sort expression option "table_name" is deprecated in favour of "table": foobar',
+            default => 'Expression option "table_name" is deprecated in favour of "table": foobar',
+        };
+        $this->expectUserDeprecationMessage($message);
+        $expression->setData([ 'table_name' => 'foobar' ]);
     }
 
     /**
@@ -53,16 +46,15 @@ trait ExpressionTestFieldTrait
      *
      * @param ExpressionFieldInterface $obj      The expression to test.
      * @param array|null               $expected The expected data subset.
-     * @return void
      */
-    public function assertStructHasFieldData(ExpressionFieldInterface $obj, array $expected = null)
+    public function assertStructHasFieldData(ExpressionFieldInterface $obj, ?array $expected = null): void
     {
-        if (empty($expected)) {
+        if ($expected === null || $expected === []) {
             $expected = [
                 'property' => 'col',
                 'table'    => 'tbl',
             ];
-            $obj->setData($mutation);
+            $obj->setData($expected);
         }
 
         $data = $obj->data();

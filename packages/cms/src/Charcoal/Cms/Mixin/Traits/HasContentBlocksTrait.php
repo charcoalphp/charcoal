@@ -24,20 +24,16 @@ trait HasContentBlocksTrait
 
     /**
      * Determine if this object has any content blocks.
-     *
-     * @return boolean
      */
-    public function hasContentBlocks()
+    public function hasContentBlocks(): bool
     {
-        return !!($this->numContentBlocks());
+        return (bool)$this->numContentBlocks();
     }
 
     /**
      * Count the number of content blocks associated to this object.
-     *
-     * @return integer
      */
-    public function numContentBlocks()
+    public function numContentBlocks(): int
     {
         return count($this->contentBlocks());
     }
@@ -78,9 +74,7 @@ trait HasContentBlocksTrait
             if ($attachment->isText()) {
                 $content = $attachment->description();
 
-                $content = $this->ellipsis($content);
-
-                return $content;
+                return $this->ellipsis($content);
             }
         }
 
@@ -122,7 +116,7 @@ trait HasContentBlocksTrait
     abstract public function getAttachments(
         $group = null,
         $type = null,
-        callable $before = null,
-        callable $after = null
+        ?callable $before = null,
+        ?callable $after = null
     );
 }

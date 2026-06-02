@@ -1,6 +1,9 @@
 <?php
 
-namespace Charcoals\Tests\Image\Effect;
+namespace Charcoal\Tests\Image\Effect;
+
+use Charcoal\Image\Effect\AbstractSharpenEffect;
+use Charcoal\Tests\Mock\ImageMock;
 
 class AbstractSharpenEffectTest extends \PHPUnit\Framework\TestCase
 {
@@ -8,12 +11,17 @@ class AbstractSharpenEffectTest extends \PHPUnit\Framework\TestCase
 
     protected function setUp(): void
     {
-        $img = $this->getMockForAbstractClass('\Charcoal\Image\AbstractImage');
-        $this->obj = $this->getMockForAbstractClass('\Charcoal\Image\Effect\AbstractSharpenEffect');
+        $img = new ImageMock();
+        $this->obj = new class () extends AbstractSharpenEffect {
+            public function process(?array $data = null) {}
+            public function processAdaptive() {}
+            public function processUnsharp() {}
+            public function processStandard() {}
+        };
         $this->obj->setImage($img);
     }
 
-    public function testDefaults()
+    public function testDefaults(): void
     {
         $obj = $this->obj;
 
@@ -25,7 +33,7 @@ class AbstractSharpenEffectTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('all', $obj->channel());
     }
 
-    public function testSetData()
+    public function testSetData(): void
     {
         $obj = $this->obj;
         $ret = $obj->setData(
@@ -48,7 +56,7 @@ class AbstractSharpenEffectTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('blue', $obj->channel());
     }
 
-    public function testSetRadius()
+    public function testSetRadius(): void
     {
         $obj = $this->obj;
 
@@ -60,14 +68,14 @@ class AbstractSharpenEffectTest extends \PHPUnit\Framework\TestCase
         $obj->setRadius(false);
     }
 
-    public function testSetRadiusNegativeThrowsException()
+    public function testSetRadiusNegativeThrowsException(): void
     {
         $this->expectException('\InvalidArgumentException');
         $obj = $this->obj;
         $obj->setRadius(-1);
     }
 
-    public function testSetSigma()
+    public function testSetSigma(): void
     {
         $obj = $this->obj;
 
@@ -79,14 +87,14 @@ class AbstractSharpenEffectTest extends \PHPUnit\Framework\TestCase
         $obj->setSigma(false);
     }
 
-    public function testSetSigmaNegativeThrowsException()
+    public function testSetSigmaNegativeThrowsException(): void
     {
         $this->expectException('\InvalidArgumentException');
         $obj = $this->obj;
         $obj->setSigma(-1);
     }
 
-    public function testSetAmount()
+    public function testSetAmount(): void
     {
         $obj = $this->obj;
 
@@ -98,14 +106,14 @@ class AbstractSharpenEffectTest extends \PHPUnit\Framework\TestCase
         $obj->setAmount('foobar');
     }
 
-    public function testSetAmountNegativeThrowsException()
+    public function testSetAmountNegativeThrowsException(): void
     {
         $this->expectException('\InvalidArgumentException');
         $obj = $this->obj;
         $obj->setAmount(-1);
     }
 
-    public function testSetThreshold()
+    public function testSetThreshold(): void
     {
         $obj = $this->obj;
 
@@ -117,7 +125,7 @@ class AbstractSharpenEffectTest extends \PHPUnit\Framework\TestCase
         $obj->setThreshold('foobar');
     }
 
-    public function testSetMode()
+    public function testSetMode(): void
     {
         $obj = $this->obj;
         $ret = $obj->setMode('unsharp');
@@ -128,7 +136,7 @@ class AbstractSharpenEffectTest extends \PHPUnit\Framework\TestCase
         $obj->setMode('foobar');
     }
 
-    public function testSetChannel()
+    public function testSetChannel(): void
     {
         $obj = $this->obj;
         $ret = $obj->setChannel('alpha');

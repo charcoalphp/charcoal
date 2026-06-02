@@ -16,18 +16,12 @@ class PropertyMetadataTest extends AbstractTestCase
      */
     public $obj;
 
-    /**
-     * @return void
-     */
     protected function setUp(): void
     {
         $this->obj = new PropertyMetadata();
     }
 
-    /**
-     * @return void
-     */
-    public function testSetIdent()
+    public function testSetIdent(): void
     {
         $this->assertEquals('', $this->obj->ident());
         $ret = $this->obj->setIdent('foo');

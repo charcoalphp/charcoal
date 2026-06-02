@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Charcoal\Ui\Form;
 
 // From 'charcoal-ui'
@@ -14,10 +16,9 @@ class GenericForm extends AbstractForm
 {
     /**
      * Retrieve the form type.
-     *
-     * @return string
      */
-    public function type()
+    #[\Override]
+    public function type(): string
     {
         return 'charcoal/ui/form/generic';
     }

@@ -20,27 +20,18 @@ use Charcoal\Tests\AbstractTestCase;
 use Charcoal\Tests\CoreContainerIntegrationTrait;
 use Charcoal\Tests\ReflectionsTrait;
 
-/**
- *
- */
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Loader\CollectionLoader::class, 'camelize')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Loader\CollectionLoader::class, 'getter')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Loader\CollectionLoader::class, 'setter')]
 class CollectionLoaderTest extends AbstractTestCase
 {
     use CoreContainerIntegrationTrait;
     use ReflectionsTrait;
 
-    /**
-     * @var CollectionLoader
-     */
-    private $loader;
+    private \Charcoal\Loader\CollectionLoader $loader;
 
-    /**
-     * @var Model
-     */
-    private $model;
+    private \Charcoal\Model\Model $model;
 
-    /**
-     * @return void
-     */
     protected function setUp(): void
     {
         $this->model = $this->createModel();
@@ -49,10 +40,7 @@ class CollectionLoaderTest extends AbstractTestCase
         $this->loader = $this->createCollectionLoader();
     }
 
-    /**
-     * @return CollectionLoader
-     */
-    public function createCollectionLoader()
+    public function createCollectionLoader(): \Charcoal\Loader\CollectionLoader
     {
         $container = $this->getContainer();
 
@@ -63,18 +51,13 @@ class CollectionLoaderTest extends AbstractTestCase
             ]]
         ]);
 
-        $loader = new CollectionLoader([
+        return new CollectionLoader([
             'logger'  => $container['logger'],
             'factory' => $factory,
         ]);
-
-        return $loader;
     }
 
-    /**
-     * @return Model
-     */
-    public function createModel()
+    public function createModel(): \Charcoal\Model\Model
     {
         $container = $this->getContainer();
 
@@ -117,10 +100,7 @@ class CollectionLoaderTest extends AbstractTestCase
         return $model;
     }
 
-    /**
-     * @return void
-     */
-    public function testSetData()
+    public function testSetData(): void
     {
         $loader = $this->loader;
         $loader->setModel($this->model);
@@ -134,30 +114,21 @@ class CollectionLoaderTest extends AbstractTestCase
         $this->assertEquals([ 'id', 'test' ], $loader->properties());
     }
 
-    /**
-     * @return void
-     */
-    public function testSetDataIsChainable()
+    public function testSetDataIsChainable(): void
     {
         $loader = $this->loader;
         $ret = $loader->setData([]);
         $this->assertSame($ret, $loader);
     }
 
-    /**
-     * @return void
-     */
-    public function testDefaultCollection()
+    public function testDefaultCollection(): void
     {
         $loader = $this->loader;
         $collection = $loader->createCollection();
         $this->assertInstanceOf(Collection::class, $collection);
     }
 
-    /**
-     * @return void
-     */
-    public function testCustomCollectionClass()
+    public function testCustomCollectionClass(): void
     {
         $loader = $this->loader;
 
@@ -177,10 +148,7 @@ class CollectionLoaderTest extends AbstractTestCase
         $this->assertInternalType('array', $collection);
     }
 
-    /**
-     * @return void
-     */
-    public function testAll()
+    public function testAll(): void
     {
         $loader = $this->loader;
         $loader->setModel($this->model)
@@ -194,7 +162,7 @@ class CollectionLoaderTest extends AbstractTestCase
 
         $this->assertTrue($loader->hasModel());
 
-        $collection = $loader->load();
+        $loader->load();
 
         $this->assertEquals(1, 1);
 
@@ -204,13 +172,8 @@ class CollectionLoaderTest extends AbstractTestCase
     /**
      * Test camelization.
      *
-     * @covers \Charcoal\Loader\CollectionLoader::camelize
-     * @covers \Charcoal\Loader\CollectionLoader::getter
-     * @covers \Charcoal\Loader\CollectionLoader::setter
-     *
-     * @return void
      */
-    public function testCamelize()
+    public function testCamelize(): void
     {
         $loader = $this->loader;
 

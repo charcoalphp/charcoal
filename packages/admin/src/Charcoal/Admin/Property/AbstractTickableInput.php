@@ -18,10 +18,8 @@ abstract class AbstractTickableInput extends AbstractSelectableInput
 
     /**
      * How radio controls should be displayed.
-     *
-     * @var string|null
      */
-    private $inputLayout;
+    private ?string $inputLayout = null;
 
     /**
      * Prepare a single tickable option for output.
@@ -30,6 +28,7 @@ abstract class AbstractTickableInput extends AbstractSelectableInput
      * @param  array|object   $choice The choice structure.
      * @return array|null
      */
+    #[\Override]
     protected function parseChoice($ident, $choice)
     {
         $choice = parent::parseChoice($ident, $choice);
@@ -63,7 +62,7 @@ abstract class AbstractTickableInput extends AbstractSelectableInput
         if (!is_string($layout)) {
             throw new InvalidArgumentException(sprintf(
                 'Layout must be a string, received %s',
-                (is_object($layout) ? get_class($layout) : gettype($layout))
+                (get_debug_type($layout))
             ));
         }
 

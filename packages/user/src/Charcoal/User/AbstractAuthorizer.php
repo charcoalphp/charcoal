@@ -41,10 +41,8 @@ abstract class AbstractAuthorizer implements
 
     /**
      * The ACL service.
-     *
-     * @var Acl
      */
-    private $acl;
+    private \Laminas\Permissions\Acl\Acl $acl;
 
     /**
      * @param array $data Class dependencies.
@@ -334,9 +332,8 @@ abstract class AbstractAuthorizer implements
 
     /**
      * @param  Acl $acl The ACL service.
-     * @return void
      */
-    private function setAcl(Acl $acl)
+    private function setAcl(Acl $acl): void
     {
         $this->acl = $acl;
     }

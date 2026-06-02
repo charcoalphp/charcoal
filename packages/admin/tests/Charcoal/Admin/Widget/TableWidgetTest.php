@@ -21,22 +21,16 @@ class TableWidgetTest extends AbstractTestCase
 {
     /**
      * Tested Class.
-     *
-     * @var TableWidget
      */
-    private $obj;
+    private \Charcoal\Admin\Widget\TableWidget|array $obj;
 
     /**
      * Store the service container.
-     *
-     * @var Container
      */
-    private $container;
+    private ?\Pimple\Container $container = null;
 
     /**
      * Set up the test.
-     *
-     * @return void
      */
     public function setUp(): void
     {
@@ -49,10 +43,7 @@ class TableWidgetTest extends AbstractTestCase
         ]);
     }
 
-    /**
-     * @return void
-     */
-    public function testSetSortable()
+    public function testSetSortable(): void
     {
         $ret = $this->obj->setSortable(true);
         $this->assertSame($ret, $this->obj);
@@ -65,10 +56,7 @@ class TableWidgetTest extends AbstractTestCase
         $this->assertTrue($this->obj['sortable']);
     }
 
-    /**
-     * @return void
-     */
-    public function testShowTableHeader()
+    public function testShowTableHeader(): void
     {
         $this->assertTrue($this->obj->showTableHeader());
         $ret = $this->obj->setShowTableHeader(false);
@@ -82,10 +70,7 @@ class TableWidgetTest extends AbstractTestCase
         $this->assertFalse($this->obj['show_table_header']);
     }
 
-    /**
-     * @return void
-     */
-    public function testShowTableHead()
+    public function testShowTableHead(): void
     {
         $this->assertTrue($this->obj->showTableHead());
         $ret = $this->obj->setShowTableHead(false);
@@ -99,10 +84,7 @@ class TableWidgetTest extends AbstractTestCase
         $this->assertFalse($this->obj['show_table_head']);
     }
 
-    /**
-     * @return void
-     */
-    public function testShowTableFoot()
+    public function testShowTableFoot(): void
     {
         $this->assertFalse($this->obj->showTableFoot());
         $ret = $this->obj->setShowTableFoot(false);
@@ -118,19 +100,17 @@ class TableWidgetTest extends AbstractTestCase
 
     /**
      * Set up the service container.
-     *
-     * @return Container
      */
-    protected function container()
+    protected function container(): \Pimple\Container
     {
-        if ($this->container === null) {
+        if (!$this->container instanceof \Pimple\Container) {
             $container = new Container();
             $containerProvider = new ContainerProvider();
             $containerProvider->registerWidgetDependencies($container);
             $containerProvider->registerWidgetFactory($container);
             $containerProvider->registerPropertyDisplayFactory($container);
 
-            $container['view'] = $this->createMock('\Charcoal\View\ViewInterface');
+            $container['view'] = $this->createMock(\Charcoal\View\ViewInterface::class);
 
             $this->container = $container;
         }

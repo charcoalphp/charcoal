@@ -21,9 +21,8 @@ trait AssertionsTrait
      * @param  array|Countable|Traversable $expected The expected haystack.
      * @param  array|Countable|Traversable $actual   The actual haystack.
      * @param  string                      $message  The error to report.
-     * @return void
      */
-    public function assertArrayEquals(array $expected, array $actual, $message = '')
+    public function assertArrayEquals(array $expected, array $actual, $message = ''): void
     {
         $this->assertSameSize($expected, $actual, $message);
         $this->assertEquals($expected, $actual, $message);
@@ -36,12 +35,11 @@ trait AssertionsTrait
      * @param  mixed             $array   The array to search.
      * @param  string            $message The error to report.
      * @throws Exception If argument is invalid.
-     * @return void
      */
-    public function assertArrayContains($needles, $array, $message = '')
+    public function assertArrayContains($needles, $array, $message = ''): void
     {
         if (!is_array($needles) &&
-            !(is_object($needles) && $needles instanceof Traversable)) {
+            !($needles instanceof Traversable)) {
             $invalidArgHelper = $this->getInvalidArgumentHelperClass();
             throw $invalidArgHelper::factory(
                 1,
@@ -61,12 +59,11 @@ trait AssertionsTrait
      * @param  mixed             $array   The array to search.
      * @param  string            $message The error to report.
      * @throws Exception If argument is invalid.
-     * @return void
      */
-    public function assertArrayHasKeys($keys, $array, $message = '')
+    public function assertArrayHasKeys($keys, $array, $message = ''): void
     {
         if (!is_array($keys) &&
-            !(is_object($keys) && $keys instanceof Traversable)) {
+            !($keys instanceof Traversable)) {
             $invalidArgHelper = $this->getInvalidArgumentHelperClass();
             throw $invalidArgHelper::factory(
                 1,
@@ -87,16 +84,15 @@ trait AssertionsTrait
      * @param  boolean           $strict  Whether to check for object identity.
      * @param  string            $message The error to report.
      * @throws Exception If argument is invalid.
-     * @return void
      */
     public function assertArraySubsets(
         $subsets,
         $array,
         $strict = false,
         $message = ''
-    ) {
+    ): void {
         if (!is_array($subsets) &&
-            !(is_object($subsets) && $subsets instanceof Traversable)) {
+            !($subsets instanceof Traversable)) {
             $invalidArgHelper = $this->getInvalidArgumentHelperClass();
             throw $invalidArgHelper::factory(
                 1,
@@ -117,15 +113,14 @@ trait AssertionsTrait
      * @param  boolean           $strict  Whether to check for object identity.
      * @param  string            $message The error to report.
      * @throws Exception If argument is invalid.
-     * @return void
      */
     public function assertNotArraySubset(
         $subset,
         $array,
         $strict = false,
         $message = ''
-    ) {
-        if (!(is_array($subset) || $subset instanceof ArrayAccess)) {
+    ): void {
+        if (!is_array($subset) && !$subset instanceof ArrayAccess) {
             $invalidArgHelper = $this->getInvalidArgumentHelperClass();
             throw $invalidArgHelper::factory(
                 1,
@@ -146,10 +141,8 @@ trait AssertionsTrait
 
     /**
      * Retrieve the correct version of the `InvalidArgumentHelper` class.
-     *
-     * @return string
      */
-    protected function getInvalidArgumentHelperClass()
+    protected function getInvalidArgumentHelperClass(): string
     {
         $class57 = 'PHPUnit_Util_InvalidArgumentHelper';
         return class_exists($class57) ? $class57 : InvalidArgumentHelper::class;
@@ -157,10 +150,8 @@ trait AssertionsTrait
 
     /**
      * Retrieve the correct version of the `LogicalNot` class.
-     *
-     * @return string
      */
-    protected function getLogicalNotClass()
+    protected function getLogicalNotClass(): string
     {
         $class57 = 'PHPUnit_Framework_Constraint_Not';
         return class_exists($class57) ? $class57 : LogicalNot::class;
@@ -168,10 +159,8 @@ trait AssertionsTrait
 
     /**
      * Retrieve the correct version of the `ArraySubset` class.
-     *
-     * @return string
      */
-    protected function getArraySubsetClass()
+    protected function getArraySubsetClass(): string
     {
         $class57 = 'PHPUnit_Framework_Constraint_ArraySubset';
         return class_exists($class57) ? $class57 : ArraySubset::class;

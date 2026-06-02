@@ -72,10 +72,9 @@ class LoadAction extends AdminAction
 
     /**
      * Determine if user authentication is required.
-     *
-     * @return boolean
      */
-    protected function authRequired()
+    #[\Override]
+    protected function authRequired(): bool
     {
         return true;
     }
@@ -84,9 +83,9 @@ class LoadAction extends AdminAction
      * Sets the action data.
      *
      * @param  array $data The action data.
-     * @return self
      */
-    public function setData(array $data)
+    #[\Override]
+    public function setData(array $data): static
     {
         $keys = $this->validDataFromRequest();
         $data = array_intersect_key($data, array_flip($keys));
@@ -99,9 +98,9 @@ class LoadAction extends AdminAction
      * Sets the action data from a PSR Request object.
      *
      * @param  RequestInterface $request A PSR-7 compatible Request instance.
-     * @return self
      */
-    protected function setDataFromRequest(RequestInterface $request)
+    #[\Override]
+    protected function setDataFromRequest(RequestInterface $request): static
     {
         $keys = $this->validDataFromRequest();
         $data = $request->getParams($keys);
@@ -114,9 +113,8 @@ class LoadAction extends AdminAction
      * Add data to action, replacing existing items with the same data key.
      *
      * @param  array $data The action data.
-     * @return self
      */
-    public function mergeData(array $data)
+    public function mergeData(array $data): static
     {
         $this->params = array_replace($this->params, $data);
 
@@ -128,7 +126,8 @@ class LoadAction extends AdminAction
      *
      * @return string[]
      */
-    protected function validDataFromRequest()
+    #[\Override]
+    protected function validDataFromRequest(): array
     {
         return [ 'disk', 'disposition', 'path', 'name' ];
     }
@@ -139,14 +138,14 @@ class LoadAction extends AdminAction
      * @param  array|null $keys Subset of keys to retrieve.
      * @return array|null
      */
-    public function getParams(array $keys = null)
+    public function getParams(?array $keys = null)
     {
         $params = $this->params;
 
         if ($keys) {
             $subset = [];
             foreach ($keys as $key) {
-                if (array_key_exists($key, $params)) {
+                if (array_key_exists((string)$key, $params)) {
                     $subset[$key] = $params[$key];
                 }
             }
@@ -168,12 +167,10 @@ class LoadAction extends AdminAction
         $params = $this->params;
         if (is_array($params) && isset($params[$key])) {
             $result = $params[$key];
+        } elseif (!is_string($default) && is_callable($default)) {
+            $result = $default();
         } else {
-            if (!is_string($default) && is_callable($default)) {
-                $result = $default();
-            } else {
-                $result = $default;
-            }
+            $result = $default;
         }
 
         return $result;
@@ -189,7 +186,7 @@ class LoadAction extends AdminAction
     {
         unset($request);
 
-        $translator = $this->translator();
+        $this->translator();
 
         try {
             $disk = $this->getParam('disk', $this->filesystemConfig['default_connection']);
@@ -225,7 +222,7 @@ class LoadAction extends AdminAction
         }
 
         try {
-            $filename    = isset($name) ? $name : basename($path);
+            $filename    = ($name ?? basename((string)$path));
             $disposition = $this->generateHttpDisposition($disp, $filename);
             $resource    = $handler->readStream();
             $stream      = new Stream($resource);
@@ -276,7 +273,7 @@ class LoadAction extends AdminAction
      * @throws InvalidArgumentException If the parameters are invalid.
      * @return string A string suitable for use as a Content-Disposition field-value.
      */
-    public function generateHttpDisposition($disposition, $filename, $filenameFallback = '')
+    public function generateHttpDisposition($disposition, $filename, $filenameFallback = ''): string
     {
         if (!in_array($disposition, [ self::DISPOSITION_ATTACHMENT, self::DISPOSITION_INLINE ])) {
             throw new InvalidArgumentException(sprintf(
@@ -296,16 +293,16 @@ class LoadAction extends AdminAction
         // }
 
         // percent characters aren't safe in fallback.
-        if (strpos($filenameFallback, '%') !== false) {
+        if (str_contains($filenameFallback, '%')) {
             throw new InvalidArgumentException('The filename fallback cannot contain the "%" character.');
         }
 
         // path separators aren't allowed in either.
         if (
-            strpos($filename, '/') !== false ||
-            strpos($filename, '\\') !== false ||
-            strpos($filenameFallback, '/') !== false ||
-            strpos($filenameFallback, '\\') !== false
+            str_contains($filename, '/') ||
+            str_contains($filename, '\\') ||
+            str_contains($filenameFallback, '/') ||
+            str_contains($filenameFallback, '\\')
         ) {
             throw new InvalidArgumentException(
                 'The filename and the fallback cannot contain the "/" and "\\" characters.'
@@ -344,7 +341,7 @@ class LoadAction extends AdminAction
         }
 
         if (!is_string($disk)) {
-            $actualType = is_object($disk) ? get_class($disk) : gettype($disk);
+            $actualType = get_debug_type($disk);
             $message = $translator->translate(
                 '{{ parameter }} must be a {{ expectedType }}, received {{ actualType }}',
                 [
@@ -388,7 +385,7 @@ class LoadAction extends AdminAction
 
             throw new InvalidArgumentException($message, 400);
         } elseif (!is_string($path)) {
-            $actualType = is_object($path) ? get_class($path) : gettype($path);
+            $actualType = get_debug_type($path);
             $message = $translator->translate(
                 '{{ parameter }} must be a {{ expectedType }}, received {{ actualType }}',
                 [
@@ -412,7 +409,7 @@ class LoadAction extends AdminAction
     protected function assertValidName($name)
     {
         if (!is_string($name) && $name !== null) {
-            $actualType = is_object($name) ? get_class($name) : gettype($name);
+            $actualType = get_debug_type($name);
             $message = $this->translator()->translate(
                 '{{ parameter }} must be a {{ expectedType }}, received {{ actualType }}',
                 [
@@ -446,7 +443,7 @@ class LoadAction extends AdminAction
         }
 
         if (!is_string($disposition) && $disposition !== null) {
-            $actualType = is_object($disposition) ? get_class($disposition) : gettype($disposition);
+            $actualType = get_debug_type($disposition);
             $message = $translator->translate(
                 '{{ parameter }} must be a {{ expectedType }}, received {{ actualType }}',
                 [
@@ -466,6 +463,7 @@ class LoadAction extends AdminAction
      * @param  Container $container A service locator.
      * @return void
      */
+    #[\Override]
     protected function setDependencies(Container $container)
     {
         parent::setDependencies($container);

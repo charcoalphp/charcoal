@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Charcoal\Property;
 
 // From 'charcoal-property'
@@ -12,10 +14,8 @@ use Charcoal\Property\FileProperty;
  */
 class VideoProperty extends FileProperty
 {
-    /**
-     * @return string
-     */
-    public function type()
+    #[\Override]
+    public function type(): string
     {
         return 'video';
     }
@@ -27,7 +27,8 @@ class VideoProperty extends FileProperty
      *
      * @return string[]
      */
-    public function getDefaultAcceptedMimetypes()
+    #[\Override]
+    public function getDefaultAcceptedMimetypes(): array
     {
         return [
             'video/mp4',
@@ -44,23 +45,15 @@ class VideoProperty extends FileProperty
      * @param  string $type The MIME type to resolve.
      * @return string|null The extension based on the MIME type.
      */
-    protected function resolveExtensionFromMimeType($type)
+    #[\Override]
+    protected function resolveExtensionFromMimeType($type): ?string
     {
-        switch ($type) {
-            case 'video/mp4':
-                return 'mp4';
-
-            case 'video/webm':
-                return 'webm';
-
-            case 'video/ogg':
-            case 'video/ogv':
-                return 'ogv';
-
-            case 'video/x-matroska':
-                return 'mkv';
-        }
-
-        return null;
+        return match ($type) {
+            'video/mp4' => 'mp4',
+            'video/webm' => 'webm',
+            'video/ogg', 'video/ogv' => 'ogv',
+            'video/x-matroska' => 'mkv',
+            default => null,
+        };
     }
 }

@@ -15,7 +15,7 @@ NC='\033[0m' # No Color
 #######
 
 get_packages() {
-    vendor/bin/monorepo-builder packages-json
+     ./monorepo packages
 }
 
 ######
@@ -80,19 +80,17 @@ if [[ "$1" ]]; then package=$1; fi
 test_package() {
     echo -e "${GREEN}Testing the [${NC} $1 ${GREEN}] package..."
 
-    BOOTSTRAP=packages/"$1"/tests/bootstrap.php
-
-    [ -f "$BOOTSTRAP" ] && BOOTSTRAP="--bootstrap $BOOTSTRAP" || BOOTSTRAP=''
-
     if [[ -z "$ci" ]]; then
-        php vendor/bin/phpunit packages/"$1"/tests/ --coverage-text $BOOTSTRAP
+        env TEST_MODE="PACKAGE" php vendor/bin/phpunit -c packages/"$1"/phpunit.xml.dist --coverage-text
         if [[ -n "$interactive" ]]; then
             read -p 'Continue ?:[Y/n/r](Y) ' continue
             if [[ "$continue" == 'n' ]]; then exit 0; fi
             if [[ "$continue" == 'r' ]]; then test_package $1; fi
         fi
     else
-        php vendor/bin/phpunit packages/"$1"/tests/ --coverage-clover "build/logs/clover.xml" --coverage-text $BOOTSTRAP
+        env TEST_MODE="PACKAGE" php vendor/bin/phpunit  -c packages/"$1"/phpunit.xml.dist \
+                                --coverage-clover "build/logs/clover.xml" \
+                                --coverage-text
         exit $?
     fi
 }
@@ -101,12 +99,6 @@ if [[ -z "$package" ]]; then
     # Testing all packages
     packages="$(get_packages)"
     echo "Testing all packages..."
-    # Cleaning get_packages output for array conversion
-    packages=${packages//,/ }
-    packages=${packages//[/}
-    packages=${packages//]/}
-    packages=${packages//\"/}
-
     packages=($packages)
 
     for i in "${packages[@]}"; do

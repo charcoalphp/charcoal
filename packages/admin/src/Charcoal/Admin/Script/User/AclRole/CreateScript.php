@@ -18,9 +18,8 @@ class CreateScript extends AdminScript
     /**
      * @param RequestInterface  $request  A PSR-7 compatible Request instance.
      * @param ResponseInterface $response A PSR-7 compatible Response instance.
-     * @return ResponseInterface
      */
-    public function run(RequestInterface $request, ResponseInterface $response)
+    public function run(RequestInterface $request, ResponseInterface $response): ResponseInterface
     {
         unset($request);
 
@@ -72,10 +71,7 @@ class CreateScript extends AdminScript
         return $response;
     }
 
-    /**
-     * @return boolean
-     */
-    public function authRequired()
+    public function authRequired(): bool
     {
         return false;
     }

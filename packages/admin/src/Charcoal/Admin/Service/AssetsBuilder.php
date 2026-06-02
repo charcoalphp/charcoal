@@ -19,23 +19,13 @@ use Charcoal\Admin\AssetsConfig;
  */
 final class AssetsBuilder
 {
-    /**
-     * @var AssetManager|null
-     */
-    private $assetManager = null;
-
-    /**
-     * @var string|null
-     */
-    private $basePath = null;
+    private ?\Assetic\AssetManager $assetManager = null;
 
     /**
      * @param  string|null $basePath The assets base path.
-     * @return void
      */
-    public function __construct($basePath = null)
+    public function __construct(private $basePath = null)
     {
-        $this->basePath = $basePath;
     }
 
     /**
@@ -44,7 +34,7 @@ final class AssetsBuilder
      * @param  AssetsConfig $config The assets management config.
      * @return AssetManager
      */
-    public function __invoke(AssetsConfig $config)
+    public function __invoke(AssetsConfig $config): ?\Assetic\AssetManager
     {
         return $this->build($config);
     }
@@ -53,7 +43,7 @@ final class AssetsBuilder
      * @param  AssetsConfig $config The assets management config.
      * @return AssetManager
      */
-    public function build(AssetsConfig $config)
+    public function build(AssetsConfig $config): ?\Assetic\AssetManager
     {
         $this->assetManager = new AssetManager();
         $this->parseCollections($config->collections());
@@ -63,14 +53,13 @@ final class AssetsBuilder
 
     /**
      * @param array $collections Assets collections.
-     * @return void
      */
-    private function parseCollections(array $collections)
+    private function parseCollections(array $collections): void
     {
         foreach ($collections as $collectionIdent => $actions) {
             $files = ($actions['files'] ?? []);
             // Parse scoped files. Solves merging issues.
-            array_walk($actions, function ($scope) use (&$files) {
+            array_walk($actions, function (array $scope) use (&$files): void {
                 if (isset($scope['files']) && !empty($scope['files'])) {
                     $files = array_merge($files, $scope['files']);
                 }
@@ -88,7 +77,7 @@ final class AssetsBuilder
      * @param  string[] $files Files to convert to Collection assets.
      * @return AssetInterface[]
      */
-    private function extractFiles(array $files = [])
+    private function extractFiles(array $files = []): array
     {
         $collection = [];
 
@@ -107,7 +96,7 @@ final class AssetsBuilder
             }
 
             // Files with asterisks should be treated as glob.
-            if (strpos($file, '*') !== false) {
+            if (str_contains($file, '*')) {
                 $collection[] = new GlobAsset($file);
                 continue;
             }
@@ -128,7 +117,7 @@ final class AssetsBuilder
      * @param  string $file A file path.
      * @return boolean Returns TRUE if the given path is absolute. Otherwise, returns FALSE.
      */
-    private function isAbsolutePath($file)
+    private function isAbsolutePath($file): bool
     {
         $file = (string)$file;
 

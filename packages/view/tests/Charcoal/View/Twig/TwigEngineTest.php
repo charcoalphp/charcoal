@@ -17,14 +17,8 @@ use Charcoal\Tests\View\Twig\Mock\MockHelpers;
  */
 class TwigEngineTest extends AbstractTestCase
 {
-    /**
-     * @var TwigEngine
-     */
-    private $obj;
+    private \Charcoal\View\Twig\TwigEngine $obj;
 
-    /**
-     * @return void
-     */
     public function setUp(): void
     {
         $loader = new TwigLoader([
@@ -40,18 +34,12 @@ class TwigEngineTest extends AbstractTestCase
             ]);
     }
 
-    /**
-     * @return void
-     */
-    public function testType()
+    public function testType(): void
     {
         $this->assertEquals('twig', $this->obj->type());
     }
 
-    /**
-     * @return void
-     */
-    public function testSetHelpers()
+    public function testSetHelpers(): void
     {
         $ret = $this->obj->setHelpers([]);
         $this->assertSame($ret, $this->obj);
@@ -61,27 +49,24 @@ class TwigEngineTest extends AbstractTestCase
         $this->obj->setHelpers($arr);
         // $this->assertArraySubsets($arr, $this->obj->helpers());
         $this->assertTrue(
-            empty(array_diff_key($arr, $this->obj->helpers())) && empty(array_diff_key($this->obj->helpers(), $arr))
+            array_diff_key($arr, $this->obj->helpers()) === [] && array_diff_key($this->obj->helpers(), $arr) === []
         ); // compare structure (keys) only
         $this->assertTrue(
-            empty(array_diff_assoc($arr, $this->obj->helpers())) && empty(array_diff_assoc($this->obj->helpers(), $arr))
+            array_diff_assoc($arr, $this->obj->helpers()) === [] && array_diff_assoc($this->obj->helpers(), $arr) === []
         ); // compare structure (keys) and values strictly
 
         $helpers = new MockHelpers();
         $this->obj->setHelpers($helpers);
         //  $this->assertArraySubsets($helpers->toArray(), $this->obj->helpers());
         $this->assertTrue(
-            empty(array_diff_key($helpers->toArray(), $this->obj->helpers())) && empty(array_diff_key($this->obj->helpers(), $helpers->toArray()))
+            array_diff_key($helpers->toArray(), $this->obj->helpers()) === [] && array_diff_key($this->obj->helpers(), $helpers->toArray()) === []
         );
 
         $this->expectException(InvalidArgumentException::class);
         $this->obj->setHelpers('foobar');
     }
 
-    /**
-     * @return void
-     */
-    public function testMergeHelpers()
+    public function testMergeHelpers(): void
     {
         $ret = $this->obj->mergeHelpers([]);
         $this->assertSame($ret, $this->obj);
@@ -92,10 +77,10 @@ class TwigEngineTest extends AbstractTestCase
         // $this->assertArraySubsets($arr, $this->obj->helpers());
 
         $this->assertTrue(
-            empty(array_diff_key($arr, $this->obj->helpers())) && empty(array_diff_key($this->obj->helpers(), $arr))
+            array_diff_key($arr, $this->obj->helpers()) === [] && array_diff_key($this->obj->helpers(), $arr) === []
         );
         $this->assertTrue(
-            empty(array_diff_assoc($arr, $this->obj->helpers())) && empty(array_diff_assoc($this->obj->helpers(), $arr))
+            array_diff_assoc($arr, $this->obj->helpers()) === [] && array_diff_assoc($this->obj->helpers(), $arr) === []
         );
 
         $helpers = new MockHelpers();
@@ -104,17 +89,14 @@ class TwigEngineTest extends AbstractTestCase
         // $this->assertNotArraySubset($arr, $this->obj->helpers());
         // $this->assertArraySubsets($helpers->toArray(), $this->obj->helpers());
         $this->assertTrue(
-            empty(array_diff_key($helpers->toArray(), $this->obj->helpers())) && empty(array_diff_key($this->obj->helpers(), $helpers->toArray()))
+            array_diff_key($helpers->toArray(), $this->obj->helpers()) === [] && array_diff_key($this->obj->helpers(), $helpers->toArray()) === []
         );
 
         $this->expectException(InvalidArgumentException::class);
         $this->obj->mergeHelpers('foobar');
     }
 
-    /**
-     * @return void
-     */
-    public function testAddHelperTooLate()
+    public function testAddHelperTooLate(): void
     {
         $template = 'Hello {{ foo }}';
         $context  = [ 'foo' => 'World!' ];
@@ -124,18 +106,12 @@ class TwigEngineTest extends AbstractTestCase
         $this->obj->addHelper('foo', 'World');
     }
 
-    /**
-     * @return void
-     */
-    public function testRender()
+    public function testRender(): void
     {
         $this->assertEquals('Hello Charcoal', trim($this->obj->render('foo', [ 'foo' => 'Charcoal' ])));
     }
 
-    /**
-     * @return void
-     */
-    public function testRenderTemplate()
+    public function testRenderTemplate(): void
     {
         $this->assertEquals('Hello World!', trim($this->obj->renderTemplate('Hello {{ foo }}', [ 'foo' => 'World!' ])));
     }

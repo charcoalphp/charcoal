@@ -49,14 +49,14 @@ abstract class AbstractTemplate extends AbstractEntity implements
      */
     public function templateName()
     {
-        $key = substr(strrchr('\\' . get_class($this), '\\'), 1);
+        $key = substr(strrchr('\\' . static::class, '\\'), 1);
 
         if (!isset(static::$templateNameCache[$key])) {
             $value = $key;
 
             if (!ctype_lower($value)) {
                 $value = preg_replace('/\s+/u', '', $value);
-                $value = mb_strtolower(preg_replace('/(.)(?=[A-Z])/u', '$1-', $value), 'UTF-8');
+                $value = mb_strtolower((string)preg_replace('/(.)(?=[A-Z])/u', '$1-', (string)$value), 'UTF-8');
             }
 
             $value = str_replace(

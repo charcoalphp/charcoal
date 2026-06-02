@@ -18,9 +18,10 @@ use InvalidArgumentException;
  * @todo ::addFile()
  * @todo ::merge()
  *
- *
- * @coversDefaultClass \Charcoal\Config\AbstractConfig
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\Charcoal\Config\AbstractConfig::class)]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Config\AbstractConfig::class, '__construct()')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Config\AbstractConfig::class, 'addFile()')]
 class ConfigFileAwareTest extends AbstractConfigTestCase
 {
     /**
@@ -30,8 +31,6 @@ class ConfigFileAwareTest extends AbstractConfigTestCase
 
     /**
      * Create a concrete GenericConfig instance.
-     *
-     * @return void
      */
     protected function setUp(): void
     {
@@ -43,31 +42,23 @@ class ConfigFileAwareTest extends AbstractConfigTestCase
      *
      * @param  mixed $data      Data to pre-populate the object.
      * @param  array $delegates Delegates to pre-populate the object.
-     * @return GenericConfig
      */
-    public function createConfig($data = null, array $delegates = null)
+    #[\Override]
+    public function createConfig($data = null, ?array $delegates = null): \Charcoal\Config\GenericConfig
     {
         return new GenericConfig($data, $delegates);
     }
 
     /**
      * Asserts that the object implements FileAwareInterface.
-     *
-     * @coversNothing
-     * @return void
      */
-    public function testFileAwareInterface()
+    #[\PHPUnit\Framework\Attributes\CoversNothing]
+    public function testFileAwareInterface(): void
     {
         $this->assertInstanceOf(FileAwareInterface::class, $this->cfg);
     }
 
-    /**
-     * @covers ::__construct()
-     * @covers ::addFile()
-     *
-     * @return void
-     */
-    public function testConstructWithSupportedFormat()
+    public function testConstructWithSupportedFormat(): void
     {
         $path = $this->getPathToFixture('pass/valid.json');
         $cfg  = $this->createConfig($path);
@@ -78,14 +69,11 @@ class ConfigFileAwareTest extends AbstractConfigTestCase
 
     // Test INI
     // =========================================================================
-
     /**
      * INI: Asserts that the Config supports INI config files.
-     *
-     * @coversNothing
-     * @return void
      */
-    public function testAddIniFile()
+    #[\PHPUnit\Framework\Attributes\CoversNothing]
+    public function testAddIniFile(): void
     {
         $path = $this->getPathToFixture('pass/valid1.ini');
         $this->cfg->addFile($path);
@@ -104,11 +92,9 @@ class ConfigFileAwareTest extends AbstractConfigTestCase
 
     /**
      * INI: Asserts that the Config supports key-paths in INI config files.
-     *
-     * @coversNothing
-     * @return void
      */
-    public function testAddIniFileWithDelimitedData()
+    #[\PHPUnit\Framework\Attributes\CoversNothing]
+    public function testAddIniFileWithDelimitedData(): void
     {
         $path = $this->getPathToFixture('pass/valid2.ini');
         $this->cfg->addFile($path);
@@ -126,11 +112,8 @@ class ConfigFileAwareTest extends AbstractConfigTestCase
 
     /**
      * INI: Asserts that an ordered list is NOT ignored.
-     *
-     * @covers ::addFile()
-     * @return void
      */
-    public function testAddIniFileWithInvalidArray()
+    public function testAddIniFileWithInvalidArray(): void
     {
         $this->expectExceptionMessage('Entity array access only supports non-numeric keys');
         $this->expectException(InvalidArgumentException::class);
@@ -141,11 +124,8 @@ class ConfigFileAwareTest extends AbstractConfigTestCase
 
     /**
      * INI: Asserts that an unparsable file is silently ignored.
-     *
-     * @covers ::addFile()
-     * @return void
      */
-    public function testAddUnparsableIniFile()
+    public function testAddUnparsableIniFile(): void
     {
         // phpcs:disable Generic.PHP.NoSilencedErrors.Discouraged
         $path = $this->getPathToFixture('pass/unparsable.ini');
@@ -159,14 +139,11 @@ class ConfigFileAwareTest extends AbstractConfigTestCase
 
     // Test JSON
     // =========================================================================
-
     /**
      * JSON: Asserts that the Config supports JSON config files.
-     *
-     * @coversNothing
-     * @return void
      */
-    public function testAddJsonFile()
+    #[\PHPUnit\Framework\Attributes\CoversNothing]
+    public function testAddJsonFile(): void
     {
         $path = $this->getPathToFixture('pass/valid.json');
         $this->cfg->addFile($path);
@@ -185,11 +162,8 @@ class ConfigFileAwareTest extends AbstractConfigTestCase
 
     /**
      * JSON: Asserts that an ordered list is NOT ignored.
-     *
-     * @covers ::addFile()
-     * @return void
      */
-    public function testAddJsonFileWithInvalidArray()
+    public function testAddJsonFileWithInvalidArray(): void
     {
         $this->expectExceptionMessage('Entity array access only supports non-numeric keys');
         $this->expectException(InvalidArgumentException::class);
@@ -200,11 +174,8 @@ class ConfigFileAwareTest extends AbstractConfigTestCase
 
     /**
      * JSON: Asserts that an invalid file is silently ignored.
-     *
-     * @covers ::addFile()
-     * @return void
      */
-    public function testAddJsonFileWithInvalidType()
+    public function testAddJsonFileWithInvalidType(): void
     {
         $path = $this->getPathToFixture('pass/invalid2.json');
         $this->cfg->addFile($path);
@@ -216,14 +187,11 @@ class ConfigFileAwareTest extends AbstractConfigTestCase
 
     // Test PHP
     // =========================================================================
-
     /**
      * PHP: Asserts that the Config supports PHP config files.
-     *
-     * @coversNothing
-     * @return void
      */
-    public function testAddPhpFile()
+    #[\PHPUnit\Framework\Attributes\CoversNothing]
+    public function testAddPhpFile(): void
     {
         $path = $this->getPathToFixture('pass/valid1.php');
         $this->cfg->addFile($path);
@@ -242,11 +210,9 @@ class ConfigFileAwareTest extends AbstractConfigTestCase
 
     /**
      * PHP: Asserts that the scope of PHP config files is bound to the Config.
-     *
-     * @coversNothing
-     * @return void
      */
-    public function testAddPhpFileThatMutatesContext()
+    #[\PHPUnit\Framework\Attributes\CoversNothing]
+    public function testAddPhpFileThatMutatesContext(): void
     {
         $path = $this->getPathToFixture('pass/valid2.php');
         $this->cfg->addFile($path);
@@ -265,11 +231,8 @@ class ConfigFileAwareTest extends AbstractConfigTestCase
 
     /**
      * PHP: Asserts that an ordered list is NOT ignored.
-     *
-     * @covers ::addFile()
-     * @return void
      */
-    public function testAddPhpFileWithInvalidArray()
+    public function testAddPhpFileWithInvalidArray(): void
     {
         $this->expectExceptionMessage('Entity array access only supports non-numeric keys');
         $this->expectException(InvalidArgumentException::class);
@@ -280,11 +243,8 @@ class ConfigFileAwareTest extends AbstractConfigTestCase
 
     /**
      * PHP: Asserts that an invalid file is silently ignored.
-     *
-     * @covers ::addFile()
-     * @return void
      */
-    public function testAddPhpFileWithInvalidType()
+    public function testAddPhpFileWithInvalidType(): void
     {
         $path = $this->getPathToFixture('pass/invalid2.php');
         $this->cfg->addFile($path);
@@ -296,14 +256,11 @@ class ConfigFileAwareTest extends AbstractConfigTestCase
 
     // Test YAML
     // =========================================================================
-
     /**
      * YAML: Asserts that the Config supports '.yml' YAML config files.
-     *
-     * @coversNothing
-     * @return void
      */
-    public function testAddYamlFile()
+    #[\PHPUnit\Framework\Attributes\CoversNothing]
+    public function testAddYamlFile(): void
     {
         $path = $this->getPathToFixture('pass/valid1.yml');
         $this->cfg->addFile($path);
@@ -322,11 +279,8 @@ class ConfigFileAwareTest extends AbstractConfigTestCase
 
     /**
      * YAML: Asserts that an ordered list is NOT ignored.
-     *
-     * @covers ::addFile()
-     * @return void
      */
-    public function testAddYamlFileWithInvalidArray()
+    public function testAddYamlFileWithInvalidArray(): void
     {
         $this->expectExceptionMessage('Entity array access only supports non-numeric keys');
         $this->expectException(InvalidArgumentException::class);
@@ -337,11 +291,8 @@ class ConfigFileAwareTest extends AbstractConfigTestCase
 
     /**
      * YAML: Asserts that an invalid file is silently ignored.
-     *
-     * @covers ::addFile()
-     * @return void
      */
-    public function testAddYamlFileWithInvalidType()
+    public function testAddYamlFileWithInvalidType(): void
     {
         $path = $this->getPathToFixture('pass/invalid2.yml');
         $this->cfg->addFile($path);

@@ -22,7 +22,7 @@ class EmailLogTest extends AbstractTestCase
         ]);
     }
 
-    public function testSetData()
+    public function testSetData(): void
     {
         $ret = $this->obj->setData([
             'queue_id'     => 'foo',
@@ -44,7 +44,7 @@ class EmailLogTest extends AbstractTestCase
         $this->assertEquals(new DateTime('2010-01-02 03:45:00'), $this->obj->sendTs());
     }
 
-    public function testKey()
+    public function testKey(): void
     {
         $this->assertEquals('id', $this->obj->key());
     }

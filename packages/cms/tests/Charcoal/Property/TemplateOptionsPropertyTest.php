@@ -26,8 +26,6 @@ class TemplateOptionsPropertyTest extends AbstractTestCase
 
     /**
      * Set up the test.
-     *
-     * @return void
      */
     protected function setUp(): void
     {
@@ -52,18 +50,12 @@ class TemplateOptionsPropertyTest extends AbstractTestCase
         $this->obj = new TemplateOptionsProperty($dependencies);
     }
 
-    /**
-     * @return void
-     */
-    public function testType()
+    public function testType(): void
     {
         $this->assertEquals('template-options', $this->obj->type());
     }
 
-    /**
-     * @return void
-     */
-    public function testAddStructureInterface()
+    public function testAddStructureInterface(): void
     {
         $container = $this->getContainer();
         $property  = $container['property/factory']->create(TemplateProperty::class);
@@ -76,10 +68,7 @@ class TemplateOptionsPropertyTest extends AbstractTestCase
         $this->assertEquals([ 'charcoal/tests/cms/mock/generic' ], $interfaces);
     }
 
-    /**
-     * @return void
-     */
-    public function testAddStructureInterfaceException()
+    public function testAddStructureInterfaceException(): void
     {
         $container = $this->getContainer();
         $property  = $container['property/factory']->create(TemplateProperty::class);

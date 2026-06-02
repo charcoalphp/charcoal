@@ -33,9 +33,8 @@ class Manager implements LoggerAwareInterface
      * @param  Acl    $acl         The Laminas Acl instant to load permissions to.
      * @param  array  $permissions The array of permissions, in [role=>details] array.
      * @param  string $resource    The Acl resource (string identifier) to load roles and permissions into.
-     * @return void
      */
-    public function loadPermissions(Acl &$acl, array $permissions, $resource = '')
+    public function loadPermissions(Acl &$acl, array $permissions, $resource = ''): void
     {
         foreach ($permissions as $role => $rolePermissions) {
             $this->addRoleAndPermissions($acl, $role, $rolePermissions, $resource);
@@ -47,9 +46,8 @@ class Manager implements LoggerAwareInterface
      * @param  PDO    $dbh      The PDO database instance.
      * @param  string $table    The table where to fetch the roles and permissions.
      * @param  string $resource The Acl resource (string identifier) to load roles and permissions into.
-     * @return void
      */
-    public function loadDatabasePermissions(Acl &$acl, PDO $dbh, $table, $resource = '')
+    public function loadDatabasePermissions(Acl &$acl, PDO $dbh, $table, $resource = ''): void
     {
         // Quick-and-dirty sanitization
         $table = preg_replace('/[^A-Za-z0-9_]/', '', $table);
@@ -77,13 +75,12 @@ class Manager implements LoggerAwareInterface
      * @param  string $role        The role (string identifier) to add.
      * @param  array  $permissions The permissions details (array) to add.
      * @param  string $resource    The Acl resource (string identifier) to add roles and permissions into.
-     * @return void
      */
-    private function addRoleAndPermissions(Acl &$acl, $role, array $permissions, $resource)
+    private function addRoleAndPermissions(Acl &$acl, $role, array $permissions, $resource): void
     {
         if (!$acl->hasRole($role)) {
             // Add role
-            $parentRole = isset($permissions['parent']) ? $permissions['parent'] : null;
+            $parentRole = ($permissions['parent'] ?? null);
             $parentRole = $parentRole ?: null;
             $newRole = new GenericRole($role);
             $acl->addRole($newRole, $parentRole);
@@ -107,11 +104,7 @@ class Manager implements LoggerAwareInterface
         }
 
         if (isset($permissions['denied'])) {
-            if (is_string($permissions['denied'])) {
-                $deniedPermissions = explode(',', $permissions['denied']);
-            } else {
-                $deniedPermissions = $permissions['denied'];
-            }
+            $deniedPermissions = is_string($permissions['denied']) ? explode(',', $permissions['denied']) : $permissions['denied'];
             foreach ($deniedPermissions as $denied) {
                 $acl->deny($role, $resource, $denied);
             }

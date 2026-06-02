@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Charcoal\Tests\Config\Mixin\FileLoader;
 
 // From 'charcoal-config'
@@ -9,19 +11,16 @@ use UnexpectedValueException;
 
 /**
  * Test {@see FileAwareTrait::loadJsonFile() JSON File Loading}
- *
- * @coversDefaultClass \Charcoal\Config\FileAwareTrait
  */
+#[\PHPUnit\Framework\Attributes\CoversTrait(\Charcoal\Config\FileAwareTrait::class)]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Config\FileAwareTrait::class, 'loadJsonFile()')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Config\FileAwareTrait::class, 'loadFile()')]
 class JsonFileLoaderTest extends AbstractFileLoaderTestCase
 {
     /**
      * Asserts that the File Loader supports JSON config files.
-     *
-     * @covers ::loadJsonFile()
-     * @covers ::loadFile()
-     * @return void
      */
-    public function testLoadFile()
+    public function testLoadFile(): void
     {
         $path = $this->getPathToFixture('pass/valid.json');
         $data = $this->obj->loadFile($path);
@@ -40,11 +39,8 @@ class JsonFileLoaderTest extends AbstractFileLoaderTestCase
 
     /**
      * Asserts that an empty file is silently ignored.
-     *
-     * @covers ::loadJsonFile()
-     * @return void
      */
-    public function testLoadEmptyFile()
+    public function testLoadEmptyFile(): void
     {
         $path = $this->getPathToFixture('pass/empty.json');
         $data = $this->obj->loadFile($path);
@@ -54,18 +50,15 @@ class JsonFileLoaderTest extends AbstractFileLoaderTestCase
 
     /**
      * Asserts that a broken file is NOT ignored.
-     *
-     * @covers ::loadJsonFile()
-     * @return void
      */
-    public function testLoadMalformedFile()
+    public function testLoadMalformedFile(): void
     {
         $this->expectExceptionMessageMatches('/^JSON file ".+?" could not be parsed: .+$/');
         $this->expectException(UnexpectedValueException::class);
 
         // phpcs:disable Generic.PHP.NoSilencedErrors.Discouraged
         $path = $this->getPathToFixture('fail/malformed.json');
-        $data = @$this->obj->loadFile($path);
+        @$this->obj->loadFile($path);
         // phpcs:enable
     }
 }

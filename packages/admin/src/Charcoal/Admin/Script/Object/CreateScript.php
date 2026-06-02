@@ -13,10 +13,8 @@ use Charcoal\Admin\AdminScript;
  */
 class CreateScript extends AdminScript
 {
-    /**
-     * @return array
-     */
-    public function defaultArguments()
+    #[\Override]
+    public function defaultArguments(): array
     {
         $arguments = [
             'obj-type' => [
@@ -30,17 +28,14 @@ class CreateScript extends AdminScript
                 'defaultValue' => ''
             ]
         ];
-
-        $arguments = array_merge(parent::defaultArguments(), $arguments);
-        return $arguments;
+        return array_merge(parent::defaultArguments(), $arguments);
     }
 
     /**
      * @param RequestInterface  $request  A PSR-7 compatible Request instance.
      * @param ResponseInterface $response A PSR-7 compatible Response instance.
-     * @return ResponseInterface
      */
-    public function run(RequestInterface $request, ResponseInterface $response)
+    public function run(RequestInterface $request, ResponseInterface $response): ResponseInterface
     {
         unset($request);
 

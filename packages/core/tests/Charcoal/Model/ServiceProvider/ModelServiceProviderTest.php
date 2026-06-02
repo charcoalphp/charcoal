@@ -51,9 +51,6 @@ class ModelServiceProviderTest extends AbstractTestCase
     public $obj;
 
 
-    /**
-     * @return void
-     */
     protected function setUp(): void
     {
         $this->obj = new ModelServiceProvider();
@@ -70,9 +67,8 @@ class ModelServiceProviderTest extends AbstractTestCase
      * - view
      *
      * @todo   Use ContainerIntegrationTrait?
-     * @return Container
      */
-    private function container()
+    private function container(): \Pimple\Container
     {
         $container = new Container();
 
@@ -117,10 +113,7 @@ class ModelServiceProviderTest extends AbstractTestCase
         return $container;
     }
 
-    /**
-     * @return void
-     */
-    public function testFactories()
+    public function testFactories(): void
     {
         $container = $this->container();
 
@@ -136,10 +129,7 @@ class ModelServiceProviderTest extends AbstractTestCase
         $this->assertInstanceOf(FactoryInterface::class, $container['source/factory']);
     }
 
-    /**
-     * @return void
-     */
-    public function testRegisterSetsModelBuilder()
+    public function testRegisterSetsModelBuilder(): void
     {
         $container = $this->container();
         $this->obj->register($container);
@@ -148,10 +138,7 @@ class ModelServiceProviderTest extends AbstractTestCase
         $this->assertInstanceOf(ModelBuilder::class, $container['model/builder']);
     }
 
-    /**
-     * @return void
-     */
-    public function testRegisterSetsModelLoaderBuilder()
+    public function testRegisterSetsModelLoaderBuilder(): void
     {
         $container = $this->container();
         $this->obj->register($container);
@@ -160,10 +147,7 @@ class ModelServiceProviderTest extends AbstractTestCase
         $this->assertInstanceOf(ModelLoaderBuilder::class, $container['model/loader/builder']);
     }
 
-    /**
-     * @return void
-     */
-    public function testRegisterSetsMetadataLoader()
+    public function testRegisterSetsMetadataLoader(): void
     {
         $container = $this->container();
         $this->obj->register($container);
@@ -172,17 +156,14 @@ class ModelServiceProviderTest extends AbstractTestCase
         $this->assertInstanceOf(MetadataLoader::class, $container['metadata/loader']);
     }
 
-    /**
-     * @return void
-     */
-    public function testExtraMetadataPaths()
+    public function testExtraMetadataPaths(): void
     {
         $container = new Container([
             'config' => [
-                'base_path' => dirname(dirname(dirname(dirname(__DIR__)))),
+                'base_path' => dirname(__DIR__, 4),
             ],
             'module/classes' => [
-                'Charcoal\\Tests\\Mock\\MockModule',
+                \Charcoal\Tests\Mock\MockModule::class,
             ],
         ]);
 

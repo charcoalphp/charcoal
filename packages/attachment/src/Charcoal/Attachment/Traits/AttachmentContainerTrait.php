@@ -126,10 +126,8 @@ trait AttachmentContainerTrait
 
     /**
      * Retrieve the attachment types with their collections.
-     *
-     * @return array
      */
-    public function attachmentTypes()
+    public function attachmentTypes(): array
     {
         return array_values($this->attachableObjects());
     }
@@ -165,7 +163,7 @@ trait AttachmentContainerTrait
                     if (isset($attMeta['label'])) {
                         $attMeta['label'] = $this->translator()->translation($attMeta['label']);
                     } else {
-                        $attMeta['label'] = ucfirst(basename($attType));
+                        $attMeta['label'] = ucfirst(basename((string)$attType));
                     }
 
                     $faIcon = '';
@@ -174,20 +172,12 @@ trait AttachmentContainerTrait
                     }
 
                     $attMeta['faIcon'] = $faIcon;
-                    $attMeta['hasFaIcon'] = !!$faIcon;
+                    $attMeta['hasFaIcon'] = (bool)$faIcon;
 
                     // Custom forms
-                    if (isset($attMeta['form_ident'])) {
-                        $attMeta['formIdent'] = $attMeta['form_ident'];
-                    } else {
-                        $attMeta['formIdent'] = null;
-                    }
+                    $attMeta['formIdent'] = ($attMeta['form_ident'] ?? null);
 
-                    if (isset($attMeta['quick_form_ident'])) {
-                        $attMeta['quickFormIdent'] = $attMeta['quick_form_ident'];
-                    } else {
-                        $attMeta['quickFormIdent'] = null;
-                    }
+                    $attMeta['quickFormIdent'] = ($attMeta['quick_form_ident'] ?? null);
 
                     $this->attachableObjects[$attType] = $attMeta;
                 }
@@ -199,10 +189,8 @@ trait AttachmentContainerTrait
 
     /**
      * Determine if this attachment is a container.
-     *
-     * @return boolean
      */
-    public function isAttachmentContainer()
+    public function isAttachmentContainer(): bool
     {
         return true;
     }

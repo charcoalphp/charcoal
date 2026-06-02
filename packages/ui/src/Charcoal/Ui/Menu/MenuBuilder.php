@@ -20,29 +20,13 @@ class MenuBuilder
     public const DEFAULT_TYPE = 'charcoal/ui/menu/generic';
 
     /**
-     * Store the menu factory instance.
-     *
-     * @var FactoryInterface
-     */
-    protected $factory;
-
-    /**
-     * Store the dependency-injection container to fulfill the required services.
-     *
-     * @var Container $container
-     */
-    protected $container;
-
-    /**
      * Return a new menu builder.
      *
      * @param FactoryInterface $factory   A menu factory.
      * @param Container        $container The DI container.
      */
-    public function __construct(FactoryInterface $factory, Container $container)
+    public function __construct(protected \Charcoal\Factory\FactoryInterface $factory, protected \Pimple\Container $container)
     {
-        $this->factory   = $factory;
-        $this->container = $container;
     }
 
     /**
@@ -53,8 +37,7 @@ class MenuBuilder
      */
     public function build($options)
     {
-        $container = $this->container;
-        $objType = isset($options['type']) ? $options['type'] : self::DEFAULT_TYPE;
+        $objType = ($options['type'] ?? self::DEFAULT_TYPE);
 
         $obj = $this->factory->create($objType);
         $obj->setData($options);

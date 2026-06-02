@@ -49,9 +49,8 @@ class ActionRoute implements
      * ConfigurableTrait > createConfig()
      *
      * @param mixed|null $data Optional config data.
-     * @return ActionRouteConfig
      */
-    public function createConfig($data = null)
+    public function createConfig($data = null): \Charcoal\App\Route\ActionRouteConfig
     {
         return new ActionRouteConfig($data);
     }

@@ -21,10 +21,8 @@ class Gallery extends Container
 
     /**
      * Retrieve the container's attachments as rows containing columns.
-     *
-     * @return array
      */
-    public function attachmentsAsRows()
+    public function attachmentsAsRows(): array
     {
         $rows = [];
 
@@ -32,7 +30,7 @@ class Gallery extends Container
             $rows = array_chunk($this->attachments()->values(), $this->numColumns);
 
             /** Map row content with useful front-end properties. */
-            array_walk($rows, function (&$attachment, $index) {
+            array_walk($rows, function (&$attachment, $index): void {
                 $attachment = [
                     'columns' => $attachment,
                     'isFirst' => ($index === 0),
@@ -45,10 +43,8 @@ class Gallery extends Container
 
     /**
      * Retrieve the Bootstrap column width to be used in front-end templating.
-     *
-     * @return string
      */
-    public function columnWidth()
+    public function columnWidth(): string
     {
         return (string)ceil(12 / $this->numColumns);
     }

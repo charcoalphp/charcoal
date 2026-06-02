@@ -20,6 +20,7 @@ class StructureWidgetInput extends NestedWidgetInput
      * @throws DomainException If the widget is not a structure widget.
      * @return WidgetInterface
      */
+    #[\Override]
     protected function createWidget()
     {
         $widget = parent::createWidget();
@@ -30,7 +31,7 @@ class StructureWidgetInput extends NestedWidgetInput
             throw new DomainException(sprintf(
                 'Widget must an instance of %s, received %s',
                 StructureFormGroup::class,
-                get_class($widget)
+                $widget::class
             ));
         }
 
@@ -39,10 +40,9 @@ class StructureWidgetInput extends NestedWidgetInput
 
     /**
      * Retrieve the default structure widget options.
-     *
-     * @return array
      */
-    public function defaultWidgetData()
+    #[\Override]
+    public function defaultWidgetData(): array
     {
         return [
             'type' => StructureFormGroup::class

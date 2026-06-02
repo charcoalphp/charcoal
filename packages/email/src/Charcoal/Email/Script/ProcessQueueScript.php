@@ -27,17 +27,13 @@ class ProcessQueueScript extends AbstractScript implements CronScriptInterface
 {
     use CronScriptTrait;
 
-    /**
-     * @var FactoryInterface
-     */
-    private $queueItemFactory;
+    private ?\Charcoal\Factory\FactoryInterface $queueItemFactory = null;
 
     /**
      * Process all messages currently in queue.
      *
      * @param  RequestInterface  $request  A PSR-7 compatible Request instance.
      * @param  ResponseInterface $response A PSR-7 compatible Response instance.
-     * @return ResponseInterface
      */
     public function run(RequestInterface $request, ResponseInterface $response): ResponseInterface
     {
@@ -67,10 +63,9 @@ class ProcessQueueScript extends AbstractScript implements CronScriptInterface
 
     /**
      * Default script arguments.
-     *
-     * @return array
      */
-    public function defaultArguments()
+    #[\Override]
+    public function defaultArguments(): array
     {
         $arguments = [
             'queue-id' => [
@@ -98,9 +93,7 @@ class ProcessQueueScript extends AbstractScript implements CronScriptInterface
                 'castTo'       => 'int',
             ],
         ];
-
-        $arguments = array_merge(parent::defaultArguments(), $arguments);
-        return $arguments;
+        return array_merge(parent::defaultArguments(), $arguments);
     }
 
     /**
@@ -108,7 +101,7 @@ class ProcessQueueScript extends AbstractScript implements CronScriptInterface
      *
      * @return EmailQueueManager
      */
-    protected function makeQueueManager()
+    protected function makeQueueManager(): object
     {
         $cli = $this->climate();
 
@@ -147,8 +140,6 @@ class ProcessQueueScript extends AbstractScript implements CronScriptInterface
 
     /**
      * Retrieve the class name of the queue manager model.
-     *
-     * @return string
      */
     protected function getQueueManagerClass(): string
     {
@@ -162,7 +153,7 @@ class ProcessQueueScript extends AbstractScript implements CronScriptInterface
     {
         $climate = $this->climate();
 
-        $callback = function ($success, $failures, $skipped) use ($climate): void {
+        return function ($success, $failures, $skipped) use ($climate): void {
             if (!empty($success)) {
                 $climate->green()->out(sprintf('%s emails were successfully sent.', count($success)));
             }
@@ -175,14 +166,12 @@ class ProcessQueueScript extends AbstractScript implements CronScriptInterface
                 $climate->dim()->out(sprintf('%s emails were skipped.', count($skipped)));
             }
         };
-
-        return $callback;
     }
 
     /**
      * @param  Container $container Pimple DI container.
-     * @return void
      */
+    #[\Override]
     protected function setDependencies(Container $container): void
     {
         parent::setDependencies($container);
@@ -191,7 +180,6 @@ class ProcessQueueScript extends AbstractScript implements CronScriptInterface
 
     /**
      * @param  FactoryInterface $factory The factory to create queue items.
-     * @return void
      */
     private function setQueueItemFactory(FactoryInterface $factory): void
     {

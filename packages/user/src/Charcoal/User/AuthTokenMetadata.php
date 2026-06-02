@@ -11,77 +11,60 @@ use Charcoal\Model\ModelMetadata;
  */
 class AuthTokenMetadata extends ModelMetadata
 {
-    /**
-     * @var boolean $enabled
-     */
-    private $enabled;
+    private ?bool $enabled = null;
 
-    /**
-     * @var boolean $httpsOnly
-     */
-    private $httpsOnly;
+    private ?bool $httpsOnly = null;
 
-    /**
-     * @var string $tokenName
-     */
-    private $tokenName;
+    private ?string $tokenName = null;
 
-    /**
-     * @var string $tokenDuration
-     */
-    private $tokenDuration;
+    private ?string $tokenDuration = null;
 
     /**
      * @see \Charcoal\Config\ConfigInterface::defaults()
-     *
-     * @return array
      */
-    public function defaults()
+    #[\Override]
+    public function defaults(): array
     {
         $parentDefaults = parent::defaults();
-
-        $defaults = array_replace_recursive($parentDefaults, [
+        return array_replace_recursive($parentDefaults, [
             'enabled'        => true,
             'token_name'     => 'charcoal_user_login',
             'token_duration' => '15 days',
             'token_path'     => '',
             'https_only'     => false,
         ]);
-        return $defaults;
     }
 
     /**
      * @param  boolean $enabled The enabled flag.
-     * @return self
      */
-    public function setEnabled($enabled)
+    public function setEnabled($enabled): static
     {
-        $this->enabled = !!$enabled;
+        $this->enabled = (bool)$enabled;
         return $this;
     }
 
     /**
      * @return boolean
      */
-    public function getEnabled()
+    public function getEnabled(): ?bool
     {
         return $this->enabled;
     }
 
     /**
      * @param  boolean $httpsOnly The "HTTPS only" flag.
-     * @return self
      */
-    public function setHttpsOnly($httpsOnly)
+    public function setHttpsOnly($httpsOnly): static
     {
-        $this->httpsOnly = !!$httpsOnly;
+        $this->httpsOnly = (bool)$httpsOnly;
         return $this;
     }
 
     /**
      * @return boolean
      */
-    public function getHttpsOnly()
+    public function getHttpsOnly(): ?bool
     {
         return $this->httpsOnly;
     }
@@ -89,9 +72,8 @@ class AuthTokenMetadata extends ModelMetadata
     /**
      * @param  string $name The token name.
      * @throws InvalidArgumentException If the token name is not a string.
-     * @return self
      */
-    public function setTokenName($name)
+    public function setTokenName($name): static
     {
         if (!is_string($name)) {
             throw new InvalidArgumentException(
@@ -105,7 +87,7 @@ class AuthTokenMetadata extends ModelMetadata
     /**
      * @return string
      */
-    public function getTokenName()
+    public function getTokenName(): ?string
     {
         return $this->tokenName;
     }
@@ -113,9 +95,8 @@ class AuthTokenMetadata extends ModelMetadata
     /**
      * @param  string $duration The token duration, or duration. Ex: "15 days".
      * @throws InvalidArgumentException If the token name is not a string.
-     * @return self
      */
-    public function setTokenDuration($duration)
+    public function setTokenDuration($duration): static
     {
         if (!is_string($duration)) {
             throw new InvalidArgumentException(
@@ -129,18 +110,17 @@ class AuthTokenMetadata extends ModelMetadata
     /**
      * @return string
      */
-    public function getTokenDuration()
+    public function getTokenDuration(): ?string
     {
         return $this->tokenDuration;
     }
 
     /**
-     * @deprecated In favour of {@see self::setTokenName()}.
      *
      * @param  string $name The cookie name.
-     * @return self
      */
-    public function setCookieName($name)
+    #[\Deprecated(message: 'In favour of {@see self::setTokenName()}.')]
+    public function setCookieName($name): static
     {
         trigger_error(
             'Auth token option "cookie_name" is deprecated in favour of "token_name"',
@@ -152,11 +132,10 @@ class AuthTokenMetadata extends ModelMetadata
     }
 
     /**
-     * @deprecated In favour of {@see self::getTokenName()}.
-     *
      * @return string
      */
-    public function getCookieName()
+    #[\Deprecated(message: 'In favour of {@see self::getTokenName()}.')]
+    public function getCookieName(): ?string
     {
         trigger_error(
             'Auth token option "cookie_duration" is deprecated in favour of "token_duration"',
@@ -167,12 +146,11 @@ class AuthTokenMetadata extends ModelMetadata
     }
 
     /**
-     * @deprecated In favour of {@see self::setTokenDuration()}.
      *
      * @param  string $duration The cookie duration, or duration. Ex: "15 days".
-     * @return self
      */
-    public function setCookieDuration($duration)
+    #[\Deprecated(message: 'In favour of {@see self::setTokenDuration()}.')]
+    public function setCookieDuration($duration): static
     {
         trigger_error(
             'Auth token option "cookie_duration" is deprecated in favour of "token_duration"',
@@ -184,11 +162,10 @@ class AuthTokenMetadata extends ModelMetadata
     }
 
     /**
-     * @deprecated In favour of {@see self::getTokenDuration()}.
-     *
      * @return string
      */
-    public function getCookieDuration()
+    #[\Deprecated(message: 'In favour of {@see self::getTokenDuration()}.')]
+    public function getCookieDuration(): ?string
     {
         trigger_error(
             'Auth token option "cookie_duration" is deprecated in favour of "token_duration"',

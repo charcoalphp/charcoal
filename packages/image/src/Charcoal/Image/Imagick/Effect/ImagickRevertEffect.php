@@ -13,7 +13,7 @@ class ImagickRevertEffect extends AbstractRevertEffect
       * @param array $data The effect data, if available.
       * @return ImagickRevertEffect Chainable
       */
-    public function process(array $data = null)
+    public function process(?array $data = null): static
     {
         if ($data !== null) {
             $this->setData($data);

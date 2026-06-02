@@ -10,7 +10,7 @@ use Psr\Http\Message\RequestInterface;
 // From Pimple
 use Pimple\Container;
 // From Mustache
-use Mustache_LambdaHelper as LambdaHelper;
+use Mustache\LambdaHelper as LambdaHelper;
 // From 'charcoal-factory'
 use Charcoal\Factory\FactoryInterface;
 // From 'charcoal-translator'
@@ -44,45 +44,35 @@ class ElfinderTemplate extends AdminTemplate
 
     /**
      * The related object type.
-     *
-     * @var string
      */
-    private $objType;
+    private string|bool|null $objType = null;
 
     /**
      * The related object ID.
-     *
-     * @var string
      */
-    private $objId;
+    private string|bool|null $objId = null;
 
     /**
      * The related property identifier.
-     *
-     * @var string
      */
-    private $propertyIdent;
+    private string|bool|null $propertyIdent = null;
 
     /**
      * Whether to output JS/CSS assets for initializing elFinder.
-     *
-     * @var boolean
      */
-    private $showAssets = true;
+    private bool $showAssets = true;
 
     /**
      * Custom localization messages.
      *
      * @var array<string, (Translation|string|null)>|null
      */
-    private $localizations;
+    private \ArrayIterator|array|null $localizations = null;
 
     /**
      * The related JS callback ID.
-     *
-     * @var string
      */
-    private $callbackIdent = '';
+    private string|bool $callbackIdent = '';
 
     /**
      * URL for the elFinder connector.
@@ -95,31 +85,31 @@ class ElfinderTemplate extends AdminTemplate
      * Sets the template data from a PSR Request object.
      *
      * @param  RequestInterface $request A PSR-7 compatible Request instance.
-     * @return self
      */
-    protected function setDataFromRequest(RequestInterface $request)
+    #[\Override]
+    protected function setDataFromRequest(RequestInterface $request): static
     {
         $keys = $this->validDataFromRequest();
         $data = $request->getParams($keys);
 
         if (isset($data['obj_type'])) {
-            $this->objType = filter_var($data['obj_type'], FILTER_SANITIZE_STRING);
+            $this->objType = htmlspecialchars(trim($data['obj_type']), ENT_QUOTES, 'UTF-8');
         }
 
         if (isset($data['obj_id'])) {
-            $this->objId = filter_var($data['obj_id'], FILTER_SANITIZE_STRING);
+            $this->objId = htmlspecialchars(trim($data['obj_id']), ENT_QUOTES, 'UTF-8');
         }
 
         if (isset($data['property'])) {
-            $this->propertyIdent = filter_var($data['property'], FILTER_SANITIZE_STRING);
+            $this->propertyIdent = htmlspecialchars(trim($data['property']), ENT_QUOTES, 'UTF-8');
         }
 
         if (isset($data['assets'])) {
-            $this->showAssets = !!$data['assets'];
+            $this->showAssets = (bool)$data['assets'];
         }
 
         if (isset($data['callback'])) {
-            $this->callbackIdent = filter_var($data['callback'], FILTER_SANITIZE_STRING);
+            $this->callbackIdent = htmlspecialchars(trim($data['callback']), ENT_QUOTES, 'UTF-8');
         }
 
         if (isset($this->elfinderConfig['translations'])) {
@@ -137,7 +127,8 @@ class ElfinderTemplate extends AdminTemplate
      *
      * @return string[]
      */
-    protected function validDataFromRequest()
+    #[\Override]
+    protected function validDataFromRequest(): array
     {
         return array_merge([
             // Current object
@@ -152,6 +143,7 @@ class ElfinderTemplate extends AdminTemplate
      *
      * @return Translation
      */
+    #[\Override]
     public function title()
     {
         if ($this->title === null) {
@@ -165,9 +157,8 @@ class ElfinderTemplate extends AdminTemplate
      * Set the custom localization messages.
      *
      * @param  array $localizations An associative array of localizations.
-     * @return self
      */
-    public function setLocalizations(array $localizations)
+    public function setLocalizations(array $localizations): static
     {
         $this->localizations = new ArrayIterator();
 
@@ -184,14 +175,13 @@ class ElfinderTemplate extends AdminTemplate
      * @param  string $ident        The message ID.
      * @param  mixed  $translations The message translations.
      * @throws InvalidArgumentException If the message ID is not a string or the translations are invalid.
-     * @return self
      */
-    public function addLocalization($ident, $translations)
+    public function addLocalization($ident, $translations): static
     {
         if (!is_string($ident)) {
             throw new InvalidArgumentException(sprintf(
                 'Translation key must be a string, received %s',
-                (is_object($ident) ? get_class($ident) : gettype($ident))
+                (get_debug_type($ident))
             ));
         }
 
@@ -205,14 +195,13 @@ class ElfinderTemplate extends AdminTemplate
      *
      * @param  string $ident The message ID to remove.
      * @throws InvalidArgumentException If the message ID is not a string.
-     * @return self
      */
-    public function removeLocalization($ident)
+    public function removeLocalization($ident): static
     {
         if (!is_string($ident)) {
             throw new InvalidArgumentException(sprintf(
                 'Translation key must be a string, received %s',
-                (is_object($ident) ? get_class($ident) : gettype($ident))
+                (get_debug_type($ident))
             ));
         }
 
@@ -223,22 +212,18 @@ class ElfinderTemplate extends AdminTemplate
 
     /**
      * Count the number of localizations.
-     *
-     * @return integer
      */
-    public function numLocalizations()
+    public function numLocalizations(): int
     {
         return count($this->localizations());
     }
 
     /**
      * Determine if there are any localizations.
-     *
-     * @return boolean
      */
-    public function hasLocalizations()
+    public function hasLocalizations(): bool
     {
-        return !!$this->numLocalizations();
+        return (bool)$this->numLocalizations();
     }
 
     /**
@@ -246,7 +231,7 @@ class ElfinderTemplate extends AdminTemplate
      *
      * @return array<string, (Translation|string|null)>
      */
-    public function localizations()
+    public function localizations(): \ArrayIterator|array|null
     {
         if ($this->localizations === null) {
             $this->setLocalizations($this->defaultLocalizations());
@@ -267,15 +252,11 @@ class ElfinderTemplate extends AdminTemplate
         if (!is_string($ident)) {
             throw new InvalidArgumentException(sprintf(
                 'Translation key must be a string, received %s',
-                (is_object($ident) ? get_class($ident) : gettype($ident))
+                (get_debug_type($ident))
             ));
         }
 
-        if (isset($this->localizations[$ident])) {
-            return $this->localizations[$ident];
-        }
-
-        return $ident;
+        return ($this->localizations[$ident] ?? $ident);
     }
 
     /**
@@ -283,7 +264,7 @@ class ElfinderTemplate extends AdminTemplate
      *
      * @return array<string, array<string, (string|null)>>
      */
-    public function elfinderLocalizations()
+    public function elfinderLocalizations(): array
     {
         $i18n = [];
 
@@ -310,7 +291,7 @@ class ElfinderTemplate extends AdminTemplate
         $options = (JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 
         if ($this->debug()) {
-            $options = ($options | JSON_PRETTY_PRINT);
+            $options |= JSON_PRETTY_PRINT;
         }
 
         return json_encode($this->elfinderLocalizations(), $options);
@@ -321,7 +302,7 @@ class ElfinderTemplate extends AdminTemplate
      *
      * @return string Returns a stringified JSON object, protected from Mustache rendering.
      */
-    final public function escapedElfinderLocalizationsAsJson()
+    final public function escapedElfinderLocalizationsAsJson(): string
     {
         return '{{=<% %>=}}' . $this->elfinderLocalizationsAsJson() . '<%={{ }}=%>';
     }
@@ -342,10 +323,7 @@ class ElfinderTemplate extends AdminTemplate
         return $this->baseUrl(static::ELFINDER_ASSETS_REL_PATH);
     }
 
-    /**
-     * @return string
-     */
-    public function elfinderAssets()
+    public function elfinderAssets(): bool
     {
         return $this->showAssets;
     }
@@ -355,16 +333,15 @@ class ElfinderTemplate extends AdminTemplate
      *
      * @return string|null
      */
-    public function elfinderCallback()
+    public function elfinderCallback(): string|bool
     {
         return $this->callbackIdent;
     }
 
     /**
      * @param  string $url The elFinder connector AJAX URL.
-     * @return self
      */
-    public function setElfinderConnectorUrl($url)
+    public function setElfinderConnectorUrl($url): static
     {
         $this->elfinderConnectorUrl = $url;
         return $this;
@@ -392,7 +369,7 @@ class ElfinderTemplate extends AdminTemplate
     {
         $uri = $this->getElfinderConnectorUrlTemplate();
 
-        return function ($noop, LambdaHelper $helper) use ($uri) {
+        return function ($noop, LambdaHelper $helper) use ($uri): null {
             $uri = $helper->render($uri);
             $this->setElfinderConnectorUrl($uri);
 
@@ -402,15 +379,12 @@ class ElfinderTemplate extends AdminTemplate
 
     /**
      * Retrieve the elFinder connector URL template for rendering.
-     *
-     * @return string
      */
-    protected function getElfinderConnectorUrlTemplate()
+    protected function getElfinderConnectorUrlTemplate(): string
     {
         $uri = 'obj_type={{ objType }}&obj_id={{ objId }}&property={{ propertyIdent }}';
-        $uri = '{{# withAdminUrl }}elfinder-connector?' . $uri . '{{/ withAdminUrl }}';
 
-        return $uri;
+        return '{{# withAdminUrl }}elfinder-connector?' . $uri . '{{/ withAdminUrl }}';
     }
 
     /**
@@ -418,7 +392,7 @@ class ElfinderTemplate extends AdminTemplate
      *
      * @return string|null
      */
-    public function objType()
+    public function objType(): string|bool|null
     {
         return $this->objType;
     }
@@ -428,7 +402,7 @@ class ElfinderTemplate extends AdminTemplate
      *
      * @return string|null
      */
-    public function objId()
+    public function objId(): string|bool|null
     {
         return $this->objId;
     }
@@ -438,7 +412,7 @@ class ElfinderTemplate extends AdminTemplate
      *
      * @return string|null
      */
-    public function propertyIdent()
+    public function propertyIdent(): string|bool|null
     {
         return $this->propertyIdent;
     }
@@ -476,24 +450,20 @@ class ElfinderTemplate extends AdminTemplate
      */
     public function elfinderClientConfig()
     {
-        if (empty($this->elfinderConfig['client'])) {
-            $settings = [];
-        } else {
-            $settings = $this->elfinderConfig['client'];
-        }
+        $settings = empty($this->elfinderConfig['client']) ? [] : $this->elfinderConfig['client'];
 
         $settings['lang'] = $this->translator()->getLocale();
 
         $property = $this->formProperty();
         if ($property) {
-            $mimeTypes = filter_input(INPUT_GET, 'filetype', FILTER_SANITIZE_STRING);
+            $mimeTypes = htmlspecialchars(trim(($_GET['filetype'] ?? '')), ENT_QUOTES, 'UTF-8');
 
             if ($mimeTypes) {
                 if ($mimeTypes === 'file') {
                     $mimeTypes = [];
                 } elseif (!is_array($mimeTypes)) {
                     $mimeTypes = explode(',', $mimeTypes);
-                    $mimeTypes = array_filter($mimeTypes, 'strlen');
+                    $mimeTypes = array_filter($mimeTypes, strlen(...));
                 }
 
                 $settings['onlyMimes'] = $mimeTypes;
@@ -517,7 +487,7 @@ class ElfinderTemplate extends AdminTemplate
         $options = (JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 
         if ($this->debug()) {
-            $options = ($options | JSON_PRETTY_PRINT);
+            $options |= JSON_PRETTY_PRINT;
         }
 
         return json_encode($this->elfinderClientConfig(), $options);
@@ -528,7 +498,7 @@ class ElfinderTemplate extends AdminTemplate
      *
      * @return string Returns a stringified JSON object, protected from Mustache rendering.
      */
-    final public function escapedElfinderClientConfigAsJson()
+    final public function escapedElfinderClientConfigAsJson(): string
     {
         return '{{=<% %>=}}' . $this->elfinderClientConfigAsJson() . '<%={{ }}=%>';
     }
@@ -539,6 +509,7 @@ class ElfinderTemplate extends AdminTemplate
      * @param  Container $container A dependencies container instance.
      * @return void
      */
+    #[\Override]
     protected function setDependencies(Container $container)
     {
         parent::setDependencies($container);
@@ -551,7 +522,7 @@ class ElfinderTemplate extends AdminTemplate
      *
      * @return array<string, (Translation|string|null)>
      */
-    protected function defaultLocalizations()
+    protected function defaultLocalizations(): array
     {
         $t = $this->translator();
 
@@ -569,13 +540,11 @@ class ElfinderTemplate extends AdminTemplate
 
     // Templating
     // =========================================================================
-
     /**
      * Determine if main & secondary menu should appear as mobile in a desktop resolution.
-     *
-     * @return boolean
      */
-    public function isFullscreenTemplate()
+    #[\Override]
+    public function isFullscreenTemplate(): bool
     {
         return false;
     }

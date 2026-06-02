@@ -14,22 +14,13 @@ use Charcoal\Model\Service\MetadataLoader;
  */
 final class ModelBuilder
 {
-    public const DEFAULT_SOURCE_TYPE = 'database';
+    public const string DEFAULT_SOURCE_TYPE = 'database';
 
-    /**
-     * @var FactoryInterface
-     */
-    private $factory;
+    private \Charcoal\Factory\FactoryInterface $factory;
 
-    /**
-     * @var MetadataLoader
-     */
-    private $metadataLoader;
+    private \Charcoal\Model\Service\MetadataLoader $metadataLoader;
 
-    /**
-     * @var FactoryInterface
-     */
-    private $sourceFactory;
+    private \Charcoal\Factory\FactoryInterface $sourceFactory;
 
     /**
      * @param array $data Constructor dependencies.
@@ -84,27 +75,24 @@ final class ModelBuilder
 
     /**
      * @param FactoryInterface $factory The factory to use to create models.
-     * @return void
      */
-    private function setFactory(FactoryInterface $factory)
+    private function setFactory(FactoryInterface $factory): void
     {
         $this->factory = $factory;
     }
 
     /**
      * @param MetadataLoader $loader The loader instance, used to load metadata.
-     * @return void
      */
-    private function setMetadataLoader(MetadataLoader $loader)
+    private function setMetadataLoader(MetadataLoader $loader): void
     {
         $this->metadataLoader = $loader;
     }
 
     /**
      * @param FactoryInterface $factory The factory to use to create models.
-     * @return void
      */
-    private function setSourceFactory(FactoryInterface $factory)
+    private function setSourceFactory(FactoryInterface $factory): void
     {
         $this->sourceFactory = $factory;
     }
@@ -118,7 +106,7 @@ final class ModelBuilder
      */
     private function createMetadata($objType, $metadataIdent = null)
     {
-        $metadataIdent = ($metadataIdent !== null) ? $metadataIdent : $objType;
+        $metadataIdent ??= $objType;
         return $this->metadataLoader->load($metadataIdent, ModelMetadata::class);
     }
 
@@ -139,11 +127,11 @@ final class ModelBuilder
 
         if (!$sourceConfig) {
             throw new UnexpectedValueException(
-                sprintf('Can not create %s source: "%s" is not defined in metadata.', get_class($this), $sourceIdent)
+                sprintf('Can not create %s source: "%s" is not defined in metadata.', self::class, $sourceIdent)
             );
         }
 
-        $sourceType = isset($sourceConfig['type']) ? $sourceConfig['type'] : self::DEFAULT_SOURCE_TYPE;
+        $sourceType = ($sourceConfig['type'] ?? self::DEFAULT_SOURCE_TYPE);
         $source = $this->sourceFactory->create($sourceType);
         $source->setData($sourceConfig);
 

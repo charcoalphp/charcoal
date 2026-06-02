@@ -14,7 +14,7 @@ class ActionRouteConfigTest extends AbstractTestCase
         $this->obj = new ActionRouteConfig();
     }
 
-    public function testSetActionData()
+    public function testSetActionData(): void
     {
         $ret = $this->obj->setActionData([ 'foo' => 'bar' ]);
         $this->assertSame($ret, $this->obj);

@@ -13,17 +13,18 @@ use Charcoal\Cache\CacheBuilder;
 
 /**
  * Test the cache driver resolution from the CacheBuilder.
- *
- * @coversDefaultClass \Charcoal\Cache\CacheBuilder
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\Charcoal\Cache\CacheBuilder::class)]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Cache\CacheBuilder::class, 'build')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Cache\CacheBuilder::class, 'isIterable')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Cache\CacheBuilder::class, 'resolveDriver')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Cache\CacheBuilder::class, 'resolveOneDriver')]
 class CacheBuilderDriverTest extends AbstractCacheBuilderTest
 {
     /**
      * Test builder with a {@see DriverInterface driver object}.
-     *
-     * @covers ::build
      */
-    public function testBuildOnDriverInstance()
+    public function testBuildOnDriverInstance(): void
     {
         $builder = $this->createBuilder();
         $driver  = $this->createDriver('BlackHole');
@@ -36,16 +37,10 @@ class CacheBuilderDriverTest extends AbstractCacheBuilderTest
 
     // Resolve One Driver
     // =========================================================================
-
     /**
      * Test builder with a driver class.
-     *
-     * @covers ::build
-     * @covers ::isIterable
-     * @covers ::resolveDriver
-     * @covers ::resolveOneDriver
      */
-    public function testBuildOnDriverClass()
+    public function testBuildOnDriverClass(): void
     {
         $builder = $this->createBuilder();
         $driver  = $this->getDriverClass('BlackHole');
@@ -56,13 +51,8 @@ class CacheBuilderDriverTest extends AbstractCacheBuilderTest
 
     /**
      * Test builder with a named driver associated to a {@see DriverInterface driver object}.
-     *
-     * @covers ::build
-     * @covers ::isIterable
-     * @covers ::resolveDriver
-     * @covers ::resolveOneDriver
      */
-    public function testBuildOnNamedDriverWithInstance()
+    public function testBuildOnNamedDriverWithInstance(): void
     {
         $driver  = $this->createDriver('BlackHole');
         $builder = $this->createBuilder([
@@ -77,13 +67,8 @@ class CacheBuilderDriverTest extends AbstractCacheBuilderTest
 
     /**
      * Test builder with a named driver associated to a driver class.
-     *
-     * @covers ::build
-     * @covers ::isIterable
-     * @covers ::resolveDriver
-     * @covers ::resolveOneDriver
      */
-    public function testBuildOnNamedDriverWithClass()
+    public function testBuildOnNamedDriverWithClass(): void
     {
         $driver  = $this->getDriverClass('BlackHole');
         $builder = $this->createBuilder([
@@ -97,13 +82,10 @@ class CacheBuilderDriverTest extends AbstractCacheBuilderTest
     }
 
     // =================================
-
     /**
      * Test builder with an empty driver name.
-     *
-     * @covers ::resolveOneDriver
      */
-    public function testBuildOnEmptyDriver()
+    public function testBuildOnEmptyDriver(): void
     {
         $this->expectExceptionMessage('Driver is empty');
         $this->expectException(InvalidArgumentException::class);
@@ -114,10 +96,8 @@ class CacheBuilderDriverTest extends AbstractCacheBuilderTest
 
     /**
      * Test builder with an invalid driver instance.
-     *
-     * @covers ::resolveOneDriver
      */
-    public function testBuildOnInvalidDriverInstance()
+    public function testBuildOnInvalidDriverInstance(): void
     {
         $this->expectExceptionMessage('Driver class stdClass must implement Stash\Interfaces\DriverInterface');
         $this->expectException(InvalidArgumentException::class);
@@ -125,15 +105,13 @@ class CacheBuilderDriverTest extends AbstractCacheBuilderTest
         $builder = $this->createBuilder();
         $driver  = new StdClass();
 
-        $pool = $builder->build($driver);
+        $builder->build($driver);
     }
 
     /**
      * Test builder with a named driver associated to an empty value.
-     *
-     * @covers ::resolveOneDriver
      */
-    public function testBuildOnNamedDriverWithEmptyEntry()
+    public function testBuildOnNamedDriverWithEmptyEntry(): void
     {
         $this->expectExceptionMessage('Driver "foobar" does not exist');
         $this->expectException(InvalidArgumentException::class);
@@ -144,15 +122,13 @@ class CacheBuilderDriverTest extends AbstractCacheBuilderTest
             ]
         ]);
 
-        $pool = $builder->build('foobar');
+        $builder->build('foobar');
     }
 
     /**
      * Test builder with a named driver associated to an invalid instance.
-     *
-     * @covers ::resolveOneDriver
      */
-    public function testBuildOnNamedDriverWithBadEntry()
+    public function testBuildOnNamedDriverWithBadEntry(): void
     {
         $this->expectExceptionMessage('Driver "foobar": Class stdClass must implement Stash\Interfaces\DriverInterface');
         $this->expectException(InvalidArgumentException::class);
@@ -164,15 +140,13 @@ class CacheBuilderDriverTest extends AbstractCacheBuilderTest
             ]
         ]);
 
-        $pool = $builder->build('foobar');
+        $builder->build('foobar');
     }
 
     /**
      * Test builder with an invalid driver class.
-     *
-     * @covers ::resolveOneDriver
      */
-    public function testBuildOnInvalidDriverClass()
+    public function testBuildOnInvalidDriverClass(): void
     {
         $this->expectExceptionMessage('Driver "FakeClassName" cannot be resolved');
         $this->expectException(InvalidArgumentException::class);
@@ -180,23 +154,17 @@ class CacheBuilderDriverTest extends AbstractCacheBuilderTest
         $builder = $this->createBuilder();
         $driver  = 'FakeClassName';
 
-        $pool = $builder->build($driver);
+        $builder->build($driver);
     }
 
 
 
     // Resolve Many Drivers
     // =========================================================================
-
     /**
      * Test builder with an array of {@see DriverInterface driver objects}.
-     *
-     * @covers ::build
-     * @covers ::isIterable
-     * @covers ::resolveDriver
-     * @covers ::resolveOneDriver
      */
-    public function testBuildOnArrayOfDriverInstances()
+    public function testBuildOnArrayOfDriverInstances(): void
     {
         $builder = $this->createBuilder();
         $driver  = $this->createDriver('BlackHole');
@@ -206,13 +174,10 @@ class CacheBuilderDriverTest extends AbstractCacheBuilderTest
     }
 
     // =================================
-
     /**
      * Test builder with an invalid array of drivers.
-     *
-     * @covers ::resolveDriver
      */
-    public function testBuildOnArrayOfInvalidDrivers()
+    public function testBuildOnArrayOfInvalidDrivers(): void
     {
         $this->expectExceptionMessage('Drivers cannot be resolved');
         $this->expectException(InvalidArgumentException::class);

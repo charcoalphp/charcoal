@@ -13,23 +13,14 @@ use Charcoal\Tests\AbstractTestCase;
  */
 class ModelMetadataTest extends AbstractTestCase
 {
-    /**
-     * @var ModelMetadata
-     */
-    private $obj;
+    private \Charcoal\Model\ModelMetadata $obj;
 
-    /**
-     * @return void
-     */
     protected function setUp(): void
     {
         $this->obj = new ModelMetadata();
     }
 
-    /**
-     * @return void
-     */
-    public function testSetIdent()
+    public function testSetIdent(): void
     {
         $ret = $this->obj->setIdent('foo');
         $this->assertSame($ret, $this->obj);
@@ -39,10 +30,7 @@ class ModelMetadataTest extends AbstractTestCase
         $this->obj->setIdent(false);
     }
 
-    /**
-     * @return void
-     */
-    public function testArrayAccessGet()
+    public function testArrayAccessGet(): void
     {
         $obj = $this->obj;
         $obj->foo = 'bar';
@@ -50,10 +38,7 @@ class ModelMetadataTest extends AbstractTestCase
         $this->assertEquals($obj->foo, $obj['foo']);
     }
 
-    /**
-     * @return void
-     */
-    public function testArrayAccessSet()
+    public function testArrayAccessSet(): void
     {
         $obj = $this->obj;
         $obj['foo'] = 'bar';
@@ -61,25 +46,19 @@ class ModelMetadataTest extends AbstractTestCase
         $this->assertEquals($obj->foo, $obj['foo']);
     }
 
-    /**
-     * @return void
-     */
-    public function testArrayAccessUnset()
+    public function testArrayAccessUnset(): void
     {
         $obj = $this->obj;
-        $this->assertObjectNotHasAttribute('foo', $obj);
+        $this->assertFalse(property_exists($obj, 'foo'));
 
         $obj['foo'] = 'bar';
-        $this->assertObjectHasAttribute('foo', $obj);
+        $this->assertTrue(property_exists($obj, 'foo'));
 
         unset($obj['foo']);
         //$this->assertObjectNotHasAttribute('foo', $obj);
     }
 
-    /**
-     * @return void
-     */
-    public function testMerge()
+    public function testMerge(): void
     {
         $data = [
             'foo' => 'bar',
@@ -93,10 +72,7 @@ class ModelMetadataTest extends AbstractTestCase
         $this->assertEquals($obj->bar, 'foo');
     }
 
-    /**
-     * @return void
-     */
-    public function testMergeIsChainable()
+    public function testMergeIsChainable(): void
     {
         $obj = $this->obj;
         $ret = $obj->merge([]);

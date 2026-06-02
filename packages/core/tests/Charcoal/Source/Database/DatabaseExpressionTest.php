@@ -21,20 +21,16 @@ class DatabaseExpressionTest extends AbstractTestCase
 
     /**
      * Create expression for testing.
-     *
-     * @return DatabaseExpression
      */
-    final protected function createExpression()
+    final protected function createExpression(): \Charcoal\Source\Database\DatabaseExpression
     {
         return new DatabaseExpression();
     }
 
     /**
      * Test influence of "active" property on SQL compilation.
-     *
-     * @return void
      */
-    public function testInactiveExpression()
+    public function testInactiveExpression(): void
     {
         $obj = $this->createExpression();
         $obj->setCondition('   /* xyzzy */   ');
@@ -48,10 +44,8 @@ class DatabaseExpressionTest extends AbstractTestCase
 
     /**
      * Test "condition" property.
-     *
-     * @return void
      */
-    public function testCustomSql()
+    public function testCustomSql(): void
     {
         $obj = $this->createExpression();
 
@@ -61,10 +55,8 @@ class DatabaseExpressionTest extends AbstractTestCase
 
     /**
      * Test invalid custom SQL.
-     *
-     * @return void
      */
-    public function testCustomSqlWithoutQuery()
+    public function testCustomSqlWithoutQuery(): void
     {
         $obj = $this->createExpression();
 

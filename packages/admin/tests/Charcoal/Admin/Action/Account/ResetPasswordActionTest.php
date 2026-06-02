@@ -38,15 +38,11 @@ class ResetPasswordActionTest extends AbstractTestCase
 
     /**
      * Store the service container.
-     *
-     * @var Container
      */
-    private $container;
+    private ?\Pimple\Container $container = null;
 
     /**
      * Set up the test.
-     *
-     * @return void
      */
     public function setUp(): void
     {
@@ -60,19 +56,13 @@ class ResetPasswordActionTest extends AbstractTestCase
         ]);
     }
 
-    /**
-     * @return void
-     */
-    public function testAuthRequiredIsFalse()
+    public function testAuthRequiredIsFalse(): void
     {
         $res = $this->callMethod($this->obj, 'authRequired');
         $this->assertFalse($res);
     }
 
-    /**
-     * @return void
-     */
-    public function testRunWithoutTokenReturns400()
+    public function testRunWithoutTokenReturns400(): void
     {
         $request  = Request::createFromEnvironment(Environment::mock());
         $response = new Response();
@@ -84,10 +74,7 @@ class ResetPasswordActionTest extends AbstractTestCase
         $this->assertFalse($results['success']);
     }
 
-    /**
-     * @return void
-     */
-    public function testRunWithoutEmailReturns400()
+    public function testRunWithoutEmailReturns400(): void
     {
         $request = Request::createFromEnvironment(Environment::mock([
             'QUERY_STRING' => 'token=foobar'
@@ -101,10 +88,7 @@ class ResetPasswordActionTest extends AbstractTestCase
         $this->assertFalse($results['success']);
     }
 
-    /**
-     * @return void
-     */
-    public function testRunWithoutPasswordReturns400()
+    public function testRunWithoutPasswordReturns400(): void
     {
         $request = Request::createFromEnvironment(Environment::mock([
             'QUERY_STRING' => 'token=foobar&email=foobar@foo.bar'
@@ -118,10 +102,7 @@ class ResetPasswordActionTest extends AbstractTestCase
         $this->assertFalse($results['success']);
     }
 
-    /**
-     * @return void
-     */
-    public function testRunWithoutMatchingPasswordsReturns400()
+    public function testRunWithoutMatchingPasswordsReturns400(): void
     {
         $request = Request::createFromEnvironment(Environment::mock([
             'QUERY_STRING' => 'token=foobar&email=foobar@foo.bar&password1=foo&password2=bar'
@@ -135,10 +116,7 @@ class ResetPasswordActionTest extends AbstractTestCase
         $this->assertFalse($results['success']);
     }
 
-    /**
-     * @return void
-     */
-    public function testRunWithoutRecaptchaReturns400()
+    public function testRunWithoutRecaptchaReturns400(): void
     {
         $mock = m::mock($this->obj);
         $mock->shouldAllowMockingProtectedMethods()
@@ -158,10 +136,7 @@ class ResetPasswordActionTest extends AbstractTestCase
         $this->assertFalse($results['success']);
     }
 
-    /**
-     * @return void
-     */
-    public function testRunWithInvalidRecaptchaReturns400()
+    public function testRunWithInvalidRecaptchaReturns400(): void
     {
         $mock = m::mock($this->obj);
         $mock->shouldAllowMockingProtectedMethods()
@@ -183,12 +158,10 @@ class ResetPasswordActionTest extends AbstractTestCase
 
     /**
      * Set up the service container.
-     *
-     * @return Container
      */
-    protected function container()
+    protected function container(): \Pimple\Container
     {
-        if ($this->container === null) {
+        if (!$this->container instanceof \Pimple\Container) {
             $container = new Container();
             $containerProvider = new ContainerProvider();
             $containerProvider->registerAdminServices($container);

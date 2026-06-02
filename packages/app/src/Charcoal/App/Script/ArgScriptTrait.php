@@ -31,7 +31,7 @@ trait ArgScriptTrait
             $var = preg_split('#(?<!\\\\)' . $delimiter . '#', $var);
         }
 
-        if (is_array($var) || $var instanceof Traversable) {
+        if (is_iterable($var)) {
             return $var;
         }
 

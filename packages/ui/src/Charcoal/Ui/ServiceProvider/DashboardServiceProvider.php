@@ -16,50 +16,45 @@ class DashboardServiceProvider implements ServiceProviderInterface
 {
     /**
      * @param Container $container A Pimple DI container.
-     * @return void
      */
-    public function register(Container $container)
+    public function register(Container $container): void
     {
         $this->registerDashboardServices($container);
     }
 
     /**
      * @param Container $container A Pimple DI container.
-     * @return void
      */
-    private function registerDashboardServices(Container $container)
+    private function registerDashboardServices(Container $container): void
     {
         /**
          * @param Container $container A Pimple DI container.
          * @return LayoutFactory
          */
-        $container['dashboard/factory'] = function (Container $container) {
-            return new Factory([
-                'base_class'         => DashboardInterface::class,
-                'default_class'      => GenericDashboard::class,
-                'arguments'          => [
-                    [
-                        'container'      => $container,
-                        'logger'         => $container['logger'],
-                        'view'           => $container['view'],
-                        'widget_builder' => $container['widget/builder'],
-                        'layout_builder' => $container['layout/builder'],
-                    ],
+        $container['dashboard/factory'] = (fn(Container $container): \Charcoal\Factory\GenericFactory => new Factory([
+            'base_class'         => DashboardInterface::class,
+            'default_class'      => GenericDashboard::class,
+            'arguments'          => [
+                [
+                    'container'      => $container,
+                    'logger'         => $container['logger'],
+                    'view'           => $container['view'],
+                    'widget_builder' => $container['widget/builder'],
+                    'layout_builder' => $container['layout/builder'],
                 ],
-                'resolver_options'   => [
-                    'suffix' => 'Dashboard',
-                ],
-            ]);
-        };
+            ],
+            'resolver_options'   => [
+                'suffix' => 'Dashboard',
+            ],
+        ]));
 
         /**
          * @param Container $container A Pimple DI container.
          * @return LayoutBuilder
          */
-        $container['dashboard/builder'] = function (Container $container) {
+        $container['dashboard/builder'] = function (Container $container): \Charcoal\Ui\Dashboard\DashboardBuilder {
             $dashboardFactory = $container['dashboard/factory'];
-            $dashboardBuilder = new DashboardBuilder($dashboardFactory, $container);
-            return $dashboardBuilder;
+            return new DashboardBuilder($dashboardFactory, $container);
         };
     }
 }

@@ -19,7 +19,6 @@ use Symfony\Component\Translation\Loader\XliffFileLoader;
 use Symfony\Component\Translation\Loader\JsonFileLoader;
 use Symfony\Component\Translation\Loader\YamlFileLoader;
 use Symfony\Component\Translation\Formatter\MessageFormatter;
-use Symfony\Component\Translation\MessageSelector;
 // From 'charcoal-translator'
 use Charcoal\Translator\LocalesConfig;
 use Charcoal\Translator\LocalesManager;
@@ -37,9 +36,8 @@ class TranslatorServiceProvider implements ServiceProviderInterface
 {
     /**
      * @param  Container $container Pimple DI container.
-     * @return void
      */
-    public function register(Container $container)
+    public function register(Container $container): void
     {
         $this->registerLocales($container);
         $this->registerTranslator($container);
@@ -48,9 +46,8 @@ class TranslatorServiceProvider implements ServiceProviderInterface
 
     /**
      * @param  Container $container Pimple DI container.
-     * @return void
      */
-    private function registerLocales(Container $container)
+    private function registerLocales(Container $container): void
     {
         /**
          * Instance of the Locales Configset.
@@ -58,9 +55,9 @@ class TranslatorServiceProvider implements ServiceProviderInterface
          * @param  Container $container Pimple DI container.
          * @return LocalesConfig
          */
-        $container['locales/config'] = function (Container $container) {
-            $appConfig     = isset($container['config']) ? $container['config'] : [];
-            $localesConfig = isset($appConfig['locales']) ? $appConfig['locales'] : null;
+        $container['locales/config'] = function (Container $container): \Charcoal\Translator\LocalesConfig {
+            $appConfig     = ($container['config'] ?? []);
+            $localesConfig = ($appConfig['locales'] ?? null);
             return new LocalesConfig($localesConfig);
         };
 
@@ -72,10 +69,8 @@ class TranslatorServiceProvider implements ServiceProviderInterface
          */
         $container['locales/default-language'] = function (Container $container) {
             $localesConfig = $container['locales/config'];
-            if (isset($localesConfig['auto_detect']) && $localesConfig['auto_detect']) {
-                if ($container['locales/browser-language'] !== null) {
-                    return $container['locales/browser-language'];
-                }
+            if (isset($localesConfig['auto_detect']) && $localesConfig['auto_detect'] && $container['locales/browser-language'] !== null) {
+                return $container['locales/browser-language'];
             }
             return $localesConfig['default_language'];
         };
@@ -93,7 +88,7 @@ class TranslatorServiceProvider implements ServiceProviderInterface
          * @param  Container $container Pimple DI container.
          * @return string|null
          */
-        $container['locales/browser-language'] = function (Container $container) {
+        $container['locales/browser-language'] = function (Container $container): ?string {
             if (!isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
                 return null;
             }
@@ -104,11 +99,9 @@ class TranslatorServiceProvider implements ServiceProviderInterface
              * as the default language.
              */
             $localesConfig    = $container['locales/config'];
-            $supportedLocales = array_filter($localesConfig['languages'], function ($locale) {
-                return !(isset($locale['active']) && !$locale['active']);
-            });
+            $supportedLocales = array_filter($localesConfig['languages'], fn(array $locale): bool => !(isset($locale['active']) && !$locale['active']));
 
-            $acceptableLanguages = explode(',', $_SERVER['HTTP_ACCEPT_LANGUAGE']);
+            $acceptableLanguages = explode(',', (string)$_SERVER['HTTP_ACCEPT_LANGUAGE']);
             foreach ($acceptableLanguages as $acceptedLang) {
                 $lang = explode(';', $acceptedLang);
                 $lang = trim($lang[0]);
@@ -161,7 +154,7 @@ class TranslatorServiceProvider implements ServiceProviderInterface
          * @param  Container $container Pimple DI container.
          * @return LocalesManager
          */
-        $container['locales/manager'] = function (Container $container) {
+        $container['locales/manager'] = function (Container $container): \Charcoal\Translator\LocalesManager {
             $localesConfig = $container['locales/config'];
             return new LocalesManager([
                 'locales'          => $localesConfig['languages'],
@@ -172,9 +165,8 @@ class TranslatorServiceProvider implements ServiceProviderInterface
 
     /**
      * @param  Container $container Pimple DI container.
-     * @return void
      */
-    private function registerTranslator(Container $container)
+    private function registerTranslator(Container $container): void
     {
         /**
          * Instance of the Translator Configset.
@@ -182,9 +174,9 @@ class TranslatorServiceProvider implements ServiceProviderInterface
          * @param  Container $container Pimple DI container.
          * @return TranslatorConfig
          */
-        $container['translator/config'] = function (Container $container) {
-            $appConfig   = isset($container['config']) ? $container['config'] : [];
-            $transConfig = isset($appConfig['translator']) ? $appConfig['translator'] : null;
+        $container['translator/config'] = function (Container $container): \Charcoal\Translator\TranslatorConfig {
+            $appConfig   = ($container['config'] ?? []);
+            $transConfig = ($appConfig['translator'] ?? null);
 
             if (isset($transConfig['paths'])) {
                 $transConfig['paths'] = $appConfig->resolveValues($transConfig['paths']);
@@ -198,7 +190,7 @@ class TranslatorServiceProvider implements ServiceProviderInterface
                 $modules    = $container['module/classes'];
                 foreach ($modules as $module) {
                     if (defined(sprintf('%s::APP_CONFIG', $module))) {
-                        $configPath = ltrim($module::APP_CONFIG, '/');
+                        $configPath = ltrim((string)$module::APP_CONFIG, '/');
                         $configPath = $basePath . DIRECTORY_SEPARATOR . $configPath;
 
                         $configData = $appConfig->loadFile($configPath);
@@ -211,7 +203,7 @@ class TranslatorServiceProvider implements ServiceProviderInterface
                     };
                 }
 
-                if ($extraPaths) {
+                if ($extraPaths !== []) {
                     $transConfig->addPaths($extraPaths);
                 }
             }
@@ -231,23 +223,11 @@ class TranslatorServiceProvider implements ServiceProviderInterface
         };
 
         /**
-         * Instance of the Message Selector, that is used to resolve a translation.
-         *
-         * @return MessageSelector
-         */
-        $container['translator/message-selector'] = function () {
-            return new MessageSelector();
-        };
-
-        /**
          * Instance of the Message Formatter, that is used to format a localized message.
          *
-         * @param  Container $container Pimple DI container.
          * @return MessageFormatter
          */
-        $container['translator/message-formatter'] = function (Container $container) {
-            return new MessageFormatter($container['translator/message-selector']);
-        };
+        $container['translator/message-formatter'] = (fn(): \Symfony\Component\Translation\Formatter\MessageFormatter => new MessageFormatter());
 
         /**
          * Instance of the Translator, that is used for translation.
@@ -256,11 +236,10 @@ class TranslatorServiceProvider implements ServiceProviderInterface
          * @param  Container $container Pimple DI container.
          * @return Translator
          */
-        $container['translator'] = function (Container $container) {
+        $container['translator'] = function (Container $container): \Charcoal\Translator\Translator {
             $transConfig = $container['translator/config'];
             $translator  = new Translator([
                 'manager'           => $container['locales/manager'],
-                'message_selector'  => $container['translator/message-selector'],
                 'message_formatter' => $container['translator/message-formatter'],
                 'cache_dir'         => $transConfig['cache_dir'],
                 'debug'             => $transConfig['debug'],
@@ -310,106 +289,80 @@ class TranslatorServiceProvider implements ServiceProviderInterface
 
     /**
      * @param  Container $container Pimple DI container.
-     * @return void
      */
-    private function registerTranslatorLoaders(Container $container)
+    private function registerTranslatorLoaders(Container $container): void
     {
         /**
          * @return ArrayLoader
          */
-        $container['translator/loader/array'] = function () {
-            return new ArrayLoader();
-        };
+        $container['translator/loader/array'] = (fn(): \Symfony\Component\Translation\Loader\ArrayLoader => new ArrayLoader());
 
         /**
          * @return CsvFileLoader
          */
-        $container['translator/loader/file/csv'] = function () {
-            return new CsvFileLoader();
-        };
+        $container['translator/loader/file/csv'] = (fn(): \Symfony\Component\Translation\Loader\CsvFileLoader => new CsvFileLoader());
 
         /**
          * @return IcuDatFileLoader
          */
-        $container['translator/loader/file/dat'] = function () {
-            return new IcuDatFileLoader();
-        };
+        $container['translator/loader/file/dat'] = (fn(): \Symfony\Component\Translation\Loader\IcuDatFileLoader => new IcuDatFileLoader());
 
         /**
          * @return IcuResFileLoader
          */
-        $container['translator/loader/file/res'] = function () {
-            return new IcuResFileLoader();
-        };
+        $container['translator/loader/file/res'] = (fn(): \Symfony\Component\Translation\Loader\IcuResFileLoader => new IcuResFileLoader());
 
         /**
          * @return IniFileLoader
          */
-        $container['translator/loader/file/ini'] = function () {
-            return new IniFileLoader();
-        };
+        $container['translator/loader/file/ini'] = (fn(): \Symfony\Component\Translation\Loader\IniFileLoader => new IniFileLoader());
 
         /**
          * @return JsonFileLoader
          */
-        $container['translator/loader/file/json'] = function () {
-            return new JsonFileLoader();
-        };
+        $container['translator/loader/file/json'] = (fn(): \Symfony\Component\Translation\Loader\JsonFileLoader => new JsonFileLoader());
 
         /**
          * @return MoFileLoader
          */
-        $container['translator/loader/file/mo'] = function () {
-            return new MoFileLoader();
-        };
+        $container['translator/loader/file/mo'] = (fn(): \Symfony\Component\Translation\Loader\MoFileLoader => new MoFileLoader());
 
         /**
          * @return PhpFileLoader
          */
-        $container['translator/loader/file/php'] = function () {
-            return new PhpFileLoader();
-        };
+        $container['translator/loader/file/php'] = (fn(): \Symfony\Component\Translation\Loader\PhpFileLoader => new PhpFileLoader());
 
         /**
          * @return PoFileLoader
          */
-        $container['translator/loader/file/po'] = function () {
-            return new PoFileLoader();
-        };
+        $container['translator/loader/file/po'] = (fn(): \Symfony\Component\Translation\Loader\PoFileLoader => new PoFileLoader());
 
         /**
          * @return QtFileLoader
          */
-        $container['translator/loader/file/qt'] = function () {
-            return new QtFileLoader();
-        };
+        $container['translator/loader/file/qt'] = (fn(): \Symfony\Component\Translation\Loader\QtFileLoader => new QtFileLoader());
 
         /**
          * @return XliffFileLoader
          */
-        $container['translator/loader/file/xliff'] = function () {
-            return new XliffFileLoader();
-        };
+        $container['translator/loader/file/xliff'] = (fn(): \Symfony\Component\Translation\Loader\XliffFileLoader => new XliffFileLoader());
 
         /**
          * @return YamlFileLoader
          */
-        $container['translator/loader/file/yaml'] = function () {
-            return new YamlFileLoader();
-        };
+        $container['translator/loader/file/yaml'] = (fn(): \Symfony\Component\Translation\Loader\YamlFileLoader => new YamlFileLoader());
     }
 
     /**
      * @param  Container $container Pimple DI container.
-     * @return void
      */
-    private function registerMiddleware(Container $container)
+    private function registerMiddleware(Container $container): void
     {
         /**
          * @param  Container $container
          * @return LanguageMiddleware
          */
-        $container['middlewares/charcoal/translator/middleware/language'] = function (Container $container) {
+        $container['middlewares/charcoal/translator/middleware/language'] = function (Container $container): \Charcoal\Translator\Middleware\LanguageMiddleware {
             $middlewareConfig = $container['config']['middlewares']['charcoal/translator/middleware/language'];
             $middlewareConfig = array_replace(
                 [

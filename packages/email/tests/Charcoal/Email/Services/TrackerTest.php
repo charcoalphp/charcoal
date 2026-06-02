@@ -15,15 +15,12 @@ use Charcoal\Email\Services\Tracker;
  */
 class TrackerTest extends TestCase
 {
-    /**
-     * @var Tracker
-     */
-    private $obj;
+    private \Charcoal\Email\Services\Tracker $obj;
 
     /**
      * @var Email
      */
-    private $email;
+    private mixed $email;
 
     /**
      *
@@ -39,7 +36,7 @@ class TrackerTest extends TestCase
     /**
      *
      */
-    public function testAddOpenTrackingImageWithBody()
+    public function testAddOpenTrackingImageWithBody(): void
     {
         $html = '<html><body class="foo"><p>Hello</p></body></html>';
         $this->email->setMsgHtml($html);
@@ -52,7 +49,7 @@ class TrackerTest extends TestCase
     /**
      *
      */
-    public function testAddOpenTrackingImageWithoutBody()
+    public function testAddOpenTrackingImageWithoutBody(): void
     {
         $html = '<div class="foo"><p>Hello</p></div>';
         $this->email->setMsgHtml($html);
@@ -64,7 +61,7 @@ class TrackerTest extends TestCase
     /**
      *
      */
-    public function testReplaceLinksWithTracker()
+    public function testReplaceLinksWithTracker(): void
     {
         $html = '<div class="foo"><a href="https://example.com/foo">Foo</a></div>';
         $id = uniqid();

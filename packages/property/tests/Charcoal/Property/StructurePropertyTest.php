@@ -21,9 +21,6 @@ class StructurePropertyTest extends AbstractTestCase
      */
     public $obj;
 
-    /**
-     * @return void
-     */
     protected function setUp(): void
     {
         $container = $this->getContainer();
@@ -35,15 +32,12 @@ class StructurePropertyTest extends AbstractTestCase
         ]);
     }
 
-    /**
-     * @return void
-     */
-    public function testType()
+    public function testType(): void
     {
         $this->assertEquals('structure', $this->obj->type());
     }
 
-    public function testParseOneNull()
+    public function testParseOneNull(): void
     {
         $this->obj->setAllowNull(true);
         $this->assertNull($this->obj->parseOne(null));
@@ -53,7 +47,7 @@ class StructurePropertyTest extends AbstractTestCase
         $this->obj->parseOne(null);
     }
 
-    public function testParseOneString()
+    public function testParseOneString(): void
     {
         $this->assertEquals('', $this->obj->parseOne(''));
        // $this->assertEquals('foo', $this->obj->parseOne('foo'));
@@ -61,7 +55,7 @@ class StructurePropertyTest extends AbstractTestCase
         $this->assertEquals(['foo'=>'bar'], $this->obj->parseOne('{"foo":"bar"}'));
     }
 
-    public function testSqlType()
+    public function testSqlType(): void
     {
         $this->assertEquals('TEXT', $this->obj->sqlType());
 
@@ -85,23 +79,23 @@ class StructurePropertyTest extends AbstractTestCase
         $this->obj->setSqlType('foobar');
     }
 
-    public function testSetSqlTypeNullException()
+    public function testSetSqlTypeNullException(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->obj->setSqlType(false);
     }
 
-    public function testSqlPdoType()
+    public function testSqlPdoType(): void
     {
         $this->assertEquals(\PDO::PARAM_STR, $this->obj->sqlPdoType());
     }
 
-    public function testSqlExtra()
+    public function testSqlExtra(): void
     {
         $this->assertEquals('', $this->obj->sqlExtra());
     }
 
-    public function testInputVal()
+    public function testInputVal(): void
     {
         $this->assertEquals('', $this->obj->inputVal(''));
         $this->assertEquals('', $this->obj->inputVal(null));
@@ -109,7 +103,7 @@ class StructurePropertyTest extends AbstractTestCase
         $this->assertEquals('[]', $this->obj->inputVal([]));
     }
 
-    public function testStorageVal()
+    public function testStorageVal(): void
     {
         $this->assertEquals('', $this->obj->inputVal(''));
         $this->assertEquals(null, $this->obj->inputVal(null));

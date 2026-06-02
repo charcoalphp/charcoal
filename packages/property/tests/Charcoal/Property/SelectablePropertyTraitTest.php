@@ -2,6 +2,7 @@
 
 namespace Charcoal\Tests\Property;
 
+use Charcoal\Tests\Property\Mocks\SelectablePropertyTestDouble;
 use ReflectionClass;
 
 // From 'charcoal-translator'
@@ -23,31 +24,25 @@ class SelectablePropertyTraitTest extends AbstractTestCase
 
     /**
      * Tested Class.
-     *
-     * @var SelectablePropertyTrait
      */
-    private $obj;
+    private SelectablePropertyTestDouble $obj;
 
     /**
      * Set up the test.
-     *
-     * @return void
      */
     protected function setUp(): void
     {
         $container = $this->getContainer();
 
-        $this->obj = $this->getMockForTrait(SelectablePropertyTrait::class);
-        $this->obj->expects($this->any())
-                  ->method('translator')
-                  ->will($this->returnValue($container['translator']));
+        $this->obj = $this->createPartialMock(SelectablePropertyTestDouble::class, ['translator']);
+        $this->obj->method('translator')
+                  ->willReturn($container['translator']);
     }
 
     /**
      * @param  mixed $val The translation string.
-     * @return Translation
      */
-    public function translation($val)
+    public function translation($val): \Charcoal\Translator\Translation
     {
         $container = $this->getContainer();
         $locales   = $container['locales/manager'];
@@ -55,10 +50,7 @@ class SelectablePropertyTraitTest extends AbstractTestCase
         return new Translation($val, $locales);
     }
 
-    /**
-     * @return void
-     */
-    public function testEmptyChoices()
+    public function testEmptyChoices(): void
     {
         $this->assertEquals([], $this->obj->choices());
 
@@ -77,10 +69,7 @@ class SelectablePropertyTraitTest extends AbstractTestCase
         $this->assertEquals('qux', $this->obj->choiceLabel('qux'));
     }
 
-    /**
-     * @return void
-     */
-    public function testChoices()
+    public function testChoices(): void
     {
         $choices = [
             'foo' => 'oof',
@@ -116,28 +105,19 @@ class SelectablePropertyTraitTest extends AbstractTestCase
         $this->assertEquals($expected['bar']['label'], $this->obj->choiceLabel('bar'));
     }
 
-    /**
-     * @return void
-     */
-    public function testChoiceLabelStructException()
+    public function testChoiceLabelStructException(): void
     {
         $this->expectException('\InvalidArgumentException');
         $this->obj->choiceLabel([]);
     }
 
-    /**
-     * @return void
-     */
-    public function testChoiceLabelKeyException()
+    public function testChoiceLabelKeyException(): void
     {
         $this->expectException('\InvalidArgumentException');
         $this->obj->choiceLabel(0);
     }
 
-    /**
-     * @return void
-     */
-    public function testParseChoices()
+    public function testParseChoices(): void
     {
         $choices = [
             'foo' => 'oof',
@@ -180,19 +160,13 @@ class SelectablePropertyTraitTest extends AbstractTestCase
         $this->assertEquals($baz, $parsed);
     }
 
-    /**
-     * @return void
-     */
-    public function testParseChoiceStructException()
+    public function testParseChoiceStructException(): void
     {
         $this->expectException('\InvalidArgumentException');
         $this->callMethod($this->obj, 'parseChoice', [ null, 'foo' ]);
     }
 
-    /**
-     * @return void
-     */
-    public function testParseChoiceKeyException()
+    public function testParseChoiceKeyException(): void
     {
         $this->expectException('\InvalidArgumentException');
         $this->callMethod($this->obj, 'parseChoice', [ 'foo', 0 ]);

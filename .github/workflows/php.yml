@@ -2,7 +2,7 @@ name: PHP Testing
 
 on:
   push:
-    branches: [ main ]
+#    branches: [ main ]
   pull_request:
     branches: [ main ]
 
@@ -28,7 +28,7 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: 8.0
+          php-version: 8.5
           coverage: none
 
       - name: Install Composer dependencies
@@ -36,7 +36,7 @@ jobs:
 
       - name: Output list of packages as JSON
         id: output_data
-        run: echo "matrix=$(vendor/bin/monorepo-builder packages-json)" >> $GITHUB_OUTPUT
+        run: echo "matrix=$(./monorepo packages -t json)" >> $GITHUB_OUTPUT
 
     outputs:
       matrix: ${{ steps.output_data.outputs.matrix }}
@@ -48,7 +48,13 @@ jobs:
 
     strategy:
       matrix:
-        php-versions: ['7.4', '8.0']
+        php-versions:
+          - '8.3'
+          - '8.4'
+          - '8.5'
+        include:
+          - php-versions: '8.3'
+            dependencies: 'highest'
         package: ${{fromJson(needs.provide_packages_json.outputs.matrix)}}
 
     steps:
@@ -67,6 +73,8 @@ jobs:
 
       - name: Install Composer dependencies
         uses: ramsey/composer-install@v2
+        with:
+          dependency-versions: ${{ matrix.dependencies }}
 
       - name: Install ImageMagick
         if: ${{ matrix.package == 'image' }}
@@ -82,4 +90,6 @@ jobs:
         run: tests/script/phpcs --ci ${{ matrix.package }}
 
       - name: Run PHPunit for all packages
+        env:
+          TEST_MODE: PACKAGE
         run: tests/script/phpunit --ci ${{ matrix.package }}

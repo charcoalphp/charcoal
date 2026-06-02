@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Charcoal\App\Route;
 
 // From 'charcoal-app'
@@ -10,10 +12,7 @@ use Charcoal\App\Route\RouteConfig;
  */
 class ActionRouteConfig extends RouteConfig
 {
-    /**
-     * @var array $actionData
-     */
-    private $actionData = [];
+    private array $actionData = [];
 
     /**
      * Set the action data.
@@ -21,7 +20,7 @@ class ActionRouteConfig extends RouteConfig
      * @param array $actionData The route data.
      * @return ActionRouteConfig Chainable
      */
-    public function setActionData(array $actionData)
+    public function setActionData(array $actionData): static
     {
         $this->actionData = $actionData;
         return $this;
@@ -29,10 +28,8 @@ class ActionRouteConfig extends RouteConfig
 
     /**
      * Get the action data.
-     *
-     * @return array
      */
-    public function actionData()
+    public function actionData(): array
     {
         return $this->actionData;
     }

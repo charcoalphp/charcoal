@@ -22,18 +22,15 @@ class MapWidgetInput extends AbstractPropertyInput
 
     /**
      * Settings for the map widget.
-     *
-     * @var array
      */
-    private $mapOptions;
+    private ?array $mapOptions = null;
 
     /**
      * Sets the API key for the mapping service.
      *
      * @param  string $key An API key.
-     * @return self
      */
-    public function setApiKey($key)
+    public function setApiKey($key): static
     {
         $this->apiKey = $key;
 
@@ -58,7 +55,7 @@ class MapWidgetInput extends AbstractPropertyInput
      * @param  array $settings The map widget options.
      * @return MapWidgetInput Chainable
      */
-    public function setMapOptions(array $settings)
+    public function setMapOptions(array $settings): static
     {
         if (isset($settings['api_key'])) {
             $this->setApiKey($settings['api_key']);
@@ -79,7 +76,7 @@ class MapWidgetInput extends AbstractPropertyInput
      * @param  array $settings The map widget options.
      * @return MapWidgetInput Chainable
      */
-    public function mergeMapOptions(array $settings)
+    public function mergeMapOptions(array $settings): static
     {
         if (isset($settings['api_key'])) {
             $this->setApiKey($settings['api_key']);
@@ -98,7 +95,7 @@ class MapWidgetInput extends AbstractPropertyInput
      * @throws InvalidArgumentException If the identifier is not a string.
      * @return MapWidgetInput Chainable
      */
-    public function addMapOption($key, $val)
+    public function addMapOption($key, $val): static
     {
         if (!is_string($key)) {
             throw new InvalidArgumentException(
@@ -122,10 +119,8 @@ class MapWidgetInput extends AbstractPropertyInput
 
     /**
      * Retrieve the map widget's options.
-     *
-     * @return array
      */
-    public function mapOptions()
+    public function mapOptions(): array
     {
         if ($this->mapOptions === null) {
             $this->mapOptions = $this->defaultMapOptions();
@@ -135,10 +130,8 @@ class MapWidgetInput extends AbstractPropertyInput
 
     /**
      * Retrieve the default map widget options.
-     *
-     * @return array
      */
-    public function defaultMapOptions()
+    public function defaultMapOptions(): array
     {
         return [ 'api_key' => $this->apiKey() ];
     }
@@ -159,6 +152,7 @@ class MapWidgetInput extends AbstractPropertyInput
      * @param Container $container A dependencies container instance.
      * @return void
      */
+    #[\Override]
     protected function setDependencies(Container $container)
     {
         parent::setDependencies($container);

@@ -18,9 +18,7 @@ use Charcoal\Tests\Admin\ContainerProvider;
  */
 class FormSidebarWidgetTest extends AbstractTestCase
 {
-    /**
-     * @return void
-     */
+    public $obj;
     public function setUp(): void
     {
         $container = new Container();
@@ -36,10 +34,7 @@ class FormSidebarWidgetTest extends AbstractTestCase
         ]);
     }
 
-    /**
-     * @return void
-     */
-    public function testConstructor()
+    public function testConstructor(): void
     {
         $this->assertInstanceOf(FormSidebarWidget::class, $this->obj);
     }

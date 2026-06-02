@@ -10,9 +10,14 @@ use Charcoal\Config\DelegatesAwareInterface;
 
 /**
  * Test DelegatesAwareTrait implementation in AbstractConfig
- *
- * @coversDefaultClass \Charcoal\Config\AbstractConfig
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\Charcoal\Config\AbstractConfig::class)]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Config\AbstractConfig::class, '__construct()')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Config\AbstractConfig::class, 'setDelegates()')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Config\AbstractConfig::class, 'addDelegate()')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Config\AbstractConfig::class, 'prependDelegate()')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Config\AbstractConfig::class, 'offsetExists()')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Config\AbstractConfig::class, 'offsetGet()')]
 class ConfigDelegatesAwareTest extends AbstractConfigTestCase
 {
     /**
@@ -27,8 +32,6 @@ class ConfigDelegatesAwareTest extends AbstractConfigTestCase
 
     /**
      * Create a concrete MacroConfig instance.
-     *
-     * @return void
      */
     protected function setUp(): void
     {
@@ -62,11 +65,9 @@ class ConfigDelegatesAwareTest extends AbstractConfigTestCase
 
     /**
      * Asserts that the object implements DelegatesAwareInterface.
-     *
-     * @coversNothing
-     * @return void
      */
-    public function testDelegatesAwareInterface()
+    #[\PHPUnit\Framework\Attributes\CoversNothing]
+    public function testDelegatesAwareInterface(): void
     {
         $this->assertInstanceOf(DelegatesAwareInterface::class, $this->cfg);
     }
@@ -75,15 +76,7 @@ class ConfigDelegatesAwareTest extends AbstractConfigTestCase
 
     // Test Delegate Collecting
     // =========================================================================
-
-    /**
-     * @covers ::__construct()
-     * @covers ::setDelegates()
-     * @covers ::addDelegate()
-     * @covers ::prependDelegate()
-     * @return void
-     */
-    public function testSetDelegates()
+    public function testSetDelegates(): void
     {
         $cfg = $this->createConfig(null, [ $this->delegates[0] ]);
         $this->assertEquals(0, $cfg['bop']);
@@ -99,100 +92,83 @@ class ConfigDelegatesAwareTest extends AbstractConfigTestCase
 
     // Test ArrayAccess on delegated properties
     // =========================================================================
-
     /**
      * Asserts that the delegate container returns TRUE if a data key is found
      * {@see DelegatesAwareTrait::hasInDelegates() among its delegates}.
-     *
-     * @covers ::offsetExists()
-     * @return void
      */
-    public function testOffsetExistsInDelegates()
+    public function testOffsetExistsInDelegates(): void
     {
         $cfg = $this->cfg;
 
-        $this->assertObjectNotHasAttribute('bar', $cfg);
-        $this->assertObjectHasAttribute('bar', $this->delegates[1]);
+        $this->assertFalse(property_exists($cfg, 'bar'));
+        $this->assertTrue(property_exists($this->delegates[1], 'bar'));
         $this->assertTrue(isset($cfg['bar']));
     }
 
     /**
      * Asserts that the delegate container returns FALSE if a data key is nonexistent
      * {@see DelegatesAwareTrait::hasInDelegates() among its delegates}.
-     *
-     * @covers ::offsetExists()
-     * @return void
      */
-    public function testOffsetExistsReturnsFalseOnNonexistentKeyInDelegates()
+    public function testOffsetExistsReturnsFalseOnNonexistentKeyInDelegates(): void
     {
         $cfg = $this->cfg;
 
-        $this->assertObjectNotHasAttribute('zyx', $cfg);
+        $this->assertFalse(property_exists($cfg, 'zyx'));
         $this->assertFalse(isset($cfg['zyx']));
     }
 
     /**
      * Asserts that the delegate container returns the value of a data key found
      * {@see DelegatesAwareTrait::getInDelegates() among its delegates}.
-     *
-     * @covers ::offsetGet()
-     * @return void
      */
-    public function testOffsetGetInDelegates()
+    public function testOffsetGetInDelegates(): void
     {
         $cfg = $this->cfg;
 
-        $this->assertObjectNotHasAttribute('qux', $cfg);
-        $this->assertObjectHasAttribute('qux', $this->delegates[2]);
+        $this->assertFalse(property_exists($cfg, 'qux'));
+        $this->assertTrue(property_exists($this->delegates[2], 'qux'));
         $this->assertEquals($this->delegates[2]['qux'], $cfg['qux']);
     }
 
     /**
      * Asserts that the delegate container returns NULL if a data key is nonexistent
      * {@see DelegatesAwareTrait::getInDelegates() among its delegates}.
-     *
-     * @covers ::offsetExists()
-     * @return void
      */
-    public function testOffsetGetReturnsNullOnNonexistentKeyInDelegates()
+    public function testOffsetGetReturnsNullOnNonexistentKeyInDelegates(): void
     {
         $cfg = $this->cfg;
 
-        $this->assertObjectNotHasAttribute('xyz', $cfg);
+        $this->assertFalse(property_exists($cfg, 'xyz'));
         $this->assertNull($cfg['xyz']);
     }
 
     /**
      * Asserts that attributes in delegates cannot be mutated by the delegate container.
-     *
-     * @coversNothing
-     * @return void
      */
-    public function testOffsetSetDoesNotPerformMutationsInDelegates()
+    #[\PHPUnit\Framework\Attributes\CoversNothing]
+    public function testOffsetSetDoesNotPerformMutationsInDelegates(): void
     {
         $cfg = $this->cfg;
 
-        $this->assertObjectNotHasAttribute('qux', $cfg);
-        $this->assertObjectHasAttribute('qux', $this->delegates[2]);
+        $this->assertFalse(property_exists($cfg, 'qux'));
+        $this->assertTrue(property_exists($this->delegates[2], 'qux'));
 
         $cfg['qux'] = 'garply';
-        $this->assertObjectHasAttribute('qux', $cfg);
+        $this->assertTrue(property_exists($cfg, 'qux'));
         $this->assertEquals('garply', $cfg['qux']);
         $this->assertEquals('xyzzy', $this->delegates[2]['qux']);
     }
 
     /**
      * Asserts that attributes in delegates cannot be removed by the delegate container.
-     *
-     * @coversNothing
-     * @return void
      */
-    public function testOffsetUnsetDoesNotPerformMutationsInDelegates()
+    #[\PHPUnit\Framework\Attributes\CoversNothing]
+    public function testOffsetUnsetDoesNotPerformMutationsInDelegates(): void
     {
         $cfg = $this->cfg;
 
-        $this->assertObjectNotHasAttribute('qux', $cfg);
-        $this->assertObjectHasAttribute('qux', $this->delegates[2]);
+        $this->assertFalse(property_exists($cfg, 'qux'));
+        $this->assertTrue(property_exists($this->delegates[2], 'qux'));
 
         unset($cfg['qux']);
         $this->assertEquals($this->delegates[2]['qux'], $cfg['qux']);
@@ -201,15 +177,13 @@ class ConfigDelegatesAwareTest extends AbstractConfigTestCase
     /**
      * Asserts that removing a value from the delegate container allows subsequent requests
      * to lookup a fallback in a delegate.
-     *
-     * @coversNothing
-     * @return void
      */
-    public function testOffsetUnsetOnConfigWithFallbackInDelegates()
+    #[\PHPUnit\Framework\Attributes\CoversNothing]
+    public function testOffsetUnsetOnConfigWithFallbackInDelegates(): void
     {
         $cfg = $this->cfg;
 
-        $this->assertObjectHasAttribute('hud', $cfg);
+        $this->assertTrue(property_exists($cfg, 'hud'));
         $this->assertEquals('flob', $cfg['hud']);
 
         unset($cfg['hud']);

@@ -33,20 +33,16 @@ trait FeedbackContainerTrait
 
     /**
      * Determine if there's feedback.
-     *
-     * @return boolean
      */
-    public function hasFeedbacks()
+    public function hasFeedbacks(): bool
     {
         return ($this->numFeedbacks() > 0);
     }
 
     /**
      * Count feedback.
-     *
-     * @return integer
      */
-    public function numFeedbacks()
+    public function numFeedbacks(): int
     {
         return count($this->feedbacks());
     }
@@ -95,7 +91,7 @@ trait FeedbackContainerTrait
             $entry = $level;
         } elseif (is_string($level) && is_array($message)) {
             $entry = $message;
-            $entry['level'] = (string)$level;
+            $entry['level'] = $level;
         } else {
             $entry = [
                 'level'   => (string)$level,
@@ -184,7 +180,7 @@ trait FeedbackContainerTrait
      *
      * @return string[]
      */
-    public function getSupportedValidatorLevelsForFeedback()
+    public function getSupportedValidatorLevelsForFeedback(): array
     {
         return [
             ValidatorInterface::ERROR,
@@ -229,7 +225,7 @@ trait FeedbackContainerTrait
      * @throws InvalidArgumentException If the feedback entry is invalid.
      * @return array A parsed feedback entry.
      */
-    protected function parseFeedbackEntry(array $entry)
+    protected function parseFeedbackEntry(array $entry): array
     {
         $entry['message'] = (string)$entry['message'];
 
@@ -247,7 +243,7 @@ trait FeedbackContainerTrait
      *
      * @return string A unique feedback entry ID.
      */
-    protected function generateFeedbackEntryId()
+    protected function generateFeedbackEntryId(): string
     {
         return uniqid();
     }
@@ -258,7 +254,7 @@ trait FeedbackContainerTrait
      * @param  string $level The feedback level.
      * @return boolean Whether the level is dismissable (TRUE) or not (FALSE).
      */
-    protected function isFeedbackDismissable($level)
+    protected function isFeedbackDismissable($level): bool
     {
         return in_array($level, [ 'log', 'debug', 'info', 'notice' ]);
     }
@@ -271,25 +267,13 @@ trait FeedbackContainerTrait
      */
     protected function resolveFeedbackType($level)
     {
-        switch ($level) {
-            case 'emergency':
-            case 'alert':
-            case 'critical':
-            case 'error':
-                return 'danger';
-
-            case 'debug':
-                return 'warning';
-
-            case 'notice':
-            case 'log':
-                return 'info';
-
-            case 'done':
-                return 'success';
-        }
-
-        return $level;
+        return match ($level) {
+            'emergency', 'alert', 'critical', 'error' => 'danger',
+            'debug' => 'warning',
+            'notice', 'log' => 'info',
+            'done' => 'success',
+            default => $level,
+        };
     }
 
     /**
@@ -300,24 +284,12 @@ trait FeedbackContainerTrait
      */
     protected function resolveFeedbackLevel($level)
     {
-        switch ($level) {
-            case 'emergency':
-            case 'alert':
-            case 'critical':
-            case 'danger':
-                return 'error';
-
-            case 'debug':
-                return 'warning';
-
-            case 'notice':
-            case 'log':
-                return 'info';
-
-            case 'done':
-                return 'success';
-        }
-
-        return $level;
+        return match ($level) {
+            'emergency', 'alert', 'critical', 'danger' => 'error',
+            'debug' => 'warning',
+            'notice', 'log' => 'info',
+            'done' => 'success',
+            default => $level,
+        };
     }
 }

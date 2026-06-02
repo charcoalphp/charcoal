@@ -24,15 +24,10 @@ class UpdateScript extends AdminScript
      */
     private $basePath;
 
-    /**
-     * @var \GuzzleHttp\Client
-     */
-    private $guzzleClient;
+    private ?\GuzzleHttp\Client $guzzleClient = null;
 
-    /**
-     * @return array
-     */
-    public function defaultArguments()
+    #[\Override]
+    public function defaultArguments(): array
     {
         $arguments = [
             'url' => [
@@ -46,17 +41,14 @@ class UpdateScript extends AdminScript
                 'noValue'      => true
             ],
         ];
-
-        $arguments = array_merge(parent::defaultArguments(), $arguments);
-        return $arguments;
+        return array_merge(parent::defaultArguments(), $arguments);
     }
 
     /**
      * @param RequestInterface  $request  PSR-7 Request.
      * @param ResponseInterface $response PSR-7 Response.
-     * @return ResponseInterface
      */
-    public function run(RequestInterface $request, ResponseInterface $response)
+    public function run(RequestInterface $request, ResponseInterface $response): ResponseInterface
     {
         unset($request);
         $this->guzzleClient = new GuzzleClient();
@@ -96,6 +88,7 @@ class UpdateScript extends AdminScript
      * @param Container $container Pimple DI Container.
      * @return void
      */
+    #[\Override]
     protected function setDependencies(Container $container)
     {
         parent::setDependencies($container);
@@ -106,9 +99,8 @@ class UpdateScript extends AdminScript
     /**
      * @param string $url       The URL to cache. The base (start) URL will be prefixed to relative URLs.
      * @param string $outputDir The output directory.
-     * @return void
      */
-    private function cacheUrl($url, $outputDir)
+    private function cacheUrl(string $url, string $outputDir): void
     {
         $relativeUrl = str_replace($this->baseUrl(), '', $url);
         $url = $this->baseUrl() . $relativeUrl;
@@ -130,7 +122,7 @@ class UpdateScript extends AdminScript
             return;
         }
 
-        if (strstr($headers['Content-Type'][0], 'text/html') !== false) {
+        if (str_contains($headers['Content-Type'][0], 'text/html')) {
             $outputFile = $outputDir . '/index.html';
             $prefix = '';
         } else {
@@ -154,7 +146,7 @@ class UpdateScript extends AdminScript
      * @param integer $flags   Glob flags.
      * @return array
      */
-    private function globRecursive($dir, $pattern, $flags = 0)
+    private function globRecursive(string $dir, string $pattern, $flags = 0): array|false
     {
         $files = glob($dir . '/' . $pattern, $flags);
         foreach (glob($dir . '/*', (GLOB_ONLYDIR | GLOB_NOSORT)) as $dir) {

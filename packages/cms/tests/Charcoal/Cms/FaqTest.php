@@ -17,15 +17,11 @@ class FaqTest extends AbstractTestCase
 
     /**
      * Tested Class.
-     *
-     * @var Faq
      */
-    private $obj;
+    private \Charcoal\Cms\Faq $obj;
 
     /**
      * Set up the test.
-     *
-     * @return void
      */
     protected function setUp(): void
     {
@@ -34,10 +30,7 @@ class FaqTest extends AbstractTestCase
         $this->obj = new Faq($dependencies);
     }
 
-    /**
-     * @return void
-     */
-    public function testSetData()
+    public function testSetData(): void
     {
         $ret = $this->obj->setData([
             'question' => 'Foo?',
@@ -48,30 +41,21 @@ class FaqTest extends AbstractTestCase
         $this->assertEquals('Bar', (string)$this->obj->answer());
     }
 
-    /**
-     * @return void
-     */
-    public function testSetQuestion()
+    public function testSetQuestion(): void
     {
         $ret = $this->obj->setQuestion('Foo?');
         $this->assertSame($ret, $this->obj);
         $this->assertEquals('Foo?', $this->obj->question());
     }
 
-    /**
-     * @return void
-     */
-    public function testSetAnswer()
+    public function testSetAnswer(): void
     {
         $ret = $this->obj->setAnswer('Bar');
         $this->assertSame($ret, $this->obj);
         $this->assertEquals('Bar', $this->obj->answer());
     }
 
-    /**
-     * @return void
-     */
-    public function testCategoryType()
+    public function testCategoryType(): void
     {
         $this->assertEquals(FaqCategory::class, $this->obj->categoryType());
     }

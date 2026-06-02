@@ -13,10 +13,8 @@ class ModelMetadata extends AbstractMetadata
 {
     /**
      * The metadata identifier.
-     *
-     * @var string
      */
-    private $ident;
+    private ?string $ident = null;
 
     /**
      * The model's sources.
@@ -27,26 +25,23 @@ class ModelMetadata extends AbstractMetadata
 
     /**
      * The model's default source.
-     *
-     * @var string
      */
-    private $defaultSource;
+    private ?string $defaultSource = null;
 
     /**
      * Set the metadata identifier.
      *
      * @param  string $ident The metadata identifier.
      * @throws InvalidArgumentException If identifier is not a string.
-     * @return self
      */
-    public function setIdent($ident)
+    public function setIdent($ident): static
     {
         if (!is_string($ident)) {
             throw new InvalidArgumentException(
                 sprintf(
                     '[%s] Identifier must be a string; received %s',
-                    get_called_class(),
-                    (is_object($ident) ? get_class($ident) : gettype($ident))
+                    static::class,
+                    (get_debug_type($ident))
                 )
             );
         }
@@ -61,16 +56,15 @@ class ModelMetadata extends AbstractMetadata
      *
      * @return string
      */
-    public function ident()
+    public function ident(): ?string
     {
         return $this->ident;
     }
 
     /**
      * @param array $sources The available sources for this model.
-     * @return self
      */
-    public function setSources(array $sources)
+    public function setSources(array $sources): static
     {
         foreach ($sources as $sourceIdent => $source) {
             $this->addSource($sourceIdent, $source);
@@ -89,9 +83,8 @@ class ModelMetadata extends AbstractMetadata
     /**
      * @param string $sourceIdent The source identifier.
      * @param mixed  $source      The source data.
-     * @return self
      */
-    public function addSource($sourceIdent, $source)
+    public function addSource($sourceIdent, $source): static
     {
         $this->sources[$sourceIdent] = $source;
         return $this;
@@ -113,9 +106,8 @@ class ModelMetadata extends AbstractMetadata
     /**
      * @param string $defaultSource The default source identifier.
      * @throws InvalidArgumentException If the argument is not a string.
-     * @return self
      */
-    public function setDefaultSource($defaultSource)
+    public function setDefaultSource($defaultSource): static
     {
         if (!is_string($defaultSource)) {
             throw new InvalidArgumentException(
@@ -129,7 +121,7 @@ class ModelMetadata extends AbstractMetadata
     /**
      * @return string
      */
-    public function defaultSource()
+    public function defaultSource(): ?string
     {
         return $this->defaultSource;
     }

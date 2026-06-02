@@ -12,18 +12,15 @@ class AudioInput extends FileInput
 {
     /**
      * Retrieve list of default file type specifiers.
-     *
-     * @return string
      */
-    public function getDefaultAccept()
+    #[\Override]
+    public function getDefaultAccept(): string
     {
         return 'audio/*';
     }
 
-    /**
-     * @return string|null
-     */
-    public function filePreview()
+    #[\Override]
+    public function filePreview(): string
     {
         $value = $this->inputVal();
         if ($value) {

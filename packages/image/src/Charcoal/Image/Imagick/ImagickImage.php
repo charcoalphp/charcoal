@@ -12,10 +12,7 @@ use Charcoal\Image\AbstractImage;
  */
 class ImagickImage extends AbstractImage
 {
-    /**
-     * @var Imagick $imagick
-     */
-    private $imagick;
+    private readonly \Imagick $imagick;
 
     /**
      * @throws Exception If imagick driver can not be loaded.
@@ -30,18 +27,12 @@ class ImagickImage extends AbstractImage
         $this->imagick = new Imagick();
     }
 
-    /**
-     * @return string
-     */
-    public function driverType()
+    public function driverType(): string
     {
         return 'imagick';
     }
 
-    /**
-     * @return Imagick
-     */
-    public function imagick()
+    public function imagick(): \Imagick
     {
         return $this->imagick;
     }
@@ -53,9 +44,8 @@ class ImagickImage extends AbstractImage
      * @param integer $height Image height, in pixels.
      * @param string  $color  Default to transparent.
      * @throws InvalidArgumentException If the size arguments are not valid, positive integers.
-     * @return self
      */
-    public function create($width, $height, $color = 'rgb(100%, 100%, 100%, 0)')
+    public function create($width, $height, $color = 'rgb(100%, 100%, 100%, 0)'): static
     {
         if (!is_numeric($width) || $width < 1) {
             throw new InvalidArgumentException(
@@ -76,9 +66,8 @@ class ImagickImage extends AbstractImage
      *
      * @param string $source The source path / filename.
      * @throws InvalidArgumentException If the source argument is not a string.
-     * @return self
      */
-    public function open($source = null)
+    public function open($source = null): static
     {
         if ($source !== null && !is_string($source)) {
             throw new InvalidArgumentException(
@@ -86,7 +75,7 @@ class ImagickImage extends AbstractImage
             );
         }
 
-        $source = ($source) ? $source : $this->source();
+        $source = $source ?: $this->source();
         if (parse_url($source, PHP_URL_HOST)) {
             $handle = fopen($source, 'rb');
             $this->imagick()->readImageFile($handle);
@@ -103,9 +92,8 @@ class ImagickImage extends AbstractImage
      *
      * @param string $target The target path / filename.
      * @throws InvalidArgumentException If the target argument is not a string.
-     * @return self
      */
-    public function save($target = null)
+    public function save($target = null): static
     {
         if ($target !== null && !is_string($target)) {
             throw new InvalidArgumentException(
@@ -113,7 +101,7 @@ class ImagickImage extends AbstractImage
             );
         }
 
-        $target  = ($target) ? $target : $this->target();
+        $target  = $target ?: $this->target();
         $fileExt = pathinfo($target, PATHINFO_EXTENSION);
 
         $this->imagick()->setImageFormat($fileExt);
@@ -124,20 +112,16 @@ class ImagickImage extends AbstractImage
 
     /**
      * Get the image's width, in pixels
-     *
-     * @return integer
      */
-    public function width()
+    public function width(): int
     {
         return $this->imagick()->getImageWidth();
     }
 
     /**
      * Get the image's height, in pixels
-     *
-     * @return integer
      */
-    public function height()
+    public function height(): int
     {
         return $this->imagick()->getImageHeight();
     }
@@ -147,9 +131,8 @@ class ImagickImage extends AbstractImage
      *
      * @param string $channel The standard "channel" string.
      * @throws InvalidArgumentException If the channel argument is not a valid channel.
-     * @return integer
      */
-    public function imagickChannel($channel)
+    public function imagickChannel($channel): int
     {
         $channelMap = [
             // RGB
@@ -180,9 +163,8 @@ class ImagickImage extends AbstractImage
      *
      * @param string $gravity The standard gravity name.
      * @throws InvalidArgumentException If the gravity argument is not a valid gravity type.
-     * @return integer
      */
-    public function imagickGravity($gravity)
+    public function imagickGravity($gravity): int
     {
         $gravityMap = [
             'center'    => Imagick::GRAVITY_CENTER,

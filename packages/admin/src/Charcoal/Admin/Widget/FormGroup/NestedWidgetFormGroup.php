@@ -64,17 +64,13 @@ class NestedWidgetFormGroup extends AbstractFormGroup implements
 
     /**
      * Store the widget factory instance for the current class.
-     *
-     * @var FactoryInterface
      */
-    private $widgetFactory;
+    private ?\Charcoal\Factory\FactoryInterface $widgetFactory = null;
 
     /**
      * Whether notes shoudl be display before or after the form fields.
-     *
-     * @var boolean
      */
-    private $showNotesAbove = false;
+    private bool $showNotesAbove = false;
 
     /**
      * Retrieve the widget's ID.
@@ -92,10 +88,8 @@ class NestedWidgetFormGroup extends AbstractFormGroup implements
 
     /**
      * Retrieve the current form group
-     *
-     * @return self
      */
-    public function currentFromGroup()
+    public function currentFromGroup(): static
     {
         return $this;
     }
@@ -104,9 +98,8 @@ class NestedWidgetFormGroup extends AbstractFormGroup implements
      * Set the widget's ID.
      *
      * @param  string $widgetId The widget identifier.
-     * @return self
      */
-    public function setWidgetId($widgetId)
+    public function setWidgetId($widgetId): static
     {
         $this->widgetId = $widgetId;
 
@@ -116,7 +109,8 @@ class NestedWidgetFormGroup extends AbstractFormGroup implements
     /**
      * @return Translation|string|null
      */
-    public function description()
+    #[\Override]
+    public function description(): string
     {
         return $this->renderTemplate((string)parent::description());
     }
@@ -124,7 +118,8 @@ class NestedWidgetFormGroup extends AbstractFormGroup implements
     /**
      * @return Translation|string|null
      */
-    public function notes()
+    #[\Override]
+    public function notes(): string
     {
         return $this->renderTemplate((string)parent::notes());
     }
@@ -135,6 +130,7 @@ class NestedWidgetFormGroup extends AbstractFormGroup implements
      * @param  boolean|string $show Whether to show or hide notes.
      * @return FormGroupWidget Chainable
      */
+    #[\Override]
     public function setShowNotes($show)
     {
         $this->showNotesAbove = ($show === 'above');
@@ -142,10 +138,7 @@ class NestedWidgetFormGroup extends AbstractFormGroup implements
         return parent::setShowNotes($show);
     }
 
-    /**
-     * @return boolean
-     */
-    public function showNotesAbove()
+    public function showNotesAbove(): bool
     {
         return $this->showNotesAbove && $this->showNotes();
     }
@@ -154,6 +147,7 @@ class NestedWidgetFormGroup extends AbstractFormGroup implements
      * @param  Container $container The DI container.
      * @return void
      */
+    #[\Override]
     protected function setDependencies(Container $container)
     {
         parent::setDependencies($container);
@@ -168,9 +162,8 @@ class NestedWidgetFormGroup extends AbstractFormGroup implements
      * Set the widget factory.
      *
      * @param FactoryInterface $factory The factory to create widgets.
-     * @return self
      */
-    protected function setWidgetFactory(FactoryInterface $factory)
+    protected function setWidgetFactory(FactoryInterface $factory): static
     {
         $this->widgetFactory = $factory;
 
@@ -181,14 +174,13 @@ class NestedWidgetFormGroup extends AbstractFormGroup implements
      * Retrieve the widget factory.
      *
      * @throws RuntimeException If the widget factory was not previously set.
-     * @return FactoryInterface
      */
-    protected function widgetFactory()
+    protected function widgetFactory(): \Charcoal\Factory\FactoryInterface
     {
-        if ($this->widgetFactory === null) {
+        if (!$this->widgetFactory instanceof \Charcoal\Factory\FactoryInterface) {
             throw new RuntimeException(sprintf(
                 'Widget Factory is not defined for "%s"',
-                get_class($this)
+                static::class
             ));
         }
 

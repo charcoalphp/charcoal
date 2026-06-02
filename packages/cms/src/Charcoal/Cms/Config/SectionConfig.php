@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Charcoal\Cms\Config;
 
 // From 'charcoal-config'
@@ -32,9 +34,8 @@ class SectionConfig extends AbstractConfig
      * Used in section loader to retrieve sections
      * relative to this specific section. (usually: home)
      * @param mixed $baseSection Base section ID.
-     * @return SectionConfig
      */
-    public function setBaseSection($baseSection)
+    public function setBaseSection($baseSection): static
     {
         $this->baseSection = $baseSection;
 
@@ -45,9 +46,8 @@ class SectionConfig extends AbstractConfig
      * Set the available section types
      *
      * @param  mixed $sectionTypes Section types.
-     * @return SectionConfig
      */
-    public function setSectionTypes($sectionTypes)
+    public function setSectionTypes($sectionTypes): static
     {
         $this->sectionTypes = $sectionTypes;
         return $this;
@@ -55,9 +55,8 @@ class SectionConfig extends AbstractConfig
 
     /**
      * @param string $objType Section object type.
-     * @return SectionConfig
      */
-    public function setObjType($objType)
+    public function setObjType($objType): static
     {
         $this->objType = $objType;
 

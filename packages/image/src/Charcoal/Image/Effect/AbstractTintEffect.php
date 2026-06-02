@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Charcoal\Image\Effect;
 
 use InvalidArgumentException;
@@ -10,18 +12,12 @@ use Charcoal\Image\AbstractEffect;
  */
 abstract class AbstractTintEffect extends AbstractEffect
 {
-    /**
-     * @var string $color
-     */
-    private $color = 'rgb(0,0,0)';
+    private string $color = 'rgb(0,0,0)';
     /**
      * @var float $opacity;
      */
-    private $opacity = 0.5;
-    /**
-     * @var boolean $midtone
-     */
-    private $midtone = true;
+    private float $opacity = 0.5;
+    private bool $midtone = true;
 
     /**
      * @param string $color The tint color value.
@@ -77,7 +73,7 @@ abstract class AbstractTintEffect extends AbstractEffect
      */
     public function setMidtone($midtone)
     {
-        $this->midtone = !!$midtone;
+        $this->midtone = (bool)$midtone;
         return $this;
     }
 

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Charcoal\Image\Imagemagick\Effect;
 
 use Exception;
@@ -13,9 +15,8 @@ class ImagemagickMaskEffect extends AbstractMaskEffect
     /**
      * @param array $data The effect data, if available.
      * @throws Exception This effect is not yet supported by Imagemagick driver.
-     * @return void
      */
-    public function process(array $data = null)
+    public function process(?array $data = null): void
     {
         if ($data !== null) {
             $this->setData($data);

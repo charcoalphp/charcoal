@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Charcoal\Tests\View\Twig;
 
 use LogicException;
@@ -25,30 +27,14 @@ use Charcoal\View\Twig\TwigLoader;
  */
 class DebugHelpersTest extends AbstractTestCase
 {
-    /**
-     * @var AppConfig
-     */
-    private $config;
-
-    /**
-     * @var TwigEngine
-     */
-    private $twig;
-
-    /**
-     * @return void
-     */
     public function setUp(): void
     {
-        $this->config = [];
-        $this->twig   = $this->createTwigEngine($this->config);
     }
 
     /**
      * @param  AppConfig|null $config The app config for the debug helpers.
-     * @return TwigEnvironment
      */
-    public function createTwigEngine($config = null)
+    public function createTwigEngine($config = null): \Twig\Environment
     {
         $loader = new TwigLoader([
             'base_path' => __DIR__,

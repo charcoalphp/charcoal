@@ -21,20 +21,16 @@ class DatabasePaginationTest extends AbstractTestCase
 
     /**
      * Create expression for testing.
-     *
-     * @return DatabasePagination
      */
-    final protected function createExpression()
+    final protected function createExpression(): \Charcoal\Source\Database\DatabasePagination
     {
         return new DatabasePagination();
     }
 
     /**
      * Test influence of "active" property on SQL compilation.
-     *
-     * @return void
      */
-    public function testInactiveExpression()
+    public function testInactiveExpression(): void
     {
         $obj = $this->createExpression();
         $obj->setNumPerPage(10);
@@ -48,10 +44,8 @@ class DatabasePaginationTest extends AbstractTestCase
 
     /**
      * Test "page" property without "num_per_page".
-     *
-     * @return void
      */
-    public function testSqlOffsetWithoutLimit()
+    public function testSqlOffsetWithoutLimit(): void
     {
         $obj = $this->createExpression();
 
@@ -64,10 +58,8 @@ class DatabasePaginationTest extends AbstractTestCase
 
     /**
      * Test "page" property with "num_per_page".
-     *
-     * @return void
      */
-    public function testSqlOffsetWithLimit()
+    public function testSqlOffsetWithLimit(): void
     {
         $obj = $this->createExpression();
 
@@ -83,10 +75,8 @@ class DatabasePaginationTest extends AbstractTestCase
 
     /**
      * Test "num_per_page" property without "page".
-     *
-     * @return void
      */
-    public function testSqlLimitWithoutOffset()
+    public function testSqlLimitWithoutOffset(): void
     {
         $obj = $this->createExpression();
 
@@ -99,10 +89,8 @@ class DatabasePaginationTest extends AbstractTestCase
 
     /**
      * Test helper methods.
-     *
-     * @return void
      */
-    public function testUtilities()
+    public function testUtilities(): void
     {
         $obj = $this->createExpression();
 

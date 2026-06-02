@@ -29,10 +29,9 @@ abstract class AbstractNotificationScript extends AdminScript implements CronScr
 {
     use CronScriptTrait;
 
-    /**
-     * @var FactoryInterface
-     */
-    private $notificationFactory;
+    public $revisionFactory;
+
+    private ?\Charcoal\Factory\FactoryInterface $notificationFactory = null;
 
     /**
      * @var FactoryInterface
@@ -52,6 +51,7 @@ abstract class AbstractNotificationScript extends AdminScript implements CronScr
     /**
      * @return array
      */
+    #[\Override]
     public function defaultArguments()
     {
         $arguments = [
@@ -62,9 +62,7 @@ abstract class AbstractNotificationScript extends AdminScript implements CronScr
                 'defaultValue'  => 'now'
             ]
         ];
-
-        $arguments = array_merge(parent::defaultArguments(), $arguments);
-        return $arguments;
+        return array_merge(parent::defaultArguments(), $arguments);
     }
 
     /**
@@ -78,7 +76,7 @@ abstract class AbstractNotificationScript extends AdminScript implements CronScr
 
         $this->startLock();
 
-        $climate = $this->climate();
+        $this->climate();
 
         $frequency = $this->frequency();
 
@@ -101,6 +99,7 @@ abstract class AbstractNotificationScript extends AdminScript implements CronScr
      * @param Container $container Pimple DI container.
      * @return void
      */
+    #[\Override]
     protected function setDependencies(Container $container)
     {
         parent::setDependencies($container);
@@ -141,7 +140,7 @@ abstract class AbstractNotificationScript extends AdminScript implements CronScr
      * @param string $frequency The frequency type to load.
      * @return Charcoal\Model\CollectionInterface
      */
-    private function loadNotifications($frequency)
+    private function loadNotifications($frequency): \ArrayAccess|array
     {
         $loader = new CollectionLoader([
             'logger' => $this->logger,
@@ -152,35 +151,33 @@ abstract class AbstractNotificationScript extends AdminScript implements CronScr
             'property'  => 'frequency',
             'val'     => $frequency
         ]);
-        $notifications = $loader->load();
-        return $notifications;
+        return $loader->load();
     }
 
     /**
      * Handle a notification request
      *
      * @param Notification $notification The notification object to handle.
-     * @return void
      */
-    private function handleNotification(Notification $notification)
+    private function handleNotification(Notification $notification): void
     {
-        if (empty($notification->targetTypes())) {
+        if (in_array($notification->targetTypes(), [null, []], true)) {
             return;
         }
         $objectsByTypes = [];
         $numTotal = 0;
         foreach ($notification->targetTypes() as $objType) {
-            $objType = trim($objType);
+            $objType = trim((string)$objType);
             $objects = $this->updatedObjects($objType);
             $num = count($objects);
-            if ($num == 0) {
+            if ($num === 0) {
                 continue;
             }
             $obj = [];
             $obj['objects'] = $objects;
             $obj['num'] = $num;
             $obj['type'] = $objType;
-            $obj['typeLabel'] = isset($objects[0]['targetTypeLabel']) ? $objects[0]['targetTypeLabel'] : $objType;
+            $obj['typeLabel'] = ($objects[0]['targetTypeLabel'] ?? $objType);
 
             $objectsByTypes[$objType] = $obj;
             $numTotal += $num;
@@ -192,11 +189,10 @@ abstract class AbstractNotificationScript extends AdminScript implements CronScr
      * @param Notification $notification The notification object.
      * @param array        $objects      The objects that were modified.
      * @param integer      $numTotal     Total number of modified objects.
-     * @return void
      */
-    private function sendEmail(Notification $notification, array $objects, $numTotal)
+    private function sendEmail(Notification $notification, array $objects, int $numTotal): void
     {
-        if ($numTotal == 0) {
+        if ($numTotal === 0) {
             return;
         }
 
@@ -237,7 +233,7 @@ abstract class AbstractNotificationScript extends AdminScript implements CronScr
      * @param string $objType The object (target) type to process.
      * @return CollectionInterface
      */
-    private function updatedObjects($objType)
+    private function updatedObjects(string $objType): \ArrayAccess|array
     {
         $loader = new CollectionLoader([
             'logger'   => $this->logger,
@@ -266,7 +262,7 @@ abstract class AbstractNotificationScript extends AdminScript implements CronScr
         $userFactory = $this->userFactory;
         $baseUrl = $this->baseUrl();
 
-        $loader->setCallback(function (&$obj) use ($objFactory, $userFactory, $baseUrl) {
+        $loader->setCallback(function (array &$obj) use ($objFactory, $userFactory, $baseUrl): void {
             $diff = $obj->dataDiff();
             $obj->updatedProperties = isset($diff[0]) ? array_keys($diff[0]) : [];
             $obj->dateStr = $obj['rev_ts']->format('Y-m-d H:i:s');
@@ -296,9 +292,8 @@ abstract class AbstractNotificationScript extends AdminScript implements CronScr
 
     /**
      * @param FactoryInterface $factory The factory used to create queue items.
-     * @return void
      */
-    private function setNotificationFactory(FactoryInterface $factory)
+    private function setNotificationFactory(FactoryInterface $factory): void
     {
         $this->notificationFactory = $factory;
     }
@@ -306,16 +301,15 @@ abstract class AbstractNotificationScript extends AdminScript implements CronScr
     /**
      * @return FactoryInterface
      */
-    private function notificationFactory()
+    private function notificationFactory(): ?\Charcoal\Factory\FactoryInterface
     {
         return $this->notificationFactory;
     }
 
     /**
      * @param FactoryInterface $factory The factory used to create queue items.
-     * @return void
      */
-    private function setRevisionFactory(FactoryInterface $factory)
+    private function setRevisionFactory(FactoryInterface $factory): void
     {
         $this->revisionFactory = $factory;
     }

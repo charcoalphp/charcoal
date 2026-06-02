@@ -34,13 +34,9 @@ trait ConditionalizableTrait
     public function resolvedCondition()
     {
         if (!isset($this->resolvedCondition)) {
-            if (!isset($this->condition)) {
-                $this->resolvedCondition = true;
-            } else {
-                $this->resolvedCondition = $this->parseConditionalLogic(
-                    $this->condition()
-                );
-            }
+            $this->resolvedCondition = isset($this->condition) ? $this->parseConditionalLogic(
+                $this->condition()
+            ) : true;
         }
 
         return $this->resolvedCondition;
@@ -98,7 +94,7 @@ trait ConditionalizableTrait
 
         $result = $this->resolveConditionalLogic($condition);
 
-        return (($not === true) ? !$result : $result);
+        return (($not) ? !$result : $result);
     }
 
     /**
@@ -107,38 +103,37 @@ trait ConditionalizableTrait
      * @todo Simplify logic by moving `form()` method lookup to relevant form widget.
      *
      * @param  callable|string $condition The callable or renderable condition.
-     * @return boolean
      */
-    protected function resolveConditionalLogic($condition)
+    protected function resolveConditionalLogic($condition): bool
     {
         if (is_callable([ $this, $condition ])) {
-            return !!$this->{$condition}();
+            return (bool)$this->{$condition}();
         }
 
         if (is_callable($condition)) {
-            return !!$condition();
+            return (bool)$condition();
         }
 
         if (is_callable([ $this, 'form' ])) {
             $form = $this->form();
 
             if (is_callable([ $form, $condition ])) {
-                return !!$form->{$condition}();
+                return (bool)$form->{$condition}();
             }
 
             if (is_callable([ $form, 'obj' ])) {
                 $obj = $form->obj();
 
                 if (is_callable([ $obj, $condition ])) {
-                    return !!$obj->{$condition}();
+                    return (bool)$obj->{$condition}();
                 }
 
                 if (($obj instanceof ViewableInterface) && ($obj->view() instanceof ViewInterface)) {
-                    return !!$obj->renderTemplate($condition);
+                    return (bool)$obj->renderTemplate($condition);
                 }
             }
         }
 
-        return !!$condition;
+        return (bool)$condition;
     }
 }

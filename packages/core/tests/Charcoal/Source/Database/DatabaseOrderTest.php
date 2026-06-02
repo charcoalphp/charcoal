@@ -23,10 +23,8 @@ class DatabaseOrderTest extends AbstractTestCase
 
     /**
      * Create expression for testing.
-     *
-     * @return DatabaseOrder
      */
-    final protected function createExpression()
+    final protected function createExpression(): \Charcoal\Source\Database\DatabaseOrder
     {
         return new DatabaseOrder();
     }
@@ -35,10 +33,8 @@ class DatabaseOrderTest extends AbstractTestCase
      * Test default table name for default data values.
      *
      * @see \Charcoal\Tests\Source\Database\DatabaseFilterTest::testDefaultValues()
-     *
-     * @return void
      */
-    public function testDefaultValues()
+    public function testDefaultValues(): void
     {
         $obj = $this->createExpression();
 
@@ -50,10 +46,8 @@ class DatabaseOrderTest extends AbstractTestCase
 
     /**
      * Test influence of "active" property on SQL compilation.
-     *
-     * @return void
      */
-    public function testInactiveExpression()
+    public function testInactiveExpression(): void
     {
         $obj = $this->createExpression();
         $obj->setMode('asc')->setProperty('foo');
@@ -67,10 +61,8 @@ class DatabaseOrderTest extends AbstractTestCase
 
     /**
      * Test SQL without a mode.
-     *
-     * @return void
      */
-    public function testBlankSql()
+    public function testBlankSql(): void
     {
         $obj = $this->createExpression();
 
@@ -80,10 +72,8 @@ class DatabaseOrderTest extends AbstractTestCase
 
     /**
      * Test SQL with custom mode and placeholders.
-     *
-     * @return void
      */
-    public function testSqlCustomMode()
+    public function testSqlCustomMode(): void
     {
         $obj = $this->createExpression();
 
@@ -94,10 +84,8 @@ class DatabaseOrderTest extends AbstractTestCase
     /**
      * Test that "custom" and "values" mode have precedence over other features
      * when the mode is undefined.
-     *
-     * @return void
      */
-    public function testSqlModeResolutionAndPrecedence()
+    public function testSqlModeResolutionAndPrecedence(): void
     {
         $obj = $this->createExpression();
 
@@ -114,10 +102,8 @@ class DatabaseOrderTest extends AbstractTestCase
 
     /**
      * Test SQL with random mode.
-     *
-     * @return void
      */
-    public function testSqlRandomMode()
+    public function testSqlRandomMode(): void
     {
         $obj = $this->createExpression();
 
@@ -128,13 +114,12 @@ class DatabaseOrderTest extends AbstractTestCase
     /**
      * Test SQL with direction mode.
      *
-     * @dataProvider provideSqlDirectionMode
      *
      * @param  mixed $mode     The directional mode to set.
      * @param  mixed $expected The expected SQL direction.
-     * @return void
      */
-    public function testSqlDirectionMode($mode, $expected)
+    #[\PHPUnit\Framework\Attributes\DataProvider('provideSqlDirectionMode')]
+    public function testSqlDirectionMode(string $mode, string $expected): void
     {
         $obj = $this->createExpression();
 
@@ -149,9 +134,8 @@ class DatabaseOrderTest extends AbstractTestCase
      * Provide data for selecting directional ordering.
      *
      * @used-by self::testSqlDirectionMode()
-     * @return  array
      */
-    public function provideSqlDirectionMode()
+    public static function provideSqlDirectionMode(): array
     {
         return [
             [ 'asc',  'ASC'  ],
@@ -161,10 +145,8 @@ class DatabaseOrderTest extends AbstractTestCase
 
     /**
      * Test direction mode without property.
-     *
-     * @return void
      */
-    public function testSqlDirectionModeWithoutProperty()
+    public function testSqlDirectionModeWithoutProperty(): void
     {
         $obj = $this->createExpression();
 
@@ -174,10 +156,8 @@ class DatabaseOrderTest extends AbstractTestCase
 
     /**
      * Test SQL with values mode.
-     *
-     * @return void
      */
-    public function testSqlValuesMode()
+    public function testSqlValuesMode(): void
     {
         $obj = $this->createExpression();
         $obj->setMode('values')
@@ -189,10 +169,8 @@ class DatabaseOrderTest extends AbstractTestCase
 
     /**
      * Test values mode without property.
-     *
-     * @return void
      */
-    public function testSqlValuesModeWithoutProperty()
+    public function testSqlValuesModeWithoutProperty(): void
     {
         $obj = $this->createExpression();
 
@@ -204,10 +182,8 @@ class DatabaseOrderTest extends AbstractTestCase
 
     /**
      * Test values mode without values.
-     *
-     * @return void
      */
-    public function testSqlValuesModeWithoutValues()
+    public function testSqlValuesModeWithoutValues(): void
     {
         $obj = $this->createExpression();
 
@@ -219,10 +195,8 @@ class DatabaseOrderTest extends AbstractTestCase
 
     /**
      * Test invalid custom SQL.
-     *
-     * @return void
      */
-    public function testSqlCustomModeWithoutQuery()
+    public function testSqlCustomModeWithoutQuery(): void
     {
         $obj = $this->createExpression();
 
@@ -234,10 +208,8 @@ class DatabaseOrderTest extends AbstractTestCase
 
     /**
      * Test invalid property SQL.
-     *
-     * @return void
      */
-    public function testSqlWithoutModeWithoutProperty()
+    public function testSqlWithoutModeWithoutProperty(): void
     {
         $obj = $this->createExpression();
 
@@ -249,10 +221,8 @@ class DatabaseOrderTest extends AbstractTestCase
 
     /**
      * Test helper methods.
-     *
-     * @return void
      */
-    public function testPrepareValues()
+    public function testPrepareValues(): void
     {
         $obj = $this->createExpression();
 

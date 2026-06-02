@@ -48,9 +48,8 @@ class ModelServiceProvider implements ServiceProviderInterface
 {
     /**
      * @param Container $container A Pimple DI container.
-     * @return void
      */
-    public function register(Container $container)
+    public function register(Container $container): void
     {
         $this->registerModelDependencies($container);
         $this->registerMetadataDependencies($container);
@@ -68,35 +67,29 @@ class ModelServiceProvider implements ServiceProviderInterface
          * @param Container $container A Pimple DI container.
          * @return \Charcoal\Factory\FactoryInterface
          */
-        $container['model/factory'] = function (Container $container) {
-            return new Factory([
-                'base_class' => ModelInterface::class,
-                'arguments'  => [ $container['model/dependencies'] ]
-            ]);
-        };
+        $container['model/factory'] = (fn(Container $container): \Charcoal\Factory\GenericFactory => new Factory([
+            'base_class' => ModelInterface::class,
+            'arguments'  => [ $container['model/dependencies'] ]
+        ]));
 
         /**
          * @param Container $container A Pimple DI container.
          * @return ModelBuilder
          */
-        $container['model/builder'] = function (Container $container) {
-            return new ModelBuilder([
-                'factory'           => $container['model/factory'],
-                'metadata_loader'   => $container['metadata/loader'],
-                'source_factory'    => $container['source/factory']
-            ]);
-        };
+        $container['model/builder'] = (fn(Container $container): \Charcoal\Model\Service\ModelBuilder => new ModelBuilder([
+            'factory'           => $container['model/factory'],
+            'metadata_loader'   => $container['metadata/loader'],
+            'source_factory'    => $container['source/factory']
+        ]));
 
         /**
          * @param Container $container A Pimple DI container.
          * @return ModelLoaderBuilder
          */
-        $container['model/loader/builder'] = function (Container $container) {
-            return new ModelLoaderBuilder([
-                'factory' => $container['model/factory'],
-                'cache'   => $container['cache']
-            ]);
-        };
+        $container['model/loader/builder'] = (fn(Container $container): \Charcoal\Model\Service\ModelLoaderBuilder => new ModelLoaderBuilder([
+            'factory' => $container['model/factory'],
+            'cache'   => $container['cache']
+        ]));
     }
 
     /**
@@ -112,9 +105,7 @@ class ModelServiceProvider implements ServiceProviderInterface
          * @param Container $container A Pimple DI container.
          * @return \ArrayAccess|\Traversable
          */
-        $container['model/collection'] = $container->factory(function (Container $container) {
-            return new $container['model/collection/class']();
-        });
+        $container['model/collection'] = $container->factory(fn(Container $container): object => new $container['model/collection/class']());
 
         /**
          * @param Container $container A Pimple DI container.
@@ -129,16 +120,14 @@ class ModelServiceProvider implements ServiceProviderInterface
          * @param Container $container A Pimple DI container.
          * @return \Charcoal\Factory\FactoryInterface
          */
-        $container['model/collection/loader/factory'] = function (Container $container) {
-            return new Factory([
-                'default_class' => CollectionLoader::class,
-                'arguments'     => [[
-                    'logger'        => $container['logger'],
-                    'factory'       => $container['model/factory'],
-                    'collection'    => $container['model/collection/class']
-                ]]
-            ]);
-        };
+        $container['model/collection/loader/factory'] = (fn(Container $container): \Charcoal\Factory\GenericFactory => new Factory([
+            'default_class' => CollectionLoader::class,
+            'arguments'     => [[
+                'logger'        => $container['logger'],
+                'factory'       => $container['model/factory'],
+                'collection'    => $container['model/collection/class']
+            ]]
+        ]));
     }
 
     /**
@@ -153,16 +142,14 @@ class ModelServiceProvider implements ServiceProviderInterface
              * @param Container $container A Pimple DI container.
              * @return array The model dependencies array.
              */
-            $container['model/dependencies'] = function (Container $container) {
-                return [
-                    'container'        => $container,
-                    'logger'           => $container['logger'],
-                    'view'             => $container['view'],
-                    'property_factory' => $container['property/factory'],
-                    'metadata_loader'  => $container['metadata/loader'],
-                    'source_factory'   => $container['source/factory']
-                ];
-            };
+            $container['model/dependencies'] = (fn(Container $container): array => [
+                'container'        => $container,
+                'logger'           => $container['logger'],
+                'view'             => $container['view'],
+                'property_factory' => $container['property/factory'],
+                'metadata_loader'  => $container['metadata/loader'],
+                'source_factory'   => $container['source/factory']
+            ]);
         }
 
         // The property factory might be already set from elsewhere; defines it if not.
@@ -171,22 +158,20 @@ class ModelServiceProvider implements ServiceProviderInterface
              * @param Container $container A Pimple DI container.
              * @return \Charcoal\Factory\FactoryInterface
              */
-            $container['property/factory'] = function (Container $container) {
-                return new Factory([
-                    'base_class'       => PropertyInterface::class,
-                    'default_class'    => GenericProperty::class,
-                    'resolver_options' => [
-                        'prefix' => '\\Charcoal\\Property\\',
-                        'suffix' => 'Property'
-                    ],
-                    'arguments' => [[
-                        'container'  => $container,
-                        'database'   => $container['database'],
-                        'logger'     => $container['logger'],
-                        'translator' => $container['translator']
-                    ]]
-                ]);
-            };
+            $container['property/factory'] = (fn(Container $container): \Charcoal\Factory\GenericFactory => new Factory([
+                'base_class'       => PropertyInterface::class,
+                'default_class'    => GenericProperty::class,
+                'resolver_options' => [
+                    'prefix' => '\\Charcoal\\Property\\',
+                    'suffix' => 'Property'
+                ],
+                'arguments' => [[
+                    'container'  => $container,
+                    'database'   => $container['database'],
+                    'logger'     => $container['logger'],
+                    'translator' => $container['translator']
+                ]]
+            ]));
         }
 
         if (!isset($container['source/factory'])) {
@@ -194,19 +179,17 @@ class ModelServiceProvider implements ServiceProviderInterface
              * @param Container $container A Pimple DI container.
              * @return \Charcoal\Factory\FactoryInterface
              */
-            $container['source/factory'] = function (Container $container) {
-                return new Factory([
-                    'map' => [
-                        'database' => DatabaseSource::class
-                    ],
-                    'base_class' => SourceInterface::class,
-                    'arguments'  => [[
-                        'logger' => $container['logger'],
-                        'cache'  => $container['cache'],
-                        'pdo'    => $container['database']
-                    ]]
-                ]);
-            };
+            $container['source/factory'] = (fn(Container $container): \Charcoal\Factory\GenericFactory => new Factory([
+                'map' => [
+                    'database' => DatabaseSource::class
+                ],
+                'base_class' => SourceInterface::class,
+                'arguments'  => [[
+                    'logger' => $container['logger'],
+                    'cache'  => $container['cache'],
+                    'pdo'    => $container['database']
+                ]]
+            ]));
         }
     }
 
@@ -223,9 +206,9 @@ class ModelServiceProvider implements ServiceProviderInterface
              * @param  Container $container Pimple DI container.
              * @return MetadataConfig
              */
-            $container['metadata/config'] = function (Container $container) {
-                $appConfig  = isset($container['config']) ? $container['config'] : [];
-                $metaConfig = isset($appConfig['metadata']) ? $appConfig['metadata'] : null;
+            $container['metadata/config'] = function (Container $container): \Charcoal\Model\Service\MetadataConfig {
+                $appConfig  = ($container['config'] ?? []);
+                $metaConfig = ($appConfig['metadata'] ?? null);
                 $metaConfig = new MetadataConfig($metaConfig);
 
                 if (isset($container['module/classes'])) {
@@ -234,7 +217,7 @@ class ModelServiceProvider implements ServiceProviderInterface
                     $modules    = $container['module/classes'];
                     foreach ($modules as $module) {
                         if (defined(sprintf('%s::APP_CONFIG', $module))) {
-                            $configPath = ltrim($module::APP_CONFIG, '/');
+                            $configPath = ltrim((string)$module::APP_CONFIG, '/');
                             $configPath = $basePath . DIRECTORY_SEPARATOR . $configPath;
 
                             $configData = $metaConfig->loadFile($configPath);
@@ -247,7 +230,7 @@ class ModelServiceProvider implements ServiceProviderInterface
                         };
                     }
 
-                    if (!empty($extraPaths)) {
+                    if ($extraPaths !== []) {
                         $metaConfig->addPaths($extraPaths);
                     }
                 }
@@ -288,7 +271,7 @@ class ModelServiceProvider implements ServiceProviderInterface
              * @param  Container $container A Pimple DI container.
              * @return MetadataLoader
              */
-            $container['metadata/loader'] = function (Container $container) {
+            $container['metadata/loader'] = function (Container $container): \Charcoal\Model\Service\MetadataLoader {
                 $appConfig  = $container['config'];
                 $metaConfig = $container['metadata/config'];
 

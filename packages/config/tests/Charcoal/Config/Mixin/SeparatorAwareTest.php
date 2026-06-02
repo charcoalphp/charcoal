@@ -9,12 +9,17 @@ use Charcoal\Tests\Config\Mock\TreeEntity;
 use Charcoal\Config\SeparatorAwareInterface;
 use Charcoal\Config\SeparatorAwareTrait;
 use InvalidArgumentException;
+use ValueError;
 
 /**
  * Test SeparatorAwareTrait
- *
- * @coversDefaultClass \Charcoal\Config\SeparatorAwareTrait
  */
+#[\PHPUnit\Framework\Attributes\CoversTrait(\Charcoal\Config\SeparatorAwareTrait::class)]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Config\SeparatorAwareTrait::class, 'separator()')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Config\SeparatorAwareTrait::class, 'setSeparator()')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Config\SeparatorAwareTrait::class, 'hasWithSeparator()')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Config\SeparatorAwareTrait::class, 'getWithSeparator()')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Config\SeparatorAwareTrait::class, 'setWithSeparator()')]
 class SeparatorAwareTest extends AbstractTestCase
 {
     use AssertionsTrait;
@@ -31,8 +36,6 @@ class SeparatorAwareTest extends AbstractTestCase
 
     /**
      * Create a TreeEntity instance.
-     *
-     * @return void
      */
     protected function setUp(): void
     {
@@ -66,20 +69,17 @@ class SeparatorAwareTest extends AbstractTestCase
      * Create a TreeEntity instance.
      *
      * @param  array $data Data to pre-populate the object.
-     * @return TreeEntity
      */
-    public function createObject(array $data = null)
+    public function createObject(?array $data = null): \Charcoal\Tests\Config\Mock\TreeEntity
     {
         return new TreeEntity($data);
     }
 
     /**
      * Asserts that the object implements SeparatorAwareInterface.
-     *
-     * @coversNothing
-     * @return void
      */
-    public function testSeparatorAwareInterface()
+    #[\PHPUnit\Framework\Attributes\CoversNothing]
+    public function testSeparatorAwareInterface(): void
     {
         $this->assertInstanceOf(SeparatorAwareInterface::class, $this->obj);
     }
@@ -88,21 +88,15 @@ class SeparatorAwareTest extends AbstractTestCase
 
     // Test Seperator Token
     // =========================================================================
-
     /**
      * Asserts that the separator is disabled by default.
-     *
-     * @covers ::separator()
-     * @return void
      */
-    public function testDefaultSeparatorIsEmptyString()
+    public function testDefaultSeparatorIsEmptyString(): void
     {
         $this->assertEmpty($this->obj->separator());
     }
 
     /**
-     * @covers ::setSeparator()
-     * @covers ::separator()
      * @return TreeEntity
      */
     public function testSetSeparator()
@@ -116,12 +110,7 @@ class SeparatorAwareTest extends AbstractTestCase
         return $obj;
     }
 
-    /**
-     * @covers ::setSeparator()
-     * @covers ::separator()
-     * @return void
-     */
-    public function testMutatedSeparator()
+    public function testMutatedSeparator(): void
     {
         $obj = $this->obj;
 
@@ -132,12 +121,7 @@ class SeparatorAwareTest extends AbstractTestCase
         );
     }
 
-    /**
-     * @covers ::setSeparator()
-     * @covers ::separator()
-     * @return void
-     */
-    public function testEmptySeparator()
+    public function testEmptySeparator(): void
     {
         $obj = $this->obj;
 
@@ -145,11 +129,7 @@ class SeparatorAwareTest extends AbstractTestCase
         $this->assertEquals('', $obj->separator());
     }
 
-    /**
-     * @covers ::setSeparator()
-     * @return void
-     */
-    public function testSetSeparatorWithInvalidType()
+    public function testSetSeparatorWithInvalidType(): void
     {
         $this->expectExceptionMessage('Separator must be a string');
         $this->expectException(InvalidArgumentException::class);
@@ -157,11 +137,7 @@ class SeparatorAwareTest extends AbstractTestCase
         $this->obj->setSeparator(1);
     }
 
-    /**
-     * @covers ::setSeparator()
-     * @return void
-     */
-    public function testSetSeparatorWithInvalidToken()
+    public function testSetSeparatorWithInvalidToken(): void
     {
         $this->expectExceptionMessage('Separator must be one-character, or empty');
         $this->expectException(InvalidArgumentException::class);
@@ -173,127 +149,83 @@ class SeparatorAwareTest extends AbstractTestCase
 
     // Test HasWithSeparator
     // =========================================================================
-
     /**
-     * @covers  ::hasWithSeparator()
-     * @depends testSetSeparator
-     *
      * @param  SeparatorAwareInterface $obj The SeparatorAwareInterface implementation to test.
-     * @return void
      */
-    public function testObjReturnsTrueOnHasEndKeyPath(SeparatorAwareInterface $obj)
+    #[\PHPUnit\Framework\Attributes\Depends('testSetSeparator')]
+    public function testObjReturnsTrueOnHasEndKeyPath(SeparatorAwareInterface $obj): void
     {
         $this->assertTrue($obj->hasWithSeparator('connections.default.driver'));
     }
 
     /**
-     * @covers  ::hasWithSeparator()
-     * @depends testSetSeparator
-     *
      * @param  SeparatorAwareInterface $obj The SeparatorAwareInterface implementation to test.
-     * @return void
      */
-    public function testObjReturnsTrueOnHasMidKeyPath(SeparatorAwareInterface $obj)
+    #[\PHPUnit\Framework\Attributes\Depends('testSetSeparator')]
+    public function testObjReturnsTrueOnHasMidKeyPath(SeparatorAwareInterface $obj): void
     {
         $this->assertTrue($obj->hasWithSeparator('connections.default'));
     }
 
     /**
-     * @covers  ::hasWithSeparator()
-     * @depends testSetSeparator
-     *
      * @param  SeparatorAwareInterface $obj The SeparatorAwareInterface implementation to test.
-     * @return void
      */
-    public function testObjReturnsTrueOnHasBaseKeyPath(SeparatorAwareInterface $obj)
+    #[\PHPUnit\Framework\Attributes\Depends('testSetSeparator')]
+    public function testObjReturnsTrueOnHasBaseKeyPath(SeparatorAwareInterface $obj): void
     {
         $this->assertTrue($obj->hasWithSeparator('connections'));
     }
 
     /**
-     * @covers  ::hasWithSeparator()
-     * @depends testSetSeparator
-     *
      * @param  SeparatorAwareInterface $obj The SeparatorAwareInterface implementation to test.
-     * @return void
      */
-    public function testObjReturnsFalseOnHasEndKeyPathToNullValue(SeparatorAwareInterface $obj)
+    #[\PHPUnit\Framework\Attributes\Depends('testSetSeparator')]
+    public function testObjReturnsFalseOnHasEndKeyPathToNullValue(SeparatorAwareInterface $obj): void
     {
         $this->assertFalse($obj->hasWithSeparator('connections.customer.unix_socket'));
     }
 
     /**
-     * @covers  ::hasWithSeparator()
-     * @depends testSetSeparator
-     *
      * @param  SeparatorAwareInterface $obj The SeparatorAwareInterface implementation to test.
-     * @return void
      */
-    public function testObjReturnsFalseOnHasNonexistentEndKeyPath(SeparatorAwareInterface $obj)
+    #[\PHPUnit\Framework\Attributes\Depends('testSetSeparator')]
+    public function testObjReturnsFalseOnHasNonexistentEndKeyPath(SeparatorAwareInterface $obj): void
     {
         $this->assertFalse($obj->hasWithSeparator('connections.default.server_version'));
     }
 
     /**
-     * @covers  ::hasWithSeparator()
-     * @depends testSetSeparator
-     *
      * @param  SeparatorAwareInterface $obj The SeparatorAwareInterface implementation to test.
-     * @return void
      */
-    public function testObjReturnsFalseOnHasNonexistentMidKeyPath(SeparatorAwareInterface $obj)
+    #[\PHPUnit\Framework\Attributes\Depends('testSetSeparator')]
+    public function testObjReturnsFalseOnHasNonexistentMidKeyPath(SeparatorAwareInterface $obj): void
     {
         $this->assertFalse($obj->hasWithSeparator('connections.analytics.host'));
     }
 
     /**
-     * @covers  ::hasWithSeparator()
-     * @depends testSetSeparator
-     *
      * @param  SeparatorAwareInterface $obj The SeparatorAwareInterface implementation to test.
-     * @return void
      */
-    public function testObjReturnsFalseOnHasNonexistentBaseKeyPath(SeparatorAwareInterface $obj)
+    #[\PHPUnit\Framework\Attributes\Depends('testSetSeparator')]
+    public function testObjReturnsFalseOnHasNonexistentBaseKeyPath(SeparatorAwareInterface $obj): void
     {
         $this->assertFalse($obj->hasWithSeparator('logging'));
     }
 
-    /**
-     * @used-by self::testHasWithSeparatorWithoutDelimiterInPhp7()
-     * @used-by self::testHasWithSeparatorWithoutDelimiterInPhp5()
-     *
-     * @covers ::hasWithSeparator()
-     * @return void
-     */
-    public function delegatedTestHasWithSeparatorWithoutDelimiter()
+    public function testHasWithSeparatorWithoutDelimiter(): void
     {
+        $this->expectException(ValueError::class);
         $this->obj->hasWithSeparator('connections.default.host');
     }
-
-    /**
-     * @requires PHP >= 7.0
-     * @return   void
-     */
-    public function testHasWithSeparatorWithoutDelimiterInPhp7()
-    {
-        $this->expectError();
-
-        $this->delegatedTestHasWithSeparatorWithoutDelimiter();
-    }
-
 
 
     // Test GetWithSeparator
     // =========================================================================
-
     /**
-     * @covers  ::getWithSeparator()
-     * @depends testSetSeparator
-     *
      * @param  SeparatorAwareInterface $obj The SeparatorAwareInterface implementation to test.
-     * @return void
      */
-    public function testObjReturnsValueOnGetEndKeyPath(SeparatorAwareInterface $obj)
+    #[\PHPUnit\Framework\Attributes\Depends('testSetSeparator')]
+    public function testObjReturnsValueOnGetEndKeyPath(SeparatorAwareInterface $obj): void
     {
         $this->assertEquals(
             $this->connections['default']['driver'],
@@ -302,13 +234,10 @@ class SeparatorAwareTest extends AbstractTestCase
     }
 
     /**
-     * @covers  ::getWithSeparator()
-     * @depends testSetSeparator
-     *
      * @param  SeparatorAwareInterface $obj The SeparatorAwareInterface implementation to test.
-     * @return void
      */
-    public function testObjReturnsValueOnGetMidKeyPath(SeparatorAwareInterface $obj)
+    #[\PHPUnit\Framework\Attributes\Depends('testSetSeparator')]
+    public function testObjReturnsValueOnGetMidKeyPath(SeparatorAwareInterface $obj): void
     {
         $this->assertEquals(
             $this->connections['default'],
@@ -317,13 +246,10 @@ class SeparatorAwareTest extends AbstractTestCase
     }
 
     /**
-     * @covers  ::getWithSeparator()
-     * @depends testSetSeparator
-     *
      * @param  SeparatorAwareInterface $obj The SeparatorAwareInterface implementation to test.
-     * @return void
      */
-    public function testObjReturnsValueOnGetBaseKeyPath(SeparatorAwareInterface $obj)
+    #[\PHPUnit\Framework\Attributes\Depends('testSetSeparator')]
+    public function testObjReturnsValueOnGetBaseKeyPath(SeparatorAwareInterface $obj): void
     {
         $this->assertEquals(
             $this->connections,
@@ -332,88 +258,54 @@ class SeparatorAwareTest extends AbstractTestCase
     }
 
     /**
-     * @covers  ::getWithSeparator()
-     * @depends testSetSeparator
-     *
      * @param  SeparatorAwareInterface $obj The SeparatorAwareInterface implementation to test.
-     * @return void
      */
-    public function testObjReturnsNullOnGetEndKeyPathToNullValue(SeparatorAwareInterface $obj)
+    #[\PHPUnit\Framework\Attributes\Depends('testSetSeparator')]
+    public function testObjReturnsNullOnGetEndKeyPathToNullValue(SeparatorAwareInterface $obj): void
     {
         $this->assertNull($obj->getWithSeparator('connections.customer.unix_socket'));
     }
 
     /**
-     * @covers  ::getWithSeparator()
-     * @depends testSetSeparator
-     *
      * @param  SeparatorAwareInterface $obj The SeparatorAwareInterface implementation to test.
-     * @return void
      */
-    public function testObjReturnsNullOnGetNonexistentEndKeyPath(SeparatorAwareInterface $obj)
+    #[\PHPUnit\Framework\Attributes\Depends('testSetSeparator')]
+    public function testObjReturnsNullOnGetNonexistentEndKeyPath(SeparatorAwareInterface $obj): void
     {
         $this->assertNull($obj->getWithSeparator('connections.default.server_version'));
     }
 
     /**
-     * @covers  ::getWithSeparator()
-     * @depends testSetSeparator
-     *
      * @param  SeparatorAwareInterface $obj The SeparatorAwareInterface implementation to test.
-     * @return void
      */
-    public function testObjReturnsNullOnGetNonexistentMidKeyPath(SeparatorAwareInterface $obj)
+    #[\PHPUnit\Framework\Attributes\Depends('testSetSeparator')]
+    public function testObjReturnsNullOnGetNonexistentMidKeyPath(SeparatorAwareInterface $obj): void
     {
         $this->assertNull($obj->getWithSeparator('connections.analytics.host'));
     }
 
     /**
-     * @covers  ::getWithSeparator()
-     * @depends testSetSeparator
-     *
      * @param  SeparatorAwareInterface $obj The SeparatorAwareInterface implementation to test.
-     * @return void
      */
-    public function testObjReturnsNullOnGetNonexistentBaseKeyPath(SeparatorAwareInterface $obj)
+    #[\PHPUnit\Framework\Attributes\Depends('testSetSeparator')]
+    public function testObjReturnsNullOnGetNonexistentBaseKeyPath(SeparatorAwareInterface $obj): void
     {
         $this->assertNull($obj->getWithSeparator('logging'));
     }
 
-    /**
-     * @used-by self::testGetWithSeparatorWithoutDelimiterInPhp7()
-     * @used-by self::testGetWithSeparatorWithoutDelimiterInPhp5()
-     *
-     * @covers ::getWithSeparator()
-     * @return void
-     */
-    public function delegatedTestGetWithSeparatorWithoutDelimiter()
+    public function testGetWithSeparatorWithoutDelimiter(): void
     {
+        $this->expectException(ValueError::class);
         $this->obj->getWithSeparator('connections.default.host');
     }
 
-    /**
-     * @requires PHP >= 7.0
-     * @return   void
-     */
-    public function testGetWithSeparatorWithoutDelimiterInPhp7()
-    {
-        $this->expectError();
-
-        $this->delegatedTestGetWithSeparatorWithoutDelimiter();
-    }
-
-
     // Test SetWithSeparator
     // =========================================================================
-
     /**
-     * @covers  ::setWithSeparator()
-     * @depends testSetSeparator
-     *
      * @param  SeparatorAwareInterface $obj The SeparatorAwareInterface implementation to test.
-     * @return void
      */
-    public function testObjReplacesValueRecursivelyOnSetKeyPath(SeparatorAwareInterface $obj)
+    #[\PHPUnit\Framework\Attributes\Depends('testSetSeparator')]
+    public function testObjReplacesValueRecursivelyOnSetKeyPath(SeparatorAwareInterface $obj): void
     {
         $obj->setWithSeparator('keywords', [ 'php', 'framework', 'charcoal', 'config' ]);
         $obj->setWithSeparator('keywords', [ 1 => 'library', 4 => 'component' ]);
@@ -430,78 +322,60 @@ class SeparatorAwareTest extends AbstractTestCase
     }
 
     /**
-     * @covers  ::setWithSeparator()
-     * @depends testSetSeparator
-     *
      * @param  SeparatorAwareInterface $obj The SeparatorAwareInterface implementation to test.
-     * @return void
      */
-    public function testObjReplacesValueOnSetEndKeyPath(SeparatorAwareInterface $obj)
+    #[\PHPUnit\Framework\Attributes\Depends('testSetSeparator')]
+    public function testObjReplacesValueOnSetEndKeyPath(SeparatorAwareInterface $obj): void
     {
         $obj->setWithSeparator('connections.default.driver', 'pdo_sqlite');
         $this->assertEquals('pdo_sqlite', $obj->get('connections.default.driver'));
     }
 
     /**
-     * @covers  ::setWithSeparator()
-     * @depends testSetSeparator
-     *
      * @param  SeparatorAwareInterface $obj The SeparatorAwareInterface implementation to test.
-     * @return void
      */
-    public function testObjReplacesValueOnSetMidKeyPath(SeparatorAwareInterface $obj)
+    #[\PHPUnit\Framework\Attributes\Depends('testSetSeparator')]
+    public function testObjReplacesValueOnSetMidKeyPath(SeparatorAwareInterface $obj): void
     {
         $obj->setWithSeparator('connections.default', [ 'dbname' => 'otherdatabase' ]);
         $this->assertEquals('otherdatabase', $obj->get('connections.default.dbname'));
     }
 
     /**
-     * @covers  ::setWithSeparator()
-     * @depends testSetSeparator
-     *
      * @param  SeparatorAwareInterface $obj The SeparatorAwareInterface implementation to test.
-     * @return void
      */
-    public function testObjReplacesValueOnSetBaseKeyPath(SeparatorAwareInterface $obj)
+    #[\PHPUnit\Framework\Attributes\Depends('testSetSeparator')]
+    public function testObjReplacesValueOnSetBaseKeyPath(SeparatorAwareInterface $obj): void
     {
         $obj->setWithSeparator('connections', [ 'default' => [ 'host' => 'web.otherplace.tld' ] ]);
         $this->assertEquals('web.otherplace.tld', $obj->get('connections.default.host'));
     }
 
     /**
-     * @covers  ::setWithSeparator()
-     * @depends testSetSeparator
-     *
      * @param  SeparatorAwareInterface $obj The SeparatorAwareInterface implementation to test.
-     * @return void
      */
-    public function testObjAddsValueOnSetNonexistentEndKeyPath(SeparatorAwareInterface $obj)
+    #[\PHPUnit\Framework\Attributes\Depends('testSetSeparator')]
+    public function testObjAddsValueOnSetNonexistentEndKeyPath(SeparatorAwareInterface $obj): void
     {
         $obj->setWithSeparator('connections.default.server_version', '5.7');
         $this->assertEquals('5.7', $obj->get('connections.default.server_version'));
     }
 
     /**
-     * @covers  ::setWithSeparator()
-     * @depends testSetSeparator
-     *
      * @param  SeparatorAwareInterface $obj The SeparatorAwareInterface implementation to test.
-     * @return void
      */
-    public function testObjAddsValueOnSetNonexistentMidKeyPath(SeparatorAwareInterface $obj)
+    #[\PHPUnit\Framework\Attributes\Depends('testSetSeparator')]
+    public function testObjAddsValueOnSetNonexistentMidKeyPath(SeparatorAwareInterface $obj): void
     {
         $obj->setWithSeparator('connections.analytics', [ 'driver' => 'pdo_pgsql' ]);
         $this->assertEquals('pdo_pgsql', $obj->get('connections.analytics.driver'));
     }
 
     /**
-     * @covers  ::setWithSeparator()
-     * @depends testSetSeparator
-     *
      * @param  SeparatorAwareInterface $obj The SeparatorAwareInterface implementation to test.
-     * @return void
      */
-    public function testObjAddsValueOnSetNonexistentBaseKeyPath(SeparatorAwareInterface $obj)
+    #[\PHPUnit\Framework\Attributes\Depends('testSetSeparator')]
+    public function testObjAddsValueOnSetNonexistentBaseKeyPath(SeparatorAwareInterface $obj): void
     {
         $obj->setWithSeparator('logging', [ 'level' => 'debug' ]);
         $this->assertTrue($obj->has('logging.level'));
@@ -511,26 +385,9 @@ class SeparatorAwareTest extends AbstractTestCase
         );
     }
 
-    /**
-     * @used-by self::testSetWithSeparatorWithoutDelimiterInPhp7()
-     * @used-by self::testSetWithSeparatorWithoutDelimiterInPhp5()
-     *
-     * @covers ::setWithSeparator()
-     * @return void
-     */
-    public function delegatedTestSetWithSeparatorWithoutDelimiter()
+    public function testSetWithSeparatorWithoutDelimiter(): void
     {
+        $this->expectException(ValueError::class);
         $this->obj->setWithSeparator('connections.default.server_version', '5.7');
-    }
-
-    /**
-     * @requires PHP >= 7.0
-     * @return   void
-     */
-    public function testSetWithSeparatorWithoutDelimiterInPhp7()
-    {
-        $this->expectError();
-
-        $this->delegatedTestSetWithSeparatorWithoutDelimiter();
     }
 }

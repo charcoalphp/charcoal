@@ -18,14 +18,8 @@ class IdPropertyTest extends AbstractTestCase
 {
     use \Charcoal\Tests\Property\ContainerIntegrationTrait;
 
-    /**
-     * @var IdProperty
-     */
-    private $obj;
+    private \Charcoal\Property\IdProperty|array $obj;
 
-    /**
-     * @return void
-     */
     protected function setUp(): void
     {
         $container = $this->getContainer();
@@ -37,18 +31,12 @@ class IdPropertyTest extends AbstractTestCase
         ]);
     }
 
-    /**
-     * @return void
-     */
-    public function testType()
+    public function testType(): void
     {
         $this->assertEquals('id', $this->obj->type());
     }
 
-    /**
-     * @return void
-     */
-    public function testSetData()
+    public function testSetData(): void
     {
         $ret = $this->obj->setData(
             [
@@ -62,10 +50,8 @@ class IdPropertyTest extends AbstractTestCase
     /**
      * Asserts that the default mode:
      * - Defaults to auto-increment
-     *
-     * @return void
      */
-    public function testDefaultMode()
+    public function testDefaultMode(): void
     {
         $this->assertEquals(IdProperty::DEFAULT_MODE, $this->obj['mode']);
         $this->assertEquals('auto-increment', $this->obj['mode']);
@@ -76,10 +62,8 @@ class IdPropertyTest extends AbstractTestCase
      * - is chainable
      * - properly sets the mode
      * - throws an invalid argument exception for any string modes
-     *
-     * @return void
      */
-    public function testSetMode()
+    public function testSetMode(): void
     {
         $ret = $this->obj->setMode('uuid');
         $this->assertSame($ret, $this->obj);
@@ -99,19 +83,14 @@ class IdPropertyTest extends AbstractTestCase
      * Asserts that calling the `setMode()` method with a NULL argument:
      * - is chainable
      * - properly resets the mode to detault
-     *
-     * @return void
      */
-    public function testSetModeNullThrowsException()
+    public function testSetModeNullThrowsException(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->obj->setMode(null);
     }
 
-    /**
-     * @return void
-     */
-    public function testMultipleCannotBeTrue()
+    public function testMultipleCannotBeTrue(): void
     {
         $this->assertFalse($this->obj['multiple']);
 
@@ -120,10 +99,7 @@ class IdPropertyTest extends AbstractTestCase
         $this->obj->setMultiple(true);
     }
 
-    /**
-     * @return void
-     */
-    public function testL10nCannotBeTrue()
+    public function testL10nCannotBeTrue(): void
     {
         $this->assertFalse($this->obj['l10n']);
 
@@ -132,10 +108,7 @@ class IdPropertyTest extends AbstractTestCase
         $this->obj->setL10n(true);
     }
 
-    /**
-     * @return void
-     */
-    public function testSaveAndAutoGenerateAutoIncrement()
+    public function testSaveAndAutoGenerateAutoIncrement(): void
     {
         $obj = $this->obj;
         $obj->setMode('auto-increment');
@@ -143,32 +116,23 @@ class IdPropertyTest extends AbstractTestCase
         $this->assertEquals('', $id);
     }
 
-    /**
-     * @return void
-     */
-    public function testSaveAndAutoGenerateUniqid()
+    public function testSaveAndAutoGenerateUniqid(): void
     {
         $obj = $this->obj;
         $obj->setMode('uniqid');
         $id = $obj->save(null);
-        $this->assertEquals(13, strlen($id));
+        $this->assertEquals(13, strlen((string) $id));
     }
 
-    /**
-     * @return void
-     */
-    public function testSaveAndAutoGenerateUuid()
+    public function testSaveAndAutoGenerateUuid(): void
     {
         $obj = $this->obj;
         $obj->setMode('uuid');
         $id = $obj->save(null);
-        $this->assertEquals(36, strlen($id));
+        $this->assertEquals(36, strlen((string) $id));
     }
 
-    /**
-     * @return void
-     */
-    public function testSqlExtra()
+    public function testSqlExtra(): void
     {
         $obj = $this->obj;
         $obj->setMode('auto-increment');
@@ -180,12 +144,9 @@ class IdPropertyTest extends AbstractTestCase
         $this->assertEquals('', $ret);
     }
 
-    /**
-     * @return void
-     */
-    public function testSqlType()
+    public function testSqlType(): void
     {
-        $container = $this->getContainer();
+        $this->getContainer();
 
         $obj = $this->obj;
         $obj->setMode('auto-increment');
@@ -206,10 +167,7 @@ class IdPropertyTest extends AbstractTestCase
         $this->assertEquals('VARCHAR(255)', $ret);
     }
 
-    /**
-     * @return void
-     */
-    public function testSqlPdoType()
+    public function testSqlPdoType(): void
     {
         $obj = $this->obj;
         $obj->setMode('auto-increment');

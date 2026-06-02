@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Charcoal\Tests\Source;
 
 use Exception;
@@ -20,10 +22,7 @@ class DatabaseSourceTest extends AbstractTestCase
 {
     use \Charcoal\Tests\CoreContainerIntegrationTrait;
 
-    /**
-     * @return void
-     */
-    public function testClass()
+    public function testClass(): void
     {
         $container = $this->getContainer();
 

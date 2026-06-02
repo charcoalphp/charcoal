@@ -16,19 +16,8 @@ use Charcoal\Tests\AbstractTestCase;
  */
 class ViewableTraitTest extends AbstractTestCase
 {
-    /**
-     * @var ViewableTrait $obj
-     */
     private $obj;
 
-    /**
-     * @var AbtractView $view
-     */
-    private $view;
-
-    /**
-     * @return void
-     */
     public function setUp(): void
     {
         $loader = new MustacheLoader([
@@ -42,7 +31,9 @@ class ViewableTraitTest extends AbstractTestCase
             'engine'    => $engine,
         ]);
 
-        $mock = $this->getMockForTrait(MockTrait::class);
+        $mock = new class {
+            use ViewableTrait;
+        };
 
         $mock->setView($genericView);
         $this->assertSame($genericView, $mock->view());
@@ -51,10 +42,7 @@ class ViewableTraitTest extends AbstractTestCase
         $this->obj = $mock;
     }
 
-    /**
-     * @return void
-     */
-    public function testSetTemplateIdent()
+    public function testSetTemplateIdent(): void
     {
         $obj = $this->obj;
         $this->assertEquals('', $obj->templateIdent());
@@ -64,20 +52,14 @@ class ViewableTraitTest extends AbstractTestCase
         $this->assertEquals('foobar', $obj->templateIdent());
     }
 
-    /**
-     * @return void
-     */
-    public function testRenderWithTemplateIdent()
+    public function testRenderWithTemplateIdent(): void
     {
         $this->obj->foo = 'bar';
         $ret = $this->obj->render('foo');
         $this->assertEquals('Hello bar', trim($ret));
     }
 
-    /**
-     * @return void
-     */
-    public function testRender()
+    public function testRender(): void
     {
         $this->obj->setTemplateIdent('foo');
         $this->obj->foo = 'bar';
@@ -85,30 +67,21 @@ class ViewableTraitTest extends AbstractTestCase
         $this->assertEquals('Hello bar', trim($ret));
     }
 
-    /**
-     * @return void
-     */
-    public function testRenderTemplate()
+    public function testRenderTemplate(): void
     {
         $this->obj->foo = 'bar';
         $ret = $this->obj->renderTemplate('Hello {{foo}}');
         $this->assertEquals('Hello bar', $ret);
     }
 
-    /**
-     * @return void
-     */
-    public function testToString()
+    public function testToString(): void
     {
         $this->obj->setTemplateIdent('foo');
         $this->obj->foo = 'bar';
         $this->assertEquals('Hello bar', trim((string)$this->obj));
     }
 
-    /**
-     * @return void
-     */
-    public function testSetViewController()
+    public function testSetViewController(): void
     {
         $this->assertSame($this->obj, $this->obj->viewController());
 
@@ -120,10 +93,7 @@ class ViewableTraitTest extends AbstractTestCase
         $this->obj->setViewController('foo');
     }
 
-    /**
-     * @return void
-     */
-    public function testSetDynamicTemplate()
+    public function testSetDynamicTemplate(): void
     {
         $this->assertNull($this->obj->setDynamicTemplate('foo', 'bar'));
     }

@@ -18,9 +18,9 @@ class UpdateAllAction extends UpdateAction
     /**
      * @param  RequestInterface  $request  A PSR-7 compatible Request instance.
      * @param  ResponseInterface $response A PSR-7 compatible Response instance.
-     * @return ResponseInterface
      */
-    public function run(RequestInterface $request, ResponseInterface $response)
+    #[\Override]
+    public function run(RequestInterface $request, ResponseInterface $response): ResponseInterface
     {
         unset($request);
 
@@ -35,17 +35,13 @@ class UpdateAllAction extends UpdateAction
         return $response;
     }
 
-    /**
-     * @return array
-     */
-    public function results()
+    #[\Override]
+    public function results(): array
     {
-        $ret = [
+        return [
             'success'   => $this->success(),
             'feedbacks' => $this->feedbacks()
         ];
-
-        return $ret;
     }
 
     /**
@@ -54,7 +50,7 @@ class UpdateAllAction extends UpdateAction
      * @param integer $flags   Glob flags.
      * @return array
      */
-    protected function globRecursive($dir, $pattern, $flags = 0)
+    protected function globRecursive(string $dir, string $pattern, $flags = 0): array|false
     {
         $files = glob($dir . '/' . $pattern, $flags);
         foreach (glob($dir . '/*', (GLOB_ONLYDIR | GLOB_NOSORT)) as $dir) {

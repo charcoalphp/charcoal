@@ -60,9 +60,8 @@ class TemplateRoute implements
      * ConfigurableTrait > createConfig()
      *
      * @param  mixed|null $data Optional config data.
-     * @return TemplateRouteConfig
      */
-    public function createConfig($data = null)
+    public function createConfig($data = null): \Charcoal\App\Route\TemplateRouteConfig
     {
         return new TemplateRouteConfig($data);
     }

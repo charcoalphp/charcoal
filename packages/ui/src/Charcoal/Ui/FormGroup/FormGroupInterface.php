@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Charcoal\Ui\FormGroup;
 
 // From 'charcoal-ui'
@@ -61,7 +63,7 @@ interface FormGroupInterface
      * @param callable $inputCallback Optional. Input callback.
      * @return FormGroupInterface[]
      */
-    public function inputs(callable $inputCallback = null);
+    public function inputs(?callable $inputCallback = null);
 
     /**
      * @return boolean

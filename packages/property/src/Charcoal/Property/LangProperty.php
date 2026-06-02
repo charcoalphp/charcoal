@@ -19,10 +19,7 @@ class LangProperty extends AbstractProperty implements SelectablePropertyInterfa
 {
     use SelectablePropertyTrait;
 
-    /**
-     * @return string
-     */
-    public function type()
+    public function type(): string
     {
         return 'lang';
     }
@@ -32,9 +29,8 @@ class LangProperty extends AbstractProperty implements SelectablePropertyInterfa
      *
      * @param  array $choices One or more choice structures.
      * @see SelectablePropertyTrait::setChoices()
-     * @return self
      */
-    public function setChoices(array $choices)
+    public function setChoices(array $choices): static
     {
         unset($choices);
 
@@ -50,9 +46,8 @@ class LangProperty extends AbstractProperty implements SelectablePropertyInterfa
      *
      * @param  array $choices One or more choice structures.
      * @see SelectablePropertyTrait::setChoices()
-     * @return self
      */
-    public function addChoices(array $choices)
+    public function addChoices(array $choices): static
     {
         unset($choices);
 
@@ -71,7 +66,7 @@ class LangProperty extends AbstractProperty implements SelectablePropertyInterfa
      * @see SelectablePropertyTrait::addChoice()
      * @return LangProperty Chainable.
      */
-    public function addChoice($choiceIdent, $choice)
+    public function addChoice($choiceIdent, $choice): static
     {
         unset($choiceIdent, $choice);
 
@@ -86,11 +81,10 @@ class LangProperty extends AbstractProperty implements SelectablePropertyInterfa
      * Determine if choices are available.
      *
      * @see SelectablePropertyTrait::hasChoices()
-     * @return boolean
      */
-    public function hasChoices()
+    public function hasChoices(): bool
     {
-        return !!$this->translator()->locales();
+        return (bool)$this->translator()->locales();
     }
 
     /**
@@ -98,9 +92,8 @@ class LangProperty extends AbstractProperty implements SelectablePropertyInterfa
      *
      * @param  string $choiceIdent The choice identifier to lookup.
      * @see SelectablePropertyTrait::hasChoice()
-     * @return boolean
      */
-    public function hasChoice($choiceIdent)
+    public function hasChoice($choiceIdent): bool
     {
         if (empty($this->choices)) {
             $this->choices();
@@ -133,7 +126,7 @@ class LangProperty extends AbstractProperty implements SelectablePropertyInterfa
                     } else {
                         $trans = 'locale.' . $langCode;
                         if ($trans === $this->translator()->translate($trans)) {
-                            $label = strtoupper($langCode);
+                            $label = strtoupper((string)$langCode);
                         } else {
                             $label = $this->translator()->translation($trans);
                         }
@@ -155,12 +148,9 @@ class LangProperty extends AbstractProperty implements SelectablePropertyInterfa
 
     /**
      * Format the given value for display.
-     *
-     * @param  mixed $val     The value to to convert for display.
-     * @param  array $options Optional display options.
-     * @return string
      */
-    public function displayVal($val, array $options = [])
+    #[\Override]
+    public function displayVal(mixed $val, array $options = []): string
     {
         if ($val === null || $val === '') {
             return '';
@@ -179,10 +169,8 @@ class LangProperty extends AbstractProperty implements SelectablePropertyInterfa
         }
 
         /** Parse multiple values / ensure they are of array type. */
-        if ($this['multiple']) {
-            if (!is_array($propertyValue)) {
-                $propertyValue = $this->parseValAsMultiple($propertyValue);
-            }
+        if ($this['multiple'] && !is_array($propertyValue)) {
+            $propertyValue = $this->parseValAsMultiple($propertyValue);
         }
 
         if (is_array($propertyValue)) {
@@ -217,7 +205,7 @@ class LangProperty extends AbstractProperty implements SelectablePropertyInterfa
      * @see StorablePropertyTrait::sqlType()
      * @return string The SQL type
      */
-    public function sqlType()
+    public function sqlType(): string
     {
         if ($this['multiple']) {
             return 'TEXT';
@@ -226,10 +214,7 @@ class LangProperty extends AbstractProperty implements SelectablePropertyInterfa
         return 'CHAR(2)';
     }
 
-    /**
-     * @return integer
-     */
-    public function sqlPdoType()
+    public function sqlPdoType(): int
     {
         return PDO::PARAM_STR;
     }

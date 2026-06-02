@@ -106,17 +106,13 @@ trait DashboardContainerTrait
             $dashboardConfig['type'] = $this->defaultDashboardType();
         }
 
-        $dashboard = $this->dashboardBuilder->build($dashboardConfig);
-
-        return $dashboard;
+        return $this->dashboardBuilder->build($dashboardConfig);
     }
 
     /**
      * Retrieve the default dashboard type class name.
-     *
-     * @return string
      */
-    public function defaultDashboardType()
+    public function defaultDashboardType(): string
     {
         return DashboardWidget::class;
     }

@@ -41,7 +41,7 @@ trait CachePoolAwareTrait
         if ($this->cachePool === null) {
             throw new RuntimeException(sprintf(
                 'Cache Pool is not defined for "%s"',
-                get_class($this)
+                $this::class
             ));
         }
 

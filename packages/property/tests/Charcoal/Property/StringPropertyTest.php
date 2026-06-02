@@ -27,8 +27,6 @@ class StringPropertyTest extends AbstractTestCase
 
     /**
      * Set up the test.
-     *
-     * @return void
      */
     protected function setUp(): void
     {
@@ -43,15 +41,12 @@ class StringPropertyTest extends AbstractTestCase
         ]);
     }
 
-    /**
-     * @return void
-     */
-    public function testType()
+    public function testType(): void
     {
         $this->assertEquals('string', $this->obj->type());
     }
 
-    public function testDefaults()
+    public function testDefaults(): void
     {
         $this->assertFalse($this->obj['required']);
         $this->assertFalse($this->obj['unique']);
@@ -63,18 +58,12 @@ class StringPropertyTest extends AbstractTestCase
         $this->assertTrue($this->obj['active']);
     }
 
-    /**
-     * @return void
-     */
-    public function testSqlExtra()
+    public function testSqlExtra(): void
     {
         $this->assertEquals('', $this->obj->sqlExtra());
     }
 
-    /**
-     * @return void
-     */
-    public function testSqlType()
+    public function testSqlType(): void
     {
         $this->obj->setMultiple(false);
         $this->assertEquals('VARCHAR(255)', $this->obj->sqlType());
@@ -89,23 +78,17 @@ class StringPropertyTest extends AbstractTestCase
         $this->assertEquals('TEXT', $this->obj->sqlType());
     }
 
-    /**
-     * @return void
-     */
-    public function testSqlPdoType()
+    public function testSqlPdoType(): void
     {
         $this->assertEquals(PDO::PARAM_STR, $this->obj->sqlPdoType());
     }
 
-    /**
-     * @return void
-     */
-    public function testSetData()
+    public function testSetData(): void
     {
         $data = [
             'min_length'  => 5,
             'max_length'  => 42,
-            'regexp'      => '/[0-9]*/',
+            'regexp'      => '/\d*/',
             'allow_empty' => false,
             'allow_html'  => true
         ];
@@ -115,15 +98,12 @@ class StringPropertyTest extends AbstractTestCase
 
         $this->assertEquals(5, $this->obj['minLength']);
         $this->assertEquals(42, $this->obj['maxLength']);
-        $this->assertEquals('/[0-9]*/', $this->obj['regexp']);
+        $this->assertEquals('/\d*/', $this->obj['regexp']);
         $this->assertFalse($this->obj['allowEmpty']);
         $this->assertTrue($this->obj['allowHtml']);
     }
 
-    /**
-     * @return void
-     */
-    public function testDisplayVal()
+    public function testDisplayVal(): void
     {
         $container  = $this->getContainer();
         $translator = $container['translator'];
@@ -157,10 +137,7 @@ class StringPropertyTest extends AbstractTestCase
         $this->assertEquals('foo, bar, baz', $this->obj->displayVal([ 'foo', 'bar', 'baz' ]));
     }
 
-    /**
-     * @return void
-     */
-    public function testDisplayChoices()
+    public function testDisplayChoices(): void
     {
         $choices = $this->getDisplayChoices();
         $this->obj->setChoices($choices);
@@ -187,9 +164,8 @@ class StringPropertyTest extends AbstractTestCase
     /**
      * @used-by testDisplayChoices()
      * @used-by testRenderedDisplayChoices()
-     * @return  array
      */
-    public function getDisplayChoices()
+    public function getDisplayChoices(): array
     {
         $container  = $this->getContainer();
         $translator = $container['translator'];
@@ -213,14 +189,13 @@ class StringPropertyTest extends AbstractTestCase
     }
 
     /**
-     * @dataProvider getDisplayChoicesProvider
      *
      * @param  string $expected The displayed $value.
      * @param  mixed  $value    The value to display.
      * @param  array  $options  The display options.
-     * @return void
      */
-    public function testRenderedDisplayChoices($expected, $value, array $options = [])
+    #[\PHPUnit\Framework\Attributes\DataProvider('getDisplayChoicesProvider')]
+    public function testRenderedDisplayChoices(string $expected, string|array $value, array $options = []): void
     {
         $this->obj->setChoices($this->getDisplayChoices());
         $this->obj->setL10n(false);
@@ -231,9 +206,8 @@ class StringPropertyTest extends AbstractTestCase
 
     /**
      * @used-by testRenderedDisplayChoices()
-     * @return  array
      */
-    public function getDisplayChoicesProvider()
+    public static function getDisplayChoicesProvider(): array
     {
         return [
             [ 'Brown fox, Lazy dog, wolf',          [ 'fox', 'dog', 'wolf' ] ],
@@ -243,10 +217,7 @@ class StringPropertyTest extends AbstractTestCase
         ];
     }
 
-    /**
-     * @return void
-     */
-    public function testSetMinLength()
+    public function testSetMinLength(): void
     {
         $ret = $this->obj->setMinLength(5);
         $this->assertSame($ret, $this->obj);
@@ -262,19 +233,13 @@ class StringPropertyTest extends AbstractTestCase
         $this->obj->setMinLength('foo');
     }
 
-    /**
-     * @return void
-     */
-    public function testSetMinLenghtNegativeThrowsException()
+    public function testSetMinLenghtNegativeThrowsException(): void
     {
         $this->expectException('\InvalidArgumentException');
         $this->obj->setMinLength(-1);
     }
 
-    /**
-     * @return void
-     */
-    public function testSetMaxLength()
+    public function testSetMaxLength(): void
     {
         $ret = $this->obj->setMaxLength(5);
         $this->assertSame($ret, $this->obj);
@@ -290,19 +255,13 @@ class StringPropertyTest extends AbstractTestCase
         $this->obj->setMaxLength('foo');
     }
 
-    /**
-     * @return void
-     */
-    public function testSetMaxLenghtNegativeThrowsException()
+    public function testSetMaxLenghtNegativeThrowsException(): void
     {
         $this->expectException('\InvalidArgumentException');
         $this->obj->setMaxLength(-1);
     }
 
-    /**
-     * @return void
-     */
-    public function testSetRegexp()
+    public function testSetRegexp(): void
     {
         $ret = $this->obj->setRegexp('[a-z]');
         $this->assertSame($ret, $this->obj);
@@ -318,10 +277,7 @@ class StringPropertyTest extends AbstractTestCase
         $this->obj->setRegexp(null);
     }
 
-    /**
-     * @return void
-     */
-    public function testSetAllowEmpty()
+    public function testSetAllowEmpty(): void
     {
         $this->assertEquals(true, $this->obj['allowEmpty']);
 
@@ -336,10 +292,7 @@ class StringPropertyTest extends AbstractTestCase
         $this->assertFalse($this->obj['allow_empty']);
     }
 
-    /**
-     * @return void
-     */
-    public function testLength()
+    public function testLength(): void
     {
         $this->obj->setVal('foo');
         $this->assertEquals(3, $this->obj->length());
@@ -357,7 +310,7 @@ class StringPropertyTest extends AbstractTestCase
         $this->assertEquals(13, $this->obj->length());
     }
 
-    public function testParseOne()
+    public function testParseOne(): void
     {
         $this->obj->setAllowHtml(false);
         $ret = $this->obj->parseOne('<p>with html</p>');
@@ -368,18 +321,12 @@ class StringPropertyTest extends AbstractTestCase
         $this->assertEquals('<p>with html</p>', $ret);
     }
 
-    /**
-     * @return void
-     */
-    public function testValidationMethods()
+    public function testValidationMethods(): void
     {
         $this->assertIsArray($this->obj->validationMethods());
     }
 
-    /**
-     * @return void
-     */
-    public function testValidateMaxLength()
+    public function testValidateMaxLength(): void
     {
         $this->obj->setMaxLength(5);
         $this->obj->setVal('1234');
@@ -407,10 +354,7 @@ class StringPropertyTest extends AbstractTestCase
         $this->assertNotTrue($this->obj->validateMaxLength());
     }
 
-    /**
-     * @return void
-     */
-    public function testValidateMaxLengthWithZeroMaxLengthReturnsTrue()
+    public function testValidateMaxLengthWithZeroMaxLengthReturnsTrue(): void
     {
         $this->obj->setMaxLength(0);
 
@@ -420,10 +364,7 @@ class StringPropertyTest extends AbstractTestCase
         $this->assertTrue($this->obj->validateMaxLength());
     }
 
-    /**
-     * @return void
-     */
-    public function testValidateMinLength()
+    public function testValidateMinLength(): void
     {
         $this->obj->setMinLength(5);
 
@@ -452,10 +393,7 @@ class StringPropertyTest extends AbstractTestCase
         $this->assertNotTrue($this->obj->validateMinLength());
     }
 
-    /**
-     * @return void
-     */
-    public function testValidateMinLengthAllowEmpty()
+    public function testValidateMinLengthAllowEmpty(): void
     {
         $this->obj->setAllowNull(false);
         $this->obj->setMinLength(5);
@@ -468,10 +406,7 @@ class StringPropertyTest extends AbstractTestCase
         $this->assertNotTrue($this->obj->validateMinLength());
     }
 
-    /**
-     * @return void
-     */
-    public function testValidateMinLengthWithoutValReturnsFalse()
+    public function testValidateMinLengthWithoutValReturnsFalse(): void
     {
         $this->obj->setAllowNull(false);
         $this->obj->setMinLength(5);
@@ -479,10 +414,7 @@ class StringPropertyTest extends AbstractTestCase
         $this->assertNotTrue($this->obj->validateMinLength());
     }
 
-    /**
-     * @return void
-     */
-    public function testValidateMinLengthWithoutMinLengthReturnsTrue()
+    public function testValidateMinLengthWithoutMinLengthReturnsTrue(): void
     {
         $this->assertTrue($this->obj->validateMinLength());
 
@@ -490,10 +422,7 @@ class StringPropertyTest extends AbstractTestCase
         $this->assertTrue($this->obj->validateMinLength());
     }
 
-    /**
-     * @return void
-     */
-    public function testValidateRegexp()
+    public function testValidateRegexp(): void
     {
         /** Without RegExp */
         $this->assertTrue($this->obj->validateRegexp());
@@ -502,7 +431,7 @@ class StringPropertyTest extends AbstractTestCase
         $this->assertTrue($this->obj->validateRegexp());
 
         /** With RegExp */
-        $this->obj->setRegexp('/[0-9]+/');
+        $this->obj->setRegexp('/\d+/');
 
         $this->obj->setVal('123');
         $this->assertTrue($this->obj->validateRegexp());
@@ -511,10 +440,7 @@ class StringPropertyTest extends AbstractTestCase
         $this->assertNotTrue($this->obj->validateRegexp());
     }
 
-    /**
-     * @return void
-     */
-    public function testValidateAllowEmpty()
+    public function testValidateAllowEmpty(): void
     {
         $this->obj->setAllowEmpty(false);
 

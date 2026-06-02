@@ -34,7 +34,7 @@ class GenericModel extends AbstractModel
     /**
      * @param array $data Dependencies.
      */
-    public function __construct(array $data = null)
+    public function __construct(?array $data = null)
     {
         $data['metadata'] = [
             'default_data' => [
@@ -69,18 +69,17 @@ class GenericModel extends AbstractModel
 
     /**
      * @param  Container $container DI Container.
-     * @return void
      */
-    public function setDependencies(Container $container)
+    #[\Override]
+    public function setDependencies(Container $container): void
     {
         $this->setTranslator($container['translator']);
     }
 
     /**
      * @param  mixed $name The name of the model.
-     * @return self
      */
-    public function setName($name)
+    public function setName($name): static
     {
         $this->name = $this->translator()->translation($name);
 
@@ -95,10 +94,7 @@ class GenericModel extends AbstractModel
         return $this->name;
     }
 
-    /**
-     * @return string
-     */
-    public function icon()
+    public function icon(): string
     {
         return '';
     }

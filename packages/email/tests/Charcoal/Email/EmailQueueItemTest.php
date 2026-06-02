@@ -16,8 +16,6 @@ class EmailQueueItemTest extends AbstractTestCase
 
     /**
      * Set up the test.
-     *
-     * @return void
      */
     protected function setUp(): void
     {
@@ -26,20 +24,15 @@ class EmailQueueItemTest extends AbstractTestCase
 
     /**
      * Create tested class.
-     *
-     * @return EmailQueueItem
      */
-    public function createObj()
+    public function createObj(): \Charcoal\Email\EmailQueueItem
     {
         return new EmailQueueItem([
             'logger' => new NullLogger()
         ]);
     }
 
-    /**
-     * @return void
-     */
-    public function testConstructor()
+    public function testConstructor(): void
     {
         $this->assertInstanceOf(QueueItemInterface::class, $this->obj);
     }

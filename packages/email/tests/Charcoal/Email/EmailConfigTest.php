@@ -18,7 +18,7 @@ class EmailConfigTest extends AbstractTestCase
     {
         $this->obj = new EmailConfig();
     }
-    public function testSetData()
+    public function testSetData(): void
     {
         $data = [
             'smtp'             => true,
@@ -43,7 +43,7 @@ class EmailConfigTest extends AbstractTestCase
         $this->assertEquals(true, $this->obj->defaultTrackLinksEnabled());
     }
 
-    public function testSetSmtp()
+    public function testSetSmtp(): void
     {
         $ret = $this->obj->setSmtp(true);
         $this->assertSame($ret, $this->obj);
@@ -53,7 +53,7 @@ class EmailConfigTest extends AbstractTestCase
         $this->assertFalse($this->obj->smtp());
     }
 
-    public function testSetSmtpHostname()
+    public function testSetSmtpHostname(): void
     {
         $ret = $this->obj->setSmtpHostname('foobar');
         $this->assertSame($ret, $this->obj);
@@ -63,7 +63,7 @@ class EmailConfigTest extends AbstractTestCase
         $this->obj->setSmtpHostname([]);
     }
 
-    public function testSetSmtpPort()
+    public function testSetSmtpPort(): void
     {
         $ret = $this->obj->setSmtpPort(42);
         $this->assertSame($ret, $this->obj);
@@ -73,7 +73,7 @@ class EmailConfigTest extends AbstractTestCase
         $this->obj->setSmtpPort('foo');
     }
 
-    public function testSetSmtpAuth()
+    public function testSetSmtpAuth(): void
     {
         $ret = $this->obj->setSmtpAuth(true);
         $this->assertSame($ret, $this->obj);
@@ -83,7 +83,7 @@ class EmailConfigTest extends AbstractTestCase
         $this->assertFalse($this->obj->smtpAuth());
     }
 
-    public function testSetSmtpUsername()
+    public function testSetSmtpUsername(): void
     {
         $ret = $this->obj->setSmtpUsername('foobar');
         $this->assertSame($ret, $this->obj);
@@ -93,7 +93,7 @@ class EmailConfigTest extends AbstractTestCase
         $this->obj->setSmtpUsername([]);
     }
 
-    public function testSetSmtpPassword()
+    public function testSetSmtpPassword(): void
     {
         $ret = $this->obj->setSmtpPassword('foobar');
         $this->assertSame($ret, $this->obj);
@@ -103,7 +103,7 @@ class EmailConfigTest extends AbstractTestCase
         $this->obj->setSmtpPassword([]);
     }
 
-    public function testSetDefaultFrom()
+    public function testSetDefaultFrom(): void
     {
         $ret = $this->obj->setDefaultFrom('test@example.com');
         $this->assertSame($ret, $this->obj);
@@ -119,7 +119,7 @@ class EmailConfigTest extends AbstractTestCase
         $this->obj->setDefaultFrom(123);
     }
 
-    public function testSetDefaultReplyTo()
+    public function testSetDefaultReplyTo(): void
     {
         $ret = $this->obj->setDefaultReplyTo('test@example.com');
         $this->assertSame($ret, $this->obj);
@@ -135,21 +135,21 @@ class EmailConfigTest extends AbstractTestCase
         $this->obj->setDefaultReplyTo(123);
     }
 
-    public function testSetDefaultLogEnabled()
+    public function testSetDefaultLogEnabled(): void
     {
         $ret = $this->obj->setDefaultLogEnabled(true);
         $this->assertSame($ret, $this->obj);
         $this->assertEquals(true, $this->obj->defaultLogEnabled());
     }
 
-    public function testSetDefaultTrackOpenEnabled()
+    public function testSetDefaultTrackOpenEnabled(): void
     {
         $ret = $this->obj->setDefaultTrackOpenEnabled(true);
         $this->assertSame($ret, $this->obj);
         $this->assertEquals(true, $this->obj->defaultTrackOpenEnabled());
     }
 
-    public function testSetDefaultTrackLinksEnabled()
+    public function testSetDefaultTrackLinksEnabled(): void
     {
         $ret = $this->obj->setDefaultTrackLinksEnabled(true);
         $this->assertSame($ret, $this->obj);

@@ -41,25 +41,23 @@ final class RouteManager implements
      * - Templates
      * - Actions
      * - Scripts
-     *
-     * @return void
      */
-    public function setupRoutes()
+    public function setupRoutes(): void
     {
         $routes = $this->config();
 
-        if (PHP_SAPI == 'cli') {
-            $scripts = ( isset($routes['scripts']) ? $routes['scripts'] : [] );
+        if (PHP_SAPI === 'cli') {
+            $scripts = ( $routes['scripts'] ?? [] );
             foreach ($scripts as $scriptIdent => $scriptConfig) {
                 $this->setupScript($scriptIdent, $scriptConfig);
             }
         } else {
-            $templates = ( isset($routes['templates']) ? $routes['templates'] : [] );
+            $templates = ( $routes['templates'] ?? [] );
             foreach ($templates as $routeIdent => $templateConfig) {
                 $this->setupTemplate($routeIdent, $templateConfig);
             }
 
-            $actions = ( isset($routes['actions']) ? $routes['actions'] : [] );
+            $actions = ( $routes['actions'] ?? [] );
             foreach ($actions as $actionIdent => $actionConfig) {
                 $this->setupAction($actionIdent, $actionConfig);
             }
@@ -77,15 +75,11 @@ final class RouteManager implements
      */
     private function setupTemplate($routeIdent, $templateConfig)
     {
-        $routePattern = isset($templateConfig['route'])
-            ? $templateConfig['route']
-            : '/' . ltrim($routeIdent, '/');
+        $routePattern = ($templateConfig['route'] ?? '/' . ltrim($routeIdent, '/'));
 
         $templateConfig['route'] = $routePattern;
 
-        $methods = isset($templateConfig['methods'])
-            ? $templateConfig['methods']
-            : [ 'GET' ];
+        $methods = ($templateConfig['methods'] ?? [ 'GET' ]);
 
         $routeHandler = $this->app->map(
             $methods,
@@ -119,9 +113,7 @@ final class RouteManager implements
                 }
 
                 $defaultController = $this['route/controller/template/class'];
-                $routeController   = isset($templateConfig['route_controller'])
-                    ? $templateConfig['route_controller']
-                    : $defaultController;
+                $routeController   = ($templateConfig['route_controller'] ?? $defaultController);
 
                 $routeFactory = $this['route/factory'];
                 $routeFactory->setDefaultClass($defaultController);
@@ -153,15 +145,11 @@ final class RouteManager implements
      */
     private function setupAction($routeIdent, $actionConfig)
     {
-        $routePattern = isset($actionConfig['route'])
-            ? $actionConfig['route']
-            : '/' . ltrim($routeIdent, '/');
+        $routePattern = ($actionConfig['route'] ?? '/') . ltrim($routeIdent, '/');
 
         $actionConfig['route'] = $routePattern;
 
-        $methods = isset($actionConfig['methods'])
-            ? $actionConfig['methods']
-            : [ 'POST' ];
+        $methods = ($actionConfig['methods'] ?? [ 'POST' ]);
 
         $routeHandler = $this->app->map(
             $methods,
@@ -195,9 +183,7 @@ final class RouteManager implements
                 }
 
                 $defaultController = $this['route/controller/action/class'];
-                $routeController   = isset($actionConfig['route_controller'])
-                    ? $actionConfig['route_controller']
-                    : $defaultController;
+                $routeController   = ($actionConfig['route_controller'] ?? $defaultController);
 
                 $routeFactory = $this['route/factory'];
                 $routeFactory->setDefaultClass($defaultController);
@@ -229,15 +215,11 @@ final class RouteManager implements
      */
     private function setupScript($routeIdent, $scriptConfig)
     {
-        $routePattern = isset($scriptConfig['route'])
-            ? $scriptConfig['route']
-            : '/' . ltrim($routeIdent, '/');
+        $routePattern = ($scriptConfig['route'] ?? '/') . ltrim($routeIdent, '/');
 
         $scriptConfig['route'] = $routePattern;
 
-        $methods = isset($scriptConfig['methods'])
-            ? $scriptConfig['methods']
-            : [ 'GET' ];
+        $methods = ($scriptConfig['methods'] ?? [ 'GET' ]);
 
         $routeHandler = $this->app->map(
             $methods,
@@ -271,9 +253,7 @@ final class RouteManager implements
                 }
 
                 $defaultController = $this['route/controller/script/class'];
-                $routeController   = isset($scriptConfig['route_controller'])
-                    ? $scriptConfig['route_controller']
-                    : $defaultController;
+                $routeController   = ($scriptConfig['route_controller'] ?? $defaultController);
 
                 $routeFactory = $this['route/factory'];
                 $routeFactory->setDefaultClass($defaultController);

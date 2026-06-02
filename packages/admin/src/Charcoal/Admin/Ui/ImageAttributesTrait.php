@@ -90,7 +90,7 @@ trait ImageAttributesTrait
      *
      * @return string
      */
-    protected function defaultStyleAttr()
+    protected function defaultStyleAttr(): array
     {
         return [
             'height'     => $this->height(),
@@ -104,12 +104,11 @@ trait ImageAttributesTrait
      * Parse the CSS styling declarations from the property's display features.
      *
      * @param  string[] $styles An associative array of CSS styles.
-     * @return string
      */
-    protected function parseStyleAttr(array $styles)
+    protected function parseStyleAttr(array $styles): string
     {
         $inline = array_map(
-            function ($val, $key) {
+            function (int|string $val, int|string $key) {
                 if (is_bool($val)) {
                     return ($val) ? $key : '';
                 } elseif (isset($val)) {
@@ -278,10 +277,9 @@ trait ImageAttributesTrait
      * Determine if the value is a {@see @see http://en.wikipedia.org/wiki/Data_URI_scheme Data URI}.
      *
      * @param  string $val A path or URI to analyze.
-     * @return boolean
      */
-    protected function isDataUri($val)
+    protected function isDataUri($val): bool
     {
-        return (0 === strpos($val, 'data:'));
+        return (str_starts_with($val, 'data:'));
     }
 }

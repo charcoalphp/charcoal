@@ -27,6 +27,8 @@ class SecondaryMenuWidget extends AdminWidget implements
     use ActionContainerTrait;
     use HttpAwareTrait;
 
+    public $isCurrent;
+
     /**
      * Default sorting priority for an action.
      *
@@ -71,31 +73,23 @@ class SecondaryMenuWidget extends AdminWidget implements
 
     /**
      * Whether the group is collapsed or not.
-     *
-     * @var boolean
      */
-    private $collapsed = false;
+    private bool $collapsed = false;
 
     /**
      * Whether the group has siblings or not.
-     *
-     * @var boolean
      */
-    private $parented = false;
+    private bool $parented = false;
 
     /**
      * The title is displayed by default.
-     *
-     * @var boolean
      */
-    private $showTitle = true;
+    private bool $showTitle = true;
 
     /**
      * The description is displayed by default.
-     *
-     * @var boolean
      */
-    private $showDescription = true;
+    private bool $showDescription = true;
 
     /**
      * The currently highlighted item.
@@ -148,9 +142,9 @@ class SecondaryMenuWidget extends AdminWidget implements
 
     /**
      * @param  array $data Class data.
-     * @return self
      */
-    public function setData(array $data)
+    #[\Override]
+    public function setData(array $data): static
     {
 
         if (isset($data['actions'])) {
@@ -242,9 +236,8 @@ class SecondaryMenuWidget extends AdminWidget implements
 
     /**
      * @param  string $ident The ident for the current item to highlight.
-     * @return self
      */
-    public function setCurrentItem($ident)
+    public function setCurrentItem($ident): static
     {
         $this->currentItem = $ident;
         return $this;
@@ -262,9 +255,8 @@ class SecondaryMenuWidget extends AdminWidget implements
      * Computes the intersection of values to determine if the link is the current item.
      *
      * @param  mixed $linkIdent The link's value(s) to check.
-     * @return boolean
      */
-    public function isCurrentItem($linkIdent)
+    public function isCurrentItem($linkIdent): bool
     {
         $context = array_filter([
             $this->currentItem(),
@@ -274,7 +266,7 @@ class SecondaryMenuWidget extends AdminWidget implements
 
         $matches = array_intersect((array)$linkIdent, $context);
 
-        return !!$matches;
+        return (bool)$matches;
     }
 
     /**
@@ -291,11 +283,10 @@ class SecondaryMenuWidget extends AdminWidget implements
      * Show/hide the widget's title.
      *
      * @param  boolean $show Show (TRUE) or hide (FALSE) the title.
-     * @return self
      */
-    public function setShowTitle($show)
+    public function setShowTitle($show): static
     {
-        $this->showTitle = !!$show;
+        $this->showTitle = (bool)$show;
 
         return $this;
     }
@@ -310,7 +301,7 @@ class SecondaryMenuWidget extends AdminWidget implements
         if ($this->showTitle === false) {
             return false;
         } else {
-            return !!$this->title();
+            return (bool)$this->title();
         }
     }
 
@@ -318,9 +309,8 @@ class SecondaryMenuWidget extends AdminWidget implements
      * Set the title of the secondary menu.
      *
      * @param  mixed $title A title for the secondary menu.
-     * @return self
      */
-    public function setTitle($title)
+    public function setTitle($title): static
     {
         $this->title = $this->translator()->translation($title);
 
@@ -352,9 +342,8 @@ class SecondaryMenuWidget extends AdminWidget implements
      * Set the secondary menu links.
      *
      * @param  array $links A collection of link objects.
-     * @return self
      */
-    public function setLinks(array $links)
+    public function setLinks(array $links): static
     {
         $this->links = new ArrayIterator();
 
@@ -371,9 +360,8 @@ class SecondaryMenuWidget extends AdminWidget implements
      * @param  string       $linkIdent The link identifier.
      * @param  array|object $link      The link object or structure.
      * @throws InvalidArgumentException If the link is invalid.
-     * @return self
      */
-    public function addLink($linkIdent, $link)
+    public function addLink($linkIdent, $link): static
     {
         if (!is_string($linkIdent) && !is_numeric($linkIdent)) {
             throw new InvalidArgumentException(
@@ -394,7 +382,7 @@ class SecondaryMenuWidget extends AdminWidget implements
             }
 
             if (isset($link['active'])) {
-                $active = !!$link['active'];
+                $active = (bool)$link['active'];
             }
 
             if (isset($link['name'])) {
@@ -423,7 +411,7 @@ class SecondaryMenuWidget extends AdminWidget implements
         } else {
             throw new InvalidArgumentException(sprintf(
                 'Link must be an associative array, received %s',
-                (is_object($link) ? get_class($link) : gettype($link))
+                (get_debug_type($link))
             ));
         }
 
@@ -463,10 +451,8 @@ class SecondaryMenuWidget extends AdminWidget implements
                 unset($link['required_acl_permissions']);
             }
 
-            if (isset($link['permissions'])) {
-                if ($this->hasPermissions($link['permissions']) === false) {
-                    continue;
-                }
+            if (isset($link['permissions']) && $this->hasPermissions($link['permissions']) === false) {
+                continue;
             }
 
             $out[] = $link;
@@ -481,9 +467,8 @@ class SecondaryMenuWidget extends AdminWidget implements
      *
      * @param  mixed $type The display type.
      * @throws InvalidArgumentException If the display type is invalid.
-     * @return self
      */
-    public function setDisplayType($type)
+    public function setDisplayType($type): static
     {
         if (!is_string($type)) {
             throw new InvalidArgumentException('The display type must be a string.');
@@ -517,20 +502,16 @@ class SecondaryMenuWidget extends AdminWidget implements
 
     /**
      * Determine if the secondary menu groups should be displayed as panels.
-     *
-     * @return boolean
      */
-    public function displayAsPanel()
+    public function displayAsPanel(): bool
     {
         return in_array($this->displayType(), [ 'panel', 'collapsible' ]);
     }
 
     /**
      * Determine if the display type is "collapsible".
-     *
-     * @return boolean
      */
-    public function collapsible()
+    public function collapsible(): bool
     {
         return ($this->displayType() === 'collapsible');
     }
@@ -540,9 +521,8 @@ class SecondaryMenuWidget extends AdminWidget implements
      *
      * @param  array $options Display configuration.
      * @throws InvalidArgumentException If the display options are not an associative array.
-     * @return self
      */
-    public function setDisplayOptions(array $options)
+    public function setDisplayOptions(array $options): static
     {
         $this->displayOptions = array_replace($this->defaultDisplayOptions(), $options);
 
@@ -579,10 +559,8 @@ class SecondaryMenuWidget extends AdminWidget implements
 
     /**
      * Retrieve the default display options for the secondary menu.
-     *
-     * @return array
      */
-    public function defaultDisplayOptions()
+    public function defaultDisplayOptions(): array
     {
         return [
             'parented'  => false,
@@ -618,9 +596,8 @@ class SecondaryMenuWidget extends AdminWidget implements
      * Set the secondary menu's groups.
      *
      * @param  array $groups A collection of group structures.
-     * @return self
      */
-    public function setGroups(array $groups)
+    public function setGroups(array $groups): static
     {
         $this->groups = [];
 
@@ -628,12 +605,10 @@ class SecondaryMenuWidget extends AdminWidget implements
             $this->addGroup($groupIdent, $group);
         }
 
-        uasort($this->groups, [ 'Charcoal\Admin\Support\Sorter', 'sortByPriority' ]);
+        uasort($this->groups, \Charcoal\Admin\Support\Sorter::sortByPriority(...));
 
         // Remove items that are not active and reset keys.
-        $this->groups = array_values(array_filter($this->groups, function ($item) {
-            return ($item->active());
-        }));
+        $this->groups = array_values(array_filter($this->groups, fn($item) => $item->active()));
 
         return $this;
     }
@@ -644,9 +619,8 @@ class SecondaryMenuWidget extends AdminWidget implements
      * @param  string                            $groupIdent The group identifier.
      * @param  array|SecondaryMenuGroupInterface $group      The group object or structure.
      * @throws InvalidArgumentException If the identifier is not a string or the group is invalid.
-     * @return self
      */
-    public function addGroup($groupIdent, $group)
+    public function addGroup($groupIdent, $group): static
     {
         if (!is_string($groupIdent)) {
             throw new InvalidArgumentException(
@@ -695,7 +669,7 @@ class SecondaryMenuWidget extends AdminWidget implements
             throw new InvalidArgumentException(sprintf(
                 'Group must be an instance of %s or an array of form group options, received %s',
                 'SecondaryMenuGroupInterface',
-                (is_object($group) ? get_class($group) : gettype($group))
+                (get_debug_type($group))
             ));
         }
 
@@ -734,36 +708,30 @@ class SecondaryMenuWidget extends AdminWidget implements
 
     /**
      * Retrieve the default secondary menu group class name.
-     *
-     * @return string
      */
-    public function defaultGroupType()
+    public function defaultGroupType(): string
     {
         return 'charcoal/ui/secondary-menu/generic';
     }
 
     /**
      * Determine if the secondary menu has any links.
-     *
-     * @return boolean
      */
-    public function hasLinks()
+    public function hasLinks(): bool
     {
-        return !!$this->numLinks();
+        return (bool)$this->numLinks();
     }
 
     /**
      * Count the number of secondary menu links.
-     *
-     * @return integer
      */
-    public function numLinks()
+    public function numLinks(): int
     {
         if (!is_array($this->links()) && !($this->links() instanceof \Traversable)) {
             return 0;
         }
 
-        $links = array_filter($this->links, function ($link) {
+        $links = array_filter($this->links, function (array $link): bool {
             if (isset($link['active']) && !$link['active']) {
                 return false;
             }
@@ -772,14 +740,7 @@ class SecondaryMenuWidget extends AdminWidget implements
                 $link['permissions'] = $link['required_acl_permissions'];
                 unset($link['required_acl_permissions']);
             }
-
-            if (isset($link['permissions'])) {
-                if ($this->hasPermissions($link['permissions']) === false) {
-                    return false;
-                }
-            }
-
-            return true;
+            return !(isset($link['permissions']) && $this->hasPermissions($link['permissions']) === false);
         });
 
         return count($links);
@@ -787,40 +748,32 @@ class SecondaryMenuWidget extends AdminWidget implements
 
     /**
      * Determine if the secondary menu has any groups of links.
-     *
-     * @return boolean
      */
-    public function hasGroups()
+    public function hasGroups(): bool
     {
-        return !!$this->numGroups();
+        return (bool)$this->numGroups();
     }
 
     /**
      * Count the number of secondary menu groups.
-     *
-     * @return integer
      */
-    public function numGroups()
+    public function numGroups(): int
     {
         return count($this->groups());
     }
 
     /**
      * Alias for {@see self::showSecondaryMenuActions()}
-     *
-     * @return boolean
      */
-    public function hasActions()
+    public function hasActions(): int
     {
         return $this->showSecondaryMenuActions();
     }
 
     /**
      * Determine if the secondary menu's actions should be shown.
-     *
-     * @return boolean
      */
-    public function showSecondaryMenuActions()
+    public function showSecondaryMenuActions(): int
     {
         $actions = $this->secondaryMenuActions();
 
@@ -837,11 +790,7 @@ class SecondaryMenuWidget extends AdminWidget implements
         if ($this->secondaryMenuActions === null) {
             $ident    = $this->ident();
             $metadata = $this->adminSecondaryMenu();
-            if (isset($metadata[$ident]['actions'])) {
-                $actions = $metadata[$ident]['actions'];
-            } else {
-                $actions = [];
-            }
+            $actions = ($metadata[$ident]['actions'] ?? []);
             $this->setSecondaryMenuActions($actions);
         }
 
@@ -857,9 +806,8 @@ class SecondaryMenuWidget extends AdminWidget implements
      * Set the description of the secondary menu.
      *
      * @param  mixed $description A description for the secondary menu.
-     * @return self
      */
-    public function setDescription($description)
+    public function setDescription($description): static
     {
         $this->description = $this->translator()->translation($description);
 
@@ -891,11 +839,10 @@ class SecondaryMenuWidget extends AdminWidget implements
      * Determine if the description is to be displayed.
      *
      * @param  boolean $show Show (TRUE) or hide (FALSE) the description.
-     * @return self
      */
-    public function setShowDescription($show)
+    public function setShowDescription($show): static
     {
-        $this->showDescription = !!$show;
+        $this->showDescription = (bool)$show;
         return $this;
     }
 
@@ -909,14 +856,11 @@ class SecondaryMenuWidget extends AdminWidget implements
         if ($this->showDescription === false) {
             return false;
         } else {
-            return !!$this->description();
+            return (bool)$this->description();
         }
     }
 
-    /**
-     * @return string
-     */
-    public function jsActionPrefix()
+    public function jsActionPrefix(): string
     {
         return 'js-secondary-menu';
     }
@@ -927,6 +871,7 @@ class SecondaryMenuWidget extends AdminWidget implements
      * @param  Container $container A dependencies container instance.
      * @return void
      */
+    #[\Override]
     protected function setDependencies(Container $container)
     {
         parent::setDependencies($container);
@@ -951,9 +896,8 @@ class SecondaryMenuWidget extends AdminWidget implements
      * Set the widget's display state.
      *
      * @param  boolean $flag A truthy state.
-     * @return self
      */
-    protected function setIsCurrent($flag)
+    protected function setIsCurrent($flag): static
     {
         $this->isCurrent = boolval($flag);
 
@@ -968,10 +912,10 @@ class SecondaryMenuWidget extends AdminWidget implements
      */
     protected function secondaryMenu()
     {
-        if (!isset($this->secondaryMenu)) {
+        if ($this->secondaryMenu === null) {
             throw new RuntimeException(sprintf(
                 'Secondary Menu Group Factory is not defined for "%s"',
-                get_class($this)
+                static::class
             ));
         }
 
@@ -982,9 +926,8 @@ class SecondaryMenuWidget extends AdminWidget implements
      * Set the secondary menu's actions.
      *
      * @param  array $actions One or more actions.
-     * @return self
      */
-    protected function setSecondaryMenuActions(array $actions)
+    protected function setSecondaryMenuActions(array $actions): static
     {
         $this->parsedSecondaryMenuActions = false;
 
@@ -1003,11 +946,9 @@ class SecondaryMenuWidget extends AdminWidget implements
      * @param  array $actions Actions to resolve.
      * @return array Secondary menu actions.
      */
-    protected function createSecondaryMenuActions(array $actions)
+    protected function createSecondaryMenuActions(array $actions): array
     {
-        $secondaryMenuActions = $this->parseActions($actions);
-
-        return $secondaryMenuActions;
+        return $this->parseActions($actions);
     }
 
     /**
@@ -1028,9 +969,8 @@ class SecondaryMenuWidget extends AdminWidget implements
      * Set a secondary menu group factory.
      *
      * @param FactoryInterface $factory The group factory, to create objects.
-     * @return void
      */
-    private function setSecondaryMenuGroupFactory(FactoryInterface $factory)
+    private function setSecondaryMenuGroupFactory(FactoryInterface $factory): void
     {
         $this->secondaryMenu = $factory;
     }

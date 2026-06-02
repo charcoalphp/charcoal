@@ -40,15 +40,11 @@ class LostPasswordAction extends AdminAction
 {
     /**
      * Store the factory instance for the current class.
-     *
-     * @var FactoryInterface
      */
-    private $emailFactory;
+    private ?\Charcoal\Factory\FactoryInterface $emailFactory = null;
 
-    /**
-     * @return boolean
-     */
-    public function authRequired()
+    #[\Override]
+    public function authRequired(): bool
     {
         return false;
     }
@@ -65,7 +61,7 @@ class LostPasswordAction extends AdminAction
     {
         $translator = $this->translator();
 
-        $ip = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : null;
+        $ip = ($_SERVER['REMOTE_ADDR'] ?? null);
 
         $email = $request->getParam('email');
         if (!$email) {
@@ -94,7 +90,8 @@ class LostPasswordAction extends AdminAction
             return $response;
         }
 
-        $doneMessage = $translator->translate('If a registered user matches the given email address, instructions to reset your password will be sent to the email address registered with that account.');
+        $doneMessage = $translator->translate('If a registered user matches the given email address, instructions' .
+            ' to reset your password will be sent to the email address registered with that account.');
         $failMessage = $translator->translate('An error occurred while processing the password reset request.');
 
         $authenticator = $this->authenticator();
@@ -160,23 +157,20 @@ class LostPasswordAction extends AdminAction
         }
     }
 
-    /**
-     * @return array
-     */
-    public function results()
+    #[\Override]
+    public function results(): array
     {
-        $ret = [
+        return [
             'success'   => $this->success(),
             'feedbacks' => $this->feedbacks(),
         ];
-
-        return $ret;
     }
 
     /**
      * @param Container $container Pimple DI Container.
      * @return void
      */
+    #[\Override]
     protected function setDependencies(Container $container)
     {
         parent::setDependencies($container);
@@ -187,13 +181,12 @@ class LostPasswordAction extends AdminAction
      * Retrieve the email model factory.
      *
      * @throws RuntimeException If the model factory was not previously set.
-     * @return FactoryInterface
      */
-    protected function emailFactory()
+    protected function emailFactory(): \Charcoal\Factory\FactoryInterface
     {
-        if (!isset($this->emailFactory)) {
+        if (!$this->emailFactory instanceof \Charcoal\Factory\FactoryInterface) {
             throw new RuntimeException(
-                sprintf('Email Factory is not defined for "%s"', get_class($this))
+                sprintf('Email Factory is not defined for "%s"', static::class)
             );
         }
 
@@ -204,9 +197,8 @@ class LostPasswordAction extends AdminAction
      * Set an email model factory.
      *
      * @param FactoryInterface $factory The email factory, to create emails.
-     * @return self
      */
-    private function setEmailFactory(FactoryInterface $factory)
+    private function setEmailFactory(FactoryInterface $factory): static
     {
         $this->emailFactory = $factory;
 
@@ -231,9 +223,8 @@ class LostPasswordAction extends AdminAction
      * @todo   Implement `$container['admin/config']['user.lost_password_email']`
      * @param  User   $user  The user to send the lost-password email to.
      * @param  string $token The lost-password token, as string.
-     * @return void
      */
-    private function sendLostPasswordEmail(User $user, $token)
+    private function sendLostPasswordEmail(User $user, $token): void
     {
         $translator = $this->translator();
         $userEmail  = $user['email'];
@@ -268,7 +259,7 @@ class LostPasswordAction extends AdminAction
                 'adminUrl'         => $this->adminUrl(),
                 'urlResetPassword' => $this->adminUrl() . 'account/reset-password/' . $token->id(),
                 'expiry'           => $token->expiry()->format('Y-m-d H:i:s'),
-                'ipAddress'        => isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '',
+                'ipAddress'        => ($_SERVER['REMOTE_ADDR'] ?? ''),
             ],
         ]);
         $emailObj->send();

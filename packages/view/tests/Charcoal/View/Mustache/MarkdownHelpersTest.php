@@ -3,7 +3,7 @@
 namespace Charcoal\Tests\View\Mustache;
 
 // From Mustache
-use Mustache_Engine as MustacheEngine;
+use Mustache\Engine as MustacheEngine;
 
 // From 'erusev/parsedown'
 use Parsedown;
@@ -17,19 +17,10 @@ use Charcoal\Tests\AbstractTestCase;
  */
 class MarkdownHelpersTest extends AbstractTestCase
 {
-    /**
-     * @var MarkdownHelpers
-     */
-    private $obj;
+    private \Charcoal\View\Mustache\MarkdownHelpers $obj;
 
-    /**
-     * @var MustacheEngine
-     */
-    private $mustache;
+    private MustacheEngine $mustache;
 
-    /**
-     * @return void
-     */
     public function setUp(): void
     {
         $parsedown = new Parsedown();
@@ -42,10 +33,7 @@ class MarkdownHelpersTest extends AbstractTestCase
         ]);
     }
 
-    /**
-     * @return void
-     */
-    public function testMarkdown()
+    public function testMarkdown(): void
     {
         $template = $this->mustache->loadTemplate(
             '{{# markdown }}**test**{{/ markdown }}'

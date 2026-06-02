@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Charcoal\Tests\View\Mustache;
 
 // From 'charcoal-view'
@@ -11,14 +13,8 @@ use Charcoal\Tests\AbstractTestCase;
  */
 class MustacheLoaderTest extends AbstractTestCase
 {
-    /**
-     * @var MustacheLoader
-     */
-    private $obj;
+    private \Charcoal\View\Mustache\MustacheLoader $obj;
 
-    /**
-     * @return void
-     */
     public function setUp(): void
     {
         $this->obj = new MustacheLoader([
@@ -28,12 +24,11 @@ class MustacheLoaderTest extends AbstractTestCase
     }
 
     /**
-     * @dataProvider templateProvider
      *
      * @param  string $template The template to load.
-     * @return void
      */
-    public function testLoad($template)
+    #[\PHPUnit\Framework\Attributes\DataProvider('templateProvider')]
+    public function testLoad(string $template): void
     {
         $ret = $this->obj->load($template);
 
@@ -42,12 +37,11 @@ class MustacheLoaderTest extends AbstractTestCase
     }
 
     /**
-     * @dataProvider templateProvider
      *
      * @param  string $template The template to load.
-     * @return void
      */
-    public function testLoadDynamic($template)
+    #[\PHPUnit\Framework\Attributes\DataProvider('templateProvider')]
+    public function testLoadDynamic(string $template): void
     {
         $this->obj->setDynamicTemplate('dynamic', $template);
         $ret = $this->obj->load('$dynamic');
@@ -56,19 +50,13 @@ class MustacheLoaderTest extends AbstractTestCase
         $this->assertEquals($expected, $ret);
     }
 
-    /**
-     * @return void
-     */
-    public function testLoadNotExisting()
+    public function testLoadNotExisting(): void
     {
         $ret = $this->obj->load('foo/bar/foobar');
         $this->assertEquals('foo/bar/foobar', $ret);
     }
 
-    /**
-     * @return array
-     */
-    public function templateProvider()
+    public static function templateProvider(): array
     {
         return [
             [ 'foo' ],

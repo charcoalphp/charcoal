@@ -16,10 +16,8 @@ class NewsRouteTest extends AbstractRouteTestCase
     /**
      * Asserts that `NewsRoute::__invoke()` method returns an HTTP Response object
      * with a 404 status code if the path does not resolve to any routable model.
-     *
-     * @return void
      */
-    public function testInvokeOnNonexistentModel()
+    public function testInvokeOnNonexistentModel(): void
     {
         $container = $this->getContainer();
         $router    = $this->createRouter([
@@ -41,10 +39,8 @@ class NewsRouteTest extends AbstractRouteTestCase
      * if the resolved model has a nonexistent template controller.
      *
      * The "template/factory" service throws an Exception when a model's template controller can not be found.
-     *
-     * @return void
      */
-    public function testInvokeOnExistingModelWithMissingTemplateController()
+    public function testInvokeOnExistingModelWithMissingTemplateController(): void
     {
         $this->insertMockRoutableContextObjects([
             'templateIdent' => 'nonexistent',
@@ -62,16 +58,14 @@ class NewsRouteTest extends AbstractRouteTestCase
         $response  = $this->createHttpResponse();
 
         $this->expectException(InvalidArgumentException::class);
-        $response = $router($container, $request, $response);
+        $router($container, $request, $response);
     }
 
     /**
      * Asserts that `NewsRoute::__invoke()` method returns an HTTP Response object
      * with a 500 status code if the resolved model does not have a template identifier.
-     *
-     * @return void
      */
-    public function testInvokeOnExistingModelWithoutTemplateIdent()
+    public function testInvokeOnExistingModelWithoutTemplateIdent(): void
     {
         $this->insertMockRoutableContextObjects([
             'templateIdent' => '',
@@ -95,10 +89,8 @@ class NewsRouteTest extends AbstractRouteTestCase
     /**
      * Asserts that `NewsRoute::__invoke()` method returns an HTTP Response object
      * with a 500 status code if the resolved model does not have a rendered template view.
-     *
-     * @return void
      */
-    public function testInvokeOnExistingModelWithBadTemplateIdent()
+    public function testInvokeOnExistingModelWithBadTemplateIdent(): void
     {
         $this->insertMockRoutableContextObjects([
             'templateIdent' => 'charcoal/tests/cms/mock/broken',
@@ -122,10 +114,8 @@ class NewsRouteTest extends AbstractRouteTestCase
     /**
      * Asserts that `NewsRoute::__invoke()` method returns an HTTP Response object
      * with a 2XX status code if the path does resolve to a specific routable model.
-     *
-     * @return void
      */
-    public function testInvokeOnExistingModelWithTemplateIdent()
+    public function testInvokeOnExistingModelWithTemplateIdent(): void
     {
         $this->insertMockRoutableContextObjects([
             'templateIdent' => 'charcoal/tests/cms/mock/news',
@@ -151,9 +141,8 @@ class NewsRouteTest extends AbstractRouteTestCase
      * Create the dynamic route to test.
      *
      * @param  array $data The dynamic route dependencies.
-     * @return NewsRoute
      */
-    protected function createRouter(array $data = [])
+    protected function createRouter(array $data = []): \Charcoal\Cms\Route\NewsRoute
     {
         return new NewsRoute($data + [
             'config' => [],

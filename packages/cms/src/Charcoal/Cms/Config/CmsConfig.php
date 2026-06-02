@@ -74,12 +74,10 @@ class CmsConfig extends AbstractConfig
     // ==========================================================================
     // INIT
     // ==========================================================================
-
     /**
      * @param ModelInterface $model The object model.
-     * @return void
      */
-    public function addModel(ModelInterface $model)
+    public function addModel(ModelInterface $model): void
     {
         $this->setData($model->data());
     }
@@ -87,12 +85,10 @@ class CmsConfig extends AbstractConfig
     // ==========================================================================
     // SETTERS
     // ==========================================================================
-
     /**
      * @param mixed $defaultFromEmail The default email for contact forms.
-     * @return self
      */
-    public function setDefaultFromEmail($defaultFromEmail)
+    public function setDefaultFromEmail($defaultFromEmail): static
     {
         $this->defaultFromEmail = $defaultFromEmail;
 
@@ -101,9 +97,8 @@ class CmsConfig extends AbstractConfig
 
     /**
      * @param mixed $homeNews The news to display on home page.
-     * @return self
      */
-    public function setHomeNews($homeNews)
+    public function setHomeNews($homeNews): static
     {
         $this->homeNews = $homeNews;
 
@@ -112,9 +107,8 @@ class CmsConfig extends AbstractConfig
 
     /**
      * @param mixed $homeEvents The events to display on home page.
-     * @return self
      */
-    public function setHomeEvents($homeEvents)
+    public function setHomeEvents($homeEvents): static
     {
         $this->homeEvents = $homeEvents;
 
@@ -125,7 +119,7 @@ class CmsConfig extends AbstractConfig
      * @param array $newsConfig The news configuration object.
      * @return $this
      */
-    public function setNews(array $newsConfig)
+    public function setNews(array $newsConfig): static
     {
         if (!$this->newsConfig) {
             $this->newsConfig = new NewsConfig();
@@ -140,7 +134,7 @@ class CmsConfig extends AbstractConfig
      * @param array $eventConfig The event configuration object.
      * @return $this
      */
-    public function setEvent(array $eventConfig)
+    public function setEvent(array $eventConfig): static
     {
         if (!$this->eventConfig) {
             $this->eventConfig = new EventConfig();
@@ -155,7 +149,7 @@ class CmsConfig extends AbstractConfig
      * @param array $sectionConfig The section configuration object.
      * @return $this
      */
-    public function setSection(array $sectionConfig)
+    public function setSection(array $sectionConfig): static
     {
         if (!$this->sectionConfig) {
             $this->sectionConfig = new SectionConfig();
@@ -168,9 +162,8 @@ class CmsConfig extends AbstractConfig
 
     /**
      * @param string $contactCategory Must conform City\\Support\\Interface\\ContactCategoryInterface.
-     * @return self
      */
-    public function setContactCategoryObj($contactCategory)
+    public function setContactCategoryObj($contactCategory): static
     {
         $this->contactCategoryObj = $contactCategory;
 
@@ -179,9 +172,8 @@ class CmsConfig extends AbstractConfig
 
     /**
      * @param string $contactObj Must conform City\\Support\\Interface\\ContactInterface.
-     * @return self
      */
-    public function setContactObj($contactObj)
+    public function setContactObj($contactObj): static
     {
         $this->contactObj = $contactObj;
 
@@ -190,9 +182,8 @@ class CmsConfig extends AbstractConfig
 
     /**
      * @param string $defaultContactCategory The default contact category fallback.
-     * @return self
      */
-    public function setDefaultContactCategory($defaultContactCategory)
+    public function setDefaultContactCategory($defaultContactCategory): static
     {
         $this->defaultContactCategory = $defaultContactCategory;
 
@@ -201,9 +192,8 @@ class CmsConfig extends AbstractConfig
 
     /**
      * @param array $dateFormats Formats for full dates.
-     * @return self
      */
-    public function setDateFormats(array $dateFormats)
+    public function setDateFormats(array $dateFormats): static
     {
         $this->dateFormats = array_replace_recursive(
             $this->dateFormats,
@@ -215,9 +205,8 @@ class CmsConfig extends AbstractConfig
 
     /**
      * @param array $timeFormats Formats for time.
-     * @return self
      */
-    public function setTimeFormats(array $timeFormats)
+    public function setTimeFormats(array $timeFormats): static
     {
         $this->timeFormats = array_replace_recursive(
             $this->timeFormats,

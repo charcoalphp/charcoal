@@ -12,10 +12,7 @@ use Charcoal\Image\ImageInterface;
  */
 abstract class AbstractEffect implements EffectInterface
 {
-    /**
-     * @var ImageInterface $image
-     */
-    private $image;
+    private ?\Charcoal\Image\ImageInterface $image = null;
 
     /**
      * @param ImageInterface $image The parent image.
@@ -33,7 +30,7 @@ abstract class AbstractEffect implements EffectInterface
      */
     public function image()
     {
-        if ($this->image === null) {
+        if (!$this->image instanceof \Charcoal\Image\ImageInterface) {
             throw new Exception(
                 'Can not get effect\'s image: Trying to access an unset image'
             );
@@ -60,7 +57,7 @@ abstract class AbstractEffect implements EffectInterface
      * @param array $data Optional effect data. If null, use the currently set properties.
      * @return AbstractEffect Chainable
      */
-    abstract public function process(array $data = null);
+    abstract public function process(?array $data = null);
 
     /**
      * Allow an object to define how the key setter are called.
@@ -68,7 +65,7 @@ abstract class AbstractEffect implements EffectInterface
      * @param string $key The key to get the setter from.
      * @return string The setter method name, for a given key.
      */
-    protected function setter($key)
+    protected function setter(string $key)
     {
         $setter = 'set_' . $key;
         return $this->camelize($setter);
@@ -82,6 +79,6 @@ abstract class AbstractEffect implements EffectInterface
      */
     protected function camelize($str)
     {
-        return lcfirst(implode('', array_map('ucfirst', explode('_', $str))));
+        return lcfirst(implode('', array_map(ucfirst(...), explode('_', $str))));
     }
 }

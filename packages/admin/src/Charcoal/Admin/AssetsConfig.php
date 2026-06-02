@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Charcoal\Admin;
 
 // from charcoal-config
@@ -25,9 +27,8 @@ class AssetsConfig extends AbstractConfig
 
     /**
      * @param array|mixed $collections Collections for AssetsConfig.
-     * @return self
      */
-    public function setCollections($collections)
+    public function setCollections($collections): static
     {
         $this->collections = $collections;
 

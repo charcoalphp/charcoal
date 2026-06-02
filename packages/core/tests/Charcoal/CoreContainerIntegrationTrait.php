@@ -50,10 +50,9 @@ trait CoreContainerIntegrationTrait
     }
 
     /**
-     * @return void
      * @see    CoreContainerProvider
      */
-    private function setupContainer()
+    private function setupContainer(): void
     {
         $provider  = new CoreContainerProvider();
         $container = new Container();

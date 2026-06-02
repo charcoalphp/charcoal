@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Charcoal\Source;
 
 /**
@@ -91,7 +93,7 @@ interface StorableInterface
      * @param  string[] $keys If provided, only update the properties specified.
      * @return boolean TRUE on success.
      */
-    public function update(array $keys = null);
+    public function update(?array $keys = null);
 
     /**
      * Delete an object from storage.

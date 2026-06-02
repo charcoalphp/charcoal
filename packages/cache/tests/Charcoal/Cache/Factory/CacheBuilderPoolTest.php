@@ -14,17 +14,17 @@ use Stash\Interfaces\PoolInterface;
 
 /**
  * Test the cache pool creation and pool attributes from the CacheBuilder.
- *
- * @coversDefaultClass \Charcoal\Cache\CacheBuilder
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\Charcoal\Cache\CacheBuilder::class)]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Cache\CacheBuilder::class, '__invoke')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Cache\CacheBuilder::class, 'parsePoolOptions')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Cache\CacheBuilder::class, 'applyPoolOptions')]
 class CacheBuilderPoolTest extends AbstractCacheBuilderTest
 {
     /**
      * Asserts that the CacheBuilder is invokable.
-     *
-     * @covers ::__invoke
      */
-    public function testBuildIsInvokable()
+    public function testBuildIsInvokable(): void
     {
         $builder = $this->createBuilder();
         $driver  = $this->createDriver('BlackHole');
@@ -35,11 +35,8 @@ class CacheBuilderPoolTest extends AbstractCacheBuilderTest
 
     /**
      * Asserts that the Pool logger can be assigned from build options.
-     *
-     * @covers ::parsePoolOptions
-     * @covers ::applyPoolOptions
      */
-    public function testBuildWithLoggerOnOptions()
+    public function testBuildWithLoggerOnOptions(): void
     {
         $builder = $this->createBuilder();
         $driver  = $this->createDriver('BlackHole');
@@ -54,11 +51,8 @@ class CacheBuilderPoolTest extends AbstractCacheBuilderTest
 
     /**
      * Asserts that the Pool namespace can be customized from build options.
-     *
-     * @covers ::parsePoolOptions
-     * @covers ::applyPoolOptions
      */
-    public function testBuildWithNamespaceOnOptions()
+    public function testBuildWithNamespaceOnOptions(): void
     {
         $builder = $this->createBuilder();
         $driver  = $this->createDriver('BlackHole');
@@ -76,17 +70,14 @@ class CacheBuilderPoolTest extends AbstractCacheBuilderTest
 
     /**
      * Asserts that the Item class can be customized from build options.
-     *
-     * @covers ::parsePoolOptions
-     * @covers ::applyPoolOptions
      */
-    public function testBuildWithItemClassOnOptions()
+    public function testBuildWithItemClassOnOptions(): void
     {
         $builder = $this->createBuilder();
         $driver  = $this->createDriver('BlackHole');
 
-        $mockItem      = $this->createMock(ItemInterface::class);
-        $mockClassName = get_class($mockItem);
+        $mockItem      = $this->createStub(ItemInterface::class);
+        $mockClassName = $mockItem::class;
 
         $pool = $builder($driver, [
             'item_class' => $mockClassName,
@@ -98,17 +89,14 @@ class CacheBuilderPoolTest extends AbstractCacheBuilderTest
 
     /**
      * Asserts that the Pool class can be customized from build options.
-     *
-     * @covers ::parsePoolOptions
-     * @covers ::applyPoolOptions
      */
-    public function testBuildWithPoolClassOnOptions()
+    public function testBuildWithPoolClassOnOptions(): void
     {
         $builder = $this->createBuilder();
         $driver  = $this->createDriver('BlackHole');
 
-        $mockPool      = $this->createMock(PoolInterface::class);
-        $mockClassName = get_class($mockPool);
+        $mockPool      = $this->createStub(PoolInterface::class);
+        $mockClassName = $mockPool::class;
 
         // Custom Pool Class
         $pool = $builder($driver, [
@@ -119,10 +107,8 @@ class CacheBuilderPoolTest extends AbstractCacheBuilderTest
 
     /**
      * Asserts that the CacheBuilder uses default options when given NULL.
-     *
-     * @covers ::parsePoolOptions
      */
-    public function testBuildWithNullOnOptions()
+    public function testBuildWithNullOnOptions(): void
     {
         $builder = $this->createBuilder();
         $driver  = $this->createDriver('BlackHole');
@@ -135,10 +121,8 @@ class CacheBuilderPoolTest extends AbstractCacheBuilderTest
 
     /**
      * Asserts that the CacheBuilder uses default options when given NULL.
-     *
-     * @covers ::parsePoolOptions
      */
-    public function testBuildWithInvalidTypeOnOptions()
+    public function testBuildWithInvalidTypeOnOptions(): void
     {
         $builder = $this->createBuilder();
         $driver  = $this->createDriver('BlackHole');

@@ -12,10 +12,8 @@ use Charcoal\Property\StringProperty;
  */
 class PasswordProperty extends StringProperty
 {
-    /**
-     * @return string
-     */
-    public function type()
+    #[\Override]
+    public function type(): string
     {
         return 'password';
     }
@@ -25,18 +23,19 @@ class PasswordProperty extends StringProperty
      *
      * If the hash is corruped or the algorithm is not recognized, the value will be rehashed.
      *
-     * @todo   Implement proper hashing/rehashing/validation.
      * @param  mixed $val The value, at time of saving.
      * @return string
+     * @todo   Implement proper hashing/rehashing/validation.
      */
-    public function save($val)
+    #[\Override]
+    public function save(mixed $val): mixed
     {
         if ($val === null || $val === '') {
             return $val;
         }
 
         if (!$this->isHashed($val)) {
-            $val = password_hash($val, PASSWORD_DEFAULT);
+            $val = password_hash((string)$val, PASSWORD_DEFAULT);
         }
 
         return $val;
@@ -44,17 +43,12 @@ class PasswordProperty extends StringProperty
 
     /**
      * Retrieve the maximum number of characters allowed.
-     *
-     * @return integer
      */
-    public function getMaxLength()
+    #[\Override]
+    public function getMaxLength(): int
     {
-        if (PASSWORD_DEFAULT === PASSWORD_BCRYPT) {
-            /** @link https://www.php.net/manual/en/function.password-hash.php */
-            return 72;
-        }
-
-        return parent::getMaxLength();
+        /** @link https://www.php.net/manual/en/function.password-hash.php */
+        return 72;
     }
 
     /**
@@ -63,12 +57,11 @@ class PasswordProperty extends StringProperty
      * If the hash is corruped or the algorithm is not recognized, the value is assumed to be plain-text (not hashed).
      *
      * @param  string $hash The value to test.
-     * @return boolean
      */
-    public function isHashed($hash)
+    public function isHashed($hash): bool
     {
         $info = password_get_info($hash);
-        return strtolower($info['algoName']) !== 'unknown';
+        return strtolower((string)$info['algoName']) !== 'unknown';
     }
 
     /**

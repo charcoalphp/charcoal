@@ -19,16 +19,12 @@ trait EmailAwareTrait
 
     /**
      * @param Parser $parser Email parser service.
-     * @return void
      */
     protected function setParser(Parser $parser): void
     {
         $this->parser = $parser;
     }
 
-    /**
-     * @return Parser
-     */
     protected function getParser(): Parser
     {
         if ($this->parser === null) {
@@ -40,7 +36,6 @@ trait EmailAwareTrait
     /**
      * @param mixed $email An email value (either a string or an array).
      * @throws InvalidArgumentException If the email is invalid.
-     * @return string
      */
     protected function parseEmail($email): string
     {
@@ -52,7 +47,6 @@ trait EmailAwareTrait
      *
      * @param  mixed $var An email array (containing an "email" key and optionally a "name" key).
      * @throws InvalidArgumentException If the email is invalid.
-     * @return array|null
      */
     protected function emailToArray($var): ?array
     {
@@ -64,7 +58,6 @@ trait EmailAwareTrait
      *
      * @param  array $arr An email array (containing an "email" key and optionally a "name" key).
      * @throws InvalidArgumentException If the email array is invalid.
-     * @return string
      */
     protected function emailFromArray(array $arr): string
     {

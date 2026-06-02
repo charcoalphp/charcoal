@@ -23,10 +23,8 @@ class TranslationParserScriptTest extends AbstractTestCase
 {
     /**
      * Tested Class.
-     *
-     * @var TranslationParserScript
      */
-    private $obj;
+    private \Charcoal\Translator\Script\TranslationParserScript $obj;
 
     /**
      * CLImate Output
@@ -37,15 +35,11 @@ class TranslationParserScriptTest extends AbstractTestCase
 
     /**
      * Service Container.
-     *
-     * @var Container
      */
-    private $container;
+    private \Pimple\Container $container;
 
     /**
      * Set up the test.
-     *
-     * @return void
      */
     protected function setUp(): void
     {
@@ -61,10 +55,7 @@ class TranslationParserScriptTest extends AbstractTestCase
         ]);
     }
 
-    /**
-     * @return Container
-     */
-    private function getContainer()
+    private function getContainer(): \Pimple\Container
     {
         $container = new Container();
         $provider  = new ContainerProvider();
@@ -76,10 +67,7 @@ class TranslationParserScriptTest extends AbstractTestCase
         return $container;
     }
 
-    /**
-     * @return void
-     */
-    public function testDefaultArguments()
+    public function testDefaultArguments(): void
     {
         $args = $this->obj->defaultArguments();
         $this->assertArrayHasKey('domain', $args);

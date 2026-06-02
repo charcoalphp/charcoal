@@ -20,36 +20,17 @@ use Charcoal\Email\Services\Tracker;
 class LinkAction
 {
     /**
-     * @var string
-     */
-    private $linkId;
-
-    /**
-     * @var Tracker
-     */
-    private $tracker;
-
-    /**
-     * @var FactoryInterface
-     */
-    private $modelFactory;
-
-    /**
      * @param string           $linkId       Link ID.
      * @param Tracker          $tracker      Tracker service.
      * @param FactoryInterface $modelFactory Model factory, to create Link objects.
      */
-    public function __construct(string $linkId, Tracker $tracker, FactoryInterface $modelFactory)
+    public function __construct(private readonly string $linkId, private readonly Tracker $tracker, private readonly FactoryInterface $modelFactory)
     {
-        $this->linkId = $linkId;
-        $this->tracker = $tracker;
-        $this->modelFactory = $modelFactory;
     }
 
     /**
      * @param Request  $request  PSR-7 Request.
      * @param Response $response PSR-7 Response.
-     * @return Response
      */
     public function __invoke(Request $request, Response $response): Response
     {

@@ -41,10 +41,9 @@ class LoginAction extends AdminAction
      * Authentication is required by default.
      *
      * Change to false in the login action controller; this is meant to be called before login.
-     *
-     * @return boolean
      */
-    public function authRequired()
+    #[\Override]
+    public function authRequired(): bool
     {
         return false;
     }
@@ -65,7 +64,7 @@ class LoginAction extends AdminAction
                 '{{ errorMessage }}' => $failMessage
             ]);
 
-            $ip = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : null;
+            $ip = ($_SERVER['REMOTE_ADDR'] ?? null);
 
             $email    = $request->getParam('email');
             $password = $request->getParam('password');
@@ -125,8 +124,8 @@ class LoginAction extends AdminAction
                 $this->addFeedback('success', $doneMessage);
                 $this->setSuccess(true);
 
-                if (is_string($nextUrl) && !empty($nextUrl)) {
-                    $this->setSuccessUrl((string)$nextUrl);
+                if (is_string($nextUrl) && ($nextUrl !== '' && $nextUrl !== '0')) {
+                    $this->setSuccessUrl($nextUrl);
                 } else {
                     $this->setSuccessUrl((string)$this->adminUrl());
                 }

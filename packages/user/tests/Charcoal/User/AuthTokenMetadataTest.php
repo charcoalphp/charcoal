@@ -17,25 +17,18 @@ class AuthTokenMetadataTest extends AbstractTestCase
 {
     /**
      * Tested Class.
-     *
-     * @var AuthTokenMetadata
      */
-    private $obj;
+    private \Charcoal\User\AuthTokenMetadata $obj;
 
     /**
      * Set up the test.
-     *
-     * @return void
      */
     protected function setUp(): void
     {
         $this->obj = new AuthTokenMetadata();
     }
 
-    /**
-     * @return void
-     */
-    public function testDefaults()
+    public function testDefaults(): void
     {
         $this->assertTrue($this->obj['enabled']);
         $this->assertEquals('charcoal_user_login', $this->obj['tokenName']);
@@ -43,20 +36,14 @@ class AuthTokenMetadataTest extends AbstractTestCase
         $this->assertFalse($this->obj['httpsOnly']);
     }
 
-    /**
-     * @return void
-     */
-    public function testSetEnabled()
+    public function testSetEnabled(): void
     {
         $ret = $this->obj->setEnabled(false);
         $this->assertSame($ret, $this->obj);
         $this->assertFalse($this->obj['enabled']);
     }
 
-    /**
-     * @return void
-     */
-    public function testSetTokenName()
+    public function testSetTokenName(): void
     {
         $ret = $this->obj->setTokenName('foobar');
         $this->assertSame($ret, $this->obj);
@@ -66,10 +53,7 @@ class AuthTokenMetadataTest extends AbstractTestCase
         $this->obj->setTokenName(false);
     }
 
-    /**
-     * @return void
-     */
-    public function testSetTokenDuration()
+    public function testSetTokenDuration(): void
     {
         $ret = $this->obj->setTokenDuration('2 month');
         $this->assertSame($ret, $this->obj);

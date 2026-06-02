@@ -27,15 +27,14 @@ abstract class AdminScript extends AbstractScript
 
     /**
      * The model factory.
-     *
-     * @var FactoryInterface
      */
-    private $modelFactory;
+    private ?\Charcoal\Factory\FactoryInterface $modelFactory = null;
 
     /**
      * @param  Container $container Pimple DI container.
      * @return void
      */
+    #[\Override]
     protected function setDependencies(Container $container)
     {
         parent::setDependencies($container);
@@ -95,11 +94,10 @@ abstract class AdminScript extends AbstractScript
             1 => $prop->trueLabel(),
             0 => $prop->falseLabel()
         ];
-        $input = $climate->radio(
+        return $climate->radio(
             $label,
             $opts
         );
-        return $input;
     }
 
     /**
@@ -114,18 +112,15 @@ abstract class AdminScript extends AbstractScript
         unset($prop);
 
         $climate = $this->climate();
-
-        $input = $climate->password($label);
-        return $input;
+        return $climate->password($label);
     }
 
     /**
      * Set the model factory.
      *
      * @param  FactoryInterface $factory The factory used to create models.
-     * @return void
      */
-    private function setModelFactory(FactoryInterface $factory)
+    private function setModelFactory(FactoryInterface $factory): void
     {
         $this->modelFactory = $factory;
     }

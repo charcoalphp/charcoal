@@ -28,27 +28,22 @@ class StructureProperty extends AbstractProperty
 {
     /**
      * The SQL data type.
-     *
-     * @var string
      */
     private string $sqlType = 'TEXT';
 
     /**
      * Retrieve the property's type identifier.
-     *
-     * @return string
      */
-    public function type()
+    public function type(): string
     {
         return 'structure';
     }
 
     /**
-     * @param  mixed $val     The value to convert for display.
-     * @param  array $options Optional display options.
-     * @return string
+     * @param mixed $val     The value to convert for display.
      */
-    public function displayVal($val, array $options = [])
+    #[\Override]
+    public function displayVal($val, array $options = []): string
     {
         if ($val === null || $val === '') {
             return '';
@@ -79,10 +74,10 @@ class StructureProperty extends AbstractProperty
     /**
      * Get the property's value in a format suitable for storage.
      *
-     * @param  mixed $val Optional. The value to convert to storage value.
-     * @return mixed
+     * @param mixed $val Optional. The value to convert to storage value.
      */
-    public function storageVal($val)
+    #[\Override]
+    public function storageVal(mixed $val): mixed
     {
         if ($val === null || $val === '') {
             // Do not serialize NULL values
@@ -111,14 +106,11 @@ class StructureProperty extends AbstractProperty
      * @param  mixed $lang The language to return the value in.
      * @return mixed|null
      */
-    protected function l10nVal($val, $lang = null)
+    #[\Override]
+    protected function l10nVal(mixed $val, mixed $lang = null): mixed
     {
         if (!is_string($lang)) {
-            if (is_array($lang) && isset($lang['lang'])) {
-                $lang = $lang['lang'];
-            } else {
-                $lang = $this->translator()->getLocale();
-            }
+            $lang = is_array($lang) && isset($lang['lang']) ? $lang['lang'] : $this->translator()->getLocale();
         }
 
         if ($val instanceof TranslatableValue) {
@@ -152,11 +144,12 @@ class StructureProperty extends AbstractProperty
     /**
      * AbstractProperty > setVal(). Ensure val is an array
      *
-     * @param  string|array $val The value to set.
-     * @throws InvalidArgumentException If the value is invalid.
+     * @param mixed $val The value to set.
      * @return array
+     * @throws InvalidArgumentException If the value is invalid.
      */
-    public function parseOne($val)
+    #[\Override]
+    public function parseOne(mixed $val): mixed
     {
         if ($val === null || $val === '') {
             if ($this['allowNull']) {
@@ -182,6 +175,7 @@ class StructureProperty extends AbstractProperty
      * @param mixed $val A L10N variable.
      * @return TranslatableInterface|null The translation value.
      */
+    #[\Override]
     public function parseValAsL10n($val): ?TranslatableInterface
     {
         return new TranslatableValue($val);
@@ -192,9 +186,8 @@ class StructureProperty extends AbstractProperty
      *
      * @param string $sqlType The field SQL column type.
      * @throws InvalidArgumentException If the SQL type is invalid.
-     * @return self
      */
-    public function setSqlType($sqlType)
+    public function setSqlType($sqlType): static
     {
         if (!is_string($sqlType)) {
             throw new InvalidArgumentException(
@@ -202,31 +195,15 @@ class StructureProperty extends AbstractProperty
             );
         }
 
-        switch (strtoupper($sqlType)) {
-            case 'TEXT':
-                $sqlType = 'TEXT';
-                break;
-
-            case 'TINY':
-            case 'TINYTEXT':
-                $sqlType = 'TINYTEXT';
-                break;
-
-            case 'MEDIUM':
-            case 'MEDIUMTEXT':
-                $sqlType = 'MEDIUMTEXT';
-                break;
-
-            case 'LONG':
-            case 'LONGTEXT':
-                $sqlType = 'LONGTEXT';
-                break;
-
-            default:
-                throw new InvalidArgumentException(
-                    'SQL Type must be one of TEXT, TINYTEXT, MEDIUMTEXT, LONGTEXT.'
-                );
-        }
+        $sqlType = match (strtoupper($sqlType)) {
+            'TEXT' => 'TEXT',
+            'TINY', 'TINYTEXT' => 'TINYTEXT',
+            'MEDIUM', 'MEDIUMTEXT' => 'MEDIUMTEXT',
+            'LONG', 'LONGTEXT' => 'LONGTEXT',
+            default => throw new InvalidArgumentException(
+                'SQL Type must be one of TEXT, TINYTEXT, MEDIUMTEXT, LONGTEXT.'
+            ),
+        };
 
         $this->sqlType = $sqlType;
 
@@ -239,7 +216,6 @@ class StructureProperty extends AbstractProperty
      * For a lack of better array support in mysql, data is stored as encoded JSON in a TEXT.
      *
      * @see StorableProperyTrait::sqlType()
-     * @return string
      */
     public function sqlType(): string
     {
@@ -250,9 +226,8 @@ class StructureProperty extends AbstractProperty
      * Retrieve the property's PDO data type.
      *
      * @see StorablePropertyTrait::sqlPdoType()
-     * @return integer
      */
-    public function sqlPdoType()
+    public function sqlPdoType(): int
     {
         return PDO::PARAM_STR;
     }

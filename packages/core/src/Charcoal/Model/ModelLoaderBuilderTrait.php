@@ -52,7 +52,7 @@ trait ModelLoaderBuilderTrait
         if (!isset($this->modelLoaderBuilder)) {
             throw new RuntimeException(sprintf(
                 'Model Factory is not defined for [%s]',
-                get_class($this)
+                $this::class
             ));
         }
 
@@ -72,7 +72,7 @@ trait ModelLoaderBuilderTrait
         if (!is_string($objType)) {
             throw new InvalidArgumentException(sprintf(
                 'The object type must be a string, received %s',
-                is_object($objType) ? get_class($objType) : gettype($objType)
+                get_debug_type($objType)
             ));
         }
 
@@ -82,7 +82,7 @@ trait ModelLoaderBuilderTrait
         } elseif (!is_string($key)) {
             throw new InvalidArgumentException(sprintf(
                 'The object property key must be a string, received %s',
-                is_object($key) ? get_class($key) : gettype($key)
+                get_debug_type($key)
             ));
         }
 

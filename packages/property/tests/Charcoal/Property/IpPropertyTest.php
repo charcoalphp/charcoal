@@ -20,9 +20,6 @@ class IpPropertyTest extends AbstractTestCase
      */
     public $obj;
 
-    /**
-     * @return void
-     */
     protected function setUp(): void
     {
         $container = $this->getContainer();
@@ -34,26 +31,17 @@ class IpPropertyTest extends AbstractTestCase
         ]);
     }
 
-    /**
-     * @return void
-     */
-    public function testType()
+    public function testType(): void
     {
         $this->assertEquals('ip', $this->obj->type());
     }
 
-    /**
-     * @return void
-     */
-    public function testDefaults()
+    public function testDefaults(): void
     {
         $this->assertEquals('string', $this->obj['storageMode']);
     }
 
-    /**
-     * @return void
-     */
-    public function testMultipleCannotBeTrue()
+    public function testMultipleCannotBeTrue(): void
     {
         $this->assertFalse($this->obj['multiple']);
 
@@ -62,10 +50,7 @@ class IpPropertyTest extends AbstractTestCase
         $this->obj->setMultiple(true);
     }
 
-    /**
-     * @return void
-     */
-    public function testL10nCannotBeTrue()
+    public function testL10nCannotBeTrue(): void
     {
         $this->assertFalse($this->obj['l10n']);
 
@@ -74,10 +59,7 @@ class IpPropertyTest extends AbstractTestCase
         $this->obj->setL10n(true);
     }
 
-    /**
-     * @return void
-     */
-    public function testSetStorageMode()
+    public function testSetStorageMode(): void
     {
         $this->assertEquals('string', $this->obj['storageMode']);
         $ret = $this->obj->setStorageMode('int');
@@ -88,10 +70,7 @@ class IpPropertyTest extends AbstractTestCase
         $this->obj->setStorageMode('foobar');
     }
 
-    /**
-     * @return void
-     */
-    public function testIntVal()
+    public function testIntVal(): void
     {
         $this->assertEquals(0, $this->obj->intVal('0.0.0.0'));
         $this->assertEquals(2130706433, $this->obj->intVal('127.0.0.1'));
@@ -100,10 +79,7 @@ class IpPropertyTest extends AbstractTestCase
         $this->assertEquals(3232235777, $this->obj->intVal('3232235777'));
     }
 
-    /**
-     * @return void
-     */
-    public function testStringVal()
+    public function testStringVal(): void
     {
         $this->assertEquals('0.0.0.0', $this->obj->stringVal(0));
         $this->assertEquals('127.0.0.1', $this->obj->stringVal(2130706433));
@@ -111,14 +87,14 @@ class IpPropertyTest extends AbstractTestCase
         $this->assertEquals('8.8.8.8', $this->obj->stringVal('8.8.8.8'));
     }
 
-    public function testStorageVal()
+    public function testStorageVal(): void
     {
         $this->assertEquals('0.0.0.0', $this->obj->storageVal('0.0.0.0'));
         $this->assertEquals('127.0.0.1', $this->obj->storageVal('127.0.0.1'));
         $this->assertEquals('127.0.0.1', $this->obj->stringVal('127.0.0.1'));
     }
 
-    public function testHostname()
+    public function testHostname(): void
     {
         $this->assertEquals('0.0.0.0', $this->obj->hostname(0));
         $this->assertThat($this->obj->hostname('8.8.8.8'), $this->logicalOr(
@@ -127,10 +103,7 @@ class IpPropertyTest extends AbstractTestCase
         ));
     }
 
-    /**
-     * @return void
-     */
-    public function testSqlExtra()
+    public function testSqlExtra(): void
     {
         $this->assertEquals('', $this->obj->sqlExtra());
     }
@@ -139,10 +112,8 @@ class IpPropertyTest extends AbstractTestCase
      * Asserts that the `sqlType()` method:
      * - returns "VARCHAR(15)" if the storage mode is "string" (default).
      * - returns "BIGINT" if the storage mode is "int".
-     *
-     * @return void
      */
-    public function testSqlType()
+    public function testSqlType(): void
     {
         $this->obj->setStorageMode('string');
         $this->assertEquals('VARCHAR(15)', $this->obj->sqlType());
@@ -151,10 +122,7 @@ class IpPropertyTest extends AbstractTestCase
         $this->assertEquals('BIGINT', $this->obj->sqlType());
     }
 
-    /**
-     * @return void
-     */
-    public function testSqlPdoType()
+    public function testSqlPdoType(): void
     {
         $this->obj->setStorageMode('string');
         $this->assertEquals(PDO::PARAM_STR, $this->obj->sqlPdoType());

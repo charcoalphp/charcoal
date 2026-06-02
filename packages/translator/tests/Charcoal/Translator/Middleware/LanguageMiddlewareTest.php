@@ -27,21 +27,14 @@ class LanguageMiddlewareTest extends AbstractTestCase
 {
     /**
      * Tested Class.
-     *
-     * @var LanguageMiddleware
      */
-    private $obj;
+    private \Charcoal\Translator\Middleware\LanguageMiddleware $obj;
 
     /**
      * Service Container.
-     *
-     * @var Container
      */
-    private $container;
+    private \Pimple\Container|array|null $container = null;
 
-    /**
-     * @return void
-     */
     public static function setupBeforeClass(): void
     {
         if (!isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
@@ -49,9 +42,6 @@ class LanguageMiddlewareTest extends AbstractTestCase
         }
     }
 
-    /**
-     * @return void
-     */
     public static function teardownAfterClass(): void
     {
         if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
@@ -61,12 +51,10 @@ class LanguageMiddlewareTest extends AbstractTestCase
 
     /**
      * Set up the test.
-     *
-     * @return void
      */
     protected function setUp(): void
     {
-        $container = $this->getContainer();
+        $this->getContainer();
 
         $this->obj = $this->middlewareFactory([
             'use_params' => true
@@ -77,9 +65,8 @@ class LanguageMiddlewareTest extends AbstractTestCase
      * Create LanguageMiddleware.
      *
      * @param  array $data Extra options to pass to the middleare.
-     * @return LanguageMiddleware
      */
-    protected function middlewareFactory(array $data = [])
+    protected function middlewareFactory(array $data = []): \Charcoal\Translator\Middleware\LanguageMiddleware
     {
         $container = $this->getContainer();
 
@@ -89,15 +76,13 @@ class LanguageMiddlewareTest extends AbstractTestCase
             'default_language' => $container['translator']->getLocale(),
         ];
 
-        $middleware = new LanguageMiddleware(array_replace($defaults, $data));
-
-        return $middleware;
+        return new LanguageMiddleware(array_replace($defaults, $data));
     }
 
     /**
      * @return Container
      */
-    private function getContainer()
+    private function getContainer(): \Pimple\Container|array
     {
         if ($this->container === null) {
             $this->container = new Container();
@@ -142,12 +127,12 @@ class LanguageMiddlewareTest extends AbstractTestCase
      * @param  array  $params The URI query string parameters.
      * @return UriInterface
      */
-    private function mockUri($path = '', array $params = [])
+    private function mockUri(string $path = '', array $params = []): \PHPUnit\Framework\MockObject\MockObject
     {
         $uri = $this->createMock(UriInterface::class);
 
-        $uri->expects($this->any())->method('getPath')->will($this->returnValue($path));
-        $uri->expects($this->any())->method('getQuery')->will($this->returnValue(http_build_query($params)));
+        $uri->method('getPath')->willReturn($path);
+        $uri->method('getQuery')->willReturn(http_build_query($params));
 
         return $uri;
     }
@@ -157,13 +142,13 @@ class LanguageMiddlewareTest extends AbstractTestCase
      * @param  array  $params The URI query string parameters.
      * @return ServerRequestInterface
      */
-    private function mockRequest($path = '', array $params = [])
+    private function mockRequest(string $path = '', array $params = []): \PHPUnit\Framework\MockObject\MockObject
     {
         $request = $this->createMock(ServerRequestInterface::class);
 
-        $request->expects($this->any())->method('getUri')->will($this->returnValue($this->mockUri($path)));
-        $request->expects($this->any())->method('getRequestTarget')->will($this->returnValue($path));
-        $request->expects($this->any())->method('getQueryParams')->will($this->returnValue($params));
+        $request->method('getUri')->willReturn($this->mockUri($path));
+        $request->method('getRequestTarget')->willReturn($path);
+        $request->method('getQueryParams')->willReturn($params);
 
         return $request;
     }
@@ -171,47 +156,32 @@ class LanguageMiddlewareTest extends AbstractTestCase
     /**
      * @return ResponseInterface
      */
-    private function mockResponse()
+    private function mockResponse(): \PHPUnit\Framework\MockObject\MockObject
     {
-        $response = $this->createMock(ResponseInterface::class);
-
-        return $response;
+        return $this->createMock(ResponseInterface::class);
     }
 
-    /**
-     * @return void
-     */
-    public function testInvoke()
+    public function testInvoke(): void
     {
         $request  = $this->mockRequest('/fr/foo/bar');
         $response = $this->mockResponse();
-        $next     = function ($request, $response) {
-            return $response;
-        };
+        $next     = (fn($request, $response) => $response);
 
-        $return = call_user_func([ $this->obj, '__invoke' ], $request, $response, $next);
+        $return = call_user_func($this->obj->__invoke(...), $request, $response, $next);
         $this->assertEquals($response, $return);
     }
 
-    /**
-     * @return void
-     */
-    public function testInvokeWithExcludedPath()
+    public function testInvokeWithExcludedPath(): void
     {
         $request  = $this->mockRequest('/admin/foo/bar');
         $response = $this->mockResponse();
-        $next     = function ($request, $response) {
-            return $response;
-        };
+        $next     = (fn($request, $response) => $response);
 
-        $return = call_user_func([ $this->obj, '__invoke' ], $request, $response, $next);
+        $return = call_user_func($this->obj->__invoke(...), $request, $response, $next);
         $this->assertEquals($response, $return);
     }
 
-    /**
-     * @return void
-     */
-    public function testGetLanguageWithServerRequest()
+    public function testGetLanguageWithServerRequest(): void
     {
         $request = $this->mockRequest('/fr/foo/bar');
         $return  = $this->callMethod($this->obj, 'getLanguage', [ $request ]);
@@ -232,23 +202,17 @@ class LanguageMiddlewareTest extends AbstractTestCase
         $this->assertEquals('fr', $return);
     }
 
-    /**
-     * @return void
-     */
-    public function testGetLanguageWithClientRequest()
+    public function testGetLanguageWithClientRequest(): void
     {
         $request = $this->createMock(ClientRequestInterface::class);
-        $request->expects($this->any())->method('getUri')->will($this->returnValue($this->mockUri('/jp/foo/bar')));
-        $request->expects($this->any())->method('getRequestTarget')->will($this->returnValue('/jp/foo/bar'));
+        $request->method('getUri')->willReturn($this->mockUri('/jp/foo/bar'));
+        $request->method('getRequestTarget')->willReturn('/jp/foo/bar');
 
         $return  = $this->callMethod($this->obj, 'getLanguage', [ $request ]);
         $this->assertEquals('fr', $return);
     }
 
-    /**
-     * @return void
-     */
-    public function testGetLanguageUseHost()
+    public function testGetLanguageUseHost(): void
     {
         $this->obj = $this->middlewareFactory([
             'browser_language' => null,
@@ -264,28 +228,26 @@ class LanguageMiddlewareTest extends AbstractTestCase
         ]);
 
         $uri = $this->createMock(UriInterface::class);
-        $uri->expects($this->any())->method('getHost')->will($this->returnValue('fr.example.com'));
+
+        $uri->method('getHost')->willReturn('fr.example.com');
 
         $request = $this->createMock(ServerRequestInterface::class);
-        $request->expects($this->any())->method('getUri')->will($this->returnValue($uri));
+        $request->method('getUri')->willReturn($uri);
 
         $return = $this->callMethod($this->obj, 'getLanguage', [ $request ]);
         $this->assertEquals('fr', $return);
 
         $uri = $this->createMock(UriInterface::class);
-        $uri->expects($this->any())->method('getHost')->will($this->returnValue('jp.example.com'));
+        $uri->method('getHost')->willReturn('jp.example.com');
 
         $request = $this->createMock(ServerRequestInterface::class);
-        $request->expects($this->any())->method('getUri')->will($this->returnValue($uri));
+        $request->method('getUri')->willReturn($uri);
 
         $return = $this->callMethod($this->obj, 'getLanguage', [ $request ]);
         $this->assertEquals('en', $return);
     }
 
-    /**
-     * @return void
-     */
-    public function testGetLanguageUseHostWithBadHost()
+    public function testGetLanguageUseHostWithBadHost(): void
     {
         $this->obj = $this->middlewareFactory([
             'browser_language' => null,
@@ -301,19 +263,16 @@ class LanguageMiddlewareTest extends AbstractTestCase
         ]);
 
         $uri = $this->createMock(UriInterface::class);
-        $uri->expects($this->any())->method('getHost')->will($this->returnValue('jp.example.com'));
+        $uri->method('getHost')->willReturn('jp.example.com');
 
         $request = $this->createMock(ServerRequestInterface::class);
-        $request->expects($this->any())->method('getUri')->will($this->returnValue($uri));
+        $request->method('getUri')->willReturn($uri);
 
         $return = $this->callMethod($this->obj, 'getLanguage', [ $request ]);
         $this->assertEquals('en', $return);
     }
 
-    /**
-     * @return void
-     */
-    public function testGetLanguageUseDefault()
+    public function testGetLanguageUseDefault(): void
     {
         $this->obj = $this->middlewareFactory([
             'browser_language' => null

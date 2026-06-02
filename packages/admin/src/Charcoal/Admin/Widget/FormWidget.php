@@ -99,16 +99,15 @@ class FormWidget extends AdminWidget implements
 
     /**
      * Store the factory instance for the current class.
-     *
-     * @var FactoryInterface
      */
-    private $widgetFactory;
+    private ?\Charcoal\Factory\FactoryInterface $widgetFactory = null;
 
     /**
      * @param  array $data The widget data.
      * @return FormWidget Chainable
      */
-    public function setData(array $data)
+    #[\Override]
+    public function setData(array $data): static
     {
         $this->setDefaultFormGroupsTemplate();
         $this->setDefaultFormTabsTemplate();
@@ -122,7 +121,7 @@ class FormWidget extends AdminWidget implements
      * @param array $data Optional. The form property data to set.
      * @return FormPropertyWidget
      */
-    public function createFormProperty(array $data = null)
+    public function createFormProperty(?array $data = null)
     {
         $p = $this->widgetFactory()->create($this->formPropertyClass());
         if ($data !== null) {
@@ -139,7 +138,7 @@ class FormWidget extends AdminWidget implements
      * @throws InvalidArgumentException If the class name is not a string.
      * @return FormWidget Chainable
      */
-    protected function setFormPropertyClass($className)
+    protected function setFormPropertyClass($className): static
     {
         if (!is_string($className)) {
             throw new InvalidArgumentException(
@@ -167,7 +166,7 @@ class FormWidget extends AdminWidget implements
      * @throws InvalidArgumentException If the property is already registered.
      * @return \Charcoal\Admin\Widget\FormPropertyWidget|mixed
      */
-    public function getOrCreateFormProperty($ident, array $data = null)
+    public function getOrCreateFormProperty($ident, ?array $data = null)
     {
         if ($this->updateFormProperty($ident, $data)) {
             return $this->formProperties[$ident];
@@ -203,7 +202,7 @@ class FormWidget extends AdminWidget implements
      * @throws InvalidArgumentException If the property is already registered.
      * @return \Charcoal\Admin\Widget\FormPropertyWidget|mixed
      */
-    public function getOrCreateHiddenProperty($ident, array $data = null)
+    public function getOrCreateHiddenProperty($ident, ?array $data = null)
     {
         if ($this->updateHiddenProperty($ident, $data)) {
             return $this->hiddenProperties[$ident];
@@ -233,7 +232,7 @@ class FormWidget extends AdminWidget implements
      * @param array  $data  Property metadata.
      * @return \Charcoal\Admin\Widget\FormPropertyWidget|mixed
      */
-    protected function buildFormProperty($ident, array $data = null)
+    protected function buildFormProperty($ident, ?array $data = null)
     {
         $formProperty = $this->createFormProperty();
         $formProperty->setPropertyIdent($ident);
@@ -264,7 +263,7 @@ class FormWidget extends AdminWidget implements
      * @param array  $data  Property metadata.
      * @return \Charcoal\Admin\Widget\FormPropertyWidget|null
      */
-    protected function updateFormProperty($ident, array $data = null)
+    protected function updateFormProperty($ident, ?array $data = null)
     {
         if ($ident && isset($this->formProperties[$ident])) {
             $formProperty = $this->formProperties[$ident];
@@ -286,7 +285,7 @@ class FormWidget extends AdminWidget implements
      * @param  array  $data  Property metadata.
      * @return \Charcoal\Admin\Widget\FormPropertyWidget|null
      */
-    protected function updateHiddenProperty($ident, array $data = null)
+    protected function updateHiddenProperty($ident, ?array $data = null)
     {
         if ($ident && isset($this->hiddenProperties[$ident])) {
             $formProperty = $this->hiddenProperties[$ident];
@@ -306,27 +305,24 @@ class FormWidget extends AdminWidget implements
 
     /**
      * @param  string $ident Property ident.
-     * @return boolean
      */
-    protected function hasFormProperty($ident)
+    protected function hasFormProperty($ident): bool
     {
         return ($ident && isset($this->formProperties[$ident]));
     }
 
     /**
      * @param  string $ident Property ident.
-     * @return boolean
      */
-    protected function hasHiddenProperty($ident)
+    protected function hasHiddenProperty($ident): bool
     {
         return ($ident && isset($this->hiddenProperties[$ident]));
     }
 
     /**
      * @param array $sidebars The form sidebars.
-     * @return self
      */
-    public function setSidebars(array $sidebars)
+    public function setSidebars(array $sidebars): static
     {
         $this->sidebars = [];
         foreach ($sidebars as $sidebarIdent => $sidebar) {
@@ -340,9 +336,8 @@ class FormWidget extends AdminWidget implements
      * @param string                     $sidebarIdent The sidebar identifier.
      * @param array|FormSidebarInterface $sidebar      The sidebar data or object.
      * @throws InvalidArgumentException If the ident is not a string or the sidebar is not valid.
-     * @return self
      */
-    public function addSidebar($sidebarIdent, $sidebar)
+    public function addSidebar($sidebarIdent, $sidebar): static
     {
         if (!is_string($sidebarIdent)) {
             throw new InvalidArgumentException(
@@ -381,10 +376,8 @@ class FormWidget extends AdminWidget implements
 
     /**
      * Determines if any sidebars are defined.
-     *
-     * @return boolean
      */
-    public function hasSidebars()
+    public function hasSidebars(): bool
     {
         return (bool)$this->sidebars;
     }
@@ -397,17 +390,13 @@ class FormWidget extends AdminWidget implements
     public function sidebars()
     {
         $sidebars = $this->sidebars;
-        uasort($sidebars, [ $this, 'sortSidebarsByPriority' ]);
+        uasort($sidebars, $this->sortSidebarsByPriority(...));
         foreach ($sidebars as $sidebarIdent => $sidebar) {
             if (!$sidebar->active()) {
                 continue;
             }
 
-            if ($sidebar->template()) {
-                $template = $sidebar->template();
-            } else {
-                $template = 'charcoal/admin/widget/form.sidebar';
-            }
+            $template = $sidebar->template() ?: 'charcoal/admin/widget/form.sidebar';
 
             $this->setDynamicTemplate('widget_template', $template);
             yield $sidebarIdent => $sidebar;
@@ -418,9 +407,8 @@ class FormWidget extends AdminWidget implements
      * Replace property controls to the form.
      *
      * @param  array $properties The form properties.
-     * @return self
      */
-    public function setFormProperties(array $properties)
+    public function setFormProperties(array $properties): static
     {
         $this->formProperties = [];
 
@@ -433,9 +421,8 @@ class FormWidget extends AdminWidget implements
      * Add property controls to the form.
      *
      * @param  array $properties The form properties.
-     * @return self
      */
-    public function addFormProperties(array $properties)
+    public function addFormProperties(array $properties): static
     {
         foreach ($properties as $propertyIdent => $property) {
             $this->addFormProperty($propertyIdent, $property);
@@ -455,7 +442,7 @@ class FormWidget extends AdminWidget implements
      * @throws InvalidArgumentException If the identifier or the property is invalid.
      * @return FormInterface Chainable
      */
-    public function addFormProperty($propertyIdent, $formProperty)
+    public function addFormProperty($propertyIdent, $formProperty): static
     {
         if (!is_string($propertyIdent)) {
             throw new InvalidArgumentException(
@@ -480,7 +467,7 @@ class FormWidget extends AdminWidget implements
 
         throw new InvalidArgumentException(sprintf(
             'Property must be an array or an instance of FormPropertyWidget, received %s',
-            is_object($formProperty) ? get_class($formProperty) : gettype($formProperty)
+            get_debug_type($formProperty)
         ));
     }
 
@@ -510,7 +497,7 @@ class FormWidget extends AdminWidget implements
      *
      * @return FormPropertyWidget[]
      */
-    public function getFormProperties()
+    public function getFormProperties(): array
     {
         $formProperties = [];
         foreach ($this->formProperties as $formProperty) {
@@ -530,7 +517,7 @@ class FormWidget extends AdminWidget implements
      * @param  array $properties The hidden form properties.
      * @return FormInterface Chainable
      */
-    public function setHiddenProperties(array $properties)
+    public function setHiddenProperties(array $properties): static
     {
         $this->hiddenProperties = [];
 
@@ -545,7 +532,7 @@ class FormWidget extends AdminWidget implements
      * @param  array $properties The hidden form properties.
      * @return FormInterface Chainable
      */
-    public function addHiddenProperties(array $properties)
+    public function addHiddenProperties(array $properties): static
     {
         foreach ($properties as $propertyIdent => $property) {
             $this->addHiddenProperty($propertyIdent, $property);
@@ -562,7 +549,7 @@ class FormWidget extends AdminWidget implements
      * @throws InvalidArgumentException If the identifier or the property is invalid.
      * @return FormInterface Chainable
      */
-    public function addHiddenProperty($propertyIdent, $formProperty)
+    public function addHiddenProperty($propertyIdent, $formProperty): static
     {
         if (!is_string($propertyIdent)) {
             throw new InvalidArgumentException(
@@ -588,7 +575,7 @@ class FormWidget extends AdminWidget implements
 
         throw new InvalidArgumentException(sprintf(
             'Form property must be an array or an instance of FormPropertyWidget, received %s',
-            is_object($formProperty) ? get_class($formProperty) : gettype($formProperty)
+            get_debug_type($formProperty)
         ));
     }
 
@@ -610,8 +597,6 @@ class FormWidget extends AdminWidget implements
 
     /**
      * Whether a language switcher could be displayed.
-     *
-     * @return bool
      */
     public function supportsLanguageSwitch(): bool
     {
@@ -620,10 +605,8 @@ class FormWidget extends AdminWidget implements
 
     /**
      * Determine if the form has any multilingual properties.
-     *
-     * @return boolean
      */
-    public function hasL10nFormProperties()
+    public function hasL10nFormProperties(): bool
     {
         $locales = count($this->translator()->availableLocales());
         if ($locales > 1) {
@@ -653,9 +636,8 @@ class FormWidget extends AdminWidget implements
 
     /**
      * @param string|Translation $label The submit label for the form.
-     * @return self
      */
-    public function setSubmitLabel($label)
+    public function setSubmitLabel($label): static
     {
         $this->submitLabel = $this->translator()->translate($label);
 
@@ -664,18 +646,13 @@ class FormWidget extends AdminWidget implements
 
     /**
      * Retrieve the default label for the form submission button.
-     *
-     * @return \Charcoal\Translator\Translation|null
      */
-    public function defaultSubmitLabel()
+    public function defaultSubmitLabel(): ?\Charcoal\Translator\Translation
     {
         return $this->translator()->translation('Save');
     }
 
-    /**
-     * @return string
-     */
-    public function defaultGroupType()
+    public function defaultGroupType(): string
     {
         return 'charcoal/admin/widget/form-group/generic';
     }
@@ -686,7 +663,7 @@ class FormWidget extends AdminWidget implements
      * @param  string $partial The partial template to render the form groups within.
      * @return FormWidget Chainable
      */
-    public function setGroupsTemplate($partial)
+    public function setGroupsTemplate(?string $partial): static
     {
         $this->setDynamicTemplate('form_groups_template', $partial);
         $this->groupsTemplate = $partial;
@@ -707,18 +684,12 @@ class FormWidget extends AdminWidget implements
         return $this->groupsTemplate;
     }
 
-    /**
-     * @return void
-     */
-    public function setDefaultFormGroupsTemplate()
+    public function setDefaultFormGroupsTemplate(): void
     {
         $this->setGroupsTemplate($this->defaultFormGroupsTemplate());
     }
 
-    /**
-     * @return string
-     */
-    public function defaultFormGroupsTemplate()
+    public function defaultFormGroupsTemplate(): string
     {
         return 'charcoal/admin/template/form/groups-wrapper';
     }
@@ -729,7 +700,7 @@ class FormWidget extends AdminWidget implements
      * @param  string $partial The partial template to render the form tabs within.
      * @return FormWidget Chainable
      */
-    public function setTabsTemplate($partial)
+    public function setTabsTemplate(?string $partial): static
     {
         $this->setDynamicTemplate('form_tabs_template', $partial);
         $this->tabsTemplate = $partial;
@@ -750,18 +721,12 @@ class FormWidget extends AdminWidget implements
         return $this->tabsTemplate;
     }
 
-    /**
-     * @return void
-     */
-    public function setDefaultFormTabsTemplate()
+    public function setDefaultFormTabsTemplate(): void
     {
         $this->setTabsTemplate($this->defaultFormTabsTemplate());
     }
 
-    /**
-     * @return string
-     */
-    public function defaultFormTabsTemplate()
+    public function defaultFormTabsTemplate(): string
     {
         return 'charcoal/admin/template/form/nav-tabs';
     }
@@ -770,6 +735,7 @@ class FormWidget extends AdminWidget implements
      * @param  Container $container The DI container.
      * @return void
      */
+    #[\Override]
     protected function setDependencies(Container $container)
     {
         parent::setDependencies($container);
@@ -790,14 +756,13 @@ class FormWidget extends AdminWidget implements
      * Retrieve the widget factory.
      *
      * @throws RuntimeException If the widget factory was not previously set.
-     * @return FactoryInterface
      */
-    protected function widgetFactory()
+    protected function widgetFactory(): \Charcoal\Factory\FactoryInterface
     {
-        if ($this->widgetFactory === null) {
+        if (!$this->widgetFactory instanceof \Charcoal\Factory\FactoryInterface) {
             throw new RuntimeException(sprintf(
                 'Widget Factory is not defined for "%s"',
-                get_class($this)
+                static::class
             ));
         }
 
@@ -827,10 +792,8 @@ class FormWidget extends AdminWidget implements
 
     /**
      * Retrieve the accepted metadata from the current request.
-     *
-     * @return array
      */
-    protected function acceptedRequestData()
+    protected function acceptedRequestData(): array
     {
         return [
             'form_ident',
@@ -852,15 +815,10 @@ class FormWidget extends AdminWidget implements
     protected function sortItemsByPriority(
         PrioritizableInterface $a,
         PrioritizableInterface $b
-    ) {
+    ): int {
         $priorityA = $a->priority();
         $priorityB = $b->priority();
-
-        if ($priorityA === $priorityB) {
-            return 0;
-        }
-
-        return ($priorityA < $priorityB) ? (-1) : 1;
+        return ($priorityA <=> $priorityB);
     }
 
     /**
@@ -873,14 +831,9 @@ class FormWidget extends AdminWidget implements
     protected function sortSidebarsByPriority(
         FormSidebarInterface $a,
         FormSidebarInterface $b
-    ) {
+    ): int {
         $a = $a->priority();
         $b = $b->priority();
-
-        if ($a === $b) {
-            return 0;
-        }
-
-        return ($a < $b) ? (-1) : 1;
+        return ($a <=> $b);
     }
 }

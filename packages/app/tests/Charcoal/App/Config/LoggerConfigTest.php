@@ -25,7 +25,7 @@ class LoggerConfigTest extends AbstractTestCase
         $this->obj = new LoggerConfig();
     }
 
-    public function testDefaults()
+    public function testDefaults(): void
     {
         $this->assertEquals('charcoal', LoggerConfig::DEFAULT_CHANNEL);
 
@@ -46,14 +46,14 @@ class LoggerConfigTest extends AbstractTestCase
         $this->assertEquals(LoggerConfig::DEFAULT_CHANNEL, $this->obj->channel());
     }
 
-    public function testSetActive()
+    public function testSetActive(): void
     {
         $ret = $this->obj->setActive(false);
         $this->assertSame($ret, $this->obj);
         $this->assertFalse($this->obj->active());
     }
 
-    public function testSetHandlers()
+    public function testSetHandlers(): void
     {
         $ret = $this->obj->setHandlers([ 'errlog' => [ 'type' => 'error-log' ], [ 'type' => 'mail' ] ]);
         $this->assertSame($ret, $this->obj);
@@ -68,7 +68,7 @@ class LoggerConfigTest extends AbstractTestCase
         $this->obj->setHandlers([ [ 'foo' => 'baz' ] ]);
     }
 
-    public function testSetProcessors()
+    public function testSetProcessors(): void
     {
         $ret = $this->obj->setProcessors([ 'web' => [ 'type' => 'web' ], [ 'type' => 'process-id' ] ]);
         $this->assertSame($ret, $this->obj);
@@ -83,7 +83,7 @@ class LoggerConfigTest extends AbstractTestCase
         $this->obj->setProcessors([ [ 'foo' => 'baz' ] ]);
     }
 
-    public function testSetChannel()
+    public function testSetChannel(): void
     {
         $ret = $this->obj->setChannel('foo');
         $this->assertSame($ret, $this->obj);

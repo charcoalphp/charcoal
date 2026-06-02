@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Charcoal\Ui\MenuItem;
 
 // From 'charcoal-ui'
@@ -14,10 +16,9 @@ class GenericMenuItem extends AbstractMenuItem
 {
     /**
      * Retrieve the menu item type.
-     *
-     * @return string
      */
-    public function type()
+    #[\Override]
+    public function type(): string
     {
         return 'charcoal/ui/menu-item/generic';
     }

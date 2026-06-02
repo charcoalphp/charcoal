@@ -7,7 +7,6 @@ use ReflectionClass;
 // From 'symfony/translation'
 use Symfony\Component\Translation\Formatter\MessageFormatter;
 use Symfony\Component\Translation\Loader\ArrayLoader;
-use Symfony\Component\Translation\MessageSelector;
 
 // From 'charcoal-translator'
 use Charcoal\Translator\LocalesManager;
@@ -30,43 +29,30 @@ class TranslatorTest extends AbstractTestCase
 
     /**
      * Tested Class.
-     *
-     * @var Translator
      */
-    private $obj;
+    private \Charcoal\Translator\Translator $obj;
 
     /**
      * The language manager.
-     *
-     * @var LocalesManager
      */
-    private $localesManager;
+    private static ?\Charcoal\Translator\LocalesManager $localesManager = null;
 
     /**
      * Set up the test.
-     *
-     * @return void
      */
     protected function setUp(): void
     {
-        $selector  = new MessageSelector();
-        $formatter = new MessageFormatter($selector);
-
         $this->obj = new Translator([
             'locale'            => 'en',
             'cache_dir'         => null,
             'debug'             => false,
             'manager'           => $this->localesManager(),
-            'message_selector'  => $selector,
-            'message_formatter' => $formatter,
+            'message_formatter' => new MessageFormatter(),
         ]);
 
         $this->obj->addLoader('array', new ArrayLoader());
     }
 
-    /**
-     * @return void
-     */
     public static function setUpBeforeClass(): void
     {
         $path = realpath(__DIR__.'/../../../'.static::SYMFONY_CACHE_PATH);
@@ -75,9 +61,6 @@ class TranslatorTest extends AbstractTestCase
         }
     }
 
-    /**
-     * @return void
-     */
     public static function tearDownAfterClass(): void
     {
         $path = realpath(__DIR__.'/../../../'.static::SYMFONY_CACHE_PATH.'.txt');
@@ -86,13 +69,10 @@ class TranslatorTest extends AbstractTestCase
         }
     }
 
-    /**
-     * @return LocalesManager
-     */
-    private function localesManager()
+    private static function localesManager(): \Charcoal\Translator\LocalesManager
     {
-        if ($this->localesManager === null) {
-            $this->localesManager = new LocalesManager([
+        if (!self::$localesManager instanceof \Charcoal\Translator\LocalesManager) {
+            self::$localesManager = new LocalesManager([
                 'locales' => [
                     'en' => [
                         'locale' => 'en_US.UTF8'
@@ -107,46 +87,10 @@ class TranslatorTest extends AbstractTestCase
             ]);
         }
 
-        return $this->localesManager;
+        return self::$localesManager;
     }
 
-    /**
-     * @return void
-     */
-    public function testConstructorWithMessageSelector()
-    {
-        $selector   = new MessageSelector();
-        $translator = new Translator([
-            'locale'           => 'en',
-            'cache_dir'        => null,
-            'debug'            => false,
-            'manager'          => $this->localesManager(),
-            'message_selector' => $selector,
-        ]);
-
-        $this->assertSame($selector, $this->callMethod($translator, 'selector'));
-    }
-
-    /**
-     * @return void
-     */
-    public function testConstructorWithoutMessageSelector()
-    {
-        $translator = new Translator([
-            'locale'           => 'en',
-            'cache_dir'        => null,
-            'debug'            => false,
-            'manager'          => $this->localesManager(),
-            'message_selector' => null,
-        ]);
-
-        $this->assertInstanceOf(MessageSelector::class, $this->callMethod($translator, 'selector'));
-    }
-
-    /**
-     * @return void
-     */
-    public function testConstructorWithMessageFormatter()
+    public function testConstructorWithMessageFormatter(): void
     {
         $formatter  = new MessageFormatter();
         $translator = new Translator([
@@ -160,10 +104,7 @@ class TranslatorTest extends AbstractTestCase
         $this->assertSame($formatter, $this->callMethod($translator, 'formatter'));
     }
 
-    /**
-     * @return void
-     */
-    public function testConstructorWithoutMessageFormatter()
+    public function testConstructorWithoutMessageFormatter(): void
     {
         $translator = new Translator([
             'locale'            => 'en',
@@ -176,20 +117,14 @@ class TranslatorTest extends AbstractTestCase
         $this->assertInstanceOf(MessageFormatter::class, $this->callMethod($translator, 'formatter'));
     }
 
-    /**
-     * @return void
-     */
-    public function testAvailableDomains()
+    public function testAvailableDomains(): void
     {
         $domains = $this->obj->availableDomains();
         $this->assertIsArray($domains);
         $this->assertEquals([ 'messages' ], $domains);
     }
 
-    /**
-     * @return void
-     */
-    public function testTranslation()
+    public function testTranslation(): void
     {
         $ret = $this->obj->translation('Hello!');
         $this->assertInstanceOf(Translation::class, $ret);
@@ -209,18 +144,16 @@ class TranslatorTest extends AbstractTestCase
     }
 
     /**
-     * @dataProvider invalidTransTests
      *
      * @param  mixed $value The message ID.
-     * @return void
      */
-    public function testTranslationInvalidValuesReturnNull($value)
+    #[\PHPUnit\Framework\Attributes\DataProvider('invalidTransTests')]
+    public function testTranslationInvalidValuesReturnNull(int|bool|string|array|null $value): void
     {
         $this->assertNull($this->obj->translation($value));
     }
 
     /**
-     * @dataProvider validTransTests
      *
      * @param  string $expected    The expected translation.
      * @param  string $id          The message ID.
@@ -228,11 +161,11 @@ class TranslatorTest extends AbstractTestCase
      * @param  string $parameters  An array of parameters for the message.
      * @param  string $locale      The locale to use.
      * @param  string $domain      The domain for the message.
-     * @return void
      */
-    public function testTranslate($expected, $id, $translation, $parameters, $locale, $domain)
+    #[\PHPUnit\Framework\Attributes\DataProvider('validTransTests')]
+    public function testTranslate(string $expected, string|\Charcoal\Translator\Translation|\Charcoal\Tests\Translator\Mock\StringClass|array $id, string $translation, array $parameters, ?string $locale, string $domain): void
     {
-        if (!($id instanceof Translation || is_array($id)) && $locale) {
+        if (!$id instanceof Translation && !is_array($id) && $locale) {
             $this->obj->addResource('array', [ (string)$id => $translation ], $locale, $domain);
         }
 
@@ -240,20 +173,16 @@ class TranslatorTest extends AbstractTestCase
     }
 
     /**
-     * @dataProvider invalidTransTests
      *
      * @param  mixed $value The message ID.
-     * @return void
      */
-    public function testTranslateInvalidValuesReturnEmptyString($value)
+    #[\PHPUnit\Framework\Attributes\DataProvider('invalidTransTests')]
+    public function testTranslateInvalidValuesReturnEmptyString(int|bool|string|array|null $value): void
     {
         $this->assertEquals('', $this->obj->translate($value));
     }
 
-    /**
-     * @return void
-     */
-    public function testTranslationChoice()
+    public function testTranslationChoice(): void
     {
         $ret = $this->obj->translationChoice('There is one apple|There is %count% apples', 2);
         $this->assertInstanceOf(Translation::class, $ret);
@@ -273,18 +202,16 @@ class TranslatorTest extends AbstractTestCase
     }
 
     /**
-     * @dataProvider invalidTransTests
      *
      * @param  mixed $value The message ID.
-     * @return void
      */
-    public function testTranslationChoiceInvalidValuesReturnNull($value)
+    #[\PHPUnit\Framework\Attributes\DataProvider('invalidTransTests')]
+    public function testTranslationChoiceInvalidValuesReturnNull(int|bool|string|array|null $value): void
     {
         $this->assertNull($this->obj->translationChoice($value, 1));
     }
 
     /**
-     * @dataProvider validTransChoiceTests
      *
      * @param  string  $expected    The expected translation.
      * @param  string  $id          The message ID.
@@ -293,11 +220,11 @@ class TranslatorTest extends AbstractTestCase
      * @param  string  $parameters  An array of parameters for the message.
      * @param  string  $locale      The locale to use.
      * @param  string  $domain      The domain for the message.
-     * @return void
      */
-    public function testTranslateChoice($expected, $id, $translation, $number, $parameters, $locale, $domain)
+    #[\PHPUnit\Framework\Attributes\DataProvider('validTransChoiceTests')]
+    public function testTranslateChoice(string $expected, string|\Charcoal\Translator\Translation|\Charcoal\Tests\Translator\Mock\StringClass|array $id, string $translation, int $number, array $parameters, ?string $locale, string $domain): void
     {
-        if (!($id instanceof Translation || is_array($id)) && $locale) {
+        if (!$id instanceof Translation && !is_array($id) && $locale) {
             $this->obj->addResource('array', [ (string)$id => $translation ], $locale, $domain);
         }
 
@@ -305,59 +232,42 @@ class TranslatorTest extends AbstractTestCase
     }
 
     /**
-     * @dataProvider invalidTransTests
      *
      * @param  mixed $value The message ID.
-     * @return void
      */
-    public function testTranslateChoiceInvalidValuesReturnEmptyString($value)
+    #[\PHPUnit\Framework\Attributes\DataProvider('invalidTransTests')]
+    public function testTranslateChoiceInvalidValuesReturnEmptyString(int|bool|string|array|null $value): void
     {
         $this->assertEquals('', $this->obj->translateChoice($value, 1));
     }
 
-    /**
-     * @return void
-     */
-    public function testSetLocaleSetLocalesManagerCurrentLanguage()
+    public function testSetLocaleSetLocalesManagerCurrentLanguage(): void
     {
         $this->obj->setLocale('fr');
         $this->assertEquals('fr', $this->localesManager()->currentLocale());
     }
 
-    /**
-     * @return void
-     */
-    public function testLocales()
+    public function testLocales(): void
     {
         $this->assertArrayHasKey('en', $this->obj->locales());
         $this->assertArrayHasKey('fr', $this->obj->locales());
         $this->assertArrayNotHasKey('jp', $this->obj->locales());
     }
 
-    /**
-     * @return void
-     */
-    public function testAvailableLocales()
+    public function testAvailableLocales(): void
     {
         $this->assertEquals([ 'en', 'fr' ], $this->obj->availableLocales());
     }
 
-    /**
-     * @return void
-     */
-    public function testInvalidArrayTranslation()
+    public function testInvalidArrayTranslation(): void
     {
         $method = $this->getMethod($this->obj, 'isValidTranslation');
-        $method->setAccessible(true);
 
         $this->assertFalse($method->invokeArgs($this->obj, [ [ 0 => 'Hello!' ] ]));
         $this->assertFalse($method->invokeArgs($this->obj, [ [ 'hello' => 0 ] ]));
     }
 
-    /**
-     * @return void
-     */
-    public function testHasTranslation()
+    public function testHasTranslation(): void
     {
         $data = [
             'en' => [
@@ -395,26 +305,21 @@ class TranslatorTest extends AbstractTestCase
 
     /**
      * @link https://github.com/symfony/translation/blob/v3.2.3/Tests/TranslatorTest.php
-     *
-     * @return array
      */
-    public function validTransTests()
+    public static function validTransTests(): array
     {
         // phpcs:disable Generic.Files.LineLength.TooLong
         return [
             [ 'Charcoal est super !', 'Charcoal is great!', 'Charcoal est super !', [], 'fr', '' ],
             [ 'Charcoal est awesome !', 'Charcoal is %what%!', 'Charcoal est %what% !', [ '%what%' => 'awesome' ], 'fr', '' ],
             [ 'Charcoal is great!', [ 'en' => 'Charcoal is great!', 'fr' => 'Charcoal est super !'], 'Charcoal est super !', [], null, '' ],
-            [ 'Charcoal est super !', new Translation([ 'en' => 'Charcoal is great!', 'fr' => 'Charcoal est super !'], $this->localesManager()), 'Charcoal est super !', [], 'fr', '' ],
+            [ 'Charcoal est super !', new Translation([ 'en' => 'Charcoal is great!', 'fr' => 'Charcoal est super !'], self::localesManager()), 'Charcoal est super !', [], 'fr', '' ],
             [ 'Charcoal est super !', new StringClass('Charcoal is great!'), 'Charcoal est super !', [], 'fr', '' ],
         ];
         // phpcs:enable
     }
 
-    /**
-     * @return array
-     */
-    public function invalidTransTests()
+    public static function invalidTransTests(): array
     {
         return [
             'null'                         => [ null ],
@@ -431,10 +336,8 @@ class TranslatorTest extends AbstractTestCase
 
     /**
      * @link https://github.com/symfony/translation/blob/v3.2.3/Tests/TranslatorTest.php
-     *
-     * @return array
      */
-    public function validTransChoiceTests()
+    public static function validTransChoiceTests(): array
     {
         // phpcs:disable Generic.Files.LineLength.TooLong
         return [
@@ -455,12 +358,12 @@ class TranslatorTest extends AbstractTestCase
             [ 'Il y a 10 pommes', '{0} There are no apples|one: There is one apple|more: There is %count% apples', '{0} Il n\'y a aucune pomme|one: Il y a %count% pomme|more: Il y a %count% pommes', 10, [], 'fr', '' ],
 
             [ 'There are no appless', [ 'en' => '{0} There are no appless|{1} There is one apple|]1,Inf] There is %count% apples', 'fr' => '[0,1] Il y a %count% pomme|]1,Inf] Il y a %count% pommes' ], '[0,1] Il y a %count% pomme|]1,Inf] Il y a %count% pommes', 0, [], null, '' ],
-            [ 'Il y a 0 pomme', new Translation([ 'en' => '{0} There are no appless|{1} There is one apple|]1,Inf] There is %count% apples', 'fr' => '[0,1] Il y a %count% pomme|]1,Inf] Il y a %count% pommes' ], $this->localesManager()), '[0,1] Il y a %count% pomme|]1,Inf] Il y a %count% pommes', 0, [], 'fr', '' ],
+            [ 'Il y a 0 pomme', new Translation([ 'en' => '{0} There are no appless|{1} There is one apple|]1,Inf] There is %count% apples', 'fr' => '[0,1] Il y a %count% pomme|]1,Inf] Il y a %count% pommes' ], self::localesManager()), '[0,1] Il y a %count% pomme|]1,Inf] Il y a %count% pommes', 0, [], 'fr', '' ],
 
             [ 'Il y a 0 pomme', new StringClass('{0} There are no appless|{1} There is one apple|]1,Inf] There is %count% apples'), '[0,1] Il y a %count% pomme|]1,Inf] Il y a %count% pommes', 0, [], 'fr', '' ],
 
             // Override %count% with a custom value
-            [ 'Il y a quelques pommes', 'one: There is one apple|more: There are %count% apples', 'one: Il y a %count% pomme|more: Il y a %count% pommes', 2, [ '%count%' => 'quelques' ], 'fr', '' ],
+            [ 'Il y a quelques pommes', 'one: There is one apple|more: There are %count% apples', 'one: Il y a %count% pomme|more: Il y a %custom% pommes', 2, [ '%custom%' => 'quelques' ], 'fr', '' ],
         ];
         // phpcs:enable
     }

@@ -42,25 +42,21 @@ class AttachmentFormGroup extends AbstractFormGroup implements
 
     /**
      * Store the widget factory instance for the current class.
-     *
-     * @var FactoryInterface
      */
-    private $widgetFactory;
+    private ?\Charcoal\Factory\FactoryInterface $widgetFactory = null;
 
     /**
      * Whether notes should be display before or after the form fields.
-     *
-     * @var boolean
      */
-    private $showNotesAbove = false;
+    private bool $showNotesAbove = false;
 
     /**
      * Set the widget's data.
      *
      * @param array $data The widget data.
-     * @return self
      */
-    public function setData(array $data)
+    #[\Override]
+    public function setData(array $data): static
     {
         /**
          * @todo Kinda hacky, but works with the concept of form.
@@ -80,10 +76,8 @@ class AttachmentFormGroup extends AbstractFormGroup implements
 
     /**
      * Retrieve the default nested widget options.
-     *
-     * @return array
      */
-    public function defaultWidgetData()
+    public function defaultWidgetData(): array
     {
         return [
             'type'               => 'charcoal/admin/widget/attachment',
@@ -114,9 +108,8 @@ class AttachmentFormGroup extends AbstractFormGroup implements
      * Set the widget's ID.
      *
      * @param string $widgetId The widget identifier.
-     * @return self
      */
-    public function setWidgetId($widgetId)
+    public function setWidgetId($widgetId): static
     {
         $this->widgetId = $widgetId;
 
@@ -126,7 +119,8 @@ class AttachmentFormGroup extends AbstractFormGroup implements
     /**
      * @return Translation|string|null
      */
-    public function description()
+    #[\Override]
+    public function description(): string
     {
         return $this->renderTemplate((string)parent::description());
     }
@@ -134,7 +128,8 @@ class AttachmentFormGroup extends AbstractFormGroup implements
     /**
      * @return Translation|string|null
      */
-    public function notes()
+    #[\Override]
+    public function notes(): string
     {
         return $this->renderTemplate((string)parent::notes());
     }
@@ -145,7 +140,8 @@ class AttachmentFormGroup extends AbstractFormGroup implements
      * @param boolean|string $show Whether to show or hide notes.
      * @return self Chainable
      */
-    public function setShowNotes($show)
+    #[\Override]
+    public function setShowNotes($show): static
     {
         $this->showNotesAbove = ($show === 'above');
         parent::setShowNotes($show);
@@ -153,10 +149,7 @@ class AttachmentFormGroup extends AbstractFormGroup implements
         return $this;
     }
 
-    /**
-     * @return boolean
-     */
-    public function showNotesAbove()
+    public function showNotesAbove(): bool
     {
         return $this->showNotesAbove && $this->showNotes();
     }
@@ -165,6 +158,7 @@ class AttachmentFormGroup extends AbstractFormGroup implements
      * @param Container $container The DI container.
      * @return void
      */
+    #[\Override]
     protected function setDependencies(Container $container)
     {
         parent::setDependencies($container);
@@ -186,9 +180,8 @@ class AttachmentFormGroup extends AbstractFormGroup implements
      * Set the widget factory.
      *
      * @param FactoryInterface $factory The factory to create widgets.
-     * @return self
      */
-    protected function setWidgetFactory(FactoryInterface $factory)
+    protected function setWidgetFactory(FactoryInterface $factory): static
     {
         $this->widgetFactory = $factory;
 
@@ -198,15 +191,14 @@ class AttachmentFormGroup extends AbstractFormGroup implements
     /**
      * Retrieve the widget factory.
      *
-     * @return FactoryInterface
      * @throws RuntimeException If the widget factory was not previously set.
      */
-    protected function widgetFactory()
+    protected function widgetFactory(): \Charcoal\Factory\FactoryInterface
     {
-        if ($this->widgetFactory === null) {
+        if (!$this->widgetFactory instanceof \Charcoal\Factory\FactoryInterface) {
             throw new RuntimeException(sprintf(
                 'Widget Factory is not defined for "%s"',
-                get_class($this)
+                static::class
             ));
         }
 

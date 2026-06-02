@@ -65,6 +65,7 @@ class StatusDisplay extends AbstractPropertyDisplay implements ViewableInterface
      * @param Container $container A dependencies container instance.
      * @return void
      */
+    #[\Override]
     protected function setDependencies(Container $container)
     {
         parent::setDependencies($container);
@@ -80,7 +81,7 @@ class StatusDisplay extends AbstractPropertyDisplay implements ViewableInterface
      */
     private function fallbackStatus()
     {
-        return !!$this->propertyVal() ? static::STATE_SUCCESS : static::STATE_DEFAULT;
+        return $this->propertyVal() ? static::STATE_SUCCESS : static::STATE_DEFAULT;
     }
 
     /**
@@ -88,7 +89,7 @@ class StatusDisplay extends AbstractPropertyDisplay implements ViewableInterface
      * @throws UnexpectedValueException When an unsupported operator is used.
      * @return boolean
      */
-    private function testConditionWithOperator($condition)
+    private function testConditionWithOperator($condition): ?bool
     {
         $value = $condition;
         $operator = null;
@@ -101,7 +102,7 @@ class StatusDisplay extends AbstractPropertyDisplay implements ViewableInterface
             throw new UnexpectedValueException(sprintf(
                 'The operator [%s] is not supported in [%s]',
                 $operator,
-                get_class($this)
+                static::class
             ));
         }
 
@@ -139,13 +140,12 @@ class StatusDisplay extends AbstractPropertyDisplay implements ViewableInterface
 
         if (is_array($state)) {
             foreach ($state as $stateIdent => $conditions) {
-                $result = is_string($conditions) ?
-                    $result = $this->testConditionWithOperator($conditions) : false;
+                $result = is_string($conditions) && $result = $this->testConditionWithOperator($conditions);
 
                 $result = !$result && is_array($conditions) ?
-                    !!count(array_filter($conditions, [$this, 'testConditionWithOperator'])) : $result;
+                    (bool)count(array_filter($conditions, $this->testConditionWithOperator(...))) : $result;
 
-                if (!!$result && in_array($stateIdent, static::SUPPORTED_STATES)) {
+                if ($result && in_array($stateIdent, static::SUPPORTED_STATES)) {
                     return $stateIdent;
                 }
             };
@@ -177,9 +177,8 @@ class StatusDisplay extends AbstractPropertyDisplay implements ViewableInterface
 
     /**
      * @param array|callable $state State for StatusDisplay.
-     * @return self
      */
-    public function setState($state)
+    public function setState($state): static
     {
         $this->state = $state;
 

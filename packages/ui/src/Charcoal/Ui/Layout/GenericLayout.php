@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Charcoal\Ui\Layout;
 
 use Charcoal\Ui\Layout\AbstractLayout;
@@ -13,10 +15,8 @@ class GenericLayout extends AbstractLayout
 {
     /**
      * Retrieve the layout type.
-     *
-     * @return string
      */
-    public function type()
+    public function type(): string
     {
         return 'charcoal/ui/layout/generic';
     }

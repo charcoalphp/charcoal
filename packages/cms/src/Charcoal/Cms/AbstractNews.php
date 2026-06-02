@@ -51,10 +51,7 @@ abstract class AbstractNews extends Content implements NewsInterface
      */
     private $image;
 
-    /**
-     * @var DateTimeInterface|null
-     */
-    private $newsDate;
+    private ?\DateTimeInterface $newsDate = null;
 
     /**
      * @var Translation|string|null
@@ -70,11 +67,11 @@ abstract class AbstractNews extends Content implements NewsInterface
      * Section constructor.
      * @param array $data The data.
      */
-    public function __construct(array $data = null)
+    public function __construct(?array $data = null)
     {
         parent::__construct($data);
 
-        if (is_callable([ $this, 'defaultData' ])) {
+        if (is_callable($this->defaultData(...))) {
             $this->setData($this->defaultData());
         }
     }
@@ -92,9 +89,8 @@ abstract class AbstractNews extends Content implements NewsInterface
 
     /**
      * Some dates cannot be null
-     * @return void
      */
-    public function verifyDates()
+    public function verifyDates(): void
     {
         if (!$this['newsDate']) {
             $this->setNewsDate('now');
@@ -350,9 +346,9 @@ abstract class AbstractNews extends Content implements NewsInterface
      * {@inheritdoc}
      *
      * @see \Charcoal\Source\StorableTrait::preSave()
-     * @return boolean
      */
-    protected function preSave()
+    #[\Override]
+    protected function preSave(): bool
     {
         $this->verifyDates();
         $this->setSlug($this->generateSlug());
@@ -365,9 +361,9 @@ abstract class AbstractNews extends Content implements NewsInterface
      *
      * @see \Charcoal\Source\StorableTrait::preUpdate()
      * @param array $properties Optional properties to update.
-     * @return boolean
      */
-    protected function preUpdate(array $properties = null)
+    #[\Override]
+    protected function preUpdate(?array $properties = null): bool
     {
         $this->verifyDates();
         $this->setSlug($this->generateSlug());
@@ -379,7 +375,8 @@ abstract class AbstractNews extends Content implements NewsInterface
      * @see \Charcoal\Source\StorableTrait::postSave()
      * @return boolean Parent postSave().
      */
-    protected function postSave()
+    #[\Override]
+    protected function postSave(): bool
     {
         // RoutableTrait
         $this->generateObjectRoute($this['slug']);
@@ -390,9 +387,9 @@ abstract class AbstractNews extends Content implements NewsInterface
     /**
      * @see \Charcoal\Source\StorableTrait::postUpdate()
      * @param array|null $properties Properties.
-     * @return boolean
      */
-    protected function postUpdate(array $properties = null)
+    #[\Override]
+    protected function postUpdate(?array $properties = null): bool
     {
         // RoutableTrait
         $this->generateObjectRoute($this['slug']);

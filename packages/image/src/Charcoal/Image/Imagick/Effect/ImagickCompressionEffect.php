@@ -11,16 +11,15 @@ class ImagickCompressionEffect extends AbstractCompressionEffect
 {
     /**
      * @param array $data The effect data, if available.
-     * @return self
      */
-    public function process(array $data = null)
+    public function process(?array $data = null): static
     {
         if ($data !== null) {
             $this->setData($data);
         }
 
-        $target = $this->image()->target();
-        $extension = strtolower($this->image()->imagick()->getImageFormat());
+        $this->image()->target();
+        $extension = strtolower((string)$this->image()->imagick()->getImageFormat());
 
         $invalidExtensions = [ 'gif', 'bmp' ];
 

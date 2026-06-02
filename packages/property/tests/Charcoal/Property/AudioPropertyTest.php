@@ -5,17 +5,15 @@ namespace Charcoal\Tests\Property;
 // From 'charcoal-property'
 use Charcoal\Property\AudioProperty;
 
-/**
- *
- */
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Property\AudioProperty::class, 'type()')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Property\AudioProperty::class, 'getDefaultAcceptedMimetypes()')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Property\AudioProperty::class, 'hasAcceptedMimetypes()')]
 class AudioPropertyTest extends AbstractFilePropertyTestCase
 {
     /**
      * Create a file property instance.
-     *
-     * @return AudioProperty
      */
-    public function createProperty()
+    public function createProperty(): \Charcoal\Property\AudioProperty
     {
         $container = $this->getContainer();
 
@@ -29,21 +27,17 @@ class AudioPropertyTest extends AbstractFilePropertyTestCase
 
     /**
      * Asserts that the `type()` method is "file".
-     *
-     * @covers \Charcoal\Property\AudioProperty::type()
-     * @return void
      */
-    public function testPropertyType()
+    public function testPropertyType(): void
     {
         $this->assertEquals('audio', $this->obj->type());
     }
 
     /**
      * Asserts that the property adheres to file property defaults.
-     *
-     * @return void
      */
-    public function testPropertyDefaults()
+    #[\Override]
+    public function testPropertyDefaults(): void
     {
         parent::testPropertyDefaults();
 
@@ -53,11 +47,8 @@ class AudioPropertyTest extends AbstractFilePropertyTestCase
 
     /**
      * Asserts that the property adheres to file property defaults.
-     *
-     * @covers \Charcoal\Property\AudioProperty::getDefaultAcceptedMimetypes()
-     * @return void
      */
-    public function testDefaulAcceptedMimeTypes()
+    public function testDefaultAcceptedMimeTypes(): void
     {
         $this->assertIsArray($this->obj['defaultAcceptedMimetypes']);
         $this->assertNotEmpty($this->obj['defaultAcceptedMimetypes']);
@@ -66,11 +57,8 @@ class AudioPropertyTest extends AbstractFilePropertyTestCase
     /**
      * Asserts that the property properly checks if
      * any acceptable MIME types are available.
-     *
-     * @covers \Charcoal\Property\AudioProperty::hasAcceptedMimetypes()
-     * @return void
      */
-    public function testHasAcceptedMimeTypes()
+    public function testHasAcceptedMimeTypes(): void
     {
         $this->assertTrue($this->obj->hasAcceptedMimetypes());
 
@@ -80,10 +68,8 @@ class AudioPropertyTest extends AbstractFilePropertyTestCase
 
     /**
      * Asserts that the property can resolve a filesize from its value.
-     *
-     * @return void
      */
-    public function testFilesizeFromVal()
+    public function testFilesizeFromVal(): void
     {
         $obj = $this->obj;
 
@@ -97,10 +83,8 @@ class AudioPropertyTest extends AbstractFilePropertyTestCase
      * Asserts that the property can resolve a MIME type from its value.
      *
      * Ignore issues under PHP 7.0 and PHP 7.1, see https://bugs.php.net/bug.php?id=78183
-     *
-     * @return void
      */
-    public function testMimetypeFromVal()
+    public function testMimetypeFromVal(): void
     {
         $obj = $this->obj;
 
@@ -120,10 +104,7 @@ class AudioPropertyTest extends AbstractFilePropertyTestCase
         }
     }
 
-    /**
-     * @return void
-     */
-    public function testSetData()
+    public function testSetData(): void
     {
         $obj = $this->obj;
         $data = [
@@ -137,10 +118,7 @@ class AudioPropertyTest extends AbstractFilePropertyTestCase
         $this->assertEquals(500, $obj['maxLength']);
     }
 
-    /**
-     * @return void
-     */
-    public function testSetDataSnakecase()
+    public function testSetDataSnakecase(): void
     {
         $obj = $this->obj;
         $data = [
@@ -154,10 +132,7 @@ class AudioPropertyTest extends AbstractFilePropertyTestCase
         $this->assertEquals(500, $obj['maxLength']);
     }
 
-    /**
-     * @return void
-     */
-    public function testSetMinLength()
+    public function testSetMinLength(): void
     {
         $ret = $this->obj->setMinLength(5);
         $this->assertSame($ret, $this->obj);
@@ -168,10 +143,7 @@ class AudioPropertyTest extends AbstractFilePropertyTestCase
         $this->obj->setMinLength(false);
     }
 
-    /**
-     * @return void
-     */
-    public function testSetMaxLength()
+    public function testSetMaxLength(): void
     {
         $ret = $this->obj->setMaxLength(5);
         $this->assertSame($ret, $this->obj);
@@ -182,10 +154,8 @@ class AudioPropertyTest extends AbstractFilePropertyTestCase
         $this->obj->setMaxLength(false);
     }
 
-    /**
-     * @return void
-     */
-    public function testAcceptedMimetypes()
+    #[\Override]
+    public function testAcceptedMimetypes(): void
     {
         $ret = $this->obj['acceptedMimetypes'];
         $this->assertContains('audio/mp3', $ret);
@@ -198,9 +168,8 @@ class AudioPropertyTest extends AbstractFilePropertyTestCase
      * Provide property data for {@see AudioProperty::generateExtension()}.
      *
      * @used-by AbstractFilePropertyTestCase::testGenerateExtensionFromDataProvider()
-     * @return  array
      */
-    public function provideDataForGenerateExtension()
+    public static function provideDataForGenerateExtension(): array
     {
         return [
             [ 'audio/mp3',      'mp3' ],

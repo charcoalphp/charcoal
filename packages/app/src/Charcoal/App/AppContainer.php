@@ -28,7 +28,7 @@ class AppContainer extends Container
         parent::__construct($values);
 
         // Ensure "config" is set
-        $this['config'] = (isset($values['config']) ? $values['config'] : new AppConfig());
+        $this['config'] = ($values['config'] ?? new AppConfig());
 
         $this->register(new AppServiceProvider());
 
@@ -36,30 +36,22 @@ class AppContainer extends Container
         $this->registerConfigProviders();
     }
 
-    /**
-     * @return void
-     */
-    private function registerProviderFactory()
+    private function registerProviderFactory(): void
     {
         /**
         * @return Factory
         */
         if (!isset($this['provider/factory'])) {
-            $this['provider/factory'] = function () {
-                return new Factory([
-                    'base_class'       => ServiceProviderInterface::class,
-                    'resolver_options' => [
-                        'suffix' => 'ServiceProvider'
-                    ]
-                ]);
-            };
+            $this['provider/factory'] = (fn(): \Charcoal\Factory\GenericFactory => new Factory([
+                'base_class'       => ServiceProviderInterface::class,
+                'resolver_options' => [
+                    'suffix' => 'ServiceProvider'
+                ]
+            ]));
         }
     }
 
-    /**
-     * @return void
-     */
-    private function registerConfigProviders()
+    private function registerConfigProviders(): void
     {
         if (empty($this['config']['service_providers'])) {
             return;

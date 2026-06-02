@@ -12,7 +12,7 @@ use Charcoal\Source\ExpressionInterface;
  * Shared tests for implementations of {@see AbstractExpression}
  * and {@see ExpressionInterface}.
  */
-trait ExpressionTestTrait
+trait  ExpressionTestTrait
 {
     /**
      * @return \Pimple\Container
@@ -33,17 +33,15 @@ trait ExpressionTestTrait
      * @used-by self::testDefaultValues()
      * @return  array
      */
-    abstract public function provideDefaultValues();
+    abstract public static function provideDefaultValues();
 
     /**
      * Test new instance.
      *
      * Assertions:
      * 1. Implements {@see ExpressionInterface}
-     *
-     * @return void
      */
-    final public function testConstruct()
+    final public function testConstruct(): void
     {
         $obj = $this->createExpression();
 
@@ -56,10 +54,8 @@ trait ExpressionTestTrait
      *
      * Assertions:
      * 1. Getter returns an array
-     *
-     * @return void
      */
-    final public function testDefaultValuesMethod()
+    final public function testDefaultValuesMethod(): void
     {
         $obj = $this->createExpression();
 
@@ -74,9 +70,9 @@ trait ExpressionTestTrait
      *
      * @param mixed $key      The data key test.
      * @param mixed $expected The expected data value.
-     * @return void
      */
-    final public function testDefaultValues($key, $expected)
+    #[\PHPUnit\Framework\Attributes\DataProvider('provideDefaultValues')]
+    final public function testDefaultValues($key, $expected): void
     {
         $obj  = $this->createExpression();
         $data = $obj->defaultData();
@@ -91,10 +87,8 @@ trait ExpressionTestTrait
      * Assertions:
      * 1. Getter returns an array
      * 2. Setter is chainable
-     *
-     * @return void
      */
-    final public function testDataMethod()
+    final public function testDataMethod(): void
     {
         $obj = $this->createExpression();
 
@@ -108,10 +102,8 @@ trait ExpressionTestTrait
 
     /**
      * Test data structure with default state.
-     *
-     * @return void
      */
-    final public function testDefaultData()
+    final public function testDefaultData(): void
     {
         $obj = $this->createExpression();
         $this->assertEquals($obj->defaultData(), $obj->data());
@@ -122,16 +114,15 @@ trait ExpressionTestTrait
      *
      * @param ExpressionInterface $obj      The expression to test.
      * @param array|null          $expected The expected data subset.
-     * @return void
      */
-    final public function assertStructHasBasicData(ExpressionInterface $obj, array $expected = null)
+    final public function assertStructHasBasicData(ExpressionInterface $obj, ?array $expected = null): void
     {
-        if (empty($expected)) {
+        if ($expected === null || $expected === []) {
             $expected = [
                 'active' => false,
                 'name'   => 'foo',
             ];
-            $obj->setData($mutation);
+            $obj->setData($expected);
         }
 
         $data = $obj->data();
@@ -151,10 +142,8 @@ trait ExpressionTestTrait
      * Assertions:
      * 1. Serialization from default state
      * 2. Serialization from mutated state
-     *
-     * @return void
      */
-    public function testJsonSerializable()
+    public function testJsonSerializable(): void
     {
         $obj = $this->createExpression();
 
@@ -181,16 +170,14 @@ trait ExpressionTestTrait
      * Assertions:
      * 1. Serialization from default state
      * 2. Serialization from mutated state
-     *
-     * @return void
      */
-    public function testSerializable()
+    public function testSerializable(): void
     {
         $obj = $this->createExpression();
 
         /** 1. Serialization from default state */
         $that = unserialize(serialize($obj));
-        $this->assertInstanceOf(get_class($obj), $that);
+        $this->assertInstanceOf($obj::class, $that);
         $this->assertEquals($obj, $that);
         $this->assertTrue($that->active());
         $this->assertNull($that->name());
@@ -202,7 +189,7 @@ trait ExpressionTestTrait
         ];
         $obj->setData($mutation);
         $that = unserialize(serialize($obj));
-        $this->assertInstanceOf(get_class($obj), $that);
+        $this->assertInstanceOf($obj::class, $that);
         $this->assertEquals($obj, $that);
         $this->assertFalse($that->active());
         $this->assertEquals('foo', $that->name());

@@ -29,10 +29,7 @@ class NumberProperty extends AbstractProperty
      */
     private $max;
 
-    /**
-     * @return string
-     */
-    public function type()
+    public function type(): string
     {
         return 'number';
     }
@@ -41,9 +38,8 @@ class NumberProperty extends AbstractProperty
      * Set the minimal value.
      *
      * @param mixed|null $min The minimal value.
-     * @return self
      */
-    public function setMin($min)
+    public function setMin($min): static
     {
         $this->min = $min;
         return $this;
@@ -63,9 +59,8 @@ class NumberProperty extends AbstractProperty
      * Set the maximal value.
      *
      * @param mixed|null $max The maximal value.
-     * @return self
      */
-    public function setMax($max)
+    public function setMax($max): static
     {
         $this->max = $max;
         return $this;
@@ -86,7 +81,8 @@ class NumberProperty extends AbstractProperty
      *
      * @return string[]
      */
-    public function validationMethods()
+    #[\Override]
+    public function validationMethods(): array
     {
         $parentMethods = parent::validationMethods();
 
@@ -96,10 +92,8 @@ class NumberProperty extends AbstractProperty
         ]);
     }
 
-    /**
-     * @return boolean
-     */
-    public function validateRequired()
+    #[\Override]
+    public function validateRequired(): bool
     {
         if ($this['required'] && !is_numeric($this->val())) {
             $this->validator()->error('Value is required.', 'required');
@@ -150,7 +144,7 @@ class NumberProperty extends AbstractProperty
      * @see StorablePropertyTrait::sqlType()
      * @return string The SQL type
      */
-    public function sqlType()
+    public function sqlType(): string
     {
         // Multiple number are stocked as TEXT because we do not know the maximum length
         if ($this['multiple']) {
@@ -162,9 +156,8 @@ class NumberProperty extends AbstractProperty
 
     /**
      * @see StorablePropertyTrait::sqlPdoType()
-     * @return integer
      */
-    public function sqlPdoType()
+    public function sqlPdoType(): int
     {
         return PDO::PARAM_STR;
     }

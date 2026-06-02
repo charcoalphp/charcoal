@@ -14,10 +14,7 @@ use Charcoal\Tests\AbstractTestCase;
  */
 class AclServiceProviderTest extends AbstractTestCase
 {
-    /**
-     * @return void
-     */
-    public function testProvider()
+    public function testProvider(): void
     {
         $container = new Container([
             'config' => []

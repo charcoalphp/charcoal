@@ -31,10 +31,8 @@ class StorableMock implements
 
     /**
      * The logger instance.
-     *
-     * @var \Psr\Log\LoggerInterface
      */
-    protected $logger;
+    protected \Psr\Log\NullLogger $logger;
 
     /**
      * Create new storable mock.
@@ -46,15 +44,12 @@ class StorableMock implements
 
     /**
      * Convert the current class name in "type-ident" format.
-     *
-     * @return string
      */
-    public function objType()
+    public function objType(): string
     {
-        $model = get_class($this);
+        $model = static::class;
         $model = preg_replace('/([a-z])([A-Z])/', '$1-$2', $model);
-        $model = strtolower(str_replace('\\', '/', $model));
-        return $model;
+        return strtolower(str_replace('\\', '/', $model));
     }
 
     /**
@@ -62,7 +57,7 @@ class StorableMock implements
      *
      * @return SourceInterface A new repository.
      */
-    protected function createSource()
+    protected function createSource(): \Charcoal\Tests\Mock\SourceMock
     {
         return new SourceMock([
             'logger' => $this->logger
@@ -75,7 +70,7 @@ class StorableMock implements
      * @param  mixed $offset The offset to check for.
      * @return boolean Returns TRUE on success or FALSE on failure.
      */
-    public function offsetExists($offset)
+    public function offsetExists($offset): bool
     {
         return isset($this->data[$offset]);
     }
@@ -88,7 +83,7 @@ class StorableMock implements
      */
     public function offsetGet($offset)
     {
-        return isset($this->data[$offset]) ? $this->data[$offset] : null;
+        return $this->data[$offset] ?? null;
     }
 
     /**
@@ -96,9 +91,8 @@ class StorableMock implements
      *
      * @param  mixed $offset The offset to assign the value to.
      * @param  mixed $value  The value to set.
-     * @return void
      */
-    public function offsetSet($offset, $value)
+    public function offsetSet($offset, $value): void
     {
         if ($offset === null) {
             $this->data[] = $value;
@@ -111,9 +105,8 @@ class StorableMock implements
      * Unset an offset.
      *
      * @param  mixed $offset The offset to unset.
-     * @return void
      */
-    public function offsetUnset($offset)
+    public function offsetUnset($offset): void
     {
         unset($this->data[$offset]);
     }

@@ -182,14 +182,13 @@ trait CollectionContainerTrait
      * Model Factory getter.
      *
      * @throws Exception If the model factory was not previously set.
-     * @return FactoryInterface
      */
-    protected function modelFactory()
+    protected function modelFactory(): FactoryInterface
     {
         if ($this->modelFactory === null) {
             throw new Exception(sprintf(
                 'Model Factory is not defined for "%s"',
-                get_class($this)
+                $this::class
             ));
         }
 
@@ -198,9 +197,8 @@ trait CollectionContainerTrait
 
     /**
      * @param FactoryInterface $factory The property display factory.
-     * @return CollectionContainerInterface Chainable
      */
-    private function setPropertyDisplayFactory(FactoryInterface $factory)
+    private function setPropertyDisplayFactory(FactoryInterface $factory): CollectionContainerInterface
     {
         $this->propertyDisplayFactory = $factory;
 
@@ -209,14 +207,13 @@ trait CollectionContainerTrait
 
     /**
      * @throws Exception If the property display factory was not previously injected / set.
-     * @return FactoryInterface
      */
-    private function propertyDisplayFactory()
+    private function propertyDisplayFactory(): FactoryInterface
     {
         if ($this->propertyDisplayFactory === null) {
             throw new Exception(sprintf(
                 'Property display factory is not defined for "%s"',
-                get_class($this)
+                $this::class
             ));
         }
 
@@ -225,9 +222,8 @@ trait CollectionContainerTrait
 
     /**
      * @param CollectionLoader $loader The collection loader.
-     * @return CollectionContainerInterface Chainable
      */
-    public function setCollectionLoader(CollectionLoader $loader)
+    public function setCollectionLoader(CollectionLoader $loader): CollectionContainerInterface
     {
         $this->collectionLoader = $loader;
 
@@ -237,10 +233,8 @@ trait CollectionContainerTrait
     /**
      * Safe Collection Loader getter.
      * Create the loader if it was not set / injected.
-     *
-     * @return CollectionLoader
      */
-    protected function collectionLoader()
+    protected function collectionLoader(): CollectionLoader
     {
         if ($this->collectionLoader === null) {
             $this->collectionLoader = $this->createCollectionLoader();
@@ -251,10 +245,8 @@ trait CollectionContainerTrait
 
     /**
      * Create a collection loader.
-     *
-     * @return CollectionLoader
      */
-    protected function createCollectionLoader()
+    protected function createCollectionLoader(): \Charcoal\Loader\CollectionLoader
     {
         return new CollectionLoader([
             'logger'  => $this->logger,
@@ -269,16 +261,15 @@ trait CollectionContainerTrait
      *
      * @param  CollectionLoader $loader The collection loader to prepare.
      * @param  array|null       $data   Optional collection data.
-     * @return void
      */
-    protected function configureCollectionLoader(CollectionLoader $loader, array $data = null)
+    protected function configureCollectionLoader(CollectionLoader $loader, ?array $data = null): void
     {
-        $objType = $this->getObjTypeOrFail();
+        $this->getObjTypeOrFail();
 
         $loader->setModel($this->proto());
 
         $config = $this->collectionConfig();
-        if (is_array($config) && !empty($config)) {
+        if (is_array($config) && $config !== []) {
             unset($config['properties']);
             $loader->setData($config);
         }
@@ -293,9 +284,8 @@ trait CollectionContainerTrait
     /**
      * @param string $objType The collection's object type.
      * @throws InvalidArgumentException If provided argument is not of type 'string'.
-     * @return CollectionContainerInterface Chainable
      */
-    public function setObjType($objType)
+    public function setObjType($objType): CollectionContainerInterface
     {
         if (!is_string($objType)) {
             throw new InvalidArgumentException(
@@ -307,10 +297,7 @@ trait CollectionContainerTrait
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function objType()
+    public function objType(): string
     {
         return $this->objType;
     }
@@ -319,16 +306,15 @@ trait CollectionContainerTrait
      * Retrieve the current object type or throw an exception.
      *
      * @throws UnexpectedValueException If the collection object type is invalid or missing.
-     * @return string
      */
-    public function getObjTypeOrFail()
+    public function getObjTypeOrFail(): string
     {
         $objType = $this->objType();
 
         if (!$objType) {
             throw new UnexpectedValueException(sprintf(
                 '%1$s cannot create collection. Object type is not defined.',
-                get_class($this)
+                $this::class
             ));
         }
 
@@ -340,9 +326,8 @@ trait CollectionContainerTrait
      *
      * @param  string $collectionIdent The collection identifier.
      * @throws InvalidArgumentException If the identifier argument is not a string.
-     * @return CollectionContainerInterface Chainable
      */
-    public function setCollectionIdent($collectionIdent)
+    public function setCollectionIdent($collectionIdent): CollectionContainerInterface
     {
         if (!is_string($collectionIdent)) {
             throw new InvalidArgumentException(
@@ -358,10 +343,8 @@ trait CollectionContainerTrait
      * Retrieve a key for the collection structure to use.
      *
      * If the collection key is undefined, resolve a fallback.
-     *
-     * @return string
      */
-    public function collectionIdentFallback()
+    public function collectionIdentFallback(): string
     {
         $metadata = $this->proto()->metadata();
 
@@ -376,20 +359,16 @@ trait CollectionContainerTrait
 
     /**
      * Retrieve the key for the collection structure to use.
-     *
-     * @return string|null
      */
-    public function collectionIdent()
+    public function collectionIdent(): ?string
     {
         return $this->collectionIdent;
     }
 
     /**
      * Return the current collection metadata.
-     *
-     * @return array
      */
-    public function collectionMetadata()
+    public function collectionMetadata(): array
     {
         $proto = $this->proto();
         $collectionIdent = $this->collectionIdent();
@@ -417,10 +396,8 @@ trait CollectionContainerTrait
 
     /**
      * Retrieve the collection configset.
-     *
-     * @return array|null
      */
-    public function collectionConfig()
+    public function collectionConfig(): ?array
     {
         if ($this->collectionConfig === null) {
             $this->collectionConfig = $this->createCollectionConfig();
@@ -433,9 +410,8 @@ trait CollectionContainerTrait
      * Replace the collection's configset with the given parameters.
      *
      * @param  mixed $config New collection config values.
-     * @return CollectionContainerInterface Chainable
      */
-    public function setCollectionConfig($config)
+    public function setCollectionConfig($config): CollectionContainerInterface
     {
         if (empty($config) || !is_array($config)) {
             $config = [];
@@ -453,9 +429,8 @@ trait CollectionContainerTrait
      * Merge given parameters into the collection's configset.
      *
      * @param  array $config New collection config values.
-     * @return self
      */
-    public function mergeCollectionConfig(array $config)
+    public function mergeCollectionConfig(array $config): static
     {
         if ($this->collectionConfig === null) {
             $this->setCollectionConfig($config);
@@ -475,23 +450,18 @@ trait CollectionContainerTrait
      * Stub: Parse given parameters into the collection's config set.
      *
      * @param  array $config New collection config values.
-     * @return array
      */
-    protected function parseCollectionConfig(array $config)
+    protected function parseCollectionConfig(array $config): array
     {
-        return array_filter($config, function ($val) {
-            return !empty($val) || is_numeric($val);
-        });
+        return array_filter($config, fn($val): bool => !empty($val) || is_numeric($val));
     }
 
     /**
      * Retrieve the default collection configuration.
      *
      * The default configset is determined by the collection ident and object type, if assigned.
-     *
-     * @return array|null
      */
-    protected function defaultCollectionConfig()
+    protected function defaultCollectionConfig(): ?array
     {
         if ($this->defaultCollectionConfig === null) {
             $this->defaultCollectionConfig = $this->collectionMetadata();
@@ -502,28 +472,20 @@ trait CollectionContainerTrait
 
     /**
      * Stub: reimplement in classes using this trait.
-     *
-     * @return mixed
      */
-    protected function createCollectionConfig()
+    protected function createCollectionConfig(): mixed
     {
         return $this->collectionMetadata();
     }
 
-    /**
-     * @return boolean
-     */
-    public function hasPagination()
+    public function hasPagination(): bool
     {
         return ($this->pagination() instanceof Pagination);
     }
 
-    /**
-     * @return PaginationInterface
-     */
-    public function pagination()
+    public function pagination(): PaginationInterface
     {
-        if ($this->pagination === null || !($this->pagination instanceof PaginationInterface)) {
+        if (!($this->pagination instanceof PaginationInterface)) {
             $this->pagination = $this->createPagination();
             $collectionConfig = $this->collectionConfig();
             if (isset($collectionConfig['pagination'])) {
@@ -538,43 +500,32 @@ trait CollectionContainerTrait
      * Prevents the mutation of pagination.
      *
      * @param  mixed $pagination Unused parameter.
-     * @return self
      */
-    public function setPagination($pagination)
+    public function setPagination($pagination): static
     {
         unset($pagination);
         return $this;
     }
 
-    /**
-     * @return PaginationInterface
-     */
-    protected function createPagination()
+    protected function createPagination(): PaginationInterface
     {
-        $pagination = new Pagination();
-        return $pagination;
+        return new Pagination();
     }
 
-    /**
-     * @return integer
-     */
-    public function page()
+    public function page(): int
     {
         return $this->pagination()->page();
     }
 
-    /**
-     * @return integer
-     */
-    public function numPerPage()
+    public function numPerPage(): int
     {
         return $this->pagination()->numPerPage();
     }
 
     /**
-     * @return integer
+     * @throws Exception
      */
-    public function numPages()
+    public function numPages(): int|float
     {
         if ($this->numPerPage() === 0) {
             return 0;
@@ -583,10 +534,7 @@ trait CollectionContainerTrait
         return ceil($this->numTotal() / $this->numPerPage());
     }
 
-    /**
-     * @return boolean
-     */
-    public function hasFilters()
+    public function hasFilters(): bool
     {
         return count($this->filters()) > 0;
     }
@@ -594,7 +542,7 @@ trait CollectionContainerTrait
     /**
      * @return FilterInterface[]
      */
-    public function filters()
+    public function filters(): array
     {
         if ($this->filters === null) {
             $this->filters = [];
@@ -619,27 +567,19 @@ trait CollectionContainerTrait
      * Prevents the mutation of filters.
      *
      * @param  mixed $filters Unused parameter.
-     * @return self
      */
-    public function setFilters($filters)
+    public function setFilters($filters): static
     {
         unset($filters);
         return $this;
     }
 
-    /**
-     * @return FilterInterface
-     */
-    protected function createFilter()
+    protected function createFilter(): FilterInterface
     {
-        $filter = new Filter();
-        return $filter;
+        return new Filter();
     }
 
-    /**
-     * @return boolean
-     */
-    public function hasOrders()
+    public function hasOrders(): bool
     {
         return count($this->orders()) > 0;
     }
@@ -647,7 +587,7 @@ trait CollectionContainerTrait
     /**
      * @return OrderInterface[]
      */
-    public function orders()
+    public function orders(): array
     {
         if ($this->orders === null) {
             $this->orders = [];
@@ -672,37 +612,28 @@ trait CollectionContainerTrait
      * Prevents the mutation of orders.
      *
      * @param  mixed $orders Unused parameter.
-     * @return self
      */
-    public function setOrders($orders)
+    public function setOrders($orders): static
     {
         unset($orders);
         return $this;
     }
 
-    /**
-     * @return OrderInterface
-     */
-    protected function createOrder()
+    protected function createOrder(): OrderInterface
     {
-        $order = new Order();
-        return $order;
+        return new Order();
     }
 
     /**
      * @param mixed $collection The collection.
-     * @return CollectionContainerInterface Chainable
      */
-    public function setCollection($collection)
+    public function setCollection($collection): CollectionContainerInterface
     {
         $this->collection = $collection;
         return $this;
     }
 
-    /**
-     * @return Collection
-     */
-    public function collection()
+    public function collection(): Collection
     {
         if ($this->collection === null) {
             $this->collection = $this->createCollection();
@@ -712,26 +643,20 @@ trait CollectionContainerTrait
     }
 
     /**
+     * @param array|null $data Optional collection data.
+     * @return \ArrayAccess|array|ModelInterface[]
      * @todo Integrate $data; merge with $collectionConfig
-     * @param array $data Optional collection data.
-     * @throws Exception If the object type of the colletion has not been set.
-     * @return ModelInterface[]
      */
-    public function createCollection(array $data = null)
+    public function createCollection(?array $data = null): \ArrayAccess|array
     {
-        $objType = $this->getObjTypeOrFail();
+        $this->getObjTypeOrFail();
 
         $loader = $this->collectionLoader();
         $this->configureCollectionLoader($loader, $data);
-
-        $collection = $loader->load();
-        return $collection;
+        return $loader->load();
     }
 
-    /**
-     * @return array
-     */
-    public function objects()
+    public function objects(): array
     {
         return $this->collection()->values();
     }
@@ -740,10 +665,8 @@ trait CollectionContainerTrait
      * Sort the objects before they are displayed as rows.
      *
      * This method is useful for classes using this trait.
-     *
-     * @return array
      */
-    public function sortObjects()
+    public function sortObjects(): array
     {
         return $this->objects();
     }
@@ -752,9 +675,8 @@ trait CollectionContainerTrait
      * Prevents the mutation of properties.
      *
      * @param  mixed $properties Unused parameter.
-     * @return self
      */
-    public function setProperties($properties)
+    public function setProperties($properties): static
     {
         unset($properties);
         return $this;
@@ -764,10 +686,8 @@ trait CollectionContainerTrait
      * Prepares and returns the properties.
      *
      * This method should be overriden in the class implementing this trait.
-     *
-     * @return array
      */
-    public function properties()
+    public function properties(): array
     {
         return [];
     }
@@ -776,10 +696,8 @@ trait CollectionContainerTrait
      * Sort the properties before they are displayed as columns.
      *
      * This method is useful for classes using this trait.
-     *
-     * @return array
      */
-    public function sortProperties()
+    public function sortProperties(): array
     {
         return $this->properties();
     }
@@ -788,19 +706,16 @@ trait CollectionContainerTrait
      * Retrieve the property customizations for the collection.
      *
      * This method should be overriden in the class implementing this trait.
-     *
-     * @return array
      */
-    public function propertiesOptions()
+    public function propertiesOptions(): array
     {
         return [];
     }
 
     /**
      * Supplies properties for objects in table template specific to object configuration.
-     * @return \Generator
      */
-    public function objectRows()
+    public function objectRows(): \Generator
     {
         // Get properties as defined in object's list metadata
         $properties  = $this->sortProperties();
@@ -811,10 +726,8 @@ trait CollectionContainerTrait
 
         // Go through each object to generate an array of properties listed in object's list metadata
         foreach ($objects as $object) {
-            if (isset($object['requiredAclPermissions']) && !empty($object['requiredAclPermissions'])) {
-                if ($this->hasPermissions($object['requiredAclPermissions']) === false) {
-                    continue;
-                }
+            if (isset($object['requiredAclPermissions']) && !empty($object['requiredAclPermissions']) && $this->hasPermissions($object['requiredAclPermissions']) === false) {
+                continue;
             }
 
             $objectProperties = [];
@@ -855,9 +768,8 @@ trait CollectionContainerTrait
      *
      * @param  ModelInterface    $object   The current row's object.
      * @param  PropertyInterface $property The current property.
-     * @return void
      */
-    protected function setupDisplayPropertyValue(ModelInterface $object, PropertyInterface $property)
+    protected function setupDisplayPropertyValue(ModelInterface $object, PropertyInterface $property): void
     {
         $displayType = $property['displayType'];
 
@@ -891,13 +803,12 @@ trait CollectionContainerTrait
      * @param  ModelInterface    $object        The current row's object.
      * @param  PropertyInterface $property      The current property.
      * @param  string            $propertyValue The property $key's display value.
-     * @return array
      */
     protected function parsePropertyCell(
         ModelInterface $object,
         PropertyInterface $property,
-        $propertyValue
-    ) {
+        string $propertyValue
+    ): array {
         unset($object);
 
         return [
@@ -913,9 +824,8 @@ trait CollectionContainerTrait
      *
      * @param  ModelInterface $object           The current row's object.
      * @param  array          $objectProperties The $object's display properties.
-     * @return array
      */
-    protected function parseObjectRow(ModelInterface $object, array $objectProperties)
+    protected function parseObjectRow(ModelInterface $object, array $objectProperties): array
     {
         return [
             'object'           => $object,
@@ -925,27 +835,20 @@ trait CollectionContainerTrait
         ];
     }
 
-    /**
-     * @return boolean
-     */
-    public function hasObjects()
+    public function hasObjects(): bool
     {
         return ($this->numObjects() > 0);
     }
 
-    /**
-     * @return integer
-     */
-    public function numObjects()
+    public function numObjects(): int
     {
         return count($this->objects());
     }
 
     /**
      * @throws Exception If obj type was not set.
-     * @return integer
      */
-    public function numTotal()
+    public function numTotal(): int
     {
         if ($this->numTotal === null) {
             $objType = $this->getObjTypeOrFail();
@@ -967,10 +870,8 @@ trait CollectionContainerTrait
 
     /**
      * Retrieve the object's labels.
-     *
-     * @return array|null
      */
-    public function objLabels()
+    public function objLabels(): ?array
     {
         if ($this->objLabels === null) {
             $objLabels = [];
@@ -978,7 +879,7 @@ trait CollectionContainerTrait
             $objMetadata = $proto->metadata();
             if (isset($objMetadata['labels']) && !empty($objMetadata['labels'])) {
                 $objLabels = $objMetadata['labels'];
-                array_walk($objLabels, function (&$value) {
+                array_walk($objLabels, function (&$value): void {
                     $value = $this->translator()->translation($value);
                 });
                 $this->objLabels = $objLabels;
@@ -990,17 +891,16 @@ trait CollectionContainerTrait
 
     /**
      * @param boolean $reload If true, reload will be forced.
-     * @throws InvalidArgumentException If the object type is not defined / can not create prototype.
-     * @return ModelInterface
+     * @throws InvalidArgumentException|Exception If the object type is not defined / can not create prototype.
      */
-    public function proto($reload = false)
+    public function proto($reload = false): ModelInterface
     {
         if ($this->proto === null || $reload) {
             $objType = $this->objType();
             if ($objType === null) {
                 throw new InvalidArgumentException(sprintf(
                     '%s Can not create an object prototype: object type is null.',
-                    get_class($this)
+                    $this::class
                 ));
             }
             $this->proto = $this->modelFactory()->create($objType);
@@ -1011,10 +911,9 @@ trait CollectionContainerTrait
 
     /**
      * Retrieve the current object in a collection or its prototype.
-     *
-     * @return ModelInterface
+     * @throws Exception
      */
-    protected function getCurrentObjOrProto()
+    protected function getCurrentObjOrProto(): ModelInterface
     {
         return $this->currentObj ?: $this->proto();
     }
@@ -1022,13 +921,12 @@ trait CollectionContainerTrait
     /**
      * Determine if the model implements {@see \Charcoal\View\ViewableInterface}.
      *
-     * @see \Charcoal\Admin\Ui\ObjectContainerTrait::isObjRenderable()
-     *
      * @param  string|object $obj      Object type or instance to test.
      * @param  boolean       $toString Whether to test for `__toString()`.
-     * @return boolean
+     * @throws Exception
+     * @see \Charcoal\Admin\Ui\ObjectContainerTrait::isObjRenderable()
      */
-    protected function isObjRenderable($obj, $toString = false)
+    protected function isObjRenderable($obj, $toString = false): bool
     {
         if (is_string($obj)) {
             if (!method_exists($this, 'modelFactory')) {
@@ -1042,7 +940,7 @@ trait CollectionContainerTrait
             return false;
         }
 
-        $key = get_class($obj);
+        $key = $obj::class;
 
         if (isset(static::$objRenderableCache[$key])) {
             return static::$objRenderableCache[$key];

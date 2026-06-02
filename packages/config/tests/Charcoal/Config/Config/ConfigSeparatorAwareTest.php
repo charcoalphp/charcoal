@@ -11,9 +11,14 @@ use Charcoal\Config\SeparatorAwareInterface;
 
 /**
  * Test SeparatorAwareTrait implementation in AbstractConfig
- *
- * @coversDefaultClass \Charcoal\Config\AbstractConfig
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\Charcoal\Config\AbstractConfig::class)]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Config\AbstractConfig::class, '__construct()')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Config\AbstractConfig::class, 'setSeparator()')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Config\AbstractConfig::class, 'separator()')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Config\AbstractConfig::class, 'offsetExists()')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Config\AbstractConfig::class, 'offsetGet()')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Config\AbstractConfig::class, 'offsetSet()')]
 class ConfigSeparatorAwareTest extends AbstractConfigTestCase
 {
     use AssertionsTrait;
@@ -30,8 +35,6 @@ class ConfigSeparatorAwareTest extends AbstractConfigTestCase
 
     /**
      * Create a MacroConfig instance.
-     *
-     * @return void
      */
     protected function setUp(): void
     {
@@ -62,22 +65,14 @@ class ConfigSeparatorAwareTest extends AbstractConfigTestCase
 
     /**
      * Asserts that the object implements SeparatorAwareInterface.
-     *
-     * @coversNothing
-     * @return void
      */
-    public function testSeparatorAwareInterface()
+    #[\PHPUnit\Framework\Attributes\CoversNothing]
+    public function testSeparatorAwareInterface(): void
     {
         $this->assertInstanceOf(SeparatorAwareInterface::class, $this->cfg);
     }
 
-    /**
-     * @covers ::__construct()
-     * @covers ::setSeparator()
-     * @covers ::separator()
-     * @return void
-     */
-    public function testDefaultSeparator()
+    public function testDefaultSeparator(): void
     {
         $cfg = $this->createConfig();
         $this->assertEquals(AbstractConfig::DEFAULT_SEPARATOR, $cfg->separator());
@@ -87,45 +82,35 @@ class ConfigSeparatorAwareTest extends AbstractConfigTestCase
 
     // Test ArrayAccess on nested properties
     // =========================================================================
-
     /**
      * Asserts that the container returns TRUE if an endpoint is found
      * {@see SeparatorAwareTrait::hasWithSeparator() in a keypath}.
-     *
-     * @covers ::offsetExists()
-     * @return void
      */
-    public function testOffsetExistsOnEndKeyPath()
+    public function testOffsetExistsOnEndKeyPath(): void
     {
         $cfg = $this->cfg;
 
-        $this->assertObjectHasAttribute('connections', $cfg);
+        $this->assertTrue(property_exists($cfg, 'connections'));
         $this->assertTrue(isset($cfg['connections.default.host']));
     }
 
     /**
      * Asserts that the container returns TRUE if a midpoint is found
      * {@see SeparatorAwareTrait::hasWithSeparator() in a keypath}.
-     *
-     * @covers ::offsetExists()
-     * @return void
      */
-    public function testOffsetExistsOnMidKeyPath()
+    public function testOffsetExistsOnMidKeyPath(): void
     {
         $cfg = $this->cfg;
 
-        $this->assertObjectHasAttribute('connections', $cfg);
+        $this->assertTrue(property_exists($cfg, 'connections'));
         $this->assertTrue(isset($cfg['connections.default']));
     }
 
     /**
      * Asserts that the container returns FALSE if an endpoint is nonexistent
      * {@see SeparatorAwareTrait::hasWithSeparator() in a keypath}.
-     *
-     * @covers ::offsetExists()
-     * @return void
      */
-    public function testOffsetExistsReturnsFalseOnNonexistentEndKeyPath()
+    public function testOffsetExistsReturnsFalseOnNonexistentEndKeyPath(): void
     {
         $cfg = $this->cfg;
 
@@ -135,11 +120,8 @@ class ConfigSeparatorAwareTest extends AbstractConfigTestCase
     /**
      * Asserts that the container returns FALSE if a midpoint is nonexistent
      * {@see SeparatorAwareTrait::hasWithSeparator() in a keypath}.
-     *
-     * @covers ::offsetExists()
-     * @return void
      */
-    public function testOffsetExistsReturnsFalseOnNonexistentMidKeyPath()
+    public function testOffsetExistsReturnsFalseOnNonexistentMidKeyPath(): void
     {
         $cfg = $this->cfg;
 
@@ -149,11 +131,8 @@ class ConfigSeparatorAwareTest extends AbstractConfigTestCase
     /**
      * Asserts that the container returns the value of the endpoint found
      * {@see SeparatorAwareTrait::getWithSeparator() in a keypath}.
-     *
-     * @covers ::offsetGet()
-     * @return void
      */
-    public function testOffsetGetOnEndKeyPath()
+    public function testOffsetGetOnEndKeyPath(): void
     {
         $cfg = $this->cfg;
 
@@ -166,11 +145,8 @@ class ConfigSeparatorAwareTest extends AbstractConfigTestCase
     /**
      * Asserts that the container returns the value of the midpoint found
      * {@see SeparatorAwareTrait::getWithSeparator() in a keypath}.
-     *
-     * @covers ::offsetGet()
-     * @return void
      */
-    public function testOffsetGetOnMidKeyPath()
+    public function testOffsetGetOnMidKeyPath(): void
     {
         $cfg = $this->cfg;
 
@@ -183,11 +159,8 @@ class ConfigSeparatorAwareTest extends AbstractConfigTestCase
     /**
      * Asserts that the container returns NULL if the endpoint is nonexistent
      * {@see SeparatorAwareTrait::getWithSeparator() in a keypath}.
-     *
-     * @covers ::offsetGet()
-     * @return void
      */
-    public function testOffsetGetReturnsNullOnNonexistentEndKeyPath()
+    public function testOffsetGetReturnsNullOnNonexistentEndKeyPath(): void
     {
         $cfg = $this->cfg;
 
@@ -197,11 +170,8 @@ class ConfigSeparatorAwareTest extends AbstractConfigTestCase
     /**
      * Asserts that the container returns NULL if the midpoint is nonexistent
      * {@see SeparatorAwareTrait::getWithSeparator() in a keypath}.
-     *
-     * @covers ::offsetGet()
-     * @return void
      */
-    public function testOffsetGetReturnsNullOnNonexistentMidKeyPath()
+    public function testOffsetGetReturnsNullOnNonexistentMidKeyPath(): void
     {
         $cfg = $this->cfg;
 
@@ -211,11 +181,8 @@ class ConfigSeparatorAwareTest extends AbstractConfigTestCase
     /**
      * Asserts that the container assigns a value to the endpoint
      * {@see SeparatorAwareTrait::setWithSeparator() of the keypath}.
-     *
-     * @covers ::offsetSet()
-     * @return void
      */
-    public function testOffsetSetOnEndKeyPath()
+    public function testOffsetSetOnEndKeyPath(): void
     {
         $cfg = $this->cfg;
 
@@ -226,11 +193,8 @@ class ConfigSeparatorAwareTest extends AbstractConfigTestCase
     /**
      * Asserts that the container assigns a value to the endpoint of a nonexistent midpoint
      * {@see SeparatorAwareTrait::setWithSeparator() in the keypath}.
-     *
-     * @covers ::offsetSet()
-     * @return void
      */
-    public function testOffsetSetOnNonexistentMidKeyPath()
+    public function testOffsetSetOnNonexistentMidKeyPath(): void
     {
         $cfg = $this->cfg;
         $this->assertNull($cfg['connections.analytics']);
@@ -242,11 +206,9 @@ class ConfigSeparatorAwareTest extends AbstractConfigTestCase
     /**
      * Asserts that the container assigns NULL to the endpoint
      * {@see SeparatorAwareTrait::setWithSeparator() of the keypath} to "remove".
-     *
-     * @coversNothing
-     * @return void
      */
-    public function testOffsetUnsetOnEndKeyPath()
+    #[\PHPUnit\Framework\Attributes\CoversNothing]
+    public function testOffsetUnsetOnEndKeyPath(): void
     {
         $cfg = $this->cfg;
 
@@ -257,11 +219,9 @@ class ConfigSeparatorAwareTest extends AbstractConfigTestCase
     /**
      * Asserts that the container assigns NULL to the midpoint
      * {@see SeparatorAwareTrait::setWithSeparator() of the keypath} to "remove".
-     *
-     * @coversNothing
-     * @return void
      */
-    public function testOffsetUnsetOnMidKeyPath()
+    #[\PHPUnit\Framework\Attributes\CoversNothing]
+    public function testOffsetUnsetOnMidKeyPath(): void
     {
         $cfg = $this->cfg;
 

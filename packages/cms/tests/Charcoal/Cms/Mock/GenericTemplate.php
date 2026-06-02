@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Charcoal\Tests\Cms\Mock;
 
 // From 'charcoal-app'
@@ -13,24 +15,20 @@ use Charcoal\Cms\SectionInterface;
  */
 class GenericTemplate extends AbstractTemplate
 {
-    /**
-     * @var SectionInterface $section
-     */
-    private $section;
+    private ?\Charcoal\Cms\SectionInterface $section = null;
 
     /**
      * @return SectionInterface
      */
-    public function section()
+    public function section(): ?\Charcoal\Cms\SectionInterface
     {
         return $this->section;
     }
 
     /**
      * @param  SectionInterface $section The current section.
-     * @return self
      */
-    public function setSection(SectionInterface $section)
+    public function setSection(SectionInterface $section): static
     {
         $this->section = $section;
 

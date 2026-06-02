@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Charcoal\Admin\Widget;
 
 // From 'charcoal-admin'
@@ -27,9 +29,8 @@ class GraphWidget extends AdminWidget
 
     /**
      * @param  mixed $height The graph height (for CSS).
-     * @return self
      */
-    public function setHeight($height)
+    public function setHeight($height): static
     {
         if (is_numeric($height)) {
             $height .= 'px';
@@ -50,11 +51,10 @@ class GraphWidget extends AdminWidget
 
     /**
      * @param  boolean $show The show as card flag.
-     * @return self
      */
-    public function setShowAsCard($show)
+    public function setShowAsCard($show): static
     {
-        $this->showAsCard = !!$show;
+        $this->showAsCard = (bool)$show;
 
         return $this;
     }
@@ -71,9 +71,8 @@ class GraphWidget extends AdminWidget
      * Set the input options.
      *
      * @param  array $options Optional property input settings.
-     * @return self
      */
-    public function setGraphOptions(array $options)
+    public function setGraphOptions(array $options): static
     {
         $this->graphOptions = array_merge($this->getDefaultGraphOptions(), $options);
 
@@ -91,11 +90,7 @@ class GraphWidget extends AdminWidget
     {
         $options = $this->getGraphOptions();
 
-        if (isset($options[$key])) {
-            return $options[$key];
-        }
-
-        return $default;
+        return ($options[$key] ?? $default);
     }
 
     /**
@@ -114,20 +109,17 @@ class GraphWidget extends AdminWidget
 
     /**
      * Retrieve the default display options.
-     *
-     * @return array
      */
-    public function getDefaultGraphOptions()
+    public function getDefaultGraphOptions(): array
     {
         return [];
     }
 
     /**
      * Retrieve the widget's data options for JavaScript components.
-     *
-     * @return array
      */
-    public function widgetDataForJs()
+    #[\Override]
+    public function widgetDataForJs(): array
     {
         return [
             'graph_options' => $this->getGraphOptions(),

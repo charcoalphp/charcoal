@@ -1,6 +1,6 @@
 <?php
 
-namespace Charcoals\Tests\Image;
+namespace Charcoal\Tests\Image;
 
 use InvalidArgumentException;
 
@@ -9,11 +9,11 @@ use Charcoal\Image\Imagemagick\ImagemagickImage as Image;
 
 class ImagemagickImageTest extends \PHPUnit\Framework\TestCase
 {
-    private $factory;
+    private ?\Charcoal\Image\ImageFactory $factory = null;
 
-    public function imageFactory()
+    public function imageFactory(): \Charcoal\Image\ImageFactory
     {
-        if ($this->factory === null) {
+        if (!$this->factory instanceof \Charcoal\Image\ImageFactory) {
             $this->factory = new ImageFactory();
         }
 
@@ -25,7 +25,7 @@ class ImagemagickImageTest extends \PHPUnit\Framework\TestCase
         return $this->imageFactory()->create('imagemagick');
     }
 
-    public function testFromFactory()
+    public function testFromFactory(): void
     {
         $obj = $this->createImage();
         $this->assertInstanceOf(Image::class, $obj);
@@ -41,21 +41,21 @@ class ImagemagickImageTest extends \PHPUnit\Framework\TestCase
 //        $obj->create('foo', 'bar');
 //    }
 
-    public function testCreateMinWidth()
+    public function testCreateMinWidth(): void
     {
         $obj = $this->createImage();
         $this->expectException(InvalidArgumentException::class);
         $obj->create(400, 0);
     }
 
-    public function testCreateMinHeigth()
+    public function testCreateMinHeigth(): void
     {
         $obj = $this->createImage();
         $this->expectException(InvalidArgumentException::class);
         $obj->create(0, 400);
     }
 
-    public function testOpen()
+    public function testOpen(): void
     {
         $obj = $this->createImage();
         $ret = $obj->open(EXAMPLES_DIR.'/test01.jpg');
@@ -65,7 +65,7 @@ class ImagemagickImageTest extends \PHPUnit\Framework\TestCase
         $obj->open(false);
     }
 
-    public function testOpenInvalidFile()
+    public function testOpenInvalidFile(): void
     {
         $obj = $this->createImage();
         $this->expectException('\Exception');
@@ -88,7 +88,7 @@ class ImagemagickImageTest extends \PHPUnit\Framework\TestCase
 //        //$this->assertEquals($id1, $id2);
 //    }
 
-    public function testWidth()
+    public function testWidth(): void
     {
         $obj = $this->createImage();
         $obj->open(EXAMPLES_DIR.'/test01.jpg');
@@ -97,7 +97,7 @@ class ImagemagickImageTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(3456, $width);
     }
 
-    public function testHeight()
+    public function testHeight(): void
     {
         $obj = $this->createImage();
         $obj->open(EXAMPLES_DIR.'/test01.jpg');
@@ -106,10 +106,8 @@ class ImagemagickImageTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(2304, $height);
     }
 
-    /**
-     * @dataProvider effectProvider
-     */
-    public function testEffects($effect, $filename)
+    #[\PHPUnit\Framework\Attributes\DataProvider('effectProvider')]
+    public function testEffects(array $effect, string $filename): void
     {
         $obj = $this->createImage();
         $obj->open(EXAMPLES_DIR.'/test02.png');
@@ -120,10 +118,8 @@ class ImagemagickImageTest extends \PHPUnit\Framework\TestCase
         $this->assertTrue(file_exists(OUTPUT_DIR.'/'.$filename));
     }
 
-    /**
-     * @dataProvider invalidEffectProvider
-     */
-    public function testInvalidEffext($effect)
+    #[\PHPUnit\Framework\Attributes\DataProvider('invalidEffectProvider')]
+    public function testInvalidEffext(array $effect): void
     {
         $obj = $this->createImage();
         $obj->open(EXAMPLES_DIR.'/test02.png');
@@ -132,7 +128,7 @@ class ImagemagickImageTest extends \PHPUnit\Framework\TestCase
         $obj->processsEffect($effect);
     }
 
-    public function effectProvider()
+    public static function effectProvider(): array
     {
         return [
             # Blur
@@ -186,7 +182,7 @@ class ImagemagickImageTest extends \PHPUnit\Framework\TestCase
         ];
     }
 
-    public function invalidEffectProvider()
+    public static function invalidEffectProvider(): array
     {
         return [
             # Dither

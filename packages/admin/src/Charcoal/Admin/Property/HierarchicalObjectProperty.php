@@ -25,10 +25,9 @@ class HierarchicalObjectProperty extends ObjectProperty
 
     /**
      * Retrieve the available choice structures, segmented as a tree.
-     *
-     * @return array
      */
-    public function choices()
+    #[\Override]
+    public function choices(): array
     {
         $choices = [];
 
@@ -53,7 +52,8 @@ class HierarchicalObjectProperty extends ObjectProperty
      * @param  ModelInterface $obj An object to format.
      * @return array Returns a choice structure.
      */
-    protected function parseChoice(ModelInterface $obj)
+    #[\Override]
+    protected function parseChoice(ModelInterface $obj): array
     {
         $choice = parent::parseChoice($obj);
 
@@ -87,9 +87,8 @@ class HierarchicalObjectProperty extends ObjectProperty
 
     /**
      * @param integer|string $objId ObjId for ObjectProperty.
-     * @return self
      */
-    public function setObjId($objId)
+    public function setObjId($objId): static
     {
         $this->objId = $objId;
 

@@ -28,10 +28,7 @@ abstract class AbstractImage implements ImageInterface
      */
     protected $effects = [];
 
-    /**
-     * @var EffectFactory $effectFactory
-     */
-    private $effectFactory;
+    private ?\Charcoal\Image\EffectFactory $effectFactory = null;
 
 
     /**
@@ -43,7 +40,7 @@ abstract class AbstractImage implements ImageInterface
      * @param  array  $data   The effect options.
      * @return ImageInterface Chainable
      */
-    public function __call($fxType, array $data)
+    public function __call(string $fxType, array $data)
     {
         $data['type'] = $fxType;
 
@@ -61,7 +58,7 @@ abstract class AbstractImage implements ImageInterface
      */
     protected function effectFactory()
     {
-        if ($this->effectFactory === null) {
+        if (!$this->effectFactory instanceof \Charcoal\Image\EffectFactory) {
             $this->effectFactory = new EffectFactory();
         }
         return $this->effectFactory;
@@ -175,7 +172,7 @@ abstract class AbstractImage implements ImageInterface
      * @param array $effects Optional. The effects to process. If null, use in-memory's.
      * @return ImageInterface Chainable
      */
-    public function process(array $effects = null)
+    public function process(?array $effects = null)
     {
         if ($effects !== null) {
             $this->setEffects($effects);
@@ -255,9 +252,7 @@ abstract class AbstractImage implements ImageInterface
                 'Ratio can not be calculated. Invalid image dimensions'
             );
         }
-
-        $ratio = ($width / $height);
-        return $ratio;
+        return ($width / $height);
     }
 
     /**
@@ -320,7 +315,7 @@ abstract class AbstractImage implements ImageInterface
                 );
             }
             $fxType = $effect['type'];
-            if (strstr($fxType, '/') === false) {
+            if (!str_contains((string)$fxType, '/')) {
                 // Core effects do not need to be namespaced
                 $driver = $this->driverType();
                 $fxType = 'charcoal/image/' . $driver . '/effect/' . $driver . '-' . $fxType . '-effect';

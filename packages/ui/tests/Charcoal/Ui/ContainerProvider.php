@@ -36,9 +36,8 @@ class ContainerProvider
      * Register the unit tests required services.
      *
      * @param  Container $container A DI container.
-     * @return void
      */
-    public function registerBaseServices(Container $container)
+    public function registerBaseServices(Container $container): void
     {
         $this->registerConfig($container);
         $this->registerSource($container);
@@ -50,9 +49,8 @@ class ContainerProvider
      * Register the admin services.
      *
      * @param  Container $container A DI container.
-     * @return void
      */
-    public function registerConfig(Container $container)
+    public function registerConfig(Container $container): void
     {
         $container['config'] = new AppConfig([
             'base_path'  => realpath(__DIR__ . '/../../..'),
@@ -71,8 +69,6 @@ class ContainerProvider
          *
          * Explicitly defined in case of a version mismatch with dependencies. This parameter
          * is normally defined by {@see \Charcoal\App\ServiceProvider\AppServiceProvider}.
-         *
-         * @var array
          */
         $container['module/classes'] = [];
     }
@@ -83,11 +79,10 @@ class ContainerProvider
      * Note: Uses SQLite to create a database in memory.
      *
      * @param  Container $container A DI container.
-     * @return void
      */
-    public function registerSource(Container $container)
+    public function registerSource(Container $container): void
     {
-        $container['database'] = function () {
+        $container['database'] = function (): \PDO {
             $pdo = new PDO('sqlite::memory:');
             $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             return $pdo;
@@ -98,9 +93,8 @@ class ContainerProvider
      * Register the admin services.
      *
      * @param  Container $container A DI container.
-     * @return void
      */
-    public function registerModelServices(Container $container)
+    public function registerModelServices(Container $container): void
     {
         static $provider = null;
 
@@ -115,9 +109,8 @@ class ContainerProvider
      * Register the admin services.
      *
      * @param  Container $container A DI container.
-     * @return void
      */
-    public function registerAuthServices(Container $container)
+    public function registerAuthServices(Container $container): void
     {
         static $provider = null;
 
@@ -132,9 +125,8 @@ class ContainerProvider
      * Setup the application's translator service.
      *
      * @param  Container $container A DI container.
-     * @return void
      */
-    public function registerTranslatorServices(Container $container)
+    public function registerTranslatorServices(Container $container): void
     {
         static $provider = null;
 
@@ -149,9 +141,8 @@ class ContainerProvider
      * Setup the framework's view renderer.
      *
      * @param  Container $container A DI container.
-     * @return void
      */
-    public function registerViewServices(Container $container)
+    public function registerViewServices(Container $container): void
     {
         static $provider = null;
 
@@ -166,25 +157,19 @@ class ContainerProvider
      * Setup the application's logging interface.
      *
      * @param  Container $container A DI container.
-     * @return void
      */
-    public function registerLogger(Container $container)
+    public function registerLogger(Container $container): void
     {
-        $container['logger'] = function () {
-            return new NullLogger();
-        };
+        $container['logger'] = (fn(): \Psr\Log\NullLogger => new NullLogger());
     }
 
     /**
      * Setup the application's caching interface.
      *
      * @param  Container $container A DI container.
-     * @return void
      */
-    public function registerCache(Container $container)
+    public function registerCache(Container $container): void
     {
-        $container['cache'] = function () {
-            return new Pool();
-        };
+        $container['cache'] = (fn(): \Stash\Pool => new Pool());
     }
 }

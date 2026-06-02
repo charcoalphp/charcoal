@@ -42,6 +42,7 @@ class PermalinkInput extends TextInput
      * @param  Container $container A service locator.
      * @return void
      */
+    #[\Override]
     protected function setDependencies(Container $container)
     {
         parent::setDependencies($container);
@@ -55,9 +56,9 @@ class PermalinkInput extends TextInput
      * Used for the HTML "ID" attribute.
      *
      * @param  string $inputId HTML input id attribute.
-     * @return self
      */
-    public function setInputId($inputId)
+    #[\Override]
+    public function setInputId($inputId): static
     {
         parent::setInputId($inputId);
         $this->sampleId = $inputId;
@@ -66,10 +67,8 @@ class PermalinkInput extends TextInput
 
     /**
      * Get the permalink's absolute URI.
-     *
-     * @return string|null
      */
-    public function viewLink()
+    public function viewLink(): string
     {
         $link   = null;
         $locale = $this->lang();
@@ -88,9 +87,8 @@ class PermalinkInput extends TextInput
      * Set the permalink's immutable base.
      *
      * @param  mixed $route The base URI.
-     * @return self
      */
-    protected function setBaseRoute($route)
+    protected function setBaseRoute($route): static
     {
         $this->baseRoute = $this->translator()->translation($route);
         return $this;
@@ -98,10 +96,8 @@ class PermalinkInput extends TextInput
 
     /**
      * Get the permalink's immutable base.
-     *
-     * @return string|null
      */
-    public function baseRoute()
+    public function baseRoute(): string
     {
         if ($this->baseRoute === null) {
             $this->baseRoute = $this->baseUrl();
@@ -117,7 +113,7 @@ class PermalinkInput extends TextInput
             $translator->setLocale($origLocale);
         }
 
-        return rtrim((string)$link, '/') . '/';
+        return rtrim($link, '/') . '/';
     }
 
     /**
@@ -128,7 +124,7 @@ class PermalinkInput extends TextInput
     public function editableRoute()
     {
         $link = $this->inputVal();
-        if (empty($link)) {
+        if (in_array($link, [null, '', '0'], true)) {
             $link = $this->placeholder();
         }
 
@@ -139,9 +135,8 @@ class PermalinkInput extends TextInput
      * Set the base URI of the project.
      *
      * @param  UriInterface $uri The base URI.
-     * @return self
      */
-    protected function setBaseUrl(UriInterface $uri)
+    protected function setBaseUrl(UriInterface $uri): static
     {
         $this->baseUrl = $uri;
         return $this;
@@ -155,10 +150,10 @@ class PermalinkInput extends TextInput
      */
     public function baseUrl()
     {
-        if (!isset($this->baseUrl)) {
+        if ($this->baseUrl === null) {
             throw new RuntimeException(sprintf(
                 'The base URI is not defined for [%s]',
-                get_class($this)
+                static::class
             ));
         }
 
@@ -195,9 +190,8 @@ class PermalinkInput extends TextInput
      * Used for the HTML "ID" attribute.
      *
      * @param  string $id HTML sample ID attribute.
-     * @return self
      */
-    public function setSampleId($id)
+    public function setSampleId($id): static
     {
         $this->sampleId = $id;
         return $this;
@@ -221,10 +215,8 @@ class PermalinkInput extends TextInput
 
     /**
      * Generate a unique sample ID.
-     *
-     * @return string
      */
-    protected function generateSampleId()
+    protected function generateSampleId(): string
     {
         return 'sample_' . uniqid();
     }

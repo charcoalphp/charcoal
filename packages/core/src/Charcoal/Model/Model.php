@@ -7,6 +7,8 @@
  * @author Mathieu Ducharme <mat@locomotive.ca>
  */
 
+declare(strict_types=1);
+
 namespace Charcoal\Model;
 
 // From 'charcoal-core'

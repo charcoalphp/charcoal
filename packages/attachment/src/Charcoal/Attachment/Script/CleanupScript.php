@@ -107,6 +107,7 @@ class CleanupScript extends AbstractScript implements
     /**
      * @return void
      */
+    #[\Override]
     protected function init()
     {
         parent::init();
@@ -123,6 +124,7 @@ class CleanupScript extends AbstractScript implements
      * @param Container $container A dependencies container instance.
      * @return void
      */
+    #[\Override]
     protected function setDependencies(Container $container)
     {
         parent::setDependencies($container);
@@ -131,20 +133,17 @@ class CleanupScript extends AbstractScript implements
         $this->setModelFactory($container['model/factory']);
     }
 
-    /**
-     * @return boolean
-     */
-    public function interactive()
+    #[\Override]
+    public function interactive(): bool
     {
         return true;
     }
 
     /**
      * Retrieve the script's supported arguments.
-     *
-     * @return array
      */
-    public function defaultArguments()
+    #[\Override]
+    public function defaultArguments(): array
     {
         $arguments = [
             'hard' => [
@@ -166,9 +165,8 @@ class CleanupScript extends AbstractScript implements
      *
      * @param  RequestInterface  $request  A PSR-7 compatible Request instance.
      * @param  ResponseInterface $response A PSR-7 compatible Response instance.
-     * @return ResponseInterface
      */
-    public function run(RequestInterface $request, ResponseInterface $response)
+    public function run(RequestInterface $request, ResponseInterface $response): ResponseInterface
     {
         unset($request);
 
@@ -183,10 +181,8 @@ class CleanupScript extends AbstractScript implements
 
     /**
      * Execute the prime directive.
-     *
-     * @return self
      */
-    public function start()
+    public function start(): static
     {
         $cli = $this->climate();
 
@@ -202,16 +198,13 @@ class CleanupScript extends AbstractScript implements
 
     /**
      * Prune relationships of dead objects.
-     *
-     * @return self
      */
-    protected function pruneRelationships()
+    protected function pruneRelationships(): static
     {
-        $cli   = $this->climate();
-        $ask   = $this->interactive();
-        $dry   = $this->dryRun();
-        $verb  = $this->verbose();
-        $mucho = ($dry || $verb);
+        $this->climate();
+        $this->interactive();
+        $this->dryRun();
+        $this->verbose();
 
         $attach = $this->modelFactory()->get(Attachment::class);
         $pivot  = $this->modelFactory()->get(Join::class);
@@ -227,7 +220,7 @@ class CleanupScript extends AbstractScript implements
         $sql = 'SELECT DISTINCT `%sourceType` FROM `%pivotTable`;';
         $rows = $db->query(strtr($sql, $binds), PDO::FETCH_ASSOC);
         if ($rows->rowCount()) {
-            error_log(get_called_class() . '::' . __FUNCTION__);
+            error_log(static::class . '::' . __FUNCTION__);
 
             /** @todo Confirm each distinct source type */
 
@@ -305,10 +298,8 @@ class CleanupScript extends AbstractScript implements
 
     /**
      * Prune orphan attachments.
-     *
-     * @return self
      */
-    protected function pruneAttachments()
+    protected function pruneAttachments(): static
     {
         $cli   = $this->climate();
         $ask   = $this->interactive();
@@ -366,7 +357,7 @@ class CleanupScript extends AbstractScript implements
         $this->indent    = str_repeat(' ', (($length * 2) + 4));
 
         $prop = $attach->property($attach->key());
-        if ($prop && preg_match('~\b\w+\((?<length>\d+)\)~', $prop->sqlType(), $matches)) {
+        if ($prop && preg_match('~\b\w+\((?<length>\d+)\)~', (string)$prop->sqlType(), $matches)) {
             $pad = (intval($matches['length']) + 5);
         } else {
             $pad = 20;
@@ -396,8 +387,8 @@ class CleanupScript extends AbstractScript implements
 
             if ($ask) {
                 $type  = sprintf('[%s]', $obj->microType());
-                $label = sprintf('#%1$s %2$s', str_pad($objId, $pad), str_pad($type, 20));
-                if ($title) {
+                $label = sprintf('#%1$s %2$s', str_pad((string)$objId, $pad), str_pad($type, 20));
+                if ($title !== '' && $title !== '0') {
                     $label = sprintf('%1$s "%2$s"', $label, $title);
                 }
 
@@ -506,10 +497,8 @@ class CleanupScript extends AbstractScript implements
 
     /**
      * Display stored messages or a generic conclusion.
-     *
-     * @return self
      */
-    protected function conclude()
+    protected function conclude(): static
     {
         $cli = $this->climate();
 
@@ -531,15 +520,14 @@ class CleanupScript extends AbstractScript implements
      * @param  string  $singular The message when the count is 1.
      * @param  string  $zero     The message when the count is zero.
      * @throws InvalidArgumentException If the given argument is not an integer.
-     * @return boolean
      */
-    protected function describeCount($count, $plural, $singular, $zero)
+    protected function describeCount($count, $plural, $singular, $zero): bool
     {
         if (!is_int($count)) {
             throw new InvalidArgumentException(
                 sprintf(
                     'Must be an integer',
-                    is_object($count) ? get_class($count) : gettype($count)
+                    get_debug_type($count)
                 )
             );
         }
@@ -573,9 +561,8 @@ class CleanupScript extends AbstractScript implements
      * @param  integer|null        $pruned   Count the number of deleted objects.
      * @param  integer|null        $failed   Count the number of failed deletions.
      * @param  array|null          $feedback Update the feedback.
-     * @return boolean
      */
-    protected function deleteObject(AttachableInterface $obj, &$pruned = null, &$failed = null, array &$feedback = null)
+    protected function deleteObject(AttachableInterface $obj, &$pruned = null, &$failed = null, ?array &$feedback = null): bool
     {
         $verb = $this->verbose();
 

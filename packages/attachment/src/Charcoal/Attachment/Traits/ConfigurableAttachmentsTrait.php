@@ -76,7 +76,7 @@ trait ConfigurableAttachmentsTrait
      * @param  array|null $data Optional data to pass to the new configset.
      * @return ConfigInterface
      */
-    protected function createConfig($data = null)
+    protected function createConfig($data = null): \Charcoal\Attachment\AttachmentsConfig
     {
         return new AttachmentsConfig($data);
     }

@@ -26,23 +26,21 @@ class InfoTemplate extends AdminTemplate implements
     use DashboardContainerTrait;
     use ObjectContainerTrait;
 
-    /**
-     * @var array
-     */
-    private $metadataFiles;
+    public $metadataLoader;
+    public $collectionLoader;
+
+    private ?array $metadataFiles = null;
 
     /**
      * @return \Charcoal\Admin\Translation|\Charcoal\Translator\Translation|string|null
      */
+    #[\Override]
     public function title()
     {
         return $this->objType();
     }
 
-    /**
-     * @return array
-     */
-    public function objProperties()
+    public function objProperties(): array
     {
         $ret = [];
         $properties = $this->obj()->metadata()->properties();
@@ -72,10 +70,10 @@ class InfoTemplate extends AdminTemplate implements
 
             $ret[] = $property;
         }
-        usort($ret, function ($a, $b) {
-            $ret = strcmp($a['metadataSource'], $b['metadataSource']);
+        usort($ret, function (array $a, array $b): int {
+            $ret = strcmp((string)$a['metadataSource'], (string)$b['metadataSource']);
             if ($ret === 0) {
-                return strcmp($a['ident'], $b['ident']);
+                return strcmp((string)$a['ident'], (string)$b['ident']);
             } else {
                 return $ret;
             }
@@ -83,29 +81,19 @@ class InfoTemplate extends AdminTemplate implements
         return $ret;
     }
 
-    /**
-     * @return string
-     */
-    public function className()
+    public function className(): string
     {
-        return get_class($this->obj());
+        return $this->obj()::class;
     }
 
-    /**
-     * @return array
-     */
-    public function classHierarchy()
+    public function classHierarchy(): array
     {
         $ret = [];
         $ret = array_merge($ret, array_keys(class_parents($this->obj())));
-        $ret = array_reverse($ret);
-        return $ret;
+        return array_reverse($ret);
     }
 
-    /**
-     * @return array
-     */
-    public function classTraits()
+    public function classTraits(): array
     {
         $traits = [];
         $hierarchy = $this->classHierarchy();
@@ -117,31 +105,23 @@ class InfoTemplate extends AdminTemplate implements
         return $traits;
     }
 
-    /**
-     * @return array
-     */
-    public function classInterfaces()
+    public function classInterfaces(): array
     {
-        $reflection = new ReflectionClass(get_class($this->obj()));
+        $reflection = new ReflectionClass($this->obj()::class);
         $interfaces = array_keys($reflection->getInterfaces());
         sort($interfaces);
         return $interfaces;
     }
 
-    /**
-     * @return array
-     */
-    public function metadataFiles()
+    public function metadataFiles(): array
     {
         if ($this->metadataFiles === null) {
             $files = [];
             $reflector = new ReflectionObject($this->metadataLoader);
             $method = $reflector->getMethod('hierarchy');
-            $method->setAccessible(true);
             $hierarchy = $method->invoke($this->metadataLoader, $this->objType());
 
             $method2 = $reflector->getMethod('loadMetadataFromSource');
-            $method2->setAccessible(true);
             foreach ($hierarchy as $source) {
                 $ret = $method2->invoke($this->metadataLoader, $source);
                 if (!empty($ret)) {
@@ -177,7 +157,7 @@ class InfoTemplate extends AdminTemplate implements
      */
     public function sourceEntries()
     {
-        $this->collectionLoader->setModel(get_class($this->obj()));
+        $this->collectionLoader->setModel($this->obj()::class);
         return $this->collectionLoader->loadCount();
     }
 
@@ -186,7 +166,8 @@ class InfoTemplate extends AdminTemplate implements
      *
      * @return string[]
      */
-    protected function validDataFromRequest()
+    #[\Override]
+    protected function validDataFromRequest(): array
     {
         return array_merge([
             'obj_type', 'obj_id'
@@ -197,6 +178,7 @@ class InfoTemplate extends AdminTemplate implements
      * @param Container $container DI container.
      * @return void
      */
+    #[\Override]
     protected function setDependencies(Container $container)
     {
         parent::setDependencies($container);
@@ -210,10 +192,7 @@ class InfoTemplate extends AdminTemplate implements
         $this->collectionLoader = $container['model/collection/loader'];
     }
 
-    /**
-     * @return array
-     */
-    protected function createDashboardConfig()
+    protected function createDashboardConfig(): array
     {
         return [];
     }
@@ -234,9 +213,8 @@ class InfoTemplate extends AdminTemplate implements
 
     /**
      * @param string $propertyIdent The property ident to retrieve.
-     * @return array
      */
-    private function getAllFiles($propertyIdent)
+    private function getAllFiles($propertyIdent): array
     {
         $ret = [];
         $files = $this->metadataFiles();

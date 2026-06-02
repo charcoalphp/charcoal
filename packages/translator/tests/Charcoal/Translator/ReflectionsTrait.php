@@ -18,13 +18,10 @@ trait ReflectionsTrait
      *
      * @param  mixed  $class The class name or object that contains the method.
      * @param  string $name  The method name to reflect.
-     * @return ReflectionMethod
      */
-    public function getMethod($class, $name)
+    public function getMethod($class, $name): \ReflectionMethod
     {
-        $reflected = new ReflectionMethod($class, $name);
-        $reflected->setAccessible(true);
-        return $reflected;
+        return new ReflectionMethod($class, $name);
     }
 
     /**
@@ -38,7 +35,7 @@ trait ReflectionsTrait
     public function callMethod($object, $name, array $args = [])
     {
         $method = $this->getMethod($object, $name);
-        if (empty($args)) {
+        if ($args === []) {
             return $method->invoke($object);
         } else {
             return $method->invokeArgs($object, $args);
@@ -65,13 +62,10 @@ trait ReflectionsTrait
      *
      * @param  mixed  $class The class name or object that contains the property.
      * @param  string $name  The property name to reflect.
-     * @return ReflectionProperty
      */
-    public function getProperty($class, $name)
+    public function getProperty($class, $name): \ReflectionProperty
     {
-        $reflected = new ReflectionProperty($class, $name);
-        $reflected->setAccessible(true);
-        return $reflected;
+        return new ReflectionProperty($class, $name);
     }
 
     /**
@@ -92,9 +86,8 @@ trait ReflectionsTrait
      * @param  mixed  $object The object to access.
      * @param  string $name   The property name to affect.
      * @param  mixed  $value  The new value.
-     * @return void
      */
-    public function setPropertyValue($object, $name, $value)
+    public function setPropertyValue($object, $name, $value): void
     {
         $this->getProperty($object, $name)->setValue($object, $value);
     }

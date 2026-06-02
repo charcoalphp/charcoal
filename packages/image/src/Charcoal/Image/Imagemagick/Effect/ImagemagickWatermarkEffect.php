@@ -12,9 +12,8 @@ class ImagemagickWatermarkEffect extends AbstractWatermarkEffect
 {
     /**
      * @param array $data The effect data, if available.
-     * @return self
      */
-    public function process(array $data = null)
+    public function process(?array $data = null): static
     {
         if ($data !== null) {
             $this->setData($data);
@@ -28,7 +27,7 @@ class ImagemagickWatermarkEffect extends AbstractWatermarkEffect
             $watermark = $out;
         } else {
             $watermark = $this->watermark();
-            $c = get_class($this->image());
+            $c = $this->image()::class;
             $w = new $c();
             $w->open($watermark);
             $width = $w->width();

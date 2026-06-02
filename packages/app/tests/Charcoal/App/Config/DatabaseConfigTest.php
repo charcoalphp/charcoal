@@ -17,7 +17,7 @@ class DatabaseConfigTest extends AbstractTestCase
         $this->obj = new DatabaseConfig();
     }
 
-    public function testDefaults()
+    public function testDefaults(): void
     {
         $this->assertEquals('mysql', $this->obj->type());
         $this->assertEquals('localhost', $this->obj->hostname());
@@ -26,7 +26,7 @@ class DatabaseConfigTest extends AbstractTestCase
         $this->assertFalse($this->obj->disableUtf8());
     }
 
-    public function testSetType()
+    public function testSetType(): void
     {
         $ret = $this->obj->setType('sqlite');
         $this->assertSame($ret, $this->obj);
@@ -36,7 +36,7 @@ class DatabaseConfigTest extends AbstractTestCase
         $this->obj->setType([]);
     }
 
-    public function testSetHostname()
+    public function testSetHostname(): void
     {
         $ret = $this->obj->setHostname('foo');
         $this->assertSame($ret, $this->obj);
@@ -46,7 +46,7 @@ class DatabaseConfigTest extends AbstractTestCase
         $this->obj->setHostname([]);
     }
 
-    public function testSetUsername()
+    public function testSetUsername(): void
     {
         $ret = $this->obj->setUsername('foobar');
         $this->assertSame($ret, $this->obj);
@@ -56,7 +56,7 @@ class DatabaseConfigTest extends AbstractTestCase
         $this->obj->setUsername([]);
     }
 
-    public function testSetPassword()
+    public function testSetPassword(): void
     {
         $ret = $this->obj->setPassword('baz');
         $this->assertSame($ret, $this->obj);
@@ -66,7 +66,7 @@ class DatabaseConfigTest extends AbstractTestCase
         $this->obj->setPassword([]);
     }
 
-    public function testSetDatabase()
+    public function testSetDatabase(): void
     {
         $ret = $this->obj->setDatabase('barbaz');
         $this->assertSame($ret, $this->obj);
@@ -76,7 +76,7 @@ class DatabaseConfigTest extends AbstractTestCase
         $this->obj->setDatabase([]);
     }
 
-    public function testSetDIsableUtf8()
+    public function testSetDIsableUtf8(): void
     {
         $ret = $this->obj->setDIsableUtf8(true);
         $this->assertSame($ret, $this->obj);

@@ -18,20 +18,15 @@ class Config extends AbstractConfig
 
     /**
      * The base path for the admin module's route group.
-     *
-     * @var string $basePath
      */
-    private $basePath = self::DEFAULT_BASE_PATH;
+    private string $basePath = self::DEFAULT_BASE_PATH;
 
     /**
      * @var array
      */
     public $routes = [];
 
-    /**
-     * @var array
-     */
-    private $handlers = [];
+    private array $handlers = [];
 
     /**
      * @var array
@@ -50,6 +45,7 @@ class Config extends AbstractConfig
      *
      * @return array
      */
+    #[\Override]
     public function defaults()
     {
         $baseDir = rtrim(realpath(__DIR__ . '/../../../'), '/');
@@ -63,9 +59,8 @@ class Config extends AbstractConfig
      *
      * @param  string $path The admin module base path.
      * @throws InvalidArgumentException If the route group is invalid.
-     * @return self
      */
-    public function setBasePath($path)
+    public function setBasePath($path): static
     {
         if (!is_string($path)) {
             throw new InvalidArgumentException(
@@ -74,7 +69,7 @@ class Config extends AbstractConfig
         }
 
         // Can not be empty
-        if ($path == '') {
+        if ($path === '') {
             throw new InvalidArgumentException(
                 'Path can not be empty'
             );
@@ -86,10 +81,8 @@ class Config extends AbstractConfig
 
     /**
      * Retrieve the admin module's route group.
-     *
-     * @return string
      */
-    public function basePath()
+    public function basePath(): string
     {
         return $this->basePath;
     }
@@ -99,9 +92,8 @@ class Config extends AbstractConfig
      *
      * @see    \Charcoal\App\AppConfig::setRoutes() For a similar implementation.
      * @param  array $routes The route configuration structure to set.
-     * @return self
      */
-    public function setRoutes(array $routes)
+    public function setRoutes(array $routes): static
     {
         $toIterate = RouteConfig::defaultRouteTypes();
         foreach ($routes as $key => $val) {
@@ -126,9 +118,8 @@ class Config extends AbstractConfig
      * - "phpErrorHandler"
      *
      * @param  array $handlers The handlers configuration structure to set.
-     * @return self
      */
-    public function setHandlers(array $handlers)
+    public function setHandlers(array $handlers): static
     {
         $this->handlers = array_fill_keys(HandlerConfig::defaultHandlerTypes(), []);
         $this->handlers['defaults'] = [];
@@ -143,10 +134,7 @@ class Config extends AbstractConfig
         return $this;
     }
 
-    /**
-     * @return array
-     */
-    public function handlers()
+    public function handlers(): array
     {
         return $this->handlers;
     }
@@ -156,9 +144,8 @@ class Config extends AbstractConfig
      *
      * @param  array $view The global configset for the application's view service.
      * @throws InvalidArgumentException If the argument is not a configset.
-     * @return self
      */
-    public function setView(array $view)
+    public function setView(array $view): static
     {
         $this->view = $view;
         return $this;

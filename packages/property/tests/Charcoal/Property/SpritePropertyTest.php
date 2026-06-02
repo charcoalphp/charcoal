@@ -20,9 +20,6 @@ class SpritePropertyTest extends AbstractTestCase
      */
     public $obj;
 
-    /**
-     * @return void
-     */
     protected function setUp(): void
     {
         $container = $this->getContainer();
@@ -36,20 +33,17 @@ class SpritePropertyTest extends AbstractTestCase
         ]);
     }
 
-    public function testDefaults()
+    public function testDefaults(): void
     {
         $this->assertNull($this->obj['sprite']);
     }
 
-    /**
-     * @return void
-     */
-    public function testType()
+    public function testType(): void
     {
         $this->assertEquals('sprite', $this->obj->type());
     }
 
-    public function testSetSprite()
+    public function testSetSprite(): void
     {
         $this->assertNull($this->obj['sprite']);
         $ret = $this->obj->setSprite('foo');
@@ -60,7 +54,7 @@ class SpritePropertyTest extends AbstractTestCase
         $this->obj->setSprite(false);
     }
 
-    public function testBuildChoices()
+    public function testBuildChoices(): void
     {
         $ret = $this->obj->buildChoicesFromSprite();
         $this->assertEquals([], $ret);
@@ -70,19 +64,19 @@ class SpritePropertyTest extends AbstractTestCase
         $this->assertEquals([], $ret);
     }
 
-    public function testSqlExtra()
+    public function testSqlExtra(): void
     {
         $this->assertEquals('', $this->obj->sqlExtra());
     }
 
-    public function testSqlType()
+    public function testSqlType(): void
     {
         $this->assertEquals('VARCHAR(255)', $this->obj->sqlType());
         $this->obj->setMultiple(true);
         $this->assertEquals('TEXT', $this->obj->sqlType());
     }
 
-    public function testSqlPdoType()
+    public function testSqlPdoType(): void
     {
         $this->assertEquals(\PDO::PARAM_STR, $this->obj->sqlPdoType());
     }

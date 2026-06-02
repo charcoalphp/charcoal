@@ -34,9 +34,8 @@ class ContainerProvider
      * Register the unit tests required services.
      *
      * @param  Container $container A DI container.
-     * @return void
      */
-    public function registerBaseServices(Container $container)
+    public function registerBaseServices(Container $container): void
     {
         $this->registerDatabase($container);
         $this->registerLogger($container);
@@ -50,11 +49,10 @@ class ContainerProvider
      * Note: Uses SQLite to create a database in memory.
      *
      * @param  Container $container A DI container.
-     * @return void
      */
-    public function registerDatabase(Container $container)
+    public function registerDatabase(Container $container): void
     {
-        $container['database'] = function () {
+        $container['database'] = function (): \PDO {
             $pdo = new PDO('sqlite::memory:');
             $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             return $pdo;
@@ -65,167 +63,141 @@ class ContainerProvider
      * Setup the application's logging interface.
      *
      * @param  Container $container A DI container.
-     * @return void
      */
-    public function registerLogger(Container $container)
+    public function registerLogger(Container $container): void
     {
-        $container['logger'] = function () {
-            return new NullLogger();
-        };
+        $container['logger'] = (fn(): \Psr\Log\NullLogger => new NullLogger());
     }
 
     /**
      * Setup the application's caching interface.
      *
      * @param  Container $container A DI container.
-     * @return void
      */
-    public function registerCache(Container $container)
+    public function registerCache(Container $container): void
     {
-        $container['cache'] = function () {
-            return new Pool();
-        };
+        $container['cache'] = (fn(): \Stash\Pool => new Pool());
     }
 
     /**
      * Setup the framework's metadata loader interface.
      *
      * @param  Container $container A DI container.
-     * @return void
      */
-    public function registerMetadataLoader(Container $container)
+    public function registerMetadataLoader(Container $container): void
     {
-        $container['metadata/loader'] = function (Container $container) {
-            return new MetadataLoader([
-                'cache'     => $container['cache'],
-                'logger'    => $container['logger'],
-                'base_path' => realpath(__DIR__ . '/../../../'),
-                'paths'     => [
-                    'metadata',
-                    // Standalone repo
-                    'vendor/charcoal/property/metadata',
-                    // Monorepo
-                    '/../property/metadata'
-                ]
-            ]);
-        };
+        $container['metadata/loader'] = (fn(Container $container): \Charcoal\Model\Service\MetadataLoader => new MetadataLoader([
+            'cache'     => $container['cache'],
+            'logger'    => $container['logger'],
+            'base_path' => realpath(__DIR__ . '/../../../'),
+            'paths'     => [
+                'metadata',
+                // Standalone repo
+                'vendor/charcoal/property/metadata',
+                // Monorepo
+                '/../property/metadata'
+            ]
+        ]));
     }
 
     /**
      * Setup the framework's data source factory.
      *
      * @param  Container $container A DI container.
-     * @return void
      */
-    public function registerSourceFactory(Container $container)
+    public function registerSourceFactory(Container $container): void
     {
         $this->registerLogger($container);
         $this->registerCache($container);
         $this->registerDatabase($container);
 
-        $container['source/factory'] = function ($container) {
-            return new Factory([
-                'map' => [
-                    'database' => DatabaseSource::class
-                ],
-                'arguments'  => [[
-                    'logger' => $container['logger'],
-                    'cache'  => $container['cache'],
-                    'pdo'    => $container['database']
-                ]]
-            ]);
-        };
+        $container['source/factory'] = (fn($container): \Charcoal\Factory\GenericFactory => new Factory([
+            'map' => [
+                'database' => DatabaseSource::class
+            ],
+            'arguments'  => [[
+                'logger' => $container['logger'],
+                'cache'  => $container['cache'],
+                'pdo'    => $container['database']
+            ]]
+        ]));
     }
 
     /**
      * Setup the framework's model factory.
      *
      * @param  Container $container A DI container.
-     * @return void
      */
-    public function registerModelFactory(Container $container)
+    public function registerModelFactory(Container $container): void
     {
         $this->registerSourceFactory($container);
         $this->registerMetadataLoader($container);
         $this->registerPropertyFactory($container);
 
-        $container['model/factory'] = function ($container) {
-            return new Factory([
-                'arguments' => [[
-                    'container'         => $container,
-                    'logger'            => $container['logger'],
-                    'metadata_loader'   => $container['metadata/loader'],
-                    'source_factory'    => $container['source/factory'],
-                    'property_factory'  => $container['property/factory']
-                ]]
-            ]);
-        };
+        $container['model/factory'] = (fn($container): \Charcoal\Factory\GenericFactory => new Factory([
+            'arguments' => [[
+                'container'         => $container,
+                'logger'            => $container['logger'],
+                'metadata_loader'   => $container['metadata/loader'],
+                'source_factory'    => $container['source/factory'],
+                'property_factory'  => $container['property/factory']
+            ]]
+        ]));
     }
 
     /**
      * Setup the framework's property factory.
      *
      * @param  Container $container A DI container.
-     * @return void
      */
-    public function registerPropertyFactory(Container $container)
+    public function registerPropertyFactory(Container $container): void
     {
         $this->registerLogger($container);
         $this->registerDatabase($container);
         $this->registerTranslator($container);
 
-        $container['property/factory'] = function (Container $container) {
-            return new Factory([
-                'resolver_options' => [
-                    'prefix' => '\\Charcoal\\Property\\',
-                    'suffix' => 'Property'
-                ],
-                'arguments' => [[
-                    'container'  => $container,
-                    'database'   => $container['database'],
-                    'logger'     => $container['logger'],
-                    'translator' => $container['translator']
-                ]]
-            ]);
-        };
+        $container['property/factory'] = (fn(Container $container): \Charcoal\Factory\GenericFactory => new Factory([
+            'resolver_options' => [
+                'prefix' => '\\Charcoal\\Property\\',
+                'suffix' => 'Property'
+            ],
+            'arguments' => [[
+                'container'  => $container,
+                'database'   => $container['database'],
+                'logger'     => $container['logger'],
+                'translator' => $container['translator']
+            ]]
+        ]));
     }
 
     /**
      * Setup the framework's collection loader interface.
      *
      * @param  Container $container A DI container.
-     * @return void
      */
-    public function registerModelCollectionLoader(Container $container)
+    public function registerModelCollectionLoader(Container $container): void
     {
-        $container['model/collection/loader'] = function (Container $container) {
-            return new CollectionLoader([
-                'logger' => $container['logger'],
-                'cache'  => $container['cache']
-            ]);
-        };
+        $container['model/collection/loader'] = (fn(Container $container): \Charcoal\Loader\CollectionLoader => new CollectionLoader([
+            'logger' => $container['logger'],
+            'cache'  => $container['cache']
+        ]));
     }
 
     /**
      * Setup the framework's Translator.
      *
      * @param  Container $container A DI container.
-     * @return void
      */
-    public function registerTranslator(Container $container)
+    public function registerTranslator(Container $container): void
     {
-        $container['locales/manager'] = function () {
-            return new LocalesManager([
-                'locales' => [
-                    'en' => [ 'locale' => 'en-US' ]
-                ]
-            ]);
-        };
+        $container['locales/manager'] = (fn(): \Charcoal\Translator\LocalesManager => new LocalesManager([
+            'locales' => [
+                'en' => [ 'locale' => 'en-US' ]
+            ]
+        ]));
 
-        $container['translator'] = function (Container $container) {
-            return new Translator([
-                'manager'  => $container['locales/manager']
-            ]);
-        };
+        $container['translator'] = (fn(Container $container): \Charcoal\Translator\Translator => new Translator([
+            'manager'  => $container['locales/manager']
+        ]));
     }
 }

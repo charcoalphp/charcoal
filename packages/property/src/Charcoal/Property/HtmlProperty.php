@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Charcoal\Property;
 
 // From 'charcoal-property'
@@ -26,10 +28,8 @@ class HtmlProperty extends TextProperty
      */
     private $filesystem = '';
 
-    /**
-     * @return string
-     */
-    public function type()
+    #[\Override]
+    public function type(): string
     {
         return 'html';
     }
@@ -44,9 +44,8 @@ class HtmlProperty extends TextProperty
 
     /**
      * @param string $filesystem The file system.
-     * @return self
      */
-    public function setFilesystem($filesystem)
+    public function setFilesystem($filesystem): static
     {
         $this->filesystem = $filesystem;
 
@@ -57,9 +56,9 @@ class HtmlProperty extends TextProperty
      * Unlike strings' default upper limit of 255, HTML has no default max length (0).
      *
      * @see StringProperty::defaultMaxLength()
-     * @return integer
      */
-    public function defaultMaxLength()
+    #[\Override]
+    public function defaultMaxLength(): int
     {
         return 0;
     }
@@ -68,9 +67,9 @@ class HtmlProperty extends TextProperty
      * Unlike the parent's String Property, HTML property obviously always allow HTML.
      *
      * @see StringProperty::allowHtml()
-     * @return boolean
      */
-    public function getAllowHtml()
+    #[\Override]
+    public function getAllowHtml(): bool
     {
         return true;
     }

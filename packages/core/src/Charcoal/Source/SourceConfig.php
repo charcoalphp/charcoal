@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Charcoal\Source;
 
 use InvalidArgumentException;
@@ -11,15 +13,10 @@ use Charcoal\Config\AbstractConfig;
  */
 class SourceConfig extends AbstractConfig
 {
-    /**
-     * @var string $type
-     */
-    private $type;
+    private ?string $type = null;
 
-    /**
-     * @return array
-     */
-    public function defaults()
+    #[\Override]
+    public function defaults(): array
     {
         return [
             'type' => ''
@@ -29,9 +26,8 @@ class SourceConfig extends AbstractConfig
     /**
      * @param string $type The type of source.
      * @throws InvalidArgumentException If parameter is not a string.
-     * @return self
      */
-    public function setType($type)
+    public function setType($type): static
     {
         if (!is_string($type)) {
             throw new InvalidArgumentException(
@@ -45,7 +41,7 @@ class SourceConfig extends AbstractConfig
     /**
      * @return string
      */
-    public function type()
+    public function type(): ?string
     {
         return $this->type;
     }

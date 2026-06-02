@@ -2,6 +2,7 @@
 
 namespace Charcoal\Property;
 
+use Charcoal\Translator\Translator;
 use InvalidArgumentException;
 // From 'charcoal-translator'
 use Charcoal\Translator\Translation;
@@ -46,21 +47,17 @@ trait StorablePropertyTrait
      *
      * @var string[]
      */
-    protected static $snakeCache = [];
+    protected static array $snakeCache = [];
 
     /**
      * Retrieve the property's storage fields.
      *
-     * @param  mixed $val The value to set as field value.
+     * @param mixed|null $val The value to set as field value.
      * @return PropertyField[]
      */
-    public function fields($val = null)
+    public function fields(mixed $val = null): array
     {
-        if (empty($this->fields)) {
-            $this->fields = $this->generateFields($val);
-        } else {
-            $this->fields = $this->updatedFields($this->fields, $val);
-        }
+        $this->fields = empty($this->fields) ? $this->generateFields($val) : $this->updatedFields($this->fields, $val);
 
         return $this->fields;
     }
@@ -68,11 +65,11 @@ trait StorablePropertyTrait
     /**
      * Retrieve the property's identifier formatted for field names.
      *
-     * @param  string|null $key The field key to suffix to the property identifier.
+     * @param string|null $key The field key to suffix to the property identifier.
      * @return string|null Returns the property's field name.
      *     If $key is provided, returns the namespaced field name otherwise NULL.
      */
-    public function fieldIdent($key = null)
+    public function fieldIdent(?string $key = null): ?string
     {
         if ($this->fieldIdent === null) {
             $this->fieldIdent = $this->snakeize($this['ident']);
@@ -100,7 +97,7 @@ trait StorablePropertyTrait
      *
      * @return string[]
      */
-    public function fieldNames()
+    public function fieldNames(): array
     {
         if ($this->fieldNames === null) {
             $names = [];
@@ -122,11 +119,10 @@ trait StorablePropertyTrait
     /**
      * Retrieve the property's value in a format suitable for the given field key.
      *
-     * @param  string $key The property field key.
+     * @param string $key The property field key.
      * @param  mixed  $val The value to set as field value.
-     * @return mixed
      */
-    protected function fieldValue($key, $val)
+    protected function fieldValue(string $key, mixed $val): mixed
     {
         if ($val === null) {
             return null;
@@ -150,10 +146,9 @@ trait StorablePropertyTrait
     /**
      * Retrieve the property's value in a format suitable for storage.
      *
-     * @param  mixed $val The value to convert for storage.
-     * @return mixed
+     * @param mixed $val The value to convert for storage.
      */
-    public function storageVal($val)
+    public function storageVal(mixed $val): mixed
     {
         if ($val === null) {
             // Do not serialize NULL values
@@ -169,16 +164,12 @@ trait StorablePropertyTrait
             if ($val === '') {
                 return $val;
             }
-        } else {
-            if ($this['allowNull'] && $val === '') {
-                return null;
-            }
+        } elseif ($this['allowNull'] && $val === '') {
+            return null;
         }
 
-        if ($this['multiple']) {
-            if (is_array($val)) {
-                $val = implode($this->multipleSeparator(), $val);
-            }
+        if ($this['multiple'] && is_array($val)) {
+            $val = implode($this->multipleSeparator(), $val);
         }
 
         if (!is_scalar($val)) {
@@ -197,9 +188,8 @@ trait StorablePropertyTrait
      * returns a complex array.
      *
      * @param  array $flatData The model data subset.
-     * @return mixed
      */
-    public function parseFromFlatData(array $flatData)
+    public function parseFromFlatData(array $flatData): mixed
     {
         $value = null;
 
@@ -226,9 +216,9 @@ trait StorablePropertyTrait
      * @param  mixed           $val    The value to set as field value.
      * @return PropertyField[]
      */
-    protected function updatedFields(array $fields, $val)
+    protected function updatedFields(array $fields, mixed $val): array
     {
-        if (empty($fields)) {
+        if ($fields === []) {
             $fields = $this->generateFields($val);
         }
 
@@ -242,10 +232,10 @@ trait StorablePropertyTrait
     /**
      * Reset the property's storage fields.
      *
-     * @param  mixed $val The value to set as field value.
+     * @param mixed|null $val The value to set as field value.
      * @return PropertyField[]
      */
-    protected function generateFields($val = null)
+    protected function generateFields(mixed $val = null): array
     {
         $fields = [];
 
@@ -270,9 +260,8 @@ trait StorablePropertyTrait
 
     /**
      * @param  array $data Optional. Field data.
-     * @return PropertyField
      */
-    protected function createPropertyField(array $data = null)
+    protected function createPropertyField(?array $data = null): \Charcoal\Property\PropertyField
     {
         $field = new PropertyField();
 
@@ -287,9 +276,8 @@ trait StorablePropertyTrait
      * Determine if the given value is a valid field key suffix.
      *
      * @param  mixed $key The key to test.
-     * @return boolean
      */
-    protected function isValidFieldKey($key)
+    protected function isValidFieldKey(mixed $key): bool
     {
         return (!empty($key) || is_numeric($key));
     }
@@ -300,7 +288,7 @@ trait StorablePropertyTrait
      * @param  string $value The string to snakeize.
      * @return string The snake_case string.
      */
-    protected function snakeize($value)
+    protected function snakeize(string $value): string
     {
         $key = $value;
 
@@ -308,7 +296,7 @@ trait StorablePropertyTrait
             return static::$snakeCache[$key];
         }
 
-        $value = strtolower(preg_replace('/(?<!^)[A-Z]/', '_$0', $value));
+        $value = strtolower((string)preg_replace('/(?<!^)[A-Z]/', '_$0', $value));
 
         static::$snakeCache[$key] = $value;
 
@@ -318,11 +306,10 @@ trait StorablePropertyTrait
     /**
      * Set the property's SQL encoding & collation.
      *
-     * @param  string|null $encoding The encoding identifier or SQL encoding and collation.
+     * @param string|null $encoding The encoding identifier or SQL encoding and collation.
      * @throws InvalidArgumentException  If the identifier is not a string.
-     * @return self
      */
-    public function setSqlEncoding($encoding)
+    public function setSqlEncoding(?string $encoding): static
     {
         if (!is_string($encoding) && $encoding !== null) {
             throw new InvalidArgumentException(
@@ -340,67 +327,28 @@ trait StorablePropertyTrait
 
     /**
      * Retrieve the property's SQL encoding & collation.
-     *
-     * @return string|null
      */
-    public function sqlEncoding()
+    public function sqlEncoding(): ?string
     {
         return $this->sqlEncoding;
     }
 
-    /**
-     * @return string|null
-     */
-    public function sqlExtra()
+    public function sqlExtra(): ?string
     {
         return null;
     }
 
-    /**
-     * @return string|null
-     */
-    public function sqlDefaultVal()
+    public function sqlDefaultVal(): ?string
     {
         return null;
     }
 
-    /**
-     * @return string|null
-     */
-    abstract public function sqlType();
-
-    /**
-     * @return integer
-     */
-    abstract public function sqlPdoType();
-
-    /**
-     * @return string
-     */
-    abstract public function getIdent();
-
-    /**
-     * @return boolean
-     */
-    abstract public function getL10n();
-
-    /**
-     * @return boolean
-     */
-    abstract public function getMultiple();
-
-    /**
-     * @return string
-     */
-    abstract public function multipleSeparator();
-
-    /**
-     * @return boolean
-     */
-    abstract public function getAllowNull();
-
-    /**
-     * @return \Charcoal\Translator\Translator
-     */
-    abstract protected function translator();
+    abstract public function sqlType(): ?string;
+    abstract public function sqlPdoType(): int;
+    abstract public function getIdent(): string;
+    abstract public function getL10n(): bool;
+    abstract public function getMultiple(): bool;
+    abstract public function multipleSeparator(): string;
+    abstract public function getAllowNull(): bool;
+    abstract protected function translator(): Translator;
 }

@@ -26,9 +26,13 @@ use Charcoal\Config\AbstractConfig;
  * - ConfigSeparatorAwareTest
  * - ConfigFileAwareTest
  * - FileLoader/*
- *
- * @coversDefaultClass \Charcoal\Config\AbstractConfig
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\Charcoal\Config\AbstractConfig::class)]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Config\AbstractConfig::class, 'getIterator()')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Config\AbstractConfig::class, '__construct')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Config\AbstractConfig::class, 'merge')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Config\AbstractConfig::class, 'setData')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Config\AbstractConfig::class, 'defaults')]
 class ConfigTest extends AbstractConfigTestCase
 {
     use AssertionsTrait;
@@ -40,8 +44,6 @@ class ConfigTest extends AbstractConfigTestCase
 
     /**
      * Create a concrete MacroConfig instance.
-     *
-     * @return void
      */
     protected function setUp(): void
     {
@@ -50,33 +52,23 @@ class ConfigTest extends AbstractConfigTestCase
 
     /**
      * Asserts that the object implements PSR-11.
-     *
-     * @coversNothing
-     * @return void
      */
-    public function testPsr11()
+    #[\PHPUnit\Framework\Attributes\CoversNothing]
+    public function testPsr11(): void
     {
         $this->assertInstanceOf(ContainerInterface::class, $this->cfg);
     }
 
     /**
      * Asserts that the object implements IteratorAggregate.
-     *
-     * @covers ::getIterator()
-     * @return void
      */
-    public function testIteratorAggregate()
+    public function testIteratorAggregate(): void
     {
         $this->assertInstanceOf(IteratorAggregate::class, $this->cfg);
         $this->assertInstanceOf(ArrayIterator::class, $this->cfg->getIterator());
     }
 
-    /**
-     * @covers ::__construct
-     * @covers ::merge
-     * @return void
-     */
-    public function testConstructWithArray()
+    public function testConstructWithArray(): void
     {
         $cfg = $this->mockConfig([
             'name' => 'Charcoal'
@@ -84,23 +76,13 @@ class ConfigTest extends AbstractConfigTestCase
         $this->assertEquals('Charcoal', $cfg['name']);
     }
 
-    /**
-     * @covers ::__construct
-     * @covers ::merge
-     * @return void
-     */
-    public function testConstructWithConfigInstance()
+    public function testConstructWithConfigInstance(): void
     {
         $cfg = $this->mockConfig($this->cfg);
         $this->assertEquals('garply', $cfg['baz']);
     }
 
-    /**
-     * @covers ::__construct
-     * @covers ::merge
-     * @return void
-     */
-    public function testConstructWithTraversableInstance()
+    public function testConstructWithTraversableInstance(): void
     {
         $iter = new ArrayIterator([
             'name' => 'Charcoal'
@@ -109,35 +91,23 @@ class ConfigTest extends AbstractConfigTestCase
         $this->assertEquals('Charcoal', $cfg['name']);
     }
 
-    /**
-     *
-     * @covers ::__construct
-     * @covers ::merge
-     * @return void
-     */
-    public function testConstructWithInvalidData()
+    public function testConstructWithInvalidData(): void
     {
         $this->expectExceptionMessage('Data must be a config file, an associative array, or an object implementing Traversable');
         $this->expectException(InvalidArgumentException::class);
 
         $std = new StdClass;
-        $cfg = $this->mockConfig($std);
+        $this->mockConfig($std);
     }
 
 
 
     // Test Defaults
     // =========================================================================
-
     /**
      * Asserts that, when defined, a Config will apply the class' default data.
-     *
-     * @covers ::__construct
-     * @covers ::setData
-     * @covers ::defaults
-     * @return void
      */
-    public function testConstructWithDefaults()
+    public function testConstructWithDefaults(): void
     {
         /** @var array $defaults {@see \Charcoal\Tests\Config\Mock\MacroConfig::defaults()} */
         $defaults = [
@@ -173,11 +143,8 @@ class ConfigTest extends AbstractConfigTestCase
 
     /**
      * Asserts that, by default, a Config has no default data.
-     *
-     * @covers ::defaults
-     * @return void
      */
-    public function testEmptyDefaults()
+    public function testEmptyDefaults(): void
     {
         $cfg = $this->mockConfig();
         $this->assertEmpty($cfg->defaults());

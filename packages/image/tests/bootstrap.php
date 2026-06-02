@@ -1,9 +1,11 @@
 <?php
 
 
+declare(strict_types=1);
+
 date_default_timezone_set('UTC');
 
-if (($_ENV['TEST_MODE'] ?? '') === 'PACKAGE') {
+if ((getenv('TEST_MODE') ?? '') === 'PACKAGE') {
     require getcwd().'/tests/bootstrap.php';
 } else {
     /** @var \Composer\Autoload\ClassLoader $autoloader */

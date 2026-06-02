@@ -46,30 +46,23 @@ class TagsInput extends AbstractSelectableInput
 
     /**
      * Store the factory instance for the current class.
-     *
-     * @var FactoryInterface
      */
-    private $modelFactory;
+    private ?\Charcoal\Factory\FactoryInterface $modelFactory = null;
 
     /**
      * Store the collection loader for the current class.
-     *
-     * @var CollectionLoader
      */
-    private $collectionLoader;
+    private ?\Charcoal\Loader\CollectionLoader $collectionLoader = null;
 
     /**
      * The input name should always be the property's ident.
      *
      * @return string
      */
+    #[\Override]
     public function inputName()
     {
-        if ($this->inputName) {
-            $name = $this->inputName;
-        } else {
-            $name = $this->propertyIdent();
-        }
+        $name = $this->inputName ?: $this->propertyIdent();
 
         if ($this->p()['l10n']) {
             $name .= '[' . $this->lang() . ']';
@@ -86,6 +79,7 @@ class TagsInput extends AbstractSelectableInput
      * @todo   [^1]: With PHP7 we can simply do `yield from $choices;`.
      * @return \Generator
      */
+    #[\Override]
     public function choices()
     {
         if ($this->p()['allowNull'] && !$this->p()['multiple']) {
@@ -112,9 +106,8 @@ class TagsInput extends AbstractSelectableInput
 
     /**
      * @param string $formWidget The form widget for object creation and modification.
-     * @return self
      */
-    public function setFormWidget($formWidget)
+    public function setFormWidget($formWidget): static
     {
         $this->formWidget = $formWidget;
 
@@ -125,11 +118,10 @@ class TagsInput extends AbstractSelectableInput
      * Show/hide the "Copy to Clipboard" button.
      *
      * @param  boolean $flag Show (TRUE) or hide (FALSE) the copy button.
-     * @return self
      */
-    public function setAllowClipboardCopy($flag)
+    public function setAllowClipboardCopy($flag): static
     {
-        $this->allowClipboardCopy = !!$flag;
+        $this->allowClipboardCopy = (bool)$flag;
 
         return $this;
     }
@@ -152,7 +144,7 @@ class TagsInput extends AbstractSelectableInput
      * @param  array $settings The selectize picker options.
      * @return TagsInput Chainable
      */
-    public function setSelectizeOptions(array $settings)
+    public function setSelectizeOptions(array $settings): static
     {
         $this->selectizeOptions = array_merge(
             $this->defaultSelectizeOptions(),
@@ -168,7 +160,7 @@ class TagsInput extends AbstractSelectableInput
      * @param  array $settings The selectize picker options.
      * @return TagsInput Chainable
      */
-    public function mergeSelectizeOptions(array $settings)
+    public function mergeSelectizeOptions(array $settings): static
     {
         $this->selectizeOptions = array_merge(
             $this->selectizeOptions,
@@ -186,7 +178,7 @@ class TagsInput extends AbstractSelectableInput
      * @throws InvalidArgumentException If the identifier is not a string.
      * @return self Chainable
      */
-    public function addSelectizeOption($key, $val)
+    public function addSelectizeOption($key, $val): static
     {
         if (!is_string($key)) {
             throw new InvalidArgumentException(
@@ -260,10 +252,9 @@ class TagsInput extends AbstractSelectableInput
 
     /**
      * Retrieve the default object-to-choice data map.
-     *
-     * @return array
      */
-    public function defaultChoiceObjMap()
+    #[\Override]
+    public function defaultChoiceObjMap(): array
     {
         return [
             'value' => 'id',
@@ -274,10 +265,9 @@ class TagsInput extends AbstractSelectableInput
 
     /**
      * Retrieve the control's data options for JavaScript components.
-     *
-     * @return array
      */
-    public function controlDataForJs()
+    #[\Override]
+    public function controlDataForJs(): array
     {
         $prop = $this->property();
 
@@ -298,11 +288,9 @@ class TagsInput extends AbstractSelectableInput
             'multiple_options'         => $this->property()['multipleOptions'],
         ];
 
-        if ($prop instanceof ObjectProperty) {
-            if ($prop['objType']) {
-                $data['pattern']  = $prop['pattern'];
-                $data['obj_type'] = $prop['objType'];
-            }
+        if ($prop instanceof ObjectProperty && $prop['objType']) {
+            $data['pattern']  = $prop['pattern'];
+            $data['obj_type'] = $prop['objType'];
         }
 
         return $data;
@@ -314,6 +302,7 @@ class TagsInput extends AbstractSelectableInput
      * @param  Container $container A dependencies container instance.
      * @return void
      */
+    #[\Override]
     protected function setDependencies(Container $container)
     {
         parent::setDependencies($container);
@@ -326,14 +315,13 @@ class TagsInput extends AbstractSelectableInput
      * Retrieve the object model factory.
      *
      * @throws RuntimeException If the model factory was not previously set.
-     * @return FactoryInterface
      */
-    protected function modelFactory()
+    protected function modelFactory(): \Charcoal\Factory\FactoryInterface
     {
-        if (!isset($this->modelFactory)) {
+        if (!$this->modelFactory instanceof \Charcoal\Factory\FactoryInterface) {
             throw new RuntimeException(sprintf(
                 'Model Factory is not defined for "%s"',
-                get_class($this)
+                static::class
             ));
         }
 
@@ -346,7 +334,7 @@ class TagsInput extends AbstractSelectableInput
      * @param  array $settings The selectize picker options.
      * @return array Returns the parsed options.
      */
-    protected function parseSelectizeOptions(array $settings)
+    protected function parseSelectizeOptions(array $settings): array
     {
         return $settings;
     }
@@ -355,9 +343,8 @@ class TagsInput extends AbstractSelectableInput
      * Set an object model factory.
      *
      * @param  FactoryInterface $factory The model factory, to create objects.
-     * @return self
      */
-    private function setModelFactory(FactoryInterface $factory)
+    private function setModelFactory(FactoryInterface $factory): static
     {
         $this->modelFactory = $factory;
 
@@ -368,9 +355,8 @@ class TagsInput extends AbstractSelectableInput
      * Set a model collection loader.
      *
      * @param CollectionLoader $loader The collection loader.
-     * @return self
      */
-    private function setCollectionLoader(CollectionLoader $loader)
+    private function setCollectionLoader(CollectionLoader $loader): static
     {
         $this->collectionLoader = $loader;
 
@@ -382,7 +368,7 @@ class TagsInput extends AbstractSelectableInput
      *
      * @return CollectionLoader
      */
-    private function collectionLoader()
+    private function collectionLoader(): ?\Charcoal\Loader\CollectionLoader
     {
         return $this->collectionLoader;
     }
@@ -392,9 +378,8 @@ class TagsInput extends AbstractSelectableInput
      *
      * @param  mixed $val     The value to parse into selectize choices.
      * @param  array $options Optional structure options.
-     * @return array
      */
-    private function selectizeVal($val = null, array $options = [])
+    private function selectizeVal($val = null, array $options = []): array
     {
         /** @todo Find a use for this */
         unset($options);

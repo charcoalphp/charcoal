@@ -42,9 +42,9 @@ class CollectionTemplate extends AdminTemplate implements
 
     /**
      * @param RequestInterface $request PSR-7 request.
-     * @return boolean
      */
-    public function init(RequestInterface $request)
+    #[\Override]
+    public function init(RequestInterface $request): bool
     {
         parent::init($request);
         $this->createObjTable();
@@ -57,7 +57,8 @@ class CollectionTemplate extends AdminTemplate implements
      *
      * @return string[]
      */
-    protected function validDataFromRequest()
+    #[\Override]
+    protected function validDataFromRequest(): array
     {
         return array_merge([
             'obj_type'
@@ -105,11 +106,7 @@ class CollectionTemplate extends AdminTemplate implements
             $widgetData = [];
         }
 
-        if (isset($widgetData['type'])) {
-            $widgetType = $widgetData['type'];
-        } else {
-            $widgetType = SearchWidget::class;
-        }
+        $widgetType = ($widgetData['type'] ?? SearchWidget::class);
 
         $widget = $this->widgetFactory()->create($widgetType);
         $widget->setObjType($this->objType());
@@ -127,9 +124,10 @@ class CollectionTemplate extends AdminTemplate implements
      *
      * @return \Charcoal\Translator\Translation
      */
+    #[\Override]
     public function title()
     {
-        if (isset($this->title)) {
+        if ($this->title !== null) {
             return $this->title;
         }
 
@@ -151,10 +149,10 @@ class CollectionTemplate extends AdminTemplate implements
         $metadata = $model->metadata();
         $objLabel = null;
 
-        if (!$objLabel && isset($metadata['admin']['lists'])) {
+        if (isset($metadata['admin']['lists'])) {
             $adminMetadata = $metadata['admin'];
 
-            $listIdent = filter_input(INPUT_GET, 'collection_ident', FILTER_SANITIZE_STRING);
+            $listIdent = htmlspecialchars(trim(($_GET['collection_ident'] ?? '')), ENT_QUOTES, 'UTF-8');
             if (!$listIdent) {
                 $listIdent = $this->collectionIdent();
             }
@@ -190,11 +188,7 @@ class CollectionTemplate extends AdminTemplate implements
             }
         }
 
-        if ($hasView) {
-            $this->title = $model->render((string)$objLabel, $model);
-        } else {
-            $this->title = (string)$objLabel;
-        }
+        $this->title = $hasView ? $model->render((string)$objLabel, $model) : (string)$objLabel;
 
         return $this->title;
     }
@@ -203,6 +197,7 @@ class CollectionTemplate extends AdminTemplate implements
      * @param Container $container DI Container.
      * @return void
      */
+    #[\Override]
     protected function setDependencies(Container $container)
     {
         parent::setDependencies($container);
@@ -234,15 +229,10 @@ class CollectionTemplate extends AdminTemplate implements
             );
         }
 
-        $dashboardConfig = $adminMetadata['dashboards'][$dashboardIdent];
-
-        return $dashboardConfig;
+        return $adminMetadata['dashboards'][$dashboardIdent];
     }
 
-    /**
-     * @return void
-     */
-    private function createObjTable()
+    private function createObjTable(): void
     {
         $obj = $this->proto();
         if (!$obj) {
@@ -289,7 +279,7 @@ class CollectionTemplate extends AdminTemplate implements
      */
     private function metadataDashboardIdent()
     {
-        $dashboardIdent = filter_input(INPUT_GET, 'dashboard_ident', FILTER_SANITIZE_STRING);
+        $dashboardIdent = htmlspecialchars(trim(($_GET['dashboard_ident'] ?? '')), ENT_QUOTES, 'UTF-8');
         if ($dashboardIdent) {
             return $dashboardIdent;
         }
@@ -304,7 +294,7 @@ class CollectionTemplate extends AdminTemplate implements
         // You've reached error.
         throw new Exception(sprintf(
             'No default collection dashboard defined in admin metadata for %s.',
-            get_class($this->proto())
+            $this->proto()::class
         ));
     }
 
@@ -315,7 +305,6 @@ class CollectionTemplate extends AdminTemplate implements
     protected function objAdminMetadata()
     {
         $objMetadata = $this->proto()->metadata();
-        $adminMetadata = isset($objMetadata['admin']) ? $objMetadata['admin'] : [];
-        return $adminMetadata;
+        return ($objMetadata['admin'] ?? []);
     }
 }

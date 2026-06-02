@@ -51,9 +51,9 @@ class SaveAction extends AbstractSaveAction
      * This {@see self::$saveData subset} is merged onto the target model.
      *
      * @param  RequestInterface $request A PSR-7 compatible Request instance.
-     * @return self
      */
-    protected function setDataFromRequest(RequestInterface $request)
+    #[\Override]
+    protected function setDataFromRequest(RequestInterface $request): static
     {
         parent::setDataFromRequest($request);
 
@@ -69,7 +69,8 @@ class SaveAction extends AbstractSaveAction
      *
      * @return string[]
      */
-    protected function validDataFromRequest()
+    #[\Override]
+    protected function validDataFromRequest(): array
     {
         return array_merge([
             'obj_type'
@@ -80,9 +81,8 @@ class SaveAction extends AbstractSaveAction
      * Filter the dataset used to create the target model.
      *
      * @param  array $data The save data to filter.
-     * @return array
      */
-    public function filterSaveData(array $data)
+    public function filterSaveData(array $data): array
     {
         unset(
             $data['widget_id'],
@@ -102,7 +102,7 @@ class SaveAction extends AbstractSaveAction
      * @param  array $data The save data.
      * @return SaveAction Chainable
      */
-    public function setSaveData(array $data)
+    public function setSaveData(array $data): static
     {
         $this->saveData = $data;
 
@@ -123,23 +123,22 @@ class SaveAction extends AbstractSaveAction
      * @param  ModelInterface $obj The object to validate.
      * @return boolean
      */
+    #[\Override]
     public function validate(ModelInterface $obj)
     {
         $this->parsePrimaryKey($obj);
-        $result = parent::validate($obj);
 
-        return $result;
+        return parent::validate($obj);
     }
 
     /**
      * Prepare the primary key for the object.
      *
      * @param  ModelInterface $obj The object to validate.
-     * @return void
      */
-    public function parsePrimaryKey(ModelInterface $obj)
+    public function parsePrimaryKey(ModelInterface $obj): void
     {
-        if (($obj instanceof StorableInterface) && ($obj instanceof DescribablePropertyInterface)) {
+        if ($obj instanceof DescribablePropertyInterface) {
             $pk = $obj->key();
             $id = $obj[$pk];
 
@@ -168,7 +167,7 @@ class SaveAction extends AbstractSaveAction
 
             $objType = $request->getParam('obj_type');
             if (!$objType) {
-                $actualType = is_object($objType) ? get_class($objType) : gettype($objType);
+                $actualType = get_debug_type($objType);
                 $this->addFeedback('error', strtr($reqMessage, [
                     '{{ parameter }}'    => '"obj_type"',
                     '{{ expectedType }}' => 'string',
@@ -232,11 +231,7 @@ class SaveAction extends AbstractSaveAction
         } catch (PDOException $e) {
             $this->setObj(null);
 
-            if (isset($e->errorInfo[2])) {
-                $message = $e->errorInfo[2];
-            } else {
-                $message = $e->getMessage();
-            }
+            $message = ($e->errorInfo[2] ?? $e->getMessage());
 
             $this->addFeedback('error', strtr($errorThrown, [
                 '{{ errorThrown }}' => $message

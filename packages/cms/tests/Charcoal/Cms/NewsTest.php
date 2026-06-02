@@ -22,15 +22,11 @@ class NewsTest extends AbstractTestCase
 
     /**
      * Tested Class.
-     *
-     * @var News
      */
-    private $obj;
+    private \Charcoal\Cms\News|array $obj;
 
     /**
      * Set up the test.
-     *
-     * @return void
      */
     protected function setUp(): void
     {
@@ -46,10 +42,7 @@ class NewsTest extends AbstractTestCase
         $this->obj = new News($dependencies);
     }
 
-    /**
-     * @return void
-     */
-    public function testSetData()
+    public function testSetData(): void
     {
         $ret = $this->obj->setData([
             'title'     => 'Example title',
@@ -65,10 +58,7 @@ class NewsTest extends AbstractTestCase
         $this->assertEquals(new DateTime('2015-01-01 20:00:00'), $this->obj->newsDate());
     }
 
-    /**
-     * @return void
-     */
-    public function testSetTitle()
+    public function testSetTitle(): void
     {
         $this->assertEquals('', (string)$this->obj->title());
         $ret = $this->obj->setTitle('Foo bar');
@@ -82,10 +72,7 @@ class NewsTest extends AbstractTestCase
         $this->assertEquals('Hello', (string)$this->obj['title']);
     }
 
-    /**
-     * @return void
-     */
-    public function testSetSubtitle()
+    public function testSetSubtitle(): void
     {
         $this->assertEquals('', (string)$this->obj->subtitle());
         $ret = $this->obj->setSubtitle('Bar foo');
@@ -99,10 +86,7 @@ class NewsTest extends AbstractTestCase
         $this->assertEquals('foo', (string)$this->obj['subtitle']);
     }
 
-    /**
-     * @return void
-     */
-    public function testSetSummary()
+    public function testSetSummary(): void
     {
         $this->assertEquals('', (string)$this->obj->summary());
         $ret = $this->obj->setSummary('Bar foo');
@@ -116,10 +100,7 @@ class NewsTest extends AbstractTestCase
         $this->assertEquals('foo', (string)$this->obj['summary']);
     }
 
-    /**
-     * @return void
-     */
-    public function testSetContent()
+    public function testSetContent(): void
     {
         $this->assertEquals('', (string)$this->obj->content());
         $ret = $this->obj->setContent('Bar foo');
@@ -133,10 +114,7 @@ class NewsTest extends AbstractTestCase
         $this->assertEquals('foo', (string)$this->obj['content']);
     }
 
-    /**
-     * @return void
-     */
-    public function testSetNewsDate()
+    public function testSetNewsDate(): void
     {
         $this->assertEquals(null, $this->obj->newsDate());
         $ret = $this->obj->setNewsDate('2016-02-02');
@@ -150,19 +128,13 @@ class NewsTest extends AbstractTestCase
         $this->obj->setNewsDate([]);
     }
 
-    /**
-     * @return void
-     */
-    public function testSetNewsDateInvalidString()
+    public function testSetNewsDateInvalidString(): void
     {
         $this->expectException('\Exception');
         $this->obj->setNewsDate('foo.bar');
     }
 
-    /**
-     * @return void
-     */
-    public function testMetaTitleDefaultsToTitle()
+    public function testMetaTitleDefaultsToTitle(): void
     {
         $this->assertEquals('', (string)$this->obj->metaTitle());
 
@@ -174,10 +146,7 @@ class NewsTest extends AbstractTestCase
         $this->assertEquals('Barfoo', (string)$this->obj->metaTitle());
     }
 
-    /**
-     * @return void
-     */
-    public function testMetaDescriptionDefaultsToDescription()
+    public function testMetaDescriptionDefaultsToDescription(): void
     {
         $this->assertEquals('', (string)$this->obj->metaDescription());
 
@@ -189,45 +158,31 @@ class NewsTest extends AbstractTestCase
         $this->assertEquals('Barfoo', (string)$this->obj->metaDescription());
     }
 
-    /**
-     * @return void
-     */
     /*
     public function testMetaImageDefaultsToImage()
     {
         $this->assertEquals('', (string)$this->obj->metaImage());
-
+    
         $this->obj->setImage('Foo.png');
         $this->assertSame($this->obj->image(), $this->obj->metaImage());
         $this->assertEquals('Foo.png', (string)$this->obj->metaImage());
-
+    
         $this->obj->setMetaImage('Bar.jpg');
         $this->assertEquals('Bar.jpg', (string)$this->obj->metaImage());
     }
     */
-
-    /**
-     * @return void
-     */
-    public function testCategoryType()
+    public function testCategoryType(): void
     {
         $this->assertEquals(NewsCategory::class, $this->obj->categoryType());
     }
 
-    /**
-     * @return void
-     */
     /*
     public function testSave()
     {
         $this->obj->save();
     }
     */
-
-    /**
-     * @return void
-     */
-    public function testSaveGeneratesSlug()
+    public function testSaveGeneratesSlug(): void
     {
         $this->assertEquals('', $this->obj['slug']);
         $this->obj->setData([
@@ -238,10 +193,7 @@ class NewsTest extends AbstractTestCase
         $this->assertEquals('en/news/foo', (string)$this->obj['slug']);
     }
 
-    /**
-     * @return void
-     */
-    public function testUpdateGeneratesSlug()
+    public function testUpdateGeneratesSlug(): void
     {
         $this->assertEquals('', $this->obj['slug']);
         $this->obj->setData([

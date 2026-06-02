@@ -59,23 +59,20 @@ class DeleteAction extends AdminAction
         }
     }
 
-    /**
-     * @return array
-     */
-    public function results()
+    #[\Override]
+    public function results(): array
     {
-        $ret = [
+        return [
             'success'   => $this->success(),
             'feedbacks' => $this->feedbacks()
         ];
-
-        return $ret;
     }
 
     /**
      * @param Container $container Pimple DI Container.
      * @return void
      */
+    #[\Override]
     protected function setDependencies(Container $container)
     {
         parent::setDependencies($container);

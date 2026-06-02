@@ -1,10 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 use Charcoal\App\AppConfig;
 use Charcoal\App\AppContainer;
 use Charcoal\Config\GenericConfig;
 
-if (($_ENV['TEST_MODE'] ?? '') === 'PACKAGE') {
+if ((getenv('TEST_MODE') ?? '') === 'PACKAGE') {
     require getcwd().'/tests/bootstrap.php';
 } else {
     $autoloader = require __DIR__.'/../vendor/autoload.php';

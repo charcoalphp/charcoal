@@ -7,17 +7,15 @@ use InvalidArgumentException;
 // From 'charcoal-property'
 use Charcoal\Property\ImageProperty;
 
-/**
- *
- */
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Property\ImageProperty::class, 'type()')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Property\ImageProperty::class, 'getDefaultAcceptedMimetypes()')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Property\ImageProperty::class, 'hasAcceptedMimetypes()')]
 class ImagePropertyTest extends AbstractFilePropertyTestCase
 {
     /**
      * Create a file property instance.
-     *
-     * @return ImageProperty
      */
-    public function createProperty()
+    public function createProperty(): \Charcoal\Property\ImageProperty
     {
         $container = $this->getContainer();
 
@@ -31,21 +29,17 @@ class ImagePropertyTest extends AbstractFilePropertyTestCase
 
     /**
      * Asserts that the `type()` method is "file".
-     *
-     * @covers \Charcoal\Property\ImageProperty::type()
-     * @return void
      */
-    public function testPropertyType()
+    public function testPropertyType(): void
     {
         $this->assertEquals('image', $this->obj->type());
     }
 
     /**
      * Asserts that the property adheres to file property defaults.
-     *
-     * @return void
      */
-    public function testPropertyDefaults()
+    #[\Override]
+    public function testPropertyDefaults(): void
     {
         parent::testPropertyDefaults();
 
@@ -58,11 +52,8 @@ class ImagePropertyTest extends AbstractFilePropertyTestCase
 
     /**
      * Asserts that the property adheres to file property defaults.
-     *
-     * @covers \Charcoal\Property\ImageProperty::getDefaultAcceptedMimetypes()
-     * @return void
      */
-    public function testDefaulAcceptedMimeTypes()
+    public function testDefaultAcceptedMimeTypes(): void
     {
         $this->assertIsArray($this->obj['defaultAcceptedMimetypes']);
         $this->assertNotEmpty($this->obj['defaultAcceptedMimetypes']);
@@ -71,11 +62,8 @@ class ImagePropertyTest extends AbstractFilePropertyTestCase
     /**
      * Asserts that the property properly checks if
      * any acceptable MIME types are available.
-     *
-     * @covers \Charcoal\Property\ImageProperty::hasAcceptedMimetypes()
-     * @return void
      */
-    public function testHasAcceptedMimeTypes()
+    public function testHasAcceptedMimeTypes(): void
     {
         $this->assertTrue($this->obj->hasAcceptedMimetypes());
 
@@ -85,10 +73,8 @@ class ImagePropertyTest extends AbstractFilePropertyTestCase
 
     /**
      * Asserts that the property can resolve a filesize from its value.
-     *
-     * @return void
      */
-    public function testFilesizeFromVal()
+    public function testFilesizeFromVal(): void
     {
         $obj = $this->obj;
 
@@ -100,10 +86,8 @@ class ImagePropertyTest extends AbstractFilePropertyTestCase
 
     /**
      * Asserts that the property can resolve a MIME type from its value.
-     *
-     * @return void
      */
-    public function testMimetypeFromVal()
+    public function testMimetypeFromVal(): void
     {
         $obj = $this->obj;
 
@@ -113,10 +97,7 @@ class ImagePropertyTest extends AbstractFilePropertyTestCase
         $this->assertEquals('image/png', $obj['mimetype']);
     }
 
-    /**
-     * @return void
-     */
-    public function testSetEffects()
+    public function testSetEffects(): void
     {
         $this->assertEquals([], $this->obj['effects']);
         $ret = $this->obj->setEffects([['type'=>'blur', 'sigma'=>'1']]);
@@ -131,10 +112,7 @@ class ImagePropertyTest extends AbstractFilePropertyTestCase
         $this->assertEquals(1, count($this->obj['effects']));
     }
 
-    /**
-     * @return void
-     */
-    public function testAddEffect()
+    public function testAddEffect(): void
     {
         $this->assertEquals(0, count($this->obj['effects']));
 
@@ -146,7 +124,7 @@ class ImagePropertyTest extends AbstractFilePropertyTestCase
         $this->assertEquals(2, count($this->obj['effects']));
     }
 
-    public function testSetApplyEffects()
+    public function testSetApplyEffects(): void
     {
         $this->assertEquals('save', $this->obj['applyEffects']);
         $this->assertTrue($this->obj->canApplyEffects('save'));
@@ -174,7 +152,7 @@ class ImagePropertyTest extends AbstractFilePropertyTestCase
         $this->obj->setApplyEffects('foobar');
     }
 
-    public function testDriverType()
+    public function testDriverType(): void
     {
         $this->assertEquals(ImageProperty::DEFAULT_DRIVER_TYPE, $this->obj['driverType']);
         $ret = $this->obj->setDriverType('foo');
@@ -185,13 +163,14 @@ class ImagePropertyTest extends AbstractFilePropertyTestCase
         $this->obj->setDriverType(false);
     }
 
-    public function testProcessEffects()
+    public function testProcessEffects(): void
     {
         $ret = $this->obj->processEffects(null, []);
         $this->assertNull($ret);
     }
 
-    public function testAcceptedMimetypes()
+    #[\Override]
+    public function testAcceptedMimetypes(): void
     {
         $ret = $this->obj['acceptedMimetypes'];
         $this->assertContains('image/png', $ret);
@@ -202,9 +181,8 @@ class ImagePropertyTest extends AbstractFilePropertyTestCase
      * Provide property data for {@see ImageProperty::generateExtension()}.
      *
      * @used-by AbstractFilePropertyTestCase::testGenerateExtensionFromDataProvider()
-     * @return  array
      */
-    public function provideDataForGenerateExtension()
+    public static function provideDataForGenerateExtension(): array
     {
         return [
             [ 'image/gif',     'gif' ],

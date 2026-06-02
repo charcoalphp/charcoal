@@ -60,9 +60,8 @@ class Filter extends Expression implements
      * Count the filters stored in this expression.
      *
      * @see    Countable
-     * @return integer
      */
-    public function count()
+    public function count(): int
     {
         return count($this->filters);
     }
@@ -72,9 +71,9 @@ class Filter extends Expression implements
      *
      * @param  array<string,mixed> $data The expression data;
      *     as an associative array.
-     * @return self
      */
-    public function setData(array $data)
+    #[\Override]
+    public function setData(array $data): static
     {
         parent::setData($data);
 
@@ -174,7 +173,8 @@ class Filter extends Expression implements
      *
      * @return array<string,mixed> An associative array.
      */
-    public function defaultData()
+    #[\Override]
+    public function defaultData(): array
     {
         return [
             'property'    => null,
@@ -195,7 +195,8 @@ class Filter extends Expression implements
      *
      * @return array<string,mixed> An associative array.
      */
-    public function data()
+    #[\Override]
+    public function data(): array
     {
         return [
             'property'    => $this->property(),
@@ -215,9 +216,8 @@ class Filter extends Expression implements
      * Set the value used for comparison.
      *
      * @param  mixed $value The value on the right side of the comparison.
-     * @return self
      */
-    public function setValue($value)
+    public function setValue($value): static
     {
         $this->value = $this::parseValue($value);
         return $this;
@@ -238,9 +238,8 @@ class Filter extends Expression implements
      *
      * @param  string $operator The comparison operator.
      * @throws InvalidArgumentException If the parameter is not a valid operator.
-     * @return self
      */
-    public function setOperator($operator)
+    public function setOperator($operator): static
     {
         if (!is_string($operator)) {
             throw new InvalidArgumentException(
@@ -262,10 +261,8 @@ class Filter extends Expression implements
 
     /**
      * Retrieve the operator used for comparing field and value.
-     *
-     * @return string
      */
-    public function operator()
+    public function operator(): string
     {
         return strtoupper($this->operator);
     }
@@ -275,9 +272,8 @@ class Filter extends Expression implements
      *
      * @param  string $func The function name to invoke on the field.
      * @throws InvalidArgumentException If the parameter is not a valid function.
-     * @return self
      */
-    public function setFunc($func)
+    public function setFunc($func): static
     {
         if ($func === null) {
             $this->func = $func;
@@ -317,9 +313,8 @@ class Filter extends Expression implements
      *
      * @param  string $conjunction The separator to use.
      * @throws InvalidArgumentException If the parameter is not a valid conjunction.
-     * @return self
      */
-    public function setConjunction($conjunction)
+    public function setConjunction($conjunction): static
     {
         if (!is_string($conjunction)) {
             throw new InvalidArgumentException(
@@ -354,7 +349,7 @@ class Filter extends Expression implements
      *
      * @return string[]
      */
-    protected function validOperators()
+    protected function validOperators(): array
     {
         return [
             '!', 'NOT',
@@ -376,7 +371,7 @@ class Filter extends Expression implements
      *
      * @return string[]
      */
-    protected function validFunc()
+    protected function validFunc(): array
     {
         return [
             'ABS',
@@ -410,7 +405,7 @@ class Filter extends Expression implements
      *
      * @return string[] List of separators (case sensitive).
      */
-    protected function validConjunctions()
+    protected function validConjunctions(): array
     {
         return [
             'AND', '&&',
@@ -424,9 +419,8 @@ class Filter extends Expression implements
      *
      * @see    FilterCollectionTrait::createFilter()
      * @param  array $data Optional expression data.
-     * @return self
      */
-    protected function createFilter(array $data = null)
+    protected function createFilter(?array $data = null): static
     {
         $filter = new static();
         if ($data !== null) {
@@ -448,8 +442,6 @@ class Filter extends Expression implements
 
     /**
      * Clone this expression and its subtree of expressions.
-     *
-     * @return void
      */
     public function __clone()
     {

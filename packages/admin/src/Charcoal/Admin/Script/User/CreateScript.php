@@ -40,6 +40,7 @@ class CreateScript extends AdminScript implements
      * @param  Container $container Pimple DI container.
      * @return void
      */
+    #[\Override]
     protected function setDependencies(Container $container)
     {
         parent::setDependencies($container);
@@ -52,10 +53,9 @@ class CreateScript extends AdminScript implements
      * Retrieve the available default arguments of this action.
      *
      * @link http://climate.thephpleague.com/arguments/ For descriptions of the options for CLImate.
-     *
-     * @return array
      */
-    public function defaultArguments()
+    #[\Override]
+    public function defaultArguments(): array
     {
         $arguments = [
             'email' => [
@@ -81,17 +81,14 @@ class CreateScript extends AdminScript implements
             ]
         ];
 
-        $arguments = array_merge(parent::defaultArguments(), $arguments);
-
-        return $arguments;
+        return array_merge(parent::defaultArguments(), $arguments);
     }
 
     /**
      * @param RequestInterface  $request  A PSR-7 compatible Request instance.
      * @param ResponseInterface $response A PSR-7 compatible Response instance.
-     * @return ResponseInterface
      */
-    public function run(RequestInterface $request, ResponseInterface $response)
+    public function run(RequestInterface $request, ResponseInterface $response): ResponseInterface
     {
         unset($request);
 
@@ -107,9 +104,8 @@ class CreateScript extends AdminScript implements
 
     /**
      * Create a new user in the database
-     * @return void
      */
-    private function createUser()
+    private function createUser(): void
     {
         $authenticator = $this->authenticator();
 
@@ -148,11 +144,7 @@ class CreateScript extends AdminScript implements
 
             $prompt = $prompts[$prop->ident()];
 
-            if ($prompt['property']) {
-                $v = $prompt['property'];
-            } else {
-                $v = $this->promptProperty($prop, $prompt['label']);
-            }
+            $v = $prompt['property'] ?: $this->promptProperty($prop, $prompt['label']);
             if (isset($prompt['validation'])) {
                 call_user_func($prompt['validation'], $v);
             }
@@ -175,10 +167,7 @@ class CreateScript extends AdminScript implements
         }
     }
 
-    /**
-     * @return array
-     */
-    private function userPrompts()
+    private function userPrompts(): array
     {
         $translator = $this->translator();
         $climate    = $this->climate();
@@ -187,12 +176,12 @@ class CreateScript extends AdminScript implements
             'email' => [
                 'label'      => $translator->translate('Please enter email: '),
                 'property'   => $climate->arguments->get('email'),
-                'validation' => [ $this, 'validateEmail' ],
+                'validation' => $this->validateEmail(...),
             ],
             'password' => [
                 'label'      => $translator->translate('Please enter password: '),
                 'property'   => $climate->arguments->get('password'),
-                'validation' => [ $this, 'validatePassword' ],
+                'validation' => $this->validatePassword(...),
             ],
             'roles' => [
                 'label'      => $translator->translate('Please enter role(s) [ex: admin], comma separated: '),
@@ -227,9 +216,8 @@ class CreateScript extends AdminScript implements
      * @param string $email The email, from input.
      * @throws Exception If the email is empty or invalid (validated with php's filters)
      *         or already exists in the database.
-     * @return void
      */
-    private function validateEmail($email)
+    private function validateEmail($email): void
     {
         if (!$email) {
             throw new Exception(
@@ -256,9 +244,8 @@ class CreateScript extends AdminScript implements
     /**
      * @param string $password The password, from input.
      * @throws Exception If the password is empty or too small.
-     * @return void
      */
-    private function validatePassword($password)
+    private function validatePassword($password): void
     {
         if (!$password) {
             throw new Exception(

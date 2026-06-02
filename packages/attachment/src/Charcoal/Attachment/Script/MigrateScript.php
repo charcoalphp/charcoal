@@ -31,6 +31,7 @@ class MigrateScript extends AlterPrimaryKeyScript
     /**
      * @return void
      */
+    #[\Override]
     protected function init()
     {
         $this->setArguments($this->defaultArguments());
@@ -44,10 +45,9 @@ class MigrateScript extends AlterPrimaryKeyScript
 
     /**
      * Execute the prime directive.
-     *
-     * @return self
      */
-    public function start()
+    #[\Override]
+    public function start(): static
     {
         $cli = $this->climate();
 
@@ -166,7 +166,6 @@ class MigrateScript extends AlterPrimaryKeyScript
 
     // Alter Table
     // =========================================================================
-
     /**
      * Sync the new primary keys to pivot table.
      *
@@ -175,14 +174,14 @@ class MigrateScript extends AlterPrimaryKeyScript
      * @param  IdProperty    $oldProp  The previous ID property.
      * @param  PropertyField $oldField The previous ID field.
      * @throws InvalidArgumentException If the new property does not implement the proper mode.
-     * @return self
      */
+    #[\Override]
     protected function syncRelatedFields(
         IdProperty $newProp,
         PropertyField $newField,
         IdProperty $oldProp,
         PropertyField $oldField
-    ) {
+    ): static {
         unset($newProp, $oldProp, $oldField);
 
         $cli = $this->climate();
@@ -243,6 +242,7 @@ class MigrateScript extends AlterPrimaryKeyScript
      *
      * @return array
      */
+    #[\Override]
     public function defaultArguments()
     {
         static $arguments;
@@ -267,9 +267,10 @@ class MigrateScript extends AlterPrimaryKeyScript
      *
      * @return ModelInterface
      */
+    #[\Override]
     public function targetModel()
     {
-        if (!isset($this->targetModel)) {
+        if ($this->targetModel === null) {
             $this->targetModel = $this->modelFactory()->get(Attachment::class);
         }
 
@@ -283,7 +284,7 @@ class MigrateScript extends AlterPrimaryKeyScript
      */
     public function pivotModel()
     {
-        if (!isset($this->pivotModel)) {
+        if ($this->pivotModel === null) {
             $this->pivotModel = $this->modelFactory()->get(Join::class);
         }
 

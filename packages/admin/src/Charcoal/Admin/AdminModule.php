@@ -3,6 +3,7 @@
 namespace Charcoal\Admin;
 
 // From PSR-7
+use Pimple\Container;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 // From 'charcoal-app'
@@ -32,7 +33,8 @@ class AdminModule extends AbstractModule
      *
      * @return AdminModule Chainable
      */
-    public function setUp()
+    #[\Override]
+    public function setUp(): static
     {
         // Hack: skip if the request does not start with '/admin'
         $container = $this->app()->getContainer();
@@ -47,15 +49,13 @@ class AdminModule extends AbstractModule
         $container->register(new AdminServiceProvider());
 
         $module = $this;
-        $container['charcoal/admin/module'] = function () use ($module) {
-            return $module;
-        };
+        $container['charcoal/admin/module'] = (fn(): static => $module);
 
         $adminConfig = $container['admin/config'];
 
         $this->setConfig($adminConfig);
 
-        $groupIdent = '/' . trim($adminConfig['base_path'], '/');
+        $groupIdent = '/' . trim((string)$adminConfig['base_path'], '/');
 
         // Add the route group
         $this->app()->group($groupIdent, 'charcoal/admin/module:setupRoutes')
@@ -69,7 +69,8 @@ class AdminModule extends AbstractModule
      *
      * @return AdminModule Chainable
      */
-    public function setupRoutes()
+    #[\Override]
+    public function setupRoutes(): static
     {
         if ($this->routeManager === null) {
             parent::setupRoutes();
@@ -102,7 +103,7 @@ class AdminModule extends AbstractModule
          * @param  object|HandlerInterface $handler An error handler instance.
          * @return HandlerInterface
          */
-        $container->extend('notFoundHandler', function ($handler, $container) {
+        $container->extend('notFoundHandler', function ($handler, Container $container) {
             $appConfig = $container['config'];
             $adminConfig = $container['admin/config'];
             if ($handler instanceof HandlerInterface) {
@@ -125,7 +126,7 @@ class AdminModule extends AbstractModule
          * @param  object|HandlerInterface $handler An error handler instance.
          * @return HandlerInterface
          */
-        $container->extend('notAllowedHandler', function ($handler, $container) {
+        $container->extend('notAllowedHandler', function ($handler, Container $container) {
             $appConfig = $container['config'];
             $adminConfig = $container['admin/config'];
             if ($handler instanceof HandlerInterface) {
@@ -148,7 +149,7 @@ class AdminModule extends AbstractModule
          * @param  object|HandlerInterface $handler An error handler instance.
          * @return HandlerInterface
          */
-        $container->extend('phpErrorHandler', function ($handler, $container) {
+        $container->extend('phpErrorHandler', function ($handler, Container $container) {
             $appConfig = $container['config'];
             $adminConfig = $container['admin/config'];
             if ($handler instanceof HandlerInterface) {
@@ -171,7 +172,7 @@ class AdminModule extends AbstractModule
          * @param  object|HandlerInterface $handler An error handler instance.
          * @return HandlerInterface
          */
-        $container->extend('errorHandler', function ($handler, $container) {
+        $container->extend('errorHandler', function ($handler, Container $container) {
             $appConfig = $container['config'];
             $adminConfig = $container['admin/config'];
             if ($handler instanceof HandlerInterface) {
@@ -196,7 +197,7 @@ class AdminModule extends AbstractModule
          * @param  object|HandlerInterface $handler An error handler instance.
          * @return HandlerInterface
          */
-        $container->extend('maintenanceHandler', function ($handler, $container) {
+        $container->extend('maintenanceHandler', function ($handler, Container $container) {
             $appConfig = $container['config'];
             $adminConfig = $container['admin/config'];
             if ($handler instanceof HandlerInterface) {
@@ -226,11 +227,6 @@ class AdminModule extends AbstractModule
         if ($path === 'admin') {
             return true;
         }
-
-        if (substr($path, 0, 6) === 'admin/') {
-            return true;
-        }
-
-        return false;
+        return str_starts_with($path, 'admin/');
     }
 }

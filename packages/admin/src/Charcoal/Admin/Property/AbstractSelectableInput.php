@@ -140,7 +140,7 @@ abstract class AbstractSelectableInput extends AbstractPropertyInput implements
             // Doing this in the parseVal method of abstract property
             // was causing multiple && l10n properties not to save.
             if (!is_array($val) && $this->p()['multiple']) {
-                $val = explode($this->p()->multipleSeparator(), $val);
+                $val = explode($this->p()->multipleSeparator(), (string)$val);
             }
 
             $this->parsedVal[$this->lang()] = $val;
@@ -196,7 +196,7 @@ abstract class AbstractSelectableInput extends AbstractPropertyInput implements
         } else {
             throw new InvalidArgumentException(sprintf(
                 'Empty choice must be an array, received %s',
-                (is_object($choice) ? get_class($choice) : gettype($choice))
+                (get_debug_type($choice))
             ));
         }
 
@@ -256,7 +256,7 @@ abstract class AbstractSelectableInput extends AbstractPropertyInput implements
             return '';
         }
 
-        if (strpos($prop, '{{') === false) {
+        if (!str_contains($prop, '{{')) {
             if (isset($obj[$prop])) {
                 return $this->parseChoiceVal($obj[$prop]);
             }
@@ -268,7 +268,7 @@ abstract class AbstractSelectableInput extends AbstractPropertyInput implements
             return $obj->renderTemplate($prop);
         } else {
             $callback = function ($matches) use ($obj) {
-                $prop = trim($matches[1]);
+                $prop = trim((string)$matches[1]);
                 if (isset($obj[$prop])) {
                     return $this->parseChoiceVal($obj[$prop]);
                 }
@@ -341,7 +341,7 @@ abstract class AbstractSelectableInput extends AbstractPropertyInput implements
     public function inputNameFallback()
     {
         $name = $this->inputName();
-        if (substr($name, -2, 2) === '[]') {
+        if (str_ends_with($name, '[]')) {
             return substr($name, 0, -2);
         }
 

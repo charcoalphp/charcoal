@@ -24,10 +24,8 @@ class ModelTest extends AbstractTestCase
 
     /**
      * Retrieve the model's mock metadata.
-     *
-     * @return array
      */
-    private function getModelMetadata()
+    private function getModelMetadata(): array
     {
         return [
             'properties' => [
@@ -75,10 +73,8 @@ class ModelTest extends AbstractTestCase
 
     /**
      * Drop the SQL table.
-     *
-     * @return void
      */
-    private function dropTable()
+    private function dropTable(): void
     {
         $container = $this->getContainer();
 
@@ -87,10 +83,8 @@ class ModelTest extends AbstractTestCase
 
     /**
      * Retrieve the model's mock object data.
-     *
-     * @return array
      */
-    private function getHuxleyData()
+    private function getHuxleyData(): array
     {
         return [
             'id'   => 1,
@@ -104,7 +98,7 @@ class ModelTest extends AbstractTestCase
      *
      * @return integer The saved object ID.
      */
-    private function saveHuxley()
+    private function saveHuxley(): bool
     {
         $obj = $this->obj;
         $obj->setData($this->getHuxleyData());
@@ -116,8 +110,6 @@ class ModelTest extends AbstractTestCase
      * Set up the test.
      *
      * Create the SQL table for the test, dropping any existing table.
-     *
-     * @return void
      */
     protected function setUp(): void
     {
@@ -130,17 +122,12 @@ class ModelTest extends AbstractTestCase
      * Tear down the test.
      *
      * Drop any existing SQL table.
-     *
-     * @return void
      */
     protected function tearDown(): void    {
         $this->dropTable();
     }
 
-    /**
-     * @return void
-     */
-    public function testConstructor()
+    public function testConstructor(): void
     {
         $obj = $this->obj;
 
@@ -148,10 +135,7 @@ class ModelTest extends AbstractTestCase
         $this->assertInstanceOf(ModelInterface::class, $obj);
     }
 
-    /**
-     * @return void
-     */
-    public function testSetData()
+    public function testSetData(): void
     {
         $obj = $this->obj;
         $ret = $obj->setData([ 'name' => 'Orwell' ]);
@@ -160,10 +144,7 @@ class ModelTest extends AbstractTestCase
         $this->assertEquals('Orwell', $obj->name);
     }
 
-    /**
-     * @return void
-     */
-    public function testSetFlatData()
+    public function testSetFlatData(): void
     {
         $obj = $this->obj;
         $ret = $obj->setFlatData([ 'name' => 'Clarke' ]);
@@ -172,22 +153,16 @@ class ModelTest extends AbstractTestCase
         $this->assertEquals('Clarke', $obj->name);
     }
 
-    /**
-     * @return void
-     */
-    public function testSave()
+    public function testSave(): void
     {
         $ret = $this->saveHuxley();
 
         $this->assertEquals(1, $ret);
     }
 
-    /**
-     * @return void
-     */
-    public function testLoad()
+    public function testLoad(): void
     {
-        $ret = $this->saveHuxley();
+        $this->saveHuxley();
 
         $obj1 = $this->createModel();
         $obj1->load(1);
@@ -195,10 +170,7 @@ class ModelTest extends AbstractTestCase
         $this->assertEquals($this->getHuxleyData(), $obj1->data());
     }
 
-    /**
-     * @return void
-     */
-    public function testUpdate()
+    public function testUpdate(): void
     {
         $ret = $this->saveHuxley();
 
@@ -226,10 +198,7 @@ class ModelTest extends AbstractTestCase
         $this->assertEquals('Screenwriter', $obj2['role']);
     }
 
-    /**
-     * @return void
-     */
-    public function testDelete()
+    public function testDelete(): void
     {
         $ret = $this->saveHuxley();
 
@@ -242,19 +211,15 @@ class ModelTest extends AbstractTestCase
         $this->assertEquals(null, $obj1['id']);
     }
 
-    /**
-     * @return void
-     */
-    public function testSerializeUnserialize()
+    public function testSerializeUnserialize(): void
     {
         $obj  = $this->obj;
         $data = $this->getHuxleyData();
 
         $obj->setData($data);
-
         $serialized = serialize($obj);
         $this->assertEquals(
-            'C:20:"Charcoal\Model\Model":69:{a:3:{s:2:"id";i:1;s:4:"name";s:6:"Huxley";s:4:"role";s:8:"Novelist";}}',
+            'O:20:"Charcoal\Model\Model":3:{s:2:"id";i:1;s:4:"name";s:6:"Huxley";s:4:"role";s:8:"Novelist";}',
             serialize($obj)
         );
 
@@ -265,10 +230,7 @@ class ModelTest extends AbstractTestCase
         $this->assertEquals('Huxley', $obj2['name']);
     }
 
-    /**
-     * @return void
-     */
-    public function testJsonSerialize()
+    public function testJsonSerialize(): void
     {
         $obj  = $this->obj;
         $data = $this->getHuxleyData();

@@ -21,10 +21,7 @@ class Permission extends AbstractModel implements CategorizableInterface
     use CategorizableTrait;
     use TranslatorAwareTrait;
 
-    /**
-     * @var string|null
-     */
-    private $ident;
+    private ?string $ident = null;
 
     /**
      * @var \Charcoal\Translator\Translation|null
@@ -33,9 +30,8 @@ class Permission extends AbstractModel implements CategorizableInterface
 
     /**
      * Permission can be used as a string (ident).
-     *
-     * @return string
      */
+    #[\Override]
     public function __toString(): string
     {
         if ($this->ident === null) {
@@ -44,10 +40,8 @@ class Permission extends AbstractModel implements CategorizableInterface
         return $this->ident;
     }
 
-    /**
-     * @return string
-     */
-    public function key()
+    #[\Override]
+    public function key(): string
     {
         return 'ident';
     }
@@ -55,9 +49,8 @@ class Permission extends AbstractModel implements CategorizableInterface
     /**
      * @param string $ident The permission identifier.
      * @throws InvalidArgumentException If the ident is not a string.
-     * @return self
      */
-    public function setIdent($ident)
+    public function setIdent($ident): static
     {
         if (!is_string($ident)) {
             throw new InvalidArgumentException(
@@ -68,19 +61,15 @@ class Permission extends AbstractModel implements CategorizableInterface
         return $this;
     }
 
-    /**
-     * @return string|null
-     */
-    public function getIdent()
+    public function getIdent(): ?string
     {
         return $this->ident;
     }
 
     /**
      * @param mixed $name The permission name / label.
-     * @return self
      */
-    public function setName($name)
+    public function setName($name): static
     {
         $this->name = $this->translator()->translation($name);
         return $this;
@@ -98,6 +87,7 @@ class Permission extends AbstractModel implements CategorizableInterface
      * @param Container $container Pimple DI container.
      * @return void
      */
+    #[\Override]
     protected function setDependencies(Container $container)
     {
         parent::setDependencies($container);

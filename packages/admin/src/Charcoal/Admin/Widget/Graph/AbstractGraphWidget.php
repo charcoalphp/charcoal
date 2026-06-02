@@ -164,10 +164,9 @@ abstract class AbstractGraphWidget extends AdminWidget implements
 
     /**
      * Retrieve the widget's data options for JavaScript components.
-     *
-     * @return array
      */
-    public function widgetDataForJs()
+    #[\Override]
+    public function widgetDataForJs(): array
     {
         return [
             'list_actions'  => $this->graphActions(),
@@ -278,9 +277,7 @@ abstract class AbstractGraphWidget extends AdminWidget implements
     {
         $this->actionsPriority = $this->defaultActionPriority();
 
-        $graphActions = $this->parseAsGraphActions($actions);
-
-        return $graphActions;
+        return $this->parseAsGraphActions($actions);
     }
 
     /**
@@ -300,13 +297,11 @@ abstract class AbstractGraphWidget extends AdminWidget implements
                 $action['priority'] = $this->actionsPriority++;
             }
 
-            $action['empty'] = (isset($action['empty']) ? boolval($action['empty']) : false);
+            $action['empty'] = (isset($action['empty']) && boolval($action['empty']));
 
             if (is_array($action['actions'])) {
                 $action['actions']    = $this->parseAsGraphActions($action['actions']);
-                $action['hasActions'] = !!array_filter($action['actions'], function ($action) {
-                    return $action['active'];
-                });
+                $action['hasActions'] = (bool)array_filter($action['actions'], fn(array $action): mixed => $action['active']);
             }
 
             if (isset($graphActions[$ident])) {
@@ -321,7 +316,7 @@ abstract class AbstractGraphWidget extends AdminWidget implements
             }
         }
 
-        usort($graphActions, [ 'Charcoal\Admin\Support\Sorter', 'sortByPriority' ]);
+        usort($graphActions, \Charcoal\Admin\Support\Sorter::sortByPriority(...));
 
         while (($first = reset($graphActions)) && $first['isSeparator']) {
             array_shift($graphActions);

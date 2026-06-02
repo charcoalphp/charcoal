@@ -64,15 +64,14 @@ class SelectizeRenderer
      * @param ModelInterface|array|null $context         The context as Model or array.
      * @param string|null               $controllerIdent The ControllerIdent string to override Object context.
      * @throws \InvalidArgumentException If the callable id not callable.
-     * @return string
      */
-    public function renderTemplate($templateIdent, $context, $controllerIdent = null)
+    public function renderTemplate(string $templateIdent, $context, $controllerIdent = null): string
     {
         $template = null;
 
         if ($controllerIdent && is_string($controllerIdent)) {
             $controllerIdent    = explode('::', $controllerIdent);
-            $controllerCallable = isset($controllerIdent[1]) ? $controllerIdent[1] : null;
+            $controllerCallable = ($controllerIdent[1] ?? null);
             $controllerIdent    = $controllerIdent[0];
 
             $template = $this->templateFactory->create($controllerIdent);
@@ -84,7 +83,7 @@ class SelectizeRenderer
                         '%s::%s supplied in %s::%s is not a callable method.',
                         $controllerIdent,
                         $controllerCallable,
-                        __CLASS__,
+                        self::class,
                         __FUNCTION__
                     ));
                 }
@@ -103,8 +102,8 @@ class SelectizeRenderer
             } else {
                 throw new \InvalidArgumentException(sprintf(
                     '%s supplied in %s::%s is not callable.',
-                    get_class($template),
-                    __CLASS__,
+                    $template::class,
+                    self::class,
                     __FUNCTION__
                 ));
             }

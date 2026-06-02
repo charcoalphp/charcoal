@@ -19,9 +19,6 @@ class ObjectFormWidgetTest extends AbstractTestCase
      */
     public $obj;
 
-    /**
-     * @return void
-     */
     public function setUp(): void
     {
         $logger = new NullLogger();
@@ -30,10 +27,7 @@ class ObjectFormWidgetTest extends AbstractTestCase
         ]);
     }
 
-    /**
-     * @return void
-     */
-    public function testSetFormIdent()
+    public function testSetFormIdent(): void
     {
         $ret = $this->obj->setFormIdent('foobar');
         $this->assertSame($ret, $this->obj);

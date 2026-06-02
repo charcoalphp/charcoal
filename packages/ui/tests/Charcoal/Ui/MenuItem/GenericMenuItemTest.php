@@ -19,9 +19,6 @@ class GenericMenuItemTest extends AbstractTestCase
      */
     public $obj;
 
-    /**
-     * @return void
-     */
     protected function setUp(): void
     {
         $container = $this->getContainer();
@@ -37,10 +34,7 @@ class GenericMenuItemTest extends AbstractTestCase
         ]);
     }
 
-    /**
-     * @return void
-     */
-    public function testType()
+    public function testType(): void
     {
         $this->assertEquals('charcoal/ui/menu-item/generic', $this->obj->type());
     }

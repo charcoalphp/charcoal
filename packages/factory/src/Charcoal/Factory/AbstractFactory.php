@@ -39,10 +39,7 @@ abstract class AbstractFactory implements FactoryInterface
      */
     private $defaultClass = '';
 
-    /**
-     * @var array $arguments
-     */
-    private $arguments;
+    private ?array $arguments = null;
 
     /**
      * @var callable $callback
@@ -52,9 +49,8 @@ abstract class AbstractFactory implements FactoryInterface
     /**
      * Keeps loaded instances in memory, in `[$type => $instance]` format.
      * Used with the `get()` method only.
-     * @var array $instances
      */
-    private $instances = [];
+    private array $instances = [];
 
     /**
      * @var callable $resolver
@@ -70,7 +66,7 @@ abstract class AbstractFactory implements FactoryInterface
     /**
      * @param array $data Constructor dependencies.
      */
-    public function __construct(array $data = null)
+    public function __construct(?array $data = null)
     {
         if (isset($data['base_class'])) {
             $this->setBaseClass($data['base_class']);
@@ -89,7 +85,7 @@ abstract class AbstractFactory implements FactoryInterface
         }
 
         if (!isset($data['resolver'])) {
-            $opts = isset($data['resolver_options']) ? $data['resolver_options'] : null;
+            $opts = ($data['resolver_options'] ?? null);
             $data['resolver'] = new GenericResolver($opts);
         }
 
@@ -118,13 +114,13 @@ abstract class AbstractFactory implements FactoryInterface
      * @throws InvalidArgumentException If type argument is not a string or is not an available type.
      * @return mixed The instance / object
      */
-    final public function create($type, array $args = null, callable $cb = null)
+    final public function create($type, ?array $args = null, ?callable $cb = null)
     {
         if (!is_string($type)) {
             throw new InvalidArgumentException(
                 sprintf(
                     '%s: Type must be a string.',
-                    get_called_class()
+                    static::class
                 )
             );
         }
@@ -133,7 +129,7 @@ abstract class AbstractFactory implements FactoryInterface
             $args = $this->arguments();
         }
 
-        $pool = get_called_class();
+        $pool = static::class;
         if (isset($this->resolved[$pool][$type])) {
             $className = $this->resolved[$pool][$type];
         } else {
@@ -147,7 +143,7 @@ abstract class AbstractFactory implements FactoryInterface
                     throw new InvalidArgumentException(
                         sprintf(
                             '%1$s: Type "%2$s" is not a valid type. (Using default class "%3$s")',
-                            get_called_class(),
+                            static::class,
                             $type,
                             $defaultClass
                         )
@@ -168,7 +164,7 @@ abstract class AbstractFactory implements FactoryInterface
             throw new Exception(
                 sprintf(
                     '%1$s: Class "%2$s" must be an instance of "%3$s"',
-                    get_called_class(),
+                    static::class,
                     $className,
                     $baseClass
                 )
@@ -192,7 +188,7 @@ abstract class AbstractFactory implements FactoryInterface
      * @throws InvalidArgumentException If type argument is not a string.
      * @return mixed The instance / object
      */
-    final public function get($type, array $args = null)
+    final public function get($type, ?array $args = null)
     {
         if (!is_string($type)) {
             throw new InvalidArgumentException(
@@ -216,7 +212,7 @@ abstract class AbstractFactory implements FactoryInterface
      */
     public function setBaseClass($type)
     {
-        if (!is_string($type) || empty($type)) {
+        if (!is_string($type) || ($type === '' || $type === '0')) {
             throw new InvalidArgumentException(
                 'Class name or type must be a non-empty string.'
             );
@@ -259,7 +255,7 @@ abstract class AbstractFactory implements FactoryInterface
      */
     public function setDefaultClass($type)
     {
-        if (!is_string($type) || empty($type)) {
+        if (!is_string($type) || ($type === '' || $type === '0')) {
             throw new InvalidArgumentException(
                 'Class name or type must be a non-empty string.'
             );
@@ -351,8 +347,7 @@ abstract class AbstractFactory implements FactoryInterface
         }
 
         $resolver = $this->resolver();
-        $resolved = $resolver($type);
-        return $resolved;
+        return $resolver($type);
     }
 
     /**
@@ -381,11 +376,7 @@ abstract class AbstractFactory implements FactoryInterface
 
         $resolver = $this->resolver();
         $resolved = $resolver($type);
-        if (class_exists($resolved)) {
-            return true;
-        }
-
-        return false;
+        return class_exists($resolved);
     }
 
 
@@ -411,7 +402,7 @@ abstract class AbstractFactory implements FactoryInterface
         if (!is_array($args)) {
             return new $className($args);
         }
-        if (count(array_filter(array_keys($args), 'is_string')) > 0) {
+        if (count(array_filter(array_keys($args), is_string(...))) > 0) {
             return new $className($args);
         } else {
             /**
@@ -463,9 +454,8 @@ abstract class AbstractFactory implements FactoryInterface
 
     /**
      * @param callable $resolver The class resolver instance to use.
-     * @return self
      */
-    private function setResolver(callable $resolver)
+    private function setResolver(callable $resolver): static
     {
         $this->resolver = $resolver;
         return $this;
@@ -475,9 +465,8 @@ abstract class AbstractFactory implements FactoryInterface
      * Add multiple types, in a an array of `type` => `className`.
      *
      * @param string[] $map The map (key=>classname) to use.
-     * @return self
      */
-    private function setMap(array $map)
+    private function setMap(array $map): static
     {
         // Resets (overwrites) map.
         $this->map = [];
@@ -492,9 +481,8 @@ abstract class AbstractFactory implements FactoryInterface
      *
      * @param mixed    $obj            The object to pass to callback(s).
      * @param callable $customCallback An optional additional custom callback.
-     * @return void
      */
-    private function runCallbacks(&$obj, callable $customCallback = null)
+    private function runCallbacks(&$obj, ?callable $customCallback = null): void
     {
         $factoryCallback = $this->callback();
         if (isset($factoryCallback)) {

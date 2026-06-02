@@ -5,10 +5,9 @@ namespace Charcoal\Tests\View\Mustache;
 use LogicException;
 
 // From Mustache
-use Mustache_Engine as MustacheEngine;
+use Mustache\Engine as MustacheEngine;
 
 // From 'symfony/translation'
-use Symfony\Component\Translation\MessageSelector;
 use Symfony\Component\Translation\Loader\ArrayLoader;
 
 // From 'charcoal-translator'
@@ -24,29 +23,17 @@ use Charcoal\Tests\AbstractTestCase;
  */
 class TranslatorHelpersTest extends AbstractTestCase
 {
-    /**
-     * @var Translator
-     */
-    private $translator;
+    private \Charcoal\Translator\Translator $translator;
 
-    /**
-     * @var MustacheEngine
-     */
-    private $mustache;
+    private MustacheEngine $mustache;
 
-    /**
-     * @return void
-     */
     public function setUp(): void
     {
         $this->translator = $this->createTranslator();
         $this->mustache   = $this->createMustacheEngine($this->translator);
     }
 
-    /**
-     * @return void
-     */
-    public function testTransWithoutTranslator()
+    public function testTransWithoutTranslator(): void
     {
         $this->mustache = $this->createMustacheEngine();
 
@@ -59,25 +46,19 @@ class TranslatorHelpersTest extends AbstractTestCase
         $this->assertEquals($expected, $output);
     }
 
-    /**
-     * @return void
-     */
-    public function testTransWithUnknownMacro()
+    public function testTransWithUnknownMacro(): void
     {
         $this->expectException(LogicException::class);
 
         $this->addTranslatorResources();
 
         $template = $this->mustache->loadTemplate('{{# _t.num.unknown }}count.apples{{/ _t.num.unknown }}');
-        $output   = $template->render([
+        $template->render([
             'num' => 1,
         ]);
     }
 
-    /**
-     * @return void
-     */
-    public function testTrans()
+    public function testTrans(): void
     {
         // phpcs:disable Squiz.Strings.DoubleQuoteUsage.NotRequired
         $this->addTranslatorResources();
@@ -102,10 +83,7 @@ class TranslatorHelpersTest extends AbstractTestCase
         // phpcs:enable
     }
 
-    /**
-     * @return void
-     */
-    public function testTransChoice()
+    public function testTransChoice(): void
     {
         // phpcs:disable Squiz.Strings.DoubleQuoteUsage.NotRequired
         $this->addTranslatorResources();
@@ -118,6 +96,7 @@ class TranslatorHelpersTest extends AbstractTestCase
         $output   = $template->render([
             'num' => 1,
         ]);
+//        die();
 
         $expected = trim("
             There are 5 apples
@@ -128,10 +107,7 @@ class TranslatorHelpersTest extends AbstractTestCase
         // phpcs:enable
     }
 
-    /**
-     * @return void
-     */
-    public function addTranslatorResources()
+    public function addTranslatorResources(): void
     {
         $this->translator->addResource('array', [
             'count.apples' => '{0} There are no apples|{1} There is one apple|]1,Inf[ There are %count% apples',
@@ -154,16 +130,12 @@ class TranslatorHelpersTest extends AbstractTestCase
         ], 'en', 'slang');
     }
 
-    /**
-     * @return Translator
-     */
-    public function createTranslator()
+    public function createTranslator(): \Charcoal\Translator\Translator
     {
         $translator = new Translator([
             'locale'            => 'en',
             'cache_dir'         => null,
             'debug'             => false,
-            'message_selector'  => new MessageSelector(),
             'manager'           => new LocalesManager([
                 'locales' => [
                     'en' => [
@@ -187,18 +159,16 @@ class TranslatorHelpersTest extends AbstractTestCase
     }
 
     /**
-     * @param  Translator|null $translator The translator service for the translator helpers.
-     * @return MustacheEngine
+     * @param Translator|null $translator The translator service for the translator helpers.
      */
-    public function createMustacheEngine($translator = null)
+    public function createMustacheEngine(?Translator $translator = null): MustacheEngine
     {
         $helper   = new TranslatorHelpers([
             'translator' => $translator,
         ]);
-        $mustache = new MustacheEngine([
+
+        return new MustacheEngine([
             'helpers' => $helper->toArray(),
         ]);
-
-        return $mustache;
     }
 }

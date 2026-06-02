@@ -42,17 +42,13 @@ final class ModelLoader implements ArrayAccess
 
     /**
      * The model factory.
-     *
-     * @var FactoryInterface
      */
-    private $factory;
+    private \Charcoal\Factory\FactoryInterface $factory;
 
     /**
      * The PSR-6 caching service.
-     *
-     * @var CacheItemPoolInterface
      */
-    private $cachePool;
+    private \Psr\Cache\CacheItemPoolInterface $cachePool;
 
     /**
      * Construct a Model Loader with the dependencies
@@ -90,7 +86,7 @@ final class ModelLoader implements ArrayAccess
      * @param  mixed          $args  Unused; Method arguments.
      * @return ModelInterface
      */
-    public function __call($ident, $args = null)
+    public function __call(string $ident, ?array $args = null)
     {
         unset($args);
 
@@ -103,7 +99,7 @@ final class ModelLoader implements ArrayAccess
      * @param  string|integer $ident The object identifier to load.
      * @return ModelInterface
      */
-    public function __get($ident)
+    public function __get(string $ident): mixed
     {
         return $this->load($ident);
     }
@@ -115,7 +111,7 @@ final class ModelLoader implements ArrayAccess
      * @param  string $ident The object identifier to lookup.
      * @return boolean
      */
-    public function __isset($ident)
+    public function __isset(string $ident)
     {
         return true;
     }
@@ -127,7 +123,7 @@ final class ModelLoader implements ArrayAccess
      * @throws LogicException This method should never be called.
      * @return void
      */
-    public function __unset($ident)
+    public function __unset(string $ident)
     {
         throw new LogicException(
             'Can not unset value on a loader'
@@ -136,16 +132,14 @@ final class ModelLoader implements ArrayAccess
 
     // Satisfies ArrayAccess
     // =============================================================================================
-
     /**
      * Determine if an object exists by its key.
      *
      * @todo   Needs implementation
      * @see    ArrayAccess::offsetExists
      * @param  string $ident The object identifier to lookup.
-     * @return boolean
      */
-    public function offsetExists($ident)
+    public function offsetExists($ident): bool
     {
         return true;
     }
@@ -157,7 +151,7 @@ final class ModelLoader implements ArrayAccess
      * @param  string|integer $ident The object identifier to load.
      * @return ModelInterface
      */
-    public function offsetGet($ident)
+    public function offsetGet($ident): ModelInterface
     {
         return $this->load($ident);
     }
@@ -169,9 +163,8 @@ final class ModelLoader implements ArrayAccess
      * @param  string|integer $ident The $object identifier.
      * @param  mixed          $obj   The object to add.
      * @throws LogicException This method should never be called.
-     * @return void
      */
-    public function offsetSet($ident, $obj)
+    public function offsetSet($ident, $obj): never
     {
         throw new LogicException(
             'Can not set value on a loader'
@@ -184,9 +177,8 @@ final class ModelLoader implements ArrayAccess
      * @see    ArrayAccess::offsetUnset()
      * @param  string|integer $ident The object identifier to remove.
      * @throws LogicException This method should never be called.
-     * @return void
      */
-    public function offsetUnset($ident)
+    public function offsetUnset($ident): never
     {
         throw new LogicException(
             'Can not unset value on a loader'
@@ -215,14 +207,11 @@ final class ModelLoader implements ArrayAccess
         $cacheKey  = $this->cacheKey($ident);
         $cacheItem = $this->cachePool->getItem($cacheKey);
 
-        if (!$reloadObj) {
-            if ($cacheItem->isHit()) {
-                $data = $cacheItem->get();
-                $obj  = $this->factory->create($this->objType);
-                $obj->setData($data);
-
-                return $obj;
-            }
+        if (!$reloadObj && $cacheItem->isHit()) {
+            $data = $cacheItem->get();
+            $obj  = $this->factory->create($this->objType);
+            $obj->setData($data);
+            return $obj;
         }
 
         $obj  = $this->loadFromSource($ident);
@@ -264,9 +253,7 @@ final class ModelLoader implements ArrayAccess
             $this->setObjKey($model->key());
         }
 
-        $cacheKey = 'object/' . str_replace('/', '.', $this->objType . '.' . $this->objKey . '.' . $ident);
-
-        return $cacheKey;
+        return 'object/' . str_replace('/', '.', $this->objType . '.' . $this->objKey . '.' . $ident);
     }
 
     /**
@@ -276,9 +263,8 @@ final class ModelLoader implements ArrayAccess
      *
      * @param  string $objType The object type to load with this loader.
      * @throws InvalidArgumentException If the object type is not a string.
-     * @return self
      */
-    private function setObjType($objType)
+    private function setObjType($objType): self
     {
         if (!is_string($objType)) {
             throw new InvalidArgumentException(
@@ -287,7 +273,7 @@ final class ModelLoader implements ArrayAccess
         }
 
         $objType = preg_replace('/([a-z])([A-Z])/', '$1-$2', $objType);
-        $objType = strtolower(str_replace('\\', '/', trim($objType, '\\/')));
+        $objType = strtolower(str_replace('\\', '/', trim((string)$objType, '\\/')));
 
         $this->objType = $objType;
         return $this;
@@ -298,9 +284,8 @@ final class ModelLoader implements ArrayAccess
      *
      * @param  string $objKey The object key to use for laoding.
      * @throws InvalidArgumentException If the object key is not a string.
-     * @return self
      */
-    private function setObjKey($objKey)
+    private function setObjKey($objKey): self
     {
         if (empty($objKey) && !is_numeric($objKey)) {
             $this->objKey = null;
@@ -321,9 +306,8 @@ final class ModelLoader implements ArrayAccess
      * Set the model factory.
      *
      * @param  FactoryInterface $factory The factory to create models.
-     * @return self
      */
-    private function setFactory(FactoryInterface $factory)
+    private function setFactory(FactoryInterface $factory): self
     {
         $this->factory = $factory;
         return $this;
@@ -333,9 +317,8 @@ final class ModelLoader implements ArrayAccess
      * Set the cache pool handler.
      *
      * @param  CacheItemPoolInterface $cachePool A PSR-6 compatible cache pool.
-     * @return self
      */
-    private function setCachePool(CacheItemPoolInterface $cachePool)
+    private function setCachePool(CacheItemPoolInterface $cachePool): self
     {
         $this->cachePool = $cachePool;
         return $this;

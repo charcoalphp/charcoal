@@ -81,9 +81,7 @@ trait SectionLoaderAwareTrait
      */
     public function routes()
     {
-        return function ($arg) {
-            return $this->sectionLoader()->resolveRoute($arg);
-        };
+        return fn($arg) => $this->sectionLoader()->resolveRoute($arg);
     }
 
     /**
@@ -149,7 +147,7 @@ trait SectionLoaderAwareTrait
         if (!$this->sectionLoader instanceof SectionLoader) {
             throw new ContainerException(sprintf(
                 'Missing dependency for %s: %s',
-                get_called_class(),
+                static::class,
                 SectionLoader::class
             ));
         }
@@ -171,12 +169,10 @@ trait SectionLoaderAwareTrait
     // ==========================================================================
     // FORMATTER
     // ==========================================================================
-
     /**
      * @param SectionInterface $section The section to format.
-     * @return array
      */
-    protected function formatSection(SectionInterface $section)
+    protected function formatSection(SectionInterface $section): array
     {
         $contentBlocks = $section->getAttachments('content-blocks');
         $gallery = $section->getAttachments('image-gallery');

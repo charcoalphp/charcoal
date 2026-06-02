@@ -42,7 +42,7 @@ trait MetadataLoaderAwareTrait
         if (!isset($this->metadataLoader)) {
             throw new RuntimeException(sprintf(
                 'Metadata Loader is not defined for [%s]',
-                get_class($this)
+                $this::class
             ));
         }
 
@@ -58,9 +58,8 @@ trait MetadataLoaderAwareTrait
     protected function loadMetadata($metadataIdent)
     {
         $metadataLoader = $this->metadataLoader();
-        $metadata = $metadataLoader->load($metadataIdent, $this->createMetadata());
 
-        return $metadata;
+        return $metadataLoader->load($metadataIdent, $this->createMetadata());
     }
 
     /**

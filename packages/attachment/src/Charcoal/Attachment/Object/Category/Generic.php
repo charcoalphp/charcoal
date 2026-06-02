@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Charcoal\Attachment\Object\Category;
 
 // From 'charcoal-object'
@@ -27,7 +29,7 @@ class Generic extends Content implements CategoryInterface
      * @param  string $name The attachment category name.
      * @return NewsCategory Chainable
      */
-    public function setName($name)
+    public function setName($name): static
     {
         $this->name = $this->translator()->translation($name);
 
@@ -42,10 +44,7 @@ class Generic extends Content implements CategoryInterface
         return $this->name;
     }
 
-    /**
-     * @return array
-     */
-    public function loadCategoryItems()
+    public function loadCategoryItems(): array
     {
         return [];
     }

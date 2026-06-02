@@ -30,50 +30,23 @@ abstract class AbstractScript extends AbstractEntity implements
 {
     use LoggerAwareTrait;
 
-    /**
-     * @var string $ident
-     */
-    private $ident;
+    private ?string $ident = null;
 
-    /**
-     * @var string $description
-     */
-    private $description;
+    private ?string $description = null;
 
-    /**
-     * @var array $arguments
-     */
-    private $arguments;
+    private ?array $arguments = null;
 
-    /**
-     * @var CLImate $climate
-     */
-    private $climate;
+    private \League\CLImate\CLImate $climate;
 
-    /**
-     * @var ReaderInterface $cliamteReader
-     */
-    private $climateReader;
+    private ?\League\CLImate\Util\Reader\ReaderInterface $climateReader = null;
 
-    /**
-     * @var boolean $quiet
-     */
-    private $quiet = false;
+    private bool $quiet = false;
 
-    /**
-     * @var boolean $verbose
-     */
-    private $verbose = false;
+    private bool $verbose = false;
 
-    /**
-     * @var boolean $interactive
-     */
-    private $interactive = false;
+    private bool $interactive = false;
 
-    /**
-     * @var boolean $dryRun
-     */
-    private $dryRun = false;
+    private bool $dryRun = false;
 
     /**
      * Return a new CLI script.
@@ -231,7 +204,7 @@ abstract class AbstractScript extends AbstractEntity implements
      */
     public function setQuiet($quiet)
     {
-        $this->quiet = !!$quiet;
+        $this->quiet = (bool)$quiet;
         return $this;
     }
 
@@ -249,7 +222,7 @@ abstract class AbstractScript extends AbstractEntity implements
      */
     public function setVerbose($verbose)
     {
-        $this->verbose = !!$verbose;
+        $this->verbose = (bool)$verbose;
         return $this;
     }
 
@@ -267,7 +240,7 @@ abstract class AbstractScript extends AbstractEntity implements
      */
     public function setInteractive($interactive)
     {
-        $this->interactive = !!$interactive;
+        $this->interactive = (bool)$interactive;
         return $this;
     }
 
@@ -285,7 +258,7 @@ abstract class AbstractScript extends AbstractEntity implements
      */
     public function setDryRun($simulate)
     {
-        $this->dryRun = !!$simulate;
+        $this->dryRun = (bool)$simulate;
         return $this;
     }
 
@@ -434,7 +407,7 @@ abstract class AbstractScript extends AbstractEntity implements
      * @throws RuntimeException If a radio or checkbox prompt has no options.
      * @return mixed Returns the prompt value.
      */
-    protected function input($name)
+    protected function input(string $name)
     {
         $cli = $this->climate();
         $arg = $this->argument($name);
@@ -468,19 +441,15 @@ abstract class AbstractScript extends AbstractEntity implements
             $accept = false;
         }
 
-        if (!in_array($type, [ 'confirm', 'checkboxes', 'radio' ])) {
-            if (isset($arg['defaultValue'])) {
-                $default = $arg['defaultValue'];
-
-                if (is_bool($default) || is_null($default)) {
-                    $default = var_export($default, true);
-                }
-
-                if ($default && is_string($default) || is_numeric($default)) {
-                    $pattern = '/[\(\[\<]' . preg_quote($default, '/') . '[\)\]\>]/';
-                    if (!preg_match($pattern, $prompt)) {
-                        $prompt .= ' (' . $default . ')';
-                    }
+        if (!in_array($type, [ 'confirm', 'checkboxes', 'radio' ]) && isset($arg['defaultValue'])) {
+            $default = $arg['defaultValue'];
+            if (is_bool($default) || is_null($default)) {
+                $default = var_export($default, true);
+            }
+            if ($default && is_string($default) || is_numeric($default)) {
+                $pattern = '/[\(\[\<]' . preg_quote($default, '/') . '[\)\]\>]/';
+                if (!preg_match($pattern, (string)$prompt)) {
+                    $prompt .= ' (' . $default . ')';
                 }
             }
         }
@@ -523,12 +492,8 @@ abstract class AbstractScript extends AbstractEntity implements
                 break;
         }
 
-        if ($accept) {
-            if (isset($arg['acceptValue'])) {
-                if (is_array($arg['acceptValue']) || is_callable($arg['acceptValue'])) {
-                    $input->accept($arg['acceptValue']);
-                }
-            }
+        if ($accept && isset($arg['acceptValue']) && (is_array($arg['acceptValue']) || is_callable($arg['acceptValue']))) {
+            $input->accept($arg['acceptValue']);
         }
 
         if (isset($arg['defaultValue'])) {
@@ -540,18 +505,16 @@ abstract class AbstractScript extends AbstractEntity implements
 
     /**
      * @param CLImate $climate A climate instance.
-     * @return void
      */
-    private function setClimate(CLImate $climate)
+    private function setClimate(CLImate $climate): void
     {
         $this->climate = $climate;
     }
 
     /**
      * @param ReaderInterface $climateReader A climate reader.
-     * @return void
      */
-    private function setClimateReader(ReaderInterface $climateReader)
+    private function setClimateReader(ReaderInterface $climateReader): void
     {
         $this->climateReader = $climateReader;
     }

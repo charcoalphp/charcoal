@@ -23,9 +23,6 @@ class MetatagTraitTest extends AbstractTestCase
      */
     public $obj;
 
-    /**
-     * @return void
-     */
     protected function setUp(): void
     {
         $container = $this->getContainer();
@@ -42,19 +39,14 @@ class MetatagTraitTest extends AbstractTestCase
 
     /**
      * Asserts that the object implements MetatagInterface.
-     *
-     * @coversNothing
-     * @return void
      */
-    public function testMetatagInterface()
+    #[\PHPUnit\Framework\Attributes\CoversNothing]
+    public function testMetatagInterface(): void
     {
         $this->assertInstanceOf(MetatagInterface::class, $this->obj);
     }
 
-    /**
-     * @return void
-     */
-    public function testSaveGeneratesMetaTags()
+    public function testSaveGeneratesMetaTags(): void
     {
         $this->assertEquals('', (string)$this->obj->metaTitle());
         $this->assertEquals('', (string)$this->obj->metaDescription());
@@ -72,10 +64,7 @@ class MetatagTraitTest extends AbstractTestCase
         $this->assertEquals('x.jpg', (string)$this->obj->metaImage());
     }
 
-    /**
-     * @return void
-     */
-    public function testUpdateGeneratesMetaTags()
+    public function testUpdateGeneratesMetaTags(): void
     {
         $this->assertEquals('', (string)$this->obj->metaTitle());
         $this->assertEquals('', (string)$this->obj->metaDescription());

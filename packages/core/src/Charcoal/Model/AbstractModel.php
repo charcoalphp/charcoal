@@ -65,7 +65,7 @@ abstract class AbstractModel extends AbstractEntity implements
     /**
      * @param array $data Dependencies.
      */
-    public function __construct(array $data = null)
+    public function __construct(?array $data = null)
     {
         // LoggerAwareInterface dependencies
         $this->setLogger($data['logger']);
@@ -107,7 +107,8 @@ abstract class AbstractModel extends AbstractEntity implements
      *     for retrieving a subset of data.
      * @return array
      */
-    public function data(array $properties = null)
+    #[\Override]
+    public function data(?array $properties = null)
     {
         $data = [];
         $properties = $this->properties($properties);
@@ -128,6 +129,7 @@ abstract class AbstractModel extends AbstractEntity implements
      * @return self
      * @see AbstractEntity::setData()
      */
+    #[\Override]
     public function setData(array $data)
     {
         $data = $this->setIdFromData($data);
@@ -183,11 +185,7 @@ abstract class AbstractModel extends AbstractEntity implements
             $property = $this->p($propIdent);
             if ($property['l10n'] && is_array($val)) {
                 $currentValue = json_decode(json_encode($this[$propIdent]), true);
-                if (is_array($currentValue)) {
-                    $this[$propIdent] = array_merge($currentValue, $val);
-                } else {
-                    $this[$propIdent] = $val;
-                }
+                $this[$propIdent] = is_array($currentValue) ? array_merge($currentValue, $val) : $val;
             } else {
                 $this[$propIdent] = $val;
             }
@@ -238,20 +236,18 @@ abstract class AbstractModel extends AbstractEntity implements
     public function setPropertyDataFromFlatData(array $flatData)
     {
         $flatData = $this->setIdFromData($flatData);
-
-        $propData   = [];
         $properties = $this->properties();
         foreach ($properties as $propertyIdent => $property) {
             $fieldValues = [];
             $fieldNames  = $property->fieldNames();
             foreach ($fieldNames as $fieldName) {
-                if (array_key_exists($fieldName, $flatData)) {
+                if (array_key_exists((string)$fieldName, $flatData)) {
                     $fieldValues[$fieldName] = $flatData[$fieldName];
                     unset($flatData[$fieldName]);
                 }
             }
 
-            if ($fieldValues) {
+            if ($fieldValues !== []) {
                 $this[$propertyIdent] = $property->parseFromFlatData($fieldValues);
             }
         }
@@ -268,7 +264,7 @@ abstract class AbstractModel extends AbstractEntity implements
      *     for retrieving a subset of data.
      * @return array
      */
-    public function flatData(array $properties = null)
+    public function flatData(?array $properties = null)
     {
         $flatData   = [];
         $properties = $this->properties($properties);
@@ -299,7 +295,7 @@ abstract class AbstractModel extends AbstractEntity implements
      * @param array $properties Optional array of properties to save. If null, use all object's properties.
      * @return boolean
      */
-    public function saveProperties(array $properties = null)
+    public function saveProperties(?array $properties = null)
     {
         if ($properties === null) {
             $properties = array_keys($this->metadata()->properties());
@@ -335,7 +331,7 @@ abstract class AbstractModel extends AbstractEntity implements
      * @throws PDOException If the PDO query fails.
      * @return string The matching language.
      */
-    public function loadFromL10n($key, $value, array $langs)
+    public function loadFromL10n(string $key, $value, array $langs)
     {
         $binds = [
             'ident' => $value,
@@ -366,9 +362,9 @@ abstract class AbstractModel extends AbstractEntity implements
         if ($sth === false) {
             throw new PDOException(sprintf(
                 'Could not load model [%s] for localized column "%s" [%s]',
-                get_class($this),
+                static::class,
                 $fieldName,
-                (is_object($value) ? get_class($value) : (is_string($value) ? $value : gettype($value)))
+                (is_object($value) ? $value::class : (is_string($value) ? $value : gettype($value)))
             ));
         }
 
@@ -376,9 +372,9 @@ abstract class AbstractModel extends AbstractEntity implements
         if (!$data || !isset($data['_lang'])) {
             throw new PDOException(sprintf(
                 'Unable to retrieve model [%s] data for localized column "%s" [%s]',
-                get_class($this),
+                static::class,
                 $fieldName,
-                (is_object($value) ? get_class($value) : (is_string($value) ? $value : gettype($value)))
+                (is_object($value) ? $value::class : (is_string($value) ? $value : gettype($value)))
             ));
         }
 
@@ -446,7 +442,7 @@ abstract class AbstractModel extends AbstractEntity implements
      * @see StorableTrait::preUpdate()
      * @return boolean
      */
-    protected function preUpdate(array $properties = null)
+    protected function preUpdate(?array $properties = null)
     {
         return $this->saveProperties($properties);
     }
@@ -488,11 +484,11 @@ abstract class AbstractModel extends AbstractEntity implements
         if (!$sourceConfig) {
             throw new UnexpectedValueException(sprintf(
                 'Can not create source for model [%s]: Invalid metadata (can not load source\'s configuration)',
-                get_class($this)
+                static::class
             ));
         }
 
-        $type   = isset($sourceConfig['type']) ? $sourceConfig['type'] : self::DEFAULT_SOURCE_TYPE;
+        $type   = ($sourceConfig['type'] ?? self::DEFAULT_SOURCE_TYPE);
         $source = $this->sourceFactory()->create($type);
         $source->setModel($this);
 
@@ -508,8 +504,7 @@ abstract class AbstractModel extends AbstractEntity implements
      */
     protected function createValidator()
     {
-        $validator = new ModelValidator($this);
-        return $validator;
+        return new ModelValidator($this);
     }
 
     /**
@@ -533,9 +528,8 @@ abstract class AbstractModel extends AbstractEntity implements
      */
     public static function objType()
     {
-        $class = get_called_class();
+        $class = static::class;
         $ident = preg_replace('/([a-z])([A-Z])/', '$1-$2', $class);
-        $ident = strtolower(str_replace('\\', '/', $ident));
-        return $ident;
+        return strtolower(str_replace('\\', '/', $ident));
     }
 }

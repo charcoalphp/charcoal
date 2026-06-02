@@ -29,17 +29,13 @@ abstract class AbstractUser extends Content implements
      * The email address should be unique and mandatory.
      *
      * It is also used as the login name.
-     *
-     * @var string
      */
-    private $email;
+    private ?string $email = null;
 
     /**
      * The password is stored encrypted in the (database) storage.
-     *
-     * @var string|null
      */
-    private $password;
+    private ?string $password = null;
 
     /**
      * The display name serves as a human-readable identifier for the user.
@@ -53,42 +49,32 @@ abstract class AbstractUser extends Content implements
      *
      * @var string[]
      */
-    private $roles = [];
+    private array $roles = [];
 
     /**
      * The timestamp of the latest (successful) login.
-     *
-     * @var DateTimeInterface|null
      */
-    private $lastLoginDate;
+    private ?\DateTimeInterface $lastLoginDate = null;
 
     /**
      * The IP address during the latest (successful) login.
-     *
-     * @var string|null
      */
-    private $lastLoginIp;
+    private ?string $lastLoginIp = null;
 
     /**
      * The timestamp of the latest password change.
-     *
-     * @var DateTimeInterface|null
      */
-    private $lastPasswordDate;
+    private ?\DateTimeInterface $lastPasswordDate = null;
 
     /**
      * The IP address during the latest password change.
-     *
-     * @var string|null
      */
-    private $lastPasswordIp;
+    private ?string $lastPasswordIp = null;
 
     /**
      * The token value for the "remember me" session.
-     *
-     * @var string|null
      */
-    private $loginToken;
+    private ?string $loginToken = null;
 
     /**
      * The user preferences.
@@ -192,7 +178,7 @@ abstract class AbstractUser extends Content implements
             );
         }
 
-        $this->roles = array_filter(array_map('trim', $roles), 'strlen');
+        $this->roles = array_filter(array_map(trim(...), $roles), strlen(...));
 
         return $this;
     }
@@ -468,7 +454,8 @@ abstract class AbstractUser extends Content implements
      * @param  ValidatorInterface $v Optional. A custom validator object to use for validation. If null, use object's.
      * @return boolean
      */
-    public function validate(ValidatorInterface &$v = null)
+    #[\Override]
+    public function validate(?ValidatorInterface &$v = null)
     {
         $result = parent::validate($v);
 
@@ -501,7 +488,7 @@ abstract class AbstractUser extends Content implements
             return false;
         }
 
-        if (strpos($userKey, 'email') !== false && !filter_var($userLogin, FILTER_VALIDATE_EMAIL)) {
+        if (str_contains($userKey, 'email') && !filter_var($userLogin, FILTER_VALIDATE_EMAIL)) {
             $this->validator()->error(
                 'User Credentials: Email format is incorrect.',
                 $userKey
@@ -527,7 +514,7 @@ abstract class AbstractUser extends Content implements
 
         $originalUser = $factory->create($objType)->load($this->getAuthId());
 
-        if (mb_strtolower($originalUser->getAuthIdentifier()) !== mb_strtolower($userLogin)) {
+        if (mb_strtolower((string)$originalUser->getAuthIdentifier()) !== mb_strtolower((string)$userLogin)) {
             $existingUser = $factory->create($objType)->loadFrom($userKey, $userLogin);
             /** Check for existing user with given email. */
             if (!empty($existingUser->getAuthId())) {

@@ -156,8 +156,6 @@ interface EmailInterface
 
     /**
      * Get the email's HTML message body.
-     *
-     * @return string
      */
     public function msgHtml(): string;
 
@@ -171,8 +169,6 @@ interface EmailInterface
 
     /**
      * Get the email's plain-text message body.
-     *
-     * @return string
      */
     public function msgTxt(): string;
 
@@ -209,8 +205,6 @@ interface EmailInterface
 
     /**
      * Determine if logging is enabled for this particular email.
-     *
-     * @return boolean
      */
     public function logEnabled(): bool;
 
@@ -224,8 +218,6 @@ interface EmailInterface
 
     /**
      * Determine if tracking is enabled for this particular email.
-     *
-     * @return boolean
      */
     public function trackLinksEnabled(): bool;
 
@@ -239,8 +231,6 @@ interface EmailInterface
 
     /**
      * Determine if tracking is enabled for this particular email.
-     *
-     * @return boolean
      */
     public function trackOpenEnabled(): bool;
 

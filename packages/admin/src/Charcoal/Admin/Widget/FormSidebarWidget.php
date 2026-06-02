@@ -39,10 +39,8 @@ class FormSidebarWidget extends AdminWidget implements
 
     /**
      * Store a reference to the parent form widget.
-     *
-     * @var FormInterface
      */
-    private $form;
+    private ?\Charcoal\Ui\Form\FormInterface $form = null;
 
     /**
      * Store the sidebar actions.
@@ -74,17 +72,13 @@ class FormSidebarWidget extends AdminWidget implements
 
     /**
      * Customize the shown properties.
-     *
-     * @var array
      */
-    private $propertiesOptions = [];
+    private array $propertiesOptions = [];
 
     /**
      * The title is displayed by default.
-     *
-     * @var boolean
      */
-    private $showTitle = true;
+    private bool $showTitle = true;
 
     /**
      * The sidebar's title.
@@ -95,10 +89,8 @@ class FormSidebarWidget extends AdminWidget implements
 
     /**
      * The subtitle is displayed by default.
-     *
-     * @var boolean
      */
-    private $showSubtitle = true;
+    private bool $showSubtitle = true;
 
     /**
      * The sidebar's subtitle.
@@ -151,23 +143,22 @@ class FormSidebarWidget extends AdminWidget implements
 
     /**
      * Whether the object is revisionable.
-     *
-     * @var boolean
      */
-    private $isObjRevisionable;
+    private ?bool $isObjRevisionable = null;
 
     /**
      * The required Acl permissions for the whole sidebar.
      *
      * @var string[]
      */
-    private $requiredGlobalAclPermissions = [];
+    private array $requiredGlobalAclPermissions = [];
 
     /**
      * @param array|ArrayInterface $data Class data.
      * @return FormSidebarWidget Chainable
      */
-    public function setData(array $data)
+    #[\Override]
+    public function setData(array $data): static
     {
         parent::setData($data);
 
@@ -199,7 +190,7 @@ class FormSidebarWidget extends AdminWidget implements
      * @param FormInterface $form The related form widget.
      * @return FormSidebarWidget Chainable
      */
-    public function setForm(FormInterface $form)
+    public function setForm(FormInterface $form): static
     {
         $this->form = $form;
 
@@ -211,7 +202,7 @@ class FormSidebarWidget extends AdminWidget implements
      *
      * @return FormInterface
      */
-    public function form()
+    public function form(): ?\Charcoal\Ui\Form\FormInterface
     {
         return $this->form;
     }
@@ -222,7 +213,7 @@ class FormSidebarWidget extends AdminWidget implements
      * @param  array $properties The form's object properties.
      * @return FormSidebarWidget Chainable
      */
-    public function setSidebarProperties(array $properties)
+    public function setSidebarProperties(array $properties): static
     {
         $this->sidebarProperties = $properties;
 
@@ -241,20 +232,16 @@ class FormSidebarWidget extends AdminWidget implements
 
     /**
      * Determine if the sidebar has any object properties.
-     *
-     * @return boolean
      */
-    public function hasSidebarProperties()
+    public function hasSidebarProperties(): bool
     {
         return ($this->numSidebarProperties() > 0);
     }
 
     /**
      * Count the number of object properties in the sidebar.
-     *
-     * @return integer
      */
-    public function numSidebarProperties()
+    public function numSidebarProperties(): int
     {
         return count($this->sidebarProperties());
     }
@@ -265,7 +252,7 @@ class FormSidebarWidget extends AdminWidget implements
      * @param  array $properties The options to customize the group properties.
      * @return FormSidebarWidget Chainable
      */
-    public function setPropertiesOptions(array $properties)
+    public function setPropertiesOptions(array $properties): static
     {
         $this->propertiesOptions = $properties;
 
@@ -274,10 +261,8 @@ class FormSidebarWidget extends AdminWidget implements
 
     /**
      * Retrieve the map of object property customizations.
-     *
-     * @return array
      */
-    public function propertiesOptions()
+    public function propertiesOptions(): array
     {
         return $this->propertiesOptions;
     }
@@ -292,7 +277,7 @@ class FormSidebarWidget extends AdminWidget implements
         $form = $this->form();
         $obj  = $form->obj();
 
-        $availableProperties = $obj->properties();
+        $obj->properties();
         $sidebarProperties   = $this->sidebarProperties();
         $propertiesOptions   = $this->propertiesOptions();
 
@@ -345,9 +330,7 @@ class FormSidebarWidget extends AdminWidget implements
                 return false;
             }
 
-            $actions = array_filter($actions, function ($action) {
-                return $action['active'] === true;
-            });
+            $actions = array_filter($actions, fn(array $action): bool => $action['active'] === true);
 
             $this->showSidebarActions = (count($actions) > 0);
         }
@@ -380,7 +363,7 @@ class FormSidebarWidget extends AdminWidget implements
      * @param  array $actions One or more actions.
      * @return FormSidebarWidget Chainable.
      */
-    protected function setSidebarActions(array $actions)
+    protected function setSidebarActions(array $actions): static
     {
         $this->parsedSidebarActions = false;
 
@@ -399,22 +382,19 @@ class FormSidebarWidget extends AdminWidget implements
      * @param  array $actions Actions to resolve.
      * @return array Sidebar actions.
      */
-    protected function createSidebarActions(array $actions)
+    protected function createSidebarActions(array $actions): array
     {
         $this->actionsPriority = $this->defaultActionPriority();
 
-        $sidebarActions = $this->parseAsSidebarActions($actions);
-
-        return $sidebarActions;
+        return $this->parseAsSidebarActions($actions);
     }
 
     /**
      * Parse the given actions as object actions.
      *
      * @param  array $actions Actions to resolve.
-     * @return array
      */
-    protected function parseAsSidebarActions(array $actions)
+    protected function parseAsSidebarActions(array $actions): array
     {
         $sidebarActions = [];
         foreach ($actions as $ident => $action) {
@@ -441,9 +421,7 @@ class FormSidebarWidget extends AdminWidget implements
 
             if ($action['actions']) {
                 $action['actions']    = $this->parseAsSidebarActions($action['actions']);
-                $action['hasActions'] = !!array_filter($action['actions'], function ($action) {
-                    return $action['active'];
-                });
+                $action['hasActions'] = (bool)array_filter($action['actions'], fn(array $action): mixed => $action['active']);
             }
 
             if (isset($sidebarActions[$ident])) {
@@ -458,7 +436,7 @@ class FormSidebarWidget extends AdminWidget implements
             }
         }
 
-        usort($sidebarActions, [ 'Charcoal\Admin\Support\Sorter', 'sortByPriority' ]);
+        usort($sidebarActions, \Charcoal\Admin\Support\Sorter::sortByPriority(...));
 
         while (($first = reset($sidebarActions)) && $first['isSeparator']) {
             array_shift($sidebarActions);
@@ -481,7 +459,7 @@ class FormSidebarWidget extends AdminWidget implements
         if ($this->defaultSidebarActions === null) {
             $this->defaultSidebarActions = [];
 
-            if ($this->form()) {
+            if ($this->form() instanceof \Charcoal\Ui\Form\FormInterface) {
                 $save = [
                     'label'      => $this->form()->submitLabel(),
                     'ident'      => 'save',
@@ -495,10 +473,7 @@ class FormSidebarWidget extends AdminWidget implements
         return $this->defaultSidebarActions;
     }
 
-    /**
-     * @return string
-     */
-    public function jsActionPrefix()
+    public function jsActionPrefix(): string
     {
         return 'js-sidebar';
     }
@@ -519,7 +494,7 @@ class FormSidebarWidget extends AdminWidget implements
                 $this->isObjDeletable = false;
             } else {
                 $obj = $this->form()->obj();
-                $this->isObjDeletable = !!$obj->id();
+                $this->isObjDeletable = (bool)$obj->id();
 
                 $method = [ $obj, 'isDeletable' ];
                 if (is_callable($method)) {
@@ -539,7 +514,7 @@ class FormSidebarWidget extends AdminWidget implements
      *
      * @return boolean
      */
-    public function isObjRevisionable()
+    public function isObjRevisionable(): ?bool
     {
         if ($this->isObjRevisionable === null) {
             // Overridden by permissions
@@ -553,7 +528,7 @@ class FormSidebarWidget extends AdminWidget implements
                 }
 
                 if ($obj instanceof RevisionableInterface && $obj['revisionEnabled']) {
-                    $this->isObjRevisionable = !!count($obj->allRevisions());
+                    $this->isObjRevisionable = (bool)count($obj->allRevisions());
                 }
             }
         }
@@ -634,7 +609,7 @@ class FormSidebarWidget extends AdminWidget implements
                 $this->isObjViewable = false;
             } else {
                 $obj = $this->form()->obj();
-                $this->isObjViewable = !!$obj->id();
+                $this->isObjViewable = (bool)$obj->id();
 
                 $method = [ $obj, 'isViewable' ];
                 if (is_callable($method)) {
@@ -652,9 +627,9 @@ class FormSidebarWidget extends AdminWidget implements
      * @param boolean $show Show (TRUE) or hide (FALSE) the title.
      * @return UiItemInterface Chainable
      */
-    public function setShowTitle($show)
+    public function setShowTitle($show): static
     {
-        $this->showTitle = !!$show;
+        $this->showTitle = (bool)$show;
 
         return $this;
     }
@@ -669,7 +644,7 @@ class FormSidebarWidget extends AdminWidget implements
         if ($this->showTitle === false) {
             return false;
         } else {
-            return !!$this->title();
+            return (bool)$this->title();
         }
     }
 
@@ -677,7 +652,7 @@ class FormSidebarWidget extends AdminWidget implements
      * @param mixed $title The sidebar title.
      * @return FormSidebarWidget Chainable
      */
-    public function setTitle($title)
+    public function setTitle($title): static
     {
         $this->title = $this->translator()->translation($title);
 
@@ -700,9 +675,9 @@ class FormSidebarWidget extends AdminWidget implements
      * @param boolean $show The show subtitle flag.
      * @return FormSidebarWidget Chainable
      */
-    public function setShowSubtitle($show)
+    public function setShowSubtitle($show): static
     {
-        $this->showSubtitle = !!$show;
+        $this->showSubtitle = (bool)$show;
         return $this;
     }
 
@@ -714,7 +689,7 @@ class FormSidebarWidget extends AdminWidget implements
         if ($this->showSubtitle === false) {
             return false;
         } else {
-            return !!$this->subtitle();
+            return (bool)$this->subtitle();
         }
     }
 
@@ -722,7 +697,7 @@ class FormSidebarWidget extends AdminWidget implements
      * @param mixed $subtitle The sidebar widget subtitle.
      * @return FormSidebarWidget Chainable
      */
-    public function setSubtitle($subtitle)
+    public function setSubtitle($subtitle): static
     {
         $this->subtitle = $this->translator()->translation($subtitle);
 
@@ -761,31 +736,26 @@ class FormSidebarWidget extends AdminWidget implements
      * Enable / Disable the sidebar's footer.
      *
      * @param  mixed $show The show footer flag.
-     * @return FormSidebarWidget
      */
-    public function setShowFooter($show)
+    public function setShowFooter($show): static
     {
-        $this->showFooter = !!$show;
+        $this->showFooter = (bool)$show;
 
         return $this;
     }
 
     /**
      * Determine if wrapper containing the subtitle and properties should be displayed.
-     *
-     * @return boolean
      */
-    public function showPropertiesWrapper()
+    public function showPropertiesWrapper(): bool
     {
         return $this->showSubtitle() || $this->hasSidebarProperties();
     }
 
     /**
      * Determine if wrapper containing the language switcher and actions should be displayed.
-     *
-     * @return boolean
      */
-    public function showActionsWrapper()
+    public function showActionsWrapper(): bool
     {
         return $this->showLanguageSwitch() || $this->showSidebarActions();
     }
@@ -797,10 +767,8 @@ class FormSidebarWidget extends AdminWidget implements
     protected function resolveShowLanguageSwitch()
     {
         $form = $this->form();
-        if ($form) {
-            if ($form instanceof LanguageSwitcherAwareInterface) {
-                return $form->supportsLanguageSwitch();
-            }
+        if ($form && $form instanceof LanguageSwitcherAwareInterface) {
+            return $form->supportsLanguageSwitch();
         }
 
         return false;
@@ -811,24 +779,24 @@ class FormSidebarWidget extends AdminWidget implements
      *
      * @see    AdminWidget::resolveConditionalLogic()
      * @param  callable|string $condition The callable or renderable condition.
-     * @return boolean
      */
-    protected function resolveConditionalLogic($condition)
+    #[\Override]
+    protected function resolveConditionalLogic($condition): bool
     {
         $renderer = $this->getActionRenderer();
         if ($renderer && is_callable([ $renderer, $condition ])) {
-            return !!$renderer->{$condition}();
+            return (bool)$renderer->{$condition}();
         } elseif (is_callable([ $this, $condition ])) {
-            return !!$this->{$condition}();
+            return (bool)$this->{$condition}();
         } elseif (is_callable($condition)) {
-            return !!$condition();
-        } elseif ($renderer) {
-            return !!$renderer->renderTemplate($condition);
-        } elseif ($this->view()) {
-            return !!$this->renderTemplate($condition);
+            return (bool)$condition();
+        } elseif ($renderer instanceof \Charcoal\View\ViewableInterface) {
+            return (bool)$renderer->renderTemplate($condition);
+        } elseif ($this->view() instanceof \Charcoal\View\ViewInterface) {
+            return (bool)$this->renderTemplate($condition);
         }
 
-        return !!$condition;
+        return (bool)$condition;
     }
 
     // ACL Permissions
@@ -851,26 +819,21 @@ class FormSidebarWidget extends AdminWidget implements
         }
 
         $authUser = $this->authenticator()->user();
-        if (!$authUser || !$this->authorizer()->userAllowed($authUser, $permissions)) {
-            return false;
-        }
-
-        return true;
+        return $authUser && $this->authorizer()->userAllowed($authUser, $permissions);
     }
 
     /**
      * @return string[]
      */
-    public function requiredGlobalAclPermissions()
+    public function requiredGlobalAclPermissions(): array
     {
         return $this->requiredGlobalAclPermissions;
     }
 
     /**
      * @param array $permissions The GlobalAcl permissions required pby the form group.
-     * @return self
      */
-    public function setRequiredGlobalAclPermissions(array $permissions)
+    public function setRequiredGlobalAclPermissions(array $permissions): static
     {
         $this->requiredGlobalAclPermissions = $permissions;
 
@@ -892,6 +855,6 @@ class FormSidebarWidget extends AdminWidget implements
             return false;
         }
 
-        return !!array_filter($array, 'is_string', ARRAY_FILTER_USE_KEY);
+        return (bool)array_filter($array, is_string(...), ARRAY_FILTER_USE_KEY);
     }
 }

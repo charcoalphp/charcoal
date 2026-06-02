@@ -17,10 +17,7 @@ use Charcoal\View\ViewInterface;
  */
 abstract class AbstractView implements ViewInterface
 {
-    /**
-     * @var EngineInterface $engine
-     */
-    private $engine;
+    private \Charcoal\View\EngineInterface $engine;
 
     /**
      * Build the object with an array of dependencies.
@@ -37,11 +34,10 @@ abstract class AbstractView implements ViewInterface
      * Load a template (from identifier).
      *
      * @param string $templateIdent The template identifier to load..
-     * @return string
      */
     public function loadTemplate(string $templateIdent): string
     {
-        if (!$templateIdent) {
+        if ($templateIdent === '' || $templateIdent === '0') {
             return '';
         }
         return $this->engine()->loadTemplate($templateIdent);
@@ -52,7 +48,6 @@ abstract class AbstractView implements ViewInterface
      *
      * @param string $templateIdent The template identifier, to load and render.
      * @param mixed  $context       The view controller (rendering context).
-     * @return string
      */
     public function render(string $templateIdent, $context = null): string
     {
@@ -64,7 +59,6 @@ abstract class AbstractView implements ViewInterface
      *
      * @param string $templateString The full template string to render.
      * @param mixed  $context        The view controller (rendering context).
-     * @return string
      */
     public function renderTemplate(string $templateString, $context = null): string
     {
@@ -74,7 +68,6 @@ abstract class AbstractView implements ViewInterface
     /**
      * @param string      $varName       The name of the variable to set this template unto.
      * @param string|null $templateIdent The "dynamic template" to set. null to clear.
-     * @return void
      */
     public function setDynamicTemplate(string $varName, ?string $templateIdent): void
     {
@@ -83,8 +76,6 @@ abstract class AbstractView implements ViewInterface
 
     /**
      * Get the view's rendering engine instance.
-     *
-     * @return EngineInterface
      */
     protected function engine(): EngineInterface
     {
@@ -95,7 +86,6 @@ abstract class AbstractView implements ViewInterface
      * Set the engine (`EngineInterface`) dependency.
      *
      * @param EngineInterface $engine The rendering engine.
-     * @return void
      */
     private function setEngine(EngineInterface $engine): void
     {

@@ -18,7 +18,7 @@ abstract class AbstractEntityTestCase extends AbstractTestCase
      * @param  array $data Data to assign to the object.
      * @return MacroEntity
      */
-    public function createEntity(array $data = null)
+    public function createEntity(?array $data = null)
     {
         return new MacroEntity($data);
     }
@@ -29,7 +29,7 @@ abstract class AbstractEntityTestCase extends AbstractTestCase
      * @param  array $data Data to assign to the object.
      * @return AbstractEntity
      */
-    public function mockEntity(array $data = null)
+    public function mockEntity(?array $data = null)
     {
         $obj = $this->getMockForAbstractClass(AbstractEntity::class);
 

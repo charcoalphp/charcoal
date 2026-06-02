@@ -65,7 +65,7 @@ trait AuthTemplateTrait
      *     TRUE to use the default label,
      *     or FALSE to disable the link.
      */
-    public function returnToSiteLabel()
+    public function returnToSiteLabel(): false|string
     {
         $label = $this->adminConfig('login.visit_site');
         if ($label === false) {

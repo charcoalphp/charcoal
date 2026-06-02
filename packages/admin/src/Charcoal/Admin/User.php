@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Charcoal\Admin;
 
 // From 'charcoal-user'
@@ -10,10 +12,7 @@ use Charcoal\User\AbstractUser;
  */
 class User extends AbstractUser
 {
-    /**
-     * @return string
-     */
-    public static function sessionKey()
+    public static function sessionKey(): string
     {
         return 'admin.user';
     }

@@ -3,6 +3,7 @@
 namespace Charcoal\Tests\Cms\Route;
 
 // From PSR-7
+use Charcoal\App\Route\RouteInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
@@ -26,8 +27,6 @@ abstract class AbstractRouteTestCase extends AbstractTestCase
 
     /**
      * Set up the test.
-     *
-     * @return void
      */
     protected function setUp(): void
     {
@@ -86,10 +85,8 @@ abstract class AbstractRouteTestCase extends AbstractTestCase
 
     /**
      * Assertion when given an empty path.
-     *
-     * @return void
      */
-    public function testPathResolvableOnEmptyPath()
+    public function testPathResolvableOnEmptyPath(): void
     {
         $container = $this->getContainer();
         $router    = $this->createRouter([
@@ -149,9 +146,8 @@ abstract class AbstractRouteTestCase extends AbstractTestCase
      * Create the dynamic route to test.
      *
      * @param  array $data The dynamic route dependencies.
-     * @return \Charcoal\App\Route\RouteInterface
      */
-    abstract protected function createRouter(array $data = []);
+    abstract protected function createRouter(array $data = []): RouteInterface;
 
     /**
      * Create the model's database table to test lookup.

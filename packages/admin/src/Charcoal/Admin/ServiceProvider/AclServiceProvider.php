@@ -31,9 +31,8 @@ class AclServiceProvider implements ServiceProviderInterface
 {
     /**
      * @param Container $container Pimple DI Container.
-     * @return void
      */
-    public function register(Container $container)
+    public function register(Container $container): void
     {
         /**
          * Use an AclManager to load default permissions from config and database.
@@ -41,7 +40,7 @@ class AclServiceProvider implements ServiceProviderInterface
          * @param Container $container Pimple DI container
          * @return Acl
          */
-        $container['admin/acl'] = function (Container $container) {
+        $container['admin/acl'] = function (Container $container): \Laminas\Permissions\Acl\Acl {
 
             $adminConfig = $container['admin/config'];
 
@@ -75,8 +74,6 @@ class AclServiceProvider implements ServiceProviderInterface
          * @todo   Do this right!
          * @return Acl
          */
-        $container['authorizer/acl'] = function () {
-            return $container['admin/acl'];
-        };
+        $container['authorizer/acl'] = (fn(): \Closure => $container['admin/acl']);
     }
 }

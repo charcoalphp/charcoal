@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Charcoal\Loader;
 
 // From 'charcoal-core'
@@ -18,7 +20,8 @@ class LazyCollectionLoader extends CollectionLoader
      * @param  callable|null       $after   Process each entity after applying raw data.
      * @return ModelInterface[]|\Generator
      */
-    protected function processCollection($results, callable $before = null, callable $after = null)
+    #[\Override]
+    protected function processCollection($results, ?callable $before = null, ?callable $after = null): \ArrayAccess|array
     {
         foreach ($results as $objData) {
             $obj = $this->processModel($objData, $before, $after);

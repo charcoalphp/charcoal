@@ -27,10 +27,8 @@ class Authorizer extends AbstractAuthorizer
 
     /**
      * The default ACL resource identifier.
-     *
-     * @var string|null
      */
-    private $defaultResource;
+    private ?string $defaultResource = null;
 
     /**
      * @param array $data Class dependencies.
@@ -47,7 +45,6 @@ class Authorizer extends AbstractAuthorizer
     /**
      * Determine if access is granted by checking the role(s) for permission(s).
      *
-     * @deprecated In favour of AbstractAuthorizer::anyRolesGrantedAll()
      *
      * @param  string[] $aclRoles       The ACL role(s) to check.
      * @param  string[] $aclPermissions The ACL privilege(s) to check.
@@ -55,9 +52,10 @@ class Authorizer extends AbstractAuthorizer
      *     Returns TRUE if an empty array of permissions is given.
      *     Returns NULL if no applicable roles or permissions could be checked.
      */
+    #[\Deprecated(message: 'In favour of AbstractAuthorizer::anyRolesGrantedAll()')]
     public function rolesAllowed(array $aclRoles, array $aclPermissions)
     {
-        if (empty($aclPermissions)) {
+        if ($aclPermissions === []) {
             return true;
         }
 
@@ -67,7 +65,7 @@ class Authorizer extends AbstractAuthorizer
     /**
      * Determine if access is granted by checking the user's role(s) for permission(s).
      *
-     * @deprecated In favour of AbstractAuthorizer::isUserGranted()
+     * @deprecated Use {@see AbstractAuthorizer::isUserGranted()} instead.
      *
      * @param  UserInterface $user           The user to check.
      * @param  string[]      $aclPermissions The ACL privilege(s) to check.
@@ -76,9 +74,10 @@ class Authorizer extends AbstractAuthorizer
      *     Returns TRUE if an empty array of permissions is given.
      *     Returns NULL if no applicable roles or permissions could be checked.
      */
+    #![\Deprecated(message: 'In favour of AbstractAuthorizer::isUserGranted()')]
     public function userAllowed(UserInterface $user, array $aclPermissions)
     {
-        if (empty($aclPermissions)) {
+        if ($aclPermissions === []) {
             return true;
         }
 
@@ -97,6 +96,7 @@ class Authorizer extends AbstractAuthorizer
      * @param  string                      $privilege The ACL privilege to check.
      * @return boolean Returns TRUE if and only if the $role has access to the $resource.
      */
+    #[\Override]
     public function isAllowed($role = null, $resource = null, $privilege = null)
     {
         if ($resource === static::DEFAULT_RESOURCE) {
@@ -106,10 +106,7 @@ class Authorizer extends AbstractAuthorizer
         return parent::isAllowed($role, $resource, $privilege);
     }
 
-    /**
-     * @return string|null
-     */
-    protected function getDefaultResource()
+    protected function getDefaultResource(): ?string
     {
         return $this->defaultResource;
     }
@@ -117,9 +114,8 @@ class Authorizer extends AbstractAuthorizer
     /**
      * @param  string|null $resource The ACL resource identifier.
      * @throws InvalidArgumentException If the resource identifier is not a string.
-     * @return void
      */
-    private function setDefaultResource($resource)
+    private function setDefaultResource($resource): void
     {
         if (!is_string($resource) && $resource !== null) {
             throw new InvalidArgumentException(

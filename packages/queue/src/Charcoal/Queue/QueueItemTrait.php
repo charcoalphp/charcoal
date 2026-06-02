@@ -85,9 +85,9 @@ trait QueueItemTrait
      *     FALSE on failure or if an error occurs, NULL if this item is already processed.
      */
     abstract public function process(
-        callable $alwaysCallback = null,
-        callable $successCallback = null,
-        callable $failureCallback = null
+        ?callable $alwaysCallback = null,
+        ?callable $successCallback = null,
+        ?callable $failureCallback = null
     );
 
     /**
@@ -99,7 +99,7 @@ trait QueueItemTrait
         $this->logger->error(
             sprintf('Could not process a queue item: %s', $e->getMessage()),
             [
-                'manager' => get_called_class(),
+                'manager' => static::class,
                 'queueId' => $this->queueId(),
                 'itemId'  => $this->id(),
             ]
@@ -163,7 +163,7 @@ trait QueueItemTrait
      */
     public function setProcessed($processed)
     {
-        $this->processed = !!$processed;
+        $this->processed = (bool)$processed;
         return $this;
     }
 
@@ -195,9 +195,7 @@ trait QueueItemTrait
             try {
                 $ts = new DateTime($ts);
             } catch (Exception $e) {
-                throw new InvalidArgumentException(
-                    sprintf('Can not set queued date: %s', $e->getMessage())
-                );
+                throw new InvalidArgumentException(sprintf('Can not set queued date: %s', $e->getMessage()), $e->getCode(), $e);
             }
         }
 
@@ -240,9 +238,7 @@ trait QueueItemTrait
             try {
                 $ts = new DateTime($ts);
             } catch (Exception $e) {
-                throw new InvalidArgumentException(
-                    sprintf('%s (%s)', $e->getMessage(), $ts)
-                );
+                throw new InvalidArgumentException(sprintf('%s (%s)', $e->getMessage(), $ts), $e->getCode(), $e);
             }
         }
 
@@ -285,9 +281,7 @@ trait QueueItemTrait
             try {
                 $ts = new DateTime($ts);
             } catch (Exception $e) {
-                throw new InvalidArgumentException(
-                    sprintf('%s (%s)', $e->getMessage(), $ts)
-                );
+                throw new InvalidArgumentException(sprintf('%s (%s)', $e->getMessage(), $ts), $e->getCode(), $e);
             }
         }
 
@@ -340,9 +334,7 @@ trait QueueItemTrait
             try {
                 $ts = new DateTime($ts);
             } catch (Exception $e) {
-                throw new InvalidArgumentException(
-                    sprintf('%s (%s)', $e->getMessage(), $ts)
-                );
+                throw new InvalidArgumentException(sprintf('%s (%s)', $e->getMessage(), $ts), $e->getCode(), $e);
             }
         }
 

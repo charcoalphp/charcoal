@@ -21,22 +21,16 @@ class ManagerTest extends AbstractTestCase
 {
     /**
      * Tested Class.
-     *
-     * @var Manager
      */
-    private $obj;
+    private \Charcoal\User\Acl\Manager $obj;
 
     /**
      * Store the service container.
-     *
-     * @var Container
      */
-    private $container;
+    private ?\Pimple\Container $container = null;
 
     /**
      * Set up the test.
-     *
-     * @return void
      */
     protected function setUp(): void
     {
@@ -47,10 +41,7 @@ class ManagerTest extends AbstractTestCase
         ]);
     }
 
-    /**
-     * @return void
-     */
-    public function testLoadPermissions()
+    public function testLoadPermissions(): void
     {
         $acl = new Acl();
         $rsc = new Resource('phpunit');
@@ -83,10 +74,7 @@ class ManagerTest extends AbstractTestCase
         $this->assertFalse($acl->isAllowed('test2', 'phpunit', 'baz'));
     }
 
-    /**
-     * @return void
-     */
-    public function testLoadPermissionsWithStringPermissions()
+    public function testLoadPermissionsWithStringPermissions(): void
     {
         $acl = new Acl();
         $rsc = new Resource('phpunit');
@@ -115,12 +103,10 @@ class ManagerTest extends AbstractTestCase
 
     /**
      * Set up the service container.
-     *
-     * @return Container
      */
-    private function container()
+    private function container(): \Pimple\Container
     {
-        if ($this->container === null) {
+        if (!$this->container instanceof \Pimple\Container) {
             $container = new Container();
             $containerProvider = new ContainerProvider();
             $containerProvider->registerBaseServices($container);

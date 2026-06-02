@@ -2,6 +2,7 @@
 
 namespace Charcoal\Tests\Source;
 
+use Charcoal\Property\DateTimeProperty;
 use stdClass;
 use DateTime;
 use InvalidArgumentException;
@@ -27,7 +28,16 @@ class AbstractExpressionTest extends AbstractTestCase
      */
     final protected function createExpression()
     {
-        return $this->getMockForAbstractClass(AbstractExpression::class);
+        return new class () extends AbstractExpression
+        {
+            public function defaultData()
+            {
+            }
+
+            public function data()
+            {
+            }
+        };
     }
 
     /**
@@ -37,10 +47,8 @@ class AbstractExpressionTest extends AbstractTestCase
      * 1. Default state
      * 2. Mutated state
      * 3. Chainable method
-     *
-     * @return void
      */
-    public function testName()
+    public function testName(): void
     {
         $obj = $this->createExpression();
 
@@ -57,10 +65,8 @@ class AbstractExpressionTest extends AbstractTestCase
 
     /**
      * Test "name" property with invalid value.
-     *
-     * @return void
      */
-    public function testNameWithInvalidValue()
+    public function testNameWithInvalidValue(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->createExpression()->setName(0);
@@ -74,10 +80,8 @@ class AbstractExpressionTest extends AbstractTestCase
      * 2. Mutated state
      * 3. Chainable method
      * 4. Cast value to boolean
-     *
-     * @return void
      */
-    public function testActive()
+    public function testActive(): void
     {
         $obj = $this->createExpression();
 
@@ -102,15 +106,18 @@ class AbstractExpressionTest extends AbstractTestCase
     /**
      * Test value parsing.
      *
-     * @dataProvider provideParsableValues
      *
      * @param  mixed $value    The value to test.
      * @param  mixed $expected The expected result.
-     * @return void
      */
-    public function testParseValue($value, $expected)
+    #[\PHPUnit\Framework\Attributes\DataProvider('provideParsableValues')]
+    public function testParseValue($value, int|string|bool|null $expected): void
     {
         $obj = $this->createExpression();
+
+        if ($value instanceof \Closure) {
+            $value = $value->call($this);
+        }
 
         $this->assertEquals($expected, $obj::parseValue($value));
     }
@@ -119,14 +126,16 @@ class AbstractExpressionTest extends AbstractTestCase
      * Provide data for value parsing.
      *
      * @used-by self::testParseValue()
-     * @return  array
      */
-    public function provideParsableValues()
+    public static function provideParsableValues(): array
     {
-        $container = $this->getContainer();
+        $prop = function () {
+            $container = $this->getContainer();
+            return $container['property/factory']
+                ->create('date-time')
+                ->setVal('13 July 2004');
+        };
 
-        $prop = $container['property/factory']->create('date-time');
-        $prop->setVal('13 July 2004');
         $time = new DateTime('8 June 1995');
 
         return [
@@ -144,13 +153,12 @@ class AbstractExpressionTest extends AbstractTestCase
     /**
      * Test value quoting.
      *
-     * @dataProvider provideQuotableValues
      *
      * @param mixed $value    The value to test.
      * @param  mixed $expected The expected result.
-     * @return void
      */
-    public function testQuoteValue($value, $expected)
+    #[\PHPUnit\Framework\Attributes\DataProvider('provideQuotableValues')]
+    public function testQuoteValue(int|string|bool|\stdClass|array|null $value, int|string|\stdClass|array|null $expected): void
     {
         $obj = $this->createExpression();
 
@@ -161,9 +169,8 @@ class AbstractExpressionTest extends AbstractTestCase
      * Provide data for value quoting.
      *
      * @used-by self::testQuoteValue()
-     * @return  array
      */
-    public function provideQuotableValues()
+    public static function provideQuotableValues(): array
     {
         $obj = new stdClass();
 
@@ -182,14 +189,13 @@ class AbstractExpressionTest extends AbstractTestCase
     /**
      * Test field quoting.
      *
-     * @dataProvider provideQuotableIdentifiers
      *
      * @param  mixed $fieldName The field name.
      * @param  mixed $tableName The table name.
      * @param  mixed $expected  The expected identifier.
-     * @return void
      */
-    public function testQuoteIdentifier($fieldName, $tableName, $expected)
+    #[\PHPUnit\Framework\Attributes\DataProvider('provideQuotableIdentifiers')]
+    public function testQuoteIdentifier(?string $fieldName, ?string $tableName, string $expected): void
     {
         $obj = $this->createExpression();
 
@@ -200,9 +206,8 @@ class AbstractExpressionTest extends AbstractTestCase
      * Provide data for field quoting.
      *
      * @used-by self::testQuoteIdentifier()
-     * @return  array
      */
-    public function provideQuotableIdentifiers()
+    public static function provideQuotableIdentifiers(): array
     {
         return [
             [ null,   null,   ''          ],
@@ -216,10 +221,8 @@ class AbstractExpressionTest extends AbstractTestCase
 
     /**
      * Test field quoting with invalid field name.
-     *
-     * @return void
      */
-    public function testQuoteIdentifierWithInvalidFieldName()
+    public function testQuoteIdentifierWithInvalidFieldName(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $obj = $this->createExpression();
@@ -228,10 +231,8 @@ class AbstractExpressionTest extends AbstractTestCase
 
     /**
      * Test field quoting with blank table name.
-     *
-     * @return void
      */
-    public function testQuoteIdentifierWithBlankTableName()
+    public function testQuoteIdentifierWithBlankTableName(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $obj = $this->createExpression();
@@ -240,10 +241,8 @@ class AbstractExpressionTest extends AbstractTestCase
 
     /**
      * Test field quoting with invalid table name.
-     *
-     * @return void
      */
-    public function testQuoteIdentifierWithInvalidTableName()
+    public function testQuoteIdentifierWithInvalidTableName(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $obj = $this->createExpression();
@@ -253,14 +252,13 @@ class AbstractExpressionTest extends AbstractTestCase
     /**
      * Test value differentiation.
      *
-     * @dataProvider provideDiffValues
      *
      * @param  mixed $a        The custom value.
      * @param  mixed $b        The default value.
      * @param  mixed $expected The expected result.
-     * @return void
      */
-    public function testDiffValues($a, $b, $expected)
+    #[\PHPUnit\Framework\Attributes\DataProvider('provideDiffValues')]
+    public function testDiffValues(int $a, int|string $b, int $expected): void
     {
         $obj = $this->createExpression();
 
@@ -271,9 +269,8 @@ class AbstractExpressionTest extends AbstractTestCase
      * Provide data for value differentiation.
      *
      * @used-by self::testDiffValues()
-     * @return  array
      */
-    public function provideDiffValues()
+    public static function provideDiffValues(): array
     {
         return [
             'Same Type'      => [ 5, 5, 0 ],
@@ -284,13 +281,12 @@ class AbstractExpressionTest extends AbstractTestCase
     /**
      * Test callable detection.
      *
-     * @dataProvider provideCallableValues
      *
      * @param  mixed $value    The value to test.
      * @param  mixed $expected The expected result.
-     * @return void
      */
-    public function testIsCallable($value, $expected)
+    #[\PHPUnit\Framework\Attributes\DataProvider('provideCallableValues')]
+    public function testIsCallable(string|\Closure|null $value, bool $expected): void
     {
         $obj = $this->createExpression();
 
@@ -301,14 +297,13 @@ class AbstractExpressionTest extends AbstractTestCase
      * Provide data for callable detection.
      *
      * @used-by self::testIsCallable()
-     * @return  array
      */
-    public function provideCallableValues()
+    public static function provideCallableValues(): array
     {
         return [
             'Null Type'   => [ null, false ],
             'String Type' => [ 'strval', false ],
-            'Closure'     => [ function () {
+            'Closure'     => [ function (): void {
             }, true ],
         ];
     }

@@ -15,18 +15,12 @@ class GenericFactoryTest extends AbstractTestCase
      */
     public $obj;
 
-    /**
-     * @return void
-     */
     protected function setUp(): void
     {
         $this->obj = new GenericFactory();
     }
 
-    /**
-     * @return void
-     */
-    public function testIsResolvable()
+    public function testIsResolvable(): void
     {
         $this->assertTrue($this->obj->isResolvable('DateTime'));
         $this->assertFalse($this->obj->isResolvable('foobaz'));
@@ -35,36 +29,28 @@ class GenericFactoryTest extends AbstractTestCase
         $this->obj->isResolvable(false);
     }
 
-    /**
-     * @return void
-     */
-    public function testCreate()
+    public function testCreate(): void
     {
         $ret = $this->obj->create('\DateTime');
         $this->assertInstanceOf('\DateTime', $ret);
 
         $this->expectException(\Exception::class);
-        $ret2 = $this->obj->create('foobar');
+        $this->obj->create('foobar');
     }
 
     /**
      * Asserts that the AbstractFactory's `create()` method, as GenericFactory:
      * - Returns the default class when passing an invalid argument, if set
      * - Throws an exception when passing an invalid argument, if no default class is set
-     *
-     * @return void
      */
-    public function testCreateDefaultClass()
+    public function testCreateDefaultClass(): void
     {
         $this->obj->setDefaultClass('\DateTime');
         $ret = $this->obj->create('foobar');
         $this->assertInstanceOf('\DateTime', $ret);
     }
 
-    /**
-     * @return void
-     */
-    public function testCreateCreatesNewInstance()
+    public function testCreateCreatesNewInstance(): void
     {
         $ret1 = $this->obj->create('\DateTime');
         $ret2 = $this->obj->create('\DateTime');
@@ -72,20 +58,14 @@ class GenericFactoryTest extends AbstractTestCase
         $this->assertNotSame($ret1, $ret2);
     }
 
-    /**
-     * @return void
-     */
-    public function testCreateCallback()
+    public function testCreateCallback(): void
     {
-        $ret = $this->obj->create('\DateTime', null, function($obj) {
+        $this->obj->create('\DateTime', null, function($obj): void {
             $this->assertInstanceOf('\DateTime', $obj);
         });
     }
 
-    /**
-     * @return void
-     */
-    public function testGetReturnsSameInstance()
+    public function testGetReturnsSameInstance(): void
     {
         $ret1 = $this->obj->get('\DateTime');
         $ret2 = $this->obj->get('\DateTime');
@@ -93,17 +73,14 @@ class GenericFactoryTest extends AbstractTestCase
         $this->assertSame($ret1, $ret2);
     }
 
-    /**
-     * @return void
-     */
-    public function testCreateBaseClass()
+    public function testCreateBaseClass(): void
     {
         $this->obj->setBaseClass('\DateTimeInterface');
         $ret = $this->obj->create('\DateTime');
         $this->assertInstanceOf('\DateTime', $ret);
 
         $this->expectException(\Exception::class);
-        $this->obj->setBaseClass('\Charcoal\Factory\FactoryInterface');
+        $this->obj->setBaseClass(\Charcoal\Factory\FactoryInterface::class);
         $this->obj->create('\DateTime');
     }
 }

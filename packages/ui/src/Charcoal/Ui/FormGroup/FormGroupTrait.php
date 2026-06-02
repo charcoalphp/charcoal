@@ -214,12 +214,12 @@ trait FormGroupTrait
      * @param callable $inputCallback Optional. Input callback.
      * @return FormGroupInterface[]|Generator
      */
-    public function inputs(callable $inputCallback = null)
+    public function inputs(?callable $inputCallback = null)
     {
         $groups = $this->groups;
         uasort($groups, [ $this, 'sortItemsByPriority' ]);
 
-        $inputCallback = isset($inputCallback) ? $inputCallback : $this->inputCallback;
+        $inputCallback ??= $this->inputCallback;
         foreach ($inputs as $input) {
             if (!$input->l10nMode()) {
                 $input->setL10nMode($this->l10nMode());
@@ -234,20 +234,16 @@ trait FormGroupTrait
 
     /**
      * Wether this group contains any inputs.
-     *
-     * @return boolean
      */
-    public function hasInputs()
+    public function hasInputs(): bool
     {
         return (count($this->inputs) > 0);
     }
 
     /**
      * Get the number of inputs in this group.
-     *
-     * @return integer
      */
-    public function numInputs()
+    public function numInputs(): int
     {
         return count($this->inputs);
     }

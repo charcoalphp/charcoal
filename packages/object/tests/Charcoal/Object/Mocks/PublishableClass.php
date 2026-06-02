@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Charcoal\Tests\Object\Mocks;
 
 // From 'charcoal-object'
@@ -15,10 +17,7 @@ class PublishableClass extends AbstractModel implements
 {
     use PublishableTrait;
 
-    /**
-     * @return string
-     */
-    public static function objType()
+    public static function objType(): string
     {
         return 'charcoal/tests/object/publishable-class';
     }

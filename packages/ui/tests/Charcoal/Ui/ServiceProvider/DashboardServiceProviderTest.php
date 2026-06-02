@@ -27,37 +27,24 @@ class DashboardServiceProviderTest extends AbstractTestCase
      */
     public $container;
 
-    /**
-     * @return void
-     */
     protected function setUp(): void
     {
         $this->obj = new DashboardServiceProvider();
         $this->container = new Container();
 
-        $this->container['logger'] = function () {
-            return new NullLogger();
-        };
+        $this->container['logger'] = (fn(): \Psr\Log\NullLogger => new NullLogger());
 
         // Required depdendencies (stub)
-        $this->container['view'] = function () {
-            return null;
-        };
-        $this->container['widget/builder'] = function () {
-            return null;
-        };
-        $this->container['layout/builder'] = function () {
-            return null;
-        };
+        $this->container['view'] = (fn(): null => null);
+        $this->container['widget/builder'] = (fn(): null => null);
+        $this->container['layout/builder'] = (fn(): null => null);
     }
 
     /**
      * Asserts that the `register()` method
      * - Registers all services on the container
-     *
-     * @return void
      */
-    public function testRegisterRegistersAllProviders()
+    public function testRegisterRegistersAllProviders(): void
     {
         $this->container->register($this->obj);
 
@@ -65,23 +52,17 @@ class DashboardServiceProviderTest extends AbstractTestCase
         $this->assertTrue(isset($this->container['dashboard/builder']));
     }
 
-    /**
-     * @return void
-     */
-    public function testDashboardFactory()
+    public function testDashboardFactory(): void
     {
         $this->container->register($this->obj);
         $factory = $this->container['dashboard/factory'];
-        $this->assertInstanceOf('\Charcoal\Factory\GenericFactory', $factory);
+        $this->assertInstanceOf(\Charcoal\Factory\GenericFactory::class, $factory);
     }
 
-    /**
-     * @return void
-     */
-    public function testDashboardBuilder()
+    public function testDashboardBuilder(): void
     {
         $this->container->register($this->obj);
         $factory = $this->container['dashboard/builder'];
-        $this->assertInstanceOf('\Charcoal\Ui\Dashboard\DashboardBuilder', $factory);
+        $this->assertInstanceOf(\Charcoal\Ui\Dashboard\DashboardBuilder::class, $factory);
     }
 }

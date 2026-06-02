@@ -20,30 +20,21 @@ class AbstractMenuTest extends AbstractTestCase
      */
     public $obj;
 
-    /**
-     * @return void
-     */
     protected function setUp(): void
     {
         $container = $this->getContainer();
         $container->register(new MenuServiceProvider());
 
-        $this->obj = $this->getMockForAbstractClass(AbstractMenu::class, [
-            [
-                'container'         => $container,
-                'logger'            => $container['logger'],
-                'view'              => $container['view'],
-                'menu_item_builder' => $container['menu/item/builder'],
-            ],
-        ]);
+        $this->obj = new class ([
+            'container'         => $container,
+            'logger'            => $container['logger'],
+            'view'              => $container['view'],
+            'menu_item_builder' => $container['menu/item/builder'],
+        ]) extends AbstractMenu {};
     }
 
-    /**
-     * @return void
-     */
-    public function testHasItems()
+    public function testHasItems(): void
     {
-        $obj = $this->obj;
         $this->assertFalse($this->obj->hasItems());
 
         $this->obj->setItems([
@@ -53,10 +44,7 @@ class AbstractMenuTest extends AbstractTestCase
         $this->assertTrue($this->obj->hasItems());
     }
 
-    /**
-     * @return void
-     */
-    public function testNumItems()
+    public function testNumItems(): void
     {
         $obj = $this->obj;
         $this->assertEquals(0, $obj->numItems());
@@ -69,10 +57,7 @@ class AbstractMenuTest extends AbstractTestCase
          $this->assertEquals(2, $obj->numItems());
     }
 
-    /**
-     * @return void
-     */
-    public function testItems()
+    public function testItems(): void
     {
         $ret = iterator_to_array($this->obj->items());
         $this->assertEmpty($ret);
@@ -92,12 +77,9 @@ class AbstractMenuTest extends AbstractTestCase
         $this->assertInstanceOf(MenuItemInterface::class, $ret['foobar']);
     }
 
-    /**
-     * @return void
-     */
-    public function testItemCallback()
+    public function testItemCallback(): void
     {
-        $cb = function($item) {
+        $cb = function($item): void {
             $item['property_from_callback'] = 'yes';
         };
         $ret = $this->obj->setItemCallback($cb);
@@ -113,10 +95,7 @@ class AbstractMenuTest extends AbstractTestCase
         $this->assertEquals('yes', $ret['foobar']['property_from_callback']);
     }
 
-    /**
-     * @return void
-     */
-    public function testItemsPriority()
+    public function testItemsPriority(): void
     {
         $ret = iterator_to_array($this->obj->items());
         $this->assertEmpty($ret);

@@ -13,20 +13,14 @@ use Charcoal\Tests\AbstractTestCase;
  */
 class ValidatorResultTest extends AbstractTestCase
 {
-    /**
-     * @return void
-     */
-    public function testSetData()
+    public function testSetData(): void
     {
         $obj = new ValidatorResult();
         $ret = $obj->setData([]);
         $this->assertSame($ret, $obj);
     }
 
-    /**
-     * @return void
-     */
-    public function testSetIdent()
+    public function testSetIdent(): void
     {
         $obj = new ValidatorResult();
         $this->assertEquals(null, $obj->ident());
@@ -39,10 +33,7 @@ class ValidatorResultTest extends AbstractTestCase
         $obj->setIdent(false);
     }
 
-    /**
-     * @return void
-     */
-    public function testSetLevel()
+    public function testSetLevel(): void
     {
         $obj = new ValidatorResult();
         $this->assertEquals(null, $obj->level());
@@ -55,20 +46,14 @@ class ValidatorResultTest extends AbstractTestCase
         $obj->setLevel(false);
     }
 
-    /**
-     * @return void
-     */
-    public function testSetLevelWithInvalidLevelsThrowException()
+    public function testSetLevelWithInvalidLevelsThrowException(): void
     {
         $obj = new ValidatorResult();
         $this->expectException(InvalidArgumentException::class);
         $obj->setLevel('foo');
     }
 
-    /**
-     * @return void
-     */
-    public function testSetMessage()
+    public function testSetMessage(): void
     {
         $obj = new ValidatorResult();
         $this->assertEquals('', $obj->message());
@@ -81,10 +66,7 @@ class ValidatorResultTest extends AbstractTestCase
         $obj->setMessage(false);
     }
 
-    /**
-     * @return void
-     */
-    public function testSetTs()
+    public function testSetTs(): void
     {
         $obj = new ValidatorResult();
         $ret = $obj->setTs('2015-01-01 00:00:00');

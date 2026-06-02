@@ -23,22 +23,16 @@ class AdminTemplateTest extends AbstractTestCase
 
     /**
      * Tested Class.
-     *
-     * @var AdminTemplate
      */
-    private $obj;
+    private \Charcoal\Admin\AdminTemplate $obj;
 
     /**
      * Store the service container.
-     *
-     * @var Container
      */
-    private $container;
+    private ?\Pimple\Container $container = null;
 
     /**
      * Set up the test.
-     *
-     * @return void
      */
     public function setUp(): void
     {
@@ -50,10 +44,7 @@ class AdminTemplateTest extends AbstractTestCase
         ]);
     }
 
-    /**
-     * @return void
-     */
-    public function testSetIdent()
+    public function testSetIdent(): void
     {
         $this->assertNull($this->obj->ident());
         $ret = $this->obj->setIdent('foobar');
@@ -61,10 +52,7 @@ class AdminTemplateTest extends AbstractTestCase
         $this->assertEquals('foobar', $this->obj->ident());
     }
 
-    /**
-     * @return void
-     */
-    public function testSetLabel()
+    public function testSetLabel(): void
     {
         $this->assertNull($this->obj->label());
         $ret = $this->obj->setLabel('foobar');
@@ -72,10 +60,7 @@ class AdminTemplateTest extends AbstractTestCase
         $this->assertEquals('foobar', (string)$this->obj->label());
     }
 
-    /**
-     * @return void
-     */
-    public function testAuthRequiredIsTrue()
+    public function testAuthRequiredIsTrue(): void
     {
         $res = $this->callMethod($this->obj, 'authRequired');
         $this->assertTrue($res);
@@ -83,17 +68,15 @@ class AdminTemplateTest extends AbstractTestCase
 
     /**
      * Set up the service container.
-     *
-     * @return Container
      */
-    protected function container()
+    protected function container(): \Pimple\Container
     {
-        if ($this->container === null) {
+        if (!$this->container instanceof \Pimple\Container) {
             $container = new Container();
             $containerProvider = new ContainerProvider();
             $containerProvider->registerTemplateDependencies($container);
 
-            $container['widget/factory'] = $this->createMock('\Charcoal\Factory\FactoryInterface');
+            $container['widget/factory'] = $this->createMock(\Charcoal\Factory\FactoryInterface::class);
 
             $this->container = $container;
         }

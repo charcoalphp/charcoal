@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Charcoal\Admin\Support;
 
 /**
@@ -16,16 +18,11 @@ class Sorter
      *
      * @param  array|ArrayAccess $a
      * @param  array|ArrayAccess $b
-     * @return integer
      */
-    public static function sortByPriority($a, $b)
+    public static function sortByPriority($a, $b): int
     {
         $a = ($a['priority'] ?? 0);
         $b = ($b['priority'] ?? 0);
-
-        if ($a === $b) {
-            return 0;
-        }
-        return ($a < $b) ? (-1) : 1;
+        return ($a <=> $b);
     }
 }

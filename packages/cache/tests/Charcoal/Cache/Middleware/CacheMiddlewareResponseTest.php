@@ -14,15 +14,14 @@ use Charcoal\Cache\Middleware\CacheMiddleware;
 
 /**
  * Test HTTP Responses from CacheMiddleware.
- *
- * @coversDefaultClass \Charcoal\Cache\Middleware\CacheMiddleware
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\Charcoal\Cache\Middleware\CacheMiddleware::class)]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Cache\Middleware\CacheMiddleware::class, '__invoke')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Cache\Middleware\CacheMiddleware::class, 'cacheKeyFromRequest')]
 class CacheMiddlewareResponseTest extends AbstractCacheMiddlewareTest
 {
     /**
      * Prepare the cache pool.
-     *
-     * @return void
      */
     public static function setUpBeforeClass(): void
     {
@@ -31,8 +30,6 @@ class CacheMiddlewareResponseTest extends AbstractCacheMiddlewareTest
 
     /**
      * Empty the cache pool.
-     *
-     * @return void
      */
     public static function tearDownAfterClass(): void
     {
@@ -42,8 +39,6 @@ class CacheMiddlewareResponseTest extends AbstractCacheMiddlewareTest
     /**
      * Test the initial state.
      *
-     * @covers ::__invoke
-     * @covers ::cacheKeyFromRequest
      *
      * @return CacheMiddleware To use the same cache middleware for the next test.
      */
@@ -83,14 +78,11 @@ class CacheMiddlewareResponseTest extends AbstractCacheMiddlewareTest
     /**
      * Test the cached state.
      *
-     * @covers  ::__invoke
-     * @covers  ::cacheKeyFromRequest
-     * @depends testInitialState
      *
      * @param  CacheMiddleware $middleware The cache middleware from the previous test.
-     * @return void
      */
-    public function testCachedState(CacheMiddleware $middleware)
+    #[\PHPUnit\Framework\Attributes\Depends('testInitialState')]
+    public function testCachedState(CacheMiddleware $middleware): void
     {
         $txt = 'Lorem ipsum dolor sit amet.';
 

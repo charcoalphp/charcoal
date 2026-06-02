@@ -29,33 +29,25 @@ class AuthorizerTest extends AbstractTestCase
 
     /**
      * Tested Class.
-     *
-     * @var Authorizer
      */
-    private $auth;
+    private \Charcoal\User\Authorizer $auth;
 
     /**
      * Store the ACL manager.
-     *
-     * @var Acl
      */
-    private $acl;
+    private \Laminas\Permissions\Acl\Acl $acl;
 
     /**
      * Store the service container.
-     *
-     * @var Container
      */
-    private $container;
+    private ?\Pimple\Container $container = null;
 
     /**
      * Set up the test.
-     *
-     * @return void
      */
     protected function setUp(): void
     {
-        $container = $this->container();
+        $this->container();
 
         $this->acl = new Acl();
         $this->acl->addResource('area');
@@ -97,9 +89,8 @@ class AuthorizerTest extends AbstractTestCase
      * Create an Authorizer instance.
      *
      * @param  array $data Class dependencies.
-     * @return Authorizer
      */
-    protected function createAuthorizer(array $data = [])
+    protected function createAuthorizer(array $data = []): \Charcoal\User\Authorizer
     {
         $container = $this->container();
 
@@ -109,9 +100,7 @@ class AuthorizerTest extends AbstractTestCase
             'resource'  => 'area',
         ];
 
-        $authorizer = new Authorizer($data);
-
-        return $authorizer;
+        return new Authorizer($data);
     }
 
     /**
@@ -130,9 +119,7 @@ class AuthorizerTest extends AbstractTestCase
             'resource'  => 'area',
         ];
 
-        $stub = $this->getMockForAbstractClass(AbstractAuthorizer::class, [ $data ]);
-
-        return $stub;
+        return $this->getMockForAbstractClass(AbstractAuthorizer::class, [ $data ]);
     }
 
     /**
@@ -144,24 +131,18 @@ class AuthorizerTest extends AbstractTestCase
     {
         $container = $this->container();
 
-        $user = $container['model/factory']->create(GenericUser::class);
-
-        return $user;
+        return $container['model/factory']->create(GenericUser::class);
     }
 
 
 
     // Authorizer
     // =========================================================================
-
-    /**
-     * @return void
-     */
-    public function testSetDefaultResourceWithNull()
+    public function testSetDefaultResourceWithNull(): void
     {
         $container = $this->container();
 
-        $authorizer = $this->createAuthorizer([
+        $this->createAuthorizer([
             'resource' => null
         ]);
         $auth = new Authorizer([
@@ -173,33 +154,24 @@ class AuthorizerTest extends AbstractTestCase
         $this->assertNull($this->callMethod($auth, 'getDefaultResource'));
     }
 
-    /**
-     * @return void
-     */
-    public function testSetDefaultResourceWithBadValue()
+    public function testSetDefaultResourceWithBadValue(): void
     {
         $container = $this->container();
 
         $this->expectException(\InvalidArgumentException::class);
-        $auth = new Authorizer([
+        new Authorizer([
             'logger'    => $container['logger'],
             'acl'       => $this->acl,
             'resource'  => 35,
         ]);
     }
 
-    /**
-     * @return void
-     */
-    public function testRolesAllowedWithoutPermissions()
+    public function testRolesAllowedWithoutPermissions(): void
     {
         $this->assertTrue($this->auth->rolesAllowed([ 'guest' ], []));
     }
 
-    /**
-     * @return void
-     */
-    public function testRolesAllowed()
+    public function testRolesAllowed(): void
     {
         $this->assertFalse($this->auth->rolesAllowed([ 'guest' ], [ 'privilege1' ]));
 
@@ -213,10 +185,7 @@ class AuthorizerTest extends AbstractTestCase
         $this->assertTrue($this->auth->rolesAllowed([ null ], [ 'privilege1' ]));
     }
 
-    /**
-     * @return void
-     */
-    public function testUserAllowedWithoutPermissions()
+    public function testUserAllowedWithoutPermissions(): void
     {
         $user = $this->createUser();
         $user['roles'] = 'guest';
@@ -224,10 +193,7 @@ class AuthorizerTest extends AbstractTestCase
         $this->assertTrue($this->auth->userAllowed($user, []));
     }
 
-    /**
-     * @return void
-     */
-    public function testUserAllowed()
+    public function testUserAllowed(): void
     {
         $user = $this->createUser();
         $user['roles'] = 'guest';
@@ -239,10 +205,7 @@ class AuthorizerTest extends AbstractTestCase
         $this->assertFalse($this->auth->userAllowed($user, [ 'privilege1', 'privilege2' ]));
     }
 
-    /**
-     * @return void
-     */
-    public function testIsAllowedWithDefaultResource()
+    public function testIsAllowedWithDefaultResource(): void
     {
         $this->acl->allow('guest', 'area', 'privilege1');
         $this->assertFalse($this->auth->isAllowed('guest', null, 'privilege1'));
@@ -254,11 +217,7 @@ class AuthorizerTest extends AbstractTestCase
 
     // AbstractAuthorizer
     // =========================================================================
-
-    /**
-     * @return void
-     */
-    public function testIsRoleGrantedCatchesAclExceptions()
+    public function testIsRoleGrantedCatchesAclExceptions(): void
     {
         $this->acl->allow('guest', null, [ 'privilege1', 'privilege2', 'privilege3' ]);
         $this->acl->deny('guest', null, [ 'privilege4', 'privilege5' ]);
@@ -270,10 +229,7 @@ class AuthorizerTest extends AbstractTestCase
         $this->assertNull($this->auth->isRoleGrantedAny('guest', 'nonexistent', [ 'privilege4', 'privilege5' ]));
     }
 
-    /**
-     * @return void
-     */
-    public function testIsRoleGrantedAll()
+    public function testIsRoleGrantedAll(): void
     {
         $this->acl->allow('guest', null, [ 'privilege1', 'privilege2', 'privilege3' ]);
         $this->acl->deny('guest', null, 'privilege4');
@@ -282,10 +238,7 @@ class AuthorizerTest extends AbstractTestCase
         $this->assertFalse($this->auth->isRoleGrantedAll('guest', null, [ 'privilege1', 'privilege4' ]));
     }
 
-    /**
-     * @return void
-     */
-    public function testAllRolesGrantedAll()
+    public function testAllRolesGrantedAll(): void
     {
         $this->setUpComplexRolesAndPrivileges();
 
@@ -293,10 +246,7 @@ class AuthorizerTest extends AbstractTestCase
         $this->assertFalse($this->auth->allRolesGrantedAll([ 'aide', 'staff' ], null, [ 'edit', 'submit' ]));
     }
 
-    /**
-     * @return void
-     */
-    public function testAnyRolesGrantedAll()
+    public function testAnyRolesGrantedAll(): void
     {
         $this->setUpComplexRolesAndPrivileges();
 
@@ -304,10 +254,7 @@ class AuthorizerTest extends AbstractTestCase
         $this->assertFalse($this->auth->anyRolesGrantedAll([ 'aide', 'staff' ], null, [ 'edit', 'publish' ]));
     }
 
-    /**
-     * @return void
-     */
-    public function testIsRoleGrantedAny()
+    public function testIsRoleGrantedAny(): void
     {
         $this->acl->allow('guest', null, [ 'privilege1', 'privilege2', 'privilege3' ]);
         $this->acl->deny('guest', null, [ 'privilege4', 'privilege5' ]);
@@ -316,10 +263,7 @@ class AuthorizerTest extends AbstractTestCase
         $this->assertFalse($this->auth->isRoleGrantedAny('guest', null, [ 'privilege4', 'privilege5' ]));
     }
 
-    /**
-     * @return void
-     */
-    public function testAllRolesGrantedAny()
+    public function testAllRolesGrantedAny(): void
     {
         $this->setUpComplexRolesAndPrivileges();
 
@@ -327,10 +271,7 @@ class AuthorizerTest extends AbstractTestCase
         $this->assertFalse($this->auth->allRolesGrantedAny([ 'aide', 'staff' ], null, [ 'publish', 'other' ]));
     }
 
-    /**
-     * @return void
-     */
-    public function testAnyRolesGrantedAny()
+    public function testAnyRolesGrantedAny(): void
     {
         $this->setUpComplexRolesAndPrivileges();
 
@@ -338,10 +279,7 @@ class AuthorizerTest extends AbstractTestCase
         $this->assertFalse($this->auth->anyRolesGrantedAny([ 'aide', 'staff' ], null, [ 'publish', 'other' ]));
     }
 
-    /**
-     * @return void
-     */
-    public function testIsUserGrantedWithoutPermissions()
+    public function testIsUserGrantedWithoutPermissions(): void
     {
         $user = $this->createUser();
         $user['roles'] = 'guest';
@@ -349,10 +287,7 @@ class AuthorizerTest extends AbstractTestCase
         $this->assertFalse($this->auth->isUserGranted($user, null, null));
     }
 
-    /**
-     * @return void
-     */
-    public function testIsUserGranted()
+    public function testIsUserGranted(): void
     {
         $this->setUpComplexRolesAndPrivileges();
 
@@ -367,32 +302,24 @@ class AuthorizerTest extends AbstractTestCase
 
     // ACL
     // =========================================================================
-
     /**
      * Ensures that by default, Laminas ACL denies access to everything by all.
-     *
-     * @return void
      */
-    public function testDefaultDeny()
+    public function testDefaultDeny(): void
     {
         $this->assertFalse($this->auth->isAllowed());
     }
 
     /**
      * Ensures that by default, Laminas ACL can allow access to everything by all.
-     *
-     * @return void
      */
-    public function testDefaultAllow()
+    public function testDefaultAllow(): void
     {
         $this->acl->allow();
         $this->assertTrue($this->auth->isAllowed());
     }
 
-    /**
-     * @return void
-     */
-    public function testProxyMethods()
+    public function testProxyMethods(): void
     {
         $this->setUpComplexRolesAndPrivileges();
 
@@ -425,15 +352,12 @@ class AuthorizerTest extends AbstractTestCase
 
     // Dependencies
     // =========================================================================
-
     /**
      * Set up the service container.
-     *
-     * @return Container
      */
-    private function container()
+    private function container(): \Pimple\Container
     {
-        if ($this->container === null) {
+        if (!$this->container instanceof \Pimple\Container) {
             $container = new Container();
             $containerProvider = new ContainerProvider();
             $containerProvider->registerBaseServices($container);

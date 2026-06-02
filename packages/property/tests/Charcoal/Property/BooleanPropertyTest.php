@@ -21,9 +21,6 @@ class BooleanPropertyTest extends AbstractTestCase
      */
     public $obj;
 
-    /**
-     * @return void
-     */
     protected function setUp(): void
     {
         $container = $this->getContainer();
@@ -35,10 +32,7 @@ class BooleanPropertyTest extends AbstractTestCase
         ]);
     }
 
-    /**
-     * @return void
-     */
-    public function testType()
+    public function testType(): void
     {
         $this->assertEquals('boolean', $this->obj->type());
     }
@@ -46,10 +40,8 @@ class BooleanPropertyTest extends AbstractTestCase
     /**
      * Assert that the boolean property 's `displayVal()` method:
      * - return the proper label
-     *
-     * @return void
      */
-    public function testDisplayVal()
+    public function testDisplayVal(): void
     {
         $this->obj->setTrueLabel('Oui');
         $this->obj->setFalseLabel('Non');
@@ -72,10 +64,8 @@ class BooleanPropertyTest extends AbstractTestCase
      * - set the multiple to false, if false or falsish value
      * - throws exception otherwise (truthish or invalid value)
      * - is chainable
-     *
-     * @return void
      */
-    public function testSetMultiple()
+    public function testSetMultiple(): void
     {
         $obj = $this->obj;
         $ret = $obj->setMultiple(0);
@@ -88,19 +78,14 @@ class BooleanPropertyTest extends AbstractTestCase
 
     /**
      * Asserts that the boolean property is multiple by default
-     *
-     * @return void
      */
-    public function testMultiple()
+    public function testMultiple(): void
     {
         $obj = $this->obj;
         $this->assertFalse($obj['multiple']);
     }
 
-    /**
-     * @return void
-     */
-    public function testSetData()
+    public function testSetData(): void
     {
         $obj = $this->obj;
         $data = [
@@ -115,10 +100,7 @@ class BooleanPropertyTest extends AbstractTestCase
         $this->assertEquals('bar', $obj['falseLabel']);
     }
 
-    /**
-     * @return void
-     */
-    public function testSetTrueLabel()
+    public function testSetTrueLabel(): void
     {
         $obj = $this->obj;
         $ret = $obj->setTrueLabel('foo');
@@ -127,10 +109,7 @@ class BooleanPropertyTest extends AbstractTestCase
         $this->assertEquals('foo', $obj['trueLabel']);
     }
 
-    /**
-     * @return void
-     */
-    public function testSetFalseLabel()
+    public function testSetFalseLabel(): void
     {
         $obj = $this->obj;
         $ret = $obj->setFalseLabel('foo');
@@ -139,36 +118,24 @@ class BooleanPropertyTest extends AbstractTestCase
         $this->assertEquals('foo', $obj['falseLabel']);
     }
 
-    /**
-     * @return void
-     */
-    public function testSqlExtra()
+    public function testSqlExtra(): void
     {
         $obj = $this->obj;
         $this->assertSame(null, $obj->sqlExtra());
     }
 
-    /**
-     * @return void
-     */
-    public function testSqlType()
+    public function testSqlType(): void
     {
         //$this->assertEquals('TINYINT(1) UNSIGNED', $this->obj->sqlType());
         $this->assertEquals('INT', $this->obj->sqlType());
     }
 
-    /**
-     * @return void
-     */
-    public function testSqlPdoType()
+    public function testSqlPdoType(): void
     {
         $this->assertEquals(PDO::PARAM_BOOL, $this->obj->sqlPdoType());
     }
 
-    /**
-     * @return void
-     */
-    public function testChoices()
+    public function testChoices(): void
     {
         $obj = $this->obj;
         $obj->setVal(false);
@@ -187,10 +154,7 @@ class BooleanPropertyTest extends AbstractTestCase
         $this->assertEquals($choices, $obj->choices());
     }
 
-    /**
-     * @return void
-     */
-    public function testSave()
+    public function testSave(): void
     {
         $this->assertTrue($this->obj->save(true));
         $this->assertFalse($this->obj->save(false));

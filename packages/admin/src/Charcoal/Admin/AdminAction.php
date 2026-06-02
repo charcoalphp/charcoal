@@ -57,17 +57,13 @@ abstract class AdminAction extends AbstractAction implements
 
     /**
      * Store the result from the last validation by Google reCAPTCHA API.
-     *
-     * @var array|null
      */
-    private $recaptchaLastResult;
+    private ?array $recaptchaLastResult = null;
 
     /**
      * Store the model factory.
-     *
-     * @var FactoryInterface $modelFactory
      */
-    private $modelFactory;
+    private ?\Charcoal\Factory\FactoryInterface $modelFactory = null;
 
     /**
      * Action's init method is called automatically from `charcoal-app`'s Action Route.
@@ -82,6 +78,7 @@ abstract class AdminAction extends AbstractAction implements
      * @return boolean
      * @see \Charcoal\App\Route\TemplateRoute::__invoke()
      */
+    #[\Override]
     public function init(RequestInterface $request)
     {
         if (!session_id()) {
@@ -165,12 +162,11 @@ abstract class AdminAction extends AbstractAction implements
      */
     public function results()
     {
-        $results = [
+        return [
             'success'   => $this->success(),
             'next_url'  => $this->redirectUrl(),
             'feedbacks' => $this->feedbacks()
         ];
-        return $results;
     }
 
     /**
@@ -179,6 +175,7 @@ abstract class AdminAction extends AbstractAction implements
      * @param  Container $container DI Container.
      * @return void
      */
+    #[\Override]
     protected function setDependencies(Container $container)
     {
         parent::setDependencies($container);
@@ -340,11 +337,11 @@ abstract class AdminAction extends AbstractAction implements
      *     with a new Response object that represents a client error.
      * @return boolean Returns TRUE if the user response is valid, FALSE if it is invalid.
      */
-    protected function validateCaptchaFromRequest(RequestInterface $request, ResponseInterface &$response = null)
+    protected function validateCaptchaFromRequest(RequestInterface $request, ?ResponseInterface &$response = null)
     {
         $token = $request->getParam('g-recaptcha-response', false);
         if (empty($token)) {
-            if ($response !== null) {
+            if ($response instanceof \Psr\Http\Message\ResponseInterface) {
                 $this->addFeedback('error', $this->translator()->translate('Missing CAPTCHA response.'));
                 $this->setSuccess(false);
 
@@ -355,7 +352,7 @@ abstract class AdminAction extends AbstractAction implements
         }
 
         $result = $this->validateCaptcha($token);
-        if ($result === false && $response !== null) {
+        if ($result === false && $response instanceof \Psr\Http\Message\ResponseInterface) {
             $this->addFeedback('error', $this->translator()->translate('Invalid or malformed CAPTCHA response.'));
             $this->setSuccess(false);
 

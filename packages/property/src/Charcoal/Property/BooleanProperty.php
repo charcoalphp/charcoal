@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Charcoal\Property;
 
 use PDO;
@@ -28,47 +30,39 @@ class BooleanProperty extends AbstractProperty
      */
     private $falseLabel;
 
-    /**
-     * @return string
-     */
-    public function type()
+    public function type(): string
     {
         return 'boolean';
     }
 
     /**
-     * @see AbstractProperty::parseOne()
-     * @see AbstractProperty::parseVal()
-     *
      * @param  mixed $val A single value to parse.
-     * @return boolean
+     *@see AbstractProperty::parseVal()
+     *
+     * @see AbstractProperty::parseOne()
      */
-    public function parseOne($val)
+    #[\Override]
+    public function parseOne(mixed $val): bool
     {
-        return !!$val;
+        return (bool)$val;
     }
 
     /**
+     * @param  mixed $val     The value to to convert for display.
      * @see AbstractProperty::displayVal()
      *
      * @param  mixed $val     The value to to convert for display.
      * @param  array $options Optional display options.
-     * @return string
      */
-    public function displayVal($val, array $options = [])
+    #[\Override]
+    public function displayVal($val, array $options = []): string
     {
         if ($val === true) {
-            if (isset($options['true_label'])) {
-                $label = $options['true_label'];
-            } else {
-                $label = $this['trueLabel'];
-            }
+            $label = ($options['true_label'] ?? $this['trueLabel']);
+        } elseif (isset($options['false_label'])) {
+            $label = $options['false_label'];
         } else {
-            if (isset($options['false_label'])) {
-                $label = $options['false_label'];
-            } else {
-                $label = $this['falseLabel'];
-            }
+            $label = $this['falseLabel'];
         }
 
         return $this->translator()->translate($label);
@@ -77,16 +71,16 @@ class BooleanProperty extends AbstractProperty
     /**
      * Ensure multiple can never be true for boolean property.
      *
-     * @see AbstractProperty::setMultiple()
-     *
      * @param  boolean $multiple The multiple flag.
      * @throws InvalidArgumentException If multiple is true. (must be false for boolean properties).
-     * @return self
+     * @see AbstractProperty::setMultiple()
+     *
      */
-    public function setMultiple($multiple)
+    #[\Override]
+    public function setMultiple(bool $multiple): static
     {
-        $multiple = !!$multiple;
-        if ($multiple === true) {
+        $multiple = (bool)$multiple;
+        if ($multiple) {
             throw new InvalidArgumentException(
                 'Multiple can not be true for boolean property.'
             );
@@ -98,19 +92,17 @@ class BooleanProperty extends AbstractProperty
      * Multiple is always false for boolean property.
      *
      * @see AbstractProperty::getMultiple()
-     *
-     * @return boolean
      */
-    public function getMultiple()
+    #[\Override]
+    public function getMultiple(): bool
     {
         return false;
     }
 
     /**
      * @param  mixed $label The true label.
-     * @return self
      */
-    public function setTrueLabel($label)
+    public function setTrueLabel($label): static
     {
         $this->trueLabel = $this->translator()->translation($label);
         return $this;
@@ -130,9 +122,8 @@ class BooleanProperty extends AbstractProperty
 
     /**
      * @param  mixed $label The false label.
-     * @return self
      */
-    public function setFalseLabel($label)
+    public function setFalseLabel($label): static
     {
         $this->falseLabel = $this->translator()->translation($label);
         return $this;
@@ -159,7 +150,7 @@ class BooleanProperty extends AbstractProperty
      *
      * @return string The SQL type
      */
-    public function sqlType()
+    public function sqlType(): string
     {
         $dbDriver = $this->pdo->getAttribute(PDO::ATTR_DRIVER_NAME);
         if ($dbDriver === 'sqlite') {
@@ -171,26 +162,22 @@ class BooleanProperty extends AbstractProperty
 
     /**
      * @see StorablePropertyTrait::sqlPdoType()
-     *
-     * @return integer
      */
-    public function sqlPdoType()
+    public function sqlPdoType(): int
     {
         return PDO::PARAM_BOOL;
     }
 
     /**
      * @see SelectablePropertyTrait::choices()
-     *
-     * @return array
      */
-    public function choices()
+    public function choices(): array
     {
         $val = $this->val();
         return [
             [
                 'label'    => $this['trueLabel'],
-                'selected' => !!$val,
+                'selected' => (bool)$val,
                 'value'    => 1,
             ],
             [

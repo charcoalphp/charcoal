@@ -78,8 +78,6 @@ trait TemplateableTrait
 
     /**
      * Retrieve the renderable object's template identifier.
-     *
-     * @return string|null
      */
     public function templateIdent(): ?string
     {
@@ -216,9 +214,8 @@ trait TemplateableTrait
         $key  = 'template_options';
         $prop = $this->property($key);
         $val  = $this->propertyValue($key);
-        $obj  = $prop->structureVal($val, $this->templateOptionsMetadata());
 
-        return $obj;
+        return $prop->structureVal($val, $this->templateOptionsMetadata());
     }
 
     /**
@@ -238,7 +235,7 @@ trait TemplateableTrait
         if (!$this instanceof TemplateableInterface) {
             throw new RuntimeException(sprintf(
                 'Class [%s] must implement [%s]',
-                get_class($this),
+                $this::class,
                 TemplateableInterface::class
             ));
         }
@@ -260,7 +257,7 @@ trait TemplateableTrait
      * @param  boolean        $recursive Whether we should traverse structure properties.
      * @return ModelInterface The localized object.
      */
-    protected function translateTemplateOptionsModel(ModelInterface $obj, $recursive = false)
+    protected function translateTemplateOptionsModel(ModelInterface $obj, $recursive = false): ModelInterface
     {
         unset($recursive);
         foreach ($obj->properties() as $propertyIdent => $property) {
@@ -271,7 +268,7 @@ trait TemplateableTrait
                 $struct = $property->structureVal($obj[$propertyIdent]);
 
                 /** Provide support for dynamically wrapping translation sets.  */
-                if (in_array(get_class($struct), [ Model::class, StructureModel::class ])) {
+                if (in_array($struct::class, [ Model::class, StructureModel::class ])) {
                     $struct = $this->translateTemplateOptionsModel($struct);
                 }
 
@@ -287,7 +284,7 @@ trait TemplateableTrait
      *
      * @return string[]
      */
-    protected function defaultTemplateProperties()
+    protected function defaultTemplateProperties(): array
     {
         return [
             'template_ident'
@@ -303,7 +300,7 @@ trait TemplateableTrait
      * @param  PropertyInterface|string ...$properties The properties to lookup.
      * @return string[]|null
      */
-    protected function extractTemplateInterfacesFrom(...$properties)
+    protected function extractTemplateInterfacesFrom(...$properties): array
     {
         $interfaces = [];
         foreach ($properties as $property) {
@@ -321,10 +318,8 @@ trait TemplateableTrait
                         if (isset($choice[$key])) {
                             $interface = $choice[$key];
 
-                            if ($key === 'template' || $key === 'controller') {
-                                if (substr($interface, -9) !== '-template') {
-                                    $interface .= '-template';
-                                }
+                            if (($key === 'template' || $key === 'controller') && !str_ends_with((string)$interface, '-template')) {
+                                $interface .= '-template';
                             }
 
                             $interfaces[] = $interface;
@@ -345,9 +340,8 @@ trait TemplateableTrait
      *
      * @uses   self::assertValidTemplateStructureDependencies() Validates that the model meets requirements.
      * @param  (PropertyInterface|string)[]|null $templateIdentProperties The template key properties to parse.
-     * @return boolean
      */
-    protected function prepareTemplateOptions(array $templateIdentProperties = null)
+    protected function prepareTemplateOptions(?array $templateIdentProperties = null): bool
     {
         $this->assertValidTemplateStructureDependencies();
 
@@ -384,7 +378,7 @@ trait TemplateableTrait
      * @param  (PropertyInterface|string)[]|null $properties The template properties to parse.
      * @return void
      */
-    protected function saveTemplateOptions(array $properties = null)
+    protected function saveTemplateOptions(?array $properties = null)
     {
         if ($properties === null) {
             $properties = $this->defaultTemplateProperties();

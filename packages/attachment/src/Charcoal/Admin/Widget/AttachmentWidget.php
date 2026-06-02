@@ -8,7 +8,7 @@ use InvalidArgumentException;
 // From Pimple
 use Pimple\Container;
 // From Mustache
-use Mustache_LambdaHelper as LambdaHelper;
+use Mustache\LambdaHelper as LambdaHelper;
 // From 'charcoal-config'
 use Charcoal\Config\ConfigurableInterface;
 // From 'charcoal-factory'
@@ -37,6 +37,15 @@ class AttachmentWidget extends AdminWidget implements
     use ObjectContainerTrait {
         ObjectContainerTrait::createOrLoadObj as createOrCloneOrLoadObj;
     }
+
+    /**
+     * @var int
+     */
+    public $numPerPage;
+    /**
+     * @var int
+     */
+    public $page;
 
     /**
      * The widget's title.
@@ -70,17 +79,13 @@ class AttachmentWidget extends AdminWidget implements
 
     /**
      * Track the state of data merging.
-     *
-     * @var boolean
      */
-    private $isMergingData = false;
+    private bool $isMergingData = false;
 
     /**
      * Store the factory instance for the current class.
-     *
-     * @var FactoryInterface
      */
-    private $widgetFactory;
+    private ?\Charcoal\Factory\FactoryInterface $widgetFactory = null;
 
     /**
      * Font-awesome icons for each of the default attachment types.
@@ -101,10 +106,7 @@ class AttachmentWidget extends AdminWidget implements
         'resources' => 'paperclip'
     ];
 
-    /**
-     * @var array
-     */
-    private $attachmentOptions;
+    private ?array $attachmentOptions = null;
 
     /**
      * Inject dependencies from a DI Container.
@@ -112,6 +114,7 @@ class AttachmentWidget extends AdminWidget implements
      * @param Container $container A dependencies container instance.
      * @return void
      */
+    #[\Override]
     protected function setDependencies(Container $container)
     {
         parent::setDependencies($container);
@@ -143,20 +146,16 @@ class AttachmentWidget extends AdminWidget implements
 
     /**
      * Determine if the widget has any attachment types.
-     *
-     * @return boolean
      */
-    public function hasAttachmentTypes()
+    public function hasAttachmentTypes(): bool
     {
         return !empty($this->attachableObjects());
     }
 
     /**
      * Retrieve the attachment types with their collections.
-     *
-     * @return array
      */
-    public function attachmentTypes()
+    public function attachmentTypes(): array
     {
         $attachableObjects = $this->attachableObjects();
 
@@ -172,17 +171,17 @@ class AttachmentWidget extends AdminWidget implements
             $label = $attMeta['label'];
 
             $out[] = [
-                'id'             => (isset($attMeta['att_id']) ? $attMeta['att_id'] : null),
+                'id'             => ($attMeta['att_id'] ?? null),
                 'ident'          => $this->createIdent($attType),
                 'skipForm'       => $attMeta['skipForm'],
                 'formIdent'      => $attMeta['formIdent'],
                 'quickFormIdent' => $attMeta['quickFormIdent'],
-                'hasFaIcon'      => !!$attMeta['faIcon'],
+                'hasFaIcon'      => (bool)$attMeta['faIcon'],
                 'faIcon'         => $attMeta['faIcon'],
                 'label'          => $label,
                 'val'            => $attType,
                 'locked'         => $attMeta['locked'],
-                'active'         => ($i == 1)
+                'active'         => ($i === 1)
             ];
         }
 
@@ -220,20 +219,16 @@ class AttachmentWidget extends AdminWidget implements
 
     /**
      * Determine the number of attachments.
-     *
-     * @return boolean
      */
-    public function hasAttachments()
+    public function hasAttachments(): int
     {
         return count(iterator_to_array($this->attachments()));
     }
 
     /**
      * The default set of settings for attachment widget.
-     *
-     * @return array
      */
-    public function defaultAttachmentOptions()
+    public function defaultAttachmentOptions(): array
     {
         return [
             'header'       => null,
@@ -251,9 +246,8 @@ class AttachmentWidget extends AdminWidget implements
      * @param string $key The setting to add/replace.
      * @param mixed  $val The settings's value to apply.
      * @throws InvalidArgumentException If the identifier is not a string.
-     * @return self
      */
-    public function addAttachmentOption($key, $val)
+    public function addAttachmentOption($key, $val): static
     {
         if (!is_string($key)) {
             throw new InvalidArgumentException(
@@ -291,20 +285,15 @@ class AttachmentWidget extends AdminWidget implements
             $this->attachmentOptions();
         }
 
-        if (isset($this->attachmentOptions[$key])) {
-            return $this->attachmentOptions[$key];
-        }
-
-        return null;
+        return ($this->attachmentOptions[$key] ?? null);
     }
 
     /**
      * Merge (replacing or adding) attachment options.
      *
      * @param array $settings The attachment options.
-     * @return self
      */
-    public function mergeAttachmentOptions(array $settings)
+    public function mergeAttachmentOptions(array $settings): static
     {
         // Make sure default options are loaded.
         if ($this->attachmentOptions === null) {
@@ -323,12 +312,10 @@ class AttachmentWidget extends AdminWidget implements
      * @param array $settings The Attachment options.
      * @return array Returns the parsed options.
      */
-    protected function parseAttachmentOptions(array $settings)
+    protected function parseAttachmentOptions(array $settings): array
     {
-        if (isset($settings['show_header']) && isset($settings['show_preview'])) {
-            if (!$settings['show_header'] && !$settings['show_preview']) {
-                $settings['show_header'] = true;
-            }
+        if (isset($settings['show_header']) && isset($settings['show_preview']) && (!$settings['show_header'] && !$settings['show_preview'])) {
+            $settings['show_header'] = true;
         }
 
         return $settings;
@@ -336,14 +323,13 @@ class AttachmentWidget extends AdminWidget implements
 
     // Setters
     // =========================================================================
-
     /**
      * Set the widget's data.
      *
      * @param array $data The widget data.
-     * @return self
      */
-    public function setData(array $data)
+    #[\Override]
+    public function setData(array $data): static
     {
         $this->isMergingData = true;
         /**
@@ -375,14 +361,12 @@ class AttachmentWidget extends AdminWidget implements
      * @throws InvalidArgumentException If the argument is not a string.
      * @return UserDataInterface Chainable
      */
-    public function setLang($lang)
+    public function setLang($lang): static
     {
-        if ($lang !== null) {
-            if (!is_string($lang)) {
-                throw new InvalidArgumentException(
-                    'Language must be a string'
-                );
-            }
+        if ($lang !== null && !is_string($lang)) {
+            throw new InvalidArgumentException(
+                'Language must be a string'
+            );
         }
 
         $this->lang = $lang;
@@ -394,9 +378,8 @@ class AttachmentWidget extends AdminWidget implements
      * Set the attachment widget settings.
      *
      * @param array $settings Attachments options array.
-     * @return self
      */
-    public function setAttachmentOptions(array $settings)
+    public function setAttachmentOptions(array $settings): static
     {
         $this->attachmentOptions = array_merge(
             $this->defaultAttachmentOptions(),
@@ -413,14 +396,13 @@ class AttachmentWidget extends AdminWidget implements
      *
      * @param  string $group The group identifier.
      * @throws InvalidArgumentException If the group key is invalid.
-     * @return self
      */
-    public function setGroup($group)
+    public function setGroup($group): static
     {
         if (!is_string($group) && $group !== null) {
             throw new InvalidArgumentException(sprintf(
                 'Attachment group must be string, received %s',
-                is_object($group) ? get_class($group) : gettype($group)
+                get_debug_type($group)
             ));
         }
 
@@ -433,9 +415,8 @@ class AttachmentWidget extends AdminWidget implements
      * Set an widget factory.
      *
      * @param FactoryInterface $factory The factory to create widgets.
-     * @return self
      */
-    protected function setWidgetFactory(FactoryInterface $factory)
+    protected function setWidgetFactory(FactoryInterface $factory): static
     {
         $this->widgetFactory = $factory;
 
@@ -446,9 +427,8 @@ class AttachmentWidget extends AdminWidget implements
      * Set the widget's title.
      *
      * @param  mixed $title The title for the current widget.
-     * @return self
      */
-    public function setTitle($title)
+    public function setTitle($title): static
     {
         $this->title = $this->translator()->translation($title);
 
@@ -460,9 +440,8 @@ class AttachmentWidget extends AdminWidget implements
      *
      * @param  integer $num The number of results to retrieve, per page.
      * @throws InvalidArgumentException If the parameter is not numeric or < 0.
-     * @return self
      */
-    public function setNumPerPage($num)
+    public function setNumPerPage($num): static
     {
         if (!is_numeric($num)) {
             throw new InvalidArgumentException(
@@ -488,9 +467,8 @@ class AttachmentWidget extends AdminWidget implements
      *
      * @param integer $page The current page. Start at 0.
      * @throws InvalidArgumentException If the parameter is not numeric or < 0.
-     * @return self
      */
-    public function setPage($page)
+    public function setPage($page): static
     {
         if (!is_numeric($page)) {
             throw new InvalidArgumentException(
@@ -520,7 +498,7 @@ class AttachmentWidget extends AdminWidget implements
      * @param  array|AttachableInterface[] $attachableObjects A list of available attachment types.
      * @return self|boolean
      */
-    public function setAttachableObjects($attachableObjects)
+    public function setAttachableObjects($attachableObjects): false|self
     {
         if (!$this->isMergingData) {
             $attachableObjects = $this->mergePresetAttachableObjects($attachableObjects);
@@ -564,7 +542,7 @@ class AttachmentWidget extends AdminWidget implements
             }
 
             // Useful for attaching a pre-existing attachment
-            $attId = (isset($attMeta['attachment_id']) ? $attMeta['attachment_id'] : null);
+            $attId = ($attMeta['attachment_id'] ?? null);
 
             if (isset($attMeta['label'])) {
                 $label = $this->translator()->translation($attMeta['label']);
@@ -609,14 +587,14 @@ class AttachmentWidget extends AdminWidget implements
                     $icon = 'fa fa-' . $icon;
                 }
             } else {
-                $attParts = explode('/', $attType);
+                $attParts = explode('/', (string)$attType);
                 if (isset($this->defaultIcons[end($attParts)])) {
                     $faIcon = 'fa fa-' . $this->defaultIcons[end($attParts)];
                 }
             }
 
             if (isset($attMeta['show_icon'])) {
-                $showIcon = !!$attMeta['show_icon'];
+                $showIcon = (bool)$attMeta['show_icon'];
             }
 
             if (isset($attMeta['locked'])) {
@@ -633,7 +611,7 @@ class AttachmentWidget extends AdminWidget implements
                 'skipForm'         => $skipForm,
                 'formIdent'        => $formIdent,
                 'quickFormIdent'   => $quickFormIdent,
-                'hasFaIcon'        => !!$faIcon,
+                'hasFaIcon'        => (bool)$faIcon,
                 'faIcon'           => $faIcon,
                 'showIcon'         => $showIcon,
                 'filters'          => $filters,
@@ -652,19 +630,17 @@ class AttachmentWidget extends AdminWidget implements
 
     // Getters
     // =========================================================================
-
     /**
      * Retrieve the widget factory.
      *
      * @throws RuntimeException If the widget factory was not previously set.
-     * @return FactoryInterface
      */
-    public function widgetFactory()
+    public function widgetFactory(): \Charcoal\Factory\FactoryInterface
     {
-        if (!isset($this->widgetFactory)) {
+        if (!$this->widgetFactory instanceof \Charcoal\Factory\FactoryInterface) {
             throw new RuntimeException(sprintf(
                 'Widget Factory is not defined for "%s"',
-                get_class($this)
+                static::class
             ));
         }
 
@@ -683,10 +659,8 @@ class AttachmentWidget extends AdminWidget implements
 
     /**
      * Retrieve the attachment options.
-     *
-     * @return array
      */
-    public function attachmentOptions()
+    public function attachmentOptions(): array
     {
         if ($this->attachmentOptions === null) {
             $this->attachmentOptions = $this->defaultAttachmentOptions();
@@ -729,10 +703,8 @@ class AttachmentWidget extends AdminWidget implements
         return $this->attachableObjects;
     }
 
-    /**
-     * @return array
-     */
-    public function widgetDataForJs()
+    #[\Override]
+    public function widgetDataForJs(): array
     {
         return [
             'obj_type' => $this->obj()->objType(),
@@ -743,10 +715,8 @@ class AttachmentWidget extends AdminWidget implements
 
     /**
      * Retrieve the widget's options.
-     *
-     * @return array
      */
-    public function widgetOptions()
+    public function widgetOptions(): array
     {
         return [
             'obj_type'           => $this->obj()->objType(),
@@ -769,7 +739,7 @@ class AttachmentWidget extends AdminWidget implements
         $options = (JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 
         if ($this->debug()) {
-            $options = ($options | JSON_PRETTY_PRINT);
+            $options |= JSON_PRETTY_PRINT;
         }
 
         return json_encode($this->widgetOptions(), $options);
@@ -780,7 +750,7 @@ class AttachmentWidget extends AdminWidget implements
      *
      * @return string Returns a stringified JSON object, protected from Mustache rendering.
      */
-    final public function escapedWidgetOptionsAsJson()
+    final public function escapedWidgetOptionsAsJson(): string
     {
         return '{{=<% %>=}}' . $this->widgetOptionsAsJson() . '<%={{ }}=%>';
     }
@@ -802,7 +772,7 @@ class AttachmentWidget extends AdminWidget implements
      * @param  string $string A dirty string to filter.
      * @return string
      */
-    public function createIdent($string)
+    public function createIdent($string): ?string
     {
         return preg_replace('~/~', '-', $string);
     }

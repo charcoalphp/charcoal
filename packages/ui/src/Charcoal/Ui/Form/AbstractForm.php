@@ -27,7 +27,7 @@ abstract class AbstractForm extends AbstractUiItem implements
      *
      * @param array|\ArrayAccess $data The class dependencies.
      */
-    public function __construct($data = null)
+    public function __construct(?array $data = null)
     {
         parent::__construct($data);
 

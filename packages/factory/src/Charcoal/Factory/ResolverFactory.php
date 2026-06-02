@@ -11,30 +11,18 @@ use Charcoal\Factory\AbstractFactory;
  */
 class ResolverFactory extends AbstractFactory
 {
-    /**
-     * @var string $resolverPrefix
-     */
-    private $resolverPrefix = '';
+    private string $resolverPrefix = '';
 
-    /**
-     * @var string $resolverSuffix
-     */
-    private $resolverSuffix = '';
+    private string $resolverSuffix = '';
 
-    /**
-     * @var array $resolverCapitals
-     */
-    private $resolverCapitals;
+    private array $resolverCapitals;
 
-    /**
-     * @var array $resolverReplacements
-     */
-    private $resolverReplacements;
+    private array $resolverReplacements;
 
     /**
      * @param array $data Factory arguments.
      */
-    public function __construct(array $data = null)
+    public function __construct(?array $data = null)
     {
         parent::__construct($data);
 
@@ -71,7 +59,7 @@ class ResolverFactory extends AbstractFactory
      * @throws InvalidArgumentException If the prefix argument is not a string.
      * @return ResolverFactory Chainable
      */
-    public function setResolverPrefix($prefix)
+    public function setResolverPrefix($prefix): static
     {
         if (!is_string($prefix)) {
             throw new InvalidArgumentException(
@@ -82,10 +70,7 @@ class ResolverFactory extends AbstractFactory
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function resolverPrefix()
+    public function resolverPrefix(): string
     {
         return $this->resolverPrefix;
     }
@@ -95,7 +80,7 @@ class ResolverFactory extends AbstractFactory
      * @throws InvalidArgumentException If the suffix argument is not a string.
      * @return ResolverFactory Chainable
      */
-    public function setResolverSuffix($suffix)
+    public function setResolverSuffix($suffix): static
     {
         if (!is_string($suffix)) {
             throw new InvalidArgumentException(
@@ -106,10 +91,7 @@ class ResolverFactory extends AbstractFactory
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function resolverSuffix()
+    public function resolverSuffix(): string
     {
         return $this->resolverSuffix;
     }
@@ -118,16 +100,13 @@ class ResolverFactory extends AbstractFactory
      * @param array $capitals The array of letter to "calitalize-next" (uppercase next letter in the string).
      * @return ResolverFactory Chainable
      */
-    public function setResolverCapitals(array $capitals)
+    public function setResolverCapitals(array $capitals): static
     {
         $this->resolverCapitals = $capitals;
         return $this;
     }
 
-    /**
-     * @return array
-     */
-    public function resolverCapitals()
+    public function resolverCapitals(): array
     {
         return $this->resolverCapitals;
     }
@@ -136,16 +115,13 @@ class ResolverFactory extends AbstractFactory
      * @param array $replacements The array (key=>value) of replacements.
      * @return ResolverFactory Chainable
      */
-    public function setResolverReplacements(array $replacements)
+    public function setResolverReplacements(array $replacements): static
     {
         $this->resolverReplacements = $replacements;
         return $this;
     }
 
-    /**
-     * @return array
-     */
-    public function resolverReplacements()
+    public function resolverReplacements(): array
     {
         return $this->resolverReplacements;
     }
@@ -157,7 +133,8 @@ class ResolverFactory extends AbstractFactory
      * @throws InvalidArgumentException If the type parameter is not a string.
      * @return string The resolved class name (FQN).
      */
-    public function resolve($type)
+    #[\Override]
+    public function resolve($type): string
     {
         if (!is_string($type)) {
             throw new InvalidArgumentException(
@@ -165,7 +142,7 @@ class ResolverFactory extends AbstractFactory
             );
         }
 
-        $capitalize_next = function (&$i) {
+        $capitalize_next = function (&$i): void {
             $i = ucfirst($i);
         };
 
@@ -192,9 +169,9 @@ class ResolverFactory extends AbstractFactory
     /**
      * @param string $type The "type" of object to resolve (the object ident).
      * @throws InvalidArgumentException If the type parameter is not a string.
-     * @return boolean
      */
-    public function isResolvable($type)
+    #[\Override]
+    public function isResolvable($type): bool
     {
         if (!is_string($type)) {
             throw new InvalidArgumentException(

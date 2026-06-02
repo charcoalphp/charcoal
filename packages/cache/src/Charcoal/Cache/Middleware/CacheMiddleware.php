@@ -44,14 +44,14 @@ class CacheMiddleware
      *
      * @var string[]
      */
-    private $methods;
+    private readonly array $methods;
 
     /**
      * Cache response if the request matches one of the HTTP status codes.
      *
      * @var integer[]
      */
-    private $statusCodes;
+    private readonly array $statusCodes;
 
     /**
      * Time-to-live in seconds.
@@ -142,10 +142,8 @@ class CacheMiddleware
 
     /**
      * Default middleware options.
-     *
-     * @return array
      */
-    public function defaults()
+    public function defaults(): array
     {
         return [
             'ttl'            => CacheConfig::DAY_IN_SECONDS,
@@ -191,7 +189,7 @@ class CacheMiddleware
             return $next($request, $response);
         }
 
-        if ($this->isSkipCache($request)) {
+        if ($this->isSkipCache()) {
             return $next($request, $response);
         }
 
@@ -230,7 +228,7 @@ class CacheMiddleware
 
         if (!$this->isQueryIncluded($query)) {
             $queryArr = $this->parseIgnoredParams($query);
-            if (!empty($queryArr)) {
+            if ($queryArr !== []) {
                 return $this->disableCacheHeadersOnResponse($response);
             }
         }
@@ -286,20 +284,16 @@ class CacheMiddleware
      * Determine if the HTTP request method matches the accepted choices.
      *
      * @param  RequestInterface $request The PSR-7 HTTP request.
-     * @return boolean
      */
-    private function isRequestMethodValid(RequestInterface $request)
+    private function isRequestMethodValid(RequestInterface $request): bool
     {
         return in_array($request->getMethod(), $this->methods);
     }
 
     /**
      * Determine if the HTTP request method matches the accepted choices.
-     *
-     * @param  RequestInterface $request The PSR-7 HTTP request.
-     * @return boolean
      */
-    private function isSkipCache(RequestInterface $request)
+    private function isSkipCache(): bool
     {
         if (isset($this->skipCache['session_vars'])) {
             $skip = $this->skipCache['session_vars'];
@@ -315,7 +309,6 @@ class CacheMiddleware
                 }
             }
         }
-
         return false;
     }
 
@@ -323,9 +316,8 @@ class CacheMiddleware
      * Determine if the HTTP response status matches the accepted choices.
      *
      * @param  ResponseInterface $response The PSR-7 HTTP response.
-     * @return boolean
      */
-    private function isResponseStatusValid(ResponseInterface $response)
+    private function isResponseStatusValid(ResponseInterface $response): bool
     {
         return in_array($response->getStatusCode(), $this->statusCodes);
     }
@@ -334,9 +326,8 @@ class CacheMiddleware
      * Determine if the request should be cached based on the URI path.
      *
      * @param  string $path The request path (route) to verify.
-     * @return boolean
      */
-    private function isPathIncluded($path)
+    private function isPathIncluded($path): bool
     {
         if ($this->includedPath === '*') {
             return true;
@@ -345,23 +336,22 @@ class CacheMiddleware
         if (empty($this->includedPath) && !is_numeric($this->includedPath)) {
             return false;
         }
-
+        $found = false;
         foreach ((array)$this->includedPath as $included) {
             if (preg_match('@' . $included . '@', $path)) {
-                return true;
+                $found = true;
+                break;
             }
         }
-
-        return false;
+        return $found;
     }
 
     /**
      * Determine if the request should NOT be cached based on the URI path.
      *
      * @param  string $path The request path (route) to verify.
-     * @return boolean
      */
-    private function isPathExcluded($path)
+    private function isPathExcluded($path): bool
     {
         if ($this->excludedPath === '*') {
             return true;
@@ -370,14 +360,14 @@ class CacheMiddleware
         if (empty($this->excludedPath) && !is_numeric($this->excludedPath)) {
             return false;
         }
-
+        $found = false;
         foreach ((array)$this->excludedPath as $excluded) {
             if (preg_match('@' . $excluded . '@', $path)) {
-                return true;
+                $found = true;
+                break;
             }
         }
-
-        return false;
+        return $found;
     }
 
     /**
@@ -388,7 +378,7 @@ class CacheMiddleware
      */
     private function isQueryIncluded(array $queryParams)
     {
-        if (empty($queryParams)) {
+        if ($queryParams === []) {
             return true;
         }
 
@@ -412,7 +402,7 @@ class CacheMiddleware
      */
     private function isQueryExcluded(array $queryParams)
     {
-        if (empty($queryParams)) {
+        if ($queryParams === []) {
             return false;
         }
 
@@ -432,11 +422,10 @@ class CacheMiddleware
      * Returns the query parameters that are NOT ignored.
      *
      * @param  array $queryParams The query parameters to filter.
-     * @return array
      */
-    private function parseIgnoredParams(array $queryParams)
+    private function parseIgnoredParams(array $queryParams): array
     {
-        if (empty($queryParams)) {
+        if ($queryParams === []) {
             return $queryParams;
         }
 
@@ -479,9 +468,8 @@ class CacheMiddleware
 
     /**
      * @param Closure|null $processCacheKeyCallback ProcessCacheKeyCallback for CacheMiddleware.
-     * @return self
      */
-    public function setProcessCacheKeyCallback($processCacheKeyCallback)
+    public function setProcessCacheKeyCallback($processCacheKeyCallback): static
     {
         $this->processCacheKeyCallback = $processCacheKeyCallback;
 

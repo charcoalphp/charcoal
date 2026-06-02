@@ -16,10 +16,7 @@ use Charcoal\Admin\AdminScript;
  */
 class CheckLinksScript extends AdminScript
 {
-    /**
-     * @var string
-     */
-    private $startUrl;
+    private ?string $startUrl = null;
 
     /**
      * @var array
@@ -36,10 +33,7 @@ class CheckLinksScript extends AdminScript
      */
     private $processedUrls = [];
 
-    /**
-     * @var GuzzleClient
-     */
-    private $guzzleClient;
+    private readonly \GuzzleHttp\Client $guzzleClient;
 
     /**
      * @var GoutteClient
@@ -58,10 +52,8 @@ class CheckLinksScript extends AdminScript
         $this->goutteClient->setClient($this->guzzleClient);
     }
 
-    /**
-     * @return array
-     */
-    public function defaultArguments()
+    #[\Override]
+    public function defaultArguments(): array
     {
         $arguments = [
             'url' => [
@@ -81,17 +73,14 @@ class CheckLinksScript extends AdminScript
                 'defaultValue' => true
             ]
         ];
-
-        $arguments = array_merge(parent::defaultArguments(), $arguments);
-        return $arguments;
+        return array_merge(parent::defaultArguments(), $arguments);
     }
 
     /**
      * @param RequestInterface  $request  PSR-7 request.
      * @param ResponseInterface $response PSR-7 response.
-     * @return ResponseInterface
      */
-    public function run(RequestInterface $request, ResponseInterface $response)
+    public function run(RequestInterface $request, ResponseInterface $response): ResponseInterface
     {
         unset($request);
 
@@ -114,9 +103,8 @@ class CheckLinksScript extends AdminScript
 
     /**
      * @param string $url The URL to check.
-     * @return void
      */
-    private function checkUrl($url)
+    private function checkUrl($url): void
     {
         $rawUrl = $url;
         $this->processedUrls[] = $url;
@@ -132,7 +120,7 @@ class CheckLinksScript extends AdminScript
         try {
             $response = $this->guzzleClient->request('GET', $url, [
                 'http_errors' => false,
-                'on_stats' => function (TransferStats $stats) {
+                'on_stats' => function (TransferStats $stats): void {
                     if ($stats->hasResponse()) {
                         $code = $stats->getResponse()->getStatusCode();
                         $transferTime = (1000 * $stats->getTransferTime());
@@ -162,7 +150,7 @@ class CheckLinksScript extends AdminScript
                     }
                 }
             ]);
-        } catch (Exception $e) {
+        } catch (Exception) {
             // Do nothing
             $this->climate()->error('-- Error retrieving ' . $url);
         }
@@ -174,13 +162,12 @@ class CheckLinksScript extends AdminScript
     /**
      * @param string  $url   The URL to retrieve links from.
      * @param integer $level The current level.
-     * @return void
      */
-    private function retrieveLinks($url, $level)
+    private function retrieveLinks($url, int|float $level): void
     {
 
         $crawler = $this->goutteClient->request('GET', $url);
-        $crawler->filter('a')->each(function ($item) use ($level) {
+        $crawler->filter('a')->each(function ($item) use ($level): void {
             $href = $item->attr('href');
             if (in_array($href, $this->processedUrls)) {
                 return;
@@ -202,19 +189,15 @@ class CheckLinksScript extends AdminScript
         if (!isset($parsed['host'])) {
             return true;
         }
-        if ($parsed['host'] === $this->parsedStartUrl['host']) {
-            return true;
-        }
-        return false;
+        return $parsed['host'] === $this->parsedStartUrl['host'];
     }
 
     /**
      * @param string $url The URL to convert to absolute.
-     * @return string
      */
-    private function absoluteLink($url)
+    private function absoluteLink($url): string
     {
-        if (strstr($url, 'http') === false) {
+        if (!str_contains($url, 'http')) {
             return $this->startUrl . ltrim($url, '/');
         } else {
             return $url;
@@ -223,16 +206,10 @@ class CheckLinksScript extends AdminScript
 
     /**
      * @param string $url The URL to valdate.
-     * @return boolean
      */
-    private function validateLink($url)
+    private function validateLink($url): bool
     {
         $parsed = parse_url($url);
-        if (isset($parsed['scheme'])) {
-            if (!in_array($parsed['scheme'], ['http', 'https'])) {
-                return false;
-            }
-        }
-        return true;
+        return !(isset($parsed['scheme']) && !in_array($parsed['scheme'], ['http', 'https']));
     }
 }

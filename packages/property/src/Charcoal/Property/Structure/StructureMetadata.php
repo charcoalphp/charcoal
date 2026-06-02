@@ -13,17 +13,13 @@ class StructureMetadata extends AbstractMetadata
 {
     /**
      * The metadata identifier.
-     *
-     * @var string|null
      */
-    private $ident;
+    private ?string $ident = null;
 
     /**
      * Store the admin module config.
-     *
-     * @var array
      */
-    private $admin = [];
+    private array $admin = [];
 
     /**
      * Set the metadata identifier.
@@ -32,7 +28,7 @@ class StructureMetadata extends AbstractMetadata
      * @throws InvalidArgumentException If identifier is not a string.
      * @return StructureMetadata Chainable
      */
-    public function setIdent($ident)
+    public function setIdent($ident): static
     {
         if ($ident === null) {
             $this->ident = null;
@@ -43,8 +39,8 @@ class StructureMetadata extends AbstractMetadata
             throw new InvalidArgumentException(
                 sprintf(
                     '[%s] Identifier must be a string; received %s',
-                    get_called_class(),
-                    (is_object($ident) ? get_class($ident) : gettype($ident))
+                    static::class,
+                    (get_debug_type($ident))
                 )
             );
         }
@@ -56,10 +52,8 @@ class StructureMetadata extends AbstractMetadata
 
     /**
      * Retrieve the metadata identifier.
-     *
-     * @return string|null
      */
-    public function ident()
+    public function ident(): ?string
     {
         return $this->ident;
     }
@@ -68,9 +62,9 @@ class StructureMetadata extends AbstractMetadata
      * Set the object's default values.
      *
      * @param  array $data An associative array.
-     * @return StructureMetadata
      */
-    public function setDefaultData(array $data)
+    #[\Override]
+    public function setDefaultData(array $data): static
     {
         foreach ($data as $key => $val) {
             $key = $this->camelize($key);
@@ -84,9 +78,9 @@ class StructureMetadata extends AbstractMetadata
      * Set the properties.
      *
      * @param  array $properties One or more properties.
-     * @return StructureMetadata
      */
-    public function setProperties(array $properties)
+    #[\Override]
+    public function setProperties(array $properties): static
     {
         foreach ($properties as $propertyIdent => $propertyMetadata) {
             $propertyIdent = $this->camelize($propertyIdent);
@@ -108,9 +102,8 @@ class StructureMetadata extends AbstractMetadata
      *
      * @param  string $propertyIdent The property identifier to lookup.
      * @throws InvalidArgumentException If the identifier argument is not a string.
-     * @return boolean
      */
-    public function hasProperty($propertyIdent)
+    public function hasProperty($propertyIdent): bool
     {
         if (!is_string($propertyIdent)) {
             throw new InvalidArgumentException(
@@ -124,10 +117,8 @@ class StructureMetadata extends AbstractMetadata
 
     /**
      * Retrieve the admin module's metadata.
-     *
-     * @return array
      */
-    public function admin()
+    public function admin(): array
     {
         return $this->admin;
     }
@@ -136,9 +127,8 @@ class StructureMetadata extends AbstractMetadata
      * Set the admin module's metadata.
      *
      * @param  array $data Metadata.
-     * @return StructureMetadata
      */
-    public function setAdmin(array $data)
+    public function setAdmin(array $data): static
     {
         $this->admin = array_replace_recursive($this->admin, $data);
 

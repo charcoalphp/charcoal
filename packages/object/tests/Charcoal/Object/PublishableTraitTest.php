@@ -26,19 +26,15 @@ class PublishableTraitTest extends AbstractTestCase
      *
      * @var PublishableTrait
      */
-    private $obj;
+    private \Charcoal\Tests\Object\Mocks\PublishableClass $obj;
 
     /**
      * Store the service container.
-     *
-     * @var Container
      */
-    private $container;
+    private ?\Pimple\Container $container = null;
 
     /**
      * Set up the test.
-     *
-     * @return void
      */
     public function setUp(): void
     {
@@ -56,10 +52,8 @@ class PublishableTraitTest extends AbstractTestCase
      * - accepts a string representation of a date/time value
      * - accepts a {@see \DateTimeInterface}
      * - accepts an blank value
-     *
-     * @return void
      */
-    public function testPublishDate()
+    public function testPublishDate(): void
     {
         $obj  = $this->obj;
         $time = new DateTime('2015-01-01 00:00:00');
@@ -75,10 +69,7 @@ class PublishableTraitTest extends AbstractTestCase
         $this->assertEquals($time, $obj->getPublishDate());
     }
 
-    /**
-     * @return void
-     */
-    public function testUnexpectedPublishDate()
+    public function testUnexpectedPublishDate(): void
     {
         $obj = $this->obj;
 
@@ -86,10 +77,7 @@ class PublishableTraitTest extends AbstractTestCase
         $obj->setPublishDate('foobar');
     }
 
-    /**
-     * @return void
-     */
-    public function testInvalidPublishDate()
+    public function testInvalidPublishDate(): void
     {
         $obj = $this->obj;
 
@@ -103,10 +91,8 @@ class PublishableTraitTest extends AbstractTestCase
      * - accepts a string representation of a date/time value
      * - accepts a {@see \DateTimeInterface}
      * - accepts an blank value
-     *
-     * @return void
      */
-    public function testExpiryDate()
+    public function testExpiryDate(): void
     {
         $obj  = $this->obj;
         $time = new DateTime('2015-01-01 00:00:00');
@@ -122,10 +108,7 @@ class PublishableTraitTest extends AbstractTestCase
         $this->assertEquals($time, $obj->getExpiryDate());
     }
 
-    /**
-     * @return void
-     */
-    public function testUnexpectedExpiryDate()
+    public function testUnexpectedExpiryDate(): void
     {
         $obj = $this->obj;
 
@@ -133,10 +116,7 @@ class PublishableTraitTest extends AbstractTestCase
         $obj->setExpiryDate('foobar');
     }
 
-    /**
-     * @return void
-     */
-    public function testInvalidExpiryDate()
+    public function testInvalidExpiryDate(): void
     {
         $obj = $this->obj;
 
@@ -144,10 +124,7 @@ class PublishableTraitTest extends AbstractTestCase
         $obj->setExpiryDate(false);
     }
 
-    /**
-     * @return void
-     */
-    public function testPublishStatus()
+    public function testPublishStatus(): void
     {
         $obj = $this->obj;
 
@@ -174,14 +151,13 @@ class PublishableTraitTest extends AbstractTestCase
     }
 
     /**
-     * @dataProvider providerPublishStatus
      *
      * @param  mixed  $publishDate    A date/time value.
      * @param  mixed  $expiryDate     A date/time value.
      * @param  string $expectedStatus The expected publication status.
-     * @return void
      */
-    public function testPublishStatusFromDates($publishDate, $expiryDate, $expectedStatus)
+    #[\PHPUnit\Framework\Attributes\DataProvider('providerPublishStatus')]
+    public function testPublishStatusFromDates(?string $publishDate, ?string $expiryDate, string $expectedStatus): void
     {
         $obj = $this->obj;
         if ($publishDate !== null) {
@@ -204,10 +180,7 @@ class PublishableTraitTest extends AbstractTestCase
         $this->assertEquals($expectedStatus, $obj->publishDateStatus());
     }
 
-    /**
-     * @return array
-     */
-    public function providerPublishStatus()
+    public static function providerPublishStatus(): array
     {
         return [
             [ null, null, Publishable::STATUS_PUBLISHED ],
@@ -220,10 +193,7 @@ class PublishableTraitTest extends AbstractTestCase
         ];
     }
 
-    /**
-     * @return void
-     */
-    public function testIsPublished()
+    public function testIsPublished(): void
     {
         $obj = $this->obj;
 
@@ -247,12 +217,10 @@ class PublishableTraitTest extends AbstractTestCase
 
     /**
      * Set up the service container.
-     *
-     * @return Container
      */
-    private function container()
+    private function container(): \Pimple\Container
     {
-        if ($this->container === null) {
+        if (!$this->container instanceof \Pimple\Container) {
             $container = new Container();
             $containerProvider = new ContainerProvider();
             $containerProvider->registerBaseServices($container);

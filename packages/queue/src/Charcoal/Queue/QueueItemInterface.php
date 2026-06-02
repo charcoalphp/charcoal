@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Charcoal\Queue;
 
 use Charcoal\Model\ModelInterface;
@@ -23,9 +25,9 @@ interface QueueItemInterface extends ModelInterface
      *     FALSE on failure or if an error occurs, NULL if this item is already processed.
      */
     public function process(
-        callable $alwaysCallback = null,
-        callable $successCallback = null,
-        callable $failureCallback = null
+        ?callable $alwaysCallback = null,
+        ?callable $successCallback = null,
+        ?callable $failureCallback = null
     );
 
     /**

@@ -17,15 +17,11 @@ class FaqCategoryTest extends AbstractTestCase
 
     /**
      * Tested Class.
-     *
-     * @var FaqCategory
      */
-    private $obj;
+    private \Charcoal\Cms\FaqCategory $obj;
 
     /**
      * Set up the test.
-     *
-     * @return void
      */
     protected function setUp(): void
     {
@@ -34,10 +30,7 @@ class FaqCategoryTest extends AbstractTestCase
         $this->obj = new FaqCategory($dependencies);
     }
 
-    /**
-     * @return void
-     */
-    public function testItemType()
+    public function testItemType(): void
     {
         $this->assertEquals(Faq::class, $this->obj->itemType());
     }

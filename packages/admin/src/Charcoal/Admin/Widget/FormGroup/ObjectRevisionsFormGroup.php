@@ -40,9 +40,8 @@ class ObjectRevisionsFormGroup extends AbstractFormGroup implements
 
     /**
      * @param string $widgetId The widget identifier.
-     * @return self
      */
-    public function setWidgetId($widgetId)
+    public function setWidgetId($widgetId): static
     {
         $this->widgetId = $widgetId;
 
@@ -61,10 +60,8 @@ class ObjectRevisionsFormGroup extends AbstractFormGroup implements
         return $this->widgetId;
     }
 
-    /**
-     * @return boolean
-     */
-    public function active()
+    #[\Override]
+    public function active(): bool
     {
         return parent::active() && $this->objType() && $this->objId();
     }
@@ -105,6 +102,7 @@ class ObjectRevisionsFormGroup extends AbstractFormGroup implements
      * @param  Container $container A dependencies container instance.
      * @return void
      */
+    #[\Override]
     protected function setDependencies(Container $container)
     {
         parent::setDependencies($container);

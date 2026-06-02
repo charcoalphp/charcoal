@@ -5,9 +5,9 @@ namespace Charcoal\Tests\View\Mustache;
 use StdClass;
 
 // From Mustache
-use Mustache_Engine as MustacheEngine;
-use Mustache_LambdaHelper as LambdaHelper;
-use Mustache_Template as MustacheTemplate;
+use Mustache\Engine as MustacheEngine;
+use Mustache\LambdaHelper as LambdaHelper;
+use Mustache\Template as MustacheTemplate;
 
 // From 'charcoal-view'
 use Charcoal\View\Mustache\AssetsHelpers;
@@ -18,19 +18,10 @@ use Charcoal\Tests\AbstractTestCase;
  */
 class AssetsHelpersTest extends AbstractTestCase
 {
-    /**
-     * @var AssetsHelpers
-     */
-    private $obj;
+    private \Charcoal\View\Mustache\AssetsHelpers $obj;
 
-    /**
-     * @var MustacheEngine
-     */
-    private $mustache;
+    private MustacheEngine $mustache;
 
-    /**
-     * @return void
-     */
     public function setUp(): void
     {
         $this->obj      = new AssetsHelpers();
@@ -39,10 +30,7 @@ class AssetsHelpersTest extends AbstractTestCase
         ]);
     }
 
-    /**
-     * @return void
-     */
-    public function testDefaults()
+    public function testDefaults(): void
     {
         $this->assertEquals('', $this->obj->js());
         $this->assertEquals('', $this->obj->css());
@@ -50,10 +38,7 @@ class AssetsHelpersTest extends AbstractTestCase
         $this->assertEquals('', $this->obj->cssRequirements());
     }
 
-    /**
-     * @return void
-     */
-    public function testAddJs()
+    public function testAddJs(): void
     {
         $this->obj->addJs('<script id="foo">');
         $this->obj->addJs('<script id="baz">');
@@ -61,10 +46,7 @@ class AssetsHelpersTest extends AbstractTestCase
         $this->assertEquals('', $this->obj->js());
     }
 
-    /**
-     * @return void
-     */
-    public function testAddJsWithMustache()
+    public function testAddJsWithMustache(): void
     {
         $template = $this->mustache->loadTemplate(
             '{{# addJs }}<script id="{{name}}">{{/ addJs }}'."<<<\n".'{{& js }}'."\n>>>"
@@ -78,20 +60,14 @@ class AssetsHelpersTest extends AbstractTestCase
         $this->assertEquals("<<<\n".'<script id="qux">'."\n>>>", $rendered);
     }
 
-    /**
-     * @return void
-     */
-    public function testAddCss()
+    public function testAddCss(): void
     {
         $this->obj->addCss('<style id="foo">');
         $this->obj->addCss('<style id="baz">');
         $this->assertEquals('<style id="foo"><style id="baz">', $this->obj->css());
     }
 
-    /**
-     * @return void
-     */
-    public function testAddCssWithMustache()
+    public function testAddCssWithMustache(): void
     {
         $template = $this->mustache->loadTemplate(
             '{{# addCss }}<style id="{{name}}">{{/ addCss }}'."<<<\n".'{{& css }}'."\n>>>"
@@ -105,10 +81,7 @@ class AssetsHelpersTest extends AbstractTestCase
         $this->assertEquals("<<<\n".'<style id="qux">'."\n>>>", $rendered);
     }
 
-    /**
-     * @return void
-     */
-    public function testAddJsRequirement()
+    public function testAddJsRequirement(): void
     {
         // Test enqueue
         $this->obj->addJsRequirement('<script id="foo">');
@@ -120,10 +93,7 @@ class AssetsHelpersTest extends AbstractTestCase
         $this->assertEquals('', $this->obj->jsRequirements());
     }
 
-    /**
-     * @return void
-     */
-    public function testAddJsRequirementWithMustache()
+    public function testAddJsRequirementWithMustache(): void
     {
         $template = $this->mustache->loadTemplate(
             '{{# addJsRequirement }}<script id="{{name}}">{{/ addJsRequirement }}'.
@@ -138,10 +108,7 @@ class AssetsHelpersTest extends AbstractTestCase
         $this->assertEquals("<<<\n".'<script id="qux">'."\n>>>", $rendered);
     }
 
-    /**
-     * @return void
-     */
-    public function testAddCssRequirement()
+    public function testAddCssRequirement(): void
     {
         // Test enqueue
         $this->obj->addCssRequirement('<style id="foo">');
@@ -153,10 +120,7 @@ class AssetsHelpersTest extends AbstractTestCase
         $this->assertEquals('', $this->obj->cssRequirements());
     }
 
-    /**
-     * @return void
-     */
-    public function testAddCssRequirementWithMustache()
+    public function testAddCssRequirementWithMustache(): void
     {
         $template = $this->mustache->loadTemplate(
             '{{# addCssRequirement }}<style id="{{name}}">{{/ addCssRequirement }}'.
@@ -171,30 +135,21 @@ class AssetsHelpersTest extends AbstractTestCase
         $this->assertEquals("<<<\n".'<style id="qux">'."\n>>>", $rendered);
     }
 
-    /**
-     * @return void
-     */
-    public function testPurgeJs()
+    public function testPurgeJs(): void
     {
         $this->obj->addJs('<script>');
         $this->obj->purgeJs();
         $this->assertEquals('', $this->obj->js());
     }
 
-    /**
-     * @return void
-     */
-    public function testPurgeCss()
+    public function testPurgeCss(): void
     {
         $this->obj->addCss('<style>');
         $this->obj->purgeCss();
         $this->assertEquals('', $this->obj->css());
     }
 
-    /**
-     * @return void
-     */
-    public function testPurgeAssets()
+    public function testPurgeAssets(): void
     {
         $this->obj->addCss('<style>');
         $this->obj->addJs('<script>');
@@ -203,10 +158,7 @@ class AssetsHelpersTest extends AbstractTestCase
         $this->assertEquals('', $this->obj->js());
     }
 
-    /**
-     * @return void
-     */
-    public function testPurgeAssetsWithMustache()
+    public function testPurgeAssetsWithMustache(): void
     {
         $template = $this->mustache->loadTemplate(
             '{{# addCss }}<style>{{/ addCss }}{{# addJs }}<script>{{/ addJs }}{{ purgeAssets }}'
@@ -216,10 +168,7 @@ class AssetsHelpersTest extends AbstractTestCase
         $this->assertEquals('', $rendered);
     }
 
-    /**
-     * @return void
-     */
-    public function testPurgeJsWithMustache()
+    public function testPurgeJsWithMustache(): void
     {
         $template = $this->mustache->loadTemplate(
             '{{# addJs }}<script>{{/ addJs }}{{ purgeJs }}'
@@ -229,10 +178,7 @@ class AssetsHelpersTest extends AbstractTestCase
         $this->assertEquals('', $rendered);
     }
 
-    /**
-     * @return void
-     */
-    public function testPurgeCssWithMustache()
+    public function testPurgeCssWithMustache(): void
     {
         $template = $this->mustache->loadTemplate(
             '{{# addCss }}<style>{{/ addCss }}{{ purgeCss }}'

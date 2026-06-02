@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Charcoal\View\Mustache;
 
 // From Mustache
-use Mustache_LambdaHelper as LambdaHelper;
+use Mustache\LambdaHelper as LambdaHelper;
 // From 'erusev/parsedown'
 use Parsedown;
 
@@ -16,10 +16,8 @@ class MarkdownHelpers implements HelpersInterface
 {
     /**
      * Store the Markdown parser.
-     *
-     * @var Parsedown
      */
-    private $parsedown;
+    private \Parsedown $parsedown;
 
     /**
      * @param array $data Class Dependencies.
@@ -31,8 +29,6 @@ class MarkdownHelpers implements HelpersInterface
 
     /**
      * Retrieve the helpers.
-     *
-     * @return array
      */
     public function toArray(): array
     {
@@ -46,11 +42,10 @@ class MarkdownHelpers implements HelpersInterface
      *
      * @param  string            $text   The Markdown text to parse.
      * @param  LambdaHelper|null $helper For rendering strings in the current context.
-     * @return string
      */
-    public function __invoke($text, LambdaHelper $helper = null): string
+    public function __invoke($text, ?LambdaHelper $helper = null): string
     {
-        if ($helper !== null) {
+        if ($helper instanceof \Mustache\LambdaHelper) {
             $text = $helper->render($text);
         }
         return $this->parsedown->text($text);
@@ -60,7 +55,6 @@ class MarkdownHelpers implements HelpersInterface
      * Set the Markdown parser.
      *
      * @param  Parsedown $parser Thar Markdown parser.
-     * @return void
      */
     private function setParsedown(Parsedown $parser): void
     {

@@ -14,7 +14,7 @@ trait DocumentTrait
      *
      * @return string[]
      */
-    protected function documentTitleParts()
+    protected function documentTitleParts(): array
     {
         return [
             'title' => $this->title(),
@@ -24,23 +24,19 @@ trait DocumentTrait
 
     /**
      * Retrieve the document title separator.
-     *
-     * @return string
      */
-    protected function documentTitleSeparator()
+    protected function documentTitleSeparator(): string
     {
         return '—';
     }
 
     /**
      * Parse the document title separator.
-     *
-     * @return string
      */
-    protected function parseDocumentTitleSeparator()
+    protected function parseDocumentTitleSeparator(): string
     {
         $delim = trim($this->documentTitleSeparator());
-        if (empty($delim)) {
+        if ($delim === '' || $delim === '0') {
             return '';
         }
 
@@ -53,13 +49,12 @@ trait DocumentTrait
      * @param  array $parts The document title parts.
      * @return string The concatenated title.
      */
-    protected function parseDocumentTitle(array $parts)
+    protected function parseDocumentTitle(array $parts): string
     {
         $parts = $this->parseDocumentTitleParts($parts);
         $delim = $this->parseDocumentTitleSeparator();
-        $title = implode($delim, $parts);
 
-        return $title;
+        return implode($delim, $parts);
     }
 
     /**
@@ -73,7 +68,7 @@ trait DocumentTrait
      * @param  array $parts The document title parts.
      * @return array The parsed and filtered segments.
      */
-    protected function parseDocumentTitleParts(array $parts)
+    protected function parseDocumentTitleParts(array $parts): array
     {
         $segments = [];
         foreach ($parts as $key => $value) {

@@ -19,22 +19,16 @@ class ObjectScheduleTest extends AbstractTestCase
 {
     /**
      * Tested Class.
-     *
-     * @var ObjectSchedule
      */
-    private $obj;
+    private \Charcoal\Object\ObjectSchedule $obj;
 
     /**
      * Store the service container.
-     *
-     * @var Container
      */
-    private $container;
+    private ?\Pimple\Container $container = null;
 
     /**
      * Set up the test.
-     *
-     * @return void
      */
     public function setUp(): void
     {
@@ -43,10 +37,7 @@ class ObjectScheduleTest extends AbstractTestCase
         $this->obj = $container['model/factory']->create(ObjectSchedule::class);
     }
 
-    /**
-     * @return void
-     */
-    public function testSetTargetType()
+    public function testSetTargetType(): void
     {
         $this->assertNull($this->obj->getTargetType());
         $ret = $this->obj->setTargetType('foobar');
@@ -57,10 +48,7 @@ class ObjectScheduleTest extends AbstractTestCase
         $this->obj->setTargetType(false);
     }
 
-    /**
-     * @return void
-     */
-    public function testSetTargetId()
+    public function testSetTargetId(): void
     {
         $this->assertNull($this->obj->getTargetId());
         $ret = $this->obj->setTargetId(42);
@@ -68,10 +56,7 @@ class ObjectScheduleTest extends AbstractTestCase
         $this->assertEquals(42, $this->obj->getTargetId());
     }
 
-    /**
-     * @return void
-     */
-    public function testSetDataDiff()
+    public function testSetDataDiff(): void
     {
         $this->assertEquals([], $this->obj->getDataDiff());
         $ret = $this->obj->setDataDiff(['foo'=>42]);
@@ -79,10 +64,7 @@ class ObjectScheduleTest extends AbstractTestCase
         $this->assertEquals(['foo'=>42], $this->obj->getDataDiff());
     }
 
-    /**
-     * @return void
-     */
-    public function testSetProcessed()
+    public function testSetProcessed(): void
     {
         $this->assertFalse($this->obj->getProcessed());
         $ret = $this->obj->setProcessed(true);
@@ -90,10 +72,7 @@ class ObjectScheduleTest extends AbstractTestCase
         $this->assertTrue($this->obj->getProcessed());
     }
 
-    /**
-     * @return void
-     */
-    public function testSetScheduledDate()
+    public function testSetScheduledDate(): void
     {
         $obj = $this->obj;
         $this->assertNull($obj->getScheduledDate());
@@ -109,19 +88,13 @@ class ObjectScheduleTest extends AbstractTestCase
         $obj->setScheduledDate(false);
     }
 
-    /**
-     * @return void
-     */
-    public function testSetScheduledDateInvalidTime()
+    public function testSetScheduledDateInvalidTime(): void
     {
         $this->expectException('\InvalidArgumentException');
         $this->obj->setScheduledDate('A totally invalid date time');
     }
 
-    /**
-     * @return void
-     */
-    public function testSetProcessedDate()
+    public function testSetProcessedDate(): void
     {
         $obj = $this->obj;
         $this->assertNull($obj->getProcessedDate());
@@ -137,19 +110,13 @@ class ObjectScheduleTest extends AbstractTestCase
         $obj->setProcessedDate(false);
     }
 
-    /**
-     * @return void
-     */
-    public function testSetProcessedDateInvalidTime()
+    public function testSetProcessedDateInvalidTime(): void
     {
         $this->expectException('\InvalidArgumentException');
         $this->obj->setProcessedDate('A totally invalid date time');
     }
 
-    /**
-     * @return void
-     */
-    public function testProcess()
+    public function testProcess(): void
     {
         $container = $this->container();
         $this->obj->setModelFactory($container['model/factory']);
@@ -167,12 +134,10 @@ class ObjectScheduleTest extends AbstractTestCase
 
     /**
      * Set up the service container.
-     *
-     * @return Container
      */
-    private function container()
+    private function container(): \Pimple\Container
     {
-        if ($this->container === null) {
+        if (!$this->container instanceof \Pimple\Container) {
             $container = new Container();
             $containerProvider = new ContainerProvider();
             $containerProvider->registerBaseServices($container);

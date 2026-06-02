@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Charcoal\Source;
 
 use JsonSerializable;
@@ -9,8 +11,7 @@ use Serializable;
  * Describes a query expression.
  */
 interface ExpressionInterface extends
-    JsonSerializable,
-    Serializable
+    JsonSerializable
 {
     /**
      * Set the expression data.

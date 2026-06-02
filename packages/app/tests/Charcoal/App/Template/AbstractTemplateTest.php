@@ -23,17 +23,13 @@ class AbstractTemplateTest extends AbstractTestCase
 {
     /**
      * Tested Class.
-     *
-     * @var AbstractTemplate
      */
-    private $obj;
+    private \Charcoal\App\Template\AbstractTemplate $obj;
 
     /**
      * Store the service container.
-     *
-     * @var Container
      */
-    private $container;
+    private ?\Pimple\Container $container = null;
 
     /**
      * Set up the test.
@@ -42,26 +38,24 @@ class AbstractTemplateTest extends AbstractTestCase
     {
         $container = $this->container();
 
-        $this->obj = $this->getMockForAbstractClass(AbstractTemplate::class, [[
+        $this->obj = new class ([
             'logger'    => $container['logger'],
             'container' => $container
-        ]]);
+        ]) extends AbstractTemplate {};
     }
 
-    public function testInitIsTrue()
+    public function testInitIsTrue(): void
     {
-        $request = $this->createMock(RequestInterface::class);
+        $request = $this->createStub(RequestInterface::class);
         $this->assertTrue($this->obj->init($request));
     }
 
     /**
      * Set up the service container.
-     *
-     * @return Container
      */
-    private function container()
+    private function container(): \Pimple\Container
     {
-        if ($this->container === null) {
+        if (!$this->container instanceof \Pimple\Container) {
             $container = new Container();
             $containerProvider = new ContainerProvider();
             $containerProvider->registerLogger($container);

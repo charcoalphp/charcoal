@@ -19,26 +19,21 @@ class AbstractEngineTest extends AbstractTestCase
      */
     public $obj;
 
-    /**
-     * @return void
-     */
     public function setUp(): void
     {
         $loader = new MustacheLoader([
             'base_path' => __DIR__,
             'paths'     => [ 'Mustache/templates' ],
         ]);
-        $this->obj = $this->getMockForAbstractClass(AbstractEngine::class, [
-            [
-                'loader' => $loader,
-            ]
-        ]);
+        $this->obj = new class ([
+            'loader' => $loader,
+        ]) extends AbstractEngine {
+            public function type(): string { }
+            public function renderTemplate(string $templateString, $context): string { }
+        };
     }
 
-    /**
-     * @return void
-     */
-    public function testLoadTemplate()
+    public function testLoadTemplate(): void
     {
         $this->assertEquals('', $this->obj->loadTemplate(''));
 
@@ -46,10 +41,7 @@ class AbstractEngineTest extends AbstractTestCase
         $this->assertEquals($expected, $this->obj->loadTemplate('foo'));
     }
 
-    /**
-     * @return void
-     */
-    public function testSetDynamicTemplate()
+    public function testSetDynamicTemplate(): void
     {
         $this->assertNull($this->obj->setDynamicTemplate('foo', 'bar'));
     }

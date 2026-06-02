@@ -45,7 +45,8 @@ class ReorderAction extends AdminAction implements ObjectContainerInterface
      *
      * @return string[]
      */
-    protected function validDataFromRequest()
+    #[\Override]
+    protected function validDataFromRequest(): array
     {
         return array_merge([
             'obj_type', 'obj_id'
@@ -79,7 +80,7 @@ class ReorderAction extends AdminAction implements ObjectContainerInterface
 
         try {
             if (!$objType) {
-                $actualType = is_object($objType) ? get_class($objType) : gettype($objType);
+                $actualType = get_debug_type($objType);
                 $this->addFeedback('error', strtr($reqMessage, [
                     '{{ parameter }}'    => '"obj_type"',
                     '{{ expectedType }}' => 'string',
@@ -95,7 +96,7 @@ class ReorderAction extends AdminAction implements ObjectContainerInterface
             $this->setObjType($objType);
 
             if (!$objOrders || !is_array($objOrders)) {
-                $actualType = is_object($objOrders) ? get_class($objOrders) : gettype($objOrders);
+                $actualType = get_debug_type($objOrders);
                 $this->addFeedback('error', strtr($reqMessage, [
                     '{{ parameter }}'    => '"obj_orders"',
                     '{{ expectedType }}' => 'array of object IDs',
@@ -107,7 +108,7 @@ class ReorderAction extends AdminAction implements ObjectContainerInterface
             }
 
             if (!is_string($orderProperty)) {
-                $actualType = is_object($orderProperty) ? get_class($orderProperty) : gettype($orderProperty);
+                $actualType = get_debug_type($orderProperty);
                 $this->addFeedback('error', strtr($typeMessage, [
                     '{{ parameter }}'    => '"obj_property"',
                     '{{ expectedType }}' => 'string',
@@ -166,10 +167,8 @@ class ReorderAction extends AdminAction implements ObjectContainerInterface
         }
     }
 
-    /**
-     * @return array
-     */
-    public function results()
+    #[\Override]
+    public function results(): array
     {
         return [
             'success'   => $this->success(),
@@ -181,6 +180,7 @@ class ReorderAction extends AdminAction implements ObjectContainerInterface
      * @param  Container $container A DI Container.
      * @return void
      */
+    #[\Override]
     protected function setDependencies(Container $container)
     {
         parent::setDependencies($container);

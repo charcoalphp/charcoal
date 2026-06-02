@@ -18,9 +18,7 @@ use Charcoal\Tests\Admin\ContainerProvider;
  */
 class TextWidgetTest extends AbstractTestCase
 {
-    /**
-     * @return void
-     */
+    public $obj;
     public function setUp(): void
     {
         $container = new Container();
@@ -33,10 +31,7 @@ class TextWidgetTest extends AbstractTestCase
         ]);
     }
 
-    /**
-     * @return void
-     */
-    public function testSetShowTitle()
+    public function testSetShowTitle(): void
     {
         $this->assertFalse($this->obj->showTitle());
         $ret = $this->obj->setShowTitle(false);
@@ -48,10 +43,7 @@ class TextWidgetTest extends AbstractTestCase
         $this->assertTrue($this->obj->showTitle());
     }
 
-    /**
-     * @return void
-     */
-    public function testSetShowSubtitle()
+    public function testSetShowSubtitle(): void
     {
         $this->assertFalse($this->obj->showSubtitle());
         $ret = $this->obj->setShowSubtitle(false);
@@ -63,10 +55,7 @@ class TextWidgetTest extends AbstractTestCase
         $this->assertTrue($this->obj->showSubtitle());
     }
 
-    /**
-     * @return void
-     */
-    public function testSetShowDescription()
+    public function testSetShowDescription(): void
     {
         $this->assertFalse($this->obj->showDescription());
         $ret = $this->obj->setShowDescription(false);
@@ -78,10 +67,7 @@ class TextWidgetTest extends AbstractTestCase
         $this->assertTrue($this->obj->showDescription());
     }
 
-    /**
-     * @return void
-     */
-    public function testSetShowNotes()
+    public function testSetShowNotes(): void
     {
         $this->assertFalse($this->obj->showNotes());
         $ret = $this->obj->setShowNotes(false);
@@ -93,40 +79,28 @@ class TextWidgetTest extends AbstractTestCase
         $this->assertTrue($this->obj->showNotes());
     }
 
-    /**
-     * @return void
-     */
-    public function testSetTitle()
+    public function testSetTitle(): void
     {
         $ret = $this->obj->setTitle('Fôö title');
         $this->assertSame($ret, $this->obj);
         $this->assertEquals('Fôö title', (string)$this->obj->title());
     }
 
-    /**
-     * @return void
-     */
-    public function testSetSubtitle()
+    public function testSetSubtitle(): void
     {
         $ret = $this->obj->setSubtitle('Fôö subtitle');
         $this->assertSame($ret, $this->obj);
         $this->assertEquals('Fôö subtitle', (string)$this->obj->subtitle());
     }
 
-    /**
-     * @return void
-     */
-    public function testSetDescription()
+    public function testSetDescription(): void
     {
         $ret = $this->obj->setDescription('Fôö description');
         $this->assertSame($ret, $this->obj);
         $this->assertEquals('Fôö description', (string)$this->obj->description());
     }
 
-    /**
-     * @return void
-     */
-    public function testSetNotes()
+    public function testSetNotes(): void
     {
         $ret = $this->obj->setNotes('Fôö notes');
         $this->assertSame($ret, $this->obj);

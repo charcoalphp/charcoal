@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Charcoal\Email\Objects;
 
 use DateTime;
@@ -33,10 +35,8 @@ class EmailLog extends AbstractModel
 
     /**
      * The Message-ID (Unique message identifier)
-     *
-     * @var string $messageId
      */
-    private $messageId;
+    private ?string $messageId = null;
 
     /**
      * The campaign ID.
@@ -47,38 +47,29 @@ class EmailLog extends AbstractModel
 
     /**
      * The sender's email address.
-     *
-     * @var string $from
      */
-    private $from;
+    private ?string $from = null;
 
     /**
      * The recipient's email address.
-     *
-     * @var string $to
      */
-    private $to;
+    private ?string $to = null;
 
     /**
      * The email subject.
-     *
-     * @var string $subject
      */
-    private $subject;
+    private ?string $subject = null;
 
     /**
      * When the email should be sent.
-     *
-     * @var DateTimeInterface|null $sendTs
      */
-    private $sendTs;
+    private ?\DateTimeInterface $sendTs = null;
 
     /**
      * Get the primary key that uniquely identifies each queue item.
-     *
-     * @return string
      */
-    public function key()
+    #[\Override]
+    public function key(): string
     {
         return 'id';
     }
@@ -87,9 +78,8 @@ class EmailLog extends AbstractModel
      * Set the queue ID.
      *
      * @param  string $queueId The queue ID.
-     * @return self
      */
-    public function setQueueId($queueId)
+    public function setQueueId($queueId): static
     {
         $this->queueId = $queueId;
 
@@ -110,9 +100,8 @@ class EmailLog extends AbstractModel
      * Set the error code.
      *
      * @param  string $errorCode The error code.
-     * @return self
      */
-    public function setErrorCode($errorCode)
+    public function setErrorCode($errorCode): static
     {
         $this->errorCode = $errorCode;
 
@@ -134,9 +123,8 @@ class EmailLog extends AbstractModel
      *
      * @param string $messageId The Message-ID.
      * @throws InvalidArgumentException If the Message-ID is not a string.
-     * @return self
      */
-    public function setMessageId($messageId)
+    public function setMessageId($messageId): static
     {
         if (!is_string($messageId)) {
             throw new InvalidArgumentException(
@@ -154,7 +142,7 @@ class EmailLog extends AbstractModel
      *
      * @return string
      */
-    public function messageId()
+    public function messageId(): ?string
     {
         return $this->messageId;
     }
@@ -164,9 +152,8 @@ class EmailLog extends AbstractModel
      *
      * @param  string $campaign The campaign identifier.
      * @throws InvalidArgumentException If the campaign is invalid.
-     * @return self
      */
-    public function setCampaign($campaign)
+    public function setCampaign($campaign): static
     {
         if ($campaign !== null && !is_string($campaign)) {
             throw new InvalidArgumentException(
@@ -194,9 +181,8 @@ class EmailLog extends AbstractModel
      *
      * @param  string|array $email An email address.
      * @throws InvalidArgumentException If the email address is invalid.
-     * @return self
      */
-    public function setFrom($email)
+    public function setFrom($email): static
     {
         $this->from = $this->parseEmail($email);
         return $this;
@@ -207,7 +193,7 @@ class EmailLog extends AbstractModel
      *
      * @return string
      */
-    public function from()
+    public function from(): ?string
     {
         return $this->from;
     }
@@ -216,9 +202,8 @@ class EmailLog extends AbstractModel
      * Set the recipient's email address.
      *
      * @param  string|array $email An email address.
-     * @return self
      */
-    public function setTo($email)
+    public function setTo($email): static
     {
         $this->to = $this->parseEmail($email);
         return $this;
@@ -229,7 +214,7 @@ class EmailLog extends AbstractModel
      *
      * @return string
      */
-    public function to()
+    public function to(): ?string
     {
         return $this->to;
     }
@@ -239,9 +224,8 @@ class EmailLog extends AbstractModel
      *
      * @param  string $subject The email subject.
      * @throws InvalidArgumentException If the subject is not a string.
-     * @return self
      */
-    public function setSubject($subject)
+    public function setSubject($subject): static
     {
         if (!is_string($subject)) {
             throw new InvalidArgumentException(
@@ -259,7 +243,7 @@ class EmailLog extends AbstractModel
      *
      * @return string
      */
-    public function subject()
+    public function subject(): ?string
     {
         return $this->subject;
     }
@@ -267,9 +251,8 @@ class EmailLog extends AbstractModel
     /**
      * @param  null|string|DateTime $ts The "send date" datetime value.
      * @throws InvalidArgumentException If the ts is not a valid datetime value.
-     * @return self
      */
-    public function setSendTs($ts)
+    public function setSendTs($ts): static
     {
         if ($ts === null) {
             $this->sendTs = null;
@@ -280,7 +263,7 @@ class EmailLog extends AbstractModel
             try {
                 $ts = new DateTime($ts);
             } catch (Exception $e) {
-                throw new InvalidArgumentException($e->getMessage());
+                throw new InvalidArgumentException($e->getMessage(), $e->getCode(), $e);
             }
         }
 
@@ -294,23 +277,20 @@ class EmailLog extends AbstractModel
         return $this;
     }
 
-    /**
-     * @return null|DateTimeInterface
-     */
-    public function sendTs()
+    public function sendTs(): ?\DateTimeInterface
     {
         return $this->sendTs;
     }
 
     /**
      * @see    StorableTrait::preSave()
-     * @return boolean
      */
+    #[\Override]
     protected function preSave(): bool
     {
         parent::preSave();
 
-        if ($this->sendTs() === null) {
+        if (!$this->sendTs() instanceof \DateTimeInterface) {
             $this->setSendTs('now');
         }
 

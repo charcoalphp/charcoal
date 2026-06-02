@@ -13,24 +13,18 @@ class AttachmentsConfig extends AbstractConfig
 {
     /**
      * Available attachment widget structures.
-     *
-     * @var array
      */
-    private $widgets = [];
+    private array $widgets = [];
 
     /**
      * Attachment type groupings.
-     *
-     * @var array
      */
-    private $groups = [];
+    private array $groups = [];
 
     /**
      * Available attachment types.
-     *
-     * @var array
      */
-    private $attachables = [];
+    private array $attachables = [];
 
     /**
      * Set attachments settings in a specific order.
@@ -38,6 +32,7 @@ class AttachmentsConfig extends AbstractConfig
      * @param  array $data New config values.
      * @return AttachmentsConfig Chainable
      */
+    #[\Override]
     public function setData(array $data)
     {
         if (isset($data['attachables'])) {
@@ -64,7 +59,7 @@ class AttachmentsConfig extends AbstractConfig
      * @throws InvalidArgumentException If the attachment type or structure is invalid.
      * @return AttachmentsConfig Chainable
      */
-    public function setAttachables(array $attachables)
+    public function setAttachables(array $attachables): static
     {
         foreach ($attachables as $attType => $attStruct) {
             if (!is_array($attStruct)) {
@@ -94,10 +89,8 @@ class AttachmentsConfig extends AbstractConfig
 
     /**
      * Retrieve the available attachment types.
-     *
-     * @return array
      */
-    public function attachables()
+    public function attachables(): array
     {
         return $this->attachables;
     }
@@ -109,7 +102,7 @@ class AttachmentsConfig extends AbstractConfig
      * @throws InvalidArgumentException If the group identifier or structure is invalid.
      * @return AttachmentsConfig Chainable
      */
-    public function setGroups(array $groups)
+    public function setGroups(array $groups): static
     {
         foreach ($groups as $groupIdent => $groupStruct) {
             if (!is_array($groupStruct)) {
@@ -144,10 +137,8 @@ class AttachmentsConfig extends AbstractConfig
 
     /**
      * Retrieve the available attachment type groups.
-     *
-     * @return array
      */
-    public function groups()
+    public function groups(): array
     {
         return $this->groups;
     }
@@ -159,7 +150,7 @@ class AttachmentsConfig extends AbstractConfig
      * @throws InvalidArgumentException If the widget identifier or structure is invalid.
      * @return AttachmentsConfig Chainable
      */
-    public function setWidgets(array $widgets)
+    public function setWidgets(array $widgets): static
     {
         foreach ($widgets as $widgetIdent => $widgetStruct) {
             if (!is_array($widgetStruct)) {
@@ -188,10 +179,8 @@ class AttachmentsConfig extends AbstractConfig
 
     /**
      * Retrieve the available attachment widget structures.
-     *
-     * @return array
      */
-    public function widgets()
+    public function widgets(): array
     {
         return $this->widgets;
     }

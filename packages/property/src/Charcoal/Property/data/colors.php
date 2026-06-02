@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 // The SVG 1.0 Recognized Color keyword names
 // https://www.w3.org/TR/SVG/types.html#ColorKeywords
 return [

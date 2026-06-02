@@ -71,7 +71,7 @@ abstract class AbstractExpression implements
      */
     public function setActive($active)
     {
-        $this->active = !!$active;
+        $this->active = (bool)$active;
         return $this;
     }
 
@@ -183,7 +183,7 @@ abstract class AbstractExpression implements
         if (!is_string($identifier)) {
             throw new InvalidArgumentException(sprintf(
                 'Field Name must be a string, received %s',
-                is_object($identifier) ? get_class($identifier) : gettype($identifier)
+                get_debug_type($identifier)
             ));
         }
 
@@ -191,7 +191,7 @@ abstract class AbstractExpression implements
             if (!is_string($tableName)) {
                 throw new InvalidArgumentException(sprintf(
                     'Table Name must be a string, received %s',
-                    is_object($tableName) ? get_class($tableName) : gettype($tableName)
+                    get_debug_type($tableName)
                 ));
             }
 
@@ -201,11 +201,7 @@ abstract class AbstractExpression implements
                 );
             }
 
-            if ($identifier === '*') {
-                $template = '%1$s.*';
-            } else {
-                $template = '%1$s.`%2$s`';
-            }
+            $template = $identifier === '*' ? '%1$s.*' : '%1$s.`%2$s`';
 
             return sprintf($template, $tableName, $identifier);
         }
@@ -255,9 +251,9 @@ abstract class AbstractExpression implements
      * @uses   self::diffValues()
      * @return array<string,mixed> An associative array containing only mutated values.
      */
-    public function jsonSerialize()
+    public function jsonSerialize(): array
     {
-        return array_udiff_assoc($this->data(), $this->defaultData(), [ $this, 'diffValues' ]);
+        return array_udiff_assoc($this->data(), $this->defaultData(), $this->diffValues(...));
     }
 
     /**
@@ -276,9 +272,8 @@ abstract class AbstractExpression implements
      *
      * @see    Serializable
      * @param  string $data The serialized data.
-     * @return void
      */
-    public function unserialize($data)
+    public function unserialize($data): void
     {
         $data = unserialize($data);
         $this->setData($data);

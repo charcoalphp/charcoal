@@ -21,10 +21,8 @@ class PaginationTest extends AbstractTestCase
 
     /**
      * Create expression for testing.
-     *
-     * @return Pagination
      */
-    final protected function createExpression()
+    final protected function createExpression(): \Charcoal\Source\Pagination
     {
         return new Pagination();
     }
@@ -34,10 +32,8 @@ class PaginationTest extends AbstractTestCase
      *
      * Assertions:
      * 1. Implements {@see PaginationInterface}
-     *
-     * @return void
      */
-    public function testPaginationConstruct()
+    public function testPaginationConstruct(): void
     {
         $obj = $this->createExpression();
 
@@ -49,9 +45,8 @@ class PaginationTest extends AbstractTestCase
      * Provide data for value parsing.
      *
      * @used-by ExpressionTestTrait::testDefaultValues()
-     * @return  array
      */
-    final public function provideDefaultValues()
+    final public static function provideDefaultValues(): array
     {
         return [
             'page num' => [ 'page',         1 ],
@@ -70,10 +65,8 @@ class PaginationTest extends AbstractTestCase
      * 3. Chainable method
      * 4. Accepts float
      * 5. Swaps zero for one
-     *
-     * @return void
      */
-    public function testPageNum()
+    public function testPageNum(): void
     {
         $obj = $this->createExpression();
 
@@ -99,10 +92,8 @@ class PaginationTest extends AbstractTestCase
 
     /**
      * Test "page" property with negative value.
-     *
-     * @return void
      */
-    public function testPageNumWithNegativeValue()
+    public function testPageNumWithNegativeValue(): void
     {
         $obj = $this->createExpression();
 
@@ -112,10 +103,8 @@ class PaginationTest extends AbstractTestCase
 
     /**
      * Test "page" property with invalid value.
-     *
-     * @return void
      */
-    public function testPageNumWithInvalidValue()
+    public function testPageNumWithInvalidValue(): void
     {
         $obj = $this->createExpression();
 
@@ -131,10 +120,8 @@ class PaginationTest extends AbstractTestCase
      * 2. Mutated state
      * 3. Chainable method
      * 4. Accepts float
-     *
-     * @return void
      */
-    public function testNumPerPage()
+    public function testNumPerPage(): void
     {
         $obj = $this->createExpression();
 
@@ -156,10 +143,8 @@ class PaginationTest extends AbstractTestCase
 
     /**
      * Test "num_per_page" property with negative value.
-     *
-     * @return void
      */
-    public function testNumPerPageWithNegativeValue()
+    public function testNumPerPageWithNegativeValue(): void
     {
         $obj = $this->createExpression();
 
@@ -169,10 +154,8 @@ class PaginationTest extends AbstractTestCase
 
     /**
      * Test "num_per_page" property with invalid value.
-     *
-     * @return void
      */
-    public function testNumPerPageWithInvalidValue()
+    public function testNumPerPageWithInvalidValue(): void
     {
         $obj = $this->createExpression();
 
@@ -187,10 +170,8 @@ class PaginationTest extends AbstractTestCase
      * 1. Mutate all options
      * 2. Partially mutated state
      * 3. Mutation via aliases
-     *
-     * @return void
      */
-    public function testData()
+    public function testData(): void
     {
         /** 1. Mutate all options */
         $mutation = [
@@ -244,10 +225,8 @@ class PaginationTest extends AbstractTestCase
 
     /**
      * Test lowest possible index.
-     *
-     * @return void
      */
-    public function testFirst()
+    public function testFirst(): void
     {
         $obj = $this->createExpression();
 
@@ -262,10 +241,8 @@ class PaginationTest extends AbstractTestCase
 
     /**
      * Test highest possible index.
-     *
-     * @return void
      */
-    public function testLast()
+    public function testLast(): void
     {
         $obj = $this->createExpression();
 

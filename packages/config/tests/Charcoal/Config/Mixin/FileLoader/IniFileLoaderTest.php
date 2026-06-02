@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Charcoal\Tests\Config\Mixin\FileLoader;
 
 // From 'charcoal-config'
@@ -9,19 +11,16 @@ use UnexpectedValueException;
 
 /**
  * Test {@see FileAwareTrait::loadIniFile() INI File Loading}
- *
- * @coversDefaultClass \Charcoal\Config\FileAwareTrait
  */
+#[\PHPUnit\Framework\Attributes\CoversTrait(\Charcoal\Config\FileAwareTrait::class)]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Config\FileAwareTrait::class, 'loadIniFile()')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Config\FileAwareTrait::class, 'loadFile()')]
 class IniFileLoaderTest extends AbstractFileLoaderTestCase
 {
     /**
      * Asserts that the File Loader supports INI config files.
-     *
-     * @covers ::loadIniFile()
-     * @covers ::loadFile()
-     * @return void
      */
-    public function testLoadFile()
+    public function testLoadFile(): void
     {
         $path = $this->getPathToFixture('pass/valid1.ini');
         $data = $this->obj->loadFile($path);
@@ -42,10 +41,8 @@ class IniFileLoaderTest extends AbstractFileLoaderTestCase
      * Asserts that the File Loader does NOT support key-paths in INI config files.
      *
      * @see    \Charcoal\Tests\Config\Config\ConfigFileAwareTest::testLoadIniFileWithDelimitedData
-     * @covers ::loadIniFile()
-     * @return void
      */
-    public function testLoadFileWithDelimitedData()
+    public function testLoadFileWithDelimitedData(): void
     {
         $path = $this->getPathToFixture('pass/valid2.ini');
         $data = $this->obj->loadFile($path);
@@ -64,11 +61,8 @@ class IniFileLoaderTest extends AbstractFileLoaderTestCase
 
     /**
      * Asserts that an empty file is silently ignored.
-     *
-     * @covers ::loadIniFile()
-     * @return void
      */
-    public function testLoadEmptyFile()
+    public function testLoadEmptyFile(): void
     {
         $path = $this->getPathToFixture('pass/empty.ini');
         $data = $this->obj->loadFile($path);
@@ -78,28 +72,22 @@ class IniFileLoaderTest extends AbstractFileLoaderTestCase
 
     /**
      * Asserts that a broken file is NOT ignored.
-     *
-     * @covers ::loadIniFile()
-     * @return void
      */
-    public function testLoadMalformedFile()
+    public function testLoadMalformedFile(): void
     {
         $this->expectExceptionMessageMatches('/^INI file ".+?" is empty or invalid$/');
         $this->expectException(UnexpectedValueException::class);
 
         // phpcs:disable Generic.PHP.NoSilencedErrors.Discouraged
         $path = $this->getPathToFixture('fail/malformed.ini');
-        $data = @$this->obj->loadFile($path);
+        @$this->obj->loadFile($path);
         // phpcs:enable
     }
 
     /**
      * Asserts that an unparsable file is silently ignored.
-     *
-     * @covers ::loadIniFile()
-     * @return void
      */
-    public function testLoadUnparsableFile()
+    public function testLoadUnparsableFile(): void
     {
         // phpcs:disable Generic.PHP.NoSilencedErrors.Discouraged
         $path = $this->getPathToFixture('pass/unparsable.ini');

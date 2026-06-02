@@ -7,7 +7,7 @@ use Assetic\Asset\AssetCollection;
 use Assetic\Asset\AssetReference;
 use Assetic\Asset\StringAsset;
 use Assetic\AssetManager;
-use Mustache_LambdaHelper as LambdaHelper;
+use Mustache\LambdaHelper as LambdaHelper;
 // From charcoal-view
 use Charcoal\View\Mustache\HelpersInterface;
 
@@ -19,27 +19,18 @@ class AssetsHelpers implements HelpersInterface
     /**
      * @var AssetManager|mixed $assets The assetic assets manager.
      */
-    private $assets;
+    private ?\Assetic\AssetManager $assets = null;
 
-    /**
-     * @var string $action
-     */
-    private $action;
+    private ?string $action = null;
 
-    /**
-     * @var string $collection
-     */
-    private $collection;
+    private ?string $collection = null;
 
-    /**
-     * @var string $ident
-     */
-    private $ident;
+    private ?string $ident = null;
 
     /**
      * @param array $data Class Dependencies.
      */
-    public function __construct(array $data = null)
+    public function __construct(?array $data = null)
     {
         if (isset($data['assets']) && $data['assets'] instanceof AssetManager) {
             $this->assets = $data['assets'];
@@ -48,8 +39,6 @@ class AssetsHelpers implements HelpersInterface
 
     /**
      * Get the collection of helpers as a plain array.
-     *
-     * @return array
      */
     public function toArray(): array
     {
@@ -80,17 +69,21 @@ class AssetsHelpers implements HelpersInterface
      * @param  LambdaHelper|null $helper For rendering strings in the current context.
      * @return string
      */
-    public function __invoke($text = null, LambdaHelper $helper = null)
+    public function __invoke($text = null, ?LambdaHelper $helper = null)
     {
-        if ($helper) {
+        if ($helper instanceof LambdaHelper) {
             $text = $helper->render($text);
         }
+        if ($this->action === null) {
+            return $text;
+        }
+
         $return = $this->{$this->action}($this->collection, $text);
         $text   = $return;
 
         $this->reset();
 
-        if ($helper) {
+        if ($helper instanceof LambdaHelper) {
             return $helper->render($text);
         }
 
@@ -105,7 +98,7 @@ class AssetsHelpers implements HelpersInterface
      * @param  string $macro A domain, locale, or number.
      * @return boolean
      */
-    public function __isset($macro)
+    public function __isset(string $macro)
     {
         return boolval($macro);
     }
@@ -116,9 +109,8 @@ class AssetsHelpers implements HelpersInterface
      * Required by Mustache.
      *
      * @param  string $macro A domain, locale, or number.
-     * @return mixed
      */
-    public function __get($macro)
+    public function __get(string $macro): mixed
     {
         if (!$this->action) {
             $macro = '__' . $macro;
@@ -154,7 +146,7 @@ class AssetsHelpers implements HelpersInterface
      * @param string $text       Asset string to inject.
      * @return string
      */
-    protected function __inject($collection, $text)
+    protected function __inject($collection, $text): null
     {
         if (!$this->assets->has($collection)) {
             $this->assets->set($collection, new AssetCollection());
@@ -180,9 +172,8 @@ class AssetsHelpers implements HelpersInterface
 
     /**
      * @param string $collection The collection ident.
-     * @return string
      */
-    protected function __output($collection)
+    protected function __output($collection): string
     {
         $dump = $this->assets->get($collection)->dump();
         return '{{=<<<<% %>>>>=}}' . $dump . '<<<<%={{ }}=%>>>>';

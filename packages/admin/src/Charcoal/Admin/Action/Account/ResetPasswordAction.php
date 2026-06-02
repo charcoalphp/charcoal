@@ -34,10 +34,8 @@ use Charcoal\Admin\User\LostPasswordToken;
  */
 class ResetPasswordAction extends AdminAction
 {
-    /**
-     * @return boolean
-     */
-    public function authRequired()
+    #[\Override]
+    public function authRequired(): bool
     {
         return false;
     }
@@ -55,7 +53,7 @@ class ResetPasswordAction extends AdminAction
     {
         $translator = $this->translator();
 
-        $ip = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : null;
+        $ip = ($_SERVER['REMOTE_ADDR'] ?? null);
 
         $token     = $request->getParam('token');
         $email     = $request->getParam('email');
@@ -191,17 +189,13 @@ class ResetPasswordAction extends AdminAction
         return $response;
     }
 
-    /**
-     * @return array
-     */
-    public function results()
+    #[\Override]
+    public function results(): array
     {
-        $ret = [
+        return [
             'success'   => $this->success(),
             'feedbacks' => $this->feedbacks(),
         ];
-
-        return $ret;
     }
 
     /**
@@ -216,9 +210,8 @@ class ResetPasswordAction extends AdminAction
      * @see    \Charcoal\Admin\Template\Account::validateToken()
      * @param  string $token  The token to validate.
      * @param  string $userId The user ID that should match the token.
-     * @return boolean
      */
-    private function validateToken($token, $userId)
+    private function validateToken($token, $userId): bool
     {
         $obj = $this->modelFactory()->create(LostPasswordToken::class);
         $sql = strtr('SELECT * FROM `%table` WHERE `token` = :token AND `user` = :userId AND `expiry` > NOW()', [
@@ -229,16 +222,15 @@ class ResetPasswordAction extends AdminAction
             'userId' => $userId,
         ]);
 
-        return !!$obj->token();
+        return (bool)$obj->token();
     }
 
     /**
      * Delete the given password reset token.
      *
      * @param  string $token The token to delete.
-     * @return void
      */
-    private function deleteToken($token)
+    private function deleteToken($token): void
     {
         $obj = $this->modelFactory()->create(LostPasswordToken::class);
         $obj->setToken($token);

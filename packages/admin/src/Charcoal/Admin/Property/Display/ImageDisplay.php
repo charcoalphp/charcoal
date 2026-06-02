@@ -28,6 +28,7 @@ class ImageDisplay extends AbstractPropertyDisplay
      * @see    \Charcoal\Admin\Property\Display\LinkDisplay::hrefVal()
      * @return string
      */
+    #[\Override]
     public function displayVal()
     {
         $val = parent::displayVal();
@@ -38,8 +39,8 @@ class ImageDisplay extends AbstractPropertyDisplay
         $parts = parse_url($val);
         if (empty($parts['scheme']) && !in_array($val[0], [ '/', '#', '?' ])) {
             $path  = isset($parts['path']) ? ltrim($parts['path'], '/') : '';
-            $query = isset($parts['query']) ? $parts['query'] : '';
-            $hash  = isset($parts['fragment']) ? $parts['fragment'] : '';
+            $query = ($parts['query'] ?? '');
+            $hash  = ($parts['fragment'] ?? '');
             $val   = $this->baseUrl->withPath($path)->withQuery($query)->withFragment($hash);
         }
 
@@ -52,6 +53,7 @@ class ImageDisplay extends AbstractPropertyDisplay
      * @param Container $container A dependencies container instance.
      * @return void
      */
+    #[\Override]
     protected function setDependencies(Container $container)
     {
         parent::setDependencies($container);

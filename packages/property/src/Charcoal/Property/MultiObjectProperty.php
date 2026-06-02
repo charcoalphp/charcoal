@@ -9,26 +9,15 @@ use InvalidArgumentException;
  */
 class MultiObjectProperty extends AbstractProperty
 {
-    /**
-     * @var array $allowedTypes
-     */
-    private $allowedTypes;
+    private ?array $allowedTypes = null;
 
-    /**
-     * @var boolean $groupedByType
-     */
-    private $groupedByType = true;
-
-    /**
-     * @var string $joinTable
-     */
-    private $joinTable = 'charcoal_multi_objects';
+    private string $joinTable = 'charcoal_multi_objects';
 
     /**
      * @param array $types The allowed types map.
      * @return MultiObjectProperty Chainable
      */
-    public function setAllowedTypes(array $types)
+    public function setAllowedTypes(array $types): static
     {
         foreach ($types as $type => $typeOptions) {
             $this->addAllowedType($type, $typeOptions);
@@ -41,7 +30,7 @@ class MultiObjectProperty extends AbstractProperty
      * @param array  $typeOptions Extra options for the type.
      * @return MultiObjectProperty Chainable
      */
-    public function addAllowedType($type, array $typeOptions = [])
+    public function addAllowedType($type, array $typeOptions = []): static
     {
         $this->allowedTypes[$type] = $typeOptions;
         return $this;
@@ -50,7 +39,7 @@ class MultiObjectProperty extends AbstractProperty
     /**
      * @return array
      */
-    public function getAllowedTypes()
+    public function getAllowedTypes(): ?array
     {
         return $this->allowedTypes;
     }
@@ -60,7 +49,7 @@ class MultiObjectProperty extends AbstractProperty
      * @throws InvalidArgumentException If the table is not a string or contains invalid table characters.
      * @return MultiObjectProperty Chainable
      */
-    public function setJoinTable($table)
+    public function setJoinTable($table): static
     {
         if (!is_string($table)) {
             throw new InvalidArgumentException(
@@ -69,7 +58,7 @@ class MultiObjectProperty extends AbstractProperty
         }
         // For security reason, only alphanumeric characters (+ underscores) are valid table names.
         // Although SQL can support more, there's really no reason to.
-        if (!preg_match('/[A-Za-z0-9_]/', $table)) {
+        if (!preg_match('/\w/', $table)) {
             throw new InvalidArgumentException(
                 sprintf('Table name "%s" is invalid: must be alphanumeric / underscore.', $table)
             );
@@ -78,22 +67,17 @@ class MultiObjectProperty extends AbstractProperty
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getJoinTable()
+    public function getJoinTable(): string
     {
         return $this->joinTable;
     }
 
     /**
      * Create the join table on the database source, if it does not exist.
-     *
-     * @return void
      */
-    public function createJoinTable()
+    public function createJoinTable(): void
     {
-        if ($this->joinTableExists() === true) {
+        if ($this->joinTableExists()) {
             return;
         }
 
@@ -109,23 +93,17 @@ class MultiObjectProperty extends AbstractProperty
         $this->source()->db()->query($q);
     }
 
-    /**
-     * @return boolean
-     */
-    public function joinTableExists()
+    public function joinTableExists(): bool
     {
         $q = 'SHOW TABLES LIKE \'' . $this->getJoinTable() . '\'';
         $this->logger->debug($q);
         $res = $this->source()->db()->query($q);
         $tableExists = $res->fetchColumn(0);
 
-        return !!$tableExists;
+        return (bool)$tableExists;
     }
 
-    /**
-     * @return string
-     */
-    public function type()
+    public function type(): string
     {
         return 'multi-object';
     }
@@ -133,15 +111,12 @@ class MultiObjectProperty extends AbstractProperty
     /**
      * @return string|null
      */
-    public function sqlType()
+    public function sqlType(): null
     {
         return null;
     }
 
-    /**
-     * @return integer
-     */
-    public function sqlPdoType()
+    public function sqlPdoType(): int
     {
         return 0;
     }

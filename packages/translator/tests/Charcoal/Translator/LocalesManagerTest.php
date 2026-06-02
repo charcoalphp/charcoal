@@ -15,15 +15,11 @@ class LocalesManagerTest extends AbstractTestCase
 {
     /**
      * Tested Class.
-     *
-     * @var LocalesManager
      */
-    private $obj;
+    private \Charcoal\Translator\LocalesManager $obj;
 
     /**
      * Set up the test.
-     *
-     * @return void
      */
     protected function setUp(): void
     {
@@ -37,10 +33,7 @@ class LocalesManagerTest extends AbstractTestCase
         ]);
     }
 
-    /**
-     * @return void
-     */
-    public function testConstructorWithDefaultLanguage()
+    public function testConstructorWithDefaultLanguage(): void
     {
         $this->obj = new LocalesManager([
             'locales' => [
@@ -54,13 +47,10 @@ class LocalesManagerTest extends AbstractTestCase
         $this->assertEquals('bar', $this->obj->defaultLocale());
     }
 
-    /**
-     * @return void
-     */
-    public function testConstructorDefaultLanguageWithInvalidType()
+    public function testConstructorDefaultLanguageWithInvalidType(): void
     {
         $this->expectException(InvalidArgumentException::class);
-        $obj = new LocalesManager([
+        new LocalesManager([
             'locales' => [
                 'foo' => []
             ],
@@ -68,13 +58,10 @@ class LocalesManagerTest extends AbstractTestCase
         ]);
     }
 
-    /**
-     * @return void
-     */
-    public function testConstructorDefaultLanguageWithInvalidLocale()
+    public function testConstructorDefaultLanguageWithInvalidLocale(): void
     {
         $this->expectException(InvalidArgumentException::class);
-        $obj = new LocalesManager([
+        new LocalesManager([
             'locales' => [
                 'foo' => []
             ],
@@ -82,21 +69,15 @@ class LocalesManagerTest extends AbstractTestCase
         ]);
     }
 
-    /**
-     * @return void
-     */
-    public function testConstructorWithoutActiveLocales()
+    public function testConstructorWithoutActiveLocales(): void
     {
         $this->expectException(InvalidArgumentException::class);
-        $obj = new LocalesManager([
+        new LocalesManager([
             'locales' => []
         ]);
     }
 
-    /**
-     * @return void
-     */
-    public function testLocales()
+    public function testLocales(): void
     {
         $locales = $this->obj->locales();
         $this->assertArrayHasKey('foo', $locales);
@@ -106,21 +87,15 @@ class LocalesManagerTest extends AbstractTestCase
         $this->assertArrayNotHasKey('baz', $locales);
     }
 
-    /**
-     * @requires PHP >= 7.0
-     * @return   void
-     */
-    public function testSortedLocalesInPhp7()
+    #[\PHPUnit\Framework\Attributes\RequiresPhp('>= 8.1.0')]
+    public function testSortedLocalesInPhp7(): void
     {
         $obj = $this->getLocalesManagerForSortedLocales();
 
         $this->assertEquals([ 'xyz', 'zyx', 'qux', 'foo', 'bar' ], $obj->availableLocales());
     }
 
-    /**
-     * @return LocalesManager
-     */
-    public function getLocalesManagerForSortedLocales()
+    public function getLocalesManagerForSortedLocales(): \Charcoal\Translator\LocalesManager
     {
         return new LocalesManager([
             'locales' => [
@@ -134,18 +109,12 @@ class LocalesManagerTest extends AbstractTestCase
         ]);
     }
 
-    /**
-     * @return void
-     */
-    public function testAvailableLocales()
+    public function testAvailableLocales(): void
     {
         $this->assertEquals([ 'foo', 'bar' ], $this->obj->availableLocales());
     }
 
-    /**
-     * @return void
-     */
-    public function testSetCurrentLocale()
+    public function testSetCurrentLocale(): void
     {
         $this->assertEquals('foo', $this->obj->currentLocale());
 
@@ -156,19 +125,13 @@ class LocalesManagerTest extends AbstractTestCase
         $this->assertEquals('foo', $this->obj->currentLocale());
     }
 
-    /**
-     * @return void
-     */
-    public function testSetCurrentLocaleWithInvalidType()
+    public function testSetCurrentLocaleWithInvalidType(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->obj->setCurrentLocale(false);
     }
 
-    /**
-     * @return void
-     */
-    public function testSetCurrentLocaleWithInvalidLocale()
+    public function testSetCurrentLocaleWithInvalidLocale(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->obj->setCurrentLocale('qux');

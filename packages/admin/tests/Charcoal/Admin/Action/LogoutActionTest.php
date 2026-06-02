@@ -29,22 +29,16 @@ class LogoutActionTest extends AbstractTestCase
 
     /**
      * Tested Class.
-     *
-     * @var LogoutAction
      */
-    private $obj;
+    private \Charcoal\Admin\Action\LogoutAction $obj;
 
     /**
      * Store the service container.
-     *
-     * @var Container
      */
-    private $container;
+    private ?\Pimple\Container $container = null;
 
     /**
      * Set up the test.
-     *
-     * @return void
      */
     public function setUp(): void
     {
@@ -59,19 +53,13 @@ class LogoutActionTest extends AbstractTestCase
         ]);
     }
 
-    /**
-     * @return void
-     */
-    public function testAuthRequiredIsTrue()
+    public function testAuthRequiredIsTrue(): void
     {
         $res = $this->callMethod($this->obj, 'authRequired');
         $this->assertTrue($res);
     }
 
-    /**
-     * @return void
-     */
-    public function testRunWithUnauthenticatedUser()
+    public function testRunWithUnauthenticatedUser(): void
     {
         $this->createUser('foo@bar.com');
 
@@ -85,10 +73,7 @@ class LogoutActionTest extends AbstractTestCase
         $this->assertFalse($results['success']);
     }
 
-    /**
-     * @return void
-     */
-    public function testRunWithAuthenticatedUser()
+    public function testRunWithAuthenticatedUser(): void
     {
         $user = $this->createUser('foo@bar.com');
         $this->getAuthenticator()->setUser($user);
@@ -105,12 +90,10 @@ class LogoutActionTest extends AbstractTestCase
 
     /**
      * Set up the service container.
-     *
-     * @return Container
      */
-    protected function container()
+    protected function container(): \Pimple\Container
     {
-        if ($this->container === null) {
+        if (!$this->container instanceof \Pimple\Container) {
             $container = new Container();
             $containerProvider = new ContainerProvider();
             $containerProvider->registerActionDependencies($container);

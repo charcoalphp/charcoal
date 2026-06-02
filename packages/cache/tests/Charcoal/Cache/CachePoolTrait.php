@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Charcoal\Tests\Cache;
 
 // From PSR-6
@@ -26,7 +28,7 @@ trait CachePoolTrait
      *
      * @return CacheItemPoolInterface
      */
-    protected static function createCachePool()
+    protected static function createCachePool(): \Stash\Pool
     {
         $pool = new Pool(new Ephemeral());
         $pool->setNamespace('tests');

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Charcoal\Email;
 
 // From 'charcoal-queue'
@@ -14,8 +16,6 @@ class EmailQueueManager extends AbstractQueueManager
 {
     /**
      * Retrieve the class name of the queue item model.
-     *
-     * @return string
      */
     public function getQueueItemClass(): string
     {

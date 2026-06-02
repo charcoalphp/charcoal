@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Charcoal\Tests\View\Php;
 
 // From 'charcoal-view'
@@ -15,11 +17,8 @@ class PhpEngineTest extends AbstractTestCase
     /**
      * @var MustacheEngine
      */
-    private $obj;
+    private \Charcoal\View\Php\PhpEngine $obj;
 
-    /**
-     * @return void
-     */
     public function setUp(): void
     {
         $loader = new PhpLoader([
@@ -31,27 +30,18 @@ class PhpEngineTest extends AbstractTestCase
         ]);
     }
 
-    /**
-     * @return void
-     */
-    public function testType()
+    public function testType(): void
     {
         $this->assertEquals('php', $this->obj->type());
     }
 
-    /**
-     * @return void
-     */
-    public function testRender()
+    public function testRender(): void
     {
         $actual = trim($this->obj->render('foo', [ 'foo' => 'Charcoal' ]));
         $this->assertEquals('Hello Charcoal', $actual);
     }
 
-    /**
-     * @return void
-     */
-    public function testRenderTemplate()
+    public function testRenderTemplate(): void
     {
         $actual = trim($this->obj->renderTemplate('Hello <?php echo $foo; ?>  ', [ 'foo' => 'World!' ]));
         $this->assertEquals('Hello World!', $actual);

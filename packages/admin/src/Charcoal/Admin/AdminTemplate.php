@@ -78,20 +78,11 @@ class AdminTemplate extends AbstractTemplate implements
      */
     protected $subtitle;
 
-    /**
-     * @var boolean
-     */
-    private $showSecondaryMenu = true;
+    private bool $showSecondaryMenu = true;
 
-    /**
-     * @var boolean
-     */
-    private $showMainMenu = true;
+    private bool $showMainMenu = true;
 
-    /**
-     * @var boolean
-     */
-    private $showSystemMenu = true;
+    private bool $showSystemMenu = true;
 
     /**
      * @var boolean
@@ -118,10 +109,7 @@ class AdminTemplate extends AbstractTemplate implements
      */
     protected $secondaryMenu;
 
-    /**
-     * @var array
-     */
-    private $adminDataForJs;
+    private ?array $adminDataForJs = null;
 
     /**
      * @var \Charcoal\Ui\Menu\MenuBuilder $menuBuilder
@@ -133,15 +121,9 @@ class AdminTemplate extends AbstractTemplate implements
      */
     private $menuItemBuilder;
 
-    /**
-     * @var FactoryInterface $modelFactory
-     */
-    private $modelFactory;
+    private ?\Charcoal\Factory\FactoryInterface $modelFactory = null;
 
-    /**
-     * @var FactoryInterface $widgetFactory
-     */
-    private $widgetFactory;
+    private ?\Charcoal\Factory\FactoryInterface $widgetFactory = null;
 
     /**
      * Template's init method is called automatically from `charcoal-app`'s Template Route.
@@ -156,6 +138,7 @@ class AdminTemplate extends AbstractTemplate implements
      * @return boolean
      * @see \Charcoal\App\Route\TemplateRoute::__invoke()
      */
+    #[\Override]
     public function init(RequestInterface $request)
     {
         if (!session_id()) {
@@ -199,12 +182,11 @@ class AdminTemplate extends AbstractTemplate implements
      * Sets the template data from a PSR Request object.
      *
      * @param  RequestInterface $request A PSR-7 compatible Request instance.
-     * @return self
      */
-    protected function setDataFromRequest(RequestInterface $request)
+    protected function setDataFromRequest(RequestInterface $request): static
     {
         $keys = $this->validDataFromRequest();
-        if (!empty($keys)) {
+        if ($keys !== []) {
             $this->setData($request->getParams($keys));
         }
 
@@ -216,7 +198,7 @@ class AdminTemplate extends AbstractTemplate implements
      *
      * @return string[]
      */
-    protected function validDataFromRequest()
+    protected function validDataFromRequest(): array
     {
         return [
             // HTTP Handling
@@ -230,7 +212,7 @@ class AdminTemplate extends AbstractTemplate implements
      * @param mixed $ident Template identifier.
      * @return AdminTemplate Chainable
      */
-    public function setIdent($ident)
+    public function setIdent($ident): static
     {
         $this->ident = $ident;
         return $this;
@@ -248,7 +230,7 @@ class AdminTemplate extends AbstractTemplate implements
      * @param mixed $label Template label.
      * @return AdminTemplate Chainable
      */
-    public function setLabel($label)
+    public function setLabel($label): static
     {
         $this->label = $this->translator()->translation($label);
 
@@ -269,7 +251,7 @@ class AdminTemplate extends AbstractTemplate implements
      * @param  mixed $title Template title.
      * @return AdminTemplate Chainable
      */
-    public function setTitle($title)
+    public function setTitle($title): static
     {
         $this->title = $this->translator()->translation($title);
 
@@ -296,7 +278,7 @@ class AdminTemplate extends AbstractTemplate implements
      * @param mixed $subtitle Template subtitle.
      * @return AdminTemplate Chainable
      */
-    public function setSubtitle($subtitle)
+    public function setSubtitle($subtitle): static
     {
         $this->subtitle = $this->translator()->translation($subtitle);
 
@@ -317,16 +299,13 @@ class AdminTemplate extends AbstractTemplate implements
      * @param boolean $show The show main menu flag.
      * @return AdminTemplate Chainable
      */
-    public function setShowMainMenu($show)
+    public function setShowMainMenu($show): static
     {
-        $this->showMainMenu = !!$show;
+        $this->showMainMenu = (bool)$show;
         return $this;
     }
 
-    /**
-     * @return boolean
-     */
-    public function showMainMenu()
+    public function showMainMenu(): bool
     {
         return ($this->isAuthorized() && $this->showMainMenu);
     }
@@ -359,16 +338,13 @@ class AdminTemplate extends AbstractTemplate implements
      * @param boolean $show The show footer menu flag.
      * @return AdminTemplate Chainable
      */
-    public function setShowSystemMenu($show)
+    public function setShowSystemMenu($show): static
     {
-        $this->showSystemMenu = !!$show;
+        $this->showSystemMenu = (bool)$show;
         return $this;
     }
 
-    /**
-     * @return boolean
-     */
-    public function showSystemMenu()
+    public function showSystemMenu(): bool
     {
         return ($this->isAuthorized() && $this->showSystemMenu && (count($this->systemMenu()) > 0));
     }
@@ -376,7 +352,7 @@ class AdminTemplate extends AbstractTemplate implements
     /**
      * @return array
      */
-    public function systemMenu()
+    public function systemMenu(): \ArrayIterator
     {
         if ($this->systemMenu === null) {
             $this->systemMenu = $this->createSystemMenu();
@@ -389,16 +365,13 @@ class AdminTemplate extends AbstractTemplate implements
      * @param  boolean $show The show secondary menu flag.
      * @return AdminTemplate Chainable
      */
-    public function setShowSecondaryMenu($show)
+    public function setShowSecondaryMenu($show): static
     {
-        $this->showSecondaryMenu = !!$show;
+        $this->showSecondaryMenu = (bool)$show;
         return $this;
     }
 
-    /**
-     * @return boolean
-     */
-    public function showSecondaryMenu()
+    public function showSecondaryMenu(): bool
     {
         return ($this->isAuthorized() && $this->showSecondaryMenu);
     }
@@ -430,10 +403,7 @@ class AdminTemplate extends AbstractTemplate implements
         return 'assets/admin/images/identicon.png';
     }
 
-    /**
-     * @return string
-     */
-    public function navContainerCssClasses()
+    public function navContainerCssClasses(): string
     {
         $classes = [ 'has-nav-logo' ];
 
@@ -496,7 +466,7 @@ class AdminTemplate extends AbstractTemplate implements
         $siteName  = $this->siteName();
         $pageTitle = strip_tags($this->title());
 
-        if ($pageTitle) {
+        if ($pageTitle !== '' && $pageTitle !== '0') {
             if ($pageTitle === $siteName) {
                 return sprintf('%1$s &#8212; Charcoal', $pageTitle);
             } else {
@@ -509,10 +479,8 @@ class AdminTemplate extends AbstractTemplate implements
 
     /**
      * Retrieve the current language.
-     *
-     * @return string
      */
-    public function lang()
+    public function lang(): string
     {
         return $this->translator()->getLocale();
     }
@@ -580,20 +548,15 @@ class AdminTemplate extends AbstractTemplate implements
         if ($hasSize && $recaptcha['size'] === 'invisible') {
             return true;
         }
-
-        if (!$hasInvisible && !$hasSize) {
-            return true;
-        }
-
-        return false;
+        return !$hasInvisible && !$hasSize;
     }
 
     /**
      * Alias of {@see self::recaptchaSiteKey()}.
      *
-     * @deprecated
      * @return string|null
      */
+    #[\Deprecated]
     public function recaptchaKey()
     {
         return $this->recaptchaSiteKey();
@@ -623,7 +586,7 @@ class AdminTemplate extends AbstractTemplate implements
      *
      * @return string[]
      */
-    public function recaptchaParameters()
+    public function recaptchaParameters(): array
     {
         $apiConfig = $this->apiConfig('google.recaptcha');
         $tplConfig = $this->get('recaptcha_options') ?: [];
@@ -658,10 +621,8 @@ class AdminTemplate extends AbstractTemplate implements
 
     /**
      * Generate a string representation of HTML attributes for the Google reCAPTCHA tag.
-     *
-     * @return string
      */
-    public function recaptchaHtmlAttr()
+    public function recaptchaHtmlAttr(): string
     {
         $params = $this->recaptchaParameters();
 
@@ -681,6 +642,7 @@ class AdminTemplate extends AbstractTemplate implements
      * @param Container $container DI Container.
      * @return void
      */
+    #[\Override]
     protected function setDependencies(Container $container)
     {
         parent::setDependencies($container);
@@ -715,11 +677,11 @@ class AdminTemplate extends AbstractTemplate implements
      * @throws Exception If the factory is not set.
      * @return FactoryInterface The model factory.
      */
-    protected function modelFactory()
+    protected function modelFactory(): \Charcoal\Factory\FactoryInterface
     {
-        if (!$this->modelFactory) {
+        if (!$this->modelFactory instanceof \Charcoal\Factory\FactoryInterface) {
             throw new Exception(
-                sprintf('Model factory is not set for template "%s".', get_class($this))
+                sprintf('Model factory is not set for template "%s".', static::class)
             );
         }
         return $this->modelFactory;
@@ -727,11 +689,10 @@ class AdminTemplate extends AbstractTemplate implements
 
     /**
      * @throws Exception If the widget factory dependency was not previously set / injected.
-     * @return FactoryInterface
      */
-    protected function widgetFactory()
+    protected function widgetFactory(): \Charcoal\Factory\FactoryInterface
     {
-        if ($this->widgetFactory === null) {
+        if (!$this->widgetFactory instanceof \Charcoal\Factory\FactoryInterface) {
             throw new Exception(
                 'Widget factory was not set.'
             );
@@ -745,7 +706,7 @@ class AdminTemplate extends AbstractTemplate implements
      * @param  string $name Name of the project.
      * @return AdminTemplate Chainable
      */
-    protected function setSiteName($name)
+    protected function setSiteName($name): static
     {
         $this->siteName = $this->translator()->translation($name);
         return $this;
@@ -756,9 +717,8 @@ class AdminTemplate extends AbstractTemplate implements
      *
      * @param  mixed $options The main menu widget ID or config.
      * @throws InvalidArgumentException If the admin config is missing, invalid, or malformed.
-     * @return array
      */
-    protected function createMainMenu($options = null)
+    protected function createMainMenu($options = null): array
     {
         $mainMenuConfig = $this->adminConfig('main_menu');
 
@@ -791,7 +751,7 @@ class AdminTemplate extends AbstractTemplate implements
             $menuItems[] = $this->parseMainMenuItem($menuItem, $menuIdent, $mainMenuIdent);
         }
 
-        usort($menuItems, [ 'Charcoal\Admin\Support\Sorter', 'sortByPriority' ]);
+        usort($menuItems, \Charcoal\Admin\Support\Sorter::sortByPriority(...));
 
         return $menuItems;
     }
@@ -822,7 +782,7 @@ class AdminTemplate extends AbstractTemplate implements
             }
 
             // Get main menu from the obj_type
-            $objType = filter_input(INPUT_GET, 'obj_type', FILTER_SANITIZE_STRING);
+            $objType = htmlspecialchars(trim(($_GET['obj_type'] ?? '')), ENT_QUOTES, 'UTF-8');
             if ($objType) {
                 $secondaryMenuItems = $this->adminConfig('secondary_menu');
                 foreach ($secondaryMenuItems as $main => $item) {
@@ -834,7 +794,7 @@ class AdminTemplate extends AbstractTemplate implements
             }
 
             // Choose main menu with a get parameter
-            $mainMenuFromRequest = filter_input(INPUT_GET, 'main_menu', FILTER_SANITIZE_STRING);
+            $mainMenuFromRequest = htmlspecialchars(trim(($_GET['main_menu'] ?? '')), ENT_QUOTES, 'UTF-8');
             if ($mainMenuFromRequest) {
                 $mainMenuIdent = $mainMenuFromRequest;
             }
@@ -852,9 +812,8 @@ class AdminTemplate extends AbstractTemplate implements
      *
      * @param string      $objType The ObjType to search.
      * @param array|mixed $item    The secondary menu item to search in.
-     * @return boolean
      */
-    protected function isObjTypeInSecondaryMenuItem($objType, $item)
+    protected function isObjTypeInSecondaryMenuItem($objType, array $item): bool
     {
         if (isset($item['links'])) {
             foreach ($item['links'] as $obj => $i) {
@@ -878,8 +837,9 @@ class AdminTemplate extends AbstractTemplate implements
     /**
      * @throws InvalidArgumentException If the secondary menu widget is invalid.
      * @return \Charcoal\Admin\Widget\SecondaryMenuWidgetInterface[]|
+     * @return mixed[]
      */
-    protected function createSecondaryMenu()
+    protected function createSecondaryMenu(): array
     {
         $secondaryMenuItems = $this->adminConfig('secondary_menu');
 
@@ -909,7 +869,7 @@ class AdminTemplate extends AbstractTemplate implements
             }
         }
 
-        usort($menuItems, [ 'Charcoal\Admin\Support\Sorter', 'sortByPriority' ]);
+        usort($menuItems, \Charcoal\Admin\Support\Sorter::sortByPriority(...));
 
         return $menuItems;
     }
@@ -919,7 +879,7 @@ class AdminTemplate extends AbstractTemplate implements
      * @throws InvalidArgumentException If the menu is missing, invalid, or malformed.
      * @return array|Generator
      */
-    protected function createSystemMenu($options = null)
+    protected function createSystemMenu($options = null): array
     {
         $menuConfig = $this->adminConfig('system_menu');
 
@@ -964,7 +924,7 @@ class AdminTemplate extends AbstractTemplate implements
             $menuItems[$menuIdent] = $menuItem;
         }
 
-        usort($menuItems, [ 'Charcoal\Admin\Support\Sorter', 'sortByPriority' ]);
+        usort($menuItems, \Charcoal\Admin\Support\Sorter::sortByPriority(...));
 
         return $menuItems;
     }
@@ -973,18 +933,16 @@ class AdminTemplate extends AbstractTemplate implements
      * As a convenience, all admin templates have a model factory to easily create objects.
      *
      * @param FactoryInterface $factory The factory used to create models.
-     * @return void
      */
-    private function setModelFactory(FactoryInterface $factory)
+    private function setModelFactory(FactoryInterface $factory): void
     {
         $this->modelFactory = $factory;
     }
 
     /**
      * @param FactoryInterface $factory The widget factory, to create the dashboard and secondary menu widgets.
-     * @return void
      */
-    private function setWidgetFactory(FactoryInterface $factory)
+    private function setWidgetFactory(FactoryInterface $factory): void
     {
         $this->widgetFactory = $factory;
     }
@@ -995,7 +953,7 @@ class AdminTemplate extends AbstractTemplate implements
      * @param  string|null $currentIdent The current menu identifier.
      * @return array Finalized menu structure.
      */
-    private function parseMainMenuItem(array $menuItem, $menuIdent = null, $currentIdent = null)
+    private function parseMainMenuItem(array $menuItem, $menuIdent = null, $currentIdent = null): array
     {
         $svgUri = $this->baseUrl() . 'assets/admin/images/svgs.svg#icon-';
 
@@ -1007,7 +965,7 @@ class AdminTemplate extends AbstractTemplate implements
 
         if (!empty($menuItem['url'])) {
             $url = $menuItem['url'];
-            if ($url && strpos($url, ':') === false && !in_array($url[0], [ '/', '#', '?' ])) {
+            if ($url && !str_contains((string)$url, ':') && !in_array($url[0], [ '/', '#', '?' ])) {
                 $url = $this->adminUrl() . $url;
             }
         } else {
@@ -1018,7 +976,7 @@ class AdminTemplate extends AbstractTemplate implements
 
         if (isset($menuItem['icon'])) {
             $icon = $menuItem['icon'];
-            if ($icon && strpos($icon, ':') === false && !in_array($icon[0], [ '/', '#', '?' ])) {
+            if ($icon && !str_contains((string)$icon, ':') && !in_array($icon[0], [ '/', '#', '?' ])) {
                 $icon = $svgUri . $icon;
             }
         } else {
@@ -1037,7 +995,7 @@ class AdminTemplate extends AbstractTemplate implements
             $menuItem['label'] = $this->translator()->translation($menuItem['label']);
         }
 
-        $menuItem['show_label'] = (isset($menuItem['show_label']) ? !!$menuItem['show_label'] : true);
+        $menuItem['show_label'] = (isset($menuItem['show_label']) ? (bool)$menuItem['show_label'] : true);
 
         $menuItem['selected'] = ($menuItem['ident'] === $currentIdent);
 
@@ -1048,9 +1006,7 @@ class AdminTemplate extends AbstractTemplate implements
             $secondaryMenuWidget = current(
                 array_filter(
                     $this->secondaryMenu(),
-                    function ($item) use ($menuIdent) {
-                        return $item->ident() === $menuIdent;
-                    }
+                    fn($item): bool => $item->ident() === $menuIdent
                 )
             );
 
@@ -1070,7 +1026,7 @@ class AdminTemplate extends AbstractTemplate implements
      * @param  string|null $currentIdent The current menu identifier.
      * @return array Finalized menu structure.
      */
-    private function parseSystemMenuItem(array $menuItem, $menuIdent = null, $currentIdent = null)
+    private function parseSystemMenuItem(array $menuItem, $menuIdent = null, $currentIdent = null): array
     {
         if (!isset($menuItem['ident'])) {
             $menuItem['ident'] = $menuIdent;
@@ -1078,7 +1034,7 @@ class AdminTemplate extends AbstractTemplate implements
 
         if (!empty($menuItem['url'])) {
             $url = $menuItem['url'];
-            if ($url && strpos($url, ':') === false && !in_array($url[0], [ '/', '#', '?' ])) {
+            if ($url && !str_contains((string)$url, ':') && !in_array($url[0], [ '/', '#', '?' ])) {
                 $url = $this->adminUrl() . $url;
             }
         } else {
@@ -1125,10 +1081,8 @@ class AdminTemplate extends AbstractTemplate implements
 
     /**
      * Generate an array containing a list of CSS classes to be used by the <html> tag.
-     *
-     * @return array
      */
-    public function htmlClasses()
+    public function htmlClasses(): array
     {
         $classes = [
             'has-no-js'
@@ -1143,20 +1097,16 @@ class AdminTemplate extends AbstractTemplate implements
 
     /**
      * Determine if main & secondary menu should appear as mobile in a desktop resolution.
-     *
-     * @return boolean
      */
-    public function isFullscreenTemplate()
+    public function isFullscreenTemplate(): bool
     {
         return false;
     }
 
     /**
      * Retrieve the default data to the global Admin JavaScript application.
-     *
-     * @return array
      */
-    final protected function getDefaultAdminDataForJs()
+    final protected function getDefaultAdminDataForJs(): array
     {
         return [
             'debug'      => $this->debug(),
@@ -1169,10 +1119,8 @@ class AdminTemplate extends AbstractTemplate implements
 
     /**
      * Retrieve all data options for the global Admin JavaScript application.
-     *
-     * @return array
      */
-    final protected function getAdminDataForJs()
+    final protected function getAdminDataForJs(): array
     {
         if ($this->adminDataForJs === null) {
             $this->adminDataForJs = $this->getDefaultAdminDataForJs();
@@ -1185,9 +1133,8 @@ class AdminTemplate extends AbstractTemplate implements
      * Add extra data to the global Admin JavaScript application.
      *
      * @param  array $data Additional options.
-     * @return self
      */
-    final public function addAdminDataForJs(array $data)
+    final public function addAdminDataForJs(array $data): static
     {
         $this->adminDataForJs = array_merge($this->getAdminDataForJs(), $data);
 
@@ -1196,14 +1143,10 @@ class AdminTemplate extends AbstractTemplate implements
 
     /**
      * Retrieve the resolved data options for the global Admin JavaScript application.
-     *
-     * @return array
      */
-    final public function adminDataForJs()
+    final public function adminDataForJs(): array
     {
-        return array_map(function ($datum) {
-            return is_callable($datum) ? $datum($this) : $datum;
-        }, $this->getAdminDataForJs());
+        return array_map(fn($datum) => is_callable($datum) ? $datum($this) : $datum, $this->getAdminDataForJs());
     }
 
     /**
@@ -1216,7 +1159,7 @@ class AdminTemplate extends AbstractTemplate implements
         $options = (JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 
         if ($this->debug()) {
-            $options = ($options | JSON_PRETTY_PRINT);
+            $options |= JSON_PRETTY_PRINT;
         }
 
         return json_encode($this->adminDataForJs(), $options);
@@ -1227,7 +1170,7 @@ class AdminTemplate extends AbstractTemplate implements
      *
      * @return string Returns a stringified JSON object, protected from Mustache rendering.
      */
-    final public function escapedAdminDataForJsAsJson()
+    final public function escapedAdminDataForJsAsJson(): string
     {
         return '{{=<% %>=}}' . $this->adminDataForJsAsJson() . '<%={{ }}=%>';
     }

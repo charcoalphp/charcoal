@@ -37,6 +37,7 @@ class ResetPasswordScript extends AdminScript implements
      * @param  Container $container Pimple DI container.
      * @return void
      */
+    #[\Override]
     protected function setDependencies(Container $container)
     {
         parent::setDependencies($container);
@@ -49,10 +50,9 @@ class ResetPasswordScript extends AdminScript implements
      * Retrieve the available default arguments of this action.
      *
      * @link http://climate.thephpleague.com/arguments/ For descriptions of the options for CLImate.
-     *
-     * @return array
      */
-    public function defaultArguments()
+    #[\Override]
+    public function defaultArguments(): array
     {
         $arguments = [
             'email' => [
@@ -74,17 +74,14 @@ class ResetPasswordScript extends AdminScript implements
             ]
         ];
 
-        $arguments = array_merge(parent::defaultArguments(), $arguments);
-
-        return $arguments;
+        return array_merge(parent::defaultArguments(), $arguments);
     }
 
     /**
      * @param  RequestInterface  $request  A PSR-7 compatible Request instance.
      * @param  ResponseInterface $response A PSR-7 compatible Response instance.
-     * @return ResponseInterface
      */
-    public function run(RequestInterface $request, ResponseInterface $response)
+    public function run(RequestInterface $request, ResponseInterface $response): ResponseInterface
     {
         unset($request);
 
@@ -114,7 +111,7 @@ class ResetPasswordScript extends AdminScript implements
         $authenticator->changeUserPassword($user, $password);
 
         if ($climate->arguments->get('sendEmail')) {
-            $this->sendResetPasswordEmail($email, $password);
+            $this->sendResetPasswordEmail();
         }
 
         $climate->red()->out(
@@ -125,12 +122,10 @@ class ResetPasswordScript extends AdminScript implements
     }
 
     /**
-     * @param  string $email    The user email.
-     * @param  string $password The new, plain-text password.
      * @return void
      * @todo   Implement reset password email dispatch.
      */
-    private function sendResetPasswordEmail($email, $password)
+    private function sendResetPasswordEmail()
     {
     }
 }

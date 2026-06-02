@@ -19,9 +19,6 @@ class AbstractMenuItemTest extends AbstractTestCase
      */
     public $obj;
 
-    /**
-     * @return void
-     */
     protected function setUp(): void
     {
         $container = $this->getContainer();
@@ -29,40 +26,32 @@ class AbstractMenuItemTest extends AbstractTestCase
 
         $menu = $container['menu/builder']->build([]);
 
-        $this->obj = $this->getMockForAbstractClass(AbstractMenuItem::class, [
-            [
-                'menu'              => $menu,
-                'logger'            => $container['logger'],
-                'view'              => $container['view'],
-                'menu_item_builder' => $container['menu/item/builder'],
-            ],
-        ]);
+        $this->obj = new class ([
+            'menu'              => $menu,
+            'logger'            => $container['logger'],
+            'view'              => $container['view'],
+            'menu_item_builder' => $container['menu/item/builder'],
+        ]) extends AbstractMenuItem {};
     }
 
-    /**
-     * @return void
-     */
-    public function testHasChildren()
+    public function testHasChildren(): void
     {
         $obj = $this->obj;
         $this->assertFalse($obj->hasChildren());
 
-        $ret = $obj->setChildren([
+        $obj->setChildren([
             'test' => []
         ]);
 
         $this->assertTrue($obj->hasChildren());
     }
 
-    /**
-     * @return void
-     */
-    public function testNumChildren()
+    public function testNumChildren(): void
     {
         $obj = $this->obj;
         $this->assertEquals(0, $obj->numChildren());
 
-        $ret = $obj->setChildren([
+        $obj->setChildren([
             'test'   => [],
             'foobar' => []
         ]);

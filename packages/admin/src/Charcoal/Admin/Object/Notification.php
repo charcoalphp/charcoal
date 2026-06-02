@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Charcoal\Admin\Object;
 
 use InvalidArgumentException;
@@ -14,37 +16,33 @@ class Notification extends AbstractModel
      * The user ids.
      * @var string[]
      */
-    private $users = [];
+    private array $users = [];
 
     /**
      * The types of object to watch, for notifications.
      * @var string[]
      */
-    private $targetTypes;
+    private ?array $targetTypes = null;
 
     /**
      * Extra emails the report shoul be sent to.
      * @var string[]
      */
-    private $extraEmails = [];
+    private array $extraEmails = [];
 
     /**
      * Can be "minute", "hourly", "daily", "weekly" or "monthly".
-     * @var string
      */
-    private $frequency;
+    private ?string $frequency = null;
 
-    /**
-     * @var boolean
-     */
-    private $active = true;
+    private bool $active = true;
 
     /**
      * @param array|string|null $users The users of this notifications.
      * @throws InvalidArgumentException If the users are not an array or a comma-separated string.
      * @return Notification Chainable
      */
-    public function setUsers($users)
+    public function setUsers($users): static
     {
         if ($users === null) {
             $this->users = [];
@@ -58,14 +56,11 @@ class Notification extends AbstractModel
                 'Users must be an array or a comma-separated string.'
             );
         }
-        $this->users = array_map('trim', $users);
+        $this->users = array_map(trim(...), $users);
         return $this;
     }
 
-    /**
-     * @return array
-     */
-    public function users()
+    public function users(): array
     {
         return $this->users;
     }
@@ -75,7 +70,7 @@ class Notification extends AbstractModel
      * @throws InvalidArgumentException If the types are not an array or a comma-separated string.
      * @return Notification Chainable
      */
-    public function setTargetTypes($targetTypes)
+    public function setTargetTypes($targetTypes): static
     {
         if ($targetTypes === null) {
             $this->targetTypes = null;
@@ -89,14 +84,11 @@ class Notification extends AbstractModel
                 'Object types must be an array or a comma-separated string.'
             );
         }
-        $this->targetTypes = array_map('trim', $targetTypes);
+        $this->targetTypes = array_map(trim(...), $targetTypes);
         return $this;
     }
 
-    /**
-     * @return array|null
-     */
-    public function targetTypes()
+    public function targetTypes(): ?array
     {
         return $this->targetTypes;
     }
@@ -106,7 +98,7 @@ class Notification extends AbstractModel
      * @throws InvalidArgumentException If the emails are not an array or a comma-separated string.
      * @return Notification Chainable
      */
-    public function setExtraEmails($extraEmails)
+    public function setExtraEmails($extraEmails): static
     {
         if ($extraEmails === null) {
             $this->extraEmails = [];
@@ -120,14 +112,11 @@ class Notification extends AbstractModel
                 'Extra emails must be an array or a comma-separated string.'
             );
         }
-        $this->extraEmails = array_map('trim', $extraEmails);
+        $this->extraEmails = array_map(trim(...), $extraEmails);
         return $this;
     }
 
-    /**
-     * @return array|null
-     */
-    public function extraEmails()
+    public function extraEmails(): array
     {
         return $this->extraEmails;
     }
@@ -137,7 +126,7 @@ class Notification extends AbstractModel
      * @throws InvalidArgumentException If the frequency is not a valid mode.
      * @return Notification Chainable
      */
-    public function setFrequency($frequency)
+    public function setFrequency($frequency): static
     {
         if ($frequency === null) {
             $this->frequency = null;
@@ -162,7 +151,7 @@ class Notification extends AbstractModel
     /**
      * @return boolean
      */
-    public function frequency()
+    public function frequency(): ?string
     {
         return $this->frequency;
     }
@@ -171,16 +160,13 @@ class Notification extends AbstractModel
      * @param boolean $active The active flag.
      * @return Notification Chainable
      */
-    public function setActive($active)
+    public function setActive($active): static
     {
-        $this->active = !!$active;
+        $this->active = (bool)$active;
         return $this;
     }
 
-    /**
-     * @return boolean
-     */
-    public function active()
+    public function active(): bool
     {
         return $this->active;
     }

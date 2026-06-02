@@ -30,20 +30,11 @@ class AclPermissions extends AdminWidget implements
 {
     use FormGroupTrait;
 
-    /**
-     * @var Acl $roleAcl
-     */
-    private $roleAcl;
+    private ?\Laminas\Permissions\Acl\Acl $roleAcl = null;
 
-    /**
-     * @var array
-     */
-    private $roleAllowed;
+    private ?array $roleAllowed = null;
 
-    /**
-     * @var array
-     */
-    private $roleDenied;
+    private ?array $roleDenied = null;
 
     /**
      * Store the collection loader for the current class.
@@ -71,15 +62,12 @@ class AclPermissions extends AdminWidget implements
      *
      * @return string
      */
-    public function objId()
+    public function objId(): string|false|null
     {
-        return filter_input(INPUT_GET, 'obj_id', FILTER_SANITIZE_STRING);
+        return htmlspecialchars(trim(($_GET['obj_id'] ?? '')), ENT_QUOTES, 'UTF-8');
     }
 
-    /**
-     * @return array
-     */
-    public function permissionCategories()
+    public function permissionCategories(): array
     {
         $loader = $this->collectionLoader();
         $loader->setModel(PermissionCategory::class);
@@ -103,6 +91,7 @@ class AclPermissions extends AdminWidget implements
      * @param  Container $container A dependencies container instance.
      * @return void
      */
+    #[\Override]
     protected function setDependencies(Container $container)
     {
         parent::setDependencies($container);
@@ -120,10 +109,10 @@ class AclPermissions extends AdminWidget implements
      */
     protected function db()
     {
-        if (!isset($this->database)) {
+        if ($this->database === null) {
             throw new RuntimeException(sprintf(
                 'Database Connection is not defined for "%s"',
-                get_class($this)
+                static::class
             ));
         }
 
@@ -138,10 +127,10 @@ class AclPermissions extends AdminWidget implements
      */
     protected function adminAcl()
     {
-        if (!isset($this->aclManager)) {
+        if ($this->aclManager === null) {
             throw new RuntimeException(sprintf(
                 'ACL Manager is not defined for "%s"',
-                get_class($this)
+                static::class
             ));
         }
 
@@ -156,10 +145,10 @@ class AclPermissions extends AdminWidget implements
      */
     protected function collectionLoader()
     {
-        if (!isset($this->collectionLoader)) {
+        if ($this->collectionLoader === null) {
             throw new RuntimeException(sprintf(
                 'Collection Loader is not defined for "%s"',
-                get_class($this)
+                static::class
             ));
         }
 
@@ -168,12 +157,9 @@ class AclPermissions extends AdminWidget implements
 
 
 
-    /**
-     * @return Acl
-     */
-    protected function roleAcl()
+    protected function roleAcl(): \Laminas\Permissions\Acl\Acl
     {
-        if (!$this->roleAcl) {
+        if (!$this->roleAcl instanceof \Laminas\Permissions\Acl\Acl) {
             $id = $this->objId();
 
             $this->roleAcl = new Acl();
@@ -195,8 +181,8 @@ class AclPermissions extends AdminWidget implements
             $sth->execute();
             $permissions = $sth->fetch(PDO::FETCH_ASSOC);
 
-            $this->roleAllowed = explode(',', trim($permissions['allowed']));
-            $this->roleDenied  = explode(',', trim($permissions['denied']));
+            $this->roleAllowed = explode(',', trim((string)$permissions['allowed']));
+            $this->roleDenied  = explode(',', trim((string)$permissions['denied']));
 
             foreach ($this->roleAllowed as $allowed) {
                 $this->roleAcl->allow($id, 'admin', $allowed);
@@ -211,12 +197,11 @@ class AclPermissions extends AdminWidget implements
 
     /**
      * @param string $category The category ident to load permissions from.
-     * @return array
      */
-    private function loadCategoryPermissions($category)
+    private function loadCategoryPermissions($category): array
     {
         $adminAcl = $this->adminAcl();
-        $roleAcl  = $this->roleAcl();
+        $this->roleAcl();
 
         $loader = $this->collectionLoader();
         $loader->setModel(Permission::class);

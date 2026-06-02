@@ -21,10 +21,8 @@ abstract class AbstractError extends AbstractHandler
 {
     /**
      * Whether to output the error's details.
-     *
-     * @var boolean $displayErrorDetails
      */
-    private $displayErrorDetails;
+    private ?bool $displayErrorDetails = null;
 
     /**
      * The caught throwable.
@@ -50,7 +48,7 @@ abstract class AbstractError extends AbstractHandler
      */
     public function hasThrown()
     {
-        return !!$this->thrown;
+        return (bool)$this->thrown;
     }
 
     /**
@@ -86,6 +84,7 @@ abstract class AbstractError extends AbstractHandler
      *
      * @return integer
      */
+    #[\Override]
     public function getCode()
     {
         return 500;
@@ -125,6 +124,7 @@ abstract class AbstractError extends AbstractHandler
      * @param  Container $container A service locator.
      * @return self
      */
+    #[\Override]
     protected function setDependencies(Container $container)
     {
         parent::setDependencies($container);
@@ -143,7 +143,7 @@ abstract class AbstractError extends AbstractHandler
      */
     protected function setDisplayErrorDetails($state)
     {
-        $this->displayErrorDetails = !!$state;
+        $this->displayErrorDetails = (bool)$state;
 
         return $this;
     }
@@ -171,7 +171,7 @@ abstract class AbstractError extends AbstractHandler
      */
     protected function renderThrowableAsText($throwable)
     {
-        $text = sprintf('Type: %s' . PHP_EOL, get_class($throwable));
+        $text = sprintf('Type: %s' . PHP_EOL, $throwable::class);
 
         $code = $throwable->getCode();
         if (!empty($code)) {
@@ -285,7 +285,7 @@ abstract class AbstractError extends AbstractHandler
 
             do {
                 $json['error'][] = [
-                    'type'    => get_class($throwable),
+                    'type'    => $throwable::class,
                     'code'    => $throwable->getCode(),
                     'message' => $throwable->getMessage(),
                     'file'    => $throwable->getFile(),
@@ -310,7 +310,7 @@ abstract class AbstractError extends AbstractHandler
         if ($this->displayErrorDetails()) {
             do {
                 $xml .= "  <exception>\n";
-                $xml .= '    <type>' . get_class($throwable) . "</type>\n";
+                $xml .= '    <type>' . $throwable::class . "</type>\n";
                 $xml .= '    <code>' . $throwable->getCode() . "</code>\n";
                 $xml .= '    <message>' . $this->createCdataSection($throwable->getMessage()) . "</message>\n";
                 $xml .= '    <file>' . $throwable->getFile() . "</file>\n";
@@ -319,9 +319,8 @@ abstract class AbstractError extends AbstractHandler
                 $xml .= "  </exception>\n";
             } while ($throwable = $throwable->getPrevious());
         }
-        $xml .= '</error>';
 
-        return $xml;
+        return $xml . '</error>';
     }
 
     /**
@@ -349,7 +348,7 @@ abstract class AbstractError extends AbstractHandler
         $line    = $throwable->getLine();
         $trace   = $throwable->getTraceAsString();
 
-        $html = sprintf('<div><strong>Type:</strong> %s</div>', get_class($throwable));
+        $html = sprintf('<div><strong>Type:</strong> %s</div>', $throwable::class);
 
         if ($code) {
             $html .= sprintf('<div><strong>Code:</strong> %s</div>', $code);
@@ -381,6 +380,7 @@ abstract class AbstractError extends AbstractHandler
      * @param  array|\ArrayAccess $data Raw template data.
      * @return array|\ArrayAccess Expanded and processed template data.
      */
+    #[\Override]
     protected function parseTemplateData($data = [])
     {
         $error = $this->getThrown();

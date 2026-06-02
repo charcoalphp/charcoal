@@ -10,10 +10,8 @@ use Charcoal\Property\StringProperty;
  */
 class EmailProperty extends StringProperty
 {
-    /**
-     * @return string
-     */
-    public function type()
+    #[\Override]
+    public function type(): string
     {
         return 'email';
     }
@@ -22,18 +20,15 @@ class EmailProperty extends StringProperty
      * Email's maximum length is defined in RFC-3696 (+ errata) as 254 characters.
      *
      * This overrides PropertyString's maxLength() to ensure compliance with the email standards.
-     *
-     * @return integer
      */
-    public function getMaxLength()
+    #[\Override]
+    public function getMaxLength(): int
     {
         return 254;
     }
 
-    /**
-     * @return array
-     */
-    public function validationMethods()
+    #[\Override]
+    public function validationMethods(): array
     {
         $parentMethods = parent::validationMethods();
 
@@ -42,10 +37,7 @@ class EmailProperty extends StringProperty
         ]);
     }
 
-    /**
-     * @return boolean
-     */
-    public function validateEmail()
+    public function validateEmail(): bool
     {
         if ($this['allowNull'] && !$this['required']) {
             return true;
@@ -61,14 +53,15 @@ class EmailProperty extends StringProperty
     }
 
     /**
-     * @see AbstractProperty::parseOne()
-     * @see AbstractProperty::parseVal()
-     *
      * @param  mixed $val A single value to parse.
      * @return string
+     *@see AbstractProperty::parseOne()
+     * @see AbstractProperty::parseVal()
+     *
      */
-    public function parseOne($val)
+    #[\Override]
+    public function parseOne(mixed $val): string|false
     {
-        return filter_var(strip_tags($val), FILTER_SANITIZE_EMAIL);
+        return filter_var(strip_tags((string)$val), FILTER_SANITIZE_EMAIL);
     }
 }

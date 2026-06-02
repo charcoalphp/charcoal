@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Charcoal\Tests\Mock;
 
 // From 'charcoal-core'
@@ -18,7 +20,7 @@ class SourceMock extends AbstractSource
      * @param  StorableInterface $item  Optional item to load into.
      * @return StorableInterface
      */
-    public function loadItem($ident, StorableInterface $item = null)
+    public function loadItem($ident, ?StorableInterface $item = null): null
     {
         return null;
     }
@@ -29,7 +31,7 @@ class SourceMock extends AbstractSource
      * @param  StorableInterface|null $item Optional model.
      * @return StorableInterface[]
      */
-    public function loadItems(StorableInterface $item = null)
+    public function loadItems(?StorableInterface $item = null): array
     {
         return [];
     }
@@ -40,7 +42,7 @@ class SourceMock extends AbstractSource
      * @param  StorableInterface $item The object to save.
      * @return mixed The created item ID, otherwise FALSE.
      */
-    public function saveItem(StorableInterface $item)
+    public function saveItem(StorableInterface $item): int
     {
         return 1;
     }
@@ -52,7 +54,7 @@ class SourceMock extends AbstractSource
      * @param  array             $properties The list of properties to update, if not all.
      * @return boolean TRUE if the item was updated, otherwise FALSE.
      */
-    public function updateItem(StorableInterface $item, array $properties = null)
+    public function updateItem(StorableInterface $item, ?array $properties = null): bool
     {
         return true;
     }
@@ -63,7 +65,7 @@ class SourceMock extends AbstractSource
      * @param  StorableInterface $item Optional item to delete. If none, the current model object will be used.
      * @return boolean TRUE if the item was deleted, otherwise FALSE.
      */
-    public function deleteItem(StorableInterface $item = null)
+    public function deleteItem(?StorableInterface $item = null): bool
     {
         return true;
     }

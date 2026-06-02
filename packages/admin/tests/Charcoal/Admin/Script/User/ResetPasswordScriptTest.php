@@ -31,21 +31,15 @@ use Charcoal\Tests\Admin\ContainerProvider;
  */
 class ResetPasswordScriptTest extends AbstractTestCase
 {
-    /**
-     * @var Container
-     */
-    private $container;
+    private \Pimple\Container $container;
 
     /**
      * Instance of class under test
      * @var CreateScript
      */
-    private $obj;
+    private \Charcoal\Admin\Script\User\ResetPasswordScript $obj;
 
-    /**
-     * @return Container
-     */
-    private function getContainer()
+    private function getContainer(): \Pimple\Container
     {
         $container = new Container();
         $containerProvider = new ContainerProvider();
@@ -53,9 +47,6 @@ class ResetPasswordScriptTest extends AbstractTestCase
         return $container;
     }
 
-    /**
-     * @return void
-     */
     public function setUp(): void
     {
         $this->container = $this->getContainer();
@@ -70,10 +61,7 @@ class ResetPasswordScriptTest extends AbstractTestCase
         ]);
     }
 
-    /**
-     * @return void
-     */
-    public function testDefaultArguments()
+    public function testDefaultArguments(): void
     {
         $args = $this->obj->defaultArguments();
 
@@ -81,10 +69,7 @@ class ResetPasswordScriptTest extends AbstractTestCase
         $this->assertArrayHasKey('password', $args);
     }
 
-    /**
-     * @return void
-     */
-    public function testArguments()
+    public function testArguments(): void
     {
         $args = $this->obj->arguments();
 

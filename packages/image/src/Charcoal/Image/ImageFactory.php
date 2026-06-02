@@ -13,25 +13,18 @@ class ImageFactory extends AbstractFactory
     /**
      * @param array $data Constructor dependencies.
      */
-    public function __construct(array $data = null)
+    public function __construct(?array $data = null)
     {
-        if (isset($data['map'])) {
-            $data['map'] = array_merge($this->defaultMap(), $data['map']);
-        } else {
-            $data['map'] = $this->defaultMap();
-        }
+        $data['map'] = isset($data['map']) ? array_merge($this->defaultMap(), $data['map']) : $this->defaultMap();
 
         parent::__construct($data);
     }
 
-    /**
-     * @return array
-     */
-    protected function defaultMap()
+    protected function defaultMap(): array
     {
         return [
-            'imagick'     => '\Charcoal\Image\Imagick\ImagickImage',
-            'imagemagick' => '\Charcoal\Image\Imagemagick\ImagemagickImage'
+            'imagick'     => \Charcoal\Image\Imagick\ImagickImage::class,
+            'imagemagick' => \Charcoal\Image\Imagemagick\ImagemagickImage::class
         ];
     }
 }

@@ -19,9 +19,6 @@ class CollectionMapWidgetTest extends AbstractTestCase
      */
     public $obj;
 
-    /**
-     * @return void
-     */
     public function setUp(): void
     {
         $logger = new NullLogger();
@@ -30,40 +27,28 @@ class CollectionMapWidgetTest extends AbstractTestCase
         ]);
     }
 
-    /**
-     * @return void
-     */
-    public function testSetLatProperty()
+    public function testSetLatProperty(): void
     {
         $ret = $this->obj->setLatProperty('foo');
         $this->assertSame($ret, $this->obj);
         $this->assertEquals('foo', $this->obj->latProperty());
     }
 
-    /**
-     * @return void
-     */
-    public function testSetLonProperty()
+    public function testSetLonProperty(): void
     {
         $ret = $this->obj->setLonProperty('foo');
         $this->assertSame($ret, $this->obj);
         $this->assertEquals('foo', $this->obj->lonProperty());
     }
 
-    /**
-     * @return void
-     */
-    public function testSetPolygonProperty()
+    public function testSetPolygonProperty(): void
     {
         $ret = $this->obj->setPolygonProperty('foo');
         $this->assertSame($ret, $this->obj);
         $this->assertEquals('foo', $this->obj->polygonProperty());
     }
 
-    /**
-     * @return void
-     */
-    public function testSetInfoboxTemplate()
+    public function testSetInfoboxTemplate(): void
     {
         $ret = $this->obj->setInfoboxTemplate('foo');
         $this->assertSame($ret, $this->obj);

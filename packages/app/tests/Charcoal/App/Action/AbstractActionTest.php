@@ -6,6 +6,7 @@ namespace Charcoal\Tests\App\Action;
 use Psr\Http\Message\RequestInterface;
 
 // From Slim
+use Psr\Http\Message\ResponseInterface;
 use Slim\Http\Response;
 
 // From Pimple
@@ -23,17 +24,13 @@ class AbstractActionTest extends AbstractTestCase
 {
     /**
      * Tested Class.
-     *
-     * @var AbstractAction
      */
-    private $obj;
+    private \Charcoal\App\Action\AbstractAction $obj;
 
     /**
      * Store the service container.
-     *
-     * @var Container
      */
-    private $container;
+    private ?\Pimple\Container $container = null;
 
     /**
      * Set up the test.
@@ -42,13 +39,23 @@ class AbstractActionTest extends AbstractTestCase
     {
         $container = $this->container();
 
-        $this->obj = $this->getMockForAbstractClass(AbstractAction::class, [[
+        $this->obj = new class ([
             'logger'    => $container['logger'],
             'container' => $container
-        ]]);
+        ]) extends AbstractAction {
+            public function results()
+            {
+                return ''; // Works for both JSON and XML
+            }
+
+            public function run(RequestInterface $request, ResponseInterface $response)
+            {
+                return $response;
+            }
+        };
     }
 
-    public function testSetData()
+    public function testSetData(): void
     {
         $ret = $this->obj->setData([
             'mode'        => 'redirect',
@@ -63,7 +70,7 @@ class AbstractActionTest extends AbstractTestCase
         $this->assertEquals('fail', $this->obj->failureUrl());
     }
 
-    public function testSetMode()
+    public function testSetMode(): void
     {
         $this->assertEquals('json', $this->obj->mode());
         $ret = $this->obj->setMode('redirect');
@@ -74,7 +81,7 @@ class AbstractActionTest extends AbstractTestCase
         $this->obj->setMode(false);
     }
 
-    public function testSetSuccess()
+    public function testSetSuccess(): void
     {
         $ret = $this->obj->setSuccess(false);
         $this->assertSame($ret, $this->obj);
@@ -86,7 +93,7 @@ class AbstractActionTest extends AbstractTestCase
         $this->assertTrue($this->obj->success());
     }
 
-    public function testSuccessUrl()
+    public function testSuccessUrl(): void
     {
         $this->assertEquals('', $this->obj->successUrl());
         $ret = $this->obj->setSuccessUrl('foo');
@@ -99,7 +106,7 @@ class AbstractActionTest extends AbstractTestCase
         $this->obj->setSuccessUrl([]);
     }
 
-    public function testSetFailureUrl()
+    public function testSetFailureUrl(): void
     {
         $this->assertEquals('', $this->obj->failureUrl());
         $ret = $this->obj->setFailureUrl('foo');
@@ -112,7 +119,7 @@ class AbstractActionTest extends AbstractTestCase
         $this->obj->setFailureUrl([]);
     }
 
-    public function testRedirectUrlSuccess()
+    public function testRedirectUrlSuccess(): void
     {
         $this->obj->setData([
             'failure_url' => 'fail',
@@ -130,14 +137,10 @@ class AbstractActionTest extends AbstractTestCase
      *
      * For this, the `run` method must be added as public in the mock object.
      */
-    public function testInvokable()
+    public function testInvokable(): void
     {
-        $request = $this->createMock(RequestInterface::class);
+        $request = $this->createStub(RequestInterface::class);
         $response = new Response();
-
-        $this->obj->expects($this->any())
-            ->method('run')
-            ->will($this->returnValue($response));
 
         $obj = $this->obj;
         $res = $obj($request, $response);
@@ -145,14 +148,10 @@ class AbstractActionTest extends AbstractTestCase
         $this->assertInstanceOf(Response::class, $res);
     }
 
-    public function testDefaultModeisJson()
+    public function testDefaultModeisJson(): void
     {
-        $request = $this->createMock(RequestInterface::class);
+        $request = $this->createStub(RequestInterface::class);
         $response = new Response();
-
-        $this->obj->expects($this->any())
-            ->method('run')
-            ->will($this->returnValue($response));
 
         $obj = $this->obj;
         $res = $obj($request, $response);
@@ -161,14 +160,10 @@ class AbstractActionTest extends AbstractTestCase
         $this->assertEquals('application/json', $headers['Content-Type'][0]);
     }
 
-    public function testInvokeModeJson()
+    public function testInvokeModeJson(): void
     {
-        $request = $this->createMock(RequestInterface::class);
+        $request = $this->createStub(RequestInterface::class);
         $response = new Response();
-
-        $this->obj->expects($this->any())
-            ->method('run')
-            ->will($this->returnValue($response));
 
         $this->obj->setMode('json');
         $obj = $this->obj;
@@ -178,14 +173,10 @@ class AbstractActionTest extends AbstractTestCase
         $this->assertEquals('application/json', $headers['Content-Type'][0]);
     }
 
-    public function testInvokeModeXml()
+    public function testInvokeModeXml(): void
     {
-        $request = $this->createMock(RequestInterface::class);
+        $request = $this->createStub(RequestInterface::class);
         $response = new Response();
-
-        $this->obj->expects($this->any())
-            ->method('run')
-            ->will($this->returnValue($response));
 
         $this->obj->setMode('xml');
         $obj = $this->obj;
@@ -195,14 +186,10 @@ class AbstractActionTest extends AbstractTestCase
         $this->assertEquals('text/xml', $headers['Content-Type'][0]);
     }
 
-    public function testInvokeModeRedirect()
+    public function testInvokeModeRedirect(): void
     {
-        $request = $this->createMock(RequestInterface::class);
+        $request = $this->createStub(RequestInterface::class);
         $response = new Response();
-
-        $this->obj->expects($this->any())
-            ->method('run')
-            ->will($this->returnValue($response));
 
         $this->obj->setMode('redirect');
         $this->obj->setFailureUrl('example.com');
@@ -215,20 +202,18 @@ class AbstractActionTest extends AbstractTestCase
         $this->assertEquals('example.com', $headers['Location'][0]);
     }
 
-    public function testInitIsTrue()
+    public function testInitIsTrue(): void
     {
-        $request = $this->createMock(RequestInterface::class);
+        $request = $this->createStub(RequestInterface::class);
         $this->assertTrue($this->obj->init($request));
     }
 
     /**
      * Set up the service container.
-     *
-     * @return Container
      */
-    private function container()
+    private function container(): \Pimple\Container
     {
-        if ($this->container === null) {
+        if (!$this->container instanceof \Pimple\Container) {
             $container = new Container();
             $containerProvider = new ContainerProvider();
             $containerProvider->registerLogger($container);

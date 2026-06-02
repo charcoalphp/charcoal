@@ -24,11 +24,12 @@ trait CollectionLoaderAwareTrait
      * Set a model collection loader.
      *
      * @param  CollectionLoader $loader The model collection loader.
-     * @return void
      */
-    protected function setCollectionLoader(CollectionLoader $loader)
+    protected function setCollectionLoader(CollectionLoader $loader): static
     {
         $this->collectionLoader = $loader;
+
+        return $this;
     }
 
     /**
@@ -37,12 +38,12 @@ trait CollectionLoaderAwareTrait
      * @throws RuntimeException If the collection loader is missing.
      * @return CollectionLoader
      */
-    public function collectionLoader()
+    public function collectionLoader(): \Charcoal\Loader\CollectionLoader
     {
         if (!isset($this->collectionLoader)) {
             throw new RuntimeException(sprintf(
                 'Collection Loader is not defined for [%s]',
-                get_class($this)
+                $this::class
             ));
         }
 

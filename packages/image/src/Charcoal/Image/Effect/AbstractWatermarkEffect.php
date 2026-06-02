@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Charcoal\Image\Effect;
 
 use InvalidArgumentException;
@@ -19,7 +21,7 @@ abstract class AbstractWatermarkEffect extends AbstractEffect implements LayerEf
      * The watermark image source (path or Image).
      * @var string|ImageInterface $watermark
      */
-    private $watermark;
+    private string|\Charcoal\Image\ImageInterface|null $watermark = null;
 
     /**
      * @param string|ImageInterface $watermark The watermark (path or Image).

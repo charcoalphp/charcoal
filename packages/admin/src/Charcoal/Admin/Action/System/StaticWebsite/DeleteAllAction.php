@@ -43,23 +43,20 @@ class DeleteAllAction extends AdminAction
         return $response;
     }
 
-    /**
-     * @return array
-     */
-    public function results()
+    #[\Override]
+    public function results(): array
     {
-        $ret = [
+        return [
             'success'   => $this->success(),
             'feedbacks' => $this->feedbacks()
         ];
-
-        return $ret;
     }
 
     /**
      * @param Container $container Pimple DI Container.
      * @return void
      */
+    #[\Override]
     protected function setDependencies(Container $container)
     {
         parent::setDependencies($container);
@@ -69,9 +66,8 @@ class DeleteAllAction extends AdminAction
 
     /**
      * @param string $dir Directory to delete.
-     * @return void
      */
-    private function recursiveDelete($dir)
+    private function recursiveDelete(string $dir): void
     {
         $files = new RecursiveIteratorIterator(
             new RecursiveDirectoryIterator($dir, RecursiveDirectoryIterator::SKIP_DOTS),

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Charcoal\Tests\View\Php;
 
 // From 'charcoal-view'
@@ -14,11 +16,8 @@ class PhpLoaderTest extends AbstractTestCase
     /**
      * @var MustacheLoader
      */
-    private $obj;
+    private \Charcoal\View\Php\PhpLoader $obj;
 
-    /**
-     * @return void
-     */
     public function setUp(): void
     {
         $this->obj = new PhpLoader([
@@ -27,10 +26,7 @@ class PhpLoaderTest extends AbstractTestCase
         ]);
     }
 
-    /**
-     * @return void
-     */
-    public function testLoad()
+    public function testLoad(): void
     {
         $ret = $this->obj->load('foo');
 
@@ -38,10 +34,7 @@ class PhpLoaderTest extends AbstractTestCase
         $this->assertEquals($expected, $ret);
     }
 
-    /**
-     * @return void
-     */
-    public function testLoadDynamic()
+    public function testLoadDynamic(): void
     {
         $this->obj->setDynamicTemplate('widget_template', 'foo');
         $ret = $this->obj->load('$widget_template');
@@ -50,10 +43,7 @@ class PhpLoaderTest extends AbstractTestCase
         $this->assertEquals($expected, $ret);
     }
 
-    /**
-     * @return void
-     */
-    public function testLoadNotExisting()
+    public function testLoadNotExisting(): void
     {
         $ret = $this->obj->load('foo/bar/foobar');
         $this->assertEquals('foo/bar/foobar', $ret);

@@ -35,10 +35,8 @@ trait DatabaseExpressionTestTrait
      *
      * Assertions:
      * 1. Implements {@see ExpressionInterface}
-     *
-     * @return void
      */
-    public function testConstruct()
+    public function testConstruct(): void
     {
         $obj = $this->createExpression();
 

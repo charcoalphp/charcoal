@@ -41,6 +41,7 @@ class GridStackDashboardWidget extends AdminWidget implements
      * @param Container $container The DI container.
      * @return void
      */
+    #[\Override]
     protected function setDependencies(Container $container)
     {
         parent::setDependencies($container);
@@ -55,49 +56,46 @@ class GridStackDashboardWidget extends AdminWidget implements
      * @param callable $widgetCallback A callback applied to each widget.
      * @return UiItemInterface[]|\Generator
      */
-    public function widgets(callable $widgetCallback = null)
+    public function widgets(?callable $widgetCallback = null)
     {
         $widgets = $this->widgets;
 
         $gridStack = $this->gridStack() ?: [];
         $parsedGridStack = [];
 
-        array_walk($gridStack, function ($item) use (&$parsedGridStack) {
+        array_walk($gridStack, function (array $item) use (&$parsedGridStack): void {
             $parsedGridStack[$item['id']] = $item;
         });
 
         // Load gridStack from user preferences
         $user = $this->adminUser();
-        $userGridStack = json_decode($user->preferences(), true)['grid_stack'] ?: [];
+        $userGridStack = json_decode((string)$user->preferences(), true)['grid_stack'] ?: [];
         $parsedUserGridStack = [];
 
-        array_walk($userGridStack, function ($item) use (&$parsedUserGridStack) {
+        array_walk($userGridStack, function (array $item) use (&$parsedUserGridStack): void {
             $parsedUserGridStack[$item['id']] = $item;
         });
 
-        $widgetCallback = isset($widgetCallback) ? $widgetCallback : $this->widgetCallback;
+        $widgetCallback ??= $this->widgetCallback;
         foreach ($widgets as $widget) {
             if (isset($widget['permissions']) && $this instanceof AuthAwareInterface) {
                 $widget->setActive($this->hasPermissions($widget['permissions']));
             }
 
-            if (!!count($parsedUserGridStack)) {
+            if ((bool)count($parsedUserGridStack)) {
                 if (isset($parsedUserGridStack[$widget->ident()])) {
                     $widget->setData([
                         'grid_stack' => $parsedUserGridStack[$widget->ident()]
                     ]);
                 }
-            } else {
-                if (isset($parsedGridStack[$widget->ident()])) {
-                    $gridStack  = array_replace_recursive(
-                        $parsedGridStack[$widget->ident()],
-                        $widget['grid_stack'] ?: []
-                    );
-
-                    $widget->setData([
-                        'grid_stack' => $gridStack
-                    ]);
-                }
+            } elseif (isset($parsedGridStack[$widget->ident()])) {
+                $gridStack  = array_replace_recursive(
+                    $parsedGridStack[$widget->ident()],
+                    $widget['grid_stack'] ?: []
+                );
+                $widget->setData([
+                    'grid_stack' => $gridStack
+                ]);
             }
 
             $gridStackDeco = new GridStackWidgetDecorator($widget);
@@ -126,9 +124,8 @@ class GridStackDashboardWidget extends AdminWidget implements
 
     /**
      * @param mixed $gridStack GridStack for AdvancedDashboardWidget.
-     * @return self
      */
-    public function setGridStack($gridStack)
+    public function setGridStack($gridStack): static
     {
         $this->gridStack = $gridStack;
 
@@ -157,7 +154,7 @@ class GridStackDashboardWidget extends AdminWidget implements
      * @param LayoutBuilder $builder The layout builder, to create customized layout object(s).
      * @return \Charcoal\Ui\Layout\DashboardInterface Chainable
      */
-    public function setLayoutBuilder(LayoutBuilder $builder)
+    public function setLayoutBuilder(LayoutBuilder $builder): null
     {
         return null;
     }
@@ -166,7 +163,7 @@ class GridStackDashboardWidget extends AdminWidget implements
      * @param LayoutInterface|array $layout The layout object or structure.
      * @return \Charcoal\Ui\Layout\DashboardInterface Chainable
      */
-    public function setLayout($layout)
+    public function setLayout($layout): null
     {
         return null;
     }
@@ -174,7 +171,7 @@ class GridStackDashboardWidget extends AdminWidget implements
     /**
      * @return LayoutInterface
      */
-    public function layout()
+    public function layout(): null
     {
         return null;
     }

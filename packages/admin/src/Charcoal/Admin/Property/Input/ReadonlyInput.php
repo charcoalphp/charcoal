@@ -40,17 +40,13 @@ class ReadonlyInput extends AbstractPropertyInput
 
     /**
      * Whether the placeholder text should be shown when the value is empty.
-     *
-     * @var boolean
      */
-    private $showPlaceholder = false;
+    private bool $showPlaceholder = false;
 
     /**
      * Store the factory instance for the current class.
-     *
-     * @var FactoryInterface
      */
-    private $propertyDisplayFactory;
+    private ?\Charcoal\Factory\FactoryInterface $propertyDisplayFactory = null;
 
     /**
      * @return string
@@ -113,6 +109,7 @@ class ReadonlyInput extends AbstractPropertyInput
      * @throws UnexpectedValueException If the value is invalid.
      * @return string
      */
+    #[\Override]
     public function inputVal()
     {
         $property = $this->property();
@@ -139,7 +136,7 @@ class ReadonlyInput extends AbstractPropertyInput
         if (!is_scalar($val)) {
             throw new UnexpectedValueException(sprintf(
                 'Property Input Value must be a string, received %s',
-                (is_object($val) ? get_class($val) : gettype($val))
+                (get_debug_type($val))
             ));
         }
 
@@ -149,6 +146,7 @@ class ReadonlyInput extends AbstractPropertyInput
     /**
      * @return boolean
      */
+    #[\Override]
     public function hasPropertyVal()
     {
         if ($this->hasPropertyVal === null) {
@@ -164,9 +162,9 @@ class ReadonlyInput extends AbstractPropertyInput
      * @param boolean $show Show (TRUE) or hide (FALSE) the notes.
      * @return UiItemInterface Chainable
      */
-    public function setShowPlaceholder($show)
+    public function setShowPlaceholder($show): static
     {
-        $this->showPlaceholder = !!$show;
+        $this->showPlaceholder = (bool)$show;
 
         return $this;
     }
@@ -201,7 +199,7 @@ class ReadonlyInput extends AbstractPropertyInput
                         return $output;
                     }
                 }
-            } catch (JsonException $e) {
+            } catch (JsonException) {
                 // do nothing
             }
         }
@@ -223,7 +221,7 @@ class ReadonlyInput extends AbstractPropertyInput
                 if (!is_scalar($output) && !is_null($output)) {
                     return $output;
                 }
-            } catch (JsonException $e) {
+            } catch (JsonException) {
                 // do nothing
             }
         }
@@ -263,10 +261,9 @@ class ReadonlyInput extends AbstractPropertyInput
 
     /**
      * Retrieve the default display options.
-     *
-     * @return array
      */
-    public function getDefaultInputOptions()
+    #[\Override]
+    public function getDefaultInputOptions(): array
     {
         return [
             'maybe_input_is_serialized' => static::DEFAULT_MAYBE_INPUT_IS_SERIALIZED,
@@ -279,6 +276,7 @@ class ReadonlyInput extends AbstractPropertyInput
      * @param Container $container Pimple DI container.
      * @return void
      */
+    #[\Override]
     protected function setDependencies(Container $container)
     {
         parent::setDependencies($container);
@@ -302,13 +300,12 @@ class ReadonlyInput extends AbstractPropertyInput
      * Retrieve the property display factory.
      *
      * @throws RuntimeException If the property display factory was not previously set.
-     * @return FactoryInterface
      */
-    protected function getPropertyDisplayFactory()
+    protected function getPropertyDisplayFactory(): \Charcoal\Factory\FactoryInterface
     {
-        if (!isset($this->propertyDisplayFactory)) {
+        if (!$this->propertyDisplayFactory instanceof \Charcoal\Factory\FactoryInterface) {
             throw new RuntimeException(
-                sprintf('Property Display Factory is not defined for "%s"', get_class($this))
+                sprintf('Property Display Factory is not defined for "%s"', static::class)
             );
         }
 

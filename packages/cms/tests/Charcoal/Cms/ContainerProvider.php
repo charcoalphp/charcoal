@@ -45,9 +45,8 @@ class ContainerProvider
 {
     /**
      * @param  Container $container A DI container.
-     * @return void
      */
-    public function registerBaseServices(Container $container)
+    public function registerBaseServices(Container $container): void
     {
         $this->registerLogger($container);
         $this->registerCache($container);
@@ -59,9 +58,8 @@ class ContainerProvider
 
     /**
      * @param  Container $container A DI container.
-     * @return void
      */
-    public function registerModelDependencies(Container $container)
+    public function registerModelDependencies(Container $container): void
     {
         $this->registerDatabase($container);
         $this->registerViewServices($container);
@@ -70,44 +68,40 @@ class ContainerProvider
 
     /**
      * @param  Container $container A DI container.
-     * @return void
      */
-    public function registerConfig(Container $container)
+    public function registerConfig(Container $container): void
     {
-        $container['config'] = function () {
-            return new AppConfig([
-                'base_path' => realpath(__DIR__ . '/../../..'),
-                'templates' => [],
-                'metadata'  => [
-                    'paths' => [
-                        'metadata',
-                        'tests/Charcoal/Cms/Fixture/metadata',
-                        // Standalone
-                        'vendor/charcoal/object/metadata',
-                        // Monorepo
-                        '/../object/metadata',
-                    ],
+        $container['config'] = (fn(): \Charcoal\App\AppConfig => new AppConfig([
+            'base_path' => realpath(__DIR__ . '/../../..'),
+            'templates' => [],
+            'metadata'  => [
+                'paths' => [
+                    'metadata',
+                    'tests/Charcoal/Cms/Fixture/metadata',
+                    // Standalone
+                    'vendor/charcoal/object/metadata',
+                    // Monorepo
+                    '/../object/metadata',
                 ],
-                'view'      => [
-                    'paths' => [
-                        'views',
-                        'tests/Charcoal/Cms/Fixture/views',
-                    ],
-                    'default_controller' => GenericTemplate::class,
+            ],
+            'view'      => [
+                'paths' => [
+                    'views',
+                    'tests/Charcoal/Cms/Fixture/views',
                 ],
-            ]);
-        };
+                'default_controller' => GenericTemplate::class,
+            ],
+        ]));
     }
 
     /**
      * Extend the application configset for a unilingual setup.
      *
      * @param  Container $container A DI container.
-     * @return void
      */
-    public function withUnilingualConfig(Container $container)
+    public function withUnilingualConfig(Container $container): void
     {
-        $container->extend('config', function (AppConfig $config) {
+        $container->extend('config', function (AppConfig $config): \Charcoal\App\AppConfig {
             $config['locales'] = [
                 'languages' => [
                     'en' => [
@@ -133,11 +127,10 @@ class ContainerProvider
      * Extend the application configset for a multilingual setup.
      *
      * @param  Container $container A DI container.
-     * @return void
      */
-    public function withMultilingualConfig(Container $container)
+    public function withMultilingualConfig(Container $container): void
     {
-        $container->extend('config', function (AppConfig $config) {
+        $container->extend('config', function (AppConfig $config): \Charcoal\App\AppConfig {
             $config['locales'] = [
                 'languages' => [
                     'en'  => [
@@ -194,11 +187,10 @@ class ContainerProvider
      * Extend the application configset with templates.
      *
      * @param  Container $container A DI container.
-     * @return void
      */
-    public function withTemplatesConfig(Container $container)
+    public function withTemplatesConfig(Container $container): void
     {
-        $container->extend('config', function (AppConfig $config) {
+        $container->extend('config', function (AppConfig $config): \Charcoal\App\AppConfig {
             $config['templates'] = [
                 [
                     'value'  => 'foo',
@@ -239,11 +231,10 @@ class ContainerProvider
 
     /**
      * @param  Container $container A DI container.
-     * @return void
      */
-    public function registerDatabase(Container $container)
+    public function registerDatabase(Container $container): void
     {
-        $container['database'] = function () {
+        $container['database'] = function (): \PDO {
             $pdo = new PDO('sqlite::memory:');
             $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
@@ -253,33 +244,26 @@ class ContainerProvider
 
     /**
      * @param  Container $container A DI container.
-     * @return void
      */
-    public function registerLogger(Container $container)
+    public function registerLogger(Container $container): void
     {
-        $container['logger'] = function () {
-            return new NullLogger();
-        };
+        $container['logger'] = (fn(): \Psr\Log\NullLogger => new NullLogger());
     }
 
     /**
      * @param  Container $container A DI container.
-     * @return void
      */
-    public function registerCache(Container $container)
+    public function registerCache(Container $container): void
     {
-        $container['cache'] = function () {
-            return new Pool();
-        };
+        $container['cache'] = (fn(): \Stash\Pool => new Pool());
     }
 
     /**
      * Register the admin services.
      *
      * @param  Container $container A DI container.
-     * @return void
      */
-    public function registerModelServices(Container $container)
+    public function registerModelServices(Container $container): void
     {
         static $provider = null;
 
@@ -294,9 +278,8 @@ class ContainerProvider
      * Register the admin services.
      *
      * @param  Container $container A DI container.
-     * @return void
      */
-    public function registerAuthServices(Container $container)
+    public function registerAuthServices(Container $container): void
     {
         static $provider = null;
 
@@ -311,9 +294,8 @@ class ContainerProvider
      * Setup the application's translator service.
      *
      * @param  Container $container A DI container.
-     * @return void
      */
-    public function registerTranslatorServices(Container $container)
+    public function registerTranslatorServices(Container $container): void
     {
         static $provider = null;
 
@@ -328,9 +310,8 @@ class ContainerProvider
      * Setup the framework's view renderer.
      *
      * @param  Container $container A DI container.
-     * @return void
      */
-    public function registerViewServices(Container $container)
+    public function registerViewServices(Container $container): void
     {
         static $provider = null;
 
@@ -343,48 +324,39 @@ class ContainerProvider
 
     /**
      * @param  Container $container A DI container.
-     * @return void
      */
-    public function registerCmsConfig(Container $container)
+    public function registerCmsConfig(Container $container): void
     {
-        $container['cms/config'] = function () {
-            return new CmsConfig();
-        };
+        $container['cms/config'] = (fn(): \Charcoal\Cms\Config\CmsConfig => new CmsConfig());
     }
 
     /**
      * @param  Container $container A DI container.
-     * @return void
      */
-    public function registerDateHelper(Container $container)
+    public function registerDateHelper(Container $container): void
     {
-        $container['date/helper'] = function () {
-            return new DateHelper([
-                'date_formats' => '',
-                'time_formats' => '',
-            ]);
-        };
+        $container['date/helper'] = (fn(): \Charcoal\Cms\Support\Helpers\DateHelper => new DateHelper([
+            'date_formats' => '',
+            'time_formats' => '',
+        ]));
     }
 
     /**
      * @param  Container $container A DI container.
-     * @return void
      */
-    public function registerTemplateFactory(Container $container)
+    public function registerTemplateFactory(Container $container): void
     {
-        $container['template/factory'] = function (Container $container) {
-            return new Factory([
-                'base_class'       => TemplateInterface::class,
-                'resolver_options' => [
-                    'suffix' => 'Template',
+        $container['template/factory'] = (fn(Container $container): \Charcoal\Factory\GenericFactory => new Factory([
+            'base_class'       => TemplateInterface::class,
+            'resolver_options' => [
+                'suffix' => 'Template',
+            ],
+            'arguments'        => [
+                [
+                    'container' => $container,
+                    'logger'    => $container['logger'],
                 ],
-                'arguments'        => [
-                    [
-                        'container' => $container,
-                        'logger'    => $container['logger'],
-                    ],
-                ],
-            ]);
-        };
+            ],
+        ]));
     }
 }

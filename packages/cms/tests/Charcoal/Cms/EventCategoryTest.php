@@ -17,15 +17,11 @@ class EventCategoryTest extends AbstractTestCase
 
     /**
      * Tested Class.
-     *
-     * @var EventCategory
      */
-    private $obj;
+    private \Charcoal\Cms\EventCategory $obj;
 
     /**
      * Set up the test.
-     *
-     * @return void
      */
     protected function setUp(): void
     {
@@ -34,18 +30,12 @@ class EventCategoryTest extends AbstractTestCase
         $this->obj = new EventCategory($dependencies);
     }
 
-    /**
-     * @return void
-     */
-    public function testItemType()
+    public function testItemType(): void
     {
         $this->assertEquals(Event::class, $this->obj->itemType());
     }
 
-    /**
-     * @return void
-     */
-    public function testValidate()
+    public function testValidate(): void
     {
         $this->assertFalse($this->obj->validate());
         $this->obj->setName([ 'fr' => 'Titre' ]);

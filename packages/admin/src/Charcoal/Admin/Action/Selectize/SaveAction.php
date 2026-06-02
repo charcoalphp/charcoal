@@ -20,7 +20,8 @@ class SaveAction extends BaseSaveAction
      *
      * @return string[]
      */
-    protected function validDataFromRequest()
+    #[\Override]
+    protected function validDataFromRequest(): array
     {
         return array_merge([
             'selectize_obj_type', 'selectize_prop_ident', 'selectize_property'
@@ -30,6 +31,7 @@ class SaveAction extends BaseSaveAction
     /**
      * @return array
      */
+    #[\Override]
     public function results()
     {
         $results = parent::results();
@@ -46,6 +48,7 @@ class SaveAction extends BaseSaveAction
      * @param Container $container DI Container.
      * @return void
      */
+    #[\Override]
     protected function setDependencies(Container $container)
     {
         parent::setDependencies($container);

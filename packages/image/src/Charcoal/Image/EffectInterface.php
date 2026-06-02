@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Charcoal\Image;
 
 use Charcoal\Image\ImageInterface;
@@ -25,5 +27,5 @@ interface EffectInterface
      * @param array $data The effect data, if available.
      * @return EffectInterface
      */
-    public function process(array $data = null);
+    public function process(?array $data = null);
 }

@@ -54,21 +54,14 @@ class Role extends AbstractModel
      */
     public $denied;
 
-    /**
-     * @var boolean
-     */
-    private $superuser = false;
+    private bool $superuser = false;
 
-    /**
-     * @var integer
-     */
-    private $position;
+    private ?int $position = null;
 
     /**
      * ACL Role can be used as a string (ident).
-     *
-     * @return string
      */
+    #[\Override]
     public function __toString(): string
     {
         if ($this->ident === null) {
@@ -77,19 +70,16 @@ class Role extends AbstractModel
         return $this->ident;
     }
 
-    /**
-     * @return string
-     */
-    public function key()
+    #[\Override]
+    public function key(): string
     {
         return 'ident';
     }
 
     /**
      * @param  string|Role $parent Role's parent.
-     * @return self
      */
-    public function setParent($parent)
+    public function setParent($parent): static
     {
         if ($parent instanceof self) {
             $parent = $parent['ident'];
@@ -109,9 +99,8 @@ class Role extends AbstractModel
 
     /**
      * @param  mixed $name The user-friendly name of this role.
-     * @return self
      */
-    public function setName($name)
+    public function setName($name): static
     {
         $this->name = $this->p('name')->parseVal($name);
         return $this;
@@ -127,13 +116,12 @@ class Role extends AbstractModel
 
     /**
      * @param  mixed $allowed The allowed permissions for this role.
-     * @return self
      */
-    public function setAllowed($allowed)
+    public function setAllowed($allowed): static
     {
         $allowed = $this->p('allowed')->parseVal($allowed);
         if (is_array($allowed)) {
-            $allowed = array_filter(array_map('trim', $allowed));
+            $allowed = array_filter(array_map(trim(...), $allowed));
         }
 
         $this->allowed = $allowed;
@@ -150,13 +138,12 @@ class Role extends AbstractModel
 
     /**
      * @param  mixed $denied The denied permissions for this role.
-     * @return self
      */
-    public function setDenied($denied)
+    public function setDenied($denied): static
     {
         $denied = $this->p('denied')->parseVal($denied);
         if (is_array($denied)) {
-            $denied = array_filter(array_map('trim', $denied));
+            $denied = array_filter(array_map(trim(...), $denied));
         }
 
         $this->denied = $denied;
@@ -173,27 +160,22 @@ class Role extends AbstractModel
 
     /**
      * @param  boolean $isSuper The superuser flag.
-     * @return self
      */
-    public function setSuperuser($isSuper)
+    public function setSuperuser($isSuper): static
     {
-        $this->superuser = !!$isSuper;
+        $this->superuser = (bool)$isSuper;
         return $this;
     }
 
-    /**
-     * @return boolean
-     */
-    public function getSuperuser()
+    public function getSuperuser(): bool
     {
         return $this->superuser;
     }
 
     /**
      * @param  integer|string|null $position The role's ordering position.
-     * @return self
      */
-    public function setPosition($position)
+    public function setPosition($position): static
     {
         $this->position = (int)$position;
         return $this;
@@ -202,7 +184,7 @@ class Role extends AbstractModel
     /**
      * @return integer
      */
-    public function getPosition()
+    public function getPosition(): ?int
     {
         return $this->position;
     }
@@ -211,6 +193,7 @@ class Role extends AbstractModel
      * @param  Container $container Pimple DI container.
      * @return void
      */
+    #[\Override]
     protected function setDependencies(Container $container)
     {
         parent::setDependencies($container);

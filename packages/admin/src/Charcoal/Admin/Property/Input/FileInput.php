@@ -5,7 +5,7 @@ namespace Charcoal\Admin\Property\Input;
 // From Pimple
 use Pimple\Container;
 // From Mustache
-use Mustache_LambdaHelper as LambdaHelper;
+use Mustache\LambdaHelper as LambdaHelper;
 // // From 'charcoal-admin'
 use Charcoal\Admin\Property\AbstractPropertyInput;
 
@@ -30,24 +30,18 @@ class FileInput extends AbstractPropertyInput
 
     /**
      * Flag wether the "file preview" should be displayed.
-     *
-     * @var boolean
      */
-    private $showFilePreview = true;
+    private bool $showFilePreview = true;
 
     /**
      * Flag wether the "file upload" input should be displayed.
-     *
-     * @var boolean
      */
-    private $showFileUpload;
+    private ?bool $showFileUpload = null;
 
     /**
      * Flag wether the "file picker" popup button should be displaed.
-     *
-     * @var boolean
      */
-    private $showFilePicker;
+    private ?bool $showFilePicker = null;
 
     /**
      * URL for the "file picker" popup.
@@ -79,10 +73,8 @@ class FileInput extends AbstractPropertyInput
 
     /**
      * Retrieve the control type for the HTML element `<input>`.
-     *
-     * @return string
      */
-    public function type()
+    public function type(): string
     {
         return 'file';
     }
@@ -92,9 +84,8 @@ class FileInput extends AbstractPropertyInput
      *
      * @link   https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/file
      * @param  string|string[] $types The accepted MIME types.
-     * @return self
      */
-    public function setAccept($types)
+    public function setAccept($types): static
     {
         if (is_array($types)) {
             $types = implode(',', $types);
@@ -108,10 +99,8 @@ class FileInput extends AbstractPropertyInput
      * Retrieve a comma-separated list of default file type specifiers.
      *
      * This method concatenates the file property's "acceptedMimetypes".
-     *
-     * @return string
      */
-    public function getDefaultAccept()
+    public function getDefaultAccept(): string
     {
         $types = $this->property()['acceptedMimetypes'];
         return implode(',', $types);
@@ -134,14 +123,14 @@ class FileInput extends AbstractPropertyInput
     /**
      * @return string|null
      */
-    public function abridgedInputVal()
+    public function abridgedInputVal(): string|array|null
     {
         $val = (string)$this->inputVal();
-        $val = preg_replace('!^' . preg_quote($this->p()['uploadPath'], '!') . '!', '', $val);
+        $val = preg_replace('!^' . preg_quote((string)$this->p()['uploadPath'], '!') . '!', '', $val);
 
-        if (strpos($val, '://') !== false) {
-            $host = parse_url($val, PHP_URL_HOST);
-            $path = ltrim(substr($val, (strpos($val, $host) + strlen($host) + 1)), '/');
+        if (str_contains((string)$val, '://')) {
+            $host = parse_url((string)$val, PHP_URL_HOST);
+            $path = ltrim(substr((string)$val, (strpos((string)$val, (string)$host) + strlen($host) + 1)), '/');
             if (mb_strlen($path) > 30) {
                 $a = 12;
                 $z = 12;
@@ -153,10 +142,7 @@ class FileInput extends AbstractPropertyInput
         return $val;
     }
 
-    /**
-     * @return string|null
-     */
-    public function filePreview()
+    public function filePreview(): string
     {
         $value = $this->inputVal();
         if ($value) {
@@ -181,8 +167,8 @@ class FileInput extends AbstractPropertyInput
         $parts = parse_url($val);
         if (empty($parts['scheme']) && !in_array($val[0], [ '/', '#', '?' ])) {
             $path  = isset($parts['path']) ? ltrim($parts['path'], '/') : '';
-            $query = isset($parts['query']) ? $parts['query'] : '';
-            $hash  = isset($parts['fragment']) ? $parts['fragment'] : '';
+            $query = ($parts['query'] ?? '');
+            $hash  = ($parts['fragment'] ?? '');
             $val   = $this->baseUrl->withPath($path)->withQuery($query)->withFragment($hash);
         }
 
@@ -204,8 +190,8 @@ class FileInput extends AbstractPropertyInput
         $parts = parse_url($val);
         if (empty($parts['scheme']) && !in_array($val[0], [ '/', '#', '?' ])) {
             $path  = isset($parts['path']) ? ltrim($parts['path'], '/') : '';
-            $query = isset($parts['query']) ? $parts['query'] : '';
-            $hash  = isset($parts['fragment']) ? $parts['fragment'] : '';
+            $query = ($parts['query'] ?? '');
+            $hash  = ($parts['fragment'] ?? '');
             $val   = $this->baseUrl->withPath($path)->withQuery($query)->withFragment($hash);
         }
 
@@ -216,17 +202,14 @@ class FileInput extends AbstractPropertyInput
      * @param boolean $show The show file preview flag.
      * @return FileInput Chainable
      */
-    public function setShowFilePreview($show)
+    public function setShowFilePreview($show): static
     {
-        $this->showFilePreview = !!$show;
+        $this->showFilePreview = (bool)$show;
 
         return $this;
     }
 
-    /**
-     * @return boolean
-     */
-    public function showFilePreview()
+    public function showFilePreview(): bool
     {
         return $this->showFilePreview;
     }
@@ -235,9 +218,9 @@ class FileInput extends AbstractPropertyInput
      * @param boolean $show The show file upload flag.
      * @return FileInput Chainable
      */
-    public function setShowFileUpload($show)
+    public function setShowFileUpload($show): static
     {
-        $this->showFileUpload = !!$show;
+        $this->showFileUpload = (bool)$show;
 
         return $this;
     }
@@ -258,29 +241,23 @@ class FileInput extends AbstractPropertyInput
      * @param boolean $show The show file picker flag.
      * @return FileInput Chainable
      */
-    public function setShowFilePicker($show)
+    public function setShowFilePicker($show): static
     {
-        $this->showFilePicker = !!$show;
+        $this->showFilePicker = (bool)$show;
 
         return $this;
     }
 
-    /**
-     * @return boolean
-     */
-    public function showFilePicker()
+    public function showFilePicker(): bool
     {
         if ($this->showFilePicker === null) {
-            return !($this->showFileUpload === true);
+            return $this->showFileUpload !== true;
         }
 
         return $this->showFilePicker && $this->hasFilePicker();
     }
 
-    /**
-     * @return boolean
-     */
-    public function hasFilePicker()
+    public function hasFilePicker(): bool
     {
         return class_exists('\\elFinder');
     }
@@ -289,7 +266,7 @@ class FileInput extends AbstractPropertyInput
      * @param  string $url The file picker AJAX URL.
      * @return FileInput Chainable
      */
-    public function setFilePickerUrl($url)
+    public function setFilePickerUrl($url): static
     {
         $this->filePickerUrl = $url;
         return $this;
@@ -317,7 +294,7 @@ class FileInput extends AbstractPropertyInput
      *
      * @return callable|null
      */
-    public function prepareFilePickerUrl()
+    public function prepareFilePickerUrl(): ?\Closure
     {
         if (!$this->showFilePicker()) {
             return null;
@@ -325,7 +302,7 @@ class FileInput extends AbstractPropertyInput
 
         $uri = $this->getFilePickerUrlTemplate();
 
-        return function ($noop, LambdaHelper $helper) use ($uri) {
+        return function ($noop, LambdaHelper $helper) use ($uri): null {
             $uri = $helper->render($uri);
             $this->setFilePickerUrl($uri);
 
@@ -335,24 +312,20 @@ class FileInput extends AbstractPropertyInput
 
     /**
      * Retrieve the elFinder connector URL template for rendering.
-     *
-     * @return string
      */
-    protected function getFilePickerUrlTemplate()
+    protected function getFilePickerUrlTemplate(): string
     {
         $uri = 'obj_type={{ objType }}&obj_id={{ objId }}&property={{ p.ident }}&callback={{ inputId }}';
-        $uri = '{{# withAdminUrl }}elfinder?' . $uri . '{{/ withAdminUrl }}';
 
-        return $uri;
+        return '{{# withAdminUrl }}elfinder?' . $uri . '{{/ withAdminUrl }}';
     }
 
     /**
      * Set the title for the file picker dialog.
      *
      * @param  string|string[] $title The dialog title.
-     * @return self
      */
-    public function setDialogTitle($title)
+    public function setDialogTitle($title): static
     {
         $this->dialogTitle = $this->translator()->translation($title);
 
@@ -377,9 +350,8 @@ class FileInput extends AbstractPropertyInput
      * Set the label for the file picker button.
      *
      * @param  string|string[] $label The button label.
-     * @return self
      */
-    public function setChooseButtonLabel($label)
+    public function setChooseButtonLabel($label): static
     {
         $this->chooseButtonLabel = $this->translator()->translation($label);
 
@@ -404,9 +376,8 @@ class FileInput extends AbstractPropertyInput
      * Set the label for the file removal button.
      *
      * @param  string|string[] $label The button label.
-     * @return self
      */
-    public function setRemoveButtonLabel($label)
+    public function setRemoveButtonLabel($label): static
     {
         $this->removeButtonLabel = $this->translator()->translation($label);
 
@@ -433,6 +404,7 @@ class FileInput extends AbstractPropertyInput
      * @param Container $container A dependencies container instance.
      * @return void
      */
+    #[\Override]
     protected function setDependencies(Container $container)
     {
         parent::setDependencies($container);
@@ -445,7 +417,7 @@ class FileInput extends AbstractPropertyInput
      *
      * @return \Charcoal\Translator\Translation|string|null
      */
-    protected function defaultDialogTitle()
+    protected function defaultDialogTitle(): ?\Charcoal\Translator\Translation
     {
         return $this->translator()->translation('filesystem.library.media');
     }
@@ -455,7 +427,7 @@ class FileInput extends AbstractPropertyInput
      *
      * @return \Charcoal\Translator\Translation|string|null
      */
-    protected function defaultChooseButtonLabel()
+    protected function defaultChooseButtonLabel(): ?\Charcoal\Translator\Translation
     {
         if ($this->property()['multiple']) {
             return $this->translator()->translation('Choose files…');
@@ -469,7 +441,7 @@ class FileInput extends AbstractPropertyInput
      *
      * @return \Charcoal\Translator\Translation|string|null
      */
-    protected function defaultRemoveButtonLabel()
+    protected function defaultRemoveButtonLabel(): ?\Charcoal\Translator\Translation
     {
         if ($this->property()['multiple']) {
             return $this->translator()->translation('Clear selected files');
@@ -480,10 +452,9 @@ class FileInput extends AbstractPropertyInput
 
     /**
      * Retrieve the control's data options for JavaScript components.
-     *
-     * @return array
      */
-    public function controlDataForJs()
+    #[\Override]
+    public function controlDataForJs(): array
     {
         return [
             'input_name'   => $this->inputName(),

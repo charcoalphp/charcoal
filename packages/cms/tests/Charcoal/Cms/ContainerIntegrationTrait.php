@@ -27,10 +27,8 @@ trait ContainerIntegrationTrait
 
     /**
      * Retrieve the model's mock dependencies.
-     *
-     * @return array
      */
-    protected function getModelDependencies()
+    protected function getModelDependencies(): array
     {
         $container = $this->getContainer();
 
@@ -56,10 +54,8 @@ trait ContainerIntegrationTrait
 
     /**
      * Retrieve the property's mock dependencies with the service locator.
-     *
-     * @return array
      */
-    protected function getPropertyDependenciesWithContainer()
+    protected function getPropertyDependenciesWithContainer(): array
     {
         $container = $this->getContainer();
 
@@ -97,9 +93,8 @@ trait ContainerIntegrationTrait
 
     /**
      * @see    ContainerProvider
-     * @return void
      */
-    private function setupContainer()
+    private function setupContainer(): void
     {
         $provider  = new ContainerProvider();
         $container = new Container();

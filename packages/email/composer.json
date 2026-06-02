@@ -1,8 +1,12 @@
 {
     "name": "charcoal/email",
-    "type": "library",
     "description": "Email sending and queueing for Charcoal",
-    "keywords": ["charcoal", "email", "queue", "phpmailer"],
+    "keywords": [
+        "charcoal",
+        "email",
+        "queue",
+        "phpmailer"
+    ],
     "homepage": "https://charcoal.locomotive.ca",
     "license": "MIT",
     "authors": [
@@ -11,13 +15,9 @@
             "homepage": "https://locomotive.ca"
         }
     ],
-    "extra": {
-        "branch-alias": {
-            "dev-main": "5.x-dev"
-        }
-    },
+    "type": "library",
     "require": {
-        "php": "^7.4 || ^8.0",
+        "php": "^8.3",
         "psr/log": "^1.0",
         "phpmailer/phpmailer": "~6.0",
         "charcoal/config": "^5.1",
@@ -28,11 +28,11 @@
     },
     "require-dev": {
         "pimple/pimple": "^3.0",
-        "phpunit/phpunit": "^9.5",
+        "phpunit/phpunit": "^12.5",
         "squizlabs/php_codesniffer": "^3.5",
         "php-coveralls/php-coveralls": "^2.2",
         "mustache/mustache": "^2.11",
-        "phpstan/phpstan": "^1.6"
+        "phpstan/phpstan": "^2.0"
     },
     "autoload": {
         "psr-4": {
@@ -44,8 +44,10 @@
             "Charcoal\\Tests\\": "tests/Charcoal"
         }
     },
-    "replace": {
-        "locomotivemtl/charcoal-email": "*"
+    "extra": {
+        "branch-alias": {
+            "dev-main": "5.x-dev"
+        }
     },
     "scripts": {
         "test": [
@@ -64,6 +66,9 @@
         "phpcs": "php vendor/bin/phpcs -ps --colors src/",
         "phpcbf": "php vendor/bin/phpcbf -ps --colors src/ tests/",
         "phpstan": "php vendor/bin/phpstan analyze -l1 src/ tests/"
+    },
+    "replace": {
+        "locomotivemtl/charcoal-email": "*"
     },
     "minimum-stability": "dev",
     "prefer-stable": true

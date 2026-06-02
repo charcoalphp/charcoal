@@ -16,7 +16,7 @@ use Psr\Http\Message\UriInterface;
 // From Slim
 use Slim\Http\Uri;
 // From Mustache
-use Mustache_LambdaHelper as LambdaHelper;
+use Mustache\LambdaHelper as LambdaHelper;
 // From 'charcoal-config'
 use Charcoal\Config\ConfigInterface;
 use Charcoal\Config\GenericConfig as Config;
@@ -66,9 +66,8 @@ class AdminServiceProvider implements ServiceProviderInterface
      * It should not get services.
      *
      * @param  Container $container The Pimple DI container.
-     * @return void
      */
-    public function register(Container $container)
+    public function register(Container $container): void
     {
         // Ensure dependencies are set
         $container->register(new EmailServiceProvider());
@@ -102,7 +101,7 @@ class AdminServiceProvider implements ServiceProviderInterface
          * @param  Container $container The Pimple DI Container.
          * @return AdminConfig
          */
-        $container['admin/config'] = function (Container $container) {
+        $container['admin/config'] = function (Container $container): \Charcoal\Admin\Config {
             $appConfig = $container['config'];
 
             $extraConfigs = [];
@@ -124,12 +123,10 @@ class AdminServiceProvider implements ServiceProviderInterface
                 array_push($extraConfigs, ...$appAdminConfigs);
             }
 
-            if (!empty($extraConfigs)) {
-                foreach ($extraConfigs as $path) {
-                    $configPath =  $appConfig['base_path'] . DIRECTORY_SEPARATOR . ltrim($path, '/');
+            foreach ($extraConfigs as $path) {
+                $configPath =  $appConfig['base_path'] . DIRECTORY_SEPARATOR . ltrim($path, '/');
 
-                    $appConfig->addFile($configPath);
-                }
+                $appConfig->addFile($configPath);
             }
 
             $adminConfig = $appConfig['admin'];
@@ -157,7 +154,7 @@ class AdminServiceProvider implements ServiceProviderInterface
                     $adminUrl = clone $container['base-url'];
                     if ($adminConfig['base_path']) {
                         $basePath  = rtrim($adminUrl->getBasePath(), '/');
-                        $adminPath = ltrim($adminConfig['base_path'], '/');
+                        $adminPath = ltrim((string)$adminConfig['base_path'], '/');
                         $adminUrl  = $adminUrl->withBasePath($basePath . '/' . $adminPath);
                     }
                 }
@@ -181,11 +178,9 @@ class AdminServiceProvider implements ServiceProviderInterface
          * @param Container $container A container instance.
          * @return ViewInterface
          */
-        $container->extend('view', function (GenericView $view, Container $container): ViewInterface {
-            return new GenericView([
-                'engine' => $container['view/engine/mustache']
-            ]);
-        });
+        $container->extend('view', fn(GenericView $view, Container $container): ViewInterface => new GenericView([
+            'engine' => $container['view/engine/mustache']
+        ]));
 
         /**
          * Extend view/config.
@@ -216,11 +211,10 @@ class AdminServiceProvider implements ServiceProviderInterface
             /**
              * @return MetadataConfig
              */
-            $container['metadata/config'] = function (Container $container) {
+            $container['metadata/config'] = function (Container $container): \Charcoal\Model\Service\MetadataConfig {
                 $settings   = $container['admin/config']['metadata'];
-                $metaConfig = new MetadataConfig($settings);
 
-                return $metaConfig;
+                return new MetadataConfig($settings);
             };
         } else {
             /**
@@ -232,9 +226,9 @@ class AdminServiceProvider implements ServiceProviderInterface
              * @param  Container      $container  The Pimple DI container.
              * @return MetadataConfig
              */
-            $container->extend('metadata/config', function (MetadataConfig $metaConfig, Container $container) {
+            $container->extend('metadata/config', function (MetadataConfig $metaConfig, Container $container): \Charcoal\Model\Service\MetadataConfig {
                 $settings = $container['admin/config']['metadata'];
-                if (is_array($settings) && !empty($settings)) {
+                if (is_array($settings) && $settings !== []) {
                     $metaConfig->merge($settings);
                 }
 
@@ -276,16 +270,16 @@ class AdminServiceProvider implements ServiceProviderInterface
          * @param  Container      $container  The Pimple DI container.
          * @return MetadataConfig
          */
-        $container->extend('metadata/config', function (MetadataConfig $metaConfig, Container $container) {
+        $container->extend('metadata/config', function (MetadataConfig $metaConfig, Container $container): \Charcoal\Model\Service\MetadataConfig {
             $adminConfig = $container['admin/config'];
-            $adminDir    = '/' . trim($adminConfig['base_path'], '/');
+            $adminDir    = '/' . trim((string)$adminConfig['base_path'], '/');
 
             $metaPaths   = $metaConfig->paths();
             $parsedPaths = [];
             foreach ($metaPaths as $basePath) {
                 $adminPath = rtrim($basePath, '/') . $adminDir;
-
-                array_push($parsedPaths, $adminPath, $basePath);
+                $parsedPaths[] = $adminPath;
+                $parsedPaths[] = $basePath;
             }
 
             $metaConfig->setPaths($parsedPaths);
@@ -306,15 +300,13 @@ class AdminServiceProvider implements ServiceProviderInterface
          * @param  Container $container The Pimple DI Container.
          * @return Authenticator
          */
-        $container['admin/authenticator'] = function (Container $container) {
-            return new Authenticator([
-                'logger'        => $container['logger'],
-                'user_type'     => User::class,
-                'user_factory'  => $container['model/factory'],
-                'token_type'    => AuthToken::class,
-                'token_factory' => $container['model/factory']
-            ]);
-        };
+        $container['admin/authenticator'] = (fn(Container $container): \Charcoal\User\Authenticator => new Authenticator([
+            'logger'        => $container['logger'],
+            'user_type'     => User::class,
+            'user_factory'  => $container['model/factory'],
+            'token_type'    => AuthToken::class,
+            'token_factory' => $container['model/factory']
+        ]));
 
         /**
          * Replace default Authenticator ('charcoal-ui') with the Admin Authenticator.
@@ -323,21 +315,17 @@ class AdminServiceProvider implements ServiceProviderInterface
          * @param  Container $container The Pimple DI Container.
          * @return Authenticator
          */
-        $container['authenticator'] = function (Container $container) {
-            return $container['admin/authenticator'];
-        };
+        $container['authenticator'] = (fn(Container $container): mixed => $container['admin/authenticator']);
 
         /**
          * @param  Container $container The Pimple DI container.
          * @return Authorizer
          */
-        $container['admin/authorizer'] = function (Container $container) {
-            return new Authorizer([
-                'logger'   => $container['logger'],
-                'acl'      => $container['admin/acl'],
-                'resource' => 'admin'
-            ]);
-        };
+        $container['admin/authorizer'] = (fn(Container $container): \Charcoal\User\Authorizer => new Authorizer([
+            'logger'   => $container['logger'],
+            'acl'      => $container['admin/acl'],
+            'resource' => 'admin'
+        ]));
 
         /**
          * Replace default Authorizer ('charcoal-ui') with the Admin Authorizer.
@@ -346,9 +334,7 @@ class AdminServiceProvider implements ServiceProviderInterface
          * @param  Container $container The Pimple DI Container.
          * @return Authorizer
          */
-        $container['authorizer'] = function (Container $container) {
-            return $container['admin/authorizer'];
-        };
+        $container['authorizer'] = (fn(Container $container): mixed => $container['admin/authorizer']);
     }
 
     /**
@@ -360,9 +346,7 @@ class AdminServiceProvider implements ServiceProviderInterface
     protected function registerViewExtensions(Container $container)
     {
         if (!isset($container['view/mustache/helpers'])) {
-            $container['view/mustache/helpers'] = function () {
-                return [];
-            };
+            $container['view/mustache/helpers'] = (fn(): array => []);
         }
 
         /**
@@ -370,7 +354,7 @@ class AdminServiceProvider implements ServiceProviderInterface
          *
          * @return array
          */
-        $container->extend('view/mustache/helpers', function (array $helpers, Container $container) {
+        $container->extend('view/mustache/helpers', function (array $helpers, Container $container): array {
             $adminUrl = $container['admin/base-url'];
 
             $urls = [
@@ -387,8 +371,8 @@ class AdminServiceProvider implements ServiceProviderInterface
                  * @param  string $uri A URI path to wrap.
                  * @return UriInterface|null
                  */
-                'withAdminUrl' => function ($uri, LambdaHelper $helper = null) use ($adminUrl) {
-                    if ($helper) {
+                'withAdminUrl' => function ($uri, ?LambdaHelper $helper = null) use ($adminUrl) {
+                    if ($helper instanceof LambdaHelper) {
                         $uri = $helper->render($uri);
                     }
 
@@ -397,16 +381,13 @@ class AdminServiceProvider implements ServiceProviderInterface
                         $uri = $adminUrl->withPath('');
                     } else {
                         $parts = parse_url($uri);
-                        if (!isset($parts['scheme'])) {
-                            if (!in_array($uri[0], ['/', '#', '?'])) {
-                                $path  = isset($parts['path']) ? ltrim($parts['path'], '/') : '';
-                                $query = isset($parts['query']) ? $parts['query'] : '';
-                                $hash  = isset($parts['fragment']) ? $parts['fragment'] : '';
-
-                                return $adminUrl->withPath($path)
-                                                ->withQuery($query)
-                                                ->withFragment($hash);
-                            }
+                        if (!isset($parts['scheme']) && !in_array($uri[0], ['/', '#', '?'])) {
+                            $path  = isset($parts['path']) ? ltrim($parts['path'], '/') : '';
+                            $query = ($parts['query'] ?? '');
+                            $hash  = ($parts['fragment'] ?? '');
+                            return $adminUrl->withPath($path)
+                                            ->withQuery($query)
+                                            ->withFragment($hash);
                         }
                     }
 
@@ -432,7 +413,7 @@ class AdminServiceProvider implements ServiceProviderInterface
          * @param  AdminConfig $adminConfig The admin configset.
          * @return AdminConfig
          */
-        $container->extend('admin/config', function (AdminConfig $adminConfig) {
+        $container->extend('admin/config', function (AdminConfig $adminConfig): \Charcoal\Admin\Config {
             $adminConfig['elfinder'] = new Config($adminConfig['elfinder']);
 
             return $adminConfig;
@@ -444,9 +425,7 @@ class AdminServiceProvider implements ServiceProviderInterface
          * @param  Container $container The Pimple DI Container.
          * @return ConfigInterface
          */
-        $container['elfinder/config'] = function (Container $container) {
-            return $container['admin/config']['elfinder'];
-        };
+        $container['elfinder/config'] = (fn(Container $container): mixed => $container['admin/config']['elfinder']);
     }
 
     /**
@@ -463,14 +442,12 @@ class AdminServiceProvider implements ServiceProviderInterface
          * @param  Container $container The Pimple DI container.
          * @return SelectizeRenderer
          */
-        $container['selectize/renderer'] = function (Container $container) {
-            return new SelectizeRenderer([
-                'logger'           => $container['logger'],
-                'translator'       => $container['translator'],
-                'template_factory' => $container['template/factory'],
-                'view'             => $container['view']
-            ]);
-        };
+        $container['selectize/renderer'] = (fn(Container $container): \Charcoal\Admin\Service\SelectizeRenderer => new SelectizeRenderer([
+            'logger'           => $container['logger'],
+            'translator'       => $container['translator'],
+            'template_factory' => $container['template/factory'],
+            'view'             => $container['view']
+        ]));
     }
 
     /**
@@ -479,7 +456,7 @@ class AdminServiceProvider implements ServiceProviderInterface
      */
     protected function registerAssetsManager(Container $container)
     {
-        $container['assets/config'] = function (Container $container) {
+        $container['assets/config'] = function (Container $container): \Charcoal\Admin\AssetsConfig {
             $config = $container['admin/config']->get('assets');
 
             return new AssetsConfig($config);
@@ -498,54 +475,48 @@ class AdminServiceProvider implements ServiceProviderInterface
          * @param  Container $container The Pimple DI container.
          * @return FactoryInterface
          */
-        $container['property/input/factory'] = function (Container $container) {
-            return new Factory([
-                'base_class'       => PropertyInputInterface::class,
-                'arguments'        => [[
-                    'container' => $container,
-                    'logger'    => $container['logger']
-                ]],
-                'resolver_options' => [
-                    'suffix' => 'Input'
-                ]
-            ]);
-        };
+        $container['property/input/factory'] = (fn(Container $container): \Charcoal\Factory\GenericFactory => new Factory([
+            'base_class'       => PropertyInputInterface::class,
+            'arguments'        => [[
+                'container' => $container,
+                'logger'    => $container['logger']
+            ]],
+            'resolver_options' => [
+                'suffix' => 'Input'
+            ]
+        ]));
 
         /**
          * @param  Container $container The Pimple DI container.
          * @return FactoryInterface
          */
-        $container['property/display/factory'] = function (Container $container) {
-            return new Factory([
-                'base_class'       => PropertyDisplayInterface::class,
-                'arguments'        => [[
-                    'container' => $container,
-                    'logger'    => $container['logger']
-                ]],
-                'resolver_options' => [
-                    'suffix' => 'Display'
-                ]
-            ]);
-        };
+        $container['property/display/factory'] = (fn(Container $container): \Charcoal\Factory\GenericFactory => new Factory([
+            'base_class'       => PropertyDisplayInterface::class,
+            'arguments'        => [[
+                'container' => $container,
+                'logger'    => $container['logger']
+            ]],
+            'resolver_options' => [
+                'suffix' => 'Display'
+            ]
+        ]));
 
         /**
          * @param  Container $container A Pimple DI container.
          * @return FactoryInterface
          */
-        $container['secondary-menu/group/factory'] = function (Container $container) {
-            return new Factory([
-                'base_class'       => SecondaryMenuGroupInterface::class,
-                'default_class'    => GenericSecondaryMenuGroup::class,
-                'arguments'        => [[
-                    'container'      => $container,
-                    'logger'         => $container['logger'],
-                    'view'           => $container['view'],
-                    'layout_builder' => $container['layout/builder']
-                ]],
-                'resolver_options' => [
-                    'suffix' => 'SecondaryMenuGroup'
-                ]
-            ]);
-        };
+        $container['secondary-menu/group/factory'] = (fn(Container $container): \Charcoal\Factory\GenericFactory => new Factory([
+            'base_class'       => SecondaryMenuGroupInterface::class,
+            'default_class'    => GenericSecondaryMenuGroup::class,
+            'arguments'        => [[
+                'container'      => $container,
+                'logger'         => $container['logger'],
+                'view'           => $container['view'],
+                'layout_builder' => $container['layout/builder']
+            ]],
+            'resolver_options' => [
+                'suffix' => 'SecondaryMenuGroup'
+            ]
+        ]));
     }
 }

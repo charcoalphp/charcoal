@@ -14,21 +14,23 @@ use Twig\TwigFunction;
 class DebugHelpers extends AbstractExtension implements
     HelpersInterface
 {
+    public $debug;
     /**
      * @param array $data Class Dependencies.
      */
-    public function __construct(array $data = null)
+    public function __construct(?array $data = null)
     {
         if (isset($data['debug'])) {
             $this->debug = $data['debug'];
         }
     }
 
+    #[\Override]
     public function getFunctions(): array
     {
         return [
-            new TwigFunction('debug', [ $this, 'isDebug' ]),
-            new TwigFunction('isDebug', [ $this, 'isDebug' ]),
+            new TwigFunction('debug', $this->isDebug(...)),
+            new TwigFunction('isDebug', $this->isDebug(...)),
         ];
     }
 
@@ -39,8 +41,6 @@ class DebugHelpers extends AbstractExtension implements
 
     /**
      * Retrieve the helpers.
-     *
-     * @return array
      */
     public function toArray(): array
     {

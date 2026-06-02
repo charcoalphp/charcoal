@@ -20,22 +20,16 @@ class GenericUserTest extends AbstractTestCase
 {
     /**
      * Tested Class.
-     *
-     * @var UserInterface
      */
-    private $obj;
+    private \Charcoal\User\GenericUser $obj;
 
     /**
      * Store the service container.
-     *
-     * @var Container
      */
-    private $container;
+    private ?\Pimple\Container $container = null;
 
     /**
      * Set up the test.
-     *
-     * @return void
      */
     protected function setUp(): void
     {
@@ -54,10 +48,7 @@ class GenericUserTest extends AbstractTestCase
         ]);
     }
 
-    /**
-     * @return void
-     */
-    public function testSessionKey()
+    public function testSessionKey(): void
     {
         $obj = $this->obj;
 
@@ -67,12 +58,10 @@ class GenericUserTest extends AbstractTestCase
 
     /**
      * Set up the service container.
-     *
-     * @return Container
      */
-    private function container()
+    private function container(): \Pimple\Container
     {
-        if ($this->container === null) {
+        if (!$this->container instanceof \Pimple\Container) {
             $container = new Container();
             $containerProvider = new ContainerProvider();
             $containerProvider->registerBaseServices($container);

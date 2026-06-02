@@ -1,6 +1,9 @@
 <?php
 
-namespace Charcoals\Tests\Image\Effect;
+namespace Charcoal\Tests\Image\Effect;
+
+use Charcoal\Image\Effect\AbstractGrayscaleEffect;
+use Charcoal\Tests\Mock\ImageMock;
 
 class AbstractGrayscaleEffectTest extends \PHPUnit\Framework\TestCase
 {
@@ -8,13 +11,14 @@ class AbstractGrayscaleEffectTest extends \PHPUnit\Framework\TestCase
 
     protected function setUp(): void
     {
-        $img = $this->getMockForAbstractClass('\Charcoal\Image\AbstractImage');
-        $img->method('driverType')->willReturn('imagick');
-        $this->obj = $this->getMockForAbstractClass('\Charcoal\Image\Effect\AbstractGrayscaleEffect');
+        $img = new ImageMock();
+        $this->obj = new class () extends AbstractGrayscaleEffect {
+            public function process(?array $data = null) {}
+        };
         $this->obj->setImage($img);
     }
 
-    public function testSetData()
+    public function testSetData(): void
     {
         $obj = $this->obj;
         $ret = $obj->setData([]);

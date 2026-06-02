@@ -26,21 +26,19 @@ class EventCategory extends Content implements CategoryInterface
      * Section constructor.
      * @param array $data Init data.
      */
-    public function __construct(array $data = null)
+    public function __construct(?array $data = null)
     {
         parent::__construct($data);
 
-        if (is_callable([ $this, 'defaultData' ])) {
+        if (is_callable($this->defaultData(...))) {
             $this->setData($this->defaultData());
         }
     }
 
     /**
      * CategoryTrait > itemType()
-     *
-     * @return string
      */
-    public function itemType()
+    public function itemType(): string
     {
         return Event::class;
     }
@@ -48,7 +46,7 @@ class EventCategory extends Content implements CategoryInterface
     /**
      * @return \Charcoal\Model\Collection|array
      */
-    public function loadCategoryItems()
+    public function loadCategoryItems(): array
     {
         return [];
     }
@@ -63,9 +61,8 @@ class EventCategory extends Content implements CategoryInterface
 
     /**
      * @param mixed $name The category name.
-     * @return self
      */
-    public function setName($name)
+    public function setName($name): static
     {
         $this->name = $this->translator()->translation($name);
 
@@ -74,9 +71,9 @@ class EventCategory extends Content implements CategoryInterface
 
     /**
      * @param ValidatorInterface $v Optional. A custom validator object to use for validation. If null, use object's.
-     * @return boolean
      */
-    public function validate(ValidatorInterface &$v = null)
+    #[\Override]
+    public function validate(?ValidatorInterface &$v = null): bool
     {
         parent::validate($v);
 

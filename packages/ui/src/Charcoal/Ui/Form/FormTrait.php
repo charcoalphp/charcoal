@@ -326,7 +326,7 @@ trait FormTrait
             throw new InvalidArgumentException(sprintf(
                 'Group must be an instance of %s or an array of form group options, received %s',
                 'FormGroupInterface',
-                (is_object($group) ? get_class($group) : gettype($group))
+                (get_debug_type($group))
             ));
         }
 
@@ -339,13 +339,9 @@ trait FormTrait
      * @param  array|null $data Optional. The form group data to set.
      * @return FormGroupInterface
      */
-    protected function createFormGroup(array $data = null)
+    protected function createFormGroup(?array $data = null)
     {
-        if (isset($data['type'])) {
-            $type = $data['type'];
-        } else {
-            $type = $this->defaultGroupType();
-        }
+        $type = ($data['type'] ?? $this->defaultGroupType());
 
         $group = $this->formGroupFactory()->create($type);
         $group->setForm($this->formWidget());
@@ -363,13 +359,12 @@ trait FormTrait
      * @param  FormGroupInterface $group      The form group to update.
      * @param  array|null         $groupData  Optional. The new group data to apply.
      * @param  string|null        $groupIdent Optional. The new group identifier.
-     * @return FormGroupInterface
      */
     protected function updateFormGroup(
         FormGroupInterface $group,
-        array $groupData = null,
+        ?array $groupData = null,
         $groupIdent = null
-    ) {
+    ): FormGroupInterface {
         $group->setForm($this->formWidget());
 
         if ($groupData !== null) {
@@ -385,10 +380,8 @@ trait FormTrait
 
     /**
      * Retrieve the default form group class name.
-     *
-     * @return string
      */
-    public function defaultGroupType()
+    public function defaultGroupType(): string
     {
         return 'charcoal/ui/form-group/generic';
     }
@@ -399,12 +392,12 @@ trait FormTrait
      * @param callable $groupCallback Optional callback applied to each form group.
      * @return FormGroupInterface[]|Generator
      */
-    public function groups(callable $groupCallback = null)
+    public function groups(?callable $groupCallback = null)
     {
         $groups = $this->groups;
         uasort($groups, [ $this, 'sortItemsByPriority' ]);
 
-        $groupCallback = (isset($groupCallback) ? $groupCallback : $this->groupCallback);
+        $groupCallback ??= $this->groupCallback;
 
         $groups = $this->finalizeFormGroups($groups);
 
@@ -432,7 +425,7 @@ trait FormTrait
      * @param array|FormGroupInterface[] $groups Form groups to finalize.
      * @return array|FormGroupInterface[]
      */
-    protected function finalizeFormGroups($groups)
+    protected function finalizeFormGroups($groups): array
     {
         $out = [];
 
@@ -441,10 +434,8 @@ trait FormTrait
                 continue;
             }
 
-            if ($group instanceof ConditionalizableInterface) {
-                if (!$group->resolvedCondition()) {
-                    continue;
-                }
+            if ($group instanceof ConditionalizableInterface && !$group->resolvedCondition()) {
+                continue;
             }
 
             // Test formGroup vs. ACL roles
@@ -465,35 +456,33 @@ trait FormTrait
                 }
             }
 
-            if ($group->rawConditionalLogic()) {
-                if (is_callable([$this, 'obj'])) {
-                    foreach ($group->rawConditionalLogic() as $logic) {
-                        $valid = true;
-                        $value = $this->obj()->get($logic['property']);
+            if ($group->rawConditionalLogic() && is_callable([$this, 'obj'])) {
+                foreach ($group->rawConditionalLogic() as $logic) {
+                    $valid = true;
+                    $value = $this->obj()->get($logic['property']);
 
-                        switch ($logic['operator']) {
-                            case '!==':
-                            case '!=':
-                            case '!':
-                            case 'not':
-                                if ($value == $logic['value']) {
-                                    $valid = false;
-                                }
-                                break;
-                            default:
-                            case '"==="':
-                            case '"=="':
-                            case '"="':
-                            case '"is"':
-                                if ($value != $logic['value']) {
-                                    $valid = false;
-                                }
-                                break;
-                        }
+                    switch ($logic['operator']) {
+                        case '!==':
+                        case '!=':
+                        case '!':
+                        case 'not':
+                            if ($value == $logic['value']) {
+                                $valid = false;
+                            }
+                            break;
+                        default:
+                        case '"==="':
+                        case '"=="':
+                        case '"="':
+                        case '"is"':
+                            if ($value != $logic['value']) {
+                                $valid = false;
+                            }
+                            break;
+                    }
 
-                        if (!$valid) {
-                            $group->setConditionalLogicUnmet(true);
-                        }
+                    if (!$valid) {
+                        $group->setConditionalLogicUnmet(true);
                     }
                 }
             }
@@ -506,10 +495,8 @@ trait FormTrait
 
     /**
      * Determine if the form has any groups.
-     *
-     * @return boolean
      */
-    public function hasGroups()
+    public function hasGroups(): bool
     {
         return ($this->numGroups() > 0);
     }
@@ -519,9 +506,8 @@ trait FormTrait
      *
      * @param string $groupIdent The group identifier to look up.
      * @throws InvalidArgumentException If the group identifier is invalid.
-     * @return boolean
      */
-    public function hasGroup($groupIdent)
+    public function hasGroup($groupIdent): bool
     {
         if (!is_string($groupIdent)) {
             throw new InvalidArgumentException(
@@ -534,10 +520,8 @@ trait FormTrait
 
     /**
      * Count the number of form groups.
-     *
-     * @return integer
      */
-    public function numGroups()
+    public function numGroups(): int
     {
         return count($this->groups);
     }
@@ -584,10 +568,8 @@ trait FormTrait
 
     /**
      * Determine if content groups are to be displayed as tabbable panes.
-     *
-     * @return boolean
      */
-    public function isTabbable()
+    public function isTabbable(): bool
     {
         return ($this->groupDisplayMode() === 'tab');
     }

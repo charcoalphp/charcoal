@@ -21,9 +21,6 @@ class GenericFormGroupTest extends AbstractTestCase
      */
     public $obj;
 
-    /**
-     * @return void
-     */
     protected function setUp(): void
     {
         $container = $this->getContainer();
@@ -46,10 +43,7 @@ class GenericFormGroupTest extends AbstractTestCase
         ]);
     }
 
-    /**
-     * @return void
-     */
-    public function testConstructor()
+    public function testConstructor(): void
     {
         $this->assertInstanceOf(GenericFormGroup::class, $this->obj);
     }

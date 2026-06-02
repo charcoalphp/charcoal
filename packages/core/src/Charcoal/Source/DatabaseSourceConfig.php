@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Charcoal\Source;
 
 use InvalidArgumentException;
@@ -11,40 +13,20 @@ use Charcoal\Source\SourceConfig;
  */
 class DatabaseSourceConfig extends SourceConfig
 {
-    /**
-     * @var string $type
-     */
-    private $type;
+    private ?string $type = null;
 
-    /**
-     * @var string $hostname
-     */
-    private $hostname;
+    private ?string $hostname = null;
 
-    /**
-     * @var string $username
-     */
-    private $username;
+    private ?string $username = null;
 
-    /**
-     * @var string $password
-     */
-    private $password;
+    private ?string $password = null;
 
-    /**
-     * @var string $database
-     */
-    private $database;
+    private ?string $database = null;
 
-    /**
-     * @var boolean $disableUtf8
-     */
-    private $disableUtf8;
+    private ?bool $disableUtf8 = null;
 
-    /**
-     * @return array
-     */
-    public function defaults()
+    #[\Override]
+    public function defaults(): array
     {
         return [
             'type'         => 'mysql',
@@ -61,9 +43,9 @@ class DatabaseSourceConfig extends SourceConfig
      *
      * @param  string $type The database type.
      * @throws InvalidArgumentException If parameter is not a string.
-     * @return self
      */
-    public function setType($type)
+    #[\Override]
+    public function setType($type): static
     {
         if (!is_string($type)) {
             throw new InvalidArgumentException(
@@ -79,7 +61,8 @@ class DatabaseSourceConfig extends SourceConfig
      *
      * @return string
      */
-    public function type()
+    #[\Override]
+    public function type(): ?string
     {
         return $this->type;
     }
@@ -89,9 +72,8 @@ class DatabaseSourceConfig extends SourceConfig
      *
      * @param  string $hostname The database server hostname.
      * @throws InvalidArgumentException If hostname is not a string.
-     * @return self
      */
-    public function setHostname($hostname)
+    public function setHostname($hostname): static
     {
         if (!is_string($hostname)) {
             throw new InvalidArgumentException(
@@ -107,7 +89,7 @@ class DatabaseSourceConfig extends SourceConfig
      *
      * @return string
      */
-    public function hostname()
+    public function hostname(): ?string
     {
         return $this->hostname;
     }
@@ -117,9 +99,8 @@ class DatabaseSourceConfig extends SourceConfig
      *
      * @param  string $username The username.
      * @throws InvalidArgumentException If username is not a string.
-     * @return self
      */
-    public function setUsername($username)
+    public function setUsername($username): static
     {
         if (!is_string($username)) {
             throw new InvalidArgumentException(
@@ -135,7 +116,7 @@ class DatabaseSourceConfig extends SourceConfig
      *
      * @return string
      */
-    public function username()
+    public function username(): ?string
     {
         return $this->username;
     }
@@ -145,9 +126,8 @@ class DatabaseSourceConfig extends SourceConfig
      *
      * @param  string $password The password.
      * @throws InvalidArgumentException If password is not a string.
-     * @return self
      */
-    public function setPassword($password)
+    public function setPassword($password): static
     {
         if (!is_string($password)) {
             throw new InvalidArgumentException(
@@ -163,7 +143,7 @@ class DatabaseSourceConfig extends SourceConfig
      *
      * @return string
      */
-    public function password()
+    public function password(): ?string
     {
         return $this->password;
     }
@@ -173,9 +153,8 @@ class DatabaseSourceConfig extends SourceConfig
      *
      * @param string $database The database name.
      * @throws InvalidArgumentException If database is not a string.
-     * @return self
      */
-    public function setDatabase($database)
+    public function setDatabase($database): static
     {
         if (!is_string($database)) {
             throw new InvalidArgumentException(
@@ -191,7 +170,7 @@ class DatabaseSourceConfig extends SourceConfig
      *
      * @return string
      */
-    public function database()
+    public function database(): ?string
     {
         return $this->database;
     }
@@ -200,11 +179,10 @@ class DatabaseSourceConfig extends SourceConfig
      * Set whether to disable UTF-8 compatibility or not.
      *
      * @param  boolean $disableUtf8 The disable flag.
-     * @return self
      */
-    public function setDisableUtf8($disableUtf8)
+    public function setDisableUtf8($disableUtf8): static
     {
-        $this->disableUtf8 = !!$disableUtf8;
+        $this->disableUtf8 = (bool)$disableUtf8;
         return $this;
     }
 
@@ -213,7 +191,7 @@ class DatabaseSourceConfig extends SourceConfig
      *
      * @return boolean
      */
-    public function disableUtf8()
+    public function disableUtf8(): ?bool
     {
         return $this->disableUtf8;
     }

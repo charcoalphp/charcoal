@@ -16,14 +16,9 @@ use Charcoal\Validator\ValidatorResult;
 abstract class AbstractValidator implements ValidatorInterface
 {
     /**
-     * @var ValidatableInterface
-     */
-    protected $model;
-
-    /**
      * @var ValidatorResult[] $results
      */
-    private $results = [];
+    private array $results = [];
 
     /**
      * Holds a list of all camelized strings.
@@ -35,9 +30,8 @@ abstract class AbstractValidator implements ValidatorInterface
     /**
      * @param ValidatableInterface $model The object to validate.
      */
-    public function __construct(ValidatableInterface $model)
+    public function __construct(protected \Charcoal\Validator\ValidatableInterface $model)
     {
-        $this->model = $model;
     }
 
     /**
@@ -80,7 +74,7 @@ abstract class AbstractValidator implements ValidatorInterface
     {
         $this->addResult(
             [
-                'ident'   => (($ident !== null) ? $ident : ''),
+                'ident'   => ($ident ?? ''),
                 'level'   => $level,
                 'message' => $msg
             ]
@@ -160,7 +154,7 @@ abstract class AbstractValidator implements ValidatorInterface
     {
         $allResults = $v->results();
 
-        foreach ($allResults as $level => $resultset) {
+        foreach ($allResults as $resultset) {
             foreach ($resultset as $result) {
                 if ($prefix !== null) {
                     $result->setIdent($prefix . '.' . $result->ident());
@@ -185,8 +179,8 @@ abstract class AbstractValidator implements ValidatorInterface
             return static::$camelCache[$key];
         }
 
-        if (strpos($value, '_') !== false) {
-            $value = implode('', array_map('ucfirst', explode('_', $value)));
+        if (str_contains($value, '_')) {
+            $value = implode('', array_map(ucfirst(...), explode('_', $value)));
         }
 
         static::$camelCache[$key] = lcfirst($value);

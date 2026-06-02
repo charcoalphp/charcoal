@@ -17,94 +17,69 @@ class EmailConfig extends AbstractConfig
 
     /**
      * Whether SMTP should be used.
-     *
-     * @var boolean $smtp
      */
-    private $smtp = false;
+    private bool $smtp = false;
 
     /**
      * The SMTP hostname.
-     *
-     * @var string $smtpHostname
      */
-    private $smtpHostname;
+    private ?string $smtpHostname = null;
 
     /**
      * The SMTP port.
-     *
-     * @var integer $smtpPort
      */
-    private $smtpPort;
+    private ?int $smtpPort = null;
 
     /**
      * The SMTP security type.
-     *
-     * @var string $smtpSecurity
      */
-    private $smtpSecurity = '';
+    private string $smtpSecurity = '';
 
     /**
      * Whether SMTP requires authentication.
-     *
-     * @var boolean $smtpAuth
      */
-    private $smtpAuth;
+    private ?bool $smtpAuth = null;
 
     /**
      * The SMTP username.
-     *
-     * @var string $smtpUsername
      */
-    private $smtpUsername;
+    private ?string $smtpUsername = null;
 
     /**
      * The SMTP password.
-     *
-     * @var string $smtpPassword
      */
-    private $smtpPassword;
+    private ?string $smtpPassword = null;
 
     /**
      * The default sender's email address.
-     *
-     * @var string $defaultFrom
      */
-    private $defaultFrom;
+    private ?string $defaultFrom = null;
 
     /**
      * The default "Reply-To" email address.
-     *
-     * @var string $defaultReplyTo
      */
-    private $defaultReplyTo;
+    private ?string $defaultReplyTo = null;
 
     /**
      * Whether the email (open) should be tracked by default.
-     *
-     * @var boolean $defaultTrack
      */
-    private $defaultTrackOpenEnabled;
+    private ?bool $defaultTrackOpenEnabled = null;
 
 
     /**
      * Whether the email (links) should be tracked by default.
-     *
-     * @var boolean $defaultTrack
      */
-    private $defaultTrackLinksEnabled;
+    private ?bool $defaultTrackLinksEnabled = null;
 
     /**
      * Whether the email should be logged by default.
-     *
-     * @var boolean $defaultLog
      */
-    private $defaultLogEnabled;
+    private ?bool $defaultLogEnabled = null;
 
     /**
      * Default email configuration.
-     *
-     * @return array
      */
+    #[\Override]
     public function defaults(): array
     {
         return [
@@ -124,20 +99,17 @@ class EmailConfig extends AbstractConfig
      *
      * @param  boolean $smtp If the email should be sent using SMTP or not.
      * @throws InvalidArgumentException If the SMTP state is not a boolean.
-     * @return self
      */
-    public function setSmtp($smtp)
+    public function setSmtp($smtp): static
     {
-        $this->smtp = !!$smtp;
+        $this->smtp = (bool)$smtp;
         return $this;
     }
 
     /**
      * Determine if SMTP should be used.
-     *
-     * @return boolean
      */
-    public function smtp()
+    public function smtp(): bool
     {
         return $this->smtp;
     }
@@ -147,9 +119,8 @@ class EmailConfig extends AbstractConfig
      *
      * @param  string $hostname The SMTP hostname.
      * @throws InvalidArgumentException If the SMTP hostname is not a string.
-     * @return self
      */
-    public function setSmtpHostname($hostname)
+    public function setSmtpHostname($hostname): static
     {
         if (!is_string($hostname)) {
             throw new InvalidArgumentException(
@@ -167,7 +138,7 @@ class EmailConfig extends AbstractConfig
      *
      * @return string
      */
-    public function smtpHostname()
+    public function smtpHostname(): ?string
     {
         return $this->smtpHostname;
     }
@@ -177,9 +148,8 @@ class EmailConfig extends AbstractConfig
      *
      * @param  integer $port The SMTP port.
      * @throws InvalidArgumentException If the SMTP port is not an integer.
-     * @return self
      */
-    public function setSmtpPort($port)
+    public function setSmtpPort($port): static
     {
         if (!is_int($port)) {
             throw new InvalidArgumentException(
@@ -197,7 +167,7 @@ class EmailConfig extends AbstractConfig
      *
      * @return integer
      */
-    public function smtpPort()
+    public function smtpPort(): ?int
     {
         return $this->smtpPort;
     }
@@ -206,11 +176,10 @@ class EmailConfig extends AbstractConfig
      * Set whether SMTP requires authentication.
      *
      * @param  boolean $auth The SMTP authentication flag (if auth is required).
-     * @return self
      */
-    public function setSmtpAuth($auth)
+    public function setSmtpAuth($auth): static
     {
-        $this->smtpAuth = !!$auth;
+        $this->smtpAuth = (bool)$auth;
         return $this;
     }
 
@@ -219,7 +188,7 @@ class EmailConfig extends AbstractConfig
      *
      * @return boolean
      */
-    public function smtpAuth()
+    public function smtpAuth(): ?bool
     {
         return $this->smtpAuth;
     }
@@ -229,9 +198,8 @@ class EmailConfig extends AbstractConfig
      *
      * @param  string $username The SMTP username, if using authentication.
      * @throws InvalidArgumentException If the SMTP username is not a string.
-     * @return self
      */
-    public function setSmtpUsername($username)
+    public function setSmtpUsername($username): static
     {
         if (!is_string($username)) {
             throw new InvalidArgumentException(
@@ -249,7 +217,7 @@ class EmailConfig extends AbstractConfig
      *
      * @return string
      */
-    public function smtpUsername()
+    public function smtpUsername(): ?string
     {
         return $this->smtpUsername;
     }
@@ -259,9 +227,8 @@ class EmailConfig extends AbstractConfig
      *
      * @param  string $password The SMTP password, if using authentication.
      * @throws InvalidArgumentException If the SMTP password is not a string.
-     * @return self
      */
-    public function setSmtpPassword($password)
+    public function setSmtpPassword($password): static
     {
         if (!is_string($password)) {
             throw new InvalidArgumentException(
@@ -279,7 +246,7 @@ class EmailConfig extends AbstractConfig
      *
      * @return string
      */
-    public function smtpPassword()
+    public function smtpPassword(): ?string
     {
         return $this->smtpPassword;
     }
@@ -289,9 +256,8 @@ class EmailConfig extends AbstractConfig
      *
      * @param  string $security The SMTP security type (empty, "TLS", or "SSL").
      * @throws InvalidArgumentException If the security type is not valid (empty, "TLS", or "SSL").
-     * @return self
      */
-    public function setSmtpSecurity($security)
+    public function setSmtpSecurity($security): static
     {
         $security = strtoupper($security);
         $validSecurity = [ '', 'TLS', 'SSL' ];
@@ -309,10 +275,8 @@ class EmailConfig extends AbstractConfig
 
     /**
      * Get the SMTP security type.
-     *
-     * @return string
      */
-    public function smtpSecurity()
+    public function smtpSecurity(): string
     {
         return $this->smtpSecurity;
     }
@@ -321,9 +285,8 @@ class EmailConfig extends AbstractConfig
      * Set the default sender's email address.
      *
      * @param  string|array $email The default "From" email address.
-     * @return self
      */
-    public function setDefaultFrom($email)
+    public function setDefaultFrom($email): static
     {
         $this->defaultFrom = $this->parseEmail($email);
         return $this;
@@ -334,7 +297,7 @@ class EmailConfig extends AbstractConfig
      *
      * @return string
      */
-    public function defaultFrom()
+    public function defaultFrom(): ?string
     {
         return $this->defaultFrom;
     }
@@ -343,9 +306,8 @@ class EmailConfig extends AbstractConfig
      * Set the default "Reply-To" email address.
      *
      * @param  string|array $email The default "Reply-To" email address.
-     * @return self
      */
-    public function setDefaultReplyTo($email)
+    public function setDefaultReplyTo($email): static
     {
         $this->defaultReplyTo = $this->parseEmail($email);
         return $this;
@@ -356,7 +318,7 @@ class EmailConfig extends AbstractConfig
      *
      * @return string
      */
-    public function defaultReplyTo()
+    public function defaultReplyTo(): ?string
     {
         return $this->defaultReplyTo;
     }
@@ -365,11 +327,10 @@ class EmailConfig extends AbstractConfig
      * Set whether the email sending should be logged by default.
      *
      * @param  boolean $log The default log flag.
-     * @return self
      */
-    public function setDefaultLogEnabled($log)
+    public function setDefaultLogEnabled($log): static
     {
-        $this->defaultLogEnabled = !!$log;
+        $this->defaultLogEnabled = (bool)$log;
         return $this;
     }
 
@@ -378,7 +339,7 @@ class EmailConfig extends AbstractConfig
      *
      * @return boolean
      */
-    public function defaultLogEnabled()
+    public function defaultLogEnabled(): ?bool
     {
         return $this->defaultLogEnabled;
     }
@@ -387,11 +348,10 @@ class EmailConfig extends AbstractConfig
      * Set whether the email (open) should be tracked by default.
      *
      * @param  boolean $track The default track flag.
-     * @return self
      */
-    public function setDefaultTrackOpenEnabled($track)
+    public function setDefaultTrackOpenEnabled($track): static
     {
-        $this->defaultTrackOpenEnabled = !!$track;
+        $this->defaultTrackOpenEnabled = (bool)$track;
         return $this;
     }
 
@@ -400,7 +360,7 @@ class EmailConfig extends AbstractConfig
      *
      * @return boolean
      */
-    public function defaultTrackOpenEnabled()
+    public function defaultTrackOpenEnabled(): ?bool
     {
         return $this->defaultTrackOpenEnabled;
     }
@@ -409,11 +369,10 @@ class EmailConfig extends AbstractConfig
      * Set whether the email links should be tracked by default.
      *
      * @param  boolean $track The default track flag.
-     * @return self
      */
-    public function setDefaultTrackLinksEnabled($track)
+    public function setDefaultTrackLinksEnabled($track): static
     {
-        $this->defaultTrackLinksEnabled = !!$track;
+        $this->defaultTrackLinksEnabled = (bool)$track;
         return $this;
     }
 
@@ -422,7 +381,7 @@ class EmailConfig extends AbstractConfig
      *
      * @return boolean
      */
-    public function defaultTrackLinksEnabled()
+    public function defaultTrackLinksEnabled(): ?bool
     {
         return $this->defaultTrackLinksEnabled;
     }

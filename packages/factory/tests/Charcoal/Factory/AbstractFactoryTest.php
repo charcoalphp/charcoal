@@ -19,71 +19,56 @@ class AbstractFactoryTest extends AbstractTestCase
      */
     public $obj;
 
-    /**
-     * @return void
-     */
     protected function setUp(): void
     {
-        $this->obj = $this->getMockForAbstractClass(AbstractFactory::class);
+        $this->obj = new class extends AbstractFactory {};
     }
 
-    /**
-     * @return void
-     */
-    public function testConstructorBaseClassAndDefaultClass()
+    public function testConstructorBaseClassAndDefaultClass(): void
     {
-        $obj = $this->getMockForAbstractClass(AbstractFactory::class, [[
+        $obj = new class ([
             'base_class' => DateTimeInterface::class,
             'default_class' => DateTime::class
-        ]]);
+        ]) extends AbstractFactory {};
         $this->assertEquals(DateTimeInterface::class, $obj->baseClass());
         $this->assertEquals(DateTime::class, $obj->defaultClass());
     }
 
-    /**
-     * @return void
-     */
-    public function testConstructorArguments()
+    public function testConstructorArguments(): void
     {
-        $obj = $this->getMockForAbstractClass(AbstractFactory::class, [[
+        $obj = new class ([
             'arguments' => ['2018-01-01 15:30:00']
-        ]]);
+        ]) extends AbstractFactory {};
         $ret = $obj->create(DateTime::class);
         $this->assertEquals('2018-01-01 15:30:00', $ret->format('Y-m-d H:i:s'));
     }
 
-    /**
-     * @return void
-     */
-    public function testConstructorMap()
+    public function testConstructorMap(): void
     {
-        $obj = $this->getMockForAbstractClass(AbstractFactory::class, [[
+        $obj = new class ([
             'map' => [
                 'foo' => DateTime::class
             ]
-        ]]);
+        ]) extends AbstractFactory {};
 
         $ret = $obj->create('foo');
         $this->assertInstanceOf(DateTime::class, $ret);
 
         $this->expectException(InvalidArgumentException::class);
-        $obj2 = $this->getMockForAbstractClass(AbstractFactory::class, [[
+        new class ([
             'map' => [DateTime::class]
-        ]]);
+        ]) extends AbstractFactory {};
     }
 
-    /**
-     * @return void
-     */
-    public function testConstructorCallback()
+    public function testConstructorCallback(): void
     {
-        $obj = $this->getMockForAbstractClass(AbstractFactory::class, [[
+        $obj = new class ([
             'callback' => function ($obj) {
                 $obj->setDate(2015, 7, 8);
                 $obj->setTime(11, 59, 59);
                 return $obj;
             }
-        ]]);
+        ]) extends AbstractFactory {};
 
         $ret = $obj->create(DateTime::class);
         $this->assertEquals('2015-07-08 11:59:59', $ret->format('Y-m-d H:i:s'));
@@ -97,10 +82,8 @@ class AbstractFactoryTest extends AbstractTestCase
      * - Is chainable
      * - Properly sets the baseClass value.
      * - Throws an exception if the parameter is not a valid (existing) class
-     *
-     * @return void
      */
-    public function testSetBaseClass()
+    public function testSetBaseClass(): void
     {
         $obj = $this->obj;
         $this->assertSame('', $obj->baseClass());
@@ -113,10 +96,7 @@ class AbstractFactoryTest extends AbstractTestCase
         $obj->setBaseClass('foobar');
     }
 
-    /**
-     * @return void
-     */
-    public function testSetBaseClassNotAString()
+    public function testSetBaseClassNotAString(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->obj->setBaseClass(false);
@@ -132,10 +112,8 @@ class AbstractFactoryTest extends AbstractTestCase
      * - Throws an exception if the parameter is not a valid (existing) class
      * Also asserts that subsequent call to `create()`:
      * - Create an instance of the default class if an invalid parameters is sent.
-     *
-     * @return void
      */
-    public function testSetDefaultClass()
+    public function testSetDefaultClass(): void
     {
         $this->assertSame('', $this->obj->defaultClass());
 
@@ -150,10 +128,7 @@ class AbstractFactoryTest extends AbstractTestCase
         $this->obj->setDefaultClass('foobar');
     }
 
-    /**
-     * @return void
-     */
-    public function testSetDefaultClassNotAString()
+    public function testSetDefaultClassNotAString(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->obj->setDefaultClass(false);
@@ -164,10 +139,8 @@ class AbstractFactoryTest extends AbstractTestCase
      * Asserts that the create method:
      * - Creates an object of the given class.
      * - Returns a new object on every call.
-     *
-     * @return void
      */
-    public function testCreate()
+    public function testCreate(): void
     {
         $ret = $this->obj->create(DateTime::class);
         $this->assertInstanceOf(DateTime::class, $ret);
@@ -176,10 +149,7 @@ class AbstractFactoryTest extends AbstractTestCase
         $this->assertNotSame($ret, $ret2);
     }
 
-    /**
-     * @return void
-     */
-    public function testCreateInvalidArgumentException()
+    public function testCreateInvalidArgumentException(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->obj->create(false);
@@ -189,10 +159,8 @@ class AbstractFactoryTest extends AbstractTestCase
      * Asserts that the get method:
      * - Returns an object of the given class.
      * - Returns the exact same object if called multiple times.
-     *
-     * @return void
      */
-    public function testGet()
+    public function testGet(): void
     {
         $ret = $this->obj->get(DateTime::class);
         $this->assertInstanceOf(DateTime::class, $ret);
@@ -201,19 +169,13 @@ class AbstractFactoryTest extends AbstractTestCase
         $this->assertSame($ret, $ret2);
     }
 
-    /**
-     * @return void
-     */
-    public function testGetInvalidArgumentException()
+    public function testGetInvalidArgumentException(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->obj->get(false);
     }
 
-    /**
-     * @return void
-     */
-    public function testDefaultResolver()
+    public function testDefaultResolver(): void
     {
         $ret = $this->obj->create('date-time');
         $this->assertInstanceOf(DateTime::class, $ret);

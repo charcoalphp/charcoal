@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Charcoal\Property;
 
 // From 'charcoal-property'
@@ -46,10 +48,8 @@ class UrlProperty extends StringProperty
 
     public const DEFAULT_URL_PATTERN = self::DIEGO_PERINI_PATTERN;
 
-    /**
-     * @return string
-     */
-    public function type()
+    #[\Override]
+    public function type(): string
     {
         return 'url';
     }
@@ -62,8 +62,9 @@ class UrlProperty extends StringProperty
      * @param mixed $val A single value to parse.
      * @return mixed The parsed value.
      */
-    public function parseOne($val)
+    #[\Override]
+    public function parseOne(mixed $val): string|false
     {
-        return filter_var(strip_tags($val), FILTER_SANITIZE_URL);
+        return filter_var(strip_tags((string)$val), FILTER_SANITIZE_URL);
     }
 }

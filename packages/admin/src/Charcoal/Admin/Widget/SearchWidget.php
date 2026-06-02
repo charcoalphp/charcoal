@@ -26,9 +26,9 @@ class SearchWidget extends AdminWidget implements CollectionContainerInterface
 
     /**
      * @param array $data The search widget data.
-     * @return self
      */
-    public function setData(array $data)
+    #[\Override]
+    public function setData(array $data): static
     {
         if (isset($data['obj_type'])) {
             $this->setObjType($data['obj_type']);
@@ -51,10 +51,10 @@ class SearchWidget extends AdminWidget implements CollectionContainerInterface
     {
         $obj             = $this->proto();
         $metadata        = $obj->metadata();
-        $adminMetadata   = isset($metadata['admin']) ? $metadata['admin'] : null;
+        $adminMetadata   = ($metadata['admin'] ?? null);
         $collectionIdent = $this->collectionIdent();
         if (!$collectionIdent) {
-            $collectionIdent = isset($adminMetadata['default_list']) ? $adminMetadata['default_list'] : '';
+            $collectionIdent = ($adminMetadata['default_list'] ?? '');
         }
 
         if (isset($adminMetadata['lists'][$collectionIdent])) {
@@ -80,7 +80,7 @@ class SearchWidget extends AdminWidget implements CollectionContainerInterface
             $collectionIdent = $this->collectionIdent();
             if ($collectionIdent) {
                 $metadata      = $model->metadata();
-                $adminMetadata = isset($metadata['admin']) ? $metadata['admin'] : null;
+                $adminMetadata = ($metadata['admin'] ?? null);
 
                 if (isset($adminMetadata['lists'][$collectionIdent]['properties'])) {
                     // Flipping to have property ident as key
@@ -119,10 +119,9 @@ class SearchWidget extends AdminWidget implements CollectionContainerInterface
 
     /**
      * Retrieve the widget's data options for JavaScript components.
-     *
-     * @return array
      */
-    public function widgetDataForJs()
+    #[\Override]
+    public function widgetDataForJs(): array
     {
         return [
             'obj_type'   => $this->objType(),

@@ -48,8 +48,7 @@ trait AuthAwareTrait
         if ($permissions === null || empty($permissions)) {
             return true;
         }
-        $authorized = $this->authorizer()->userAllowed($authUser, $permissions);
-        return $authorized;
+        return $this->authorizer()->userAllowed($authUser, $permissions);
     }
 
     /**
@@ -84,7 +83,7 @@ trait AuthAwareTrait
         if (!$this->authenticator) {
             throw new RuntimeException(sprintf(
                 'Authenticator service is not defined for "%s"',
-                get_class($this)
+                $this::class
             ));
         }
 
@@ -113,7 +112,7 @@ trait AuthAwareTrait
         if (!$this->authorizer) {
             throw new RuntimeException(sprintf(
                 'Authorizer service is not defined for "%s"',
-                get_class($this)
+                $this::class
             ));
         }
 
@@ -133,7 +132,7 @@ trait AuthAwareTrait
         }
         if (is_string($permissions)) {
             $permissions = explode(',', $permissions);
-            $permissions = array_map('trim', $permissions);
+            $permissions = array_map(trim(...), $permissions);
         }
         if (!is_array($permissions)) {
             throw new InvalidArgumentException(

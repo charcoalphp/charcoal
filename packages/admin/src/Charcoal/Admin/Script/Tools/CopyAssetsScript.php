@@ -15,15 +15,14 @@ use Charcoal\Admin\AdminScript;
  */
 class CopyAssetsScript extends AdminScript
 {
+    public $basePath;
     /**
      * @var string
      */
     private $dir;
 
-    /**
-     * @return array
-     */
-    public function defaultArguments()
+    #[\Override]
+    public function defaultArguments(): array
     {
         $arguments = [
             'dir' => [
@@ -32,17 +31,14 @@ class CopyAssetsScript extends AdminScript
                 'defaultValue' => 'www/assets/admin/'
             ]
         ];
-
-        $arguments = array_merge(parent::defaultArguments(), $arguments);
-        return $arguments;
+        return array_merge(parent::defaultArguments(), $arguments);
     }
 
     /**
      * @param RequestInterface  $request  PSR-7 request.
      * @param ResponseInterface $response PSR-7 response.
-     * @return ResponseInterface
      */
-    public function run(RequestInterface $request, ResponseInterface $response)
+    public function run(RequestInterface $request, ResponseInterface $response): ResponseInterface
     {
         unset($request);
 
@@ -91,6 +87,7 @@ class CopyAssetsScript extends AdminScript
      * @param Container $container Pimple DI Container.
      * @return void
      */
+    #[\Override]
     protected function setDependencies(Container $container)
     {
         parent::setDependencies($container);
@@ -109,7 +106,7 @@ class CopyAssetsScript extends AdminScript
      * @param       integer $permissions New folder creation permissions.
      * @return      boolean     Returns true on success, false on failure.
      */
-    private function copy($source, $dest, $permissions = 0755)
+    private function copy(string $source, string $dest, $permissions = 0755)
     {
         // Check for symlinks
         if (is_link($source)) {
@@ -130,7 +127,7 @@ class CopyAssetsScript extends AdminScript
         $dir = dir($source);
         while (false !== $entry = $dir->read()) {
             // Skip pointers
-            if ($entry == '.' || $entry == '..') {
+            if ($entry === '.' || $entry === '..') {
                 continue;
             }
 

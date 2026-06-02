@@ -21,38 +21,28 @@ class AbstractLoaderTest extends AbstractTestCase
      */
     public $obj;
 
-    /**
-     * @return void
-     */
     public function setUp(): void
     {
-        $this->obj = $this->getMockForAbstractClass(AbstractLoader::class, [[
+        $this->obj = new class ([
             'base_path' => __DIR__,
             'paths'     => [ 'Mustache/templates' ],
-        ]]);
+        ]) extends AbstractLoader {
+            protected function filenameFromIdent(string $ident): string { }
+        };
     }
 
-    /**
-     * @return void
-     */
-    public function testGetDynamicTemplateReturnsEmptyTemplateForUndefinedVarName()
+    public function testGetDynamicTemplateReturnsEmptyTemplateForUndefinedVarName(): void
     {
         $this->assertEquals('', $this->obj->dynamicTemplate('foo'));
     }
 
-    /**
-     * @return void
-     */
-    public function testSetDynamicTemplate()
+    public function testSetDynamicTemplate(): void
     {
         $this->assertNull($this->obj->setDynamicTemplate('dynamic', 'foo'));
         $this->assertEquals('foo', $this->obj->dynamicTemplate('dynamic'));
     }
 
-    /**
-     * @return void
-     */
-    public function testClearDynamicTemplate()
+    public function testClearDynamicTemplate(): void
     {
         $this->obj->clearDynamicTemplates();
         $this->assertInstanceOf(AbstractLoader::class, $this->obj);

@@ -1,6 +1,9 @@
 <?php
 
-namespace Charcoals\Tests\Image\Effect;
+namespace Charcoal\Tests\Image\Effect;
+
+use Charcoal\Image\Effect\AbstractRotateEffect;
+use Charcoal\Tests\Mock\ImageMock;
 
 class AbstractRotateEffectTest extends \PHPUnit\Framework\TestCase
 {
@@ -8,12 +11,14 @@ class AbstractRotateEffectTest extends \PHPUnit\Framework\TestCase
 
     protected function setUp(): void
     {
-        $img = $this->getMockForAbstractClass('\Charcoal\Image\AbstractImage');
-        $this->obj = $this->getMockForAbstractClass('\Charcoal\Image\Effect\AbstractRotateEffect');
+        $img = new ImageMock();
+        $this->obj = new class () extends AbstractRotateEffect {
+            public function process(?array $data = null) {}
+        };
         $this->obj->setImage($img);
     }
 
-    public function testDefaults()
+    public function testDefaults(): void
     {
         $obj = $this->obj;
 
@@ -21,7 +26,7 @@ class AbstractRotateEffectTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('rgb(100%, 100%, 100%, 0)', $obj->backgroundColor());
     }
 
-    public function testSetData()
+    public function testSetData(): void
     {
         $obj = $this->obj;
         $ret = $obj->setData(
@@ -36,7 +41,7 @@ class AbstractRotateEffectTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('blue', $obj->backgroundColor());
     }
 
-    public function testSetAngle()
+    public function testSetAngle(): void
     {
         $obj = $this->obj;
         $ret = $obj->setAngle(135);
@@ -47,7 +52,7 @@ class AbstractRotateEffectTest extends \PHPUnit\Framework\TestCase
         $obj->setAngle('foobar');
     }
 
-    public function testSetBackgroundColor()
+    public function testSetBackgroundColor(): void
     {
         $obj = $this->obj;
         $ret = $obj->setBackgroundColor('red');

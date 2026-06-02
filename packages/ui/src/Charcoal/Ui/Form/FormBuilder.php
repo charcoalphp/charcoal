@@ -20,13 +20,6 @@ class FormBuilder
     public const DEFAULT_TYPE = 'charcoal/ui/form/generic';
 
     /**
-     * Store the form factory instance.
-     *
-     * @var FactoryInterface
-     */
-    protected $factory;
-
-    /**
      * Store the dependency-injection container to fulfill the required services.
      *
      * @var Container $container
@@ -38,9 +31,8 @@ class FormBuilder
      *
      * @param FactoryInterface $factory An form factory.
      */
-    public function __construct(FactoryInterface $factory)
+    public function __construct(protected \Charcoal\Factory\FactoryInterface $factory)
     {
-        $this->factory = $factory;
     }
 
     /**
@@ -51,7 +43,7 @@ class FormBuilder
      */
     public function build($options)
     {
-        $objType = isset($options['type']) ? $options['type'] : self::DEFAULT_TYPE;
+        $objType = ($options['type'] ?? self::DEFAULT_TYPE);
 
         $obj = $this->factory->create($objType);
         $obj->setData($options);

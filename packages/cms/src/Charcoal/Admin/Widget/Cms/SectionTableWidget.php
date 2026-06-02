@@ -19,6 +19,7 @@ class SectionTableWidget extends TableWidget
      * @param  Container $container A dependencies container instance.
      * @return void
      */
+    #[\Override]
     protected function setDependencies(Container $container)
     {
         parent::setDependencies($container);

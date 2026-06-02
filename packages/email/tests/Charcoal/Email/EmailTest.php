@@ -32,7 +32,7 @@ class EmailTest extends AbstractTestCase
         ]);
     }
 
-    public function testSetData()
+    public function testSetData(): void
     {
         $obj = $this->obj;
         $ret = $obj->setData([
@@ -69,7 +69,7 @@ class EmailTest extends AbstractTestCase
         $this->assertEquals(true, $obj->trackLinksEnabled());
     }
 
-    public function testSetCampaign()
+    public function testSetCampaign(): void
     {
         $obj = $this->obj;
         $ret = $obj->setCampaign('foo');
@@ -77,7 +77,7 @@ class EmailTest extends AbstractTestCase
         $this->assertEquals('foo', $obj->campaign());
     }
 
-    public function testGenerateCampaign()
+    public function testGenerateCampaign(): void
     {
         $obj = $this->obj;
         $ret = $obj->campaign();
@@ -92,7 +92,7 @@ class EmailTest extends AbstractTestCase
      * - Resets the "to" value before setting it, at every call.
      * - Throws an exception if the to argument is not a string.
      */
-    public function testSetTo()
+    public function testSetTo(): void
     {
         $obj = $this->obj;
 
@@ -123,7 +123,7 @@ class EmailTest extends AbstractTestCase
         $obj->setTo(false);
     }
 
-    public function testAddTo()
+    public function testAddTo(): void
     {
         $obj = $this->obj;
         $ret = $obj->addTo('test@example.com');
@@ -137,7 +137,7 @@ class EmailTest extends AbstractTestCase
         $obj->addTo(false);
     }
 
-    public function testSetCc()
+    public function testSetCc(): void
     {
         $obj = $this->obj;
 
@@ -160,7 +160,7 @@ class EmailTest extends AbstractTestCase
         $obj->SetCc(false);
     }
 
-    public function testAddCc()
+    public function testAddCc(): void
     {
         $obj = $this->obj;
         $ret = $obj->addCc('test@example.com');
@@ -174,7 +174,7 @@ class EmailTest extends AbstractTestCase
         $obj->addCc(false);
     }
 
-    public function testSetBcc()
+    public function testSetBcc(): void
     {
         $obj = $this->obj;
 
@@ -197,7 +197,7 @@ class EmailTest extends AbstractTestCase
         $obj->setBcc(false);
     }
 
-    public function testAddBcc()
+    public function testAddBcc(): void
     {
         $obj = $this->obj;
         $ret = $obj->addBcc('test@example.com');
@@ -211,7 +211,7 @@ class EmailTest extends AbstractTestCase
         $obj->addBcc(false);
     }
 
-    public function testSetFrom()
+    public function testSetFrom(): void
     {
         $obj = $this->obj;
         //$config = $obj->config()->setDefaultFrom('default@example.com');
@@ -231,7 +231,7 @@ class EmailTest extends AbstractTestCase
         $obj->setFrom(false);
     }
 
-    public function testSetReplyTo()
+    public function testSetReplyTo(): void
     {
         $obj = $this->obj;
         //$config = $obj->config()->setDefaultReplyTo('default@example.com');
@@ -251,7 +251,7 @@ class EmailTest extends AbstractTestCase
         $obj->setReplyTo(false);
     }
 
-    public function testSetSubject()
+    public function testSetSubject(): void
     {
         $obj = $this->obj;
         $ret = $obj->setSubject('foo');
@@ -259,7 +259,7 @@ class EmailTest extends AbstractTestCase
         $this->assertEquals('foo', $obj->subject());
     }
 
-    public function testSetMsgHtml()
+    public function testSetMsgHtml(): void
     {
         $obj = $this->obj;
         $ret = $obj->setMsgHtml('foo');
@@ -267,7 +267,7 @@ class EmailTest extends AbstractTestCase
         $this->assertEquals('foo', $obj->msgHtml());
     }
 
-    public function testSetMsgTxt()
+    public function testSetMsgTxt(): void
     {
         $obj = $this->obj;
         $ret = $obj->setMsgTxt('foo');
@@ -275,7 +275,7 @@ class EmailTest extends AbstractTestCase
         $this->assertEquals('foo', $obj->msgTxt());
     }
 
-    public function testConvertHtml()
+    public function testConvertHtml(): void
     {
         $obj = $this->obj;
         $html = file_get_contents(__DIR__.'/../../data/example.html');
@@ -287,7 +287,7 @@ class EmailTest extends AbstractTestCase
         $this->assertEquals($txt, $obj->msgTxt());
     }
 
-    public function testSetAttachments()
+    public function testSetAttachments(): void
     {
         $obj = $this->obj;
         $ret = $obj->setAttachments(['foo']);
@@ -295,7 +295,7 @@ class EmailTest extends AbstractTestCase
         $this->assertEquals(['foo'], $obj->attachments());
     }
 
-    public function testSetLogEnabled()
+    public function testSetLogEnabled(): void
     {
         $obj = $this->obj;
         // $this->config()->setDefaultLogEnabled(false);
@@ -309,7 +309,7 @@ class EmailTest extends AbstractTestCase
         $this->assertNotTrue($obj->logEnabled());
     }
 
-    public function testSetTrackOpenEnabled()
+    public function testSetTrackOpenEnabled(): void
     {
         $obj = $this->obj;
         // $this->config()->setDefaultTrackOpenEnabled(false);
@@ -323,7 +323,7 @@ class EmailTest extends AbstractTestCase
         $this->assertNotTrue($obj->trackOpenEnabled());
     }
 
-    public function testSetTrackLinksEnabled()
+    public function testSetTrackLinksEnabled(): void
     {
         $obj = $this->obj;
         // $this->config()->setDefaultTrackLinksEnabled(false);

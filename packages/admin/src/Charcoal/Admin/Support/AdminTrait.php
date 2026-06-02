@@ -49,12 +49,10 @@ trait AdminTrait
         if ($key) {
             if (isset($this->adminConfig[$key])) {
                 return $this->adminConfig[$key];
+            } elseif (!is_string($default) && is_callable($default)) {
+                return $default();
             } else {
-                if (!is_string($default) && is_callable($default)) {
-                    return $default();
-                } else {
-                    return $default;
-                }
+                return $default;
             }
         }
 
@@ -84,12 +82,10 @@ trait AdminTrait
         if ($key) {
             if (isset($this->appConfig[$key])) {
                 return $this->appConfig[$key];
+            } elseif (!is_string($default) && is_callable($default)) {
+                return $default();
             } else {
-                if (!is_string($default) && is_callable($default)) {
-                    return $default();
-                } else {
-                    return $default;
-                }
+                return $default;
             }
         }
 

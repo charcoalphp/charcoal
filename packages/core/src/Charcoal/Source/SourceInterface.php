@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Charcoal\Source;
 
 // From 'charcoal-core'
@@ -121,7 +123,7 @@ interface SourceInterface extends
      * @param  StorableInterface $item  Optional item to load into.
      * @return StorableInterface
      */
-    public function loadItem($ident, StorableInterface $item = null);
+    public function loadItem($ident, ?StorableInterface $item = null);
 
     /**
      * Load items for the given model.
@@ -129,7 +131,7 @@ interface SourceInterface extends
      * @param  StorableInterface|null $item Optional model.
      * @return StorableInterface[]
      */
-    public function loadItems(StorableInterface $item = null);
+    public function loadItems(?StorableInterface $item = null);
 
     /**
      * Save an item (create a new row) in storage.
@@ -147,7 +149,7 @@ interface SourceInterface extends
      * @param  array             $properties The list of properties to update, if not all.
      * @return boolean TRUE if the item was updated, otherwise FALSE.
      */
-    public function updateItem(StorableInterface $item, array $properties = null);
+    public function updateItem(StorableInterface $item, ?array $properties = null);
 
     /**
      * Delete an item from storage.
@@ -156,5 +158,5 @@ interface SourceInterface extends
      * @throws UnexpectedValueException If the item does not have an ID.
      * @return boolean TRUE if the item was deleted, otherwise FALSE.
      */
-    public function deleteItem(StorableInterface $item = null);
+    public function deleteItem(?StorableInterface $item = null);
 }

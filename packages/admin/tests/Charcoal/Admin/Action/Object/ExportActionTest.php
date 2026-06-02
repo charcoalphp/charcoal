@@ -28,22 +28,16 @@ class ExportActionTest extends AbstractTestCase
 
     /**
      * Tested Class.
-     *
-     * @var ExportAction
      */
-    private $obj;
+    private \Charcoal\Admin\Action\Object\ExportAction $obj;
 
     /**
      * Store the service container.
-     *
-     * @var Container
      */
-    private $container;
+    private ?\Pimple\Container $container = null;
 
     /**
      * Set up the test.
-     *
-     * @return void
      */
     public function setUp(): void
     {
@@ -57,19 +51,13 @@ class ExportActionTest extends AbstractTestCase
         ]);
     }
 
-    /**
-     * @return void
-     */
-    public function testAuthRequiredIsTrue()
+    public function testAuthRequiredIsTrue(): void
     {
         $res = $this->callMethod($this->obj, 'authRequired');
         $this->assertTrue($res);
     }
 
-    /**
-     * @return void
-     */
-    public function testRunWithoutObjTypeIs400()
+    public function testRunWithoutObjTypeIs400(): void
     {
         $request  = Request::createFromEnvironment(Environment::mock());
         $response = new Response();
@@ -83,12 +71,10 @@ class ExportActionTest extends AbstractTestCase
 
     /**
      * Set up the service container.
-     *
-     * @return Container
      */
-    protected function container()
+    protected function container(): \Pimple\Container
     {
-        if ($this->container === null) {
+        if (!$this->container instanceof \Pimple\Container) {
             $container = new Container();
             $containerProvider = new ContainerProvider();
             $containerProvider->registerAdminServices($container);

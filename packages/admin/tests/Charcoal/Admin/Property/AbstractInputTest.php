@@ -22,30 +22,25 @@ class AbstractInputTest extends AbstractTestCase
 
     /**
      * Store the service container.
-     *
-     * @var Container
      */
-    private $container;
+    private ?\Pimple\Container $container = null;
 
-    /**
-     * @return void
-     */
     public function setUp(): void
     {
         $container = $this->container();
 
-        $this->obj = $this->getMockForAbstractClass(AbstractPropertyInput::class, [
-            [
-                'logger'          => $container['logger'],
-                'metadata_loader' => $container['metadata/loader'],
-            ],
-        ]);
+        $this->obj = new Class([
+            'logger'          => $container['logger'],
+            'metadata_loader' => $container['metadata/loader'],
+        ]) extends AbstractPropertyInput {
+            public function type(): string
+            {
+                return 'foo';
+            }
+        };
     }
 
-    /**
-     * @return void
-     */
-    public function testSetData()
+    public function testSetData(): void
     {
         $obj = $this->obj;
         $ret = $obj->setData([
@@ -63,12 +58,10 @@ class AbstractInputTest extends AbstractTestCase
 
     /**
      * Set up the service container.
-     *
-     * @return Container
      */
-    protected function container()
+    protected function container(): \Pimple\Container
     {
-        if ($this->container === null) {
+        if (!$this->container instanceof \Pimple\Container) {
             $container = new Container();
             $containerProvider = new ContainerProvider();
             $containerProvider->registerInputDependencies($container);

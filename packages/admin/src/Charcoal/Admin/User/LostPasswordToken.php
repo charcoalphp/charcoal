@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Charcoal\Admin\User;
 
 use DateTime;
@@ -25,29 +27,23 @@ class LostPasswordToken extends AbstractModel
      */
     private $user;
 
-    /**
-     * @var DateTimeInterface|null
-     */
-    private $expiry;
+    private ?\DateTimeInterface $expiry = null;
 
     /**
      * @var mixed
      */
     private $defaultExpiry = '30 minutes';
 
-    /**
-     * @return string
-     */
-    public function key()
+    #[\Override]
+    public function key(): string
     {
         return 'token';
     }
 
     /**
      * @param  string $token The token.
-     * @return self
      */
-    public function setToken($token)
+    public function setToken($token): static
     {
         $this->token = $token;
         return $this;
@@ -63,9 +59,8 @@ class LostPasswordToken extends AbstractModel
 
     /**
      * @param  string $user The user.
-     * @return self
      */
-    public function setUser($user)
+    public function setUser($user): static
     {
         $this->user = $user;
         return $this;
@@ -82,9 +77,8 @@ class LostPasswordToken extends AbstractModel
     /**
      * @param  DateTimeInterface|string|null $expiry The date/time at object's creation.
      * @throws InvalidArgumentException If the date/time is invalid.
-     * @return self
      */
-    public function setExpiry($expiry)
+    public function setExpiry($expiry): static
     {
         if ($expiry === null) {
             $this->expiry = null;
@@ -95,7 +89,7 @@ class LostPasswordToken extends AbstractModel
             try {
                 $expiry = new DateTime($expiry);
             } catch (Exception $e) {
-                throw new InvalidArgumentException($e->getMessage());
+                throw new InvalidArgumentException($e->getMessage(), $e->getCode(), $e);
             }
         }
 
@@ -110,10 +104,7 @@ class LostPasswordToken extends AbstractModel
         return $this;
     }
 
-    /**
-     * @return DateTimeInterface|null
-     */
-    public function expiry()
+    public function expiry(): ?\DateTimeInterface
     {
         return $this->expiry;
     }
@@ -122,6 +113,7 @@ class LostPasswordToken extends AbstractModel
      * @param Container $container Pimple DI Container.
      * @return void
      */
+    #[\Override]
     protected function setDependencies(Container $container)
     {
         parent::setDependencies($container);
@@ -132,9 +124,10 @@ class LostPasswordToken extends AbstractModel
      * @see    \Charcoal\Source\StorableTrait::preSave() For the "create" Event.
      * @return boolean
      */
+    #[\Override]
     protected function preSave()
     {
-        if ($this->expiry === null) {
+        if (!$this->expiry instanceof \DateTimeInterface) {
             $this->setExpiry('now +' . $this->defaultExpiry);
         }
 

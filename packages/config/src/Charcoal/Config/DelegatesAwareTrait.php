@@ -66,7 +66,7 @@ trait DelegatesAwareTrait
      * @param  string $key The data key to check.
      * @return boolean TRUE if $key exists and has a value other than NULL, FALSE otherwise.
      */
-    final protected function hasInDelegates($key)
+    final protected function hasInDelegates($key): bool
     {
         foreach ($this->delegates as $delegate) {
             if (isset($delegate[$key])) {

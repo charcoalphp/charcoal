@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Charcoal\Admin\Ui;
 
 /**
@@ -12,8 +14,6 @@ interface LanguageSwitcherAwareInterface
 {
     /**
      * Whether a language switcher could be displayed.
-     *
-     * @return bool
      */
     public function supportsLanguageSwitch(): bool;
 }

@@ -1,6 +1,9 @@
 <?php
 
-namespace Charcoals\Tests\Image\Effect;
+namespace Charcoal\Tests\Image\Effect;
+
+use Charcoal\Image\Effect\AbstractRevertEffect;
+use Charcoal\Tests\Mock\ImageMock;
 
 class AbstractRevertEffectTest extends \PHPUnit\Framework\TestCase
 {
@@ -8,19 +11,21 @@ class AbstractRevertEffectTest extends \PHPUnit\Framework\TestCase
 
     protected function setUp(): void
     {
-        $img = $this->getMockForAbstractClass('\Charcoal\Image\AbstractImage');
-        $this->obj = $this->getMockForAbstractClass('\Charcoal\Image\Effect\AbstractRevertEffect');
+        $img = new ImageMock();
+        $this->obj = new class () extends AbstractRevertEffect {
+            public function process(?array $data = null) {}
+        };
         $this->obj->setImage($img);
     }
 
-    public function testDefaults()
+    public function testDefaults(): void
     {
         $obj = $this->obj;
 
         $this->assertEquals('all', $obj->channel());
     }
 
-    public function testSetData()
+    public function testSetData(): void
     {
         $obj = $this->obj;
         $ret = $obj->setData(
@@ -33,7 +38,7 @@ class AbstractRevertEffectTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('green', $obj->channel());
     }
 
-    public function testSetChannel()
+    public function testSetChannel(): void
     {
         $obj = $this->obj;
         $ret = $obj->setChannel('gray');

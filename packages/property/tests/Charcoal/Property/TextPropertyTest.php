@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Charcoal\Tests\Property;
 
 use Charcoal\Property\TextProperty;
@@ -18,9 +20,6 @@ class TextPropertyTest extends AbstractTestCase
      */
     public $obj;
 
-    /**
-     * @return void
-     */
     protected function setUp(): void
     {
         $container = $this->getContainer();
@@ -34,15 +33,13 @@ class TextPropertyTest extends AbstractTestCase
 
     /**
      * Asserts that the `type()` method returns "text".
-     *
-     * @return void
      */
-    public function testType()
+    public function testType(): void
     {
         $this->assertEquals('text', $this->obj->type());
     }
 
-    public function testDefaults()
+    public function testDefaults(): void
     {
         $this->assertFalse($this->obj['required']);
         $this->assertFalse($this->obj['unique']);
@@ -57,20 +54,16 @@ class TextPropertyTest extends AbstractTestCase
 
     /**
      * Asserts that the `defaultMaxLength` method returns 0 (no limit).
-     *
-     * @return void
      */
-    public function testDefaultMaxLength()
+    public function testDefaultMaxLength(): void
     {
         $this->assertEquals(0, $this->obj->defaultMaxLength());
     }
 
     /**
      * Asserts that the `sqlType()` method returns "TEXT".
-     *
-     * @return void
      */
-    public function testSqlType()
+    public function testSqlType(): void
     {
         $this->assertEquals('TEXT', $this->obj->sqlType());
 

@@ -436,7 +436,7 @@ trait MetatagTrait
         // this is NOT empty.
         if ($meta instanceof Translation) {
             $empty = true;
-            foreach ($meta->data() as $lang => $val) {
+            foreach ($meta->data() as $val) {
                 if ($val && $val != '') {
                     $empty = false;
                 }

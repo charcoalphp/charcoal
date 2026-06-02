@@ -26,33 +26,25 @@ class TranslatorConfig extends AbstractConfig
      *
      * @var string[]
      */
-    private $paths;
+    private ?array $paths = null;
 
     /**
      * Mapping of domains/locales/messages.
-     *
-     * @var array
      */
-    private $translations;
+    private ?array $translations = null;
 
     /**
      * Debug mode.
-     *
-     * @var boolean
      */
-    private $debug;
+    private ?bool $debug = null;
 
     /**
      * The directory to use for the cache.
-     *
-     * @var string
      */
-    private $cacheDir;
+    private ?string $cacheDir = null;
 
-    /**
-     * @return array
-     */
-    public function defaults()
+    #[\Override]
+    public function defaults(): array
     {
         return [
             'loaders' => [
@@ -72,7 +64,7 @@ class TranslatorConfig extends AbstractConfig
      * @throws InvalidArgumentException If the loader is invalid.
      * @return TranslatorConfig Chainable
      */
-    public function setLoaders(array $loaders)
+    public function setLoaders(array $loaders): static
     {
         $this->loaders = [];
         foreach ($loaders as $loader) {
@@ -99,7 +91,7 @@ class TranslatorConfig extends AbstractConfig
      * @param  string[] $paths The "paths" (search pattern) to look into for translation resources.
      * @return TranslatorConfig Chainable
      */
-    public function setPaths(array $paths)
+    public function setPaths(array $paths): static
     {
         $this->paths = [];
         $this->addPaths($paths);
@@ -111,7 +103,7 @@ class TranslatorConfig extends AbstractConfig
      * @throws InvalidArgumentException If the path is not a string.
      * @return TranslatorConfig Chainable
      */
-    public function addPaths(array $paths)
+    public function addPaths(array $paths): static
     {
         foreach ($paths as $path) {
             if (!is_string($path)) {
@@ -127,7 +119,7 @@ class TranslatorConfig extends AbstractConfig
     /**
      * @return string[]
      */
-    public function paths()
+    public function paths(): ?array
     {
         return $this->paths;
     }
@@ -150,17 +142,17 @@ class TranslatorConfig extends AbstractConfig
      * @throws InvalidArgumentException If the path is not a string.
      * @return TranslatorConfig Chainable
      */
-    public function setTranslations(array $translations)
+    public function setTranslations(array $translations): static
     {
         $this->translations = [];
-        foreach ($translations as $domain => $data) {
+        foreach ($translations as $data) {
             if (!is_array($data)) {
                 throw new InvalidArgumentException(
                     'Translator translations must be a 3-level array'
                 );
             }
 
-            foreach ($data as $locale => $messages) {
+            foreach ($data as $messages) {
                 if (!is_array($messages)) {
                     throw new InvalidArgumentException(
                         'Translator translations must be a 3-level array'
@@ -179,7 +171,7 @@ class TranslatorConfig extends AbstractConfig
      *
      * @return array
      */
-    public function translations()
+    public function translations(): ?array
     {
         return $this->translations;
     }
@@ -188,16 +180,16 @@ class TranslatorConfig extends AbstractConfig
      * @param boolean $debug The debug flag.
      * @return TranslatorConfig Chainable
      */
-    public function setDebug($debug)
+    public function setDebug($debug): static
     {
-        $this->debug = !!$debug;
+        $this->debug = (bool)$debug;
         return $this;
     }
 
     /**
      * @return boolean
      */
-    public function debug()
+    public function debug(): ?bool
     {
         return $this->debug;
     }
@@ -207,7 +199,7 @@ class TranslatorConfig extends AbstractConfig
      * @throws InvalidArgumentException If the cache dir argument is not a string.
      * @return TranslatorConfig Chainable
      */
-    public function setCacheDir($cacheDir)
+    public function setCacheDir($cacheDir): static
     {
         if (!is_string($cacheDir)) {
             throw new InvalidArgumentException(
@@ -221,15 +213,12 @@ class TranslatorConfig extends AbstractConfig
     /**
      * @return string
      */
-    public function cacheDir()
+    public function cacheDir(): ?string
     {
         return $this->cacheDir;
     }
 
-    /**
-     * @return array
-     */
-    private function availableLoaders()
+    private function availableLoaders(): array
     {
         return [
             'csv',

@@ -26,7 +26,7 @@ abstract class AbstractFormGroup extends AbstractUiItem implements
      *
      * @param array|\ArrayAccess $data The class depdendencies.
      */
-    public function __construct($data)
+    public function __construct(?array $data)
     {
         parent::__construct($data);
 
@@ -48,6 +48,7 @@ abstract class AbstractFormGroup extends AbstractUiItem implements
      * @param  array $data Widget data.
      * @return self
      */
+    #[\Override]
     public function setData(array $data)
     {
         if (isset($data['permissions'])) {

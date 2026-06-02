@@ -16,12 +16,9 @@ class AbstractLayoutTest extends AbstractTestCase
      */
     public $obj;
 
-    /**
-     * @return void
-     */
     protected function setUp(): void
     {
-        $this->obj = $this->getMockForAbstractClass(AbstractLayout::class);
+        $this->obj = new class extends AbstractLayout {};
     }
 
     /**
@@ -30,10 +27,8 @@ class AbstractLayoutTest extends AbstractTestCase
      * - Is chainable
      * - Sets the position (retrievable with `position()`)
      * - Throws an exception when setting non-numeric (integer) values.
-     *
-     * @return void
      */
-    public function testSetPosition()
+    public function testSetPosition(): void
     {
         $obj = $this->obj;
         $this->assertEquals(0, $obj->position());
@@ -46,26 +41,17 @@ class AbstractLayoutTest extends AbstractTestCase
         $obj->setPosition('foo');
     }
 
-    /**
-     * @return void
-     */
-    public function testDefaultPosition()
+    public function testDefaultPosition(): void
     {
         $obj = $this->obj;
         $this->assertEquals(0, $obj->position());
     }
 
-    /**
-     * @return void
-     */
-    public function testSetData()
+    public function testSetData(): void
     {
         $struct = [[
             'columns' => [ 1 ]
         ]];
-        $computed = [
-            'columns' => [ 1 ]
-        ];
 
         $obj = $this->obj;
         $ret = $obj->setData([
@@ -75,10 +61,7 @@ class AbstractLayoutTest extends AbstractTestCase
         //$this->assertEquals($computed, $obj->structure());
     }
 
-    /**
-     * @return void
-     */
-    public function testSetStructure()
+    public function testSetStructure(): void
     {
         $obj = $this->obj;
         $this->assertEquals([], $obj->structure());
@@ -121,10 +104,7 @@ class AbstractLayoutTest extends AbstractTestCase
         $this->assertEquals($res, $obj->structure());
     }
 
-    /**
-     * @return void
-     */
-    public function testNumRows()
+    public function testNumRows(): void
     {
         $obj = $this->obj;
         $this->assertEquals(0, $obj->numRows());
@@ -136,10 +116,7 @@ class AbstractLayoutTest extends AbstractTestCase
         $this->assertEquals(3, $obj->numRows());
     }
 
-    /**
-     * @return void
-     */
-    public function testRowIndex()
+    public function testRowIndex(): void
     {
         $obj = $this->obj;
         $this->assertNull($obj->rowIndex());
@@ -156,10 +133,7 @@ class AbstractLayoutTest extends AbstractTestCase
         $this->assertEquals(0, $obj->rowIndex(5));
     }
 
-    /**
-     * @return void
-     */
-    public function testRowData()
+    public function testRowData(): void
     {
         $obj = $this->obj;
         $this->assertNull($obj->rowData());
@@ -176,10 +150,7 @@ class AbstractLayoutTest extends AbstractTestCase
         $this->assertNull($obj->rowData(5));
     }
 
-    /**
-     * @return void
-     */
-    public function testRowNumColumns()
+    public function testRowNumColumns(): void
     {
         $obj = $this->obj;
         $this->assertNull($obj->rowNumColumns());
@@ -196,10 +167,7 @@ class AbstractLayoutTest extends AbstractTestCase
         $this->assertNull($obj->rowNumColumns(5));
     }
 
-    /**
-     * @return void
-     */
-    public function testRowNumCells()
+    public function testRowNumCells(): void
     {
         $obj = $this->obj;
         $this->assertNull($obj->rowNumCells());
@@ -216,10 +184,7 @@ class AbstractLayoutTest extends AbstractTestCase
         $this->assertNull($obj->rowNumCells(5));
     }
 
-    /**
-     * @return void
-     */
-    public function testRowFirstCellIndex()
+    public function testRowFirstCellIndex(): void
     {
         $obj = $this->obj;
         $this->assertNull($obj->rowFirstCellIndex());
@@ -236,10 +201,7 @@ class AbstractLayoutTest extends AbstractTestCase
         //$this->assertNull($obj->rowFirstCellIndex(5));
     }
 
-    /**
-     * @return void
-     */
-    public function testCellRowIndex()
+    public function testCellRowIndex(): void
     {
         $obj = $this->obj;
         //$this->assertNull($obj->cellRowIndex());
@@ -256,10 +218,7 @@ class AbstractLayoutTest extends AbstractTestCase
         //$this->assertNull($obj->cellRowIndex(5));
     }
 
-    /**
-     * @return void
-     */
-    public function testNumCellsTotal()
+    public function testNumCellsTotal(): void
     {
         $obj = $this->obj;
         $this->assertEquals(0, $obj->numCellsTotal());
@@ -271,10 +230,7 @@ class AbstractLayoutTest extends AbstractTestCase
         $this->assertEquals(5, $obj->numCellsTotal());
     }
 
-    /**
-     * @return void
-     */
-    public function testNumCellSpan()
+    public function testNumCellSpan(): void
     {
         $obj = $this->obj;
         $this->assertNull($obj->cellSpan());
@@ -291,10 +247,7 @@ class AbstractLayoutTest extends AbstractTestCase
         $this->assertNull($obj->cellSpan(5));
     }
 
-    /**
-     * @return void
-     */
-    public function testNumCellSpanBy12()
+    public function testNumCellSpanBy12(): void
     {
         $obj = $this->obj;
         $this->assertNull($obj->cellSpanBy12());
@@ -311,10 +264,7 @@ class AbstractLayoutTest extends AbstractTestCase
         $this->assertNull($obj->cellSpanBy12(5));
     }
 
-    /**
-     * @return void
-     */
-    public function testCellStartsRow()
+    public function testCellStartsRow(): void
     {
         $obj = $this->obj;
         //$this->assertNull($obj->cellStartsRow());
@@ -331,10 +281,7 @@ class AbstractLayoutTest extends AbstractTestCase
         //$this->assertNull($obj->cellStartsRow(5));
     }
 
-    /**
-     * @return void
-     */
-    public function testCellEndsRow()
+    public function testCellEndsRow(): void
     {
         $obj = $this->obj;
         //$this->assertNull($obj->cellStartsRow());
@@ -351,19 +298,13 @@ class AbstractLayoutTest extends AbstractTestCase
         //$this->assertNull($obj->cellEndsRow(5));
     }
 
-    /**
-     * @return void
-     */
-    public function testStart()
+    public function testStart(): void
     {
         $obj = $this->obj;
         $this->assertEquals('', $obj->start());
     }
 
-    /**
-     * @return void
-     */
-    public function testEnd()
+    public function testEnd(): void
     {
         $obj = $this->obj;
         $this->assertEquals(0, $obj->position());

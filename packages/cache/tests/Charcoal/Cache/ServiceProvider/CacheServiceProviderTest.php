@@ -26,18 +26,15 @@ use Charcoal\Cache\ServiceProvider\CacheServiceProvider;
 
 /**
  * Test CacheServiceProvider
- *
- * @coversDefaultClass \Charcoal\Cache\ServiceProvider\CacheServiceProvider
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\Charcoal\Cache\ServiceProvider\CacheServiceProvider::class)]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Cache\ServiceProvider\CacheServiceProvider::class, 'register')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Cache\ServiceProvider\CacheServiceProvider::class, 'registerDrivers')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Cache\ServiceProvider\CacheServiceProvider::class, 'registerService')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Cache\ServiceProvider\CacheServiceProvider::class, 'registerMiddleware')]
 class CacheServiceProviderTest extends AbstractTestCase
 {
-    /**
-     * @covers ::register
-     * @covers ::registerDrivers
-     * @covers ::registerService
-     * @covers ::registerMiddleware
-     */
-    public function testProvider()
+    public function testProvider(): void
     {
         $container = $this->providerFactory();
 
@@ -68,10 +65,8 @@ class CacheServiceProviderTest extends AbstractTestCase
 
     /**
      * Test "middlewares/charcoal/cache/middleware/cache" with a user-preferences.
-     *
-     * @covers ::registerMiddleware
      */
-    public function testCustomizedMiddleware()
+    public function testCustomizedMiddleware(): void
     {
         $container = $this->providerFactory([
             'config' => [
@@ -87,17 +82,14 @@ class CacheServiceProviderTest extends AbstractTestCase
         $middleware = $container['middlewares/charcoal/cache/middleware/cache'];
         $reflection = new ReflectionClass($middleware);
         $reflectionProperty = $reflection->getProperty('cacheTtl');
-        $reflectionProperty->setAccessible(true);
 
         $this->assertEquals(1, $reflectionProperty->getValue($middleware));
     }
 
     /**
      * Test "cache/drivers"; basic drivers are instances of {@see DriverInterface}.
-     *
-     * @covers ::registerDrivers
      */
-    public function testBasicDriverInstances()
+    public function testBasicDriverInstances(): void
     {
         $container = $this->providerFactory();
 
@@ -121,10 +113,8 @@ class CacheServiceProviderTest extends AbstractTestCase
 
     /**
      * Test "cache/drivers"; vendor drivers are instances of {@see DriverInterface}.
-     *
-     * @covers ::registerDrivers
      */
-    public function testAvailableVendorDriverInstances()
+    public function testAvailableVendorDriverInstances(): void
     {
         $container = $this->providerFactory();
 
@@ -146,7 +136,7 @@ class CacheServiceProviderTest extends AbstractTestCase
                     try {
                         $driver = $driverCollection[$driverKey];
                         $this->assertInstanceOf($className, $driver);
-                    } catch (Throwable $t) {
+                    } catch (Throwable) {
                         // Do nothing; Some cache drivers, such as Redis,
                         // are not correctly implemented.
                     }
@@ -160,10 +150,8 @@ class CacheServiceProviderTest extends AbstractTestCase
 
     /**
      * Test "cache/drivers"; unavailable vendor drivers return NULL.
-     *
-     * @covers ::registerDrivers
      */
-    public function testUnavailableVendorDriverInstances()
+    public function testUnavailableVendorDriverInstances(): void
     {
         $container = $this->providerFactory();
 
@@ -191,16 +179,13 @@ class CacheServiceProviderTest extends AbstractTestCase
     /**
      * Assert "cache/driver" resolves as expected.
      *
-     * @covers ::registerDrivers
-     * @covers ::registerService
      *
-     * @dataProvider provideConfigsForMainDriver
      *
      * @param  string $className   The expected driver class name.
      * @param  array  $cacheConfig The cache configset to resolve the main driver.
-     * @return void
      */
-    public function testMainDriverInstance($className, array $cacheConfig)
+    #[\PHPUnit\Framework\Attributes\DataProvider('provideConfigsForMainDriver')]
+    public function testMainDriverInstance(string $className, array $cacheConfig): void
     {
         $container = $this->providerFactory([
             'config' => [
@@ -215,9 +200,8 @@ class CacheServiceProviderTest extends AbstractTestCase
      * Provide data for testing the "cache/driver" service.
      *
      * @used-by self::testMainDriverInstance()
-     * @return  array
      */
-    public function provideConfigsForMainDriver()
+    public static function provideConfigsForMainDriver(): array
     {
         $driverClassNames = DriverList::getAvailableDrivers();
 
@@ -260,9 +244,8 @@ class CacheServiceProviderTest extends AbstractTestCase
      * Determine whether the given value is array accessible.
      *
      * @param  mixed $value The variable being evaluated.
-     * @return boolean
      */
-    public function isAccessible($value)
+    public function isAccessible($value): bool
     {
         return is_array($value) || $value instanceof \ArrayAccess;
     }
@@ -271,9 +254,8 @@ class CacheServiceProviderTest extends AbstractTestCase
      * Create a new Container instance.
      *
      * @param  array $args Parameters for the initialization of a Container.
-     * @return Container
      */
-    public function providerFactory(array $args = [])
+    public function providerFactory(array $args = []): \Pimple\Container
     {
         $container = new Container($args);
 

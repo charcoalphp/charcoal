@@ -45,9 +45,9 @@ class UpdateAction extends AbstractSaveAction
      * This {@see self::$updateData subset} is merged onto the target model.
      *
      * @param  RequestInterface $request A PSR-7 compatible Request instance.
-     * @return self
      */
-    protected function setDataFromRequest(RequestInterface $request)
+    #[\Override]
+    protected function setDataFromRequest(RequestInterface $request): static
     {
         parent::setDataFromRequest($request);
 
@@ -63,7 +63,8 @@ class UpdateAction extends AbstractSaveAction
      *
      * @return string[]
      */
-    protected function validDataFromRequest()
+    #[\Override]
+    protected function validDataFromRequest(): array
     {
         return array_merge([
             'obj_type', 'obj_id'
@@ -74,9 +75,8 @@ class UpdateAction extends AbstractSaveAction
      * Filter the dataset used to update the target model.
      *
      * @param  array $data The update data to filter.
-     * @return array
      */
-    public function filterUpdateData(array $data)
+    public function filterUpdateData(array $data): array
     {
         unset(
             $data['widget_id'],
@@ -98,7 +98,7 @@ class UpdateAction extends AbstractSaveAction
      * @param  array $data The update data.
      * @return UpdateAction Chainable
      */
-    public function setUpdateData(array $data)
+    public function setUpdateData(array $data): static
     {
         $this->updateData = $data;
 
@@ -138,7 +138,7 @@ class UpdateAction extends AbstractSaveAction
             $objId   = $request->getParam('obj_id');
 
             if (!$objType) {
-                $actualType = is_object($objType) ? get_class($objType) : gettype($objType);
+                $actualType = get_debug_type($objType);
                 $this->addFeedback('error', strtr($reqMessage, [
                     '{{ parameter }}'    => '"obj_type"',
                     '{{ expectedType }}' => 'string',
@@ -150,7 +150,7 @@ class UpdateAction extends AbstractSaveAction
             }
 
             if (!$objId) {
-                $actualType = is_object($objId) ? get_class($objId) : gettype($objId);
+                $actualType = get_debug_type($objId);
                 $this->addFeedback('error', strtr($reqMessage, [
                     '{{ parameter }}'    => '"obj_id"',
                     '{{ expectedType }}' => 'ID',

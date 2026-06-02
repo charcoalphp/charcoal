@@ -43,17 +43,8 @@ class LoadAction extends AdminAction
 {
     /**
      * Store the collection loader for the current class.
-     *
-     * @var CollectionLoader
      */
-    private $collectionLoader;
-
-    /**
-     * Store the factory instance for the current class.
-     *
-     * @var \Charcoal\Factory\FactoryInterface
-     */
-    private $modelFactory;
+    private ?\Charcoal\Loader\CollectionLoader $collectionLoader = null;
 
     /**
      * @var string
@@ -70,7 +61,8 @@ class LoadAction extends AdminAction
      *
      * @return string[]
      */
-    protected function validDataFromRequest()
+    #[\Override]
+    protected function validDataFromRequest(): array
     {
         return array_merge([
             'obj_type', 'obj_id'
@@ -107,7 +99,7 @@ class LoadAction extends AdminAction
         }
 
         if (!$objType) {
-            $actualType = is_object($objType) ? get_class($objType) : gettype($objType);
+            $actualType = get_debug_type($objType);
             $this->addFeedback('error', strtr($reqMessage, [
                 '{{ parameter }}'    => '"obj_type"',
                 '{{ expectedType }}' => 'string',
@@ -125,21 +117,13 @@ class LoadAction extends AdminAction
             $this->loadObjectCollection($objType);
 
             $count = count($this->objCollection);
-            switch ($count) {
-                case 0:
-                    $doneMessage = $this->translator()->translation('No objects found.');
-                    break;
-
-                case 1:
-                    $doneMessage = $this->translator()->translation('One object found.');
-                    break;
-
-                default:
-                    $doneMessage = strtr($this->translator()->translation('{{ count }} objects found.'), [
-                        '{{ count }}' => $count
-                    ]);
-                    break;
-            }
+            $doneMessage = match ($count) {
+                0 => $this->translator()->translation('No objects found.'),
+                1 => $this->translator()->translation('One object found.'),
+                default => strtr($this->translator()->translation('{{ count }} objects found.'), [
+                    '{{ count }}' => $count
+                ]),
+            };
             $this->addFeedback('success', $doneMessage);
             $this->setSuccess(true);
 
@@ -157,7 +141,7 @@ class LoadAction extends AdminAction
     /**
      * @return array The object collection parsed as array
      */
-    public function objCollection()
+    public function objCollection(): array
     {
         if (!$this->objCollection) {
             return [];
@@ -170,14 +154,13 @@ class LoadAction extends AdminAction
      * Retrieve the model collection loader.
      *
      * @throws RuntimeException If the collection loader was not previously set.
-     * @return CollectionLoader
      */
-    public function collectionLoader()
+    public function collectionLoader(): \Charcoal\Loader\CollectionLoader
     {
-        if (!isset($this->collectionLoader)) {
+        if (!$this->collectionLoader instanceof \Charcoal\Loader\CollectionLoader) {
             throw new RuntimeException(sprintf(
                 'Collection Loader is not defined for "%s"',
-                get_class($this)
+                static::class
             ));
         }
 
@@ -195,14 +178,13 @@ class LoadAction extends AdminAction
     /**
      * @param string $objType The object type as string.
      * @throws InvalidArgumentException If the object type is not a string.
-     * @return self
      */
-    public function setObjType($objType)
+    public function setObjType($objType): static
     {
         if (!is_string($objType)) {
             throw new InvalidArgumentException(sprintf(
                 'Object type must be a string, received %s',
-                is_object($objType) ? get_class($objType) : gettype($objType)
+                get_debug_type($objType)
             ));
         }
 
@@ -211,10 +193,8 @@ class LoadAction extends AdminAction
         return $this;
     }
 
-    /**
-     * @return array
-     */
-    public function results()
+    #[\Override]
+    public function results(): array
     {
         return [
             'success'    => $this->success(),
@@ -227,6 +207,7 @@ class LoadAction extends AdminAction
      * @param Container $container DI Container.
      * @return void
      */
+    #[\Override]
     protected function setDependencies(Container $container)
     {
         parent::setDependencies($container);
@@ -240,7 +221,7 @@ class LoadAction extends AdminAction
      * @param string $objType The object type as string.
      * @return \Charcoal\Model\Collection
      */
-    protected function loadObjectCollection($objType)
+    protected function loadObjectCollection($objType): \ArrayAccess|array
     {
         $proto  = $this->modelFactory()->get($objType);
         $loader = $this->collectionLoader();
@@ -256,9 +237,8 @@ class LoadAction extends AdminAction
      * Set a model collection loader.
      *
      * @param CollectionLoader $loader The collection loader.
-     * @return self
      */
-    protected function setCollectionLoader(CollectionLoader $loader)
+    protected function setCollectionLoader(CollectionLoader $loader): static
     {
         $this->collectionLoader = $loader;
 

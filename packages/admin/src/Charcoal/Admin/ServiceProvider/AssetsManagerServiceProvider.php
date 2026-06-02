@@ -21,9 +21,8 @@ class AssetsManagerServiceProvider implements ServiceProviderInterface
      * It should not get services.
      *
      * @param Container $container A container instance.
-     * @return void
      */
-    public function register(Container $container)
+    public function register(Container $container): void
     {
         $this->registerAssetsManager($container);
         $this->registerMustacheHelpersServices($container);
@@ -36,9 +35,7 @@ class AssetsManagerServiceProvider implements ServiceProviderInterface
     protected function registerMustacheHelpersServices(Container $container)
     {
         if (!isset($container['view/mustache/helpers'])) {
-            $container['view/mustache/helpers'] = function () {
-                return [];
-            };
+            $container['view/mustache/helpers'] = (fn(): array => []);
         }
 
         /**
@@ -47,11 +44,9 @@ class AssetsManagerServiceProvider implements ServiceProviderInterface
          * @param Container $container Pimple DI container.
          * @return AssetsHelpers
          */
-        $container['view/mustache/helpers/assets-manager'] = function (Container $container) {
-            return new AssetsHelpers([
-                'assets' => $container['assets']
-            ]);
-        };
+        $container['view/mustache/helpers/assets-manager'] = (fn(Container $container): \Charcoal\Admin\Mustache\AssetsHelpers => new AssetsHelpers([
+            'assets' => $container['assets']
+        ]));
 
         /**
          * Extend global helpers for the Mustache Engine.
@@ -60,12 +55,10 @@ class AssetsManagerServiceProvider implements ServiceProviderInterface
          * @param  Container $container A container instance.
          * @return array
          */
-        $container->extend('view/mustache/helpers', function (array $helpers, Container $container) {
-            return array_merge(
-                $helpers,
-                $container['view/mustache/helpers/assets-manager']->toArray()
-            );
-        });
+        $container->extend('view/mustache/helpers', fn(array $helpers, Container $container): array => array_merge(
+            $helpers,
+            $container['view/mustache/helpers/assets-manager']->toArray()
+        ));
     }
 
     /**
@@ -76,13 +69,13 @@ class AssetsManagerServiceProvider implements ServiceProviderInterface
      */
     protected function registerAssetsManager(Container $container)
     {
-        $container['assets/config'] = function (Container $container) {
+        $container['assets/config'] = function (Container $container): \Charcoal\Admin\AssetsConfig {
             $config = $container['view/config']->get('assets');
 
             return new AssetsConfig($config);
         };
 
-        $container['assets/builder'] = function (Container $container) {
+        $container['assets/builder'] = function (Container $container): \Charcoal\Admin\Service\AssetsBuilder {
             $appConfig = $container['config'];
 
             return new AssetsBuilder($appConfig['base_path']);

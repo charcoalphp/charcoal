@@ -25,17 +25,13 @@ class ScriptRouteTest extends AbstractTestCase
 {
     /**
      * Tested Class.
-     *
-     * @var ScriptRoute
      */
-    private $obj;
+    private \Charcoal\App\Route\ScriptRoute $obj;
 
     /**
      * Store the service container.
-     *
-     * @var Container
      */
-    private $container;
+    private ?\Pimple\Container $container = null;
 
     /**
      * Set up the test.
@@ -49,30 +45,26 @@ class ScriptRouteTest extends AbstractTestCase
         ]);
     }
 
-    public function testInvoke()
+    public function testInvoke(): void
     {
         $container = $this->container();
 
-        $container['script/factory'] = function($c) {
-            return new Factory();
-        };
+        $container['script/factory'] = (fn($c): \Charcoal\Factory\GenericFactory => new Factory());
 
-        $request  = $this->createMock(RequestInterface::class);
-        $response = $this->createMock(ResponseInterface::class);
+        $request  = $this->createStub(RequestInterface::class);
+        $response = $this->createStub(ResponseInterface::class);
 
         // Invalid because "foo/bar" is not a valid script controller
         $this->expectException('\Exception');
-        $ret = call_user_func([$this->obj, '__invoke'], $container, $request, $response);
+        call_user_func($this->obj->__invoke(...), $container, $request, $response);
     }
 
     /**
      * Set up the service container.
-     *
-     * @return Container
      */
-    private function container()
+    private function container(): \Pimple\Container
     {
-        if ($this->container === null) {
+        if (!$this->container instanceof \Pimple\Container) {
             $container = new Container();
             $containerProvider = new ContainerProvider();
             $containerProvider->registerLogger($container);

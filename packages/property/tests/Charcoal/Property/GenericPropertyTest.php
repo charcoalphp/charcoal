@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Charcoal\Tests\Property;
 
 // From 'charcoal-property'
@@ -18,9 +20,6 @@ class GenericPropertyTest extends AbstractTestCase
      */
     public $obj;
 
-    /**
-     * @return void
-     */
     protected function setUp(): void
     {
         $container = $this->getContainer();
@@ -32,27 +31,24 @@ class GenericPropertyTest extends AbstractTestCase
         ]);
     }
 
-    /**
-     * @return void
-     */
-    public function testType()
+    public function testType(): void
     {
         $this->assertEquals('generic', $this->obj->type());
     }
 
-    public function testSqlExtra()
+    public function testSqlExtra(): void
     {
         $this->assertEquals('', $this->obj->sqlExtra());
     }
 
-    public function testSqlType()
+    public function testSqlType(): void
     {
         $this->assertEquals('VARCHAR(255)', $this->obj->sqlType());
         $this->obj->setMultiple(true);
         $this->assertEquals('TEXT', $this->obj->sqlType());
     }
 
-    public function testSqlPdoType()
+    public function testSqlPdoType(): void
     {
         $this->assertEquals(\PDO::PARAM_STR, $this->obj->sqlPdoType());
     }

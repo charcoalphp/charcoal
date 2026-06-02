@@ -81,22 +81,17 @@ class MultiGroupWidget extends AdminWidget implements
     protected function sortItemsByPriority(
         PrioritizableInterface $a,
         PrioritizableInterface $b
-    ) {
+    ): int {
         $priorityA = $a->priority();
         $priorityB = $b->priority();
-
-        if ($priorityA === $priorityB) {
-            return 0;
-        }
-
-        return ($priorityA < $priorityB) ? (-1) : 1;
+        return ($priorityA <=> $priorityB);
     }
 
     /**
      * @param array $data The widget data.
-     * @return self
      */
-    public function setData(array $data)
+    #[\Override]
+    public function setData(array $data): static
     {
         parent::setData($data);
 
@@ -109,6 +104,7 @@ class MultiGroupWidget extends AdminWidget implements
      * @param  Container $container The DI container.
      * @return void
      */
+    #[\Override]
     protected function setDependencies(Container $container)
     {
         parent::setDependencies($container);
@@ -122,10 +118,7 @@ class MultiGroupWidget extends AdminWidget implements
         $this->setLayoutBuilder($container['layout/builder']);
     }
 
-    /**
-     * @return string
-     */
-    public function defaultGroupType()
+    public function defaultGroupType(): string
     {
         return 'charcoal/admin/widget/form-group/generic';
     }
@@ -135,7 +128,8 @@ class MultiGroupWidget extends AdminWidget implements
      *
      * @return string[]
      */
-    protected function defaultDataSources()
+    #[\Override]
+    protected function defaultDataSources(): array
     {
         return [self::DATA_SOURCE_OBJECT];
     }
@@ -144,9 +138,8 @@ class MultiGroupWidget extends AdminWidget implements
      * Set an widget factory.
      *
      * @param FactoryInterface $factory The factory to create widgets.
-     * @return self
      */
-    protected function setWidgetFactory(FactoryInterface $factory)
+    protected function setWidgetFactory(FactoryInterface $factory): static
     {
         $this->widgetFactory = $factory;
 
@@ -161,10 +154,10 @@ class MultiGroupWidget extends AdminWidget implements
      */
     public function widgetFactory()
     {
-        if (!isset($this->widgetFactory)) {
+        if ($this->widgetFactory === null) {
             throw new RuntimeException(sprintf(
                 'Widget Factory is not defined for "%s"',
-                get_class($this)
+                static::class
             ));
         }
 
@@ -181,9 +174,8 @@ class MultiGroupWidget extends AdminWidget implements
 
     /**
      * @param mixed $formGroups FormGroups for MultiGroupWidget.
-     * @return self
      */
-    public function setFormGroups($formGroups)
+    public function setFormGroups($formGroups): static
     {
         $this->formGroups = $formGroups;
 
@@ -200,18 +192,13 @@ class MultiGroupWidget extends AdminWidget implements
 
     /**
      * @param array|mixed $widgetMetadata WidgetMetadata for MultiGroupWidget.
-     * @return self
      */
-    public function setWidgetMetadata($widgetMetadata)
+    public function setWidgetMetadata($widgetMetadata): static
     {
         if (is_string($widgetMetadata) && $this->view()) {
             $widgetMetadata = $this->view()->renderTemplate($widgetMetadata, $this->obj());
 
-            if ($widgetMetadata !== '') {
-                $widgetMetadata = json_decode($widgetMetadata, true);
-            } else {
-                $widgetMetadata = null;
-            }
+            $widgetMetadata = $widgetMetadata !== '' ? json_decode($widgetMetadata, true) : null;
         }
 
         $this->widgetMetadata = $widgetMetadata;
@@ -228,9 +215,8 @@ class MultiGroupWidget extends AdminWidget implements
      * @param  string|ModelStructureProperty $propertyIdent The property identifier—or instance—of a storage property.
      * @throws \InvalidArgumentException If the property identifier is not a string.
      * @throws \UnexpectedValueException If a property is invalid.
-     * @return self
      */
-    public function setStorageProperty($propertyIdent)
+    public function setStorageProperty($propertyIdent): static
     {
         $property = null;
         if ($propertyIdent instanceof PropertyInterface) {
@@ -247,11 +233,11 @@ class MultiGroupWidget extends AdminWidget implements
             throw new \UnexpectedValueException(sprintf(
                 'The "%1$s" property is not defined on [%2$s]',
                 $propertyIdent,
-                get_class($obj)
+                $obj::class
             ));
         }
 
-        if ($property === null) {
+        if (!$property instanceof \Charcoal\Property\PropertyInterface) {
             $property = $obj->property($propertyIdent);
         }
 
@@ -261,8 +247,8 @@ class MultiGroupWidget extends AdminWidget implements
             throw new \UnexpectedValueException(sprintf(
                 '"%s" [%s] is not a model structure property on [%s].',
                 $propertyIdent,
-                (is_object($property) ? get_class($property) : gettype($property)),
-                (is_object($obj) ? get_class($obj) : gettype($obj))
+                (get_debug_type($property)),
+                (get_debug_type($obj))
             ));
         }
 
@@ -280,7 +266,7 @@ class MultiGroupWidget extends AdminWidget implements
         if ($this->storageProperty === null) {
             throw new RuntimeException(sprintf(
                 'Storage property owner is not defined for "%s"',
-                get_class($this)
+                static::class
             ));
         }
 

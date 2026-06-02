@@ -14,42 +14,36 @@ use Stash\Pool;
 
 /**
  * Test constructor and class attributes from the CacheBuilder.
- *
- * @coversDefaultClass \Charcoal\Cache\CacheBuilder
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\Charcoal\Cache\CacheBuilder::class)]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Cache\CacheBuilder::class, '__construct')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Cache\CacheBuilder::class, 'setDrivers')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Cache\CacheBuilder::class, 'isAccessible')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Cache\CacheBuilder::class, 'setLogger')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Cache\CacheBuilder::class, 'setNamespace')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Cache\CacheBuilder::class, 'setItemClass')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Cache\CacheBuilder::class, 'setPoolClass')]
 class CacheBuilderClassTest extends AbstractCacheBuilderTest
 {
-    /**
-     * @covers ::__construct
-     * @covers ::setDrivers
-     * @covers ::isAccessible
-     */
-    public function testSetDriversWithInvalidType()
+    public function testSetDriversWithInvalidType(): void
     {
         $this->expectExceptionMessage('Driver list must be an accessible array');
         $this->expectException(InvalidArgumentException::class);
-        $builder = $this->createBuilder([
+        $this->createBuilder([
             'drivers' => false,
         ]);
     }
 
-    /**
-     * @covers ::setLogger
-     */
-    public function testSetLoggerWithInvalidType()
+    public function testSetLoggerWithInvalidType(): void
     {
         $this->expectExceptionMessage('Expected an instance of Psr\Log\LoggerInterface');
         $this->expectException(InvalidArgumentException::class);
-        $builder = $this->createBuilder([
+        $this->createBuilder([
             'logger' => new \stdClass(),
         ]);
     }
 
-    /**
-     * @covers ::__construct
-     * @covers ::setNamespace
-     */
-    public function testSetNamespace()
+    public function testSetNamespace(): void
     {
         $driver  = $this->createDriver('BlackHole');
         $builder = $this->createBuilder([
@@ -65,26 +59,19 @@ class CacheBuilderClassTest extends AbstractCacheBuilderTest
         $this->assertEquals('foo', $pool->getNamespace());
     }
 
-    /**
-     * @covers ::setNamespace
-     */
-    public function testSetInvalidNamespace()
+    public function testSetInvalidNamespace(): void
     {
         $this->expectExceptionMessage('Namespace must be alphanumeric');
         $this->expectException(InvalidArgumentException::class);
-        $builder = $this->createBuilder([
+        $this->createBuilder([
             'namespace' => '!@#$%^&*(',
         ]);
     }
 
-    /**
-     * @covers ::__construct
-     * @covers ::setItemClass
-     */
-    public function testSetItemClass()
+    public function testSetItemClass(): void
     {
-        $mockItem      = $this->createMock(ItemInterface::class);
-        $mockClassName = get_class($mockItem);
+        $mockItem      = $this->createStub(ItemInterface::class);
+        $mockClassName = $mockItem::class;
 
         $driver  = $this->createDriver('BlackHole');
         $builder = $this->createBuilder([
@@ -97,40 +84,28 @@ class CacheBuilderClassTest extends AbstractCacheBuilderTest
         $this->assertInstanceOf($mockClassName, $item);
     }
 
-    /**
-     *
-     * @covers ::setItemClass
-     */
-    public function testSetFakeItemClass()
+    public function testSetFakeItemClass(): void
     {
         $this->expectExceptionMessage('Item class FakeClassName does not exist');
         $this->expectException(InvalidArgumentException::class);
-        $builder = $this->createBuilder([
+        $this->createBuilder([
             'item_class' => 'FakeClassName',
         ]);
     }
 
-    /**
-     *
-     * @covers ::setItemClass
-     */
-    public function testSetInvalidItemClass()
+    public function testSetInvalidItemClass(): void
     {
         $this->expectExceptionMessage('Item class stdClass must inherit from Stash\Interfaces\ItemInterface');
         $this->expectException(InvalidArgumentException::class);
-        $builder = $this->createBuilder([
+        $this->createBuilder([
             'item_class' => 'stdClass',
         ]);
     }
 
-    /**
-     * @covers ::__construct
-     * @covers ::setPoolClass
-     */
-    public function testSetPoolClass()
+    public function testSetPoolClass(): void
     {
-        $mockPool      = $this->createMock(PoolInterface::class);
-        $mockClassName = get_class($mockPool);
+        $mockPool      = $this->createStub(PoolInterface::class);
+        $mockClassName = $mockPool::class;
 
         $driver  = $this->createDriver('BlackHole');
         $builder = $this->createBuilder([
@@ -142,26 +117,20 @@ class CacheBuilderClassTest extends AbstractCacheBuilderTest
         $this->assertInstanceOf($mockClassName, $pool);
     }
 
-    /**
-     * @covers ::setPoolClass
-     */
-    public function testSetFakePoolClass()
+    public function testSetFakePoolClass(): void
     {
         $this->expectExceptionMessage('Pool class FakeClassName does not exist');
         $this->expectException(InvalidArgumentException::class);
-        $builder = $this->createBuilder([
+        $this->createBuilder([
             'pool_class' => 'FakeClassName',
         ]);
     }
 
-    /**
-     * @covers ::setPoolClass
-     */
-    public function testSetInvalidPoolClass()
+    public function testSetInvalidPoolClass(): void
     {
         $this->expectExceptionMessage('Pool class stdClass must inherit from Stash\Interfaces\PoolInterface');
         $this->expectException(InvalidArgumentException::class);
-        $builder = $this->createBuilder([
+        $this->createBuilder([
             'pool_class' => 'stdClass',
         ]);
     }

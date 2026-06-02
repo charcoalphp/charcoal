@@ -32,10 +32,8 @@ class GroupAttachmentWidget extends AttachmentWidget implements
 
     /**
      * Store the metadata loader instance.
-     *
-     * @var MetadataLoader
      */
-    private $metadataLoader;
+    private ?\Charcoal\Model\Service\MetadataLoader $metadataLoader = null;
 
     /**
      * @var boolean
@@ -57,21 +55,17 @@ class GroupAttachmentWidget extends AttachmentWidget implements
     protected function sortItemsByPriority(
         PrioritizableInterface $a,
         PrioritizableInterface $b
-    ) {
+    ): int {
         $priorityA = $a->priority();
         $priorityB = $b->priority();
-
-        if ($priorityA === $priorityB) {
-            return 0;
-        }
-
-        return ($priorityA < $priorityB) ? (-1) : 1;
+        return ($priorityA <=> $priorityB);
     }
 
     /**
      * @param  Container $container The DI container.
      * @return void
      */
+    #[\Override]
     protected function setDependencies(Container $container)
     {
         parent::setDependencies($container);
@@ -87,9 +81,8 @@ class GroupAttachmentWidget extends AttachmentWidget implements
      * Set a metadata loader.
      *
      * @param  MetadataLoader $loader The loader instance, used to load metadata.
-     * @return self
      */
-    protected function setMetadataLoader(MetadataLoader $loader)
+    protected function setMetadataLoader(MetadataLoader $loader): static
     {
         $this->metadataLoader = $loader;
 
@@ -100,14 +93,13 @@ class GroupAttachmentWidget extends AttachmentWidget implements
      * Retrieve the metadata loader.
      *
      * @throws RuntimeException If the metadata loader was not previously set.
-     * @return MetadataLoader
      */
-    protected function metadataLoader()
+    protected function metadataLoader(): \Charcoal\Model\Service\MetadataLoader
     {
-        if ($this->metadataLoader === null) {
+        if (!$this->metadataLoader instanceof \Charcoal\Model\Service\MetadataLoader) {
             throw new RuntimeException(sprintf(
                 'Metadata Loader is not defined for "%s"',
-                \get_class($this)
+                static::class
             ));
         }
 
@@ -123,16 +115,15 @@ class GroupAttachmentWidget extends AttachmentWidget implements
     protected function loadMetadata($metadataIdent)
     {
         $metadataLoader = $this->metadataLoader();
-        $metadata       = $metadataLoader->load($metadataIdent, $this->createMetadata());
 
-        return $metadata;
+        return $metadataLoader->load($metadataIdent, $this->createMetadata());
     }
 
     /**
      * @throws InvalidArgumentException If structureMetadata $data is note defined.
      * @return MetadataInterface
      */
-    protected function createMetadata()
+    protected function createMetadata(): \Charcoal\Property\Structure\StructureMetadata
     {
         return new StructureMetadata();
     }
@@ -141,9 +132,9 @@ class GroupAttachmentWidget extends AttachmentWidget implements
      * Sets data on this widget.
      *
      * @param  array $data Key-value array of data to append.
-     * @return self
      */
-    public function setData(array $data)
+    #[\Override]
+    public function setData(array $data): static
     {
         parent::setData($data);
 
@@ -173,7 +164,7 @@ class GroupAttachmentWidget extends AttachmentWidget implements
             $interfaces = [$this->objType()];
 
             if ($controllerInterface) {
-                array_push($interfaces, $controllerInterface);
+                $interfaces[] = $controllerInterface;
             }
 
             $structureMetadata = $this->createMetadata();
@@ -204,9 +195,8 @@ class GroupAttachmentWidget extends AttachmentWidget implements
      * Set the form object's template controller identifier.
      *
      * @param  mixed $ident The template controller identifier.
-     * @return self
      */
-    public function setControllerIdent($ident)
+    public function setControllerIdent(string $ident): static
     {
         if (class_exists($ident)) {
             $this->controllerIdent = $ident;
@@ -214,7 +204,7 @@ class GroupAttachmentWidget extends AttachmentWidget implements
             return $this;
         }
 
-        if (substr($ident, -9) !== '-template') {
+        if (!str_ends_with($ident, '-template')) {
             $ident .= '-template';
         }
 
@@ -235,10 +225,8 @@ class GroupAttachmentWidget extends AttachmentWidget implements
 
     /**
      * Disable the pill nav if there is only one group.
-     *
-     * @return boolean
      */
-    public function displayPills()
+    public function displayPills(): bool
     {
         return $this->numGroups() > 1;
     }

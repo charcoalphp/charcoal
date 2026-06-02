@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Charcoal\Tests\Admin\Mock;
 
 // From 'charcoal-admin'
@@ -16,24 +18,18 @@ class AuthToken extends AdminAuthtoken
     /**
      * @return boolean
      */
+    #[\Override]
     public function sendCookie()
     {
-        if (!$this->isEnabled()) {
-            return false;
-        }
-
-        return true;
+        return $this->isEnabled();
     }
 
     /**
      * @return boolean
      */
+    #[\Override]
     public function deleteCookie()
     {
-        if (!$this->isEnabled()) {
-            return false;
-        }
-
-        return true;
+        return $this->isEnabled();
     }
 }

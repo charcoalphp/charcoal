@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Charcoal\Tests\Cms\Mock;
 
 // From 'charcoal-app'
@@ -15,34 +17,24 @@ use Charcoal\Cms\SectionInterface;
  */
 class BrokenTemplate extends AbstractTemplate
 {
-    /**
-     * @var EventInterface $event
-     */
-    private $event;
+    private ?\Charcoal\Cms\EventInterface $event = null;
 
-    /**
-     * @var NewsInterface $news
-     */
-    private $news;
+    private ?\Charcoal\Cms\NewsInterface $news = null;
 
-    /**
-     * @var SectionInterface $section
-     */
-    private $section;
+    private ?\Charcoal\Cms\SectionInterface $section = null;
 
     /**
      * @return EventInterface
      */
-    public function event()
+    public function event(): ?\Charcoal\Cms\EventInterface
     {
         return $this->event;
     }
 
     /**
      * @param  EventInterface $event The current event.
-     * @return self
      */
-    public function setEvent(EventInterface $event)
+    public function setEvent(EventInterface $event): static
     {
         $this->event = $event;
 
@@ -52,16 +44,15 @@ class BrokenTemplate extends AbstractTemplate
     /**
      * @return NewsInterface
      */
-    public function news()
+    public function news(): ?\Charcoal\Cms\NewsInterface
     {
         return $this->news;
     }
 
     /**
      * @param  NewsInterface $news The current news.
-     * @return self
      */
-    public function setNews(NewsInterface $news)
+    public function setNews(NewsInterface $news): static
     {
         $this->news = $news;
 
@@ -71,16 +62,15 @@ class BrokenTemplate extends AbstractTemplate
     /**
      * @return SectionInterface
      */
-    public function section()
+    public function section(): ?\Charcoal\Cms\SectionInterface
     {
         return $this->section;
     }
 
     /**
      * @param  SectionInterface $section The current section.
-     * @return self
      */
-    public function setSection(SectionInterface $section)
+    public function setSection(SectionInterface $section): static
     {
         $this->section = $section;
 

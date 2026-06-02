@@ -16,15 +16,9 @@ use Charcoal\Model\Service\ModelLoader;
  */
 final class ModelLoaderBuilder
 {
-    /**
-     * @var FactoryInterface
-     */
-    private $factory;
+    private \Charcoal\Factory\FactoryInterface $factory;
 
-    /**
-     * @var CacheItemPoolInterface
-     */
-    private $cachePool;
+    private \Psr\Cache\CacheItemPoolInterface $cachePool;
 
     /**
      * @param array $data Builder dependencies.
@@ -38,9 +32,8 @@ final class ModelLoaderBuilder
     /**
      * @param string $objType The object type of the ModelLoader.
      * @param string $objKey  Optional object key, to set on the ModelLoader.
-     * @return ModelLoader
      */
-    public function build($objType, $objKey = null)
+    public function build($objType, $objKey = null): \Charcoal\Model\Service\ModelLoader
     {
         return new ModelLoader([
             'factory'   => $this->factory,
@@ -55,27 +48,24 @@ final class ModelLoaderBuilder
      *
      * @param string $objType The object type of the ModelLoader.
      * @param string $objKey  Optional object key, to set on the ModelLoader.
-     * @return ModelLoader
      */
-    public function __invoke($objType, $objKey = null)
+    public function __invoke($objType, $objKey = null): \Charcoal\Model\Service\ModelLoader
     {
         return $this->build($objType, $objKey);
     }
 
     /**
      * @param FactoryInterface $factory The factory to use to create models.
-     * @return void
      */
-    private function setFactory(FactoryInterface $factory)
+    private function setFactory(FactoryInterface $factory): void
     {
         $this->factory = $factory;
     }
 
     /**
      * @param CacheItemPoolInterface $cachePool The PSR-6 compliant cache pool.
-     * @return void
      */
-    private function setCachePool(CacheItemPoolInterface $cachePool)
+    private function setCachePool(CacheItemPoolInterface $cachePool): void
     {
         $this->cachePool = $cachePool;
     }

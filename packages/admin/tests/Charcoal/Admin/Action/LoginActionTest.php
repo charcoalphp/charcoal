@@ -30,22 +30,16 @@ class LoginActionTest extends AbstractTestCase
 
     /**
      * Tested Class.
-     *
-     * @var LoginAction
      */
-    private $obj;
+    private \Charcoal\Admin\Action\LoginAction $obj;
 
     /**
      * Store the service container.
-     *
-     * @var Container
      */
-    private $container;
+    private ?\Pimple\Container $container = null;
 
     /**
      * Set up the test.
-     *
-     * @return void
      */
     public function setUp(): void
     {
@@ -61,19 +55,13 @@ class LoginActionTest extends AbstractTestCase
         ]);
     }
 
-    /**
-     * @return void
-     */
-    public function testAuthRequiredIsFalse()
+    public function testAuthRequiredIsFalse(): void
     {
         $res = $this->callMethod($this->obj, 'authRequired');
         $this->assertFalse($res);
     }
 
-    /**
-     * @return void
-     */
-    public function testRunWithoutParamsIs400()
+    public function testRunWithoutParamsIs400(): void
     {
         $request  = Request::createFromEnvironment(Environment::mock());
         $response = new Response();
@@ -82,10 +70,7 @@ class LoginActionTest extends AbstractTestCase
         $this->assertEquals(400, $response->getStatusCode());
     }
 
-    /**
-     * @return void
-     */
-    public function testRunWithInvalidCredentials()
+    public function testRunWithInvalidCredentials(): void
     {
         $this->createUser('foo@bar.com');
 
@@ -108,28 +93,25 @@ class LoginActionTest extends AbstractTestCase
     public function testRunWithValidCredentials()
     {
         $this->createUser('foo@bar.com');
-
+    
         $request = Request::createFromEnvironment(Environment::mock([
            'QUERY_STRING' => 'password=qwerty'
         ]));
         $response = new Response();
-
+    
         $response = $this->obj->run($request, $response);
         $this->assertEquals(200, $response->getStatusCode());
-
+    
         $results = $this->obj->results();
         $this->assertTrue($results['success']);
     }
     */
-
     /**
      * Set up the service container.
-     *
-     * @return Container
      */
-    protected function container()
+    protected function container(): \Pimple\Container
     {
-        if ($this->container === null) {
+        if (!$this->container instanceof \Pimple\Container) {
             $container = new Container();
             $containerProvider = new ContainerProvider();
             $containerProvider->registerActionDependencies($container);

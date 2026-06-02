@@ -19,10 +19,9 @@ class HierarchicalTableWidget extends TableWidget
 {
     /**
      * Provide a template to fullfill UIItem interface.
-     *
-     * @return string
      */
-    public function template()
+    #[\Override]
+    public function template(): string
     {
         return 'charcoal/admin/widget/table';
     }
@@ -36,10 +35,11 @@ class HierarchicalTableWidget extends TableWidget
      * @param  PropertyInterface $property The current property.
      * @return void
      */
+    #[\Override]
     protected function setupDisplayPropertyValue(
         ModelInterface $object,
         PropertyInterface $property
-    ) {
+    ): void {
         parent::setupDisplayPropertyValue($object, $property);
 
         if ($this->display instanceof HierarchicalDisplay) {
@@ -51,9 +51,9 @@ class HierarchicalTableWidget extends TableWidget
      * Sort the objects before they are displayed as rows.
      *
      * @see \Charcoal\Admin\Ui\CollectionContainerTrait::sortObjects()
-     * @return array
      */
-    public function sortObjects()
+    #[\Override]
+    public function sortObjects(): array
     {
         $collection = new HierarchicalCollection($this->objects(), false);
         $collection

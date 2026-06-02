@@ -15,7 +15,7 @@ class BasicInput extends TinymceInput
      *
      * @param array $data Dependencies.
      */
-    public function __construct(array $data = null)
+    public function __construct(?array $data = null)
     {
         parent::__construct($data);
 
@@ -25,10 +25,8 @@ class BasicInput extends TinymceInput
         }
     }
 
-    /**
-     * @return string
-     */
-    public function inputType()
+    #[\Override]
+    public function inputType(): string
     {
         return 'charcoal/admin/property/input/tinymce';
     }

@@ -26,15 +26,10 @@ class ProcessSchedulesScript extends AdminScript implements CronScriptInterface
 {
     use CronScriptTrait;
 
-    /**
-     * @var FactoryInterface $scheduleFactory
-     */
-    private $scheduleFactory;
+    private ?\Charcoal\Factory\FactoryInterface $scheduleFactory = null;
 
-    /**
-     * @return array
-     */
-    public function defaultArguments()
+    #[\Override]
+    public function defaultArguments(): array
     {
         $arguments = [
             'obj-type' => [
@@ -49,17 +44,14 @@ class ProcessSchedulesScript extends AdminScript implements CronScriptInterface
                 'defaultValue' => ''
             ]
         ];
-
-        $arguments = array_merge(parent::defaultArguments(), $arguments);
-        return $arguments;
+        return array_merge(parent::defaultArguments(), $arguments);
     }
 
     /**
      * @param RequestInterface  $request  A PSR-7 compatible Request instance.
      * @param ResponseInterface $response A PSR-7 compatible Response instance.
-     * @return ResponseInterface
      */
-    public function run(RequestInterface $request, ResponseInterface $response)
+    public function run(RequestInterface $request, ResponseInterface $response): ResponseInterface
     {
         unset($request);
 
@@ -72,17 +64,17 @@ class ProcessSchedulesScript extends AdminScript implements CronScriptInterface
 
         $scheduled = $this->loadSchedules($objType, $objId);
 
-        $callback = function ($obj) use ($climate) {
+        $callback = function ($obj): void {
             // No default callback
         };
 
-        $successCallback = function ($obj) use ($climate) {
+        $successCallback = function ($obj) use ($climate): void {
             $climate->green()->out(
                 sprintf('Object %s : %s schedule was successfully ran.', $obj->targetType(), $obj->targetId())
             );
         };
 
-        $failureCallback = function ($obj) use ($climate) {
+        $failureCallback = function ($obj) use ($climate): void {
             $climate->red()->out(
                 sprintf('Object %s : %s schedule could not be ran.', $obj->targetType(), $obj->targetId())
             );
@@ -102,6 +94,7 @@ class ProcessSchedulesScript extends AdminScript implements CronScriptInterface
      * @param Container $container Pimple DI container.
      * @return void
      */
+    #[\Override]
     protected function setDependencies(Container $container)
     {
         parent::setDependencies($container);
@@ -112,16 +105,15 @@ class ProcessSchedulesScript extends AdminScript implements CronScriptInterface
     /**
      * @return FactoryInterface
      */
-    protected function scheduleFactory()
+    protected function scheduleFactory(): ?\Charcoal\Factory\FactoryInterface
     {
         return $this->scheduleFactory;
     }
 
     /**
      * @param FactoryInterface $factory The factory used to create queue items.
-     * @return void
      */
-    private function setScheduleFactory(FactoryInterface $factory)
+    private function setScheduleFactory(FactoryInterface $factory): void
     {
         $this->scheduleFactory = $factory;
     }
@@ -139,7 +131,7 @@ class ProcessSchedulesScript extends AdminScript implements CronScriptInterface
      * @param string $objId   Optional object id to loader.
      * @return \Charcoal\Model\Collection|array
      */
-    private function loadSchedules($objType = null, $objId = null)
+    private function loadSchedules($objType = null, $objId = null): \ArrayAccess|array
     {
         $loader = new CollectionLoader([
             'logger' => $this->logger,
@@ -173,7 +165,6 @@ class ProcessSchedulesScript extends AdminScript implements CronScriptInterface
             'property' => 'scheduled_date',
             'mode'     => 'asc'
         ]);
-        $schedules = $loader->load();
-        return $schedules;
+        return $loader->load();
     }
 }

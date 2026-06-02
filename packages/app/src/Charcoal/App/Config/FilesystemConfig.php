@@ -20,22 +20,19 @@ class FilesystemConfig extends AbstractConfig
      */
     public $defaultConnection;
 
-    /**
-     * @return array
-     */
-    public function defaultConnections()
+    public function defaultConnections(): array
     {
         return [
             'public' => [
                 'public'    => true,
                 'type'      => 'local',
-                'path'      => '%app.public_path%',
+                'path'      => './',
                 'label'     => 'Public',
             ],
             'private' => [
                 'public'    => false,
                 'type'      => 'local',
-                'path'      => '%app.base_path%',
+                'path'      => '../',
                 'label'     => 'Private',
             ],
         ];
@@ -43,10 +40,8 @@ class FilesystemConfig extends AbstractConfig
 
     /**
      * Ensure connections always return the default connections.
-     *
-     * @return array
      */
-    public function connections()
+    public function connections(): array
     {
         return array_merge($this->defaultConnections(), $this->connections);
     }

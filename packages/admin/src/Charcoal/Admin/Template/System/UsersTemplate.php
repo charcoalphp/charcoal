@@ -27,7 +27,8 @@ class UsersTemplate extends AdminTemplate implements
      *
      * @return string[]
      */
-    protected function validDataFromRequest()
+    #[\Override]
+    protected function validDataFromRequest(): array
     {
         return array_merge([
             'obj_type'
@@ -39,15 +40,13 @@ class UsersTemplate extends AdminTemplate implements
      *
      * @return \Charcoal\Translator\Translation|string|null
      */
-    public function title()
+    #[\Override]
+    public function title(): ?\Charcoal\Translator\Translation
     {
         return $this->translator()->translation('Administrators');
     }
 
-    /**
-     * @return mixed
-     */
-    public function createDashboardConfig()
+    public function createDashboardConfig(): array
     {
         return [
             'layout' => [
@@ -68,6 +67,7 @@ class UsersTemplate extends AdminTemplate implements
      * @param Container $container Pimple DI Container.
      * @return void
      */
+    #[\Override]
     protected function setDependencies(Container $container)
     {
         parent::setDependencies($container);

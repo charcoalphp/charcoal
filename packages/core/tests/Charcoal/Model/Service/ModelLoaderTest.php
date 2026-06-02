@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Charcoal\Tests\Model\Service;
 
 use Exception;
@@ -27,8 +29,6 @@ class ModelLoaderTest extends AbstractTestCase
 
     /**
      * Set up the test.
-     *
-     * @return void
      */
     protected function setUp(): void
     {
@@ -49,10 +49,7 @@ class ModelLoaderTest extends AbstractTestCase
         ]);
     }
 
-    /**
-     * @return void
-     */
-    public function testLoadInvalidObjTypeThrowsException()
+    public function testLoadInvalidObjTypeThrowsException(): void
     {
         $this->expectException(Exception::class);
         $this->obj->load('foobar');

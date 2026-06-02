@@ -12,7 +12,7 @@ use Charcoal\Tests\AbstractTestCase;
  */
 class LoggerServiceProviderTest extends AbstractTestCase
 {
-    public function testProvider()
+    public function testProvider(): void
     {
         $container = new Container([
             'config' => []

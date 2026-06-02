@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Charcoal\Tests\App;
 
 // From PSR-7
@@ -18,17 +20,8 @@ class AppTest extends AbstractTestCase
 {
     /**
      * Tested Class.
-     *
-     * @var App
      */
-    private $obj;
-
-    /**
-     * Store the service container.
-     *
-     * @var Container
-     */
-    private $container;
+    private \Charcoal\App\App $obj;
 
     /**
      * Set up the test.
@@ -45,18 +38,18 @@ class AppTest extends AbstractTestCase
         $this->obj = new App($container);
     }
 
-    public function testAppIsConstructed()
+    public function testAppIsConstructed(): void
     {
         $app = new App();
         $this->assertInstanceOf(App::class, $app);
     }
 
-    public function testConstructor()
+    public function testConstructor(): void
     {
         $this->assertInstanceOf(App::class, $this->obj);
     }
 
-    public function testRun()
+    public function testRun(): void
     {
         $res = $this->obj->run(true);
         $this->assertInstanceOf(ResponseInterface::class, $res);

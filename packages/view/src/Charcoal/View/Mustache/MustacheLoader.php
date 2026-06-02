@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Charcoal\View\Mustache;
 
 // From Mustache
-use Mustache_Loader as MustacheLoaderInterface;
+use Mustache\Loader as MustacheLoaderInterface;
 // From 'charcoal-view'
 use Charcoal\View\AbstractLoader;
 use Charcoal\View\LoaderInterface;
@@ -27,24 +27,22 @@ class MustacheLoader extends AbstractLoader implements
      *
      * @todo   Add support for custom delimiters.
      * @param  string $ident The template being evaluated.
-     * @return boolean
      */
+    #[\Override]
     protected function isTemplateString(string $ident): bool
     {
-        return strpos($ident, '{{') !== false || parent::isTemplateString($ident);
+        return str_contains($ident, '{{') || parent::isTemplateString($ident);
     }
 
     /**
      * Convert an identifier to a file path.
      *
      * @param  string $ident The template identifier to convert to a filename.
-     * @return string
      */
     protected function filenameFromIdent(string $ident): string
     {
         $filename  = str_replace([ '\\' ], '.', $ident);
-        $filename .= '.mustache';
 
-        return $filename;
+        return $filename . '.mustache';
     }
 }

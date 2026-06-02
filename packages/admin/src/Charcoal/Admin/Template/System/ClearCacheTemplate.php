@@ -38,10 +38,8 @@ class ClearCacheTemplate extends AdminTemplate
 
     /**
      * Summary of cache.
-     *
-     * @var array
      */
-    private $cacheInfo;
+    private ?array $cacheInfo = null;
 
     /**
      * Cache service config.
@@ -59,10 +57,8 @@ class ClearCacheTemplate extends AdminTemplate
 
     /**
      * Regular expression pattern to match a Stash / APC cache key.
-     *
-     * @var string
      */
-    private $apcCacheKeyPattern;
+    private ?string $apcCacheKeyPattern = null;
 
     /**
      * Mustache View Engine.
@@ -83,6 +79,7 @@ class ClearCacheTemplate extends AdminTemplate
      *
      * @return \Charcoal\Translator\Translation|string|null
      */
+    #[\Override]
     public function title()
     {
         if ($this->title === null) {
@@ -97,10 +94,11 @@ class ClearCacheTemplate extends AdminTemplate
      *
      * @return \Charcoal\Admin\Widget\SecondaryMenuWidgetInterface|null
      */
+    #[\Override]
     public function secondaryMenu()
     {
         if ($this->secondaryMenu === null) {
-            $this->secondaryMenu = $this->createSecondaryMenu('system');
+            $this->secondaryMenu = $this->createSecondaryMenu();
         }
 
         return $this->secondaryMenu;
@@ -108,14 +106,13 @@ class ClearCacheTemplate extends AdminTemplate
 
     /**
      * @param  boolean $force Whether to reload cache information.
-     * @return array
      */
-    public function cacheInfo($force = false)
+    public function cacheInfo($force = false): array
     {
         if ($this->cacheInfo === null || $force === true) {
             $flip      = array_flip($this->availableCacheDrivers);
-            $driver    = get_class($this->cache->getDriver());
-            $cacheType = isset($flip['\\' . $driver]) ? $flip['\\' . $driver] : $driver;
+            $driver    = $this->cache->getDriver()::class;
+            $cacheType = ($flip['\\' . $driver] ?? $driver);
 
             $globalItems = $this->globalCacheItems();
             $this->cacheInfo = [
@@ -137,7 +134,7 @@ class ClearCacheTemplate extends AdminTemplate
     /**
      * @return string
      */
-    private function getCacheNamespace()
+    private function getCacheNamespace(): bool|string
     {
         return $this->cache->getNamespace();
     }
@@ -150,18 +147,12 @@ class ClearCacheTemplate extends AdminTemplate
         return $this->cacheConfig['prefix'];
     }
 
-    /**
-     * @return string
-     */
-    private function getGlobalCacheKey()
+    private function getGlobalCacheKey(): string
     {
         return '/::' . $this->getCacheNamespace() . '::/';
     }
 
-    /**
-     * @return array
-     */
-    private function globalCacheInfo()
+    private function globalCacheInfo(): array
     {
         if ($this->isApc()) {
             $cacheKey = $this->getGlobalCacheKey();
@@ -190,10 +181,7 @@ class ClearCacheTemplate extends AdminTemplate
         }
     }
 
-    /**
-     * @return string
-     */
-    private function getPagesCacheKey()
+    private function getPagesCacheKey(): string
     {
         return '/::' . $this->getCacheNamespace() . '::request::|::' . $this->getCacheNamespace() . '::template::/';
     }
@@ -224,10 +212,7 @@ class ClearCacheTemplate extends AdminTemplate
         return null;
     }
 
-    /**
-     * @return array
-     */
-    private function pagesCacheInfo()
+    private function pagesCacheInfo(): array
     {
         if ($this->isApc()) {
             $cacheKey = $this->getPagesCacheKey();
@@ -243,31 +228,12 @@ class ClearCacheTemplate extends AdminTemplate
         }
     }
 
-    /**
-     * @return array
-     */
-    private function pagesCacheItems()
-    {
-        if ($this->isApc()) {
-            $cacheKey = $this->getPagesCacheKey();
-            return $this->apcCacheItems($cacheKey);
-        } else {
-            return [];
-        }
-    }
-
-    /**
-     * @return string
-     */
-    private function getObjectsCacheKey()
+    private function getObjectsCacheKey(): string
     {
         return '/::' . $this->getCacheNamespace() . '::object::|::' . $this->getCacheNamespace() . '::metadata::/';
     }
 
-    /**
-     * @return array
-     */
-    private function objectsCacheInfo()
+    private function objectsCacheInfo(): array
     {
         if ($this->isApc()) {
             $cacheKey = $this->getObjectsCacheKey();
@@ -289,7 +255,7 @@ class ClearCacheTemplate extends AdminTemplate
     private function twigCacheInfo(): array
     {
         $engine = $this->getTwigEngine();
-        if (!$engine) {
+        if (!$engine instanceof \Charcoal\View\Twig\TwigEngine) {
             return [
                 'num_entries'     => 0,
                 'total_size'      => 0,
@@ -298,9 +264,7 @@ class ClearCacheTemplate extends AdminTemplate
         }
 
         $defaultCachePath = realpath($engine->cache());
-        $cachePath = $defaultCachePath
-            ? $defaultCachePath
-            : realpath($this->appConfig['publicPath'] . DIRECTORY_SEPARATOR . $engine->cache());
+        $cachePath = $defaultCachePath ?: realpath($this->appConfig['publicPath'] . DIRECTORY_SEPARATOR . $engine->cache());
 
         if (!is_dir($cachePath)) {
             return [
@@ -323,7 +287,7 @@ class ClearCacheTemplate extends AdminTemplate
     private function mustacheCacheInfo(): array
     {
         $engine = $this->getMustacheEngine();
-        if (!$engine) {
+        if (!$engine instanceof \Charcoal\View\Mustache\MustacheEngine) {
             return [
                 'num_entries'     => 0,
                 'total_size'      => 0,
@@ -332,9 +296,7 @@ class ClearCacheTemplate extends AdminTemplate
         }
 
         $defaultCachePath = realpath($engine->cache());
-        $cachePath = $defaultCachePath
-            ? $defaultCachePath
-            : realpath($this->appConfig['publicPath'] . DIRECTORY_SEPARATOR . $engine->cache());
+        $cachePath = $defaultCachePath ?: realpath($this->appConfig['publicPath'] . DIRECTORY_SEPARATOR . $engine->cache());
         if (!is_dir($cachePath)) {
             return [
                 'no_cache_folder' => true,
@@ -363,23 +325,9 @@ class ClearCacheTemplate extends AdminTemplate
     }
 
     /**
-     * @return array
-     */
-    private function objectsCacheItems()
-    {
-        if ($this->isApc()) {
-            $cacheKey = $this->getObjectsCacheKey();
-            return $this->apcCacheItems($cacheKey);
-        } else {
-            return [];
-        }
-    }
-
-    /**
      * @param  string $key The cache key to look at.
-     * @return array
      */
-    private function apcCacheInfo($key)
+    private function apcCacheInfo(string $key): array
     {
         $iter = $this->createApcIterator($key);
 
@@ -393,8 +341,8 @@ class ClearCacheTemplate extends AdminTemplate
             $hitsTotal += $item['num_hits'];
             $ttlTotal  += $item['ttl'];
         }
-        $sizeAvg = $numEntries ? ($sizeTotal / $numEntries) : 0;
-        $hitsAvg = $numEntries ? ($hitsTotal / $numEntries) : 0;
+        $sizeAvg = $numEntries !== 0 ? ($sizeTotal / $numEntries) : 0;
+        $hitsAvg = $numEntries !== 0 ? ($hitsTotal / $numEntries) : 0;
         return [
             'num_entries'  => $numEntries,
             'total_size'   => $this->formatBytes($sizeTotal),
@@ -408,7 +356,7 @@ class ClearCacheTemplate extends AdminTemplate
      * @param  string $key The cache key to look at.
      * @return array|\Generator
      */
-    private function apcCacheItems($key)
+    private function apcCacheItems(string $key)
     {
         $iter = $this->createApcIterator($key);
 
@@ -431,9 +379,8 @@ class ClearCacheTemplate extends AdminTemplate
     /**
      * @param  string $key The cache item key to load.
      * @throws RuntimeException If the APC Iterator class is missing.
-     * @return \APCIterator|\APCUIterator|null
      */
-    private function createApcIterator($key)
+    private function createApcIterator(string $key): \APCUIterator|\APCIterator
     {
         if (class_exists('\\APCUIterator', false)) {
             return new \APCUIterator($key);
@@ -446,48 +393,40 @@ class ClearCacheTemplate extends AdminTemplate
 
     /**
      * Determine if Charcoal has cache statistics.
-     *
-     * @return boolean
      */
-    public function hasStats()
+    public function hasStats(): bool
     {
         return $this->isApc();
     }
 
     /**
      * Determine if Charcoal is using the APC driver.
-     *
-     * @return boolean
      */
-    public function isApc()
+    public function isApc(): bool
     {
-        return is_a($this->cache->getDriver(), Apc::class);
+        return $this->cache->getDriver() instanceof \Stash\Driver\Apc;
     }
 
     /**
      * Determine if Charcoal is using the Memcache driver.
-     *
-     * @return boolean
      */
-    public function isMemcache()
+    public function isMemcache(): bool
     {
-        return is_a($this->cache->getDriver(), Memcache::class);
+        return $this->cache->getDriver() instanceof \Stash\Driver\Memcache;
     }
 
     /**
      * Determine if Charcoal is using the Ephemeral driver.
-     *
-     * @return boolean
      */
-    public function isMemory()
+    public function isMemory(): bool
     {
-        return is_a($this->cache->getDriver(), Ephemeral::class);
+        return $this->cache->getDriver() instanceof \Stash\Driver\Ephemeral;
     }
 
     public function hasTwigCache(): bool
     {
         $engine = $this->getTwigEngine();
-        if ($engine) {
+        if ($engine instanceof \Charcoal\View\Twig\TwigEngine) {
             return (bool)$engine->config()['useCache'];
         }
 
@@ -513,10 +452,8 @@ class ClearCacheTemplate extends AdminTemplate
      * - `stashNS`: Stash Segment
      * - `poolNS`: Optional. Application Key
      * - `appKey`: Data Segment
-     *
-     * @return string
      */
-    private function getApcCacheKeyPattern()
+    private function getApcCacheKeyPattern(): string
     {
         if ($this->apcCacheKeyPattern === null) {
             $pattern  = '/^(?<apcID>[a-f0-9]{32})::(?:(?<apcNS>';
@@ -556,7 +493,7 @@ class ClearCacheTemplate extends AdminTemplate
      * @param  integer $bytes The number of bytes to format.
      * @return string
      */
-    private function formatBytes($bytes)
+    private function formatBytes($bytes): int|string
     {
         if ($bytes === 0) {
             return 0;
@@ -566,7 +503,7 @@ class ClearCacheTemplate extends AdminTemplate
         $base  = log($bytes, 1024);
         $floor = floor($base);
         $unit  = $units[$floor];
-        $size  = round(pow(1024, ($base - $floor)), 2);
+        $size  = round((1024 ** ($base - $floor)), 2);
 
         $locale = localeconv();
         $size   = number_format($size, 2, $locale['decimal_point'], $locale['thousands_sep']);
@@ -585,9 +522,9 @@ class ClearCacheTemplate extends AdminTemplate
      * @param DateTimeInterface|null $date2 The datetime to compare against.
      * @return string
      */
-    private function formatTimeDiff(DateTimeInterface $date1, DateTimeInterface $date2 = null)
+    private function formatTimeDiff(DateTimeInterface $date1, ?DateTimeInterface $date2 = null)
     {
-        $isNow = $date2 === null;
+        $isNow = !$date2 instanceof \DateTimeInterface;
         if ($isNow) {
             $date2 = new DateTime('now', $date1->getTimezone());
         }
@@ -626,15 +563,14 @@ class ClearCacheTemplate extends AdminTemplate
                 break;
         }
 
-        $time = $translator->transChoice($unit, $count, [ '{{ count }}' => $count ]);
-
-        return $time;
+        return $translator->transChoice($unit, $count, [ '{{ count }}' => $count ]);
     }
 
     /**
      * @param Container $container Pimple DI Container.
      * @return void
      */
+    #[\Override]
     protected function setDependencies(Container $container)
     {
         parent::setDependencies($container);
@@ -644,14 +580,14 @@ class ClearCacheTemplate extends AdminTemplate
         $this->cacheConfig           = $container['cache/config'];
 
         $this->mustacheEngine = function () use ($container) {
-            if (class_exists('\Mustache_Engine')) {
+            if (class_exists('\Mustache\Engine')) {
                 return $container['view/engine/mustache'];
             }
 
             return null;
         };
         $this->twigEngine = function () use ($container) {
-            if (class_exists('\Twig\Environment')) {
+            if (class_exists(\Twig\Environment::class)) {
                 return $container['view/engine/twig'];
             }
 

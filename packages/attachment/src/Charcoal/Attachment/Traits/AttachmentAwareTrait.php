@@ -57,8 +57,8 @@ trait AttachmentAwareTrait
     public function getAttachments(
         $group = null,
         $type = null,
-        callable $before = null,
-        callable $after = null
+        ?callable $before = null,
+        ?callable $after = null
     ) {
         if (is_array($group)) {
             $options = $group;
@@ -81,23 +81,20 @@ trait AttachmentAwareTrait
         $options = $this->parseAttachmentOptions($options);
         extract($options);
 
-        if ($group !== 0) {
-            if (!is_string($group)) {
-                throw new InvalidArgumentException(sprintf(
-                    'The "group" must be a string, received %s',
-                    is_object($group) ? get_class($group) : gettype($group)
-                ));
-            }
+        if ($group !== 0 && !is_string($group)) {
+            throw new InvalidArgumentException(sprintf(
+                'The "group" must be a string, received %s',
+                get_debug_type($group)
+            ));
         }
 
         if ($type !== 0) {
             if (!is_string($type)) {
                 throw new InvalidArgumentException(sprintf(
                     'The "type" must be a string, received %s',
-                    is_object($type) ? get_class($type) : gettype($type)
+                    get_debug_type($type)
                 ));
             }
-
             $type = preg_replace('/([a-z])([A-Z])/', '$1-$2', $type);
             $type = strtolower(str_replace('\\', '/', $type));
         }
@@ -140,7 +137,7 @@ trait AttachmentAwareTrait
                 attachment.active = 1';
         }
 
-        if ($type) {
+        if ($type !== '' && $type !== 0) {
             $query .= sprintf('
             AND
                 attachment.type = "%s"', $type);
@@ -152,7 +149,7 @@ trait AttachmentAwareTrait
             AND
                 joined.object_id = "%s"', $objType, $objId);
 
-        if ($group) {
+        if ($group !== '' && $group !== 0) {
             $query .= sprintf('
             AND
                 joined.group = "%s"', $group);
@@ -165,7 +162,7 @@ trait AttachmentAwareTrait
         $loader->setModel($attProto);
         $loader->setDynamicTypeField('type');
 
-        $callable = function (&$att) use ($before) {
+        $callable = function (&$att) use ($before): void {
             if ($this instanceof AttachableInterface) {
                 $att->setContainerObj($this);
             }
@@ -194,17 +191,15 @@ trait AttachmentAwareTrait
      *
      * @return boolean Whether $this has any nodes (TRUE) or not (FALSE).
      */
-    public function hasAttachments()
+    public function hasAttachments(): bool
     {
-        return !!($this->numAttachments());
+        return (bool)$this->numAttachments();
     }
 
     /**
      * Count the number of nodes associated to the current object.
-     *
-     * @return integer
      */
-    public function numAttachments()
+    public function numAttachments(): int
     {
         return count($this->getAttachments([
             'group' => null
@@ -243,9 +238,9 @@ trait AttachmentAwareTrait
     /**
      * Remove all joins linked to a specific attachment.
      *
-     * @deprecated in favour of AttachmentAwareTrait::removeAttachmentJoins()
      * @return boolean
      */
+    #[\Deprecated(message: 'in favour of AttachmentAwareTrait::removeAttachmentJoins()')]
     public function removeJoins()
     {
         $this->logger->warning(
@@ -259,10 +254,8 @@ trait AttachmentAwareTrait
 
     /**
      * Remove all joins linked to a specific attachment.
-     *
-     * @return boolean
      */
-    public function removeAttachmentJoins()
+    public function removeAttachmentJoins(): bool
     {
         $joinProto = $this->modelFactory()->get(Join::class);
 
@@ -285,9 +278,8 @@ trait AttachmentAwareTrait
      * Delete the objects associated to the current object.
      *
      * @param  array $options Filter the attachments by an option list.
-     * @return boolean
      */
-    public function deleteAttachments(array $options = [])
+    public function deleteAttachments(array $options = []): bool
     {
         foreach ($this->getAttachments($options) as $attachment) {
             $attachment->delete();
@@ -310,7 +302,7 @@ trait AttachmentAwareTrait
      * ]
      * @return array Attachment obj_types.
      */
-    public function attachmentObjTypes()
+    public function attachmentObjTypes(): array
     {
         $defaultEditDashboard = $this->metadata()->get('admin.default_edit_dashboard');
         $dashboards = $this->metadata()->get('admin.dashboards');
@@ -318,7 +310,7 @@ trait AttachmentAwareTrait
         $widgets = $editDashboard['widgets'];
 
         $formIdent = '';
-        foreach ($widgets as $ident => $val) {
+        foreach ($widgets as $val) {
             if ($val['type'] == 'charcoal/admin/widget/object-form') {
                 $formIdent = $val['form_ident'];
             }
@@ -364,17 +356,15 @@ trait AttachmentAwareTrait
      * @param  array $options A list of options.
      *    Option keys not present in {@see self::getDefaultAttachmentOptions() default options}
      *    are rejected.
-     * @return array
      */
-    protected function parseAttachmentOptions(array $options)
+    protected function parseAttachmentOptions(array $options): array
     {
         $defaults = $this->getDefaultAttachmentOptions();
 
         $options = array_intersect_key($options, $defaults);
         $options = array_filter($options, [ $this, 'filterAttachmentOption' ], ARRAY_FILTER_USE_BOTH);
-        $options = array_replace($defaults, $options);
 
-        return $options;
+        return array_replace($defaults, $options);
     }
 
     /**
@@ -389,25 +379,17 @@ trait AttachmentAwareTrait
         if ($val === null) {
             return false;
         }
-
-        switch ($key) {
-            case 'isActive':
-                return is_bool($val);
-
-            case 'before':
-            case 'after':
-                return is_callable($val);
-        }
-
-        return true;
+        return match ($key) {
+            'isActive' => is_bool($val),
+            'before', 'after' => is_callable($val),
+            default => true,
+        };
     }
 
     /**
      * Retrieve the default options for loading a collection of attachments.
-     *
-     * @return array
      */
-    protected function getDefaultAttachmentOptions()
+    protected function getDefaultAttachmentOptions(): array
     {
         return [
             'group'    => 0,

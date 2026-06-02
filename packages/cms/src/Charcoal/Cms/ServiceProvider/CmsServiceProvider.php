@@ -36,9 +36,8 @@ class CmsServiceProvider implements ServiceProviderInterface
      * It should not get services.
      *
      * @param \Pimple\Container $container Pimple DI Container.
-     * @return void
      */
-    public function register(Container $container)
+    public function register(Container $container): void
     {
         $this->registerConfig($container);
         $this->reggisterDateHelper($container);
@@ -49,15 +48,14 @@ class CmsServiceProvider implements ServiceProviderInterface
 
     /**
      * @param Container $container Pimple DI Container.
-     * @return void
      */
-    private function registerConfig(Container $container)
+    private function registerConfig(Container $container): void
     {
         /**
          * @param Container $container Pimple DI Container.
          * @return CmsConfig Website configurations (from cms.json).
          */
-        $container['cms/config'] = function (Container $container) {
+        $container['cms/config'] = function (Container $container): \Charcoal\Cms\Config\CmsConfig {
             $appConfig = $container['config'];
             $cms = $appConfig->get('cms');
 
@@ -73,7 +71,7 @@ class CmsServiceProvider implements ServiceProviderInterface
                 $model = $container['model/factory']->create($configType);
                 $model->load($configId);
 
-                if (!!$model->id()) {
+                if ((bool)$model->id()) {
                     $cmsConfig->addModel($model);
                 }
             }
@@ -84,21 +82,18 @@ class CmsServiceProvider implements ServiceProviderInterface
 
     /**
      * @param Container $container Pimple DI Container.
-     * @return void
      */
-    private function reggisterDateHelper(Container $container)
+    private function reggisterDateHelper(Container $container): void
     {
         /**
          * @param Container $container Pimple DI Container.
          * @return DateHelper
          */
-        $container['cms/date/helper'] = function (Container $container) {
-            return new DateHelper([
-                'date_formats' => $container['cms/config']->get('date_formats'),
-                'time_formats' => $container['cms/config']->get('time_formats'),
-                'translator'   => $container['translator']
-            ]);
-        };
+        $container['cms/date/helper'] = (fn(Container $container): \Charcoal\Cms\Support\Helpers\DateHelper => new DateHelper([
+            'date_formats' => $container['cms/config']->get('date_formats'),
+            'time_formats' => $container['cms/config']->get('time_formats'),
+            'translator'   => $container['translator']
+        ]));
 
         /**
          * @param Container $container Pimple DI Container.
@@ -117,29 +112,26 @@ class CmsServiceProvider implements ServiceProviderInterface
 
     /**
      * @param Container $container Pimple DI Container.
-     * @return void
      */
-    private function registerSectionServices(Container $container)
+    private function registerSectionServices(Container $container): void
     {
         /**
          * @param Container $container Pimple DI Container.
          * @return Factory
          */
-        $container['cms/section/factory'] = function (Container $container) {
-            return new Factory([
-                'base_class'       => SectionInterface::class,
-                'arguments'        => $container['model/factory']->arguments(),
-                'resolver_options' => [
-                    'suffix' => 'Section'
-                ]
-            ]);
-        };
+        $container['cms/section/factory'] = (fn(Container $container): \Charcoal\Factory\GenericFactory => new Factory([
+            'base_class'       => SectionInterface::class,
+            'arguments'        => $container['model/factory']->arguments(),
+            'resolver_options' => [
+                'suffix' => 'Section'
+            ]
+        ]));
 
         /**
          * @param Container $container Pimple DI Container.
          * @return SectionLoader
          */
-        $container['cms/section/loader'] = function (Container $container) {
+        $container['cms/section/loader'] = function (Container $container): \Charcoal\Cms\Service\Loader\SectionLoader {
             $sectionLoader = new SectionLoader([
                 'loader'     => $container['model/collection/loader'],
                 'factory'    => $container['model/factory'],
@@ -160,15 +152,14 @@ class CmsServiceProvider implements ServiceProviderInterface
 
     /**
      * @param Container $container Pimple DI Container.
-     * @return void
      */
-    private function registerNewsServices(Container $container)
+    private function registerNewsServices(Container $container): void
     {
         /**
          * @param Container $container Pimple DI Container.
          * @return NewsLoader
          */
-        $container['cms/news/loader'] = function (Container $container) {
+        $container['cms/news/loader'] = function (Container $container): \Charcoal\Cms\Service\Loader\NewsLoader {
             $newsLoader = new NewsLoader([
                 'loader'     => $container['model/collection/loader'],
                 'factory'    => $container['model/factory'],
@@ -189,32 +180,26 @@ class CmsServiceProvider implements ServiceProviderInterface
          * @param Container $container
          * @return NewsManager
          */
-        $container['cms/news/manager'] = function (Container $container) {
-
-            $newsManager = new NewsManager([
-                'loader'      => $container['model/collection/loader'],
-                'factory'     => $container['model/factory'],
-                'news/loader' => $container['cms/news/loader'],
-                'cache'       => $container['cache'],
-                'cms/config'  => $container['cms/config'],
-                'translator'  => $container['translator']
-            ]);
-
-            return $newsManager;
-        };
+        $container['cms/news/manager'] = (fn(Container $container): \Charcoal\Cms\Service\Manager\NewsManager => new NewsManager([
+            'loader'      => $container['model/collection/loader'],
+            'factory'     => $container['model/factory'],
+            'news/loader' => $container['cms/news/loader'],
+            'cache'       => $container['cache'],
+            'cms/config'  => $container['cms/config'],
+            'translator'  => $container['translator']
+        ]));
     }
 
     /**
      * @param Container $container Pimple DI Container.
-     * @return void
      */
-    private function registerEventServices(Container $container)
+    private function registerEventServices(Container $container): void
     {
         /**
          * @param Container $container Pimple DI Container.
          * @return EventLoader
          */
-        $container['cms/event/loader'] = function (Container $container) {
+        $container['cms/event/loader'] = function (Container $container): \Charcoal\Cms\Service\Loader\EventLoader {
             $eventLoader = new EventLoader([
                 'loader'     => $container['model/collection/loader'],
                 'factory'    => $container['model/factory'],
@@ -238,18 +223,13 @@ class CmsServiceProvider implements ServiceProviderInterface
          * @param Container $container
          * @return EventManager
          */
-        $container['cms/event/manager'] = function (Container $container) {
-
-            $eventManager = new EventManager([
-                'loader'       => $container['model/collection/loader'],
-                'factory'      => $container['model/factory'],
-                'event/loader' => $container['cms/event/loader'],
-                'cache'        => $container['cache'],
-                'cms/config'   => $container['cms/config'],
-                'translator'   => $container['translator']
-            ]);
-
-            return $eventManager;
-        };
+        $container['cms/event/manager'] = (fn(Container $container): \Charcoal\Cms\Service\Manager\EventManager => new EventManager([
+            'loader'       => $container['model/collection/loader'],
+            'factory'      => $container['model/factory'],
+            'event/loader' => $container['cms/event/loader'],
+            'cache'        => $container['cache'],
+            'cms/config'   => $container['cms/config'],
+            'translator'   => $container['translator']
+        ]));
     }
 }

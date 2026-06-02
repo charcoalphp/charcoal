@@ -15,9 +15,8 @@ class ImagickWatermarkEffect extends AbstractWatermarkEffect
     /**
      * @param array $data The effect data, if available.
      * @throws Exception If the image data is invalid.
-     * @return self
      */
-    public function process(array $data = null)
+    public function process(?array $data = null): static
     {
         if ($data !== null) {
             $this->setData($data);
@@ -30,7 +29,7 @@ class ImagickWatermarkEffect extends AbstractWatermarkEffect
         if ($this->watermark() instanceof ImageInterface) {
             $watermark = $this->watermark();
         } else {
-            $imgClass = get_class($img);
+            $imgClass = $img::class;
             $watermark = new $imgClass();
             $watermark->open($this->watermark());
         }

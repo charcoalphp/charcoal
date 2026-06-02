@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Charcoal\Tests\Config\Mixin\FileLoader;
 
 // From 'charcoal-config'
@@ -9,19 +11,16 @@ use UnexpectedValueException;
 
 /**
  * Test {@see FileAwareTrait::loadPhpFile() PHP File Loading}
- *
- * @coversDefaultClass \Charcoal\Config\FileAwareTrait
  */
+#[\PHPUnit\Framework\Attributes\CoversTrait(\Charcoal\Config\FileAwareTrait::class)]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Config\FileAwareTrait::class, 'loadPhpFile()')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\Charcoal\Config\FileAwareTrait::class, 'loadFile()')]
 class PhpFileLoaderTest extends AbstractFileLoaderTestCase
 {
     /**
      * Asserts that the File Loader supports PHP config files.
-     *
-     * @covers ::loadPhpFile()
-     * @covers ::loadFile()
-     * @return void
      */
-    public function testLoadFile()
+    public function testLoadFile(): void
     {
         $path = $this->getPathToFixture('pass/valid1.php');
         $data = $this->obj->loadFile($path);
@@ -40,11 +39,8 @@ class PhpFileLoaderTest extends AbstractFileLoaderTestCase
 
     /**
      * Asserts that the scope of PHP config files is bound to the File Loader.
-     *
-     * @covers ::loadPhpFile()
-     * @return void
      */
-    public function testLoadFileThatMutatesContext()
+    public function testLoadFileThatMutatesContext(): void
     {
         $path = $this->getPathToFixture('pass/valid3.php');
         $data = $this->obj->loadFile($path);
@@ -55,11 +51,8 @@ class PhpFileLoaderTest extends AbstractFileLoaderTestCase
 
     /**
      * Asserts that an empty file is silently ignored.
-     *
-     * @covers ::loadPhpFile()
-     * @return void
      */
-    public function testLoadEmptyFile()
+    public function testLoadEmptyFile(): void
     {
         $path = $this->getPathToFixture('pass/empty.php');
         $data = $this->obj->loadFile($path);
@@ -69,34 +62,28 @@ class PhpFileLoaderTest extends AbstractFileLoaderTestCase
 
     /**
      * Asserts that a broken file is NOT ignored.
-     *
-     * @requires PHP >= 7.0
-     * @covers   ::loadPhpFile()
-     * @return   void
      */
-    public function testLoadMalformedFileInPhp7()
+    #[\PHPUnit\Framework\Attributes\RequiresPhp('>=8.1.0')]
+    public function testLoadMalformedFile(): void
     {
         $this->expectExceptionMessageMatches('/^PHP file ".+?" could not be parsed: .+$/');
         $this->expectException(UnexpectedValueException::class);
 
         // phpcs:disable Generic.PHP.NoSilencedErrors.Discouraged
         $path = $this->getPathToFixture('fail/malformed.php');
-        $data = $this->obj->loadFile($path);
+        $this->obj->loadFile($path);
         // phpcs:enable
     }
 
     /**
      * Asserts that an exception thrown within the file is caught.
-     *
-     * @covers ::loadPhpFile()
-     * @return void
      */
-    public function testLoadExceptionalFile()
+    public function testLoadExceptionalFile(): void
     {
         $this->expectExceptionMessageMatches('/^PHP file ".+?" could not be parsed: Thrown Exception$/');
         $this->expectException(UnexpectedValueException::class);
 
         $path = $this->getPathToFixture('fail/exception.php');
-        $data = $this->obj->loadFile($path);
+        $this->obj->loadFile($path);
     }
 }

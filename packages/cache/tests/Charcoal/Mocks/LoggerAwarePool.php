@@ -9,9 +9,6 @@ use Psr\Log\LoggerInterface;
  */
 class LoggerAwarePool extends \Stash\Pool
 {
-    /**
-     * @return LoggerInterface
-     */
     public function getLogger(): LoggerInterface
     {
         return $this->logger;

@@ -26,9 +26,9 @@ class UserPermissionsTemplate extends AdminTemplate implements
 
     /**
      * @param RequestInterface $request PSR-7 request.
-     * @return boolean
      */
-    public function init(RequestInterface $request)
+    #[\Override]
+    public function init(RequestInterface $request): bool
     {
         parent::init($request);
 
@@ -42,17 +42,15 @@ class UserPermissionsTemplate extends AdminTemplate implements
      *
      * @return string[]
      */
-    protected function validDataFromRequest()
+    #[\Override]
+    protected function validDataFromRequest(): array
     {
         return array_merge([
             'obj_type'
         ], parent::validDataFromRequest());
     }
 
-    /**
-     * @return void
-     */
-    private function createObjTable()
+    private function createObjTable(): void
     {
         $obj = $this->modelFactory()->create('charcoal/admin/user/permission');
         if ($obj->source()->tableExists() === false) {
@@ -70,15 +68,13 @@ class UserPermissionsTemplate extends AdminTemplate implements
     /**
      * @return \Charcoal\Translator\Translation
      */
-    public function title()
+    #[\Override]
+    public function title(): ?\Charcoal\Translator\Translation
     {
         return $this->translator()->translation('Administrator Permissions');
     }
 
-    /**
-     * @return mixed
-     */
-    public function createDashboardConfig()
+    public function createDashboardConfig(): array
     {
         return [
             'layout' => [
@@ -99,6 +95,7 @@ class UserPermissionsTemplate extends AdminTemplate implements
      * @param Container $container Pimple DI Container.
      * @return void
      */
+    #[\Override]
     protected function setDependencies(Container $container)
     {
         parent::setDependencies($container);

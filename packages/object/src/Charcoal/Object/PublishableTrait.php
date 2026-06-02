@@ -209,25 +209,19 @@ trait PublishableTrait
             } else {
                 return static::STATUS_EXPIRED;
             }
+        } elseif ($now < $publish) {
+            return static::STATUS_UPCOMING;
+        } elseif (!$expiry || $now < $expiry) {
+            return static::STATUS_PUBLISHED;
         } else {
-            if ($now < $publish) {
-                return static::STATUS_UPCOMING;
-            } else {
-                if (!$expiry || $now < $expiry) {
-                    return static::STATUS_PUBLISHED;
-                } else {
-                    return static::STATUS_EXPIRED;
-                }
-            }
+            return static::STATUS_EXPIRED;
         }
     }
 
     /**
      * Determine if the object is published.
-     *
-     * @return boolean
      */
-    public function isPublished()
+    public function isPublished(): bool
     {
         return ($this->publishDateStatus() === static::STATUS_PUBLISHED);
     }

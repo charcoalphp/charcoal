@@ -16,18 +16,12 @@ class ValidatableTraitTest extends AbstractTestCase
      */
     public $obj;
 
-    /**
-     * @return void
-     */
     protected function setUp(): void
     {
         $this->obj = new ValidatableClass();
     }
 
-    /**
-     * @return void
-     */
-    public function testConstructor()
+    public function testConstructor(): void
     {
         $obj = $this->obj;
         $this->assertInstanceOf(ValidatableClass::class, $obj);

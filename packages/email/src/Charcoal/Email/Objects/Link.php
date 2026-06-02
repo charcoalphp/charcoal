@@ -24,17 +24,13 @@ class Link extends AbstractModel
 
     /**
      * @param string $emailId The email (log) id.
-     * @return self
      */
-    public function setEmail(?string $emailId)
+    public function setEmail(?string $emailId): static
     {
         $this->email = $emailId;
         return $this;
     }
 
-    /**
-     * @return string|null
-     */
     public function email(): ?string
     {
         return $this->email;
@@ -42,17 +38,13 @@ class Link extends AbstractModel
 
     /**
      * @param string $url The original (and target) URL.
-     * @return self
      */
-    public function setUrl(?string $url)
+    public function setUrl(?string $url): static
     {
         $this->url = $url;
         return $this;
     }
 
-    /**
-     * @return string|null
-     */
     public function url(): ?string
     {
         return $this->url;

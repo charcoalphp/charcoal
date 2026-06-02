@@ -16,35 +16,22 @@ use Charcoal\Model\AbstractModel;
  */
 class OpenLog extends AbstractModel
 {
-    /**
-     * @var string|null
-     */
-    private $email;
+    private ?string $email = null;
 
-    /**
-     * @var DateTimeInterface|null
-     */
-    private $ts;
+    private ?\DateTimeInterface $ts = null;
 
-    /**
-     * @var string|null
-     */
-    private $ip;
+    private ?string $ip = null;
 
 
     /**
      * @param string|null $emailId The email (log) id.
-     * @return self
      */
-    public function setEmail(?string $emailId)
+    public function setEmail(?string $emailId): static
     {
         $this->email = $emailId;
         return $this;
     }
 
-    /**
-     * @return string|null
-     */
     public function email(): ?string
     {
         return $this->email;
@@ -53,9 +40,8 @@ class OpenLog extends AbstractModel
     /**
      * @param  null|string|DateTimeInterface $ts The "timestamp" datetime value.
      * @throws InvalidArgumentException If the timestamp is not a valid datetime value.
-     * @return self
      */
-    public function setTs($ts)
+    public function setTs($ts): static
     {
         if ($ts === null) {
             $this->ts = null;
@@ -66,7 +52,7 @@ class OpenLog extends AbstractModel
             try {
                 $ts = new DateTime($ts);
             } catch (Exception $e) {
-                throw new InvalidArgumentException($e->getMessage());
+                throw new InvalidArgumentException($e->getMessage(), $e->getCode(), $e);
             }
         }
 
@@ -80,27 +66,20 @@ class OpenLog extends AbstractModel
         return $this;
     }
 
-    /**
-     * @return null|DateTimeInterface
-     */
-    public function ts()
+    public function ts(): ?\DateTimeInterface
     {
         return $this->ts;
     }
 
     /**
      * @param string|null $ip The IP address.
-     * @return self
      */
-    public function setIp(?string $ip)
+    public function setIp(?string $ip): static
     {
         $this->ip = $ip;
         return $this;
     }
 
-    /**
-     * @return string|null
-     */
     public function ip(): ?string
     {
         return $this->ip;

@@ -14,21 +14,26 @@ use Charcoal\Tests\AbstractTestCase;
  */
 class GraphWidgetTest extends AbstractTestCase
 {
-    /**
-     * @return void
-     */
+    public $obj;
     public function setUp(): void
     {
         $logger = new NullLogger();
-        $this->obj = $this->getMockForAbstractClass('\Charcoal\Admin\Widget\Graph\AbstractGraphWidget', [[
-            'logger'=>$logger
-        ]]);
+
+        $this->obj = new class ([
+            'logger' => $logger
+        ]) extends AbstractGraphWidget {
+            public function categories()
+            {
+                return ['foo', 'bar'];
+            }
+            public function series()
+            {
+                return ['foo', 'bar'];
+            }
+        };
     }
 
-    /**
-     * @return void
-     */
-    public function testSetData()
+    public function testSetData(): void
     {
         $obj = $this->obj;
         $ret = $obj->setData([
@@ -40,10 +45,7 @@ class GraphWidgetTest extends AbstractTestCase
         $this->assertEquals(['#ff0000', '#0000ff'], $obj->colors());
     }
 
-    /**
-     * @return void
-     */
-    public function testSetHeight()
+    public function testSetHeight(): void
     {
         $obj =  $this->obj;
         $this->assertEquals('400px', $obj->height());
@@ -56,10 +58,7 @@ class GraphWidgetTest extends AbstractTestCase
         //$obj->setHeight(false);
     }
 
-    /**
-     * @return void
-     */
-    public function testSetColors()
+    public function testSetColors(): void
     {
         $obj =  $this->obj;
         $this->assertEquals($obj->defaultColors(), $obj->colors());

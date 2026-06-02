@@ -44,23 +44,20 @@ class UpdateAction extends AdminAction
         return $response;
     }
 
-    /**
-     * @return array
-     */
-    public function results()
+    #[\Override]
+    public function results(): array
     {
-        $ret = [
+        return [
             'success'   => $this->success(),
             'feedbacks' => $this->feedbacks()
         ];
-
-        return $ret;
     }
 
     /**
      * @param Container $container Pimple DI Container.
      * @return void
      */
+    #[\Override]
     protected function setDependencies(Container $container)
     {
         parent::setDependencies($container);
@@ -74,7 +71,7 @@ class UpdateAction extends AdminAction
      * @param ResponseInterface $response  PSR-7 response.
      * @return boolean
      */
-    protected function cacheUrl($url, $outputDir, ResponseInterface $response)
+    protected function cacheUrl($url, string $outputDir, ResponseInterface $response)
     {
         unset($response);
 
@@ -95,7 +92,7 @@ class UpdateAction extends AdminAction
         try {
             $guzzleClient = new GuzzleClient();
             $static = $guzzleClient->request('GET', $url);
-        } catch (Exception $e) {
+        } catch (Exception) {
             $this->setSuccess(false);
             return false;
         }
@@ -112,7 +109,7 @@ class UpdateAction extends AdminAction
             return false;
         }
 
-        if (strstr($headers['Content-Type'][0], 'text/html') !== false) {
+        if (str_contains($headers['Content-Type'][0], 'text/html')) {
             $outputFile = $outputDir . '/index.html';
             $prefix = '';
         } else {

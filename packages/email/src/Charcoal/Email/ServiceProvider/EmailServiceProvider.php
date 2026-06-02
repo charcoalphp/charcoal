@@ -33,7 +33,6 @@ class EmailServiceProvider implements ServiceProviderInterface
 {
     /**
      * @param Container $container A pimple container instance.
-     * @return void
      */
     public function register(Container $container): void
     {
@@ -43,65 +42,54 @@ class EmailServiceProvider implements ServiceProviderInterface
          */
         $container['email/config'] = function (Container $container): EmailConfig {
             $appConfig = $container['config'];
-            $emailConfig = new EmailConfig($appConfig['email']);
-            return $emailConfig;
+            return new EmailConfig($appConfig['email']);
         };
 
         /**
          * @param Container $container Pimple DI container.
          * @return ViewInterface
          */
-        $container['email/view'] = function (Container $container): ViewInterface {
-            return $container['view'];
-        };
+        $container['email/view'] = (fn(Container $container): ViewInterface => $container['view']);
 
         /**
          * @param Container $container Pimple DI Container.
          * @return FactoryInterface
          */
-        $container['email/factory'] = function (Container $container): FactoryInterface {
-            return new GenericFactory([
-                'map' => [
-                    'email' => Email::class
-                ],
-                'base_class' => EmailInterface::class,
-                'default_class' => Email::class,
-                'arguments' => [[
-                    'logger'             => $container['logger'],
-                    'config'             => $container['email/config'],
-                    'view'               => $container['email/view'],
-                    'template_factory'   => $container['template/factory'],
-                    'queue_item_factory' => $container['model/factory'],
-                    'log_factory'        => $container['model/factory'],
-                    'tracker'            => $container['email/tracker']
-                ]]
-            ]);
-        };
+        $container['email/factory'] = (fn(Container $container): FactoryInterface => new GenericFactory([
+            'map' => [
+                'email' => Email::class
+            ],
+            'base_class' => EmailInterface::class,
+            'default_class' => Email::class,
+            'arguments' => [[
+                'logger'             => $container['logger'],
+                'config'             => $container['email/config'],
+                'view'               => $container['email/view'],
+                'template_factory'   => $container['template/factory'],
+                'queue_item_factory' => $container['model/factory'],
+                'log_factory'        => $container['model/factory'],
+                'tracker'            => $container['email/tracker']
+            ]]
+        ]));
 
         /**
          * @return Parser
          */
-        $container['email/parser'] = function (): Parser {
-            return new Parser();
-        };
+        $container['email/parser'] = (fn(): Parser => new Parser());
 
         /**
          * @param Container $container Pimple DI Container.
          * @return Tracker
          */
-        $container['email/tracker'] = function (Container $container): Tracker {
-            return new Tracker(
-                (string)$container['base-url'],
-                $container['model/factory']
-            );
-        };
+        $container['email/tracker'] = (fn(Container $container): Tracker => new Tracker(
+            (string)$container['base-url'],
+            $container['model/factory']
+        ));
 
         /**
          * @param Container $container Pimple DI container.
          * @return \Charcoal\Email\EmailInterface
          */
-        $container['email'] = $container->factory(function (Container $container): EmailInterface {
-            return $container['email/factory']->create('email');
-        });
+        $container['email'] = $container->factory(fn(Container $container): EmailInterface => $container['email/factory']->create('email'));
     }
 }

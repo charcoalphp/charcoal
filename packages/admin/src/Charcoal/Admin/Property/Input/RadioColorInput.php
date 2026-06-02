@@ -15,6 +15,7 @@ class RadioColorInput extends RadioInput
      * @param  array|object   $choice The choice structure.
      * @return array|null
      */
+    #[\Override]
     protected function parseChoice($ident, $choice)
     {
         $choice = parent::parseChoice($ident, $choice);

@@ -15,28 +15,26 @@ class EmailAwareTraitTest extends AbstractTestCase
 
     protected function setUp(): void
     {
-        $this->obj = $this->getMockForTrait('\Charcoal\Email\EmailAwareTrait');
+        $this->obj = new class {
+            use \Charcoal\Email\EmailAwareTrait;
+        };
     }
 
-    public function getMethod($obj, $name)
+    public function getMethod($obj, $name): \ReflectionMethod
     {
         $class = new ReflectionClass($obj);
-        $method = $class->getMethod($name);
-        $method->setAccessible(true);
-        return $method;
+        return $class->getMethod($name);
     }
 
-    /**
-     * @dataProvider emailToArrayProvider
-     */
-    public function testEmailToArray($val, $exp)
+    #[\PHPUnit\Framework\Attributes\DataProvider('emailToArrayProvider')]
+    public function testEmailToArray(string $val, array $exp): void
     {
         $method = $this->getMethod($this->obj, 'emailToArray');
         $res = $method->invokeArgs($this->obj, [$val]);
         $this->assertEquals($res, $exp);
     }
 
-    public function emailToArrayProvider()
+    public static function emailToArrayProvider(): array
     {
         return [
             ['mat@locomotive.ca', ['email'=>'mat@locomotive.ca', 'name'=>'']],

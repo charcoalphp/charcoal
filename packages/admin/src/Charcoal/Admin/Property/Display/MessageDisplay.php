@@ -44,9 +44,8 @@ class MessageDisplay extends AbstractPropertyDisplay implements
 
     /**
      * @param  mixed $message The message to display.
-     * @return self
      */
-    public function setMessage($message)
+    public function setMessage($message): static
     {
         $this->message = $this->translator()->translation($message);
         if ($this->message instanceof Translation) {
@@ -56,12 +55,9 @@ class MessageDisplay extends AbstractPropertyDisplay implements
         return $this;
     }
 
-    /**
-     * @return bool
-     */
-    public function hasMessage()
+    public function hasMessage(): bool
     {
-        return !!$this->message;
+        return (bool)$this->message;
     }
 
     /**
@@ -78,7 +74,7 @@ class MessageDisplay extends AbstractPropertyDisplay implements
     public function displayMessage()
     {
         if ($this->message instanceof Translation) {
-            if (isset($this->message->isRendered) && $this->message->isRendered === false) {
+            if (property_exists($this->message, 'isRendered') && $this->message->isRendered !== null && $this->message->isRendered === false) {
                 $this->message = $this->renderTranslatableTemplate($this->message);
             }
 

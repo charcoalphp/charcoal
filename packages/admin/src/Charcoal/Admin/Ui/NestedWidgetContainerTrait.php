@@ -47,7 +47,7 @@ trait NestedWidgetContainerTrait
      *
      * @return WidgetInterface|Generator
      */
-    public function widget()
+    public function widget(): \Generator
     {
         $widget = $this->getWidget();
         $this->setDynamicTemplate('widget_template', $widget->template());
@@ -183,12 +183,10 @@ trait NestedWidgetContainerTrait
         if ($key) {
             if (isset($this->widgetData[$key])) {
                 return $this->widgetData[$key];
+            } elseif (!is_string($default) && is_callable($default)) {
+                return $default();
             } else {
-                if (!is_string($default) && is_callable($default)) {
-                    return $default();
-                } else {
-                    return $default;
-                }
+                return $default;
             }
         }
 
@@ -197,10 +195,8 @@ trait NestedWidgetContainerTrait
 
     /**
      * Retrieve the default nested widget options.
-     *
-     * @return array
      */
-    public function defaultWidgetData()
+    public function defaultWidgetData(): array
     {
         return [];
     }
@@ -246,7 +242,7 @@ trait NestedWidgetContainerTrait
      * @throws RuntimeException If the form doesn't have a model.
      * @return array|Traversable The rendered data.
      */
-    protected function renderDataRecursive($data)
+    protected function renderDataRecursive($data): \Traversable|array
     {
         if (!is_array($data) && !($data instanceof Traversable)) {
             throw new InvalidArgumentException('The renderable data must be iterable.');
@@ -262,7 +258,7 @@ trait NestedWidgetContainerTrait
         foreach ($data as $key => $val) {
             if (is_string($val)) {
                 $data[$key] = $this->renderData($val);
-            } elseif (is_array($val) || ($val instanceof Traversable)) {
+            } elseif (is_iterable($val)) {
                 $data[$key] = $this->renderDataRecursive($val);
             } else {
                 continue;
@@ -278,7 +274,7 @@ trait NestedWidgetContainerTrait
      * @param  string $data The data to render.
      * @return string The rendered data.
      */
-    protected function renderData($data)
+    protected function renderData($data): string|array|null
     {
         $obj = $this->form()->obj();
 
@@ -300,14 +296,14 @@ trait NestedWidgetContainerTrait
      * @throws  InvalidArgumentException If a route token is not a string.
      * @return  string
      */
-    private function parseDataToken($token)
+    private function parseDataToken($token): string|float|int
     {
         // Processes matches from a regular expression operation
         if (is_array($token) && isset($token[1])) {
             $token = $token[1];
         }
 
-        $token = trim($token);
+        $token = trim((string)$token);
         $method = [ $this, $token ];
 
         if (is_callable($method)) {
@@ -324,8 +320,8 @@ trait NestedWidgetContainerTrait
             throw new InvalidArgumentException(sprintf(
                 'Data token "%1$s" must be a string with %2$s; received %3$s',
                 $token,
-                get_called_class(),
-                (is_object($value) ? get_class($value) : gettype($value))
+                static::class,
+                (get_debug_type($value))
             ));
         }
 

@@ -19,15 +19,11 @@ class SectionTest extends AbstractTestCase
 
     /**
      * Tested Class.
-     *
-     * @var Section
      */
-    private $obj;
+    private \Charcoal\Cms\Section|array $obj;
 
     /**
      * Set up the test.
-     *
-     * @return void
      */
     protected function setUp():void
     {
@@ -43,10 +39,7 @@ class SectionTest extends AbstractTestCase
         $this->obj = new Section($dependencies);
     }
 
-    /**
-     * @return void
-     */
-    public function testSetData()
+    public function testSetData(): void
     {
         $obj = $this->obj;
         $ret = $obj->setData([
@@ -71,10 +64,7 @@ class SectionTest extends AbstractTestCase
         $this->assertEquals([ 'x' => 'y' ], $obj->templateOptions());
     }
 
-    /**
-     * @return void
-     */
-    public function testSetSectionType()
+    public function testSetSectionType(): void
     {
         $ret = $this->obj->setSectionType(Section::TYPE_EMPTY);
         $this->assertSame($ret, $this->obj);
@@ -84,10 +74,7 @@ class SectionTest extends AbstractTestCase
         $this->obj->setSectionType(false);
     }
 
-    /**
-     * @return void
-     */
-    public function testSetTitle()
+    public function testSetTitle(): void
     {
         $this->assertEquals('', (string)$this->obj->title());
         $ret = $this->obj->setTitle('Foo bar');
@@ -101,10 +88,7 @@ class SectionTest extends AbstractTestCase
         $this->assertEquals('Hello', (string)$this->obj['title']);
     }
 
-    /**
-     * @return void
-     */
-    public function testSetSubtitle()
+    public function testSetSubtitle(): void
     {
         $this->assertEquals('', (string)$this->obj->subtitle());
         $ret = $this->obj->setSubtitle('Bar foo');
@@ -118,10 +102,7 @@ class SectionTest extends AbstractTestCase
         $this->assertEquals('foo', (string)$this->obj['subtitle']);
     }
 
-    /**
-     * @return void
-     */
-    public function testSetContent()
+    public function testSetContent(): void
     {
         $this->assertEquals('', (string)$this->obj->content());
         $ret = $this->obj->setContent('Bar foo');
@@ -135,10 +116,7 @@ class SectionTest extends AbstractTestCase
         $this->assertEquals('foo', (string)$this->obj['content']);
     }
 
-    /**
-     * @return void
-     */
-    public function testSetImage()
+    public function testSetImage(): void
     {
         $this->assertEquals('', (string)$this->obj->image());
         $ret = $this->obj->setImage('foo.png');
@@ -152,10 +130,7 @@ class SectionTest extends AbstractTestCase
         $this->assertEquals('foo.webp', $this->obj['image']);
     }
 
-    /**
-     * @return void
-     */
-    public function testMetaTitleDefaultsToTitle()
+    public function testMetaTitleDefaultsToTitle(): void
     {
         $this->assertEquals('', (string)$this->obj->metaTitle());
 
@@ -167,10 +142,7 @@ class SectionTest extends AbstractTestCase
         $this->assertEquals('Barfoo', (string)$this->obj->metaTitle());
     }
 
-    /**
-     * @return void
-     */
-    public function testMetaDescriptionDefaultsToDescription()
+    public function testMetaDescriptionDefaultsToDescription(): void
     {
         $this->assertEquals('', (string)$this->obj->metaDescription());
 
@@ -182,10 +154,7 @@ class SectionTest extends AbstractTestCase
         $this->assertEquals('Barfoo', (string)$this->obj->metaDescription());
     }
 
-    /**
-     * @return void
-     */
-    public function testMetaImageDefaultsToImage()
+    public function testMetaImageDefaultsToImage(): void
     {
         $this->assertEquals('', (string)$this->obj->metaImage());
 
@@ -197,10 +166,7 @@ class SectionTest extends AbstractTestCase
         $this->assertEquals('Bar.jpg', (string)$this->obj->metaImage());
     }
 
-    /**
-     * @return void
-     */
-    public function testSaveGeneratesSlug()
+    public function testSaveGeneratesSlug(): void
     {
         $this->assertEquals('', $this->obj['slug']);
         $this->obj->setData([
@@ -211,10 +177,7 @@ class SectionTest extends AbstractTestCase
         $this->assertEquals('en/foo', (string)$this->obj['slug']);
     }
 
-    /**
-     * @return void
-     */
-    public function testUpdateGeneratesSlug()
+    public function testUpdateGeneratesSlug(): void
     {
         $this->assertEquals('', $this->obj['slug']);
         $this->obj->setData([

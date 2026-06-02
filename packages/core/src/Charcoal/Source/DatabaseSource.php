@@ -22,6 +22,7 @@ use Charcoal\Source\Expression;
 /**
  * Database Source Handler, through PDO.
  */
+#[\AllowDynamicProperties]
 class DatabaseSource extends AbstractSource implements
     DatabaseSourceInterface
 {
@@ -32,6 +33,8 @@ class DatabaseSource extends AbstractSource implements
     public const MYSQL_DRIVER_NAME   = 'mysql';
     public const SQLITE_DRIVER_NAME  = 'sqlite';
 
+    protected array $tableExistsCache = [];
+
     /**
      * The database connector.
      *
@@ -41,10 +44,8 @@ class DatabaseSource extends AbstractSource implements
 
     /**
      * The {@see self::$model}'s table name.
-     *
-     * @var string
      */
-    private $table;
+    private ?string $table = null;
 
     /**
      * Create a new database handler.
@@ -80,9 +81,8 @@ class DatabaseSource extends AbstractSource implements
      *
      * @param  string $table The source table.
      * @throws InvalidArgumentException If argument is not a string or alphanumeric/underscore.
-     * @return self
      */
-    public function setTable($table)
+    public function setTable($table): static
     {
         if (!is_string($table)) {
             throw new InvalidArgumentException(sprintf(
@@ -97,7 +97,7 @@ class DatabaseSource extends AbstractSource implements
          * are valid table names; Although SQL can support more,
          * there's really no reason to.
          */
-        if (!preg_match('/[A-Za-z0-9_]/', $table)) {
+        if (!preg_match('/\w/', $table)) {
             throw new InvalidArgumentException(sprintf(
                 '[%s] Database table name "%s" is invalid: must be alphanumeric / underscore',
                 $this->getModelClassForException(),
@@ -111,21 +111,18 @@ class DatabaseSource extends AbstractSource implements
 
     /**
      * Determine if a table is assigned.
-     *
-     * @return boolean
      */
-    public function hasTable()
+    public function hasTable(): bool
     {
-        return !empty($this->table);
+        return !in_array($this->table, [null, '', '0'], true);
     }
 
     /**
      * Get the database's current table.
      *
      * @throws RuntimeException If the table was not set.
-     * @return string
      */
-    public function table()
+    public function table(): string
     {
         if ($this->table === null) {
             throw new RuntimeException(sprintf(
@@ -141,7 +138,7 @@ class DatabaseSource extends AbstractSource implements
      *
      * @return boolean TRUE if the table was created, otherwise FALSE.
      */
-    public function createTable()
+    public function createTable(): bool
     {
         if ($this->tableExists() === true) {
             return true;
@@ -178,7 +175,7 @@ class DatabaseSource extends AbstractSource implements
         /** @todo Add indexes for all defined list constraints (yea... tough job...) */
         if ($driver === self::MYSQL_DRIVER_NAME) {
             $engine = 'InnoDB';
-            $query .= ') ENGINE=' . $engine . ' DEFAULT CHARSET=utf8 COMMENT="' . addslashes($metadata['name']) . '";';
+            $query .= ') ENGINE=' . $engine . ' DEFAULT CHARSET=utf8 COMMENT="' . addslashes((string)$metadata['name']) . '";';
         } else {
             $query .= ');';
         }
@@ -196,7 +193,7 @@ class DatabaseSource extends AbstractSource implements
      *
      * @return boolean TRUE if the table was altered, otherwise FALSE.
      */
-    public function alterTable()
+    public function alterTable(): bool
     {
         if ($this->tableExists() === false) {
             return false;
@@ -209,7 +206,7 @@ class DatabaseSource extends AbstractSource implements
         foreach ($fields as $field) {
             $ident = $field->ident();
 
-            if (!array_key_exists($ident, $cols)) {
+            if (!array_key_exists((string)$ident, $cols)) {
                 $fieldSql = $field->sql();
                 if ($fieldSql) {
                     // The key does not exist at all.
@@ -226,30 +223,27 @@ class DatabaseSource extends AbstractSource implements
                 // The key exists. Validate.
                 $col   = $cols[$ident];
                 $alter = true;
-                if (strtolower($col['Type']) !== strtolower($field->sqlType())) {
+                if (strtolower((string)$col['Type']) !== strtolower($field->sqlType())) {
                     $alter = true;
                 }
 
-                if ((strtolower($col['Null']) !== 'no') !== $field->allowNull()) {
+                if ((strtolower((string)$col['Null']) !== 'no') !== $field->allowNull()) {
                     $alter = true;
                 }
 
                 if ($col['Default'] !== $field->defaultVal()) {
                     $alter = true;
                 }
-
-                if ($alter === true) {
-                    $fieldSql = $field->sql();
-                    if ($fieldSql) {
-                        $query = 'ALTER TABLE `' . $table . '` CHANGE `' . $ident . '` ' . $fieldSql;
-                        $this->logger->debug($query);
-                        $dbh->query($query);
-                    } else {
-                        $this->logger->warning('Empty column definition.', [
-                            'table' => $table,
-                            'field' => $ident,
-                        ]);
-                    }
+                $fieldSql = $field->sql();
+                if ($fieldSql) {
+                    $query = 'ALTER TABLE `' . $table . '` CHANGE `' . $ident . '` ' . $fieldSql;
+                    $this->logger->debug($query);
+                    $dbh->query($query);
+                } else {
+                    $this->logger->warning('Empty column definition.', [
+                        'table' => $table,
+                        'field' => $ident,
+                    ]);
                 }
             }
         }
@@ -264,11 +258,11 @@ class DatabaseSource extends AbstractSource implements
      */
     public function tableExists()
     {
-        $dbh    = $this->db();
+        $this->db();
         $table  = $this->table();
 
-        if (isset($dbh->tableExists, $dbh->tableExists[$table])) {
-            return $dbh->tableExists[$table];
+        if (isset($this->tableExistsCache[$table])) {
+            return $this->tableExistsCache[$table];
         }
 
         $exists = $this->performTableExists();
@@ -282,7 +276,7 @@ class DatabaseSource extends AbstractSource implements
      *
      * @return boolean TRUE if the table exists, otherwise FALSE.
      */
-    protected function performTableExists()
+    protected function performTableExists(): bool
     {
         $dbh    = $this->db();
         $table  = $this->table();
@@ -309,14 +303,9 @@ class DatabaseSource extends AbstractSource implements
      */
     protected function setTableExists($exists = true)
     {
-        $dbh   = $this->db();
         $table = $this->table();
 
-        if (!isset($dbh->tableExists)) {
-            $dbh->tableExists = [];
-        }
-
-        $dbh->tableExists[$table] = $exists;
+        $this->tableExistsCache[$table] = $exists;
     }
 
     /**
@@ -345,9 +334,9 @@ class DatabaseSource extends AbstractSource implements
                 // Normalize SQLite's result (PRAGMA) with mysql's (SHOW COLUMNS)
                 $struct[$col['name']] = [
                     'Type'      => $col['type'],
-                    'Null'      => !!$col['notnull'] ? 'NO' : 'YES',
+                    'Null'      => $col['notnull'] ? 'NO' : 'YES',
                     'Default'   => $col['dflt_value'],
-                    'Key'       => !!$col['pk'] ? 'PRI' : '',
+                    'Key'       => $col['pk'] ? 'PRI' : '',
                     'Extra'     => '',
                 ];
             }
@@ -362,7 +351,7 @@ class DatabaseSource extends AbstractSource implements
      *
      * @return boolean TRUE if the table has no data, otherwise FALSE.
      */
-    public function tableIsEmpty()
+    public function tableIsEmpty(): bool
     {
         $table = $this->table();
         $query = sprintf('SELECT NULL FROM `%s` LIMIT 1', $table);
@@ -380,7 +369,7 @@ class DatabaseSource extends AbstractSource implements
      *     If NULL, retrieve all (from metadata).
      * @return PropertyField[]
      */
-    private function getModelFields(ModelInterface $model, $properties = null)
+    private function getModelFields(ModelInterface $model, ?array $properties = null): array
     {
         if ($properties === null) {
             // No custom properties; use all (from model metadata)
@@ -398,7 +387,7 @@ class DatabaseSource extends AbstractSource implements
             }
 
             $val = $model->propertyValue($propertyIdent);
-            foreach ($prop->fields($val) as $fieldIdent => $field) {
+            foreach ($prop->fields($val) as $field) {
                 $fields[$field->ident()] = $field;
             }
         }
@@ -413,7 +402,7 @@ class DatabaseSource extends AbstractSource implements
      * @param  StorableInterface $item  Optional item to load into.
      * @return StorableInterface
      */
-    public function loadItem($ident, StorableInterface $item = null)
+    public function loadItem($ident, ?StorableInterface $item = null)
     {
         $key = $this->model()->key();
 
@@ -429,12 +418,12 @@ class DatabaseSource extends AbstractSource implements
      * @throws \Exception If the query fails.
      * @return StorableInterface
      */
-    public function loadItemFromKey($key, $ident, StorableInterface $item = null)
+    public function loadItemFromKey($key, $ident, ?StorableInterface $item = null)
     {
-        if ($item !== null) {
+        if ($item instanceof \Charcoal\Source\StorableInterface) {
             $this->setModel($item);
         } else {
-            $class = get_class($this->model());
+            $class = $this->model()::class;
             $item  = new $class();
         }
 
@@ -472,12 +461,12 @@ class DatabaseSource extends AbstractSource implements
      * @throws PDOException If there is a query error.
      * @return StorableInterface
      */
-    public function loadItemFromQuery($query, array $binds = [], StorableInterface $item = null)
+    public function loadItemFromQuery($query, array $binds = [], ?StorableInterface $item = null): object
     {
-        if ($item !== null) {
+        if ($item instanceof \Charcoal\Source\StorableInterface) {
             $this->setModel($item);
         } else {
-            $class = get_class($this->model());
+            $class = $this->model()::class;
             $item = new $class();
         }
 
@@ -508,9 +497,9 @@ class DatabaseSource extends AbstractSource implements
      * @param  StorableInterface|null $item Optional model.
      * @return StorableInterface[]
      */
-    public function loadItems(StorableInterface $item = null)
+    public function loadItems(?StorableInterface $item = null): array
     {
-        if ($item !== null) {
+        if ($item instanceof \Charcoal\Source\StorableInterface) {
             $this->setModel($item);
         }
 
@@ -526,9 +515,9 @@ class DatabaseSource extends AbstractSource implements
      * @param  StorableInterface|null $item  Model Item.
      * @return StorableInterface[]
      */
-    public function loadItemsFromQuery($query, array $binds = [], StorableInterface $item = null)
+    public function loadItemsFromQuery($query, array $binds = [], ?StorableInterface $item = null): array
     {
-        if ($item !== null) {
+        if ($item instanceof \Charcoal\Source\StorableInterface) {
             $this->setModel($item);
         }
 
@@ -541,14 +530,14 @@ class DatabaseSource extends AbstractSource implements
         $sth = $dbh->prepare($query);
 
         // @todo Binds
-        if (!empty($binds)) {
+        if ($binds !== []) {
             unset($binds);
         }
 
         $sth->execute();
         $sth->setFetchMode(PDO::FETCH_ASSOC);
 
-        $className = get_class($model);
+        $className = $model::class;
         while ($objData = $sth->fetch()) {
             $obj = new $className();
             $obj->setFlatData($objData);
@@ -572,9 +561,7 @@ class DatabaseSource extends AbstractSource implements
             $this->createTable();
         }
 
-        if ($item !== null) {
-            $this->setModel($item);
-        }
+        $this->setModel($item);
         $model  = $this->model();
         $table  = $this->table();
         $struct = array_keys($this->tableStructure());
@@ -609,12 +596,10 @@ class DatabaseSource extends AbstractSource implements
                 '[%s] Could not save item',
                 $this->getModelClassForException()
             ));
+        } elseif ($model->id()) {
+            return $model->id();
         } else {
-            if ($model->id()) {
-                return $model->id();
-            } else {
-                return $this->db()->lastInsertId();
-            }
+            return $this->db()->lastInsertId();
         }
     }
 
@@ -625,11 +610,9 @@ class DatabaseSource extends AbstractSource implements
      * @param  array             $properties The list of properties to update, if not all.
      * @return boolean TRUE if the item was updated, otherwise FALSE.
      */
-    public function updateItem(StorableInterface $item, array $properties = null)
+    public function updateItem(StorableInterface $item, ?array $properties = null): bool
     {
-        if ($item !== null) {
-            $this->setModel($item);
-        }
+        $this->setModel($item);
         $model  = $this->model();
         $table  = $this->table();
         $struct = array_keys($this->tableStructure());
@@ -651,7 +634,7 @@ class DatabaseSource extends AbstractSource implements
                 $this->logger->warning(
                     sprintf('Field "%s" not in table structure', $key),
                     [
-                        'model' => get_class($model),
+                        'model' => $model::class,
                         'table' => $table,
                         'field' => $key,
                     ]
@@ -659,11 +642,11 @@ class DatabaseSource extends AbstractSource implements
             }
         }
 
-        if (empty($updates)) {
+        if ($updates === []) {
             $this->logger->warning(
                 'Could not update items. No valid fields were set or available in database table.',
                 [
-                    'model'      => get_class($model),
+                    'model'      => $model::class,
                     'table'      => $table,
                     'properties' => $properties,
                     'structure'  => $struct
@@ -704,9 +687,9 @@ class DatabaseSource extends AbstractSource implements
      * @throws UnexpectedValueException If the item does not have an ID.
      * @return boolean TRUE if the item was deleted, otherwise FALSE.
      */
-    public function deleteItem(StorableInterface $item = null)
+    public function deleteItem(?StorableInterface $item = null): bool
     {
-        if ($item !== null) {
+        if ($item instanceof \Charcoal\Source\StorableInterface) {
             $this->setModel($item);
         }
 
@@ -798,17 +781,15 @@ class DatabaseSource extends AbstractSource implements
             return false;
         }
 
-        if (!empty($binds)) {
-            foreach ($binds as $key => $val) {
-                if ($binds[$key] === null) {
-                    $types[$key] = PDO::PARAM_NULL;
-                } elseif (!is_scalar($binds[$key])) {
-                    $binds[$key] = json_encode($binds[$key]);
-                }
-                $type  = (isset($types[$key]) ? $types[$key] : PDO::PARAM_STR);
-                $param = ':' . $key;
-                $sth->bindParam($param, $binds[$key], $type);
+        foreach (array_keys($binds) as $key) {
+            if ($binds[$key] === null) {
+                $types[$key] = PDO::PARAM_NULL;
+            } elseif (!is_scalar($binds[$key])) {
+                $binds[$key] = json_encode($binds[$key]);
             }
+            $type  = ($types[$key] ?? PDO::PARAM_STR);
+            $param = ':' . $key;
+            $sth->bindParam($param, $binds[$key], $type);
         }
 
         return $sth;
@@ -818,9 +799,8 @@ class DatabaseSource extends AbstractSource implements
      * Compile the SELECT statement for fetching one or more objects.
      *
      * @throws UnexpectedValueException If the source does not have a table defined.
-     * @return string
      */
-    public function sqlLoad()
+    public function sqlLoad(): string
     {
         if (!$this->hasTable()) {
             throw new UnexpectedValueException(sprintf(
@@ -834,18 +814,15 @@ class DatabaseSource extends AbstractSource implements
         $filters = $this->sqlFilters();
         $orders  = $this->sqlOrders();
         $limits  = $this->sqlPagination();
-
-        $query = 'SELECT ' . $selects . ' FROM ' . $tables . $filters . $orders . $limits;
-        return $query;
+        return 'SELECT ' . $selects . ' FROM ' . $tables . $filters . $orders . $limits;
     }
 
     /**
      * Compile the SELECT statement for fetching the number of objects.
      *
      * @throws UnexpectedValueException If the source does not have a table defined.
-     * @return string
      */
-    public function sqlLoadCount()
+    public function sqlLoadCount(): string
     {
         if (!$this->hasTable()) {
             throw new UnexpectedValueException(sprintf(
@@ -856,18 +833,15 @@ class DatabaseSource extends AbstractSource implements
 
         $tables  = $this->sqlFrom();
         $filters = $this->sqlFilters();
-
-        $query = 'SELECT COUNT(*) FROM ' . $tables . $filters;
-        return $query;
+        return 'SELECT COUNT(*) FROM ' . $tables . $filters;
     }
 
     /**
      * Compile the SELECT clause.
      *
      * @throws UnexpectedValueException If the clause has no selectable fields.
-     * @return string
      */
-    public function sqlSelect()
+    public function sqlSelect(): string
     {
         $properties = $this->properties();
         if (empty($properties)) {
@@ -879,25 +853,22 @@ class DatabaseSource extends AbstractSource implements
             $parts[] = Expression::quoteIdentifier($key, self::DEFAULT_TABLE_ALIAS);
         }
 
-        if (empty($parts)) {
+        if ($parts === []) {
             throw new UnexpectedValueException(sprintf(
                 '[%s] Can not get SQL SELECT clause; no valid properties',
                 $this->getModelClassForException()
             ));
         }
 
-        $clause = implode(', ', $parts);
-
-        return $clause;
+        return implode(', ', $parts);
     }
 
     /**
      * Compile the FROM clause.
      *
      * @throws UnexpectedValueException If the source does not have a table defined.
-     * @return string
      */
-    public function sqlFrom()
+    public function sqlFrom(): string
     {
         if (!$this->hasTable()) {
             throw new UnexpectedValueException(sprintf(
@@ -927,7 +898,7 @@ class DatabaseSource extends AbstractSource implements
         ]);
 
         $sql = $criteria->sql();
-        if ($sql && strlen($sql) > 0) {
+        if ($sql && (string)$sql !== '') {
             $sql = ' WHERE ' . $sql;
         }
 
@@ -936,10 +907,8 @@ class DatabaseSource extends AbstractSource implements
 
     /**
      * Compile the ORDER BY clause.
-     *
-     * @return string
      */
-    public function sqlOrders()
+    public function sqlOrders(): string
     {
         if (!$this->hasOrders()) {
             return '';
@@ -952,12 +921,12 @@ class DatabaseSource extends AbstractSource implements
             }
 
             $sql = $order->sql();
-            if ($sql && strlen($sql) > 0) {
+            if ($sql && (string)$sql !== '') {
                 $parts[] = $sql;
             }
         }
 
-        if (empty($parts)) {
+        if ($parts === []) {
             return '';
         }
 
@@ -966,10 +935,8 @@ class DatabaseSource extends AbstractSource implements
 
     /**
      * Compile the LIMIT clause.
-     *
-     * @return string
      */
-    public function sqlPagination()
+    public function sqlPagination(): string
     {
         $pager = $this->pagination();
         if (!$pager instanceof DatabasePagination) {
@@ -977,7 +944,7 @@ class DatabaseSource extends AbstractSource implements
         }
 
         $sql = $pager->sql();
-        if ($sql && strlen($sql) > 0) {
+        if ($sql && $sql !== '') {
             $sql = ' ' . $sql;
         }
 
@@ -988,9 +955,9 @@ class DatabaseSource extends AbstractSource implements
      * Create a new filter expression.
      *
      * @param  array $data Optional expression data.
-     * @return DatabaseFilter
      */
-    protected function createFilter(array $data = null)
+    #[\Override]
+    protected function createFilter(?array $data = null): \Charcoal\Source\Database\DatabaseFilter
     {
         $filter = new DatabaseFilter();
         if ($data !== null) {
@@ -1003,9 +970,9 @@ class DatabaseSource extends AbstractSource implements
      * Create a new order expression.
      *
      * @param  array $data Optional expression data.
-     * @return DatabaseOrder
      */
-    protected function createOrder(array $data = null)
+    #[\Override]
+    protected function createOrder(?array $data = null): \Charcoal\Source\Database\DatabaseOrder
     {
         $order = new DatabaseOrder();
         if ($data !== null) {
@@ -1018,9 +985,9 @@ class DatabaseSource extends AbstractSource implements
      * Create a new pagination clause.
      *
      * @param  array $data Optional clause data.
-     * @return DatabasePagination
      */
-    protected function createPagination(array $data = null)
+    #[\Override]
+    protected function createPagination(?array $data = null): \Charcoal\Source\Database\DatabasePagination
     {
         $pagination = new DatabasePagination();
         if ($data !== null) {
@@ -1034,11 +1001,10 @@ class DatabaseSource extends AbstractSource implements
      *
      * @see    \Charcoal\Config\ConfigurableTrait
      * @param  array $data Optional data.
-     * @return DatabaseSourceConfig
      */
-    public function createConfig(array $data = null)
+    #[\Override]
+    public function createConfig(?array $data = null): \Charcoal\Source\DatabaseSourceConfig
     {
-        $config = new DatabaseSourceConfig($data);
-        return $config;
+        return new DatabaseSourceConfig($data);
     }
 }

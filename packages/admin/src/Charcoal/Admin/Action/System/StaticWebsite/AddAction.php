@@ -63,7 +63,7 @@ class AddAction extends AdminAction
             $static = $guzzleClient->request('GET', $url, [
                 'http_errors' => false
             ]);
-        } catch (Exception $e) {
+        } catch (Exception) {
             $this->setSuccess(false);
             return $response->withStatus(404);
         }
@@ -84,7 +84,7 @@ class AddAction extends AdminAction
             return $response->withStatus(404);
         }
 
-        if (strstr($headers['Content-Type'][0], 'text/html') !== false) {
+        if (str_contains($headers['Content-Type'][0], 'text/html')) {
             $outputFile = $outputDir . '/index.html';
             $prefix = '';
         } else {
@@ -113,23 +113,20 @@ class AddAction extends AdminAction
         }
     }
 
-    /**
-     * @return array
-     */
-    public function results()
+    #[\Override]
+    public function results(): array
     {
-        $ret = [
+        return [
             'success'   => $this->success(),
             'feedbacks' => $this->feedbacks()
         ];
-
-        return $ret;
     }
 
     /**
      * @param Container $container Pimple DI Container.
      * @return void
      */
+    #[\Override]
     protected function setDependencies(Container $container)
     {
         parent::setDependencies($container);

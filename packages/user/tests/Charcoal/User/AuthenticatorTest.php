@@ -19,22 +19,16 @@ class AuthenticatorTest extends AbstractTestCase
 {
     /**
      * Tested Class.
-     *
-     * @var Authenticator
      */
-    private $obj;
+    private \Charcoal\User\Authenticator $obj;
 
     /**
      * Store the service container.
-     *
-     * @var Container
      */
-    private $container;
+    private ?\Pimple\Container $container = null;
 
     /**
      * Set up the test.
-     *
-     * @return void
      */
     protected function setUp(): void
     {
@@ -47,22 +41,18 @@ class AuthenticatorTest extends AbstractTestCase
 
     /**
      * Create a new Authenticator instance.
-     *
-     * @return Authenticator
      */
-    public function createAuthenticator()
+    public function createAuthenticator(): \Charcoal\User\Authenticator
     {
         $container = $this->container();
 
-        $authenticator = new Authenticator([
+        return new Authenticator([
             'logger'        => $container['logger'],
             'user_type'     => User::class,
             'user_factory'  => $container['model/factory'],
             'token_type'    => AuthToken::class,
             'token_factory' => $container['model/factory'],
         ]);
-
-        return $authenticator;
     }
 
     /**
@@ -73,59 +63,41 @@ class AuthenticatorTest extends AbstractTestCase
      */
     public function createUser(Authenticator $authenticator)
     {
-        $factoryMethod = new ReflectionMethod(Authenticator, 'userFactory');
+        $factoryMethod = new ReflectionMethod(\AUTHENTICATOR, 'userFactory');
 
         return $factoryMethod->invoke($authenticator)->create(User::class);
     }
 
-    /**
-     * @return void
-     */
-    public function testConstructor()
+    public function testConstructor(): void
     {
         $this->assertInstanceOf(Authenticator::class, $this->obj);
     }
 
-    /**
-     * @return void
-     */
-    public function testAuthenticate()
+    public function testAuthenticate(): void
     {
         $ret = $this->obj->authenticate();
         $this->assertNull($ret);
     }
 
-    /**
-     * @return void
-     */
-    public function testAuthenticateByPasswordInvalidEmail()
+    public function testAuthenticateByPasswordInvalidEmail(): void
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->obj->authenticateByPassword([], '');
     }
 
-    /**
-     * @return void
-     */
-    public function testAuthenticateByPasswordInvalidPassword()
+    public function testAuthenticateByPasswordInvalidPassword(): void
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->obj->authenticateByPassword('', []);
     }
 
-    /**
-     * @return void
-     */
-    public function testAuthenticateByPasswordEmpty()
+    public function testAuthenticateByPasswordEmpty(): void
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->obj->authenticateByPassword('', '');
     }
 
-    /**
-     * @return void
-     */
-    public function testAuthenticateByPassword()
+    public function testAuthenticateByPassword(): void
     {
         $this->assertNull($this->obj->authenticateByPassword('test', 'password'));
     }
@@ -137,14 +109,13 @@ class AuthenticatorTest extends AbstractTestCase
     public function testUpdateSession()
     {
         $obj = $this->obj;
-
+    
         $sessionKey = $obj::sessionKey();
         $this->obj['id'] = 'foo';
         $this->obj->saveToSession();
         $this->assertEquals($_SESSION[$sessionKey], $this->obj['id']);
     }
     */
-
     /**
      * @return void
      */
@@ -153,22 +124,19 @@ class AuthenticatorTest extends AbstractTestCase
     {
         $ret = $this->obj->resetPassword('foo');
         $this->assertSame($ret, $this->obj);
-
+    
         $this->obj['id'] = 'bar';
-
+    
         $this->expectException(InvalidArgumentException::class);
         $this->obj->resetPassword(false);
     }
     */
-
     /**
      * Set up the service container.
-     *
-     * @return Container
      */
-    private function container()
+    private function container(): \Pimple\Container
     {
-        if ($this->container === null) {
+        if (!$this->container instanceof \Pimple\Container) {
             $container = new Container();
             $containerProvider = new ContainerProvider();
             $containerProvider->registerBaseServices($container);

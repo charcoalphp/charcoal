@@ -15,18 +15,15 @@ class ImageInput extends FileInput
 
     /**
      * Retrieve list of default file type specifiers.
-     *
-     * @return string
      */
-    public function getDefaultAccept()
+    #[\Override]
+    public function getDefaultAccept(): string
     {
         return 'image/*';
     }
 
-    /**
-     * @return string|null
-     */
-    public function filePreview()
+    #[\Override]
+    public function filePreview(): string
     {
         $value = $this->inputVal();
         if ($value) {
@@ -41,7 +38,8 @@ class ImageInput extends FileInput
      *
      * @return \Charcoal\Translator\Translation|string|null
      */
-    protected function defaultChooseButtonLabel()
+    #[\Override]
+    protected function defaultChooseButtonLabel(): ?\Charcoal\Translator\Translation
     {
         if ($this->property()['multiple']) {
             return $this->translator()->translation('Choose images…');
@@ -56,7 +54,7 @@ class ImageInput extends FileInput
      * @param  string|string[] $classes A space-separated list of CSS classes.
      * @return ImageDisplay Chainable
      */
-    public function setClassAttr($classes)
+    public function setClassAttr($classes): static
     {
         if (is_array($classes)) {
             $classes = implode(' ', $classes);

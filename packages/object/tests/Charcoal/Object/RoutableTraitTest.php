@@ -28,26 +28,20 @@ class RoutableTraitTest extends AbstractTestCase
      *
      * @var RoutableTrait
      */
-    private $obj;
+    private \Charcoal\Tests\Object\Mocks\RoutableClass $obj;
 
     /**
      * Store the service container.
-     *
-     * @var Container
      */
-    private $container;
+    private ?\Pimple\Container $container = null;
 
     /**
      * Store the translator service.
-     *
-     * @var Translator
      */
-    private $translator;
+    private ?\Charcoal\Translator\Translator $translator = null;
 
     /**
      * Set up the test.
-     *
-     * @return void
      */
     public function setUp(): void
     {
@@ -64,10 +58,7 @@ class RoutableTraitTest extends AbstractTestCase
         ]);
     }
 
-    /**
-     * @return void
-     */
-    public function testSlugPattern()
+    public function testSlugPattern(): void
     {
         // $this->assertEquals('', $this->obj->slugPattern());
         $ret = $this->obj->setSlugPattern('foo');
@@ -78,10 +69,7 @@ class RoutableTraitTest extends AbstractTestCase
         // $this->assertEquals('', $this->obj->slugPattern());
     }
 
-    /**
-     * @return void
-     */
-    public function testSlugPatternRoutable()
+    public function testSlugPatternRoutable(): void
     {
         $this->obj->setMetadata([
             'routable' => [
@@ -91,10 +79,7 @@ class RoutableTraitTest extends AbstractTestCase
         $this->assertEquals('foofoo', $this->obj->slugPattern());
     }
 
-    /**
-     * @return void
-     */
-    public function testSlugPatternWithoutRoutable()
+    public function testSlugPatternWithoutRoutable(): void
     {
         $this->obj->setMetadata([
             'routable'     => null,
@@ -103,10 +88,7 @@ class RoutableTraitTest extends AbstractTestCase
         $this->assertEquals('barbar', $this->obj->slugPattern());
     }
 
-    /**
-     * @return void
-     */
-    public function testSlugPatternWithoutMetadata()
+    public function testSlugPatternWithoutMetadata(): void
     {
         $this->obj->setMetadata([]);
 
@@ -114,10 +96,7 @@ class RoutableTraitTest extends AbstractTestCase
         $this->obj->slugPattern();
     }
 
-    /**
-     * @return void
-     */
-    public function testSlugPrefix()
+    public function testSlugPrefix(): void
     {
         $this->assertEquals('', $this->obj->slugPrefix());
 
@@ -129,10 +108,7 @@ class RoutableTraitTest extends AbstractTestCase
         $this->assertEquals('barfoo', $this->obj->slugPrefix());
     }
 
-    /**
-     * @return void
-     */
-    public function testSlugSuffix()
+    public function testSlugSuffix(): void
     {
         $this->assertEquals('', $this->obj->slugSuffix());
 
@@ -144,18 +120,12 @@ class RoutableTraitTest extends AbstractTestCase
         $this->assertEquals('barfoo', $this->obj->slugSuffix());
     }
 
-    /**
-     * @return void
-     */
-    public function testIsSlugEditableIsFalseByDefault()
+    public function testIsSlugEditableIsFalseByDefault(): void
     {
         $this->assertFalse($this->obj->isSlugEditable());
     }
 
-    /**
-     * @return void
-     */
-    public function testIsSlugEditable()
+    public function testIsSlugEditable(): void
     {
         $this->obj->setMetadata([
             'routable' => [
@@ -165,10 +135,7 @@ class RoutableTraitTest extends AbstractTestCase
         $this->assertTrue($this->obj->isSlugEditable());
     }
 
-    /**
-     * @return void
-     */
-    public function testSlug()
+    public function testSlug(): void
     {
         $this->assertNull($this->obj->getSlug());
 
@@ -180,12 +147,9 @@ class RoutableTraitTest extends AbstractTestCase
         $this->assertNull($this->obj->getSlug());
     }
 
-    /**
-     * @return void
-     */
-    public function testGenerateSlug()
+    public function testGenerateSlug(): void
     {
-        $container = $this->container();
+        $this->container();
 
         $this->obj->setMetadata([
             'routable' => [
@@ -200,21 +164,17 @@ class RoutableTraitTest extends AbstractTestCase
     }
 
     /**
-     * @dataProvider providerSlugs
      *
      * @param  string $str  A dirty slug.
      * @param  string $slug A clean $str.
-     * @return void
      */
-    public function testSlugify($str, $slug)
+    #[\PHPUnit\Framework\Attributes\DataProvider('providerSlugs')]
+    public function testSlugify(string $str, string $slug): void
     {
         $this->assertEquals($slug, $this->obj->slugify($str));
     }
 
-    /**
-     * @return array
-     */
-    public function providerSlugs()
+    public static function providerSlugs(): array
     {
         return [
             [ 'A B C', 'a-b-c' ],
@@ -228,12 +188,9 @@ class RoutableTraitTest extends AbstractTestCase
         ];
     }
 
-    /**
-     * @return Translator
-     */
-    private function translator()
+    private function translator(): \Charcoal\Translator\Translator
     {
-        if ($this->translator === null) {
+        if (!$this->translator instanceof \Charcoal\Translator\Translator) {
             $this->translator = new Translator([
                 'manager' => new LocalesManager([
                     'locales' => [
@@ -251,12 +208,10 @@ class RoutableTraitTest extends AbstractTestCase
 
     /**
      * Set up the service container.
-     *
-     * @return Container
      */
-    private function container()
+    private function container(): \Pimple\Container
     {
-        if ($this->container === null) {
+        if (!$this->container instanceof \Pimple\Container) {
             $container = new Container();
             $containerProvider = new ContainerProvider();
             $containerProvider->registerBaseServices($container);

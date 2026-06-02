@@ -32,10 +32,8 @@ class OptimizeImagesScript extends AdminScript
      */
     private $dir;
 
-    /**
-     * @return array
-     */
-    public function defaultArguments()
+    #[\Override]
+    public function defaultArguments(): array
     {
         $arguments = [
             'jpg' => [
@@ -54,17 +52,14 @@ class OptimizeImagesScript extends AdminScript
                 'defaultValue' => 'www/uploads/'
             ]
         ];
-
-        $arguments = array_merge(parent::defaultArguments(), $arguments);
-        return $arguments;
+        return array_merge(parent::defaultArguments(), $arguments);
     }
 
     /**
      * @param RequestInterface  $request  PSR-7 request.
      * @param ResponseInterface $response PSR-7 response.
-     * @return ResponseInterface
      */
-    public function run(RequestInterface $request, ResponseInterface $response)
+    public function run(RequestInterface $request, ResponseInterface $response): ResponseInterface
     {
         unset($request);
 
@@ -117,6 +112,7 @@ class OptimizeImagesScript extends AdminScript
      * @param Container $container Pimple DI Container.
      * @return void
      */
+    #[\Override]
     protected function setDependencies(Container $container)
     {
         parent::setDependencies($container);
@@ -142,9 +138,8 @@ class OptimizeImagesScript extends AdminScript
 
     /**
      * @param string $cmd The jpegoptim command.
-     * @return void
      */
-    private function runJpegoptim($cmd)
+    private function runJpegoptim($cmd): void
     {
         $cmdName = sprintf(
             'cd %s && \
@@ -172,9 +167,8 @@ class OptimizeImagesScript extends AdminScript
 
     /**
      * @param string $cmd The jpegoptim command.
-     * @return void
      */
-    private function runOptipng($cmd)
+    private function runOptipng($cmd): void
     {
         $cmdName = sprintf(
             'cd %s && \
@@ -197,11 +191,11 @@ class OptimizeImagesScript extends AdminScript
      * @param string $cmdName The binary name to search.
      * @return string
      */
-    private function findCmd($cmdName)
+    private function findCmd(string $cmdName)
     {
         $cmd = exec('type -p ' . $cmdName);
         $cmd = str_replace($cmdName . ' is ', '', $cmd);
-        if (!$cmd) {
+        if ($cmd === '' || $cmd === '0') {
             $cmd = exec('where ' . $cmdName);
         }
         if (!$cmd) {

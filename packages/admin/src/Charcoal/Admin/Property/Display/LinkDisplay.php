@@ -29,6 +29,7 @@ class LinkDisplay extends AbstractPropertyDisplay
     /**
      * @return string
      */
+    #[\Override]
     public function displayVal()
     {
         $prop  = $this->property();
@@ -86,9 +87,8 @@ class LinkDisplay extends AbstractPropertyDisplay
      *
      * @param  string $url  The link URL.
      * @param  string $text The link text.
-     * @return string
      */
-    protected function formatHtmlLink($url, $text = null)
+    protected function formatHtmlLink($url, $text = null): string
     {
         if ($text === null) {
             $text = $url;
@@ -99,13 +99,11 @@ class LinkDisplay extends AbstractPropertyDisplay
             $text = $format($text);
         }
 
-        $link = sprintf(
+        return sprintf(
             '<a href="%s">%s</a>',
             $this->getLocalUrl($url),
             $text
         );
-
-        return $link;
     }
 
     /**
@@ -117,14 +115,12 @@ class LinkDisplay extends AbstractPropertyDisplay
     protected function getLocalUrl($path)
     {
         $prop = $this->property();
-        if ($prop instanceof FileProperty) {
-            if ($prop['publicAccess'] === false) {
-                $query = http_build_query([
-                    'disk' => $prop['filesystem'],
-                    'path' => $path,
-                ]);
-                return $this->adminUrl('filesystem/download')->withQuery($query);
-            }
+        if ($prop instanceof FileProperty && $prop['publicAccess'] === false) {
+            $query = http_build_query([
+                'disk' => $prop['filesystem'],
+                'path' => $path,
+            ]);
+            return $this->adminUrl('filesystem/download')->withQuery($query);
         }
 
         return $this->baseUrl($path);
@@ -133,9 +129,8 @@ class LinkDisplay extends AbstractPropertyDisplay
     /**
      * @param  callable|string|null $format The link textt format.
      * @throws InvalidArgumentException If the format is not a valid callable.
-     * @return self
      */
-    public function setLinkTextFormat($format)
+    public function setLinkTextFormat($format): static
     {
         if ($format !== null && !function_exists($format)) {
             throw new InvalidArgumentException(
@@ -161,6 +156,7 @@ class LinkDisplay extends AbstractPropertyDisplay
      * @param Container $container A dependencies container instance.
      * @return void
      */
+    #[\Override]
     protected function setDependencies(Container $container)
     {
         parent::setDependencies($container);

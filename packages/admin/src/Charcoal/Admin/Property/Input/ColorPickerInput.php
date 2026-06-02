@@ -12,17 +12,13 @@ class ColorPickerInput extends AbstractPropertyInput
 {
     /**
      * Settings for {@link https://github.com/claviska/jquery-minicolors/ jQuery MiniColors}.
-     *
-     * @var array
      */
-    private $pickerOptions;
+    private ?array $pickerOptions = null;
 
     /**
      * Retrieve the control type for the HTML element `<input>`.
-     *
-     * @return string
      */
-    public function type()
+    public function type(): string
     {
         return 'color';
     }
@@ -35,7 +31,7 @@ class ColorPickerInput extends AbstractPropertyInput
      * @param  array $settings The color picker options.
      * @return ColorpickerInput Chainable
      */
-    public function setPickerOptions(array $settings)
+    public function setPickerOptions(array $settings): static
     {
         $this->pickerOptions = array_merge($this->defaultPickerOptions(), $settings);
 
@@ -48,7 +44,7 @@ class ColorPickerInput extends AbstractPropertyInput
      * @param  array $settings The color picker options.
      * @return ColorpickerInput Chainable
      */
-    public function mergePickerOptions(array $settings)
+    public function mergePickerOptions(array $settings): static
     {
         $this->pickerOptions = array_merge($this->pickerOptions, $settings);
 
@@ -63,7 +59,7 @@ class ColorPickerInput extends AbstractPropertyInput
      * @throws InvalidArgumentException If the identifier is not a string.
      * @return ColorpickerInput Chainable
      */
-    public function addPickerOption($key, $val)
+    public function addPickerOption($key, $val): static
     {
         if (!is_string($key)) {
             throw new InvalidArgumentException(
@@ -83,10 +79,8 @@ class ColorPickerInput extends AbstractPropertyInput
 
     /**
      * Retrieve the color picker's options.
-     *
-     * @return array
      */
-    public function pickerOptions()
+    public function pickerOptions(): array
     {
         if ($this->pickerOptions === null) {
             $this->pickerOptions = $this->defaultPickerOptions();
@@ -97,10 +91,8 @@ class ColorPickerInput extends AbstractPropertyInput
 
     /**
      * Retrieve the default color picker options.
-     *
-     * @return array
      */
-    public function defaultPickerOptions()
+    public function defaultPickerOptions(): array
     {
         return [
             'format'     => 'hex',

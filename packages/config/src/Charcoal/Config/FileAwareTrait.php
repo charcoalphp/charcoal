@@ -74,7 +74,7 @@ trait FileAwareTrait
      * @throws UnexpectedValueException If the file can not correctly be parsed into an array.
      * @return array An array on success.
      */
-    private function loadIniFile($path)
+    private function loadIniFile(string $path)
     {
         $data = parse_ini_file($path, true);
         if ($data === false) {
@@ -94,7 +94,7 @@ trait FileAwareTrait
      * @return array An array on success.
      *     If the file is parsed as any other type, an empty array is returned.
      */
-    private function loadJsonFile($path)
+    private function loadJsonFile(string $path): array
     {
         $data = null;
         $json = file_get_contents($path);
@@ -128,19 +128,16 @@ trait FileAwareTrait
      * @return array|Traversable An array or iterable object on success.
      *     If the file is parsed as any other type, an empty array is returned.
      */
-    private function loadPhpFile($path)
+    private function loadPhpFile(string $path): iterable
     {
         try {
             $data = include $path;
-        } catch (Exception $e) {
-            $message = sprintf('PHP file "%s" could not be parsed: %s', $path, $e->getMessage());
-            throw new UnexpectedValueException($message, 0, $e);
-        } catch (Throwable $e) {
+        } catch (Exception | Throwable $e) {
             $message = sprintf('PHP file "%s" could not be parsed: %s', $path, $e->getMessage());
             throw new UnexpectedValueException($message, 0, $e);
         }
 
-        if (is_array($data) || ($data instanceof Traversable)) {
+        if (is_iterable($data)) {
             return $data;
         }
 
@@ -156,9 +153,9 @@ trait FileAwareTrait
      * @return array An array on success.
      *     If the file is parsed as any other type, an empty array is returned.
      */
-    private function loadYamlFile($path)
+    private function loadYamlFile(string $path): array
     {
-        if (!class_exists('Symfony\Component\Yaml\Parser')) {
+        if (!class_exists(\Symfony\Component\Yaml\Parser::class)) {
             throw new LogicException('YAML format requires the Symfony YAML component');
         }
 

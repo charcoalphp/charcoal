@@ -1,6 +1,9 @@
 <?php
 
-namespace Charcoals\Tests\Image\Effect;
+namespace Charcoal\Tests\Image\Effect;
+
+use Charcoal\Image\Effect\AbstractBlurEffect;
+use Charcoal\Tests\Mock\ImageMock;
 
 class AbstractBlurEffectTest extends \PHPUnit\Framework\TestCase
 {
@@ -8,13 +11,21 @@ class AbstractBlurEffectTest extends \PHPUnit\Framework\TestCase
 
     protected function setUp(): void
     {
-        $img = $this->getMockForAbstractClass('\Charcoal\Image\AbstractImage');
-        $img->method('driverType')->willReturn('imagick');
-        $this->obj = $this->getMockForAbstractClass('\Charcoal\Image\Effect\AbstractBlurEffect');
+        $img = new ImageMock();
+        $this->obj = new class () extends AbstractBlurEffect {
+            public function process(?array $data = null) {}
+            public function processAdaptive() {}
+            public function processGaussian() {}
+            public function processMotion() {}
+            public function processRadial() {}
+            public function processSoft() {}
+            public function processStandard() {}
+        };
+
         $this->obj->setImage($img);
     }
 
-    public function testDefaults()
+    public function testDefaults(): void
     {
         $obj = $this->obj;
 
@@ -25,7 +36,7 @@ class AbstractBlurEffectTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(0, $obj->angle());
     }
 
-    public function testSetData()
+    public function testSetData(): void
     {
         $obj = $this->obj;
         $ret = $obj->setData(
@@ -46,7 +57,7 @@ class AbstractBlurEffectTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(40, $obj->angle());
     }
 
-    public function testSetRadius()
+    public function testSetRadius(): void
     {
         $obj = $this->obj;
 
@@ -58,14 +69,14 @@ class AbstractBlurEffectTest extends \PHPUnit\Framework\TestCase
         $obj->setRadius(false);
     }
 
-    public function testSetRadiusNegativeThrowsException()
+    public function testSetRadiusNegativeThrowsException(): void
     {
         $this->expectException('\InvalidArgumentException');
         $obj = $this->obj;
         $obj->setRadius(-1);
     }
 
-    public function testSetSigma()
+    public function testSetSigma(): void
     {
         $obj = $this->obj;
 
@@ -77,14 +88,14 @@ class AbstractBlurEffectTest extends \PHPUnit\Framework\TestCase
         $obj->setSigma(false);
     }
 
-    public function testSetSigmaNegativeThrowsException()
+    public function testSetSigmaNegativeThrowsException(): void
     {
         $this->expectException('\InvalidArgumentException');
         $obj = $this->obj;
         $obj->setSigma(-1);
     }
 
-    public function testSetMode()
+    public function testSetMode(): void
     {
         $obj = $this->obj;
         $ret = $obj->setMode('radial');
@@ -95,7 +106,7 @@ class AbstractBlurEffectTest extends \PHPUnit\Framework\TestCase
         $obj->setMode('foobar');
     }
 
-    public function testSetChannel()
+    public function testSetChannel(): void
     {
         $obj = $this->obj;
         $ret = $obj->setChannel('alpha');
@@ -106,7 +117,7 @@ class AbstractBlurEffectTest extends \PHPUnit\Framework\TestCase
         $obj->setChannel('foobar');
     }
 
-    public function testSetAngle()
+    public function testSetAngle(): void
     {
         $obj = $this->obj;
         $ret = $obj->setAngle(45);

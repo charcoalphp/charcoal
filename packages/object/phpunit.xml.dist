@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd"
+         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/12.5/phpunit.xsd"
          backupGlobals="false"
-         backupStaticAttributes="false"
-         bootstrap="vendor/autoload.php"
+         bootstrap="tests/bootstrap.php"
          colors="true"
-         convertErrorsToExceptions="true"
-         convertNoticesToExceptions="true"
-         convertWarningsToExceptions="true"
          processIsolation="false"
          stopOnFailure="false"
-         verbose="true">
+         cacheDirectory=".phpunit.cache"
+         backupStaticProperties="false"
+         failOnWarning="false"
+         failOnPhpunitWarning="false"
+         failOnNotice="false"
+         failOnDeprecation="false">
     <testsuites>
         <testsuite name="Charcoal Test Suite">
             <directory>./tests/Charcoal</directory>

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Charcoal\Ui\FormGroup;
 
 use Charcoal\Ui\FormGroup\AbstractFormGroup;
@@ -13,10 +15,9 @@ class GenericFormGroup extends AbstractFormGroup
 {
     /**
      * Retrieve the form group type.
-     *
-     * @return string
      */
-    public function type()
+    #[\Override]
+    public function type(): string
     {
         return 'charcoal/ui/form-group/generic';
     }

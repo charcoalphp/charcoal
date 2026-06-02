@@ -30,10 +30,9 @@ class DatabaseFilter extends Filter implements
 
     /**
      * Retrieve the default values for filtering.
-     *
-     * @return array
      */
-    public function defaultData()
+    #[\Override]
+    public function defaultData(): array
     {
         $defaults = parent::defaultData();
         $defaults['table'] = DatabaseSource::DEFAULT_TABLE_ALIAS;
@@ -78,7 +77,7 @@ class DatabaseFilter extends Filter implements
      *
      * @return boolean TRUE if the expression uses a logical NOT operator, FALSE otherwise.
      */
-    public function isNegating()
+    public function isNegating(): bool
     {
         return in_array($this->operator(), [ '!', 'NOT' ]);
     }
@@ -88,9 +87,8 @@ class DatabaseFilter extends Filter implements
      *
      * @param  string[]    $conditions  The list of conditions to compile.
      * @param  string|null $conjunction The condition separator.
-     * @return string
      */
-    protected function compileConditions(array $conditions, $conjunction = null)
+    protected function compileConditions(array $conditions, $conjunction = null): string
     {
         if (count($conditions) === 1) {
             return $conditions[0];
@@ -124,9 +122,8 @@ class DatabaseFilter extends Filter implements
      * Retrieve the correctly parenthesized and nested WHERE conditions.
      *
      * @throws UnexpectedValueException If the custom condition is empty.
-     * @return string
      */
-    protected function byFilters()
+    protected function byFilters(): string
     {
         if (!$this->hasFilters()) {
             throw new UnexpectedValueException(
@@ -140,7 +137,7 @@ class DatabaseFilter extends Filter implements
                 $filter = $filter->sql();
             }
 
-            if ($filter && strlen($filter) > 0) {
+            if ($filter && (string)$filter !== '') {
                 $conditions[] = $filter;
             }
         }
@@ -153,12 +150,11 @@ class DatabaseFilter extends Filter implements
      *
      * @todo   Values are often not quoted.
      * @throws UnexpectedValueException If any required property, function, operator, or value is empty.
-     * @return string
      */
-    protected function byPredicate()
+    protected function byPredicate(): string
     {
         $fields = $this->fieldIdentifiers();
-        if (empty($fields)) {
+        if ($fields === []) {
             throw new UnexpectedValueException(
                 'Property is required.'
             );
@@ -169,11 +165,7 @@ class DatabaseFilter extends Filter implements
         $operator   = $this->operator();
         $function   = $this->func();
         foreach ($fields as $fieldName) {
-            if ($function !== null) {
-                $target = sprintf('%1$s(%2$s)', $function, $fieldName);
-            } else {
-                $target = $fieldName;
-            }
+            $target = $function !== null ? sprintf('%1$s(%2$s)', $function, $fieldName) : $fieldName;
 
             switch ($operator) {
                 case 'FIND_IN_SET':

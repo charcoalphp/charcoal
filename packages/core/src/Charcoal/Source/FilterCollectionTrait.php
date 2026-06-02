@@ -112,16 +112,14 @@ trait FilterCollectionTrait
 
         throw new InvalidArgumentException(sprintf(
             'Filter must be a string, structure, or Expression object; received %s',
-            is_object($filter) ? get_class($filter) : gettype($filter)
+            get_debug_type($filter)
         ));
     }
 
     /**
      * Determine if the object has any query filters.
-     *
-     * @return boolean
      */
-    public function hasFilters()
+    public function hasFilters(): bool
     {
         return !empty($this->filters);
     }
@@ -165,5 +163,5 @@ trait FilterCollectionTrait
      * @param  array $data Optional expression data.
      * @return FilterInterface A new filter expression object.
      */
-    abstract protected function createFilter(array $data = null);
+    abstract protected function createFilter(?array $data = null);
 }

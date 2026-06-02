@@ -14,7 +14,7 @@ class ImagickGrayscaleEffect extends AbstractGrayscaleEffect
      * @param array $data The effect data, if available.
      * @return ImagickGrayscaleEffect Chainable
      */
-    public function process(array $data = null)
+    public function process(?array $data = null): static
     {
         if ($data !== null) {
             $this->setData($data);

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Charcoal\Admin\Property\Input;
 
 use InvalidArgumentException;
@@ -11,10 +13,8 @@ class ReadonlySelectInput extends SelectInput
 {
     /**
      * Retrieve the selected value and display it.
-     *
-     * @return string
      */
-    public function displayVal()
+    public function displayVal(): string
     {
         $selectedChoices = [];
 

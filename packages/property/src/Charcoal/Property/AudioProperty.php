@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Charcoal\Property;
 
 use InvalidArgumentException;
@@ -15,22 +17,16 @@ class AudioProperty extends FileProperty
 {
     /**
      * Minimum audio length, in seconds.
-     *
-     * @var integer
      */
-    private $minLength = 0;
+    private int $minLength = 0;
 
     /**
      * Maximum audio length, in seconds.
-     *
-     * @var integer
      */
-    private $maxLength = 0;
+    private int $maxLength = 0;
 
-    /**
-     * @return string
-     */
-    public function type()
+    #[\Override]
+    public function type(): string
     {
         return 'audio';
     }
@@ -40,7 +36,7 @@ class AudioProperty extends FileProperty
      * @throws InvalidArgumentException If the length is not an integer.
      * @return AudioProperty Chainable
      */
-    public function setMinLength($minLength)
+    public function setMinLength($minLength): static
     {
         if (!is_int($minLength)) {
             throw new InvalidArgumentException(
@@ -51,10 +47,7 @@ class AudioProperty extends FileProperty
         return $this;
     }
 
-    /**
-     * @return integer
-     */
-    public function getMinLength()
+    public function getMinLength(): int
     {
         return $this->minLength;
     }
@@ -64,7 +57,7 @@ class AudioProperty extends FileProperty
      * @throws InvalidArgumentException If the length is not an integer.
      * @return AudioProperty Chainable
      */
-    public function setMaxLength($maxLength)
+    public function setMaxLength($maxLength): static
     {
         if (!is_int($maxLength)) {
             throw new InvalidArgumentException(
@@ -75,10 +68,7 @@ class AudioProperty extends FileProperty
         return $this;
     }
 
-    /**
-     * @return integer
-     */
-    public function getMaxLength()
+    public function getMaxLength(): int
     {
         return $this->maxLength;
     }
@@ -90,7 +80,8 @@ class AudioProperty extends FileProperty
      *
      * @return string[]
      */
-    public function getDefaultAcceptedMimetypes()
+    #[\Override]
+    public function getDefaultAcceptedMimetypes(): array
     {
         return [
             'audio/mp3',
@@ -110,26 +101,15 @@ class AudioProperty extends FileProperty
      * @param  string $type The MIME type to resolve.
      * @return string|null The extension based on the MIME type.
      */
-    protected function resolveExtensionFromMimeType($type)
+    #[\Override]
+    protected function resolveExtensionFromMimeType($type): ?string
     {
-        switch ($type) {
-            case 'audio/mp3':
-            case 'audio/mpeg':
-                return 'mp3';
-
-            case 'audio/ogg':
-                return 'ogg';
-
-            case 'audio/webm':
-                return 'webm';
-
-            case 'audio/wav':
-            case 'audio/wave':
-            case 'audio/x-wav':
-            case 'audio/x-pn-wav':
-                return 'wav';
-        }
-
-        return null;
+        return match ($type) {
+            'audio/mp3', 'audio/mpeg' => 'mp3',
+            'audio/ogg' => 'ogg',
+            'audio/webm' => 'webm',
+            'audio/wav', 'audio/wave', 'audio/x-wav', 'audio/x-pn-wav' => 'wav',
+            default => null,
+        };
     }
 }

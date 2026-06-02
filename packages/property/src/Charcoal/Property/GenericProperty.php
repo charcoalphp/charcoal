@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Charcoal\Property;
 
 use PDO;
@@ -11,19 +13,15 @@ use Charcoal\Property\AbstractProperty;
  */
 class GenericProperty extends AbstractProperty
 {
-    /**
-     * @return string
-     */
-    public function type()
+    public function type(): string
     {
         return 'generic';
     }
 
     /**
      * @see StorablePropertyTrait::sqlType()
-     * @return string
      */
-    public function sqlType()
+    public function sqlType(): string
     {
         if ($this['multiple']) {
             return 'TEXT';
@@ -34,9 +32,8 @@ class GenericProperty extends AbstractProperty
 
     /**
      * @see StorablePropertyTrait::sqlPdoType()
-     * @return integer
      */
-    public function sqlPdoType()
+    public function sqlPdoType(): int
     {
         return PDO::PARAM_STR;
     }

@@ -11,60 +11,30 @@ use Charcoal\Image\AbstractEffect;
  */
 abstract class AbstractResizeEffect extends AbstractEffect
 {
-    /**
-     * @var string $mode
-     */
-    private $mode = 'auto';
+    private string $mode = 'auto';
 
-    /**
-     * @var mixed $size
-     */
-    private $size;
+    private string|float|int|null $size = null;
 
-    /**
-     * @var integer $width
-     */
-    private $width = 0;
+    private int $width = 0;
 
-    /**
-     * @var integer $height
-     */
-    private $height = 0;
+    private int $height = 0;
 
-    /**
-     * @var integer $minWidth
-     */
-    private $minWidth = 0;
+    private int $minWidth = 0;
 
-    /**
-     * @var integer $minHeight
-     */
-    private $minHeight = 0;
+    private int $minHeight = 0;
 
-    /**
-     * @var integer $maxWidth
-     */
-    private $maxWidth = 0;
+    private int $maxWidth = 0;
 
-    /**
-     * @var integer $maxHeight
-     */
-    private $maxHeight = 0;
+    private int $maxHeight = 0;
 
     /**
      * @var string $gravity
      */
     private $gravity = 'center';
 
-    /**
-     * @var string $backgroundColor
-     */
-    private $backgroundColor = 'rgba(100%, 100%, 100%, 0)';
+    private string $backgroundColor = 'rgba(100%, 100%, 100%, 0)';
 
-    /**
-     * @var boolean $adaptive
-     */
-    private $adaptive = false;
+    private bool $adaptive = false;
 
     /**
      * @param string $mode The resize mode.
@@ -167,7 +137,7 @@ abstract class AbstractResizeEffect extends AbstractEffect
                 'Height must be a positive integer'
             );
         }
-        $this->height = (int)$height;
+        $this->height = $height;
         return $this;
     }
 
@@ -329,7 +299,7 @@ abstract class AbstractResizeEffect extends AbstractEffect
      */
     public function setAdaptive($adaptive)
     {
-        $this->adaptive = !!$adaptive;
+        $this->adaptive = (bool)$adaptive;
         return $this;
     }
 
@@ -355,12 +325,10 @@ abstract class AbstractResizeEffect extends AbstractEffect
             return 'width';
         } elseif ($height > 0) {
             return 'height';
+        } elseif ($this->minWidth() || $this->minHeight() || $this->maxWidth() || $this->maxHeight()) {
+            return 'constraints';
         } else {
-            if ($this->minWidth() || $this->minHeight() || $this->maxWidth() || $this->maxHeight()) {
-                return 'constraints';
-            } else {
-                return 'none';
-            }
+            return 'none';
         }
     }
 
@@ -369,7 +337,7 @@ abstract class AbstractResizeEffect extends AbstractEffect
      * @throws Exception If the effect data is invalid for its resize mode.
      * @return self
      */
-    public function process(array $data = null)
+    public function process(?array $data = null)
     {
         if ($data !== null) {
             $this->setData($data);
