@@ -222,24 +222,13 @@ class IdProperty extends AbstractProperty
      */
     private function generateUuid()
     {
-        // Generate a uniq string identifer (valid v4 uuid)
-        return sprintf(
-            '%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
-            // 32 bits for "time_low" flag
-            mt_rand(0, 0xffff),
-            mt_rand(0, 0xffff),
-            // 16 bits for "time_mid" flag
-            mt_rand(0, 0xffff),
-            // 16 bits for "time_hi_andVersion" flat (4 most significant bits holds version number)
-            (mt_rand(0, 0x0fff) | 0x4000),
-            // 16 bits, 8 bits for "clk_seq_hi_res" flag and 8 bits for "clk_seq_low" flag
-            // two most significant bits holds zero and one for variant DCE1.1
-            (mt_rand(0, 0x3fff) | 0x8000),
-            // 48 bits for "node" flag
-            mt_rand(0, 0xffff),
-            mt_rand(0, 0xffff),
-            mt_rand(0, 0xffff)
-        );
+        $bytes = random_bytes(16);
+        // RFC 4122 reserves six bits to record the version and variant. Force those and
+        // leave every other bit random.
+        $bytes[6] = chr((ord($bytes[6]) & 0x0f) | 0x40); // version 4
+        $bytes[8] = chr((ord($bytes[8]) & 0x3f) | 0x80); // variant RFC 4122
+        // Render as the canonical 8-4-4-4-12 hexadecimal form.
+        return vsprintf('%s%s-%s-%s-%s-%s%s%s', str_split(bin2hex($bytes), 4));
     }
 
     /**
