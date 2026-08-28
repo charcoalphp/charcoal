@@ -1,5 +1,12 @@
 # Changelog
 
+## [5.1.1](https://github.com/charcoalphp/charcoal/compare/v5.1.0...v5.1.1) (2026-08-28)
+
+
+### Bug Fixes
+
+* **deps:** Do not pin elfinder version ([#99](https://github.com/charcoalphp/charcoal/issues/99)) ([867a5c0](https://github.com/charcoalphp/charcoal/commit/867a5c068b44c7104cc9c9aa8c3632c57148e8ad))
+
 ## [5.1.0](https://github.com/charcoalphp/charcoal/compare/v5.0.0...v5.1.0) (2025-04-11)
 
 
