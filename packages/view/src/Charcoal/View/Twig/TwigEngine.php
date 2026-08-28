@@ -7,10 +7,12 @@ namespace Charcoal\View\Twig;
 use Charcoal\View\AbstractEngine;
 use Charcoal\View\ViewConfig;
 use InvalidArgumentException;
+use JsonException;
 use RuntimeException;
 use Symfony\Bridge\Twig\Extension\TranslationExtension;
 use Twig\Environment as TwigEnvironment;
 use Twig\Loader\FilesystemLoader as TwigFilesystemLoader;
+use UnexpectedValueException;
 
 /**
  *
@@ -162,7 +164,16 @@ class TwigEngine extends AbstractEngine
      */
     public function render(string $templateIdent, $context): string
     {
-        $arrayContext = json_decode(json_encode($context), true);
+        try {
+            $arrayContext = json_decode(json_encode($context, JSON_THROW_ON_ERROR), true);
+        } catch (JsonException $e) {
+            throw new UnexpectedValueException(
+                sprintf('Twig cannot render template [%s]: %s', $templateIdent, $e->getMessage()),
+                $e->getCode(),
+                $e
+            );
+        }
+
         return $this->twig()->render($templateIdent, $arrayContext);
     }
 
@@ -173,9 +184,23 @@ class TwigEngine extends AbstractEngine
      */
     public function renderTemplate(string $templateString, $context): string
     {
-        $template = $this->twig()->createTemplate($templateString);
-        $arrayContext = json_decode(json_encode($context), true);
-        return $template->render($arrayContext);
+        try {
+            $arrayContext = json_decode(json_encode($context, JSON_THROW_ON_ERROR), true);
+        } catch (JsonException $e) {
+            if (strlen($templateString) > 30) {
+                // Truncate the string to avoid polluting the logs with a long template.
+                $templateString = substr($templateString, 0, 29) . '…';
+            }
+
+            throw new UnexpectedValueException(
+                sprintf('Twig cannot render template [%s]: %s', $templateString, $e->getMessage()),
+                $e->getCode(),
+                $e
+            );
+        }
+
+        $templateWrapper = $this->twig()->createTemplate($templateString);
+        return $templateWrapper->render($arrayContext);
     }
 
     /**

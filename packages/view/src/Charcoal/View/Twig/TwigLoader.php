@@ -28,7 +28,7 @@ class TwigLoader extends AbstractLoader implements
      * @param  string $ident The template being evaluated.
      * @return boolean
      */
-    protected function isTemplateString(string $ident): bool
+    public function isTemplateString(string $ident): bool
     {
         return strpos($ident, '{%') !== false || parent::isTemplateString($ident);
     }

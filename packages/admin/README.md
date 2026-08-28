@@ -270,12 +270,12 @@ Usage example:
     "pattern": "title",
     "choice_obj_map": {
         "value": "ident",
-        "label": "{{customLabelFunction}} - {{someAdditionalInfo }}"
+        "label": "{{ customLabelFunction }} - {{ someAdditionalInfo }}"
     },
     "selectize_templates": {
-        "item": "project/selectize/custom-item-template",
-        "option": "project/selectize/custom-option-template",
-        "controller": "project/selectize/custom-template"
+        "item": "{{> project/selectize/custom-item-template }}",
+        "option": "{{> project/selectize/custom-option-template }}",
+        "controller": "{{> project/selectize/custom-template }}"
     },
     "selectize_options": {
         "plugins": {
@@ -295,26 +295,26 @@ Selectize templates examples:
 
 ```json
 "selectize_templates": {
-    "item": "{{customLabelFunction}} - {{someAdditionalInfo }}",
-    "option": "{{customLabelFunction}} - {{someAdditionalInfo }}"
+    "item": "{{ customLabelFunction }} - {{ someAdditionalInfo }}",
+    "option": "{{ customLabelFunction }} - {{ someAdditionalInfo }}"
 },
 
 ---
 
-"selectize_templates": "{{customLabelFunction}} - {{someAdditionalInfo }}",
+"selectize_templates": "{{ customLabelFunction }} - {{ someAdditionalInfo }}",
 
 ---
 
-"selectize_templates": "project/selectize/custom-template",
+"selectize_templates": "{{> project/selectize/custom-template }}",
 
 ---
 
 "selectize_templates": {
-   "item": "project/selectize/custom-item-template",
-   "option": "project/selectize/custom-option-template",
-   "controller": "project/selectize/custom-template",
+   "item": "{{> project/selectize/custom-item-template }}",
+   "option": "{{> project/selectize/custom-option-template }}",
+   "controller": "{{> project/selectize/custom-template }}",
    "data": {
-        "category": "{{selectedCategory}}"
+        "category": "{{ selectedCategory }}"
    }
 },
 ```

@@ -66,17 +66,28 @@ class EmailServiceProvider implements ServiceProviderInterface
                 ],
                 'base_class' => EmailInterface::class,
                 'default_class' => Email::class,
-                'arguments' => [[
+                'arguments' => [ $container['email/dependencies'] ],
+            ]);
+        };
+
+        // The model dependencies might be already set from elsewhere; defines it if not.
+        if (!isset($container['email/dependencies'])) {
+            /**
+             * @param Container $container A Pimple DI container.
+             * @return array The model dependencies array.
+             */
+            $container['email/dependencies'] = function (Container $container) {
+                return [
                     'logger'             => $container['logger'],
                     'config'             => $container['email/config'],
                     'view'               => $container['email/view'],
                     'template_factory'   => $container['template/factory'],
                     'queue_item_factory' => $container['model/factory'],
                     'log_factory'        => $container['model/factory'],
-                    'tracker'            => $container['email/tracker']
-                ]]
-            ]);
-        };
+                    'tracker'            => $container['email/tracker'],
+                ];
+            };
+        }
 
         /**
          * @return Parser

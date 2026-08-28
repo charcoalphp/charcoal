@@ -164,7 +164,7 @@ class CollectionTemplate extends AdminTemplate implements
             }
 
             if ($listIdent && $hasView) {
-                $listIdent = $model->render($listIdent);
+                $listIdent = $model->renderTemplate($listIdent);
             }
 
             if (isset($adminMetadata['lists'][$listIdent]['label'])) {
@@ -191,7 +191,7 @@ class CollectionTemplate extends AdminTemplate implements
         }
 
         if ($hasView) {
-            $this->title = $model->render((string)$objLabel, $model);
+            $this->title = $model->renderTemplate((string)$objLabel);
         } else {
             $this->title = (string)$objLabel;
         }

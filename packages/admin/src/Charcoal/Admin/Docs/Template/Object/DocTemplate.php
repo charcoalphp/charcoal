@@ -114,7 +114,7 @@ class DocTemplate extends AdminTemplate implements
         }
 
         if ($this->isObjRenderable($obj)) {
-            $this->title = $obj->render((string)$objLabel, $obj);
+            $this->title = $obj->renderTemplate((string)$objLabel, $obj);
         } else {
             $this->title = (string)$objLabel;
         }
