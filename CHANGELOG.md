@@ -1,5 +1,13 @@
 # Changelog
 
+## [5.1.2](https://github.com/charcoalphp/charcoal/compare/v5.1.1...v5.1.2) (2026-08-28)
+
+
+### Bug Fixes
+
+* Refactor UUID generation to use random_bytes ([#97](https://github.com/charcoalphp/charcoal/issues/97)) ([4f00fe4](https://github.com/charcoalphp/charcoal/commit/4f00fe44790c4b9e1c0e631af5aa4c276808272b))
+* **user:** Regenerate session ID on active session. ([#98](https://github.com/charcoalphp/charcoal/issues/98)) ([1277b5c](https://github.com/charcoalphp/charcoal/commit/1277b5ce897d7754a5ce211a4ae0c2e56501b40e))
+
 ## [5.1.1](https://github.com/charcoalphp/charcoal/compare/v5.1.0...v5.1.1) (2026-08-28)
 
 
