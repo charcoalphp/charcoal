@@ -112,8 +112,8 @@ class LostPasswordToken extends AbstractModel
      */
     public function parsePublicToken($publicToken)
     {
-        $identLen = self::IDENT_BYTES * 2;
-        $tokenLen = self::TOKEN_BYTES * 2;
+        $identLen = (self::IDENT_BYTES * 2);
+        $tokenLen = (self::TOKEN_BYTES * 2);
 
         if (!is_string($publicToken) || strlen($publicToken) !== ($identLen + $tokenLen)) {
             return null;
