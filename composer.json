@@ -57,7 +57,7 @@
         "psr/log": "^1.0",
         "seld/jsonlint": "^1.9",
         "slim/slim": "^3.13",
-        "studio-42/elfinder": "^2.1.64",
+        "studio-42/elfinder": "^2.1.70",
         "symfony/polyfill-php85": "^1.37",
         "symfony/translation": "^7.2",
         "tedivm/stash": "^1.1",
