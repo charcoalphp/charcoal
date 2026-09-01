@@ -3,12 +3,10 @@
 namespace Charcoal\Admin\Action;
 
 use InvalidArgumentException;
-use RuntimeException;
 use UnexpectedValueException;
 // From PSR-7
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\UriInterface;
 // From Pimple
 use Pimple\Container;
 // From elFinder
@@ -17,8 +15,6 @@ use elFinderConnector;
 use elFinderVolumeDriver;
 // From 'charcoal-config'
 use Charcoal\Config\ConfigInterface;
-// From 'charcoal-factory'
-use Charcoal\Factory\FactoryInterface;
 // From 'charcoal-property'
 use Charcoal\Property\PropertyInterface;
 // From 'charcoal-app'

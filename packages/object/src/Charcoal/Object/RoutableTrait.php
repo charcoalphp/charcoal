@@ -482,7 +482,7 @@ trait RoutableTrait
                 ],
             ]);
 
-        $collection = $loader->load()->objects();
+        $collection = $loader->load()->values();
 
         if (count($collection) === 0) {
             return $this->createRouteObject();

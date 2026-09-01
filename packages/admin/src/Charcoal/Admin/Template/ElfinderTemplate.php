@@ -3,7 +3,6 @@
 namespace Charcoal\Admin\Template;
 
 use ArrayIterator;
-use RuntimeException;
 use InvalidArgumentException;
 // From PSR-7
 use Psr\Http\Message\RequestInterface;
@@ -11,8 +10,6 @@ use Psr\Http\Message\RequestInterface;
 use Pimple\Container;
 // From Mustache
 use Mustache\LambdaHelper as LambdaHelper;
-// From 'charcoal-factory'
-use Charcoal\Factory\FactoryInterface;
 // From 'charcoal-translator'
 use Charcoal\Translator\Translation;
 // From 'charcoal-property'
@@ -119,7 +116,7 @@ class ElfinderTemplate extends AdminTemplate
             ));
         }
 
-        return true;
+        return $this;
     }
 
     /**

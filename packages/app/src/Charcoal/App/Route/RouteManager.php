@@ -145,12 +145,11 @@ final class RouteManager implements
      */
     private function setupAction($routeIdent, $actionConfig)
     {
-        $routePattern = ($actionConfig['route'] ?? '/') . ltrim($routeIdent, '/');
+        $routePattern = ($actionConfig['route'] ?? '/' . ltrim($routeIdent, '/'));
 
         $actionConfig['route'] = $routePattern;
 
         $methods = ($actionConfig['methods'] ?? [ 'POST' ]);
-
         $routeHandler = $this->app->map(
             $methods,
             $routePattern,

@@ -5,17 +5,13 @@ namespace Charcoal\Object;
 use DateTime;
 use DateTimeInterface;
 use InvalidArgumentException;
-use RuntimeException;
 use Exception;
 // From Pimple
 use Pimple\Container;
 // From 'charcoal-core'
 use Charcoal\Model\AbstractModel;
-use Charcoal\Loader\CollectionLoader;
 use Charcoal\Model\ModelFactoryTrait;
 use Charcoal\Loader\CollectionLoaderAwareTrait;
-// From 'charcoal-factory'
-use Charcoal\Factory\FactoryInterface;
 // From 'charcoal-object'
 use Charcoal\Object\ObjectRouteInterface;
 
@@ -185,7 +181,7 @@ class ObjectRoute extends AbstractModel implements
             ->setPage(1)
             ->setNumPerPage(1);
 
-        $routes = $loader->load()->objects();
+        $routes = $loader->load()->values();
         if (!$routes) {
             return true;
         }

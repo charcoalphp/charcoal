@@ -460,7 +460,7 @@ class FileInput extends AbstractPropertyInput
             'input_name'   => $this->inputName(),
             # 'input_val'    => $this->inputVal(),
             'dialog_title' => (string)$this->dialogTitle(),
-            'elfinder_url' => $this->filePickerUrl(),
+            'elfinder_url' => (string)$this->filePickerUrl(),
         ];
     }
 }
