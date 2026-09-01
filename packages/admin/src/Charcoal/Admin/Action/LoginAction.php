@@ -69,11 +69,9 @@ class LoginAction extends AdminAction
 
             $email    = $request->getParam('email');
             $password = $request->getParam('password');
-            $remember = $request->getParam('remember-me');
             $nextUrl  = $request->getParam('next_url');
 
-            $email    = filter_var($email, FILTER_SANITIZE_EMAIL);
-            $remember = filter_var($remember, FILTER_VALIDATE_BOOLEAN);
+            $email = filter_var($email, FILTER_SANITIZE_EMAIL);
 
             if (!$email || !$password) {
                 $this->addFeedback('error', $translator->translate('Invalid email or password'));
@@ -101,7 +99,7 @@ class LoginAction extends AdminAction
             }
             $this->logger->debug($logMessage);
 
-            $user = $this->authenticator()->authenticateByPassword($email, $password, $remember);
+            $user = $this->authenticator()->authenticateByPassword($email, $password);
             if ($user === null) {
                 if ($ip) {
                     $logMessage = sprintf('[Admin] Login failed for "%s" from %s', $email, $ip);
