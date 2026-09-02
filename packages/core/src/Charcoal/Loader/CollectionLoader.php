@@ -442,26 +442,26 @@ class CollectionLoader implements
     /**
      * Alias of {@see SourceInterface::setFilters()}
      *
-     * @param  array $filters An array of filters.
+     * @param  array   $filters  An array of filters.
+     * @param  boolean $trusted  TRUE allows raw condition SQL; FALSE sanitizes untrusted trees.
      * @return self
      */
-    public function setFilters(array $filters)
+    public function setFilters(array $filters, $trusted = true)
     {
-        $this->source()->setFilters($filters);
+        $this->source()->setFilters($filters, $trusted);
         return $this;
     }
 
     /**
      * Alias of {@see SourceInterface::addFilters()}
      *
-     * @param  array $filters An array of filters.
+     * @param  array   $filters  An array of filters.
+     * @param  boolean $trusted  TRUE allows raw condition SQL; FALSE sanitizes untrusted trees.
      * @return self
      */
-    public function addFilters(array $filters)
+    public function addFilters(array $filters, $trusted = true)
     {
-        foreach ($filters as $f) {
-            $this->addFilter($f);
-        }
+        $this->source()->addFilters($filters, $trusted);
         return $this;
     }
 
@@ -505,26 +505,26 @@ class CollectionLoader implements
     /**
      * Alias of {@see SourceInterface::setOrders()}
      *
-     * @param  array $orders An array of orders.
+     * @param  array   $orders   An array of orders.
+     * @param  boolean $trusted  TRUE allows raw condition SQL; FALSE sanitizes untrusted lists.
      * @return self
      */
-    public function setOrders(array $orders)
+    public function setOrders(array $orders, $trusted = true)
     {
-        $this->source()->setOrders($orders);
+        $this->source()->setOrders($orders, $trusted);
         return $this;
     }
 
     /**
      * Alias of {@see SourceInterface::addOrders()}
      *
-     * @param  array $orders An array of orders.
+     * @param  array   $orders   An array of orders.
+     * @param  boolean $trusted  TRUE allows raw condition SQL; FALSE sanitizes untrusted lists.
      * @return self
      */
-    public function addOrders(array $orders)
+    public function addOrders(array $orders, $trusted = true)
     {
-        foreach ($orders as $o) {
-            $this->addOrder($o);
-        }
+        $this->source()->addOrders($orders, $trusted);
         return $this;
     }
 

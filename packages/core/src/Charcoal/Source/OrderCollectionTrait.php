@@ -30,13 +30,15 @@ trait OrderCollectionTrait
      *
      * Note: Any existing orders are dropped.
      *
-     * @param  mixed[] $orders One or more orders to set on this expression.
+     * @param  mixed[] $orders   One or more orders to set on this expression.
+     * @param  boolean $trusted  TRUE (default) allows raw `condition` / string SQL for
+     *     code-defined clauses. FALSE sanitizes the list for untrusted storage/request config.
      * @return self
      */
-    public function setOrders(array $orders)
+    public function setOrders(array $orders, $trusted = true)
     {
         $this->orders = [];
-        $this->addOrders($orders);
+        $this->addOrders($orders, $trusted);
         return $this;
     }
 
@@ -44,11 +46,16 @@ trait OrderCollectionTrait
      * Append one or more query orders on this object.
      *
      * @uses   self::processOrder()
-     * @param  mixed[] $orders One or more orders to add on this expression.
+     * @param  mixed[] $orders   One or more orders to add on this expression.
+     * @param  boolean $trusted  See {@see setOrders()}.
      * @return self
      */
-    public function addOrders(array $orders)
+    public function addOrders(array $orders, $trusted = true)
     {
+        if (!$trusted) {
+            $orders = ExpressionTreeSanitizer::sanitizeOrders($orders);
+        }
+
         foreach ($orders as $key => $order) {
             $this->addOrder($order);
 

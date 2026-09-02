@@ -30,13 +30,15 @@ trait FilterCollectionTrait
      *
      * Note: Any existing filters are dropped.
      *
-     * @param  mixed[] $filters One or more filters to set on this expression.
+     * @param  mixed[] $filters  One or more filters to set on this expression.
+     * @param  boolean $trusted  TRUE (default) allows raw `condition` / string SQL for
+     *     code-defined clauses. FALSE sanitizes the tree for untrusted storage/request config.
      * @return self
      */
-    public function setFilters(array $filters)
+    public function setFilters(array $filters, $trusted = true)
     {
         $this->filters = [];
-        $this->addFilters($filters);
+        $this->addFilters($filters, $trusted);
         return $this;
     }
 
@@ -44,11 +46,16 @@ trait FilterCollectionTrait
      * Append one or more query filters on this object.
      *
      * @uses   self::processFilter()
-     * @param  mixed[] $filters One or more filters to add on this expression.
+     * @param  mixed[] $filters  One or more filters to add on this expression.
+     * @param  boolean $trusted  See {@see setFilters()}.
      * @return self
      */
-    public function addFilters(array $filters)
+    public function addFilters(array $filters, $trusted = true)
     {
+        if (!$trusted) {
+            $filters = ExpressionTreeSanitizer::sanitizeFilters($filters);
+        }
+
         foreach ($filters as $key => $filter) {
             $this->addFilter($filter);
 
@@ -99,7 +106,7 @@ trait FilterCollectionTrait
 
         if (is_string($filter)) {
             // Trusted raw SQL for code-defined clauses only — never request/user input.
-            // Prefer property/operator/value structures so values are PDO-bound (LS01).
+            // Prefer property/operator/value structures so values are PDO-bound.
             $expr   = $this->createFilter()->setCondition($filter);
             $filter = $expr;
         } elseif (is_array($filter)) {

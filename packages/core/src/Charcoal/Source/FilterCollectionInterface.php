@@ -14,18 +14,20 @@ interface FilterCollectionInterface
      *
      * Note: Any existing filters are dropped.
      *
-     * @param  array $filters One or more filters to set on this expression.
+     * @param  array   $filters  One or more filters to set on this expression.
+     * @param  boolean $trusted  TRUE allows raw condition SQL; FALSE sanitizes untrusted trees.
      * @return FilterCollectionInterface Returns the current expression.
      */
-    public function setFilters(array $filters);
+    public function setFilters(array $filters, $trusted = true);
 
     /**
      * Append one or more query filters on this object.
      *
-     * @param  array $filters One or more filters to add on this expression.
+     * @param  array   $filters  One or more filters to add on this expression.
+     * @param  boolean $trusted  TRUE allows raw condition SQL; FALSE sanitizes untrusted trees.
      * @return FilterCollectionInterface Returns the current expression.
      */
-    public function addFilters(array $filters);
+    public function addFilters(array $filters, $trusted = true);
 
     /**
      * Append a query filter on this object.
