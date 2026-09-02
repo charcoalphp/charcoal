@@ -300,7 +300,7 @@ class ExpressionFieldTraitTest extends AbstractTestCase
 
         /** 2. With table name */
         $obj->setTable('bazqux');
-        $this->assertContains('bazqux.`foobar`', $obj->fieldIdentifiers());
+        $this->assertContains('`bazqux`.`foobar`', $obj->fieldIdentifiers());
     }
 
     /**
@@ -328,6 +328,28 @@ class ExpressionFieldTraitTest extends AbstractTestCase
 
         /** 2. With table name */
         $obj->setTable('bazqux');
-        $this->assertEquals('bazqux.`foobar`', $obj->fieldIdentifier());
+        $this->assertEquals('`bazqux`.`foobar`', $obj->fieldIdentifier());
+    }
+
+    /**
+     * Unsafe property identifiers are rejected (LS04).
+     *
+     * @return void
+     */
+    public function testPropertyRejectsUnsafeIdentifier()
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->createField()->setProperty('id`=1 OR `x');
+    }
+
+    /**
+     * Unsafe table aliases are rejected (LS04).
+     *
+     * @return void
+     */
+    public function testTableRejectsUnsafeIdentifier()
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->createField()->setTable('users; DROP TABLE x--');
     }
 }

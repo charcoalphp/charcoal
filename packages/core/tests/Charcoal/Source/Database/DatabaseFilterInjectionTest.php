@@ -108,7 +108,7 @@ class DatabaseFilterInjectionTest extends AbstractTestCase
         $this->assertStringNotContainsString($payload, $sql);
         $this->assertDoesNotMatchRegularExpression("/'\\s*OR\\s*'/", $sql);
         $this->assertMatchesRegularExpression(
-            '/objTable.`name` IN \(:filter_\d+, :filter_\d+, :filter_\d+\)/',
+            '/`objTable`\.`name` IN \(:filter_\d+, :filter_\d+, :filter_\d+\)/',
             $sql
         );
     }
@@ -136,7 +136,7 @@ class DatabaseFilterInjectionTest extends AbstractTestCase
         $this->assertSame($payload, array_values($binds)[0]);
         $this->assertStringNotContainsString($payload, $sql);
         $this->assertMatchesRegularExpression(
-            '/relTable1.`name_en` LIKE :filter_\d+/',
+            '/`relTable1`\.`name_en` LIKE :filter_\d+/',
             $sql
         );
     }

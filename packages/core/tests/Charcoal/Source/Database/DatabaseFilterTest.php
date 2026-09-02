@@ -99,7 +99,7 @@ class DatabaseFilterTest extends AbstractTestCase
         $obj->setProperty('foo')->setValue('Charcoal');
 
         $obj->setActive(true);
-        $this->assertSqlBound($obj, 'objTable.`foo` = %s', 'Charcoal');
+        $this->assertSqlBound($obj, '`objTable`.`foo` = %s', 'Charcoal');
 
         $obj->setActive(false);
         $this->assertEquals('', $obj->sql());
@@ -201,8 +201,8 @@ class DatabaseFilterTest extends AbstractTestCase
 
         $expected  = '(';
         $expected .= 'title LIKE "Hello %" AND ';
-        $expected .= 'objTable.`posted` >= :' . $names[0] . ' AND ';
-        $expected .= 'objTable.`author_id` = :' . $names[1];
+        $expected .= '`objTable`.`posted` >= :' . $names[0] . ' AND ';
+        $expected .= '`objTable`.`author_id` = :' . $names[1];
         $expected .= ')';
         $this->assertSame($expected, $sql);
     }
@@ -263,9 +263,9 @@ class DatabaseFilterTest extends AbstractTestCase
         $this->assertSame('Hello World', $binds[$names[3]]);
 
         $expected  = '(';
-        $expected .= 'objTable.`author_id` != :' . $names[0] . ' AND ';
-        $expected .= '(objTable.`published` = :' . $names[1] . ' OR objTable.`posted` < :' . $names[2] . ') AND NOT ';
-        $expected .= '(objTable.`title` = :' . $names[3] . ' AND objTable.`modified` IS NULL)';
+        $expected .= '`objTable`.`author_id` != :' . $names[0] . ' AND ';
+        $expected .= '(`objTable`.`published` = :' . $names[1] . ' OR `objTable`.`posted` < :' . $names[2] . ') AND NOT ';
+        $expected .= '(`objTable`.`title` = :' . $names[3] . ' AND `objTable`.`modified` IS NULL)';
         $expected .= ')';
         $this->assertSame($expected, $sql);
     }
@@ -413,7 +413,7 @@ class DatabaseFilterTest extends AbstractTestCase
             'value'    => 'Charcoal',
         ]);
 
-        $this->assertSqlBound($obj, 'objTable.`xyzzy` ' . $operator . ' %s', 'Charcoal');
+        $this->assertSqlBound($obj, '`objTable`.`xyzzy` ' . $operator . ' %s', 'Charcoal');
     }
 
     /**
@@ -433,7 +433,7 @@ class DatabaseFilterTest extends AbstractTestCase
             'value'    => 'Charcoal',
         ]);
 
-        $this->assertEquals('objTable.`xyzzy` '.$operator, $obj->sql());
+        $this->assertEquals('`objTable`.`xyzzy` '.$operator, $obj->sql());
         $this->assertSame([], $obj->binds());
     }
 
@@ -454,7 +454,7 @@ class DatabaseFilterTest extends AbstractTestCase
             'value'    => 'Charcoal',
         ]);
 
-        $this->assertEquals($operator.' objTable.`xyzzy`', $obj->sql());
+        $this->assertEquals($operator.' `objTable`.`xyzzy`', $obj->sql());
         $this->assertSame([], $obj->binds());
     }
 
@@ -556,7 +556,7 @@ class DatabaseFilterTest extends AbstractTestCase
             'function' => 'reverse',
         ]);
 
-        $this->assertSqlBound($obj, 'REVERSE(objTable.`xyzzy`) = %s', 'Charcoal');
+        $this->assertSqlBound($obj, 'REVERSE(`objTable`.`xyzzy`) = %s', 'Charcoal');
     }
 
     /**
@@ -586,10 +586,10 @@ class DatabaseFilterTest extends AbstractTestCase
         $names = array_keys($binds);
 
         $expected  = '(';
-        $expected .= 'objTable.`xyzzy_en` = :' . $names[0] . ' OR ';
-        $expected .= 'objTable.`xyzzy_fr` = :' . $names[1] . ' OR ';
-        $expected .= 'objTable.`xyzzy_de` = :' . $names[2] . ' OR ';
-        $expected .= 'objTable.`xyzzy_es` = :' . $names[3];
+        $expected .= '`objTable`.`xyzzy_en` = :' . $names[0] . ' OR ';
+        $expected .= '`objTable`.`xyzzy_fr` = :' . $names[1] . ' OR ';
+        $expected .= '`objTable`.`xyzzy_de` = :' . $names[2] . ' OR ';
+        $expected .= '`objTable`.`xyzzy_es` = :' . $names[3];
         $expected .= ')';
         $this->assertSame($expected, $sql);
     }
@@ -628,7 +628,7 @@ class DatabaseFilterTest extends AbstractTestCase
                     $name = array_key_first($binds);
                     $test->assertSame(implode(',', $value), $binds[$name]);
                     $test->assertSame(
-                        'FIND_IN_SET(:' . $name . ', objTable.`xyzzy`)',
+                        'FIND_IN_SET(:' . $name . ', `objTable`.`xyzzy`)',
                         $sql
                     );
                 },
@@ -642,7 +642,7 @@ class DatabaseFilterTest extends AbstractTestCase
                     $names = array_keys($binds);
                     $test->assertSame($value, array_values($binds));
                     $test->assertSame(
-                        'objTable.`xyzzy` IN (:' . implode(', :', $names) . ')',
+                        '`objTable`.`xyzzy` IN (:' . implode(', :', $names) . ')',
                         $sql
                     );
                 },
@@ -656,7 +656,7 @@ class DatabaseFilterTest extends AbstractTestCase
                     $names = array_keys($binds);
                     $test->assertSame($value, array_values($binds));
                     $test->assertSame(
-                        'objTable.`xyzzy` NOT IN (:' . implode(', :', $names) . ')',
+                        '`objTable`.`xyzzy` NOT IN (:' . implode(', :', $names) . ')',
                         $sql
                     );
                 },

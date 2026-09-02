@@ -193,7 +193,7 @@ class AbstractExpressionTest extends AbstractTestCase
     {
         $obj = $this->createExpression();
 
-        $this->assertEquals($expected, $obj::quoteIdentifier($fieldName, $tableName, $expected));
+        $this->assertEquals($expected, $obj::quoteIdentifier($fieldName, $tableName));
     }
 
     /**
@@ -205,12 +205,43 @@ class AbstractExpressionTest extends AbstractTestCase
     public function provideQuotableIdentifiers()
     {
         return [
-            [ null,   null,   ''          ],
-            [ '',     null,   ''          ],
-            [ '*',    null,   '*'         ],
-            [ 'col',  null,   '`col`'     ],
-            [ '*',    'tbl',  'tbl.*'     ],
-            [ 'col',  'tbl',  'tbl.`col`' ],
+            [ null,   null,   ''               ],
+            [ '',     null,   ''               ],
+            [ '*',    null,   '*'              ],
+            [ 'col',  null,   '`col`'          ],
+            [ '*',    'tbl',  '`tbl`.*'        ],
+            [ 'col',  'tbl',  '`tbl`.`col`'    ],
+        ];
+    }
+
+    /**
+     * Injection-shaped identifiers must be rejected (LS04).
+     *
+     * @dataProvider provideUnsafeIdentifiers
+     *
+     * @param  string      $fieldName Field / column name.
+     * @param  string|null $tableName Optional table / alias.
+     * @return void
+     */
+    public function testQuoteIdentifierRejectsUnsafeNames($fieldName, $tableName)
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $obj = $this->createExpression();
+        $obj::quoteIdentifier($fieldName, $tableName);
+    }
+
+    /**
+     * @return array<string,array{0:string,1:?string}>
+     */
+    public function provideUnsafeIdentifiers()
+    {
+        return [
+            'field_backtick'     => [ 'id`=1 OR `x', null ],
+            'field_space'        => [ 'foo bar', null ],
+            'field_injection'    => [ "foo'; DROP TABLE x--", null ],
+            'table_backtick'     => [ 'col', 'tbl`x' ],
+            'table_injection'    => [ 'col', 'users; DROP TABLE secrets--' ],
+            'table_leading_digit'=> [ 'col', '1tbl' ],
         ];
     }
 

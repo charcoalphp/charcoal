@@ -876,7 +876,7 @@ class DatabaseSource extends AbstractSource implements
     {
         $properties = $this->properties();
         if (empty($properties)) {
-            return self::DEFAULT_TABLE_ALIAS . '.*';
+            return Expression::quoteIdentifier('*', self::DEFAULT_TABLE_ALIAS);
         }
 
         $parts = [];

@@ -59,7 +59,7 @@ class DatabaseOrderTest extends AbstractTestCase
         $obj->setMode('asc')->setProperty('foo');
 
         $obj->setActive(true);
-        $this->assertEquals('objTable.`foo` ASC', $obj->sql());
+        $this->assertEquals('`objTable`.`foo` ASC', $obj->sql());
 
         $obj->setActive(false);
         $this->assertEquals('', $obj->sql());
@@ -105,7 +105,7 @@ class DatabaseOrderTest extends AbstractTestCase
 
         /** Resolves to "values" mode when values are defined. */
         $obj->setValues([ 'FR', 'UK', 'CA' ]);
-        $this->assertEquals('FIELD(objTable.`country`, "FR","UK","CA")', $obj->sql());
+        $this->assertEquals('FIELD(`objTable`.`country`, "FR","UK","CA")', $obj->sql());
 
         /** Resolves to "custom" mode, and takes precedence, when a custom expression is defined. */
         $obj->setCondition('foo DESC');
@@ -140,7 +140,7 @@ class DatabaseOrderTest extends AbstractTestCase
 
         $obj->setMode($mode)->setProperty('test');
         $this->assertEquals(
-            sprintf('objTable.`test` %s', $expected),
+            sprintf('`objTable`.`test` %s', $expected),
             $obj->sql()
         );
     }
@@ -184,7 +184,7 @@ class DatabaseOrderTest extends AbstractTestCase
             ->setProperty('test')
             ->setValues([ 1, false, 'foo' ]);
 
-        $this->assertEquals('FIELD(objTable.`test`, 1,0,"foo")', $obj->sql());
+        $this->assertEquals('FIELD(`objTable`.`test`, 1,0,"foo")', $obj->sql());
     }
 
     /**
