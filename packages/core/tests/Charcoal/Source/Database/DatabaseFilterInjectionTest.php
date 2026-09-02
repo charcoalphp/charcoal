@@ -114,6 +114,48 @@ class DatabaseFilterInjectionTest extends AbstractTestCase
     }
 
     /**
+     * Relation-style aliased LIKE (LS02) must bind the search value, not interpolate it.
+     *
+     * @return void
+     */
+    public function testAliasedTableLikeBindsPayload()
+    {
+        $payload = "%' OR '1'='1%";
+        $obj = new DatabaseFilter();
+        $obj->setData([
+            'table'    => 'relTable1',
+            'property' => 'name_en',
+            'operator' => 'LIKE',
+            'value'    => $payload,
+        ]);
+
+        $sql   = $obj->sql();
+        $binds = $obj->binds();
+
+        $this->assertCount(1, $binds);
+        $this->assertSame($payload, array_values($binds)[0]);
+        $this->assertStringNotContainsString($payload, $sql);
+        $this->assertMatchesRegularExpression(
+            '/relTable1.`name_en` LIKE :filter_\d+/',
+            $sql
+        );
+    }
+
+    /**
+     * Trusted code-defined conditions remain inlined (no binds) — intentional escape hatch.
+     *
+     * @return void
+     */
+    public function testTrustedConditionRemainsRaw()
+    {
+        $obj = new DatabaseFilter();
+        $obj->setCondition('(expiry_date > NOW() OR expiry_date IS NULL)');
+
+        $this->assertSame('(expiry_date > NOW() OR expiry_date IS NULL)', $obj->sql());
+        $this->assertSame([], $obj->binds());
+    }
+
+    /**
      * Compile a predicate and assert the payload is parameterized.
      *
      * @param  string $operator Filter operator.

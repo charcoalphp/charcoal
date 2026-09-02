@@ -109,6 +109,9 @@ class DatabaseOrder extends Order implements
     /**
      * Retrieve the ORDER BY clause for the {@see self::MODE_CUSTOM} mode.
      *
+     * Custom conditions are trusted raw SQL for code-defined clauses only.
+     * Never put request or user input in `condition`.
+     *
      * @throws UnexpectedValueException If the custom clause is empty.
      * @return string
      */

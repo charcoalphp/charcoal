@@ -98,6 +98,7 @@ trait OrderCollectionTrait
         }
 
         if (is_string($order)) {
+            // Trusted raw SQL for code-defined ORDER BY fragments only — never request/user input.
             $expr  = $this->createOrder()->setCondition($order);
             $order = $expr;
         } elseif (is_array($order)) {

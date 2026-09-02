@@ -98,6 +98,8 @@ trait FilterCollectionTrait
         }
 
         if (is_string($filter)) {
+            // Trusted raw SQL for code-defined clauses only — never request/user input.
+            // Prefer property/operator/value structures so values are PDO-bound (LS01).
             $expr   = $this->createFilter()->setCondition($filter);
             $filter = $expr;
         } elseif (is_array($filter)) {

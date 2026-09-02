@@ -171,7 +171,10 @@ class DatabaseFilter extends Filter implements
     /**
      * Retrieve the custom WHERE condition.
      *
-     * Custom conditions are trusted raw SQL and do not contribute binds.
+     * Custom conditions are trusted raw SQL for code-defined clauses only
+     * (e.g. `NOW()`, column-to-column comparisons). They do not contribute binds.
+     * Never put request or user input in `condition`; use property/operator/value
+     * predicates so values are parameterized.
      *
      * @throws UnexpectedValueException If the custom condition is empty.
      * @return string
