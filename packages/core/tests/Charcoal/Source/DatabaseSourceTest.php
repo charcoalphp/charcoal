@@ -128,6 +128,77 @@ class DatabaseSourceTest extends AbstractTestCase
 
     /**
      * Assert that, with the method `setTable()`:
+     * - setting the table changes the table
+     * - the method is chainable
+     * - non-string and unsafe identifier strings throw
+     *
+     * @return void
+     */
+    public function testSetTable()
+    {
+        $container = $this->getContainer();
+
+        $obj = new DatabaseSource([
+            'logger' => $container['logger'],
+            'pdo'    => $container['database'],
+        ]);
+
+        $ret = $obj->setTable('foo');
+        $this->assertSame($ret, $obj);
+        $this->assertEquals('foo', $obj->table());
+
+        $obj->setTable('_leading_underscore');
+        $this->assertEquals('_leading_underscore', $obj->table());
+
+        $obj->setTable('CamelCase_Table9');
+        $this->assertEquals('CamelCase_Table9', $obj->table());
+
+        $this->expectException(InvalidArgumentException::class);
+        $obj->setTable(null);
+    }
+
+    /**
+     * Injection-shaped and otherwise unsafe table names must be rejected (LS03).
+     *
+     * @dataProvider provideInvalidTableNames
+     *
+     * @param  mixed $table Invalid table name.
+     * @return void
+     */
+    public function testSetTableRejectsUnsafeNames($table)
+    {
+        $container = $this->getContainer();
+
+        $obj = new DatabaseSource([
+            'logger' => $container['logger'],
+            'pdo'    => $container['database'],
+        ]);
+
+        $this->expectException(InvalidArgumentException::class);
+        $obj->setTable($table);
+    }
+
+    /**
+     * @return array<string,array{0:mixed}>
+     */
+    public function provideInvalidTableNames()
+    {
+        return [
+            'empty'              => [ '' ],
+            'injection_drop'     => [ 'users; DROP TABLE secrets--' ],
+            'injection_comment'  => [ 'foo--' ],
+            'space'              => [ 'foo bar' ],
+            'hyphen'             => [ 'foo-bar' ],
+            'dot_schema'         => [ 'schema.table' ],
+            'backtick'           => [ 'foo`bar' ],
+            'leading_digit'      => [ '1table' ],
+            'semicolon'          => [ 'a;b' ],
+            'quote_breakout'     => [ "foo' OR '1'='1" ],
+        ];
+    }
+
+    /**
+     * Assert that, with the method `setTable()`:
      * - setting the table change the table.
      * - the method is chainable.
      * - passing a non-string argument throws an exception.
@@ -135,7 +206,7 @@ class DatabaseSourceTest extends AbstractTestCase
      * @return void
      */
     /*
-    public function testSetTable()
+    public function testSetTableLegacy()
     {
         $obj = new DatabaseSource();
         $ret = $obj->setTable('foo');

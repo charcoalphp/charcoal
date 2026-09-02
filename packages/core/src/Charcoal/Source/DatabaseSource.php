@@ -89,7 +89,7 @@ class DatabaseSource extends AbstractSource implements
      * Set the database's table to use.
      *
      * @param  string $table The source table.
-     * @throws InvalidArgumentException If argument is not a string or alphanumeric/underscore.
+     * @throws InvalidArgumentException If argument is not a string or a safe identifier.
      * @return self
      */
     public function setTable($table)
@@ -103,13 +103,13 @@ class DatabaseSource extends AbstractSource implements
         }
 
         /**
-         * For security reason, only alphanumeric characters (+ underscores)
-         * are valid table names; Although SQL can support more,
-         * there's really no reason to.
+         * Only full-string SQL identifiers: letter or underscore, then
+         * alphanumeric / underscore. Unanchored matching previously allowed
+         * values like `users; DROP TABLE x--` because they contain [A-Za-z0-9_].
          */
-        if (!preg_match('/[A-Za-z0-9_]/', $table)) {
+        if (!preg_match('/^[A-Za-z_][A-Za-z0-9_]*$/', $table)) {
             throw new InvalidArgumentException(sprintf(
-                '[%s] Database table name "%s" is invalid: must be alphanumeric / underscore',
+                '[%s] Database table name "%s" is invalid: must match /^[A-Za-z_][A-Za-z0-9_]*$/',
                 $this->getModelClassForException(),
                 $table
             ));
