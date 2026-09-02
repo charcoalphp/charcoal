@@ -50,40 +50,6 @@ class LoginTemplate extends AdminTemplate
     }
 
     /**
-     * @todo   Implement using PSR Request object
-     */
-    private function isHttps(): bool
-    {
-        if (isset($_SERVER['HTTPS']) && strtolower((string)$_SERVER['HTTPS']) === 'on') {
-            return true;
-        } elseif (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https') {
-            return true;
-        } elseif (isset($_SERVER['HTTP_FRONT_END_HTTPS']) && $_SERVER['HTTP_FRONT_END_HTTPS'] === 'on') {
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * @return boolean
-     */
-    public function rememberMeEnabled()
-    {
-        $auth  = $this->authenticator();
-        $token = $auth->tokenFactory()->get($auth->tokenType());
-
-        if ($token->isEnabled() === false) {
-            return false;
-        }
-
-        if ($token->isSecure() === true) {
-            return $this->isHttps();
-        }
-
-        return true;
-    }
-
-    /**
      * Authentication is obviously never required for the login page.
      */
     #[\Override]
@@ -124,7 +90,7 @@ class LoginTemplate extends AdminTemplate
     public function recaptchaParameters(): array
     {
         $params = parent::recaptchaParameters();
-        $params['tabindex'] = 4;
+        $params['tabindex'] = 3;
 
         if ($this->recaptchaInvisible() === true) {
             $params['callback'] = 'CharcoalCaptchaLoginCallback';

@@ -364,10 +364,10 @@ abstract class AbstractAuthenticator implements
     /**
      * Log a user into the application.
      *
-     * @param  AuthenticatableInterface $user     The authenticated user to log in.
-     * @param  boolean                  $remember Whether to "remember" the user or not.
+     * @param  AuthenticatableInterface $user The authenticated user to log in.
+     * @return void
      */
-    public function login(AuthenticatableInterface $user, $remember = false): void
+    public function login(AuthenticatableInterface $user): void
     {
         if (!$user->getAuthId()) {
             return;
@@ -378,10 +378,6 @@ abstract class AbstractAuthenticator implements
         }
 
         $this->updateUserSession($user);
-
-        if ($remember) {
-            $this->updateCurrentToken($user);
-        }
 
         $this->setUser($user);
     }
@@ -400,9 +396,9 @@ abstract class AbstractAuthenticator implements
     }
 
     /**
-     * Attempt to authenticate a user by session or token.
+     * Attempt to authenticate a user by session.
      *
-     * The user is authenticated via _session ID_ or _auth token_.
+     * The user is authenticated via _session ID_.
      *
      * @return AuthenticatableInterface|null Returns the authenticated user object
      *     or NULL if not authenticated.
@@ -418,11 +414,6 @@ abstract class AbstractAuthenticator implements
             return $user;
         }
 
-        $user = $this->authenticateByToken();
-        if ($user) {
-            return $user;
-        }
-
         $this->authenticatedMethod = null;
         $this->authenticatedToken  = null;
         $this->authenticatedUser   = null;
@@ -433,14 +424,13 @@ abstract class AbstractAuthenticator implements
     /**
      * Attempt to authenticate a user using the given credentials.
      *
-     * @param  string  $identifier The login ID, part of necessary credentials.
-     * @param  string  $password   The password, part of necessary credentials.
-     * @param  boolean $remember   Whether to "remember" the user or not.
+     * @param  string $identifier The login ID, part of necessary credentials.
+     * @param  string $password   The password, part of necessary credentials.
      * @throws InvalidArgumentException If the credentials are invalid or missing.
      * @return AuthenticatableInterface|null Returns the authenticated user object
      *     or NULL if not authenticated.
      */
-    public function authenticateByPassword($identifier, $password, $remember = false)
+    public function authenticateByPassword($identifier, $password)
     {
         if (!$this->validateLogin($identifier, $password)) {
             throw new InvalidArgumentException(
@@ -474,7 +464,7 @@ abstract class AbstractAuthenticator implements
                 $this->rehashUserPassword($user, $password);
             }
 
-            $this->login($user, $remember);
+            $this->login($user);
             $this->authenticatedMethod = static::AUTH_BY_PASSWORD;
 
             return $user;

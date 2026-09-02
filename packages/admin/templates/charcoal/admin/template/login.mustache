@@ -53,21 +53,11 @@ This template expects a `Charcoal\Admin\Template\LoginTemplate` model as context
                     </div>
                 </div>
 
-                {{# rememberMeEnabled }}
-                <div class="form-group">
-                    <div class="form-check">
-                        <input type="hidden" name="remember-me" value="0">
-                        <input class="form-check-input" type="checkbox" name="remember-me" id="remember-me" tabindex="3">
-                        <label class="form-check-label" for="remember-me">{{# _t }}Remember Me{{/ _t }}</label>
-                    </div>
-                </div>
-                {{/ rememberMeEnabled }}
-
                 {{> charcoal/admin/widget/recaptcha }}
 
                 <div class="form-group">
                     <p>
-                        <button type="submit" class="btn btn-primary btn-lg btn-block" tabindex="5">
+                        <button type="submit" class="btn btn-primary btn-lg btn-block" tabindex="4">
                             <span class="fa fa-refresh u-spin d-none"></span>
                             <span class="btn-label">{{# _t }}auth.login.action{{/ _t }}</span>
                         </button>

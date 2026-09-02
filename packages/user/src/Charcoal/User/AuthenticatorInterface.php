@@ -40,11 +40,10 @@ interface AuthenticatorInterface
     /**
      * Log a user into the application.
      *
-     * @param  AuthenticatableInterface $user     The authenticated user to log in.
-     * @param  boolean                  $remember Whether to "remember" the user or not.
+     * @param  AuthenticatableInterface $user The authenticated user to log in.
      * @return boolean
      */
-    public function login(AuthenticatableInterface $user, $remember = false);
+    public function login(AuthenticatableInterface $user): void;
 
     /**
      * Log the user out of the application.
@@ -54,9 +53,9 @@ interface AuthenticatorInterface
     public function logout();
 
     /**
-     * Attempt to authenticate a user by session or token.
+     * Attempt to authenticate a user by session.
      *
-     * The user is authenticated via _session ID_ or _auth token_.
+     * The user is authenticated via _session ID_.
      *
      * @return AuthenticatableInterface|null Returns the authenticated user object
      *     or NULL if not authenticated.
