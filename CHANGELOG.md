@@ -1,5 +1,12 @@
 # Changelog
 
+## [5.1.4](https://github.com/charcoalphp/charcoal/compare/v5.1.3...v5.1.4) (2026-09-02)
+
+
+### Bug Fixes
+
+* **loginToken:** Remove login token ([#100](https://github.com/charcoalphp/charcoal/issues/100)) ([fe7f270](https://github.com/charcoalphp/charcoal/commit/fe7f27090853e34b9232549ad81d532c08b51a8a))
+
 ## [5.1.3](https://github.com/charcoalphp/charcoal/compare/v5.1.2...v5.1.3) (2026-09-02)
 
 
