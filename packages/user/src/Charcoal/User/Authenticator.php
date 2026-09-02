@@ -17,13 +17,12 @@ class Authenticator extends AbstractAuthenticator
     /**
      * Log a user into the application.
      *
-     * @param  AuthenticatableInterface $user     The authenticated user to log in.
-     * @param  boolean                  $remember Whether to "remember" the user or not.
+     * @param  AuthenticatableInterface $user The authenticated user to log in.
      * @return void
      */
-    public function login(AuthenticatableInterface $user, $remember = false)
+    public function login(AuthenticatableInterface $user)
     {
-        parent::login($user, $remember);
+        parent::login($user);
 
         $this->touchUserLogin($user);
     }
