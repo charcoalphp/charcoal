@@ -1,5 +1,12 @@
 # Changelog
 
+## [5.1.3](https://github.com/charcoalphp/charcoal/compare/v5.1.2...v5.1.3) (2026-09-02)
+
+
+### Bug Fixes
+
+* **admin:** hash lost password reset tokens.  ([#101](https://github.com/charcoalphp/charcoal/issues/101)) ([2dcd8a1](https://github.com/charcoalphp/charcoal/commit/2dcd8a1005113082dd15fc651d323a6fb410ade3))
+
 ## [5.1.2](https://github.com/charcoalphp/charcoal/compare/v5.1.1...v5.1.2) (2026-08-28)
 
 
