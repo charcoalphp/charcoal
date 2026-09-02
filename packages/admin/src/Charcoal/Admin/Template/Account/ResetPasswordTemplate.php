@@ -83,22 +83,17 @@ class ResetPasswordTemplate extends AdminTemplate
      *
      * - exist in the database
      * - not be expired
+     * - verify against the stored password hash
      *
-     * @see    \Charcoal\Admin\Action\Account\ResetPasswordAction::validateToken()
-     * @param  string $token The token to validate.
+     * @see    \Charcoal\Admin\Action\Account\ResetPasswordAction::loadValidToken()
+     * @param  string $token The public token to validate.
      * @return boolean
      */
     private function validateToken($token)
     {
         $obj = $this->modelFactory()->create(LostPasswordToken::class);
-        $sql = strtr('SELECT * FROM `%table` WHERE `token` = :token AND `expiry` > NOW()', [
-            '%table' => $obj->source()->table()
-        ]);
-        $obj->loadFromQuery($sql, [
-            'token' => $token
-        ]);
 
-        return !!$obj->token();
+        return $obj->loadFromPublicToken($token);
     }
 
     /**
