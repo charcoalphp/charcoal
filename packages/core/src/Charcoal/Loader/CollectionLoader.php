@@ -652,9 +652,11 @@ class CollectionLoader implements
         // Unused.
         unset($ident);
 
-        $query = $this->source()->sqlLoad();
+        $source = $this->source();
+        $query  = $source->sqlLoad();
+        $binds  = method_exists($source, 'filterBinds') ? $source->filterBinds() : [];
 
-        return $this->loadFromQuery($query, $callback, $before);
+        return $this->loadFromQuery([ $query, $binds, [] ], $callback, $before);
     }
 
     /**
@@ -665,18 +667,16 @@ class CollectionLoader implements
      */
     public function loadCount()
     {
-        $query = $this->source()->sqlLoadCount();
+        $source = $this->source();
+        $query  = $source->sqlLoadCount();
+        $binds  = method_exists($source, 'filterBinds') ? $source->filterBinds() : [];
 
-        $db = $this->source()->db();
-        if (!$db) {
+        $sth = $source->dbQuery($query, $binds);
+        if ($sth === false) {
             throw new RuntimeException(
-                'Could not instanciate a database connection.'
+                'Could not execute collection count query.'
             );
         }
-        $this->logger->debug($query);
-
-        $sth = $db->prepare($query);
-        $sth->execute();
         $res = $sth->fetchColumn(0);
 
         return (int)$res;
@@ -717,7 +717,7 @@ class CollectionLoader implements
             );
         }
 
-        /** @todo Filter binds */
+        /** Filter value binds from {@see DatabaseSource::filterBinds()} */
         if (is_string($query)) {
             $this->logger->debug($query);
             $sth = $db->prepare($query);

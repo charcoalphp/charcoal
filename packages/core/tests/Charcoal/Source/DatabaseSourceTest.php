@@ -540,4 +540,40 @@ class DatabaseSourceTest extends AbstractTestCase
         $obj->deleteItem($item2);
     }
     */
+
+    /**
+     * Predicate filters expose PDO binds via filterBinds() after sqlFilters().
+     *
+     * @return void
+     */
+    public function testSqlFiltersCollectsBinds()
+    {
+        $container = $this->getContainer();
+
+        $src = new DatabaseSource([
+            'logger' => $container['logger'],
+            'pdo'    => $container['database'],
+        ]);
+
+        $this->assertSame([], $src->filterBinds());
+
+        $src->addFilter([
+            'property' => 'name',
+            'operator' => '=',
+            'value'    => "' OR '1'='1",
+        ]);
+
+        $sql = $src->sqlFilters();
+        $binds = $src->filterBinds();
+
+        $this->assertStringStartsWith(' WHERE ', $sql);
+        $this->assertMatchesRegularExpression('/:filter_\d+/', $sql);
+        $this->assertStringNotContainsString("' OR '1'='1", $sql);
+        $this->assertCount(1, $binds);
+        $this->assertSame("' OR '1'='1", array_values($binds)[0]);
+
+        $src->reset();
+        $this->assertSame('', $src->sqlFilters());
+        $this->assertSame([], $src->filterBinds());
+    }
 }

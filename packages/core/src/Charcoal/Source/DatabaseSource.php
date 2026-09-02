@@ -47,6 +47,16 @@ class DatabaseSource extends AbstractSource implements
     private $table;
 
     /**
+     * PDO binds collected from the last {@see sqlFilters()} compilation.
+     *
+     * Callers that use {@see sqlLoad()} / {@see sqlLoadCount()} / {@see sqlFilters()}
+     * must pass these binds to {@see dbQuery()} (or equivalent).
+     *
+     * @var array<string,mixed>
+     */
+    private $filterBinds = [];
+
+    /**
      * Create a new database handler.
      *
      * @param array $data Class dependencies.
@@ -515,14 +525,14 @@ class DatabaseSource extends AbstractSource implements
         }
 
         $query = $this->sqlLoad();
-        return $this->loadItemsFromQuery($query, [], $item);
+        return $this->loadItemsFromQuery($query, $this->filterBinds(), $item);
     }
 
     /**
      * Load items for the given query statement.
      *
      * @param  string                 $query The SQL SELECT statement.
-     * @param  array                  $binds This has to be done.
+     * @param  array                  $binds Named PDO parameter binds.
      * @param  StorableInterface|null $item  Model Item.
      * @return StorableInterface[]
      */
@@ -535,17 +545,12 @@ class DatabaseSource extends AbstractSource implements
         $items = [];
 
         $model = $this->model();
-        $dbh   = $this->db();
 
-        $this->logger->debug($query);
-        $sth = $dbh->prepare($query);
-
-        // @todo Binds
-        if (!empty($binds)) {
-            unset($binds);
+        $sth = $this->dbQuery($query, $binds);
+        if ($sth === false) {
+            return $items;
         }
 
-        $sth->execute();
         $sth->setFetchMode(PDO::FETCH_ASSOC);
 
         $className = get_class($model);
@@ -911,13 +916,27 @@ class DatabaseSource extends AbstractSource implements
     }
 
     /**
+     * Named PDO binds from the last {@see sqlFilters()} compilation.
+     *
+     * @return array<string,mixed>
+     */
+    public function filterBinds()
+    {
+        return $this->filterBinds;
+    }
+
+    /**
      * Compile the WHERE clause.
      *
-     * @todo   [2016-02-19] Use bindings for filters value
+     * Predicate filter values are emitted as named placeholders; use {@see filterBinds()}
+     * when executing the query.
+     *
      * @return string
      */
     public function sqlFilters()
     {
+        $this->filterBinds = [];
+
         if (!$this->hasFilters()) {
             return '';
         }
@@ -927,6 +946,10 @@ class DatabaseSource extends AbstractSource implements
         ]);
 
         $sql = $criteria->sql();
+        if ($criteria instanceof DatabaseFilter) {
+            $this->filterBinds = $criteria->binds();
+        }
+
         if ($sql && strlen($sql) > 0) {
             $sql = ' WHERE ' . $sql;
         }
