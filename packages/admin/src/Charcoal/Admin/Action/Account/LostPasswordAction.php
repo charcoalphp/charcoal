@@ -212,23 +212,23 @@ class LostPasswordAction extends AdminAction
     private function generateLostPasswordToken(User $user)
     {
         $token = $this->modelFactory()->create(LostPasswordToken::class);
-        $token->setData([
-            'user' => $user['id'],
-        ]);
+        $token->generate($user['id']);
         $token->save();
         return $token;
     }
 
     /**
      * @todo   Implement `$container['admin/config']['user.lost_password_email']`
-     * @param  User   $user  The user to send the lost-password email to.
-     * @param  string $token The lost-password token, as string.
+     * @param  User              $user  The user to send the lost-password email to.
+     * @param  LostPasswordToken $token The lost-password token.
+     * @return void
      */
-    private function sendLostPasswordEmail(User $user, $token): void
+    private function sendLostPasswordEmail(User $user, LostPasswordToken $token): void
     {
-        $translator = $this->translator();
-        $userEmail  = $user['email'];
-        $siteName   = $this->siteName();
+        $translator  = $this->translator();
+        $userEmail   = $user['email'];
+        $siteName    = $this->siteName();
+        $publicToken = $token->publicToken();
 
         if ($siteName) {
             $subject = strtr($translator->translate('{{ siteName }} — Password Reset'), [
@@ -254,10 +254,10 @@ class LostPasswordAction extends AdminAction
             'template_ident'    => 'charcoal/admin/email/user.lost-password',
             'template_data'     => [
                 'user'             => $user,
-                'token'            => $token->id(),
+                'token'            => $publicToken,
                 'siteName'         => $siteName,
                 'adminUrl'         => $this->adminUrl(),
-                'urlResetPassword' => $this->adminUrl() . 'account/reset-password/' . $token->id(),
+                'urlResetPassword' => $this->adminUrl() . 'account/reset-password/' . $publicToken,
                 'expiry'           => $token->expiry()->format('Y-m-d H:i:s'),
                 'ipAddress'        => ($_SERVER['REMOTE_ADDR'] ?? ''),
             ],

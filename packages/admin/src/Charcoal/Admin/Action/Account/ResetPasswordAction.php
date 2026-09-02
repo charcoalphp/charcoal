@@ -146,7 +146,8 @@ class ResetPasswordAction extends AdminAction
             return $response->withStatus(500);
         }
 
-        if (!$this->validateToken($token, $user->id())) {
+        $tokenObj = $this->loadValidToken($token, $user->id());
+        if (!$tokenObj) {
             $this->setFailureUrl($this->adminUrl('account/lost-password?notice=invalidtoken'));
             $this->addFeedback('error', $translator->translate('Your password reset token is invalid or expired.'));
             $this->setSuccess(false);
@@ -156,7 +157,7 @@ class ResetPasswordAction extends AdminAction
 
         try {
             $authenticator->changeUserPassword($user, $password1);
-            $this->deleteToken($token);
+            $tokenObj->delete();
 
             $this->addFeedback('success', $translator->translate('Your password has been successfully changed.'));
             $this->setSuccessUrl((string)$this->adminUrl('login?notice=newpass'));
@@ -199,41 +200,27 @@ class ResetPasswordAction extends AdminAction
     }
 
     /**
-     * Validate the given password reset token.
+     * Load and validate the given password reset token.
      *
      * To be valid, a token should:
      *
      * - exist in the database
      * - not be expired
      * - match the given user
+     * - verify against the stored password hash
      *
-     * @see    \Charcoal\Admin\Template\Account::validateToken()
-     * @param  string $token  The token to validate.
+     * @see    \Charcoal\Admin\Template\Account\ResetPasswordTemplate::validateToken()
+     * @param  string $token  The public token to validate.
      * @param  string $userId The user ID that should match the token.
+     * @return LostPasswordToken|null
      */
-    private function validateToken($token, $userId): bool
+    private function loadValidToken($token, $userId): LostPasswordToken|null
     {
         $obj = $this->modelFactory()->create(LostPasswordToken::class);
-        $sql = strtr('SELECT * FROM `%table` WHERE `token` = :token AND `user` = :userId AND `expiry` > NOW()', [
-            '%table' => $obj->source()->table(),
-        ]);
-        $obj->loadFromQuery($sql, [
-            'token'  => $token,
-            'userId' => $userId,
-        ]);
+        if (!$obj->loadFromPublicToken($token, $userId)) {
+            return null;
+        }
 
-        return (bool)$obj->token();
-    }
-
-    /**
-     * Delete the given password reset token.
-     *
-     * @param  string $token The token to delete.
-     */
-    private function deleteToken($token): void
-    {
-        $obj = $this->modelFactory()->create(LostPasswordToken::class);
-        $obj->setToken($token);
-        $obj->delete();
+        return $obj;
     }
 }
