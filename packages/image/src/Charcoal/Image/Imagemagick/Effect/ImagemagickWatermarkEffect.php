@@ -36,16 +36,21 @@ class ImagemagickWatermarkEffect extends AbstractWatermarkEffect
         }
 
         $gravity = $this->image()->imagemagickGravity($this->gravity());
-        $params  = [ '-gravity ' . $gravity ];
+        $params  = [ '-gravity ' . escapeshellarg($gravity) ];
 
         $cmd = null;
         if ($this->image()->compositeCmd()) {
             $cmd = 'composite';
-            $params[] = '-watermark 100% ' . $watermark . ' ' . $this->image()->tmp();
+            $params[] = '-watermark 100% ' . escapeshellarg($watermark) . ' ' . escapeshellarg($this->image()->tmp());
         } else {
-            $params[] = '-geometry +' . $this->x() . '+' . $this->y();
-            $params[] = '-draw "image Multiply 0,0 ' . $width . ',' . $height;
-            $params[] = '\'' . $watermark . '\'"';
+            $params[] = '-geometry +' . (int)$this->x() . '+' . (int)$this->y();
+            // The watermark path is nested inside ImageMagick's own MVG single-quote
+            // syntax (`'...'`), which sits inside the shell-quoted `-draw` argument;
+            // strip any single quotes so it can't break out of the MVG quoting.
+            $mvgWatermark = str_replace("'", '', $watermark);
+            $params[] = '-draw ' . escapeshellarg(
+                'image Multiply 0,0 ' . (int)$width . ',' . (int)$height . " '" . $mvgWatermark . "'"
+            );
         }
 
         $this->image()->applyCmd(implode(' ', $params), $cmd);

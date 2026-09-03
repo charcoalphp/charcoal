@@ -199,4 +199,98 @@ class ImagemagickImageTest extends \PHPUnit\Framework\TestCase
             [ [ 'type' => 'watermark', 'watermark' => EXAMPLES_DIR.'/watermark.png' ], 'imagemagick-watermark-default.png' ]
         ];
     }
+
+    /**
+     * Regression tests: effect parameters that are concatenated into the ImageMagick
+     * command line (background colors, geometry/size strings, watermark paths) must
+     * never be interpretable as shell metacharacters by ImagemagickImage::exec().
+     *
+     * Each case embeds a "; touch <marker> ;" payload in the parameter under test and
+     * asserts the marker file was never created, regardless of whether ImageMagick
+     * itself accepts or rejects the (bogus) literal value.
+     *
+     * @param  array  $effect The effect data, with a shell-injection payload embedded.
+     * @param  string $marker Path to the marker file the payload attempts to create.
+     * @return void
+     */
+    private function assertEffectDoesNotShellInject(array $effect, $marker)
+    {
+        if (file_exists($marker)) {
+            unlink($marker);
+        }
+
+        $obj = $this->createImage();
+        $obj->open(EXAMPLES_DIR.'/test02.png');
+
+        try {
+            $obj->processEffect($effect);
+        } catch (\Exception $e) {
+            // ImageMagick may legitimately reject the bogus literal value;
+            // what matters here is that the shell never ran the injected command.
+        }
+
+        $this->assertFalse(
+            file_exists($marker),
+            'Effect parameter was interpreted as a shell command instead of a literal value'
+        );
+
+        if (file_exists($marker)) {
+            unlink($marker);
+        }
+    }
+
+    public function testResizeBackgroundColorIsNotShellInjectable()
+    {
+        $marker = sys_get_temp_dir() . '/charcoal_test_marker_bg_' . uniqid();
+        $this->assertEffectDoesNotShellInject([
+            'type'             => 'resize',
+            'width'            => 10,
+            'height'           => 10,
+            'background_color' => '" ; touch ' . $marker . ' ; echo "',
+        ], $marker);
+    }
+
+    public function testResizeSizeIsNotShellInjectable()
+    {
+        $marker = sys_get_temp_dir() . '/charcoal_test_marker_size_' . uniqid();
+        $this->assertEffectDoesNotShellInject([
+            'type' => 'resize',
+            'size' => '50%" ; touch ' . $marker . ' ; echo "',
+        ], $marker);
+    }
+
+    public function testCropGeometryIsNotShellInjectable()
+    {
+        $marker = sys_get_temp_dir() . '/charcoal_test_marker_geo_' . uniqid();
+        $this->assertEffectDoesNotShellInject([
+            'type'     => 'crop',
+            'geometry' => '10x10+0+0" ; touch ' . $marker . ' ; echo "',
+        ], $marker);
+    }
+
+    public function testWatermarkIsNotShellInjectable()
+    {
+        // The watermark path must point to a file that genuinely exists (open()
+        // validates it with file_exists() first), so the payload is embedded in
+        // the *name* of a real file rather than appended after a valid path —
+        // mirroring a file uploaded with an unusual-but-legal filename. The
+        // marker name is kept relative (no embedded "/") because copy() itself
+        // rejects a second absolute path fragment inside a filename, which is
+        // an unrelated PHP stream-wrapper quirk, not part of what's under test.
+        $markerName = 'charcoal_test_marker_wm_' . uniqid() . '.tmp';
+        $marker = getcwd() . '/' . $markerName;
+        $maliciousWatermark = sys_get_temp_dir() . '/charcoal_test_wm_' . uniqid() . '; touch ' . $markerName . ' ;.png';
+        copy(EXAMPLES_DIR . '/watermark.png', $maliciousWatermark);
+
+        try {
+            $this->assertEffectDoesNotShellInject([
+                'type'      => 'watermark',
+                'watermark' => $maliciousWatermark,
+            ], $marker);
+        } finally {
+            if (file_exists($maliciousWatermark)) {
+                unlink($maliciousWatermark);
+            }
+        }
+    }
 }

@@ -34,9 +34,9 @@
     "require-dev": {
         "charcoal/admin": "^5.1.5",
         "mustache/mustache": "^3.2",
-        "php-coveralls/php-coveralls": "^2.2",
-        "phpunit/phpunit": "^9.5",
-        "squizlabs/php_codesniffer": "^3.5",
+        "php-coveralls/php-coveralls": "^2.7",
+        "phpunit/phpunit": "^9.6",
+        "squizlabs/php_codesniffer": "^3.13 || ^4.0",
         "tedivm/stash": "~0.16"
     },
     "conflict": {
