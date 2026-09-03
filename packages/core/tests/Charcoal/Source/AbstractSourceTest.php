@@ -431,6 +431,34 @@ class AbstractSourceTest extends AbstractTestCase
     }
 
     /**
+     * Aliased join filters must not rewrite property/operator against the main model.
+     *
+     * @covers \Charcoal\Source\AbstractSource::parseFilterWithModel
+     *
+     * @return void
+     */
+    public function testParseFilterWithModelSkipsAliasedJoin()
+    {
+        $model  = $this->createModel();
+        $source = $this->obj;
+        $source->setModel($model);
+        $method = $this->getMethod($source, 'parseFilterWithModel');
+
+        $exp = $this->createFilter([
+            'table'    => 'relTable1',
+            'property' => 'title',
+            'operator' => '=',
+            'value'    => 'Charcoal',
+        ]);
+
+        $result = $method->invoke($source, $exp);
+        $this->assertSame($exp, $result);
+        $this->assertEquals('title', $exp->property());
+        $this->assertEquals('=', $exp->operator());
+        $this->assertEquals('relTable1', $exp->table());
+    }
+
+    /**
      * Test the creation of a query filter expression.
      *
      * Assertions:

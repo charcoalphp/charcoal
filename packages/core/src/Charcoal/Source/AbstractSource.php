@@ -25,6 +25,7 @@ use Charcoal\Source\OrderCollectionInterface;
 use Charcoal\Source\OrderCollectionTrait;
 use Charcoal\Source\Pagination;
 use Charcoal\Source\PaginationInterface;
+use Charcoal\Source\DatabaseSource;
 
 /**
  * Data Storage Source Handler.
@@ -268,6 +269,10 @@ abstract class AbstractSource implements
     /**
      * Process a query filter with the current model.
      *
+     * Skips l10n / FIND_IN_SET rewrites when the filter targets a non-default
+     * table alias (e.g. joined relation search), where `property` is already a
+     * resolved field name for that alias.
+     *
      * @todo   If property is L10N, turn filter into group of filters for each language.
      * @param  FilterInterface $filter The expression object.
      * @return FilterInterface The parsed expression object.
@@ -276,17 +281,24 @@ abstract class AbstractSource implements
     {
         if ($this->hasModel()) {
             if ($filter->hasProperty()) {
-                $model    = $this->model();
-                $property = $filter->property();
-                if (is_string($property) && $model->hasProperty($property)) {
-                    $property = $model->property($property);
+                $table = method_exists($filter, 'table') ? $filter->table() : null;
+                $isAliasedJoin = is_string($table)
+                    && $table !== ''
+                    && $table !== DatabaseSource::DEFAULT_TABLE_ALIAS;
 
-                    if ($property['l10n']) {
-                        $filter->setProperty($property->l10nIdent());
-                    }
+                if (!$isAliasedJoin) {
+                    $model    = $this->model();
+                    $property = $filter->property();
+                    if (is_string($property) && $model->hasProperty($property)) {
+                        $property = $model->property($property);
 
-                    if ($property['multiple']) {
-                        $filter->setOperator('FIND_IN_SET');
+                        if ($property['l10n']) {
+                            $filter->setProperty($property->l10nIdent());
+                        }
+
+                        if ($property['multiple']) {
+                            $filter->setOperator('FIND_IN_SET');
+                        }
                     }
                 }
             }

@@ -74,6 +74,8 @@ trait ExpressionFieldTrait
             );
         }
 
+        Expression::assertSafeSqlIdentifier($property, 'Property');
+
         $this->property = $property;
         return $this;
     }
@@ -123,6 +125,8 @@ trait ExpressionFieldTrait
                 'Table reference can not be empty.'
             );
         }
+
+        Expression::assertSafeSqlIdentifier($table, 'Table reference');
 
         $this->table = $table;
         return $this;

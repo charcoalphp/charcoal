@@ -137,14 +137,16 @@ abstract class AbstractExpression implements
     }
 
     /**
-     * Quote the given scalar value.
+     * Quote the given scalar value for legacy inline SQL fragments.
+     *
+     * Prefer PDO binds (e.g. DatabaseFilter / DatabaseOrder) instead of this helper.
+     * String values use SQL-style escaping (backslash + single quotes), not HTML entities.
      *
      * @param  mixed $value The value to be quoted.
      * @return mixed Returns:
      *     - If $value is not a scalar value, the value is returned intact.
      *     - if $value is a boolean, the value is cast to an integer.
-     *     - If $value is not a number, the value is stringified
-     *       and wrapped in double quotes.
+     *     - If $value is not a number, the value is escaped and wrapped in single quotes.
      */
     public static function quoteValue($value)
     {
@@ -159,19 +161,61 @@ abstract class AbstractExpression implements
         }
 
         if (!is_numeric($value)) {
-            $value = htmlspecialchars($value, ENT_QUOTES);
-            $value = sprintf('"%s"', $value);
+            $value = sprintf("'%s'", addslashes((string)$value));
         }
 
         return $value;
     }
 
     /**
+     * Whether the name is a safe unquoted SQL identifier.
+     *
+     * @param  mixed $name Candidate identifier.
+     * @return boolean
+     */
+    public static function isSafeSqlIdentifier($name)
+    {
+        return is_string($name) && preg_match('/^[A-Za-z_][A-Za-z0-9_]*$/', $name) === 1;
+    }
+
+    /**
+     * Reject unsafe SQL identifiers.
+     *
+     * @param  mixed  $name  Candidate identifier.
+     * @param  string $label Label for the exception message.
+     * @throws InvalidArgumentException If $name is not a safe identifier.
+     * @return void
+     */
+    public static function assertSafeSqlIdentifier($name, $label = 'Identifier')
+    {
+        if (!static::isSafeSqlIdentifier($name)) {
+            throw new InvalidArgumentException(sprintf(
+                '%s "%s" is invalid: must match /^[A-Za-z_][A-Za-z0-9_]*$/',
+                $label,
+                is_scalar($name) ? $name : gettype($name)
+            ));
+        }
+    }
+
+    /**
+     * Quote a validated SQL identifier with backticks (MySQL).
+     *
+     * Embedded backticks are doubled as a defense-in-depth measure.
+     *
+     * @param  string $name Identifier already validated by {@see assertSafeSqlIdentifier()}.
+     * @return string
+     */
+    public static function quoteSqlIdentifier($name)
+    {
+        return '`' . str_replace('`', '``', $name) . '`';
+    }
+
+    /**
      * Quote the given field name.
      *
-     * @param  string      $identifier The field name.
-     * @param  string|null $tableName  If provided, the table name is prepended to the $identifier.
-     * @throws InvalidArgumentException If the parameters are not string.
+     * @param  string      $identifier The field name (`*` allowed).
+     * @param  string|null $tableName  If provided, the table/alias is prepended.
+     * @throws InvalidArgumentException If the parameters are not safe identifiers.
      * @return string
      */
     public static function quoteIdentifier($identifier, $tableName = null)
@@ -201,20 +245,24 @@ abstract class AbstractExpression implements
                 );
             }
 
+            static::assertSafeSqlIdentifier($tableName, 'Table Name');
+
             if ($identifier === '*') {
-                $template = '%1$s.*';
-            } else {
-                $template = '%1$s.`%2$s`';
+                return static::quoteSqlIdentifier($tableName) . '.*';
             }
 
-            return sprintf($template, $tableName, $identifier);
+            static::assertSafeSqlIdentifier($identifier, 'Field Name');
+
+            return static::quoteSqlIdentifier($tableName) . '.' . static::quoteSqlIdentifier($identifier);
         }
 
         if ($identifier === '*') {
             return $identifier;
-        } else {
-            return sprintf('`%1$s`', $identifier);
         }
+
+        static::assertSafeSqlIdentifier($identifier, 'Field Name');
+
+        return static::quoteSqlIdentifier($identifier);
     }
 
     /**

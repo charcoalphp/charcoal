@@ -14,18 +14,20 @@ interface OrderCollectionInterface
      *
      * Note: Any existing orders are dropped.
      *
-     * @param  array $orders One or more orders to set on this expression.
+     * @param  array   $orders   One or more orders to set on this expression.
+     * @param  boolean $trusted  TRUE allows raw condition SQL; FALSE sanitizes untrusted lists.
      * @return self
      */
-    public function setOrders(array $orders);
+    public function setOrders(array $orders, $trusted = true);
 
     /**
      * Append one or more query orders on this object.
      *
-     * @param  array $orders One or more orders to add on this expression.
+     * @param  array   $orders   One or more orders to add on this expression.
+     * @param  boolean $trusted  TRUE allows raw condition SQL; FALSE sanitizes untrusted lists.
      * @return self
      */
-    public function addOrders(array $orders);
+    public function addOrders(array $orders, $trusted = true);
 
     /**
      * Append a query order on this object.

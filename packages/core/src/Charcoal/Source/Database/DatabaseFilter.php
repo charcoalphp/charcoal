@@ -17,6 +17,8 @@ use Charcoal\Source\Filter;
  * 2. Custom — If "condition" is defined.
  *    - Optionally, a logical NOT "operator" can negate the tree by prepending NOT.
  * 3. Predicate — If "property" and either "func" or "value" are defined.
+ *
+ * Predicate values are emitted as named PDO placeholders; use {@see binds()} with the SQL.
  */
 class DatabaseFilter extends Filter implements
     DatabaseExpressionInterface
@@ -27,6 +29,20 @@ class DatabaseFilter extends Filter implements
      * @var string
      */
     protected $table = DatabaseSource::DEFAULT_TABLE_ALIAS;
+
+    /**
+     * Named PDO parameter binds collected during {@see sql()}.
+     *
+     * @var array<string,mixed>
+     */
+    private $binds = [];
+
+    /**
+     * Process-wide counter so nested filters never collide on placeholder names.
+     *
+     * @var integer
+     */
+    private static $bindSequence = 0;
 
     /**
      * Retrieve the default values for filtering.
@@ -42,12 +58,38 @@ class DatabaseFilter extends Filter implements
     }
 
     /**
+     * Named PDO binds for the last {@see sql()} compilation.
+     *
+     * @return array<string,mixed>
+     */
+    public function binds()
+    {
+        return $this->binds;
+    }
+
+    /**
+     * Merge binds from a nested filter into this expression.
+     *
+     * @param  array<string,mixed> $binds Parameter map (keys without leading colon).
+     * @return self
+     */
+    public function mergeBinds(array $binds)
+    {
+        $this->binds = array_merge($this->binds, $binds);
+        return $this;
+    }
+
+    /**
      * Converts the filter into a SQL expression for the WHERE clause.
+     *
+     * Resets and rebuilds {@see binds()} for this compilation.
      *
      * @return string A SQL string fragment.
      */
     public function sql()
     {
+        $this->binds = [];
+
         if ($this->active()) {
             if ($this->hasFilters()) {
                 $sql = $this->byFilters();
@@ -104,7 +146,35 @@ class DatabaseFilter extends Filter implements
     }
 
     /**
+     * Allocate a unique bind parameter name (without leading colon).
+     *
+     * @return string
+     */
+    protected function nextBindName()
+    {
+        return 'filter_' . (self::$bindSequence++);
+    }
+
+    /**
+     * Register a bind value and return its SQL placeholder including the colon.
+     *
+     * @param  mixed $value The value to bind.
+     * @return string
+     */
+    protected function bindValue($value)
+    {
+        $name = $this->nextBindName();
+        $this->binds[$name] = $value;
+        return ':' . $name;
+    }
+
+    /**
      * Retrieve the custom WHERE condition.
+     *
+     * Custom conditions are trusted raw SQL for code-defined clauses only
+     * (e.g. `NOW()`, column-to-column comparisons). They do not contribute binds.
+     * Never put request or user input in `condition`; use property/operator/value
+     * predicates so values are parameterized.
      *
      * @throws UnexpectedValueException If the custom condition is empty.
      * @return string
@@ -136,12 +206,17 @@ class DatabaseFilter extends Filter implements
 
         $conditions = [];
         foreach ($this->filters() as $filter) {
-            if ($filter instanceof DatabaseExpressionInterface) {
-                $filter = $filter->sql();
+            if ($filter instanceof DatabaseFilter) {
+                $sql = $filter->sql();
+                $this->mergeBinds($filter->binds());
+            } elseif ($filter instanceof DatabaseExpressionInterface) {
+                $sql = $filter->sql();
+            } else {
+                $sql = $filter;
             }
 
-            if ($filter && strlen($filter) > 0) {
-                $conditions[] = $filter;
+            if ($sql && strlen($sql) > 0) {
+                $conditions[] = $sql;
             }
         }
 
@@ -151,7 +226,8 @@ class DatabaseFilter extends Filter implements
     /**
      * Retrieve the WHERE condition.
      *
-     * @todo   Values are often not quoted.
+     * Predicate values are bound via named PDO placeholders.
+     *
      * @throws UnexpectedValueException If any required property, function, operator, or value is empty.
      * @return string
      */
@@ -185,11 +261,9 @@ class DatabaseFilter extends Filter implements
                         ));
                     }
 
-                    if (is_array($value)) {
-                        $value = implode(',', $value);
-                    }
-
-                    $conditions[] = sprintf('%2$s(\'%3$s\', %1$s)', $target, $operator, $value);
+                    $needle = is_array($value) ? implode(',', $value) : $value;
+                    $placeholder = $this->bindValue($needle);
+                    $conditions[] = sprintf('%2$s(%3$s, %1$s)', $target, $operator, $placeholder);
                     break;
 
                 case '!':
@@ -218,11 +292,23 @@ class DatabaseFilter extends Filter implements
                         ));
                     }
 
-                    if (is_array($value)) {
-                        $value = implode('\',\'', $value);
+                    $items = is_array($value) ? array_values($value) : [ $value ];
+                    if (count($items) === 0) {
+                        // Empty IN is never true; avoid invalid SQL.
+                        $conditions[] = ($operator === 'NOT IN') ? '1=1' : '0=1';
+                        break;
                     }
 
-                    $conditions[] = sprintf('%1$s %2$s (\'%3$s\')', $target, $operator, $value);
+                    $placeholders = [];
+                    foreach ($items as $item) {
+                        $placeholders[] = $this->bindValue($item);
+                    }
+                    $conditions[] = sprintf(
+                        '%1$s %2$s (%3$s)',
+                        $target,
+                        $operator,
+                        implode(', ', $placeholders)
+                    );
                     break;
 
                 default:
@@ -234,7 +320,8 @@ class DatabaseFilter extends Filter implements
                         ));
                     }
 
-                    $conditions[] = sprintf('%1$s %2$s \'%3$s\'', $target, $operator, $value);
+                    $placeholder = $this->bindValue($value);
+                    $conditions[] = sprintf('%1$s %2$s %3$s', $target, $operator, $placeholder);
                     break;
             }
         }

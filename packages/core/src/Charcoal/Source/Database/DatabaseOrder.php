@@ -4,6 +4,7 @@ namespace Charcoal\Source\Database;
 
 use UnexpectedValueException;
 // From 'charcoal-core'
+use Charcoal\Source\AbstractExpression;
 use Charcoal\Source\Database\DatabaseExpressionInterface;
 use Charcoal\Source\DatabaseSource;
 use Charcoal\Source\Order;
@@ -16,6 +17,8 @@ use Charcoal\Source\Order;
  * 2. Custom — If "condition" is defined or "mode" set to "custom".
  * 3. Values — If "property" and "values" are defined or "mode" set to "values".
  * 4. Direction — If "property" is defined.
+ *
+ * FIELD() list members are emitted as named PDO placeholders; use {@see binds()} with the SQL.
  */
 class DatabaseOrder extends Order implements
     DatabaseExpressionInterface
@@ -26,6 +29,20 @@ class DatabaseOrder extends Order implements
      * @var string
      */
     protected $table = DatabaseSource::DEFAULT_TABLE_ALIAS;
+
+    /**
+     * Named PDO parameter binds collected during {@see sql()}.
+     *
+     * @var array<string,mixed>
+     */
+    private $binds = [];
+
+    /**
+     * Process-wide counter so order placeholders never collide with each other or filters.
+     *
+     * @var integer
+     */
+    private static $bindSequence = 0;
 
     /**
      * Retrieve the default values for sorting.
@@ -41,12 +58,26 @@ class DatabaseOrder extends Order implements
     }
 
     /**
+     * Named PDO binds for the last {@see sql()} compilation.
+     *
+     * @return array<string,mixed>
+     */
+    public function binds()
+    {
+        return $this->binds;
+    }
+
+    /**
      * Converts the order into a SQL expression for the ORDER BY clause.
+     *
+     * Resets and rebuilds {@see binds()} for this compilation.
      *
      * @return string A SQL string fragment.
      */
     public function sql()
     {
+        $this->binds = [];
+
         if ($this->active()) {
             switch ($this->mode()) {
                 case self::MODE_RANDOM:
@@ -109,6 +140,9 @@ class DatabaseOrder extends Order implements
     /**
      * Retrieve the ORDER BY clause for the {@see self::MODE_CUSTOM} mode.
      *
+     * Custom conditions are trusted raw SQL for code-defined clauses only.
+     * Never put request or user input in `condition`.
+     *
      * @throws UnexpectedValueException If the custom clause is empty.
      * @return string
      */
@@ -138,7 +172,7 @@ class DatabaseOrder extends Order implements
             );
         }
 
-        $values = $this->prepareValues($this->values());
+        $values = $this->normalizedValues($this->values());
         if (empty($values)) {
             throw new UnexpectedValueException(sprintf(
                 'Value can not be empty on fields: %s',
@@ -149,24 +183,38 @@ class DatabaseOrder extends Order implements
         $dir = $this->direction();
         $dir = $dir === null ? '' : ' ' . $dir;
 
-        $values  = implode(',', $values);
+        $placeholders = [];
+        foreach ($values as $value) {
+            $placeholders[] = $this->bindValue($value);
+        }
+        $valueList = implode(', ', $placeholders);
+
         $clauses = [];
         foreach ($fields as $fieldName) {
-            $clauses[] = sprintf('FIELD(%1$s, %2$s)', $fieldName, $values) . $dir;
+            $clauses[] = sprintf('FIELD(%1$s, %2$s)', $fieldName, $valueList) . $dir;
         }
 
         return implode(', ', $clauses);
     }
 
     /**
-     * Parse the given values for SQL.
+     * Normalize FIELD() list members to scalars (booleans cast to int).
      *
      * @param  mixed $values The value to be normalized.
-     * @return array Returns a collection of parsed values.
+     * @return array Returns a collection of scalar values ready to bind.
      */
     public function prepareValues($values)
     {
-        if (empty($values)) {
+        return $this->normalizedValues($values);
+    }
+
+    /**
+     * @param  mixed $values Raw order values.
+     * @return array
+     */
+    protected function normalizedValues($values)
+    {
+        if ($values === null || $values === '' || $values === []) {
             return [];
         }
 
@@ -174,9 +222,35 @@ class DatabaseOrder extends Order implements
             $values = (array)$values;
         }
 
-        $values = array_filter($values, 'is_scalar');
-        $values = array_map('self::quoteValue', $values);
+        $normalized = [];
+        foreach ($values as $value) {
+            if (!is_scalar($value)) {
+                continue;
+            }
 
-        return $values;
+            $value = AbstractExpression::parseValue($value);
+
+            if (is_bool($value)) {
+                $normalized[] = (int)$value;
+                continue;
+            }
+
+            $normalized[] = $value;
+        }
+
+        return $normalized;
+    }
+
+    /**
+     * Register a bind value and return its SQL placeholder including the colon.
+     *
+     * @param  mixed $value The value to bind.
+     * @return string
+     */
+    protected function bindValue($value)
+    {
+        $name = 'order_' . (self::$bindSequence++);
+        $this->binds[$name] = $value;
+        return ':' . $name;
     }
 }
