@@ -2,7 +2,12 @@
     "type": "library",
     "name": "charcoal/cache",
     "description": "Charcoal service provider for the Stash Cache Library",
-    "keywords": ["charcoal", "caching", "cache", "stash"],
+    "keywords": [
+        "charcoal",
+        "caching",
+        "cache",
+        "stash"
+    ],
     "homepage": "https://locomotivemtl.github.io/charcoal-config/",
     "license": "MIT",
     "authors": [
@@ -22,7 +27,7 @@
     },
     "require": {
         "php": "^7.4 || ^8.0",
-        "charcoal/config": "^5.1.5",
+        "charcoal/config": "^5.2",
         "pimple/pimple": "^3.0",
         "psr/cache": "^1.0",
         "tedivm/stash": "~0.16"

@@ -2,7 +2,15 @@
     "name": "charcoal/config",
     "type": "library",
     "description": "Charcoal component for configuration data and object modeling",
-    "keywords": ["charcoal", "configuration", "json", "xml", "yml", "yaml", "ini"],
+    "keywords": [
+        "charcoal",
+        "configuration",
+        "json",
+        "xml",
+        "yml",
+        "yaml",
+        "ini"
+    ],
     "homepage": "https://locomotivemtl.github.io/charcoal-config/",
     "license": "MIT",
     "authors": [

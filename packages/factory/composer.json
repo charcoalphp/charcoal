@@ -2,7 +2,9 @@
     "type": "library",
     "name": "charcoal/factory",
     "description": "Charcoal object creation (Factory, AbstractFactory, Builder, Class Resolver)",
-    "keywords": ["charcoal"],
+    "keywords": [
+        "charcoal"
+    ],
     "homepage": "https://charcoal.locomotive.ca",
     "license": "MIT",
     "authors": [

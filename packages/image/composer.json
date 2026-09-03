@@ -1,7 +1,15 @@
 {
     "name": "charcoal/image",
     "description": "PHP Image manipulation library",
-    "keywords": ["php", "image", "imagick", "gd", "imagemagick", "charcoal", "locomotive"],
+    "keywords": [
+        "php",
+        "image",
+        "imagick",
+        "gd",
+        "imagemagick",
+        "charcoal",
+        "locomotive"
+    ],
     "license": "MIT",
     "authors": [
         {
@@ -16,7 +24,7 @@
     },
     "require": {
         "php": "^7.4 || ^8.0",
-        "charcoal/factory": "^5.1.5"
+        "charcoal/factory": "^5.2"
     },
     "require-dev": {
         "php-coveralls/php-coveralls": "^2.7",

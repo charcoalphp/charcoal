@@ -1,5 +1,18 @@
 # Changelog
 
+## [5.2.0](https://github.com/charcoalphp/charcoal/compare/v5.1.5...v5.2.0) (2026-09-03)
+
+
+### Features
+
+* **view:** support mustache.php 3.2 ([#105](https://github.com/charcoalphp/charcoal/issues/105)) ([a5bb338](https://github.com/charcoalphp/charcoal/commit/a5bb3386305308053540936f44b8d550d5935c7b))
+
+
+### Bug Fixes
+
+* **deps:** Update dev dependencies ([#108](https://github.com/charcoalphp/charcoal/issues/108)) ([b596e82](https://github.com/charcoalphp/charcoal/commit/b596e8291103133e4b42c0a3c9a74c1621d14901))
+* monorepo-builder packages-json is gone, use glob instead ([abf8e14](https://github.com/charcoalphp/charcoal/commit/abf8e14a184e568b6f809540b47b63d257cfc200))
+
 ## [5.1.5](https://github.com/charcoalphp/charcoal/compare/v5.1.4...v5.1.5) (2026-09-03)
 
 

@@ -2,7 +2,12 @@
     "name": "charcoal/email",
     "type": "library",
     "description": "Email sending and queueing for Charcoal",
-    "keywords": ["charcoal", "email", "queue", "phpmailer"],
+    "keywords": [
+        "charcoal",
+        "email",
+        "queue",
+        "phpmailer"
+    ],
     "homepage": "https://charcoal.locomotive.ca",
     "license": "MIT",
     "authors": [
@@ -20,9 +25,9 @@
         "php": "^7.4 || ^8.0",
         "psr/log": "^1.0",
         "phpmailer/phpmailer": "~6.0",
-        "charcoal/config": "^5.1.5",
-        "charcoal/app": "^5.1.5",
-        "charcoal/queue": "^5.1.5",
+        "charcoal/config": "^5.2",
+        "charcoal/app": "^5.2",
+        "charcoal/queue": "^5.2",
         "seld/jsonlint": "^1.9",
         "ext-pdo": "*"
     },
