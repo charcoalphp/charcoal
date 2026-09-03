@@ -91,7 +91,10 @@ class ImagemagickImage extends AbstractImage
 
         $this->resetTmp();
         touch($this->tmp());
-        $this->exec($this->convertCmd() . ' -size ' . (int)$width . 'x' . (int)$height . ' canvas:"' . $color . '" ' . $this->tmp());
+        $this->exec(
+            $this->convertCmd() . ' -size ' . (int)$width . 'x' . (int)$height .
+            ' canvas:' . escapeshellarg($color) . ' ' . escapeshellarg($this->tmp())
+        );
         return $this;
     }
 
@@ -165,7 +168,7 @@ class ImagemagickImage extends AbstractImage
         if (!file_exists($this->tmp())) {
             return 0;
         }
-        $cmd = $this->identifyCmd() . ' -format "%w" ' . $this->tmp();
+        $cmd = $this->identifyCmd() . ' -format "%w" ' . escapeshellarg($this->tmp());
         return (int)trim($this->exec($cmd));
     }
 
@@ -179,7 +182,7 @@ class ImagemagickImage extends AbstractImage
         if (!file_exists($this->tmp())) {
             return 0;
         }
-        $cmd = $this->identifyCmd() . ' -format "%h" ' . $this->tmp();
+        $cmd = $this->identifyCmd() . ' -format "%h" ' . escapeshellarg($this->tmp());
         return (int)trim($this->exec($cmd));
     }
 
@@ -225,15 +228,15 @@ class ImagemagickImage extends AbstractImage
             ));
         }
 
-        $cmd = exec('type -p ' . $cmdName);
+        $cmd = exec('type -p ' . escapeshellarg($cmdName));
         $cmd = str_replace($cmdName . ' is ', '', $cmd);
 
         if (!$cmd) {
-            $cmd = exec('where ' . $cmdName);
+            $cmd = exec('where ' . escapeshellarg($cmdName));
         }
 
         if (!$cmd) {
-            $cmd = exec('which ' . $cmdName);
+            $cmd = exec('which ' . escapeshellarg($cmdName));
         }
 
         if (!$cmd) {
@@ -434,7 +437,7 @@ class ImagemagickImage extends AbstractImage
             );
         }
 
-        $this->exec($cmd . ' ' . $params . ' ' . $this->tmp());
+        $this->exec($cmd . ' ' . $params . ' ' . escapeshellarg($this->tmp()));
 
         return $this;
     }

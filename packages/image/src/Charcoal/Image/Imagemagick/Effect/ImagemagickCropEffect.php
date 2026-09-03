@@ -26,9 +26,9 @@ class ImagemagickCropEffect extends AbstractCropEffect
 
         $geometry = $this->geometry();
         if ($geometry) {
-            $params = [ $option . ' "' . $geometry . '"' ];
+            $params = [ $option . ' ' . escapeshellarg($geometry) ];
         } else {
-            $params = [ '-gravity "' . $this->gravity() . '"' ];
+            $params = [ '-gravity ' . escapeshellarg($this->gravity()) ];
 
             $size = $width . 'x' . $height . ($x >= 0 ? '+' : '') . $x . ($y >= 0 ? '+' : '') . $y;
             $params[] = $option . ' ' . $size;
