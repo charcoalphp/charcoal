@@ -23,7 +23,11 @@ jobs:
       - name: Checkout project
         uses: actions/checkout@v4
         with:
-          persist-credentials: false
+          # monorepo-builder runs `git push --tags` over HTTPS; it does not
+          # read GITHUB_TOKEN from the environment, so git itself needs the
+          # GitHub App token stored as the checkout credential.
+          token: ${{ steps.get_workflow_token.outputs.token }}
+          persist-credentials: true
 
       - uses: bahmutov/npm-install@v1
 
