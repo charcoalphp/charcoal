@@ -29,7 +29,7 @@ class CallbackStreamTest extends AbstractTestCase
         });
 
         $this->assertSame('once', $stream->read(10));
-        $this->assertSame('', (string)$stream->getContents());
+        $this->assertSame('', $stream->getContents());
     }
 
     public function testToStringUsesOutput()
