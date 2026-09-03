@@ -48,6 +48,20 @@ class DatabaseSource extends AbstractSource implements
     private ?string $table = null;
 
     /**
+     * PDO binds collected from the last {@see sqlFilters()} compilation.
+     *
+     * @var array<string,mixed>
+     */
+    private $filterBinds = [];
+
+    /**
+     * PDO binds collected from the last {@see sqlOrders()} compilation.
+     *
+     * @var array<string,mixed>
+     */
+    private $orderBinds = [];
+
+    /**
      * Create a new database handler.
      *
      * @param array $data Class dependencies.
@@ -80,7 +94,8 @@ class DatabaseSource extends AbstractSource implements
      * Set the database's table to use.
      *
      * @param  string $table The source table.
-     * @throws InvalidArgumentException If argument is not a string or alphanumeric/underscore.
+     * @throws InvalidArgumentException If argument is not a string or a safe identifier.
+     * @return self
      */
     public function setTable($table): static
     {
@@ -93,13 +108,13 @@ class DatabaseSource extends AbstractSource implements
         }
 
         /**
-         * For security reason, only alphanumeric characters (+ underscores)
-         * are valid table names; Although SQL can support more,
-         * there's really no reason to.
+         * Only full-string SQL identifiers: letter or underscore, then
+         * alphanumeric / underscore. Unanchored matching previously allowed
+         * values like `users; DROP TABLE x--` because they contain [A-Za-z0-9_].
          */
-        if (!preg_match('/\w/', $table)) {
+        if (!preg_match('/^[A-Za-z_][A-Za-z0-9_]*$/', $table)) {
             throw new InvalidArgumentException(sprintf(
-                '[%s] Database table name "%s" is invalid: must be alphanumeric / underscore',
+                '[%s] Database table name "%s" is invalid: must match /^[A-Za-z_][A-Za-z0-9_]*$/',
                 $this->getModelClassForException(),
                 $table
             ));
@@ -504,14 +519,14 @@ class DatabaseSource extends AbstractSource implements
         }
 
         $query = $this->sqlLoad();
-        return $this->loadItemsFromQuery($query, [], $item);
+        return $this->loadItemsFromQuery($query, $this->queryBinds(), $item);
     }
 
     /**
      * Load items for the given query statement.
      *
      * @param  string                 $query The SQL SELECT statement.
-     * @param  array                  $binds This has to be done.
+     * @param  array                  $binds Named PDO parameter binds.
      * @param  StorableInterface|null $item  Model Item.
      * @return StorableInterface[]
      */
@@ -524,17 +539,12 @@ class DatabaseSource extends AbstractSource implements
         $items = [];
 
         $model = $this->model();
-        $dbh   = $this->db();
 
-        $this->logger->debug($query);
-        $sth = $dbh->prepare($query);
-
-        // @todo Binds
-        if ($binds !== []) {
-            unset($binds);
+        $sth = $this->dbQuery($query, $binds);
+        if ($sth === false) {
+            return $items;
         }
 
-        $sth->execute();
         $sth->setFetchMode(PDO::FETCH_ASSOC);
 
         $className = $model::class;
@@ -832,6 +842,7 @@ class DatabaseSource extends AbstractSource implements
         }
 
         $tables  = $this->sqlFrom();
+        $this->orderBinds = [];
         $filters = $this->sqlFilters();
         return 'SELECT COUNT(*) FROM ' . $tables . $filters;
     }
@@ -845,7 +856,7 @@ class DatabaseSource extends AbstractSource implements
     {
         $properties = $this->properties();
         if (empty($properties)) {
-            return self::DEFAULT_TABLE_ALIAS . '.*';
+            return Expression::quoteIdentifier('*', self::DEFAULT_TABLE_ALIAS);
         }
 
         $parts = [];
@@ -882,13 +893,47 @@ class DatabaseSource extends AbstractSource implements
     }
 
     /**
+     * Named PDO binds from the last {@see sqlFilters()} compilation.
+     *
+     * @return array<string,mixed>
+     */
+    public function filterBinds()
+    {
+        return $this->filterBinds;
+    }
+
+    /**
+     * Named PDO binds from the last {@see sqlOrders()} compilation.
+     *
+     * @return array<string,mixed>
+     */
+    public function orderBinds()
+    {
+        return $this->orderBinds;
+    }
+
+    /**
+     * Combined filter + order binds for {@see sqlLoad()} / assembled SELECTs.
+     *
+     * @return array<string,mixed>
+     */
+    public function queryBinds()
+    {
+        return array_merge($this->filterBinds, $this->orderBinds);
+    }
+
+    /**
      * Compile the WHERE clause.
      *
-     * @todo   [2016-02-19] Use bindings for filters value
+     * Predicate filter values are emitted as named placeholders; use {@see filterBinds()}
+     * or {@see queryBinds()} when executing the query.
+     *
      * @return string
      */
     public function sqlFilters()
     {
+        $this->filterBinds = [];
+
         if (!$this->hasFilters()) {
             return '';
         }
@@ -898,7 +943,11 @@ class DatabaseSource extends AbstractSource implements
         ]);
 
         $sql = $criteria->sql();
-        if ($sql && (string)$sql !== '') {
+        if ($criteria instanceof DatabaseFilter) {
+            $this->filterBinds = $criteria->binds();
+        }
+
+        if ($sql && strlen($sql) > 0) {
             $sql = ' WHERE ' . $sql;
         }
 
@@ -907,9 +956,16 @@ class DatabaseSource extends AbstractSource implements
 
     /**
      * Compile the ORDER BY clause.
+     *
+     * FIELD() values are emitted as named placeholders; use {@see orderBinds()}
+     * or {@see queryBinds()} when executing the query.
+     *
+     * @return string
      */
     public function sqlOrders(): string
     {
+        $this->orderBinds = [];
+
         if (!$this->hasOrders()) {
             return '';
         }
@@ -921,7 +977,11 @@ class DatabaseSource extends AbstractSource implements
             }
 
             $sql = $order->sql();
-            if ($sql && (string)$sql !== '') {
+            if ($order instanceof DatabaseOrder) {
+                $this->orderBinds = array_merge($this->orderBinds, $order->binds());
+            }
+
+            if ($sql && strlen($sql) > 0) {
                 $parts[] = $sql;
             }
         }

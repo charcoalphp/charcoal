@@ -9,6 +9,13 @@ use InvalidArgumentException;
  */
 class MultiObjectProperty extends AbstractProperty
 {
+    /**
+     * Allowlisted join-table identifier: letter/underscore, then alnum/underscore only.
+     *
+     * @var string
+     */
+    private const JOIN_TABLE_PATTERN = '/^[A-Za-z_][A-Za-z0-9_]*$/';
+
     private ?array $allowedTypes = null;
 
     private string $joinTable = 'charcoal_multi_objects';
@@ -56,14 +63,10 @@ class MultiObjectProperty extends AbstractProperty
                 'Join table must be a string'
             );
         }
-        // For security reason, only alphanumeric characters (+ underscores) are valid table names.
-        // Although SQL can support more, there's really no reason to.
-        if (!preg_match('/\w/', $table)) {
-            throw new InvalidArgumentException(
-                sprintf('Table name "%s" is invalid: must be alphanumeric / underscore.', $table)
-            );
-        }
+
+        $this->assertValidJoinTable($table);
         $this->joinTable = $table;
+
         return $this;
     }
 
@@ -81,7 +84,8 @@ class MultiObjectProperty extends AbstractProperty
             return;
         }
 
-        $q = 'CREATE TABLE \'' . $this->getJoinTable() . '\' (
+        $table = $this->quoteIdentifier($this->getJoinTable());
+        $q = 'CREATE TABLE ' . $table . ' (
             target_type VARCHAR(255),
             target_id VARCHAR(255),
             target_property VARCHAR(255),
@@ -95,10 +99,14 @@ class MultiObjectProperty extends AbstractProperty
 
     public function joinTableExists(): bool
     {
-        $q = 'SHOW TABLES LIKE \'' . $this->getJoinTable() . '\'';
-        $this->logger->debug($q);
-        $res = $this->source()->db()->query($q);
-        $tableExists = $res->fetchColumn(0);
+        // LIKE pattern is a value (bindable). Escape metacharacters so `_` is literal.
+        // Table names themselves cannot be bound as PDO parameters — only values can.
+        $pattern = addcslashes($this->getJoinTable(), '%_\\');
+        $q = 'SHOW TABLES LIKE ?';
+        $this->logger->debug($q . ' [' . $pattern . ']');
+        $sth = $this->source()->db()->prepare($q);
+        $sth->execute([ $pattern ]);
+        $tableExists = $sth->fetchColumn(0);
 
         return (bool)$tableExists;
     }
@@ -119,5 +127,37 @@ class MultiObjectProperty extends AbstractProperty
     public function sqlPdoType(): int
     {
         return 0;
+    }
+
+    /**
+     * @param string $table The candidate join table name.
+     * @throws InvalidArgumentException If the name is not a safe SQL identifier.
+     * @return void
+     */
+    private function assertValidJoinTable($table)
+    {
+        // For security reason, only alphanumeric characters (+ underscores) are valid table names.
+        // Although SQL can support more, there's really no reason to.
+        // Anchors are required: a partial match would allow injection payloads that contain alnum chars.
+        if (!preg_match(self::JOIN_TABLE_PATTERN, $table)) {
+            throw new InvalidArgumentException(
+                sprintf('Table name "%s" is invalid: must be alphanumeric / underscore.', $table)
+            );
+        }
+    }
+
+    /**
+     * Quote a validated SQL identifier (MySQL-style backticks).
+     *
+     * Identifiers cannot be bound via PDO parameters; allowlisting + quoting is required.
+     *
+     * @param string $ident The identifier (must already pass assertValidJoinTable).
+     * @return string
+     */
+    private function quoteIdentifier($ident)
+    {
+        $this->assertValidJoinTable($ident);
+
+        return '`' . str_replace('`', '``', $ident) . '`';
     }
 }

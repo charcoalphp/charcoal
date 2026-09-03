@@ -53,7 +53,7 @@ class DatabaseOrderTest extends AbstractTestCase
         $obj->setMode('asc')->setProperty('foo');
 
         $obj->setActive(true);
-        $this->assertEquals('objTable.`foo` ASC', $obj->sql());
+        $this->assertEquals('`objTable`.`foo` ASC', $obj->sql());
 
         $obj->setActive(false);
         $this->assertEquals('', $obj->sql());
@@ -93,11 +93,17 @@ class DatabaseOrderTest extends AbstractTestCase
 
         /** Resolves to "values" mode when values are defined. */
         $obj->setValues([ 'FR', 'UK', 'CA' ]);
-        $this->assertEquals('FIELD(objTable.`country`, "FR","UK","CA")', $obj->sql());
+        $sql = $obj->sql();
+        $this->assertMatchesRegularExpression(
+            '/^FIELD\(`objTable`\.`country`, :order_\d+, :order_\d+, :order_\d+\)$/',
+            $sql
+        );
+        $this->assertSame([ 'FR', 'UK', 'CA' ], array_values($obj->binds()));
 
         /** Resolves to "custom" mode, and takes precedence, when a custom expression is defined. */
         $obj->setCondition('foo DESC');
         $this->assertEquals('foo DESC', $obj->sql());
+        $this->assertSame([], $obj->binds());
     }
 
     /**
@@ -125,7 +131,7 @@ class DatabaseOrderTest extends AbstractTestCase
 
         $obj->setMode($mode)->setProperty('test');
         $this->assertEquals(
-            sprintf('objTable.`test` %s', $expected),
+            sprintf('`objTable`.`test` %s', $expected),
             $obj->sql()
         );
     }
@@ -164,7 +170,12 @@ class DatabaseOrderTest extends AbstractTestCase
             ->setProperty('test')
             ->setValues([ 1, false, 'foo' ]);
 
-        $this->assertEquals('FIELD(objTable.`test`, 1,0,"foo")', $obj->sql());
+        $sql = $obj->sql();
+        $this->assertMatchesRegularExpression(
+            '/^FIELD\(`objTable`\.`test`, :order_\d+, :order_\d+, :order_\d+\)$/',
+            $sql
+        );
+        $this->assertSame([ 1, 0, 'foo' ], array_values($obj->binds()));
     }
 
     /**
@@ -235,6 +246,6 @@ class DatabaseOrderTest extends AbstractTestCase
         $arr = $obj->prepareValues([
             1, '19', 'false', 'Foo "Qux" Baz', [ 42 ], new stdClass()
         ]);
-        $this->assertEquals([ 1, '19', false, '"Foo &quot;Qux&quot; Baz"' ], $arr);
+        $this->assertEquals([ 1, '19', 0, 'Foo "Qux" Baz' ], $arr);
     }
 }
