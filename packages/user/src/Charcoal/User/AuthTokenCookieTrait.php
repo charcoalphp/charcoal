@@ -22,9 +22,16 @@ trait AuthTokenCookieTrait
         $value  = $this['ident'] . ';' . $this['token'];
         $expiry = isset($this['expiry']) ? $this['expiry']->getTimestamp() : null;
         $path   = $metadata['tokenPath'];
-        $secure = $metadata['httpsOnly'];
+        $secure = true;
+        $httponly = true;
 
-        return setcookie($name, $value, ['expires' => $expiry, 'path' => $path, 'domain' => '', 'secure' => $secure]);
+        return setcookie($name, $value, [
+            'expires' => $expiry,
+            'path' => $path,
+            'domain' => '',
+            'secure' => $secure,
+            'httponly' => $httponly,
+        ]);
     }
 
     /**
@@ -41,9 +48,16 @@ trait AuthTokenCookieTrait
         $name   = $metadata['tokenName'];
         $expiry = (time() - 1000);
         $path   = $metadata['tokenPath'];
-        $secure = $metadata['httpsOnly'];
+        $secure = true;
+        $httponly = true;
 
-        return setcookie($name, '', ['expires' => $expiry, 'path' => $path, 'domain' => '', 'secure' => $secure]);
+        return setcookie($name, '', [
+            'expires' => $expiry,
+            'path' => $path,
+            'domain' => '',
+            'secure' => $secure,
+            'httponly' => $httponly,
+        ]);
     }
 
     /**
