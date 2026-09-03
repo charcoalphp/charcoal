@@ -123,8 +123,8 @@ class LoginAction extends AdminAction
                 $this->addFeedback('success', $doneMessage);
                 $this->setSuccess(true);
 
-                if (is_string($nextUrl) && !empty($nextUrl)) {
-                    $this->setSuccessUrl((string)$nextUrl);
+                if (is_string($nextUrl) && $nextUrl !== '') {
+                    $this->setSuccessUrl($nextUrl);
                 } else {
                     $this->setSuccessUrl((string)$this->adminUrl());
                 }

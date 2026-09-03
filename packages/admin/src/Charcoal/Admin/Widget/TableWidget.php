@@ -200,7 +200,7 @@ class TableWidget extends AdminWidget implements CollectionContainerInterface
         }
 
         if ($collectionConfig !== null) {
-            $this->mergeCollectionConfig($collectionConfig);
+            $this->mergeCollectionConfig($collectionConfig, false);
         }
 
         return $this;
@@ -321,7 +321,7 @@ class TableWidget extends AdminWidget implements CollectionContainerInterface
         }
 
         if ($collectionConfig) {
-            $this->mergeCollectionConfig($collectionConfig);
+            $this->mergeCollectionConfig($collectionConfig, true);
         }
 
         return $objListData;

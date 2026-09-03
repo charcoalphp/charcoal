@@ -67,7 +67,9 @@ Charcoal.Admin.Template_Account_LostPassword.prototype.submitForm = function ($f
                 message:  message,
                 type:     BootstrapDialog.TYPE_SUCCESS,
                 onhidden: function () {
-                    window.location.href = response.next_url || Charcoal.Admin.admin_url('login?notice=resetpass');
+                    Charcoal.Admin.redirect_to_url(
+                        response.next_url || Charcoal.Admin.admin_url('login?notice=resetpass')
+                    );
                 }
             });
         }).fail(function (jqxhr, status, error) {

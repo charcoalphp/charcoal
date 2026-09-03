@@ -123,6 +123,79 @@ class AdminActionTest extends AbstractTestCase
     }
 
     /**
+     * @dataProvider provideSafeRedirectUrls
+     *
+     * @param  string  $url      Candidate URL.
+     * @param  boolean $expected Whether it should be accepted.
+     * @return void
+     */
+    public function testIsSafeRedirectUrl($url, $expected)
+    {
+        $this->assertSame($expected, $this->obj->isSafeRedirectUrl($url));
+    }
+
+    /**
+     * @return array
+     */
+    public function provideSafeRedirectUrls()
+    {
+        return [
+            'path absolute'           => [ '/admin/object/edit', true ],
+            'path relative'           => [ 'object/edit?obj_type=foo', true ],
+            'query only'              => [ '?notice=ok', true ],
+            'empty'                   => [ '', false ],
+            'protocol relative'       => [ '//evil.example/', false ],
+            'external https'          => [ 'https://evil.example/', false ],
+            'javascript scheme'       => [ 'javascript:alert(1)', false ],
+            'data scheme'             => [ 'data:text/html,hi', false ],
+            'backslash authority'     => [ '/\\evil.example/', false ],
+            'newline injection'       => [ "/admin/\nLocation: https://evil.example/", false ],
+        ];
+    }
+
+    /**
+     * @return void
+     */
+    public function testIsSafeRedirectUrlSameOrigin()
+    {
+        $this->callMethod($this->obj, 'setBaseUrl', [
+            \Slim\Http\Uri::createFromString('https://example.com/')
+        ]);
+        $this->callMethod($this->obj, 'setAdminUrl', [
+            \Slim\Http\Uri::createFromString('https://example.com/admin/')
+        ]);
+
+        $this->assertTrue($this->obj->isSafeRedirectUrl('https://example.com/admin/'));
+        $this->assertTrue($this->obj->isSafeRedirectUrl('https://example.com/foo'));
+        $this->assertFalse($this->obj->isSafeRedirectUrl('https://evil.example/'));
+        $this->assertFalse($this->obj->isSafeRedirectUrl('http://example.com/admin/'));
+        $this->assertFalse($this->obj->isSafeRedirectUrl('//evil.example/path'));
+    }
+
+    /**
+     * @return void
+     */
+    public function testSetSuccessUrlRejectsOpenRedirect()
+    {
+        $this->obj->setSuccessUrl('https://evil.example/phish');
+        $this->assertEquals('/admin/', $this->obj->successUrl());
+
+        $this->obj->setSuccessUrl('/admin/object/edit?obj_type=foo');
+        $this->assertEquals('/admin/object/edit?obj_type=foo', $this->obj->successUrl());
+    }
+
+    /**
+     * @return void
+     */
+    public function testSetNextUrlMapsToSuccessUrl()
+    {
+        $this->obj->setSuccess(true);
+        $this->obj->setNextUrl('object/edit');
+        $this->assertEquals('object/edit', $this->obj->successUrl());
+        $this->assertEquals('object/edit', $this->obj->redirectUrl());
+    }
+
+    /**
      * Set up the service container.
      *
      * @return Container

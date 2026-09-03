@@ -188,10 +188,18 @@ class AdminTemplate extends AbstractTemplate implements
             return;
         }
 
-        $redirectTo = urlencode($request->getRequestTarget());
+        $redirectTo = $request->getRequestTarget();
+        if (!$this->isSafeRedirectUrl($redirectTo)) {
+            $redirectTo = '';
+        }
+
+        $loginPath = 'login';
+        if ($redirectTo !== '') {
+            $loginPath .= '?redirect_to=' . rawurlencode($redirectTo);
+        }
 
         header('HTTP/1.0 403 Forbidden');
-        header('Location: ' . $this->adminUrl('login?redirect_to=' . $redirectTo));
+        header('Location: ' . $this->adminUrl($loginPath));
         exit;
     }
 

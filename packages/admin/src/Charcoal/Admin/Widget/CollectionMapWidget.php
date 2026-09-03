@@ -369,7 +369,7 @@ class CollectionMapWidget extends AdminWidget implements CollectionContainerInte
         }
 
         if ($collectionConfig) {
-            $this->mergeCollectionConfig($collectionConfig);
+            $this->mergeCollectionConfig($collectionConfig, true);
         }
 
         return $objListData;

@@ -115,6 +115,111 @@ trait BaseUrlTrait
     }
 
     /**
+     * Determine if a redirect target is safe (same-origin or path-relative).
+     *
+     * Rejects scheme-based open redirects (`https://evil`, `javascript:`),
+     * protocol-relative URLs (`//evil`), and backslash tricks.
+     *
+     * @param  mixed $url Candidate redirect URL.
+     * @return boolean
+     */
+    public function isSafeRedirectUrl($url)
+    {
+        if (!is_string($url) || $url === '') {
+            return false;
+        }
+
+        // Header / JS injection via control characters.
+        if (preg_match('/[\x00-\x1F\x7F]/', $url)) {
+            return false;
+        }
+
+        if (strpos($url, '\\') !== false) {
+            return false;
+        }
+
+        // Protocol-relative or absolute with authority.
+        if (preg_match('#^(?:[a-z][a-z0-9+\-.]*:)?//#i', $url)) {
+            return $this->isSameOriginRedirectUrl($url);
+        }
+
+        // Schemes without "//" (javascript:, data:, etc.).
+        if (preg_match('#^[a-z][a-z0-9+\-.]*:#i', $url)) {
+            return false;
+        }
+
+        // Path-absolute, path-relative, query- or fragment-only.
+        return true;
+    }
+
+    /**
+     * Return $url when safe, otherwise $fallback (default: admin base URL).
+     *
+     * @param  mixed       $url      Candidate redirect URL.
+     * @param  string|null $fallback Fallback when $url is unsafe. Null uses adminUrl().
+     * @return string
+     */
+    public function sanitizeRedirectUrl($url, $fallback = null)
+    {
+        if ($this->isSafeRedirectUrl($url)) {
+            return $url;
+        }
+
+        if ($fallback === null) {
+            $fallback = (string)$this->adminUrl();
+        }
+
+        return $fallback;
+    }
+
+    /**
+     * Whether an absolute or protocol-relative URL shares this app's origin.
+     *
+     * @param  string $url Absolute or protocol-relative URL.
+     * @return boolean
+     */
+    protected function isSameOriginRedirectUrl($url)
+    {
+        $parts = parse_url($url);
+        if ($parts === false || empty($parts['host'])) {
+            return false;
+        }
+
+        if (!isset($this->baseUrl)) {
+            return false;
+        }
+
+        $baseHost = strtolower((string)$this->baseUrl->getHost());
+        if ($baseHost === '') {
+            // Relative application base: cannot validate off-site absolute URLs.
+            return false;
+        }
+
+        if (strtolower($parts['host']) !== $baseHost) {
+            return false;
+        }
+
+        if (isset($parts['scheme'])) {
+            $scheme = strtolower($parts['scheme']);
+            if (!in_array($scheme, [ 'http', 'https' ], true)) {
+                return false;
+            }
+
+            $baseScheme = strtolower((string)$this->baseUrl->getScheme());
+            if ($baseScheme !== '' && $scheme !== $baseScheme) {
+                return false;
+            }
+        }
+
+        $basePort = $this->baseUrl->getPort();
+        if (isset($parts['port']) && $basePort !== null && (int)$parts['port'] !== (int)$basePort) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
      * Prepend the base URI to the given path.
      *
      * @param  UriInterface $basePath   The base path.

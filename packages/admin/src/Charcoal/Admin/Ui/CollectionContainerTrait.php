@@ -12,6 +12,7 @@ use Charcoal\Factory\FactoryInterface;
 use Charcoal\Loader\CollectionLoader;
 use Charcoal\Model\Collection;
 use Charcoal\Model\ModelInterface;
+use Charcoal\Source\ExpressionTreeSanitizer;
 use Charcoal\Source\Filter;
 use Charcoal\Source\FilterInterface;
 use Charcoal\Source\Order;
@@ -267,27 +268,70 @@ trait CollectionContainerTrait
      *
      * This method ensures the object type exists before altering the instance.
      *
+     * List metadata filters/orders are applied as trusted (code-defined `condition`
+     * such as `NOW()` still works). Request `collection_config` is sanitized in
+     * {@see parseCollectionConfig()} before it is merged. Extra `$data` is untrusted.
+     *
      * @param  CollectionLoader $loader The collection loader to prepare.
      * @param  array|null       $data   Optional collection data.
      * @return void
      */
     protected function configureCollectionLoader(CollectionLoader $loader, array $data = null)
     {
-        $objType = $this->getObjTypeOrFail();
+        $this->getObjTypeOrFail();
 
         $loader->setModel($this->proto());
 
         $config = $this->collectionConfig();
         if (is_array($config) && !empty($config)) {
             unset($config['properties']);
-            $loader->setData($config);
+            $this->applyCollectionConfigToLoader($loader, $config, true);
         }
 
         if ($data) {
-            $loader->setData($data);
+            $this->applyCollectionConfigToLoader($loader, $data, false);
         }
 
         $loader->isConfigured = true;
+    }
+
+    /**
+     * Apply a collection configset to a loader, keeping filters/orders off {@see CollectionLoader::setData()}.
+     *
+     * `setData()` always calls `setFilters()` / `setOrders()` with `$trusted = true`.
+     * Filters and orders are applied separately so request trees can be sanitized.
+     *
+     * @param  CollectionLoader $loader  The collection loader to prepare.
+     * @param  array            $config  Collection config (list metadata and/or request overlay).
+     * @param  boolean          $trusted TRUE keeps raw `condition` SQL; FALSE strips it (LS02/LS05).
+     * @return void
+     */
+    protected function applyCollectionConfigToLoader(CollectionLoader $loader, array $config, $trusted)
+    {
+        $filters = null;
+        $orders  = null;
+
+        if (isset($config['filters']) && is_array($config['filters'])) {
+            $filters = $config['filters'];
+            unset($config['filters']);
+        }
+
+        if (isset($config['orders']) && is_array($config['orders'])) {
+            $orders = $config['orders'];
+            unset($config['orders']);
+        }
+
+        if (!empty($config)) {
+            $loader->setData($config);
+        }
+
+        if ($filters !== null) {
+            $loader->setFilters($filters, $trusted);
+        }
+
+        if ($orders !== null) {
+            $loader->setOrders($orders, $trusted);
+        }
     }
 
     /**
@@ -432,10 +476,11 @@ trait CollectionContainerTrait
     /**
      * Replace the collection's configset with the given parameters.
      *
-     * @param  mixed $config New collection config values.
+     * @param  mixed   $config  New collection config values.
+     * @param  boolean $trusted TRUE if $config is code/metadata; FALSE (default) for request/CMS.
      * @return CollectionContainerInterface Chainable
      */
-    public function setCollectionConfig($config)
+    public function setCollectionConfig($config, $trusted = false)
     {
         if (empty($config) || !is_array($config)) {
             $config = [];
@@ -443,7 +488,7 @@ trait CollectionContainerTrait
 
         $this->collectionConfig = array_replace_recursive(
             $this->defaultCollectionConfig(),
-            $this->parseCollectionConfig($config)
+            $this->parseCollectionConfig($config, $trusted)
         );
 
         return $this;
@@ -452,36 +497,61 @@ trait CollectionContainerTrait
     /**
      * Merge given parameters into the collection's configset.
      *
-     * @param  array $config New collection config values.
+     * @param  array   $config  New collection config values.
+     * @param  boolean $trusted TRUE if $config is code/metadata; FALSE (default) for request/CMS.
      * @return self
      */
-    public function mergeCollectionConfig(array $config)
+    public function mergeCollectionConfig(array $config, $trusted = false)
     {
         if ($this->collectionConfig === null) {
-            $this->setCollectionConfig($config);
+            $this->setCollectionConfig($config, $trusted);
             return $this;
         }
 
         $this->collectionConfig = array_replace_recursive(
             $this->defaultCollectionConfig(),
             $this->collectionConfig,
-            $this->parseCollectionConfig($config)
+            $this->parseCollectionConfig($config, $trusted)
         );
 
         return $this;
     }
 
     /**
-     * Stub: Parse given parameters into the collection's config set.
+     * Parse given parameters into the collection's config set.
      *
-     * @param  array $config New collection config values.
+     * Untrusted trees (request `collection_config`) have raw SQL `condition` / `string`
+     * keys stripped via {@see ExpressionTreeSanitizer} (LS02 / LS05).
+     *
+     * @param  array   $config  New collection config values.
+     * @param  boolean $trusted TRUE skips sanitization for developer list metadata.
      * @return array
      */
-    protected function parseCollectionConfig(array $config)
+    protected function parseCollectionConfig(array $config, $trusted = false)
     {
-        return array_filter($config, function ($val) {
+        $config = array_filter($config, function ($val) {
             return !empty($val) || is_numeric($val);
         });
+
+        if ($trusted) {
+            return $config;
+        }
+
+        if (isset($config['filters']) && is_array($config['filters'])) {
+            $config['filters'] = ExpressionTreeSanitizer::sanitizeFilters($config['filters']);
+            if ($config['filters'] === []) {
+                unset($config['filters']);
+            }
+        }
+
+        if (isset($config['orders']) && is_array($config['orders'])) {
+            $config['orders'] = ExpressionTreeSanitizer::sanitizeOrders($config['orders']);
+            if ($config['orders'] === []) {
+                unset($config['orders']);
+            }
+        }
+
+        return $config;
     }
 
     /**
