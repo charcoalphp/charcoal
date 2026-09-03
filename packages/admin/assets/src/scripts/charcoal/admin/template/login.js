@@ -59,7 +59,10 @@ Charcoal.Admin.Template_Login.prototype.submitForm = function ($form) {
     var urlParams = Charcoal.Admin.queryParams();
 
     if ('redirect_to' in urlParams) {
-        data = data.concat('&next_url=' + encodeURIComponent(urlParams.redirect_to));
+        var redirectTo = urlParams.redirect_to;
+        if (Charcoal.Admin.is_safe_redirect_url(redirectTo)) {
+            data = data.concat('&next_url=' + encodeURIComponent(redirectTo));
+        }
     }
 
     $.post(url, data, Charcoal.Admin.resolveJqXhrFalsePositive.bind(this), 'json')
@@ -67,8 +70,12 @@ Charcoal.Admin.Template_Login.prototype.submitForm = function ($form) {
             var nextUrl  = (response.next_url || Charcoal.Admin.admin_url()),
                 message  = (that.parseFeedbackAsHtml(response) || authL10n.authSuccess),
                 redirect = function () {
-                    window.location.href = nextUrl;
+                    Charcoal.Admin.redirect_to_url(nextUrl);
                 };
+
+            if (!Charcoal.Admin.is_safe_redirect_url(nextUrl)) {
+                nextUrl = Charcoal.Admin.admin_url();
+            }
 
             message += '<p>' + authL10n.postLoginRedirect + ' ' +
                         authL10n.postLoginFallback.replace('[[ url ]]', nextUrl) + '</p>';

@@ -102,6 +102,25 @@ class LoginActionTest extends AbstractTestCase
     }
 
     /**
+     * Open-redirect payloads must not become next_url after a failed/partial login path.
+     * Successful login with next_url is covered via setSuccessUrl allowlisting on AdminAction.
+     *
+     * @return void
+     */
+    public function testNextUrlParamIsSanitizedOnSuccessUrl()
+    {
+        $this->obj->setSuccessUrl('https://evil.example/phish');
+        $results = $this->obj->results();
+        $this->assertNotEquals('https://evil.example/phish', $results['next_url']);
+        $this->assertEquals('/admin/', $this->obj->successUrl());
+
+        $this->obj->setSuccess(true);
+        $this->obj->setSuccessUrl('/admin/object/edit');
+        $results = $this->obj->results();
+        $this->assertEquals('/admin/object/edit', $results['next_url']);
+    }
+
+    /**
      * @return void
      */
     /*

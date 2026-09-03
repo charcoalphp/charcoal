@@ -149,6 +149,43 @@ abstract class AdminAction extends AbstractAction implements
     }
 
     /**
+     * Map client `next_url` onto the success redirect, after allowlisting.
+     *
+     * @param  string|null $url The next URL.
+     * @return self
+     */
+    public function setNextUrl($url)
+    {
+        return $this->setSuccessUrl($url);
+    }
+
+    /**
+     * @param  string|null $url The success URL.
+     * @return self
+     */
+    public function setSuccessUrl($url)
+    {
+        if ($url !== null && is_string($url)) {
+            $url = $this->sanitizeRedirectUrl($url);
+        }
+
+        return parent::setSuccessUrl($url);
+    }
+
+    /**
+     * @param  string|null $url The failure URL.
+     * @return self
+     */
+    public function setFailureUrl($url)
+    {
+        if ($url !== null && is_string($url)) {
+            $url = $this->sanitizeRedirectUrl($url);
+        }
+
+        return parent::setFailureUrl($url);
+    }
+
+    /**
      * Retrieve the name of the project.
      *
      * @return Translation|string|null

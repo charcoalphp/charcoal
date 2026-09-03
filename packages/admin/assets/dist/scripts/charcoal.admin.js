@@ -476,12 +476,50 @@ Charcoal.Admin = (function () {
     };
 
     /**
+     * Determines if a redirect target is safe (same-origin or path-relative).
+     *
+     * @param  {string} uri
+     * @return {boolean}
+     */
+    Admin.is_safe_redirect_url = function (uri) {
+        if (typeof uri !== 'string' || uri === '') {
+            return false;
+        }
+
+        if (/[\x00-\x1F\x7F]/.test(uri) || uri.indexOf('\\') !== -1) {
+            return false;
+        }
+
+        if (Admin.is_absolute_url(uri)) {
+            try {
+                var resolved = new URL(uri, window.location.href);
+                var base     = new URL(Admin.base_url(), window.location.href);
+                return resolved.origin === base.origin;
+            } catch (err) {
+                return false;
+            }
+        }
+
+        // Schemes without "//" (javascript:, data:, …).
+        if (/^[a-z][a-z0-9+\.-]*:/i.test(uri)) {
+            return false;
+        }
+
+        return true;
+    };
+
+    /**
      * Redirects the window to the URI.
+     *
+     * Off-site absolute URLs fall back to the admin base URL.
      *
      * @param  {string} uri
      * @return {void}
      */
     Admin.redirect_to_url = function (uri) {
+        if (!Admin.is_safe_redirect_url(uri)) {
+            uri = Charcoal.Admin.admin_url();
+        }
         window.location.href = Admin.is_absolute_url(uri) ? uri : Charcoal.Admin.admin_url() + uri;
     };
 
@@ -5957,7 +5995,7 @@ Charcoal.Admin.Widget_Object_Revisions.prototype.request_success = function ($fo
         Charcoal.Admin.feedback().add_action({
             label: commonL10n.continue,
             callback: function () {
-                window.location.href = Charcoal.Admin.admin_url() + response.next_url;
+                Charcoal.Admin.redirect_to_url(response.next_url);
             }
         });
     }
@@ -14136,7 +14174,10 @@ Charcoal.Admin.Template_Login.prototype.submitForm = function ($form) {
     var urlParams = Charcoal.Admin.queryParams();
 
     if ('redirect_to' in urlParams) {
-        data = data.concat('&next_url=' + encodeURIComponent(urlParams.redirect_to));
+        var redirectTo = urlParams.redirect_to;
+        if (Charcoal.Admin.is_safe_redirect_url(redirectTo)) {
+            data = data.concat('&next_url=' + encodeURIComponent(redirectTo));
+        }
     }
 
     $.post(url, data, Charcoal.Admin.resolveJqXhrFalsePositive.bind(this), 'json')
@@ -14144,8 +14185,12 @@ Charcoal.Admin.Template_Login.prototype.submitForm = function ($form) {
             var nextUrl  = (response.next_url || Charcoal.Admin.admin_url()),
                 message  = (that.parseFeedbackAsHtml(response) || authL10n.authSuccess),
                 redirect = function () {
-                    window.location.href = nextUrl;
+                    Charcoal.Admin.redirect_to_url(nextUrl);
                 };
+
+            if (!Charcoal.Admin.is_safe_redirect_url(nextUrl)) {
+                nextUrl = Charcoal.Admin.admin_url();
+            }
 
             message += '<p>' + authL10n.postLoginRedirect + ' ' +
                         authL10n.postLoginFallback.replace('[[ url ]]', nextUrl) + '</p>';
@@ -14315,7 +14360,9 @@ Charcoal.Admin.Template_Account_LostPassword.prototype.submitForm = function ($f
                 message:  message,
                 type:     BootstrapDialog.TYPE_SUCCESS,
                 onhidden: function () {
-                    window.location.href = response.next_url || Charcoal.Admin.admin_url('login?notice=resetpass');
+                    Charcoal.Admin.redirect_to_url(
+                        response.next_url || Charcoal.Admin.admin_url('login?notice=resetpass')
+                    );
                 }
             });
         }).fail(function (jqxhr, status, error) {
@@ -14408,7 +14455,9 @@ Charcoal.Admin.Template_Account_ResetPassword.prototype.submitForm = function ($
                 message:  message,
                 type:     BootstrapDialog.TYPE_SUCCESS,
                 onhidden: function () {
-                    window.location.href = response.next_url || Charcoal.Admin.admin_url('login?notice=newpass');
+                    Charcoal.Admin.redirect_to_url(
+                        response.next_url || Charcoal.Admin.admin_url('login?notice=newpass')
+                    );
                 }
             });
         }).fail(function (jqxhr, status, error) {
