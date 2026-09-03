@@ -36,7 +36,11 @@ jobs:
 
       - name: Output list of packages as JSON
         id: output_data
-        run: echo "matrix=$(vendor/bin/monorepo-builder packages-json)" >> $GITHUB_OUTPUT
+        run: |
+          # `vendor/bin/monorepo-builder packages-json` is not available in this version.
+          # Build the matrix ourselves from `./packages/*/` and always output valid JSON.
+          matrix="$(python3 -c 'import glob,json; items=[p.split("/")[-2] for p in glob.glob("packages/*/")]; print(json.dumps(items))')"
+          echo "matrix=$matrix" >> $GITHUB_OUTPUT
 
     outputs:
       matrix: ${{ steps.output_data.outputs.matrix }}
