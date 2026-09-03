@@ -38,7 +38,7 @@
         "squizlabs/php_codesniffer": "^3.13 || ^4.0",
         "php-coveralls/php-coveralls": "^2.7",
         "cache/void-adapter": "^1.0",
-        "mustache/mustache": "^2.11",
+        "mustache/mustache": "^3.2",
         "tedivm/stash": "~0.16",
         "pimple/pimple": "^3.0"
     },

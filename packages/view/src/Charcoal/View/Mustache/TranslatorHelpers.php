@@ -6,7 +6,8 @@ namespace Charcoal\View\Mustache;
 
 use LogicException;
 // From Mustache
-use Mustache_LambdaHelper as LambdaHelper;
+use Mustache\LambdaHelper;
+use Mustache\RenderedString;
 // From 'charcoal-translator'
 use Charcoal\Translator\Translator;
 // From 'charcoal-view'
@@ -102,18 +103,30 @@ class TranslatorHelpers implements HelpersInterface
     /**
      * Magic: Render the Mustache section.
      *
-     * @param  string            $text   The translation key.
+     * Mustache 3+ may invoke callables while resolving dotted names (e.g. `_t.en`)
+     * with zero arguments. In that case, return `$this` so `__get()` can continue.
+     *
+     * LambdaHelper::render() returns a RenderedString when double-render is disabled;
+     * that object must be returned as-is so Mustache does not re-render the output.
+     *
+     * @param  string|null       $text   The translation key.
      * @param  LambdaHelper|null $helper For rendering strings in the current context.
-     * @return string
+     * @return string|RenderedString|self
      */
-    public function __invoke(string $text, LambdaHelper $helper = null): string
+    public function __invoke($text = null, LambdaHelper $helper = null)
     {
+        if (func_num_args() === 0) {
+            return $this;
+        }
+
+        $text = (string)$text;
+
         if ($this->translator) {
             if ($this->number === null) {
                 $text = $this->translator->trans($text, [], $this->domain, $this->locale);
             } else {
                 if (!is_numeric($this->number) && is_string($this->number)) {
-                    $this->number = $helper->render('{{ ' . $this->number . ' }}');
+                    $this->number = (string)$helper->render('{{ ' . $this->number . ' }}');
                 }
 
                 $text = $this->translator->transChoice($text, (int)$this->number, [], $this->domain, $this->locale);
@@ -122,7 +135,11 @@ class TranslatorHelpers implements HelpersInterface
             $this->reset();
         }
 
-        /** @var string Render any Mustache tags in the translation. */
+        if ($helper === null) {
+            return $text;
+        }
+
+        /** Render any Mustache tags in the translation. */
         return $helper->render($text);
     }
 

@@ -10,7 +10,7 @@ use Psr\Http\Message\RequestInterface;
 // From Pimple
 use Pimple\Container;
 // From Mustache
-use Mustache_LambdaHelper as LambdaHelper;
+use Mustache\LambdaHelper;
 // From 'charcoal-factory'
 use Charcoal\Factory\FactoryInterface;
 // From 'charcoal-translator'

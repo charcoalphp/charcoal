@@ -5,7 +5,7 @@ namespace Charcoal\Admin\Property\Input;
 use InvalidArgumentException;
 use UnexpectedValueException;
 // From Mustache
-use Mustache_LambdaHelper as LambdaHelper;
+use Mustache\LambdaHelper;
 // From 'charcoal-view'
 use Charcoal\View\ViewableInterface;
 // From 'charcoal-property'

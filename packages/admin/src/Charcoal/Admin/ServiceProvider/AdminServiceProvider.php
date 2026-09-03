@@ -16,7 +16,7 @@ use Psr\Http\Message\UriInterface;
 // From Slim
 use Slim\Http\Uri;
 // From Mustache
-use Mustache_LambdaHelper as LambdaHelper;
+use Mustache\LambdaHelper;
 // From 'charcoal-config'
 use Charcoal\Config\ConfigInterface;
 use Charcoal\Config\GenericConfig as Config;

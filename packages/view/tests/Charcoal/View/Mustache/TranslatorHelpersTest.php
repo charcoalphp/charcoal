@@ -5,7 +5,7 @@ namespace Charcoal\Tests\View\Mustache;
 use LogicException;
 
 // From Mustache
-use Mustache_Engine as MustacheEngine;
+use Mustache\Engine as MustacheEngine;
 
 // From 'symfony/translation'
 use Symfony\Component\Translation\MessageSelector;

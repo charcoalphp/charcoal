@@ -6,7 +6,7 @@ use InvalidArgumentException;
 use RuntimeException;
 use Traversable;
 // From Mustache
-use Mustache_Engine;
+use Mustache\Engine;
 // From 'charcoal-view'
 use Charcoal\View\AbstractEngine;
 
@@ -27,7 +27,7 @@ class MustacheEngine extends AbstractEngine
     /**
      * The renderering framework.
      *
-     * @var Mustache_Engine
+     * @var Engine
      */
     private $mustache;
 
@@ -160,9 +160,9 @@ class MustacheEngine extends AbstractEngine
     }
 
     /**
-     * @return Mustache_Engine
+     * @return Engine
      */
-    protected function mustache(): Mustache_Engine
+    protected function mustache(): Engine
     {
         if ($this->mustache === null) {
             $this->mustache = $this->createMustache();
@@ -172,11 +172,11 @@ class MustacheEngine extends AbstractEngine
     }
 
     /**
-     * @return Mustache_Engine
+     * @return Engine
      */
-    protected function createMustache(): Mustache_Engine
+    protected function createMustache(): Engine
     {
-        $mustache = new Mustache_Engine([
+        $mustache = new Engine([
             'cache'             => $this->cache(),
             'loader'            => $this->loader(),
             'partials_loader'   => $this->loader(),

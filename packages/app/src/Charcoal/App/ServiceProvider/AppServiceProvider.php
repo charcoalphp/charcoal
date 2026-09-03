@@ -13,7 +13,7 @@ use Slim\Http\Uri;
 // From 'league/climate'
 use League\CLImate\CLImate;
 // From Mustache
-use Mustache_LambdaHelper as LambdaHelper;
+use Mustache\LambdaHelper;
 use Charcoal\Factory\GenericFactory as Factory;
 use Charcoal\Cache\ServiceProvider\CacheServiceProvider;
 use Charcoal\Translator\ServiceProvider\TranslatorServiceProvider;
