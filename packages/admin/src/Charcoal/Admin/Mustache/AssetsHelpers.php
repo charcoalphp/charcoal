@@ -83,7 +83,7 @@ class AssetsHelpers implements HelpersInterface
     public function __invoke($text = null, LambdaHelper $helper = null)
     {
         if ($helper) {
-            $text = (string) $helper->render($text);
+            $text = (string)$helper->render($text);
         }
         $return = $this->{$this->action}($this->collection, $text);
         $text   = $return;

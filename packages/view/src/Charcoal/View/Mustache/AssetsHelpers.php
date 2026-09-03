@@ -107,7 +107,7 @@ class AssetsHelpers implements HelpersInterface
     public function addJs(string $js, LambdaHelper $helper = null): void
     {
         if ($helper !== null) {
-            $js = (string) $helper->render($js);
+            $js = (string)$helper->render($js);
         }
         self::$js .= $js;
     }
@@ -140,7 +140,7 @@ class AssetsHelpers implements HelpersInterface
 
         if (!isset(self::$jsRequirements[$key])) {
             if ($helper !== null) {
-                $js = (string) $helper->render($js);
+                $js = (string)$helper->render($js);
             }
 
             self::$jsRequirements[$key] = $js;
@@ -182,7 +182,7 @@ class AssetsHelpers implements HelpersInterface
     public function addCss(string $css, LambdaHelper $helper = null): void
     {
         if ($helper !== null) {
-            $css = (string) $helper->render($css);
+            $css = (string)$helper->render($css);
         }
         self::$css .= $css;
     }
@@ -215,7 +215,7 @@ class AssetsHelpers implements HelpersInterface
 
         if (!isset(self::$cssRequirements[$key])) {
             if ($helper !== null) {
-                $css = (string) $helper->render($css);
+                $css = (string)$helper->render($css);
             }
 
             self::$cssRequirements[$key] = $css;

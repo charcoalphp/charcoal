@@ -119,14 +119,14 @@ class TranslatorHelpers implements HelpersInterface
             return $this;
         }
 
-        $text = (string) $text;
+        $text = (string)$text;
 
         if ($this->translator) {
             if ($this->number === null) {
                 $text = $this->translator->trans($text, [], $this->domain, $this->locale);
             } else {
                 if (!is_numeric($this->number) && is_string($this->number)) {
-                    $this->number = (string) $helper->render('{{ ' . $this->number . ' }}');
+                    $this->number = (string)$helper->render('{{ ' . $this->number . ' }}');
                 }
 
                 $text = $this->translator->transChoice($text, (int)$this->number, [], $this->domain, $this->locale);

@@ -51,7 +51,7 @@ class MarkdownHelpers implements HelpersInterface
     public function __invoke($text, LambdaHelper $helper = null): string
     {
         if ($helper !== null) {
-            $text = (string) $helper->render($text);
+            $text = (string)$helper->render($text);
         }
         return $this->parsedown->text($text);
     }
