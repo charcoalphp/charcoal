@@ -1,5 +1,12 @@
 # Changelog
 
+## [5.2.1](https://github.com/charcoalphp/charcoal/compare/v5.2.0...v5.2.1) (2026-09-03)
+
+
+### Bug Fixes
+
+* **admin:** support Mustache 3.2 dotted-name lookup in AssetsHelpers ([#111](https://github.com/charcoalphp/charcoal/issues/111)) ([f9ee8c2](https://github.com/charcoalphp/charcoal/commit/f9ee8c2b6a2e55d8c5d9d9870a9e91466771a48c))
+
 ## [5.2.0](https://github.com/charcoalphp/charcoal/compare/v5.1.5...v5.2.0) (2026-09-03)
 
 
