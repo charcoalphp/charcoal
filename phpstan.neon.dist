@@ -1,0 +1,5 @@
+parameters:
+	# Intentionally invalid PHP used as a loader fixture — parse errors are non-ignorable.
+	excludePaths:
+		analyseAndScan:
+			- packages/config/tests/Charcoal/Config/Fixture/fail/malformed.php
