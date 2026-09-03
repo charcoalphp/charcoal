@@ -76,12 +76,23 @@ class AssetsHelpers implements HelpersInterface
     /**
      * Magic: Render the Mustache section.
      *
+     * Mustache 3+ may invoke callables while resolving dotted names
+     * (e.g. `assets.output.css`) with zero arguments. In that case,
+     * return `$this` so `__get()` can continue.
+     *
+     * Mustache 3.2 interpolates the final dotted-name value instead of
+     * invoking it as a lambda. `__toString()` runs the pending action.
+     *
      * @param  string            $text   The translation key.
      * @param  LambdaHelper|null $helper For rendering strings in the current context.
-     * @return string
+     * @return string|self
      */
     public function __invoke($text = null, LambdaHelper $helper = null)
     {
+        if (func_num_args() === 0 || $this->action === null) {
+            return $this;
+        }
+
         if ($helper) {
             $text = (string)$helper->render($text);
         }
@@ -95,6 +106,23 @@ class AssetsHelpers implements HelpersInterface
         }
 
         return $text;
+    }
+
+    /**
+     * Magic: Render the pending action when Mustache interpolates this helper.
+     *
+     * @return string
+     */
+    public function __toString(): string
+    {
+        if ($this->action === null) {
+            return '';
+        }
+
+        $return = $this->{$this->action}($this->collection, '');
+        $this->reset();
+
+        return (string)$return;
     }
 
     /**
