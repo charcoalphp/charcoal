@@ -1,5 +1,13 @@
 # Changelog
 
+## [5.1.5](https://github.com/charcoalphp/charcoal/compare/v5.1.4...v5.1.5) (2026-09-03)
+
+
+### Bug Fixes
+
+* **admin:** Redirections handling ([#104](https://github.com/charcoalphp/charcoal/issues/104)) ([d3729b3](https://github.com/charcoalphp/charcoal/commit/d3729b35534be024980e2455d3870894b4aa0814))
+* **user:** Enforce secure and httponly flags on cookies ([#102](https://github.com/charcoalphp/charcoal/issues/102)) ([7462e37](https://github.com/charcoalphp/charcoal/commit/7462e37e3c1ef47a12ca20a8e471f2fbe77d42c4))
+
 ## [5.1.4](https://github.com/charcoalphp/charcoal/compare/v5.1.3...v5.1.4) (2026-09-02)
 
 
