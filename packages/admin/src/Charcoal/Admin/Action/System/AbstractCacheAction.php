@@ -88,7 +88,7 @@ abstract class AbstractCacheAction extends AdminAction
         $this->setCachePool($container['cache']);
 
         $this->mustacheEngine = function () use ($container) {
-            if (class_exists('\Mustache_Engine')) {
+            if (class_exists(\Mustache\Engine::class)) {
                 return $container['view/engine/mustache'];
             }
 

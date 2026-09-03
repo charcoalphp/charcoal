@@ -7,7 +7,7 @@ use Assetic\Asset\AssetCollection;
 use Assetic\Asset\AssetReference;
 use Assetic\Asset\StringAsset;
 use Assetic\AssetManager;
-use Mustache_LambdaHelper as LambdaHelper;
+use Mustache\LambdaHelper;
 // From charcoal-view
 use Charcoal\View\Mustache\HelpersInterface;
 
@@ -83,7 +83,7 @@ class AssetsHelpers implements HelpersInterface
     public function __invoke($text = null, LambdaHelper $helper = null)
     {
         if ($helper) {
-            $text = $helper->render($text);
+            $text = (string) $helper->render($text);
         }
         $return = $this->{$this->action}($this->collection, $text);
         $text   = $return;

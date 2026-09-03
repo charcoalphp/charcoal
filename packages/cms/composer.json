@@ -33,7 +33,7 @@
     },
     "require-dev": {
         "charcoal/admin": "^5.1.5",
-        "mustache/mustache": "^2.11",
+        "mustache/mustache": "^3.2",
         "php-coveralls/php-coveralls": "^2.2",
         "phpunit/phpunit": "^9.5",
         "squizlabs/php_codesniffer": "^3.5",

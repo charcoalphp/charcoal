@@ -3,7 +3,7 @@
 namespace Charcoal\Tests\View\Mustache;
 
 // From Mustache
-use Mustache_Engine as MustacheEngine;
+use Mustache\Engine as MustacheEngine;
 
 // From 'erusev/parsedown'
 use Parsedown;

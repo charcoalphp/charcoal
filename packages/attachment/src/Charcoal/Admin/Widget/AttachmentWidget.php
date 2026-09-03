@@ -8,7 +8,7 @@ use InvalidArgumentException;
 // From Pimple
 use Pimple\Container;
 // From Mustache
-use Mustache_LambdaHelper as LambdaHelper;
+use Mustache\LambdaHelper;
 // From 'charcoal-config'
 use Charcoal\Config\ConfigurableInterface;
 // From 'charcoal-factory'
