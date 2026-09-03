@@ -137,14 +137,16 @@ abstract class AbstractExpression implements
     }
 
     /**
-     * Quote the given scalar value.
+     * Quote the given scalar value for legacy inline SQL fragments.
+     *
+     * Prefer PDO binds (e.g. DatabaseFilter / DatabaseOrder) instead of this helper.
+     * String values use SQL-style escaping (backslash + single quotes), not HTML entities.
      *
      * @param  mixed $value The value to be quoted.
      * @return mixed Returns:
      *     - If $value is not a scalar value, the value is returned intact.
      *     - if $value is a boolean, the value is cast to an integer.
-     *     - If $value is not a number, the value is stringified
-     *       and wrapped in double quotes.
+     *     - If $value is not a number, the value is escaped and wrapped in single quotes.
      */
     public static function quoteValue($value)
     {
@@ -159,8 +161,7 @@ abstract class AbstractExpression implements
         }
 
         if (!is_numeric($value)) {
-            $value = htmlspecialchars($value, ENT_QUOTES);
-            $value = sprintf('"%s"', $value);
+            $value = sprintf("'%s'", addslashes((string)$value));
         }
 
         return $value;

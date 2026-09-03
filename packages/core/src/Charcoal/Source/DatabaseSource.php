@@ -49,12 +49,16 @@ class DatabaseSource extends AbstractSource implements
     /**
      * PDO binds collected from the last {@see sqlFilters()} compilation.
      *
-     * Callers that use {@see sqlLoad()} / {@see sqlLoadCount()} / {@see sqlFilters()}
-     * must pass these binds to {@see dbQuery()} (or equivalent).
-     *
      * @var array<string,mixed>
      */
     private $filterBinds = [];
+
+    /**
+     * PDO binds collected from the last {@see sqlOrders()} compilation.
+     *
+     * @var array<string,mixed>
+     */
+    private $orderBinds = [];
 
     /**
      * Create a new database handler.
@@ -525,7 +529,7 @@ class DatabaseSource extends AbstractSource implements
         }
 
         $query = $this->sqlLoad();
-        return $this->loadItemsFromQuery($query, $this->filterBinds(), $item);
+        return $this->loadItemsFromQuery($query, $this->queryBinds(), $item);
     }
 
     /**
@@ -860,6 +864,7 @@ class DatabaseSource extends AbstractSource implements
         }
 
         $tables  = $this->sqlFrom();
+        $this->orderBinds = [];
         $filters = $this->sqlFilters();
 
         $query = 'SELECT COUNT(*) FROM ' . $tables . $filters;
@@ -926,10 +931,30 @@ class DatabaseSource extends AbstractSource implements
     }
 
     /**
+     * Named PDO binds from the last {@see sqlOrders()} compilation.
+     *
+     * @return array<string,mixed>
+     */
+    public function orderBinds()
+    {
+        return $this->orderBinds;
+    }
+
+    /**
+     * Combined filter + order binds for {@see sqlLoad()} / assembled SELECTs.
+     *
+     * @return array<string,mixed>
+     */
+    public function queryBinds()
+    {
+        return array_merge($this->filterBinds, $this->orderBinds);
+    }
+
+    /**
      * Compile the WHERE clause.
      *
      * Predicate filter values are emitted as named placeholders; use {@see filterBinds()}
-     * when executing the query.
+     * or {@see queryBinds()} when executing the query.
      *
      * @return string
      */
@@ -960,10 +985,15 @@ class DatabaseSource extends AbstractSource implements
     /**
      * Compile the ORDER BY clause.
      *
+     * FIELD() values are emitted as named placeholders; use {@see orderBinds()}
+     * or {@see queryBinds()} when executing the query.
+     *
      * @return string
      */
     public function sqlOrders()
     {
+        $this->orderBinds = [];
+
         if (!$this->hasOrders()) {
             return '';
         }
@@ -975,6 +1005,10 @@ class DatabaseSource extends AbstractSource implements
             }
 
             $sql = $order->sql();
+            if ($order instanceof DatabaseOrder) {
+                $this->orderBinds = array_merge($this->orderBinds, $order->binds());
+            }
+
             if ($sql && strlen($sql) > 0) {
                 $parts[] = $sql;
             }

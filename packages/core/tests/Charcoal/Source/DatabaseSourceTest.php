@@ -647,4 +647,47 @@ class DatabaseSourceTest extends AbstractTestCase
         $this->assertSame('', $src->sqlFilters());
         $this->assertSame([], $src->filterBinds());
     }
+
+    /**
+     * FIELD() orders expose PDO binds via orderBinds() / queryBinds() after sqlOrders().
+     *
+     * @return void
+     */
+    public function testSqlOrdersCollectsBinds()
+    {
+        $container = $this->getContainer();
+
+        $src = new DatabaseSource([
+            'logger' => $container['logger'],
+            'pdo'    => $container['database'],
+        ]);
+
+        $this->assertSame([], $src->orderBinds());
+        $this->assertSame([], $src->queryBinds());
+
+        $src->addFilter([
+            'property' => 'name',
+            'operator' => '=',
+            'value'    => 'safe',
+        ]);
+        $src->addOrder([
+            'property' => 'country',
+            'mode'     => 'values',
+            'values'   => [ "' OR '1'='1", 'CA' ],
+        ]);
+
+        $filterSql = $src->sqlFilters();
+        $orderSql  = $src->sqlOrders();
+        $binds     = $src->queryBinds();
+
+        $this->assertStringStartsWith(' WHERE ', $filterSql);
+        $this->assertStringStartsWith(' ORDER BY ', $orderSql);
+        $this->assertMatchesRegularExpression('/:filter_\d+/', $filterSql);
+        $this->assertMatchesRegularExpression('/FIELD\(`objTable`\.`country`, :order_\d+, :order_\d+\)/', $orderSql);
+        $this->assertStringNotContainsString("' OR '1'='1", $orderSql);
+        $this->assertGreaterThanOrEqual(3, count($binds));
+        $this->assertContains("' OR '1'='1", $binds);
+        $this->assertContains('CA', $binds);
+        $this->assertContains('safe', $binds);
+    }
 }

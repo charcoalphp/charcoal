@@ -172,7 +172,7 @@ class AbstractExpressionTest extends AbstractTestCase
             'Array Type'      => [ [ 42 ], [ 42 ] ],
             'Integer Type'    => [ 42, 42 ],
             'Integer String'  => [ '3', '3' ],
-            'Quotable String' => [ 'Foo "Qux" Baz', '"Foo &quot;Qux&quot; Baz"' ],
+            'Quotable String' => [ 'Foo "Qux" Baz', "'Foo \\\"Qux\\\" Baz'" ],
             'Boolean Type'    => [ true, 1 ],
             'Boolean String'  => [ 'false', 0 ],
             'Object Type'     => [ $obj, $obj ],

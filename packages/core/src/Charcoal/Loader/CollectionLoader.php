@@ -654,7 +654,7 @@ class CollectionLoader implements
 
         $source = $this->source();
         $query  = $source->sqlLoad();
-        $binds  = method_exists($source, 'filterBinds') ? $source->filterBinds() : [];
+        $binds  = $this->sourceQueryBinds($source);
 
         return $this->loadFromQuery([ $query, $binds, [] ], $callback, $before);
     }
@@ -669,7 +669,7 @@ class CollectionLoader implements
     {
         $source = $this->source();
         $query  = $source->sqlLoadCount();
-        $binds  = method_exists($source, 'filterBinds') ? $source->filterBinds() : [];
+        $binds  = $this->sourceQueryBinds($source);
 
         $sth = $source->dbQuery($query, $binds);
         if ($sth === false) {
@@ -717,7 +717,7 @@ class CollectionLoader implements
             );
         }
 
-        /** Filter value binds from {@see DatabaseSource::filterBinds()} */
+        /** Filter/order value binds from {@see DatabaseSource::queryBinds()} */
         if (is_string($query)) {
             $this->logger->debug($query);
             $sth = $db->prepare($query);
@@ -850,6 +850,28 @@ class CollectionLoader implements
     public function collectionClass()
     {
         return $this->collectionClass;
+    }
+
+    /**
+     * PDO binds from the last sqlLoad / sqlFilters / sqlOrders compilation.
+     *
+     * Prefers {@see DatabaseSource::queryBinds()} (filters + FIELD() orders);
+     * falls back to filterBinds() for older sources.
+     *
+     * @param  object $source The model source.
+     * @return array<string,mixed>
+     */
+    protected function sourceQueryBinds($source)
+    {
+        if (method_exists($source, 'queryBinds')) {
+            return $source->queryBinds();
+        }
+
+        if (method_exists($source, 'filterBinds')) {
+            return $source->filterBinds();
+        }
+
+        return [];
     }
 
     /**
