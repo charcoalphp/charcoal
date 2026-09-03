@@ -160,9 +160,9 @@ class OptimizeImagesScript extends AdminScript
                 -name "*.jpeg" -o \
                 -name "*.JPEG" \
             \) -exec chmod -R a+r {} \;',
-            $this->dir,
-            $cmd,
-            $this->jpgLevel
+            escapeshellarg($this->dir),
+            escapeshellarg($cmd),
+            (int)$this->jpgLevel
         );
         if ($this->verbose()) {
             $this->climate()->out($cmdName);
@@ -183,9 +183,9 @@ class OptimizeImagesScript extends AdminScript
                 -name "*.PNG" \
             \) \
             -exec %s -o%s {} \;',
-            $this->dir,
-            $cmd,
-            $this->pngLevel
+            escapeshellarg($this->dir),
+            escapeshellarg($cmd),
+            (int)$this->pngLevel
         );
         if ($this->verbose()) {
             $this->climate()->out($cmdName);
@@ -199,13 +199,13 @@ class OptimizeImagesScript extends AdminScript
      */
     private function findCmd($cmdName)
     {
-        $cmd = exec('type -p ' . $cmdName);
+        $cmd = exec('type -p ' . escapeshellarg($cmdName));
         $cmd = str_replace($cmdName . ' is ', '', $cmd);
         if (!$cmd) {
-            $cmd = exec('where ' . $cmdName);
+            $cmd = exec('where ' . escapeshellarg($cmdName));
         }
         if (!$cmd) {
-            $cmd = exec('which ' . $cmdName);
+            $cmd = exec('which ' . escapeshellarg($cmdName));
         }
         if (!$cmd) {
             return '';

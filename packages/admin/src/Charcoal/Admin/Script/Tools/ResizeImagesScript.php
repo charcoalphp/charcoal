@@ -127,12 +127,12 @@ class ResizeImagesScript extends AdminScript
                 awk \'$1 > \'%s\' { sub(/^[^ ]* [^ ]* /, ""); print }\' | \
                 tr \'\n\' \'\0\' | \
                 xargs -0  %s -resize %sx;',
-                $this->dir,
-                $identifyCmd,
+                escapeshellarg($this->dir),
+                escapeshellarg($identifyCmd),
                 '%w %h %i',
-                $this->maxWidth,
-                $mogrifyCmd,
-                $this->maxWidth
+                (int)$this->maxWidth,
+                escapeshellarg($mogrifyCmd),
+                (int)$this->maxWidth
             );
             if ($this->verbose()) {
                 $climate->out($cmdName);
@@ -154,12 +154,12 @@ class ResizeImagesScript extends AdminScript
                 awk \'$2 > \'%s\' { sub(/^[^ ]* [^ ]* /, ""); print }\' | \
                 tr \'\n\' \'\0\' | \
                 xargs -0  %s -resize x%s;',
-                $this->dir,
-                $identifyCmd,
+                escapeshellarg($this->dir),
+                escapeshellarg($identifyCmd),
                 '%w %h %i',
-                $this->maxHeight,
-                $mogrifyCmd,
-                $this->maxHeight
+                (int)$this->maxHeight,
+                escapeshellarg($mogrifyCmd),
+                (int)$this->maxHeight
             );
             if ($this->verbose()) {
                 $climate->out($cmdName);
@@ -188,13 +188,13 @@ class ResizeImagesScript extends AdminScript
      */
     private function findCmd($cmdName)
     {
-        $cmd = exec('type -p ' . $cmdName);
+        $cmd = exec('type -p ' . escapeshellarg($cmdName));
         $cmd = str_replace($cmdName . ' is ', '', $cmd);
         if (!$cmd) {
-            $cmd = exec('where ' . $cmdName);
+            $cmd = exec('where ' . escapeshellarg($cmdName));
         }
         if (!$cmd) {
-            $cmd = exec('which ' . $cmdName);
+            $cmd = exec('which ' . escapeshellarg($cmdName));
         }
         if (!$cmd) {
             return '';
