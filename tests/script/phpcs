@@ -15,7 +15,19 @@ NC='\033[0m' # No Color
 #######
 
 get_packages() {
-    vendor/bin/monorepo-builder packages-json
+    # Generate comma-separated package names from ./packages/*/
+    # (the `packages-json` command is not available in this monorepo-builder version)
+    local out=""
+
+    for dir in packages/*/; do
+        [ -d "$dir" ] || continue
+        name="${dir%/}"
+        name="${name##*/}"
+        out+="${name},"
+    done
+
+    # Trim trailing comma if present
+    echo "${out%,}"
 }
 
 ######

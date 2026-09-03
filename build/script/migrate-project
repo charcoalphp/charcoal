@@ -12,7 +12,16 @@ cd $CHARCOAL_BASE
 
 echo Fetching and parsing charcoal packages
 
-PACKAGES="$(vendor/bin/monorepo-builder packages-json)"
+# `vendor/bin/monorepo-builder packages-json` is not available in this monorepo-builder version.
+# Build a comma-separated package list from ./packages/*/
+PACKAGES=""
+for dir in packages/*/; do
+  [ -d "$dir" ] || continue
+  name="${dir%/}"
+  name="${name##*/}"
+  PACKAGES="${PACKAGES},${name}"
+done
+PACKAGES="${PACKAGES#,}"
 
 PACKAGES=$(sed -Ee 's/(\[|\]|")//g' <<< $PACKAGES)
 PACKAGES=$(sed -Ee 's/,/|/g' <<< $PACKAGES)
