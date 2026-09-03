@@ -23,11 +23,11 @@
         "charcoal/translator": "^5.1.5"
     },
     "require-dev": {
-        "php-coveralls/php-coveralls": "^2.2",
-        "phpunit/phpunit": "^9.5",
+        "php-coveralls/php-coveralls": "^2.7",
+        "phpunit/phpunit": "^9.6",
         "pimple/pimple": "^3.0",
         "seld/jsonlint": "^1.9",
-        "squizlabs/php_codesniffer": "^3.5",
+        "squizlabs/php_codesniffer": "^3.13 || ^4.0",
         "tedivm/stash": "~0.16",
         "ext-json": "*"
     },

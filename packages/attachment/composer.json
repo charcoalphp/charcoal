@@ -28,10 +28,10 @@
     },
     "require-dev": {
         "charcoal/admin": "^5.1.5",
-        "mockery/mockery": "^1.0",
-        "php-coveralls/php-coveralls": "^2.2",
-        "phpunit/phpunit": "^9.5",
-        "squizlabs/php_codesniffer": "^3.5"
+        "mockery/mockery": "^1.6",
+        "php-coveralls/php-coveralls": "^2.7",
+        "phpunit/phpunit": "^9.6",
+        "squizlabs/php_codesniffer": "^3.13 || ^4.0"
     },
     "suggest": {
         "charcoal/admin": "To use the attachment widgets, actions, and scripts."

@@ -7,6 +7,9 @@
     <config name="show_progress" value="1" />
     <config name="ignore_warnings_on_exit" value="1" />
 
+    <!-- Intentionally invalid PHP used as a loader fixture -->
+    <exclude-pattern>*/Fixture/fail/malformed\.php</exclude-pattern>
+
     <rule ref="PSR12" />
 
     <rule ref="Generic.Arrays.DisallowLongArraySyntax" />
