@@ -115,7 +115,7 @@ Charcoal.Admin.Widget_Object_Revisions.prototype.request_success = function ($fo
         Charcoal.Admin.feedback().add_action({
             label: commonL10n.continue,
             callback: function () {
-                window.location.href = Charcoal.Admin.admin_url() + response.next_url;
+                Charcoal.Admin.redirect_to_url(response.next_url);
             }
         });
     }

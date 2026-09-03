@@ -171,12 +171,50 @@ Charcoal.Admin = (function () {
     };
 
     /**
+     * Determines if a redirect target is safe (same-origin or path-relative).
+     *
+     * @param  {string} uri
+     * @return {boolean}
+     */
+    Admin.is_safe_redirect_url = function (uri) {
+        if (typeof uri !== 'string' || uri === '') {
+            return false;
+        }
+
+        if (/[\x00-\x1F\x7F]/.test(uri) || uri.indexOf('\\') !== -1) {
+            return false;
+        }
+
+        if (Admin.is_absolute_url(uri)) {
+            try {
+                var resolved = new URL(uri, window.location.href);
+                var base     = new URL(Admin.base_url(), window.location.href);
+                return resolved.origin === base.origin;
+            } catch (err) {
+                return false;
+            }
+        }
+
+        // Schemes without "//" (javascript:, data:, …).
+        if (/^[a-z][a-z0-9+\.-]*:/i.test(uri)) {
+            return false;
+        }
+
+        return true;
+    };
+
+    /**
      * Redirects the window to the URI.
+     *
+     * Off-site absolute URLs fall back to the admin base URL.
      *
      * @param  {string} uri
      * @return {void}
      */
     Admin.redirect_to_url = function (uri) {
+        if (!Admin.is_safe_redirect_url(uri)) {
+            uri = Charcoal.Admin.admin_url();
+        }
         window.location.href = Admin.is_absolute_url(uri) ? uri : Charcoal.Admin.admin_url() + uri;
     };
 
