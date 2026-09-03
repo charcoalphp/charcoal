@@ -37,7 +37,7 @@ class CallbackStream implements StreamInterface
      */
     public function __toString()
     {
-        return $this->output();
+        return ($this->output() ?? '');
     }
 
     /**
@@ -175,7 +175,7 @@ class CallbackStream implements StreamInterface
      */
     public function getContents()
     {
-        return $this->output();
+        return ($this->output() ?? '');
     }
 
     /**

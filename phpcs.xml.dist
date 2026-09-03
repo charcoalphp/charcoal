@@ -14,8 +14,11 @@
 
     <rule ref="Generic.Arrays.DisallowLongArraySyntax" />
     <rule ref="Generic.Classes.DuplicateClassName" />
-    <rule ref="Generic.Formatting.NoSpaceAfterCast" />
-    <rule ref="Generic.Functions.CallTimePassByReference" />
+    <rule ref="Generic.Formatting.SpaceAfterCast">
+        <properties>
+            <property name="spacing" value="0" />
+        </properties>
+    </rule>
     <rule ref="Generic.PHP.DeprecatedFunctions" />
     <rule ref="Generic.PHP.ForbiddenFunctions" />
     <rule ref="Generic.PHP.NoSilencedErrors" />
