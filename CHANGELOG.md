@@ -1,5 +1,12 @@
 # Changelog
 
+## [5.2.4](https://github.com/charcoalphp/charcoal/compare/v5.2.3...v5.2.4) (2026-09-04)
+
+
+### Bug Fixes
+
+* Upgrade PHP version from 8.0 to 8.5 in workflow ([#115](https://github.com/charcoalphp/charcoal/issues/115)) ([7f6109d](https://github.com/charcoalphp/charcoal/commit/7f6109d19da773c33eeccaced74e03396978d678))
+
 ## [5.2.3](https://github.com/charcoalphp/charcoal/compare/v5.2.2...v5.2.3) (2026-09-04)
 
 
