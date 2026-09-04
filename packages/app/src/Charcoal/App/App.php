@@ -124,6 +124,9 @@ class App extends SlimApp implements
         $config = $this->config();
         date_default_timezone_set($config['timezone']);
 
+        // Setup session cookie security defaults
+        $this->setupSessionCookieParams();
+
         // Setup env
         $dotenv = Dotenv::createImmutable($config->basePath());
         $dotenv->safeLoad();
@@ -141,6 +144,43 @@ class App extends SlimApp implements
 
         // Setup middlewares
         $this->setupMiddlewares();
+    }
+
+    /**
+     * Configure the session cookie's security attributes.
+     *
+     * Secure, HttpOnly, and SameSite=Lax by default — configurable (but not
+     * defaulted to off) via the `session` config, for environments that
+     * cannot serve HTTPS (e.g. `{"session": {"cookie_secure": false}}`).
+     *
+     * Must run before the application's first `session_start()` call (this
+     * package does not start sessions itself; several consumers do), which
+     * is why this happens as early as possible in {@see self::setup()}. A
+     * session already active (PHP warns and no-ops in that case) is left
+     * untouched rather than attempted.
+     *
+     * @return void
+     */
+    private function setupSessionCookieParams()
+    {
+        if (session_status() === PHP_SESSION_ACTIVE) {
+            return;
+        }
+
+        $config = array_merge(
+            [
+                'cookie_secure'   => true,
+                'cookie_httponly' => true,
+                'cookie_samesite' => 'Lax',
+            ],
+            ($this->config()['session'] ?: [])
+        );
+
+        session_set_cookie_params([
+            'secure'   => $config['cookie_secure'],
+            'httponly' => $config['cookie_httponly'],
+            'samesite' => $config['cookie_samesite'],
+        ]);
     }
 
     /**
