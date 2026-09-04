@@ -383,9 +383,12 @@ class AdminServiceProvider implements ServiceProviderInterface
                 /**
                  * Prepend the administration-area URI to the given path.
                  *
+                 * Mustache 3.2 treats a non-string lambda return as section context,
+                 * so this helper must return a string.
+                 *
                  * @see    \Charcoal\App\ServiceProvider\AppServiceProvider::registerViewServices()
                  * @param  string $uri A URI path to wrap.
-                 * @return UriInterface|null
+                 * @return string
                  */
                 'withAdminUrl' => function ($uri, LambdaHelper $helper = null) use ($adminUrl) {
                     if ($helper) {
@@ -394,19 +397,19 @@ class AdminServiceProvider implements ServiceProviderInterface
 
                     $uri = strval($uri);
                     if ($uri === '') {
-                        $uri = $adminUrl->withPath('');
-                    } else {
-                        $parts = parse_url($uri);
-                        if (!isset($parts['scheme'])) {
-                            if (!in_array($uri[0], ['/', '#', '?'])) {
-                                $path  = isset($parts['path']) ? ltrim($parts['path'], '/') : '';
-                                $query = isset($parts['query']) ? $parts['query'] : '';
-                                $hash  = isset($parts['fragment']) ? $parts['fragment'] : '';
+                        return (string)$adminUrl->withPath('');
+                    }
 
-                                return $adminUrl->withPath($path)
-                                                ->withQuery($query)
-                                                ->withFragment($hash);
-                            }
+                    $parts = parse_url($uri);
+                    if (!isset($parts['scheme'])) {
+                        if (!in_array($uri[0], ['/', '#', '?'])) {
+                            $path  = isset($parts['path']) ? ltrim($parts['path'], '/') : '';
+                            $query = isset($parts['query']) ? $parts['query'] : '';
+                            $hash  = isset($parts['fragment']) ? $parts['fragment'] : '';
+
+                            return (string)$adminUrl->withPath($path)
+                                            ->withQuery($query)
+                                            ->withFragment($hash);
                         }
                     }
 

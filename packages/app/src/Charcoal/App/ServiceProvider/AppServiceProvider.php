@@ -501,8 +501,11 @@ class AppServiceProvider implements ServiceProviderInterface
                 /**
                  * Prepend the base URI to the given path.
                  *
+                 * Mustache 3.2 treats a non-string lambda return as section context,
+                 * so this helper must return a string.
+                 *
                  * @param  string $uri A URI path to wrap.
-                 * @return UriInterface|null
+                 * @return string
                  */
                 'withBaseUrl' => function ($uri, LambdaHelper $helper = null) use ($baseUrl) {
                     if ($helper) {
@@ -511,19 +514,19 @@ class AppServiceProvider implements ServiceProviderInterface
 
                     $uri = strval($uri);
                     if ($uri === '') {
-                        $uri = $baseUrl->withPath('');
-                    } else {
-                        $parts = parse_url($uri);
-                        if (!isset($parts['scheme'])) {
-                            if (!in_array($uri[0], [ '/', '#', '?' ])) {
-                                $path  = isset($parts['path']) ? $parts['path'] : '';
-                                $query = isset($parts['query']) ? $parts['query'] : '';
-                                $hash  = isset($parts['fragment']) ? $parts['fragment'] : '';
+                        return (string)$baseUrl->withPath('');
+                    }
 
-                                $uri = $baseUrl->withPath($path)
-                                               ->withQuery($query)
-                                               ->withFragment($hash);
-                            }
+                    $parts = parse_url($uri);
+                    if (!isset($parts['scheme'])) {
+                        if (!in_array($uri[0], [ '/', '#', '?' ])) {
+                            $path  = isset($parts['path']) ? $parts['path'] : '';
+                            $query = isset($parts['query']) ? $parts['query'] : '';
+                            $hash  = isset($parts['fragment']) ? $parts['fragment'] : '';
+
+                            return (string)$baseUrl->withPath($path)
+                                           ->withQuery($query)
+                                           ->withFragment($hash);
                         }
                     }
 

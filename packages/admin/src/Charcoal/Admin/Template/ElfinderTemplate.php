@@ -375,7 +375,9 @@ class ElfinderTemplate extends AdminTemplate
      */
     public function elfinderConnectorUrl()
     {
-        return $this->elfinderConnectorUrl;
+        return $this->elfinderConnectorUrl === null
+            ? null
+            : (string)$this->elfinderConnectorUrl;
     }
 
     /**
@@ -393,8 +395,7 @@ class ElfinderTemplate extends AdminTemplate
         $uri = $this->getElfinderConnectorUrlTemplate();
 
         return function ($noop, LambdaHelper $helper) use ($uri) {
-            $uri = $helper->render($uri);
-            $this->setElfinderConnectorUrl($uri);
+            $this->setElfinderConnectorUrl((string)$helper->render($uri));
 
             return null;
         };

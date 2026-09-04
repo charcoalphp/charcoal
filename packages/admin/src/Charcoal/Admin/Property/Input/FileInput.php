@@ -326,8 +326,7 @@ class FileInput extends AbstractPropertyInput
         $uri = $this->getFilePickerUrlTemplate();
 
         return function ($noop, LambdaHelper $helper) use ($uri) {
-            $uri = $helper->render($uri);
-            $this->setFilePickerUrl($uri);
+            $this->setFilePickerUrl((string)$helper->render($uri));
 
             return null;
         };
@@ -489,7 +488,7 @@ class FileInput extends AbstractPropertyInput
             'input_name'   => $this->inputName(),
             # 'input_val'    => $this->inputVal(),
             'dialog_title' => (string)$this->dialogTitle(),
-            'elfinder_url' => $this->filePickerUrl(),
+            'elfinder_url' => (string)$this->filePickerUrl(),
         ];
     }
 }

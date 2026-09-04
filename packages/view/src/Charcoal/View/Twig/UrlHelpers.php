@@ -73,7 +73,7 @@ class UrlHelpers extends AbstractExtension implements
             }
         }
 
-        return $uri;
+        return (string)$uri;
     }
 
     /**

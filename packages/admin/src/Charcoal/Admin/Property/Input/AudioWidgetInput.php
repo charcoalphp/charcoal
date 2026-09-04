@@ -239,8 +239,7 @@ class AudioWidgetInput extends AudioInput
         $uri = $this->getRecorderPluginUrlTemplate();
 
         return function ($noop, LambdaHelper $helper) use ($uri) {
-            $uri = $helper->render($uri);
-            $this->setRecorderPluginUrl($uri);
+            $this->setRecorderPluginUrl((string)$helper->render($uri));
 
             return null;
         };
@@ -704,7 +703,7 @@ class AudioWidgetInput extends AudioInput
             'capture_input_id'    => $this->captureInputId(),
             'upload_input_id'     => $this->uploadInputId(),
             'hidden_input_id'     => $this->hiddenInputId(),
-            'recorder_plugin_url' => $this->recorderPluginUrl(),
+            'recorder_plugin_url' => (string)$this->recorderPluginUrl(),
         ]);
     }
 }
