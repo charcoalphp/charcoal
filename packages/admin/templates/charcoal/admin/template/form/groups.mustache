@@ -8,23 +8,23 @@
 <div class="c-form-widget_groups{{^ isDisplayModeLang }}{{# isTabbable }} tab-content{{/ isTabbable }}{{/ isDisplayModeLang }}">
     {{# groups }}
         {{^ hidden }}
-            {{# form.layout }}
+            {{# formLayout }}
                 {{> charcoal/admin/widget/layout.start }}
-            {{/ form.layout }}
-            <div class="c-form-widget_group{{# ident }} form-group-{{ . }}{{/ ident }}{{# form.layout.cellSpanBy12 }} col-md-{{ . }}{{/ form.layout.cellSpanBy12 }} js-group-tab{{^ form.isDisplayModeLang }}{{# form.isTabbable }} tab-pane{{^ isHidden }} active{{/ isHidden }}{{/ form.isTabbable }}{{/ form.isDisplayModeLang }}{{^ form.isTabbable }}{{# isHidden }} hidden{{/ isHidden }}{{/ form.isTabbable }}"
+            {{/ formLayout }}
+            <div class="c-form-widget_group{{# ident }} form-group-{{ . }}{{/ ident }}{{# formLayout.cellSpanBy12 }} col-md-{{ . }}{{/ formLayout.cellSpanBy12 }} js-group-tab{{^ isDisplayModeLang }}{{# isTabbable }} tab-pane{{^ isHidden }} active{{/ isHidden }}{{/ isTabbable }}{{/ isDisplayModeLang }}{{^ isTabbable }}{{# isHidden }} hidden{{/ isHidden }}{{/ isTabbable }}"
                 id="{{ widgetId }}"
                 style="{{# conditionalLogicUnmet }}display:none;{{/ conditionalLogicUnmet }}"
-                {{^ isDisplayModeLang }}{{# form.isTabbable }}
+                {{^ isDisplayModeLang }}{{# isTabbable }}
                 role="tabpanel"
                 aria-labelledby="{{ widgetId }}_tab_{{ident}}"
-                {{/ form.isTabbable }}{{/ isDisplayModeLang }}>
+                {{/ isTabbable }}{{/ isDisplayModeLang }}>
 
-                {{> $widget_template }}
+                {{> *template }}
             </div>
 
-            {{# form.layout }}
+            {{# formLayout }}
                 {{> charcoal/admin/widget/layout.end }}
-            {{/ form.layout }}
+            {{/ formLayout }}
         {{/ hidden }}
     {{/ groups }}
 </div>

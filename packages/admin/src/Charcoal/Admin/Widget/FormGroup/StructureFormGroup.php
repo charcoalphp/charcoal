@@ -631,16 +631,15 @@ class StructureFormGroup extends FormGroupWidget implements
 
             if ($formProperty instanceof FormInputInterface) {
                 $formProperty->setFormGroup($this);
+                if (method_exists($formProperty, 'input')) {
+                    $formProperty->input();
+                }
             }
 
             if ($formProperty->hidden()) {
                 $form->addHiddenProperty($subPropertyIdent, $formProperty);
             } else {
                 yield $propertyIdent => $formProperty;
-            }
-
-            if ($formProperty instanceof FormInputInterface) {
-                $formProperty->clearFormGroup();
             }
         }
     }
