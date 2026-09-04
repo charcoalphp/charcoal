@@ -78,9 +78,10 @@ class DatabaseServiceProvider implements ServiceProviderInterface
                     $username = $dbConfig['username'];
                     $password = $dbConfig['password'];
 
-                    // Set UTf-8 compatibility by default. Disable it if it is set as such in config
-                    $extraOptions = null;
-                    if (!isset($dbConfig['disable_utf8']) || !$dbConfig['disable_utf8']) {
+                    // Set UTF-8 compatibility by default. Disable it if it is set as such in config.
+                    // Only apply MYSQL_ATTR_INIT_COMMAND for mysql: driver-specific PDO attribute IDs overlap.
+                    $extraOptions = [];
+                    if ($type === 'mysql' && (!isset($dbConfig['disable_utf8']) || !$dbConfig['disable_utf8'])) {
                         $extraOptions = [
                             PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8mb4',
                         ];

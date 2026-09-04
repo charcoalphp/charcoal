@@ -3,7 +3,9 @@
 namespace Charcoal\Cms\Support\Helpers;
 
 use DateTime;
+use DateTimeInterface;
 use Exception;
+use IntlDateFormatter;
 // From 'charcoal-translator'
 use Charcoal\Translator\TranslatorAwareTrait;
 
@@ -204,14 +206,14 @@ class DateHelper
         if (!$this->to || !$formats['to']) {
             return sprintf(
                 (string)$content,
-                strftime($formats['from'], $this->from->getTimestamp())
+                $this->formatStrftime($formats['from'], $this->from)
             );
         }
 
         return sprintf(
             (string)$content,
-            strftime($formats['from'], $this->from->getTimestamp()),
-            strftime($formats['to'], $this->to->getTimestamp())
+            $this->formatStrftime($formats['from'], $this->from),
+            $this->formatStrftime($formats['to'], $this->to)
         );
     }
 
@@ -235,28 +237,129 @@ class DateHelper
         if (!$this->to || !$formats['to']) {
             return sprintf(
                 (string)$content,
-                strftime($formats['from'], $this->from->getTimestamp())
+                $this->formatStrftime($formats['from'], $this->from)
             );
         }
 
         return sprintf(
             (string)$content,
-            strftime($formats['from'], $this->from->getTimestamp()),
-            strftime($formats['to'], $this->to->getTimestamp())
+            $this->formatStrftime($formats['from'], $this->from),
+            $this->formatStrftime($formats['to'], $this->to)
         );
     }
 
     /**
      * @param mixed $date The date to convert.
-     * @return DateTime
+     * @return DateTimeInterface
      */
     private function parseAsDate($date)
     {
-        if ($date instanceof \DateTimeInterface) {
+        if ($date instanceof DateTimeInterface) {
             return $date;
         }
 
         return new DateTime($date);
+    }
+
+    /**
+     * Format a date with a strftime() pattern without calling strftime().
+     *
+     * strftime() was deprecated in PHP 8.1 and removed in PHP 8.4.
+     * Configured date/time formats still use strftime tokens (e.g. %b, %d, %k).
+     *
+     * @param string            $format A strftime() format string.
+     * @param DateTimeInterface $date   The date to format.
+     * @return string
+     */
+    private function formatStrftime($format, DateTimeInterface $date)
+    {
+        $format = str_replace('%%', "\x00", $format);
+
+        $formatted = preg_replace_callback(
+            '/%[#\-]?[a-zA-Z]/',
+            function ($match) use ($date) {
+                return $this->replaceStrftimeSpecifier($match[0], $date);
+            },
+            $format
+        );
+
+        return str_replace("\x00", '%', $formatted);
+    }
+
+    /**
+     * @param string            $specifier A strftime() specifier, including the leading %.
+     * @param DateTimeInterface $date      The date to format.
+     * @return string
+     */
+    private function replaceStrftimeSpecifier($specifier, DateTimeInterface $date)
+    {
+        switch ($specifier) {
+            case '%a':
+                return $this->formatIntl($date, 'EEE', $date->format('D'));
+            case '%A':
+                return $this->formatIntl($date, 'EEEE', $date->format('l'));
+            case '%b':
+            case '%h':
+                return $this->formatIntl($date, 'MMM', $date->format('M'));
+            case '%B':
+                return $this->formatIntl($date, 'MMMM', $date->format('F'));
+            case '%d':
+                return $date->format('d');
+            case '%e':
+                return sprintf('%2d', (int)$date->format('j'));
+            case '%#d':
+            case '%-d':
+                return $date->format('j');
+            case '%m':
+                return $date->format('m');
+            case '%y':
+                return $date->format('y');
+            case '%Y':
+                return $date->format('Y');
+            case '%H':
+                return $date->format('H');
+            case '%k':
+                return sprintf('%2d', (int)$date->format('G'));
+            case '%I':
+                return $date->format('h');
+            case '%l':
+                return sprintf('%2d', (int)$date->format('g'));
+            case '%M':
+                return $date->format('i');
+            case '%S':
+                return $date->format('s');
+            case '%p':
+                return $date->format('A');
+            case '%P':
+                return $date->format('a');
+            default:
+                return $specifier;
+        }
+    }
+
+    /**
+     * @param DateTimeInterface $date     The date to format.
+     * @param string            $pattern  An ICU date pattern.
+     * @param string            $fallback A DateTime::format() fallback when intl is unavailable.
+     * @return string
+     */
+    private function formatIntl(DateTimeInterface $date, $pattern, $fallback)
+    {
+        if (!class_exists(IntlDateFormatter::class)) {
+            return $fallback;
+        }
+
+        $formatter = new IntlDateFormatter(
+            $this->translator()->getLocale(),
+            IntlDateFormatter::NONE,
+            IntlDateFormatter::NONE,
+            $date->getTimezone(),
+            IntlDateFormatter::GREGORIAN,
+            $pattern
+        );
+
+        $formatted = $formatter->format($date);
+        return ($formatted !== false) ? $formatted : $fallback;
     }
 
     /**
