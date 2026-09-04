@@ -244,8 +244,7 @@ class TinymceInput extends TextareaInput
         $uri = $this->getFilePickerUrlTemplate();
 
         return function ($noop, LambdaHelper $helper) use ($uri) {
-            $uri = $helper->render($uri);
-            $this->setFilePickerUrl($uri);
+            $this->setFilePickerUrl((string)$helper->render($uri));
 
             return null;
         };
@@ -274,7 +273,7 @@ class TinymceInput extends TextareaInput
         return [
             'editor_options' => $this->editorOptions(),
             'dialog_title'   => (string)$this->dialogTitle(),
-            'elfinder_url'   => $this->filePickerUrl(),
+            'elfinder_url'   => (string)$this->filePickerUrl(),
         ];
     }
 }

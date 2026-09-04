@@ -101,8 +101,8 @@ class AssetsHelpers implements HelpersInterface
 
         $this->reset();
 
-        if ($helper) {
-            return $helper->render($text);
+        if ($helper && is_string($text) && $text !== '') {
+            return $helper->render('{{=<<<<% %>>>>=}}' . $text . '<<<<%={{ }}=%>>>>');
         }
 
         return $text;
@@ -110,6 +110,9 @@ class AssetsHelpers implements HelpersInterface
 
     /**
      * Magic: Render the pending action when Mustache interpolates this helper.
+     *
+     * Dotted interpolation (`{{& assets.output.js }}`) does not re-parse the
+     * result as Mustache, so delimiter wrappers must not be included here.
      *
      * @return string
      */
@@ -212,7 +215,10 @@ class AssetsHelpers implements HelpersInterface
      */
     protected function __output($collection)
     {
-        $dump = $this->assets->get($collection)->dump();
-        return '{{=<<<<% %>>>>=}}' . $dump . '<<<<%={{ }}=%>>>>';
+        if (!$this->assets || !$this->assets->has($collection)) {
+            return '';
+        }
+
+        return (string)$this->assets->get($collection)->dump();
     }
 }
