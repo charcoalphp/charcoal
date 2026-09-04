@@ -25,5 +25,7 @@ class AppServiceProviderTest extends AbstractTestCase
         $this->assertTrue(isset($container['widget/factory']));
         $this->assertTrue(isset($container['widget/builder']));
         $this->assertTrue(isset($container['module/factory']));
+        $this->assertTrue(isset($container['csrf/guard']));
+        $this->assertTrue(isset($container['middlewares/charcoal/app/middleware/csrf']));
     }
 }

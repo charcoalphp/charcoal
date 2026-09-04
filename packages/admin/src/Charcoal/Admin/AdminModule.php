@@ -34,8 +34,16 @@ class AdminModule extends AbstractModule
      */
     public function setUp()
     {
-        // Hack: skip if the request does not start with '/admin'
         $container = $this->app()->getContainer();
+
+        // Registered unconditionally, unlike the rest of AdminServiceProvider
+        // below: App::setupMiddlewares() requires every "active" middleware
+        // ident in config to be registered on the container for *every*
+        // request, regardless of path, so this can't wait behind the
+        // is-this-an-admin-request check the heavier services below do.
+        (new AdminServiceProvider())->registerMiddlewareServices($container);
+
+        // Hack: skip if the request does not start with '/admin'
         if ($this->isPathAdmin($container['request']->getUri()->getPath()) !== true) {
             return $this;
         }

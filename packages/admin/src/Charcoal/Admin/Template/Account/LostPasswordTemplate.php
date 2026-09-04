@@ -25,6 +25,8 @@ class LostPasswordTemplate extends AdminTemplate
      */
     public function init(RequestInterface $request)
     {
+        $this->setCsrfAttributesFromRequest($request);
+
         $translator = $this->translator();
 
         $notice = $request->getParam('notice');
