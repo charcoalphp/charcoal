@@ -54,6 +54,17 @@ trait FormTrait
     protected $groups = [];
 
     /**
+     * Finalized, re-iterable form groups.
+     *
+     * Mustache 3.2 looks up `groups` more than once (nav tabs + panes).
+     * Caching the finalized list keeps `isHidden` stable and avoids
+     * re-running ACL / conditionals on every lookup.
+     *
+     * @var FormGroupInterface[]|null
+     */
+    private $parsedGroups;
+
+    /**
      * The form's predefined data.
      *
      * @var array $formData
@@ -225,6 +236,7 @@ trait FormTrait
     public function setGroups(array $groups)
     {
         $this->groups = [];
+        $this->parsedGroups = null;
 
         foreach ($groups as $groupIdent => $group) {
             $this->addGroup($groupIdent, $group);
@@ -292,6 +304,7 @@ trait FormTrait
         }
 
         $this->groups[$groupIdent] = $group;
+        $this->parsedGroups = null;
 
         return $this;
     }
@@ -397,35 +410,49 @@ trait FormTrait
      * Retrieve the form groups.
      *
      * @param callable $groupCallback Optional callback applied to each form group.
-     * @return FormGroupInterface[]|Generator
+     * @return FormGroupInterface[]|\Generator
      */
     public function groups(callable $groupCallback = null)
     {
-        $groups = $this->groups;
-        uasort($groups, [ $this, 'sortItemsByPriority' ]);
-
         $groupCallback = (isset($groupCallback) ? $groupCallback : $this->groupCallback);
 
-        $groups = $this->finalizeFormGroups($groups);
-
-        $i = 1;
-        foreach ($groups as $group) {
+        foreach ($this->parsedGroups() as $group) {
             if ($groupCallback) {
                 $groupCallback($group);
             }
 
             $this->setDynamicTemplate('widget_template', $group->template());
 
-            if (!$this->selectedFormGroup() && $this->isTabbable()) {
-                $group->setIsHidden(false);
-                if ($i > 1) {
-                    $group->setIsHidden(true);
-                }
-            }
-            $i++;
-
             yield $group;
         }
+    }
+
+    /**
+     * Finalize and cache form groups for repeated Mustache lookups.
+     *
+     * @return FormGroupInterface[]
+     */
+    protected function parsedGroups()
+    {
+        if ($this->parsedGroups !== null) {
+            return $this->parsedGroups;
+        }
+
+        $groups = $this->groups;
+        uasort($groups, [ $this, 'sortItemsByPriority' ]);
+        $groups = $this->finalizeFormGroups($groups);
+
+        if (!$this->selectedFormGroup() && $this->isTabbable()) {
+            $i = 1;
+            foreach ($groups as $group) {
+                $group->setIsHidden($i > 1);
+                $i++;
+            }
+        }
+
+        $this->parsedGroups = $groups;
+
+        return $this->parsedGroups;
     }
 
     /**
@@ -590,6 +617,16 @@ trait FormTrait
     public function isTabbable()
     {
         return ($this->groupDisplayMode() === 'tab');
+    }
+
+    /**
+     * Determine if content groups are to be displayed as language panes.
+     *
+     * @return boolean
+     */
+    public function isDisplayModeLang()
+    {
+        return ($this->groupDisplayMode() === 'lang' || $this->l10nMode() === 'loop_groups');
     }
 
     /**

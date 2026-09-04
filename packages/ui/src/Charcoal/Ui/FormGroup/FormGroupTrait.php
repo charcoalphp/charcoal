@@ -146,6 +146,52 @@ trait FormGroupTrait
     }
 
     /**
+     * Whether the parent form displays groups as Bootstrap tabs.
+     *
+     * Exposed on the group so Mustache 3.2 does not need `form.isTabbable`
+     * dotted lookup (which invokes callables while resolving chunks).
+     *
+     * @return boolean
+     */
+    public function isTabbable()
+    {
+        $form = $this->form();
+
+        return $form !== null && method_exists($form, 'isTabbable') && $form->isTabbable();
+    }
+
+    /**
+     * Whether the parent form displays groups as language panes.
+     *
+     * @return boolean
+     */
+    public function isDisplayModeLang()
+    {
+        $form = $this->form();
+
+        return $form !== null
+            && method_exists($form, 'isDisplayModeLang')
+            && $form->isDisplayModeLang();
+    }
+
+    /**
+     * The parent form's layout, if any.
+     *
+     * Prefer this over `form.layout` in Mustache 3.2.
+     *
+     * @return mixed
+     */
+    public function formLayout()
+    {
+        $form = $this->form();
+        if ($form === null || !method_exists($form, 'layout')) {
+            return null;
+        }
+
+        return $form->layout();
+    }
+
+    /**
      * @param string $mode The l10n mode.
      * @return FormGroupInterface Chainable
      */

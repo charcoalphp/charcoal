@@ -641,10 +641,6 @@ class StructureFormGroup extends FormGroupWidget implements
             } else {
                 yield $propertyIdent => $formProperty;
             }
-
-            if ($formProperty instanceof FormInputInterface) {
-                $formProperty->clearFormGroup();
-            }
         }
     }
 

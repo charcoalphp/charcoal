@@ -43,15 +43,19 @@ trait NestedWidgetContainerTrait
     private $renderableData = [];
 
     /**
-     * Yield the nested widget.
+     * Retrieve the nested widget.
      *
-     * @return WidgetInterface|Generator
+     * Mustache 3.2 looks up `widget` more than once. Returning the widget
+     * (instead of a one-shot generator) keeps the section re-iterable.
+     *
+     * @return WidgetInterface
      */
     public function widget()
     {
         $widget = $this->getWidget();
         $this->setDynamicTemplate('widget_template', $widget->template());
-        yield $widget;
+
+        return $widget;
     }
 
     /**

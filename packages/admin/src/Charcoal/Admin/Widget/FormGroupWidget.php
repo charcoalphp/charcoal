@@ -225,10 +225,6 @@ class FormGroupWidget extends AbstractUiItem implements
                 }
 
                 yield $propertyIdent => $formProperty;
-
-                if ($formProperty instanceof FormInputInterface) {
-                    $formProperty->clearFormGroup();
-                }
             }
         }
     }
