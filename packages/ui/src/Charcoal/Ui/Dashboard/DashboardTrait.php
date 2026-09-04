@@ -158,7 +158,7 @@ trait DashboardTrait
      * Retrieve the dashboard's widgets.
      *
      * @param callable $widgetCallback A callback applied to each widget.
-     * @return UiItemInterface[]|Generator
+     * @return UiItemInterface[]|\Generator
      */
     public function widgets(callable $widgetCallback = null)
     {
@@ -181,6 +181,28 @@ trait DashboardTrait
             $this->setDynamicTemplate('widget_template', $widget->template());
             yield $widget;
         }
+    }
+
+    /**
+     * The dashboard itself, for Mustache lookups from a child widget.
+     *
+     * Prefer `dashboardLayout` over `dashboard.layout` under Mustache 3.2.
+     *
+     * @return self
+     */
+    public function dashboard()
+    {
+        return $this;
+    }
+
+    /**
+     * The dashboard layout, reachable from a child widget context.
+     *
+     * @return mixed
+     */
+    public function dashboardLayout()
+    {
+        return $this->layout();
     }
 
     /**
