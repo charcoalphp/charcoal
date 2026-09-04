@@ -1,5 +1,12 @@
 # Changelog
 
+## [5.2.2](https://github.com/charcoalphp/charcoal/compare/v5.2.1...v5.2.2) (2026-09-04)
+
+
+### Bug Fixes
+
+* Add session to config, for cookie settings ([#113](https://github.com/charcoalphp/charcoal/issues/113)) ([ad54cff](https://github.com/charcoalphp/charcoal/commit/ad54cffa972f81f67d4354a7594fb5db5f63c96d))
+
 ## [5.2.1](https://github.com/charcoalphp/charcoal/compare/v5.2.0...v5.2.1) (2026-09-03)
 
 
