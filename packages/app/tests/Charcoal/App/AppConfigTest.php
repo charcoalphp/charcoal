@@ -17,4 +17,10 @@ class AppConfigTest extends AbstractTestCase
         $obj = new AppConfig();
         $this->assertInstanceOf(AppConfig::class, $obj);
     }
+
+    public function testSessionDefaultsToEmptyArray()
+    {
+        $obj = new AppConfig();
+        $this->assertEquals([], $obj['session']);
+    }
 }

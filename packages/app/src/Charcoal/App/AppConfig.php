@@ -141,6 +141,7 @@ class AppConfig extends AbstractConfig
             'modules'          => [],
             'cache'            => [],
             'logger'           => [],
+            'session'          => [],
             'view'             => [],
             'databases'        => [],
             'default_database' => 'default',
