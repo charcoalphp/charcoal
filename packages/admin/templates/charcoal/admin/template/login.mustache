@@ -32,7 +32,7 @@ This template expects a `Charcoal\Admin\Template\LoginTemplate` model as context
                 <h2 class="sr-only">{{# _t }}auth.login.title{{/ _t }}</h2>
             </div>
             <form id="login-form" method="POST" action="{{ urlLoginAction }}">
-                <input type="hidden" name="csrf_token" value="{{ csrfToken }}">
+                {{& csrfFields }}
 
                  <div class="form-group">
                     <label class="sr-only" for="email">{{# _t }}Email{{/ _t }}</label>

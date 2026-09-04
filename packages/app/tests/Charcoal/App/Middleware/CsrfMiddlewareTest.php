@@ -32,6 +32,10 @@ class CsrfMiddlewareTest extends AbstractTestCase
             'included_path'   => [],
             'excluded_path'   => [],
             'failure_message' => 'Invalid or expired form token. Please refresh the page and try again.',
+            'failure_body'    => [
+                'success' => false,
+                'message' => '{{message}}',
+            ],
         ], $mw->defaults());
     }
 
@@ -207,6 +211,38 @@ class CsrfMiddlewareTest extends AbstractTestCase
 
         $body = json_decode((string)$response->getBody(), true);
         $this->assertEquals('Please try submitting the form again.', $body['message']);
+    }
+
+    public function testFailureBodyTemplateSupportsNestedShapes()
+    {
+        $mw = new CsrfMiddleware([
+            'guard'           => new Guard(),
+            'included_path'   => [ '^/admin/login$' ],
+            'failure_message' => 'Your session has expired. Please try logging in again.',
+            'failure_body'    => [
+                'success'   => false,
+                'next_url'  => null,
+                'feedbacks' => [
+                    [ 'level' => 'error', 'message' => '{{message}}' ],
+                ],
+            ],
+        ]);
+
+        $response = $this->invoke(
+            $mw,
+            $this->request('POST', '/admin/login'),
+            function ($req, $res) {
+                return $res;
+            }
+        );
+
+        $body = json_decode((string)$response->getBody(), true);
+        $this->assertSame(false, $body['success']);
+        $this->assertNull($body['next_url']);
+        $this->assertEquals(
+            [ [ 'level' => 'error', 'message' => 'Your session has expired. Please try logging in again.' ] ],
+            $body['feedbacks']
+        );
     }
 
     /**

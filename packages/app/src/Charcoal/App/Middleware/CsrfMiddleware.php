@@ -43,6 +43,11 @@ class CsrfMiddleware
     private $failureMessage;
 
     /**
+     * @var array
+     */
+    private $failureBody;
+
+    /**
      * @param  array $data Constructor dependencies and options.
      * @throws InvalidArgumentException If the required 'guard' dependency is missing.
      */
@@ -60,6 +65,7 @@ class CsrfMiddleware
         $this->includedPath = $this->assertValidPatterns($data['included_path'], 'included_path');
         $this->excludedPath = $this->assertValidPatterns($data['excluded_path'], 'excluded_path');
         $this->failureMessage = $data['failure_message'];
+        $this->failureBody = $data['failure_body'];
 
         $this->guard->setFailureCallable([$this, 'handleFailure']);
     }
@@ -75,6 +81,10 @@ class CsrfMiddleware
             'included_path'   => [],
             'excluded_path'   => [],
             'failure_message' => 'Invalid or expired form token. Please refresh the page and try again.',
+            'failure_body'    => [
+                'success' => false,
+                'message' => '{{message}}',
+            ],
         ];
     }
 
@@ -104,10 +114,12 @@ class CsrfMiddleware
     /**
      * Slim-CSRF failure callable.
      *
-     * Responds with a JSON body ({"success": false, "message": "..."}) so
-     * consuming applications can parse a CSRF rejection the same way as any
-     * other action failure response, rather than Slim-CSRF's default
-     * plain-text body.
+     * Responds with a JSON body built from the configured `failure_body`
+     * template (default: {"success": false, "message": "..."}), so
+     * consuming applications can parse a CSRF rejection into whatever
+     * response shape they already use elsewhere — e.g. a `feedbacks` array —
+     * rather than Slim-CSRF's default plain-text body or a single hardcoded
+     * shape.
      *
      * @param RequestInterface  $request  The PSR-7 HTTP request.
      * @param ResponseInterface $response The PSR-7 HTTP response.
@@ -116,14 +128,31 @@ class CsrfMiddleware
      */
     public function handleFailure(RequestInterface $request, ResponseInterface $response, callable $next)
     {
-        $response->getBody()->write(json_encode([
-            'success' => false,
-            'message' => $this->failureMessage,
-        ]));
+        $response->getBody()->write(json_encode($this->resolveFailureBody($this->failureBody)));
 
         return $response
             ->withStatus(400)
             ->withHeader('Content-Type', 'application/json');
+    }
+
+    /**
+     * Recursively substitutes the literal placeholder `{{message}}` with the
+     * configured failure message, anywhere it appears in the given value.
+     *
+     * @param  mixed $value A `failure_body` template value (array or scalar).
+     * @return mixed
+     */
+    private function resolveFailureBody($value)
+    {
+        if (is_array($value)) {
+            return array_map([$this, 'resolveFailureBody'], $value);
+        }
+
+        if ($value === '{{message}}') {
+            return $this->failureMessage;
+        }
+
+        return $value;
     }
 
     /**
