@@ -9,6 +9,7 @@ use Psr\Http\Message\UriInterface;
 use Pimple\ServiceProviderInterface;
 use Pimple\Container;
 // From Slim
+use Slim\Csrf\Guard;
 use Slim\Http\Uri;
 // From 'league/climate'
 use League\CLImate\CLImate;
@@ -24,6 +25,7 @@ use Charcoal\App\Handler\Maintenance;
 use Charcoal\App\Handler\NotAllowed;
 use Charcoal\App\Handler\NotFound;
 use Charcoal\App\Handler\PhpError;
+use Charcoal\App\Middleware\CsrfMiddleware;
 use Charcoal\App\Middleware\IpMiddleware;
 use Charcoal\App\Module\ModuleInterface;
 use Charcoal\App\Route\ActionRoute;
@@ -301,6 +303,28 @@ class AppServiceProvider implements ServiceProviderInterface
         $container['middlewares/charcoal/app/middleware/ip'] = function (container $container) {
             $wareConfig = $container['config']['middlewares']['charcoal/app/middleware/ip'];
             return new IpMiddleware($wareConfig);
+        };
+
+        /**
+         * Shared Slim-CSRF guard, used both by the CSRF middleware (to
+         * validate submissions) and by CSRF-aware template helpers (to issue
+         * the token pair rendered into a protected form).
+         *
+         * @param  Container $container A service container.
+         * @return Guard
+         */
+        $container['csrf/guard'] = function (Container $container) {
+            return new Guard();
+        };
+
+        /**
+         * @param  Container $container A service container.
+         * @return CsrfMiddleware
+         */
+        $container['middlewares/charcoal/app/middleware/csrf'] = function (Container $container) {
+            $wareConfig = $container['config']['middlewares']['charcoal/app/middleware/csrf'];
+            $wareConfig['guard'] = $container['csrf/guard'];
+            return new CsrfMiddleware($wareConfig);
         };
     }
 
