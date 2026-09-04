@@ -47,6 +47,24 @@ class CsrfMiddlewareTest extends AbstractTestCase
         new CsrfMiddleware([ 'guard' => new \stdClass() ]);
     }
 
+    public function testInvalidIncludedPathPatternThrows()
+    {
+        $this->expectException(InvalidArgumentException::class);
+        new CsrfMiddleware([
+            'guard'         => new Guard(),
+            'included_path' => [ '(unclosed' ],
+        ]);
+    }
+
+    public function testInvalidExcludedPathPatternThrows()
+    {
+        $this->expectException(InvalidArgumentException::class);
+        new CsrfMiddleware([
+            'guard'         => new Guard(),
+            'excluded_path' => [ '(unclosed' ],
+        ]);
+    }
+
     public function testIncludedPathEmptyMeansEverywhere()
     {
         $mw = new CsrfMiddleware([ 'guard' => new Guard() ]);

@@ -57,8 +57,8 @@ class CsrfMiddleware
         $data = array_merge($this->defaults(), $data);
 
         $this->guard = $data['guard'];
-        $this->includedPath = $data['included_path'];
-        $this->excludedPath = $data['excluded_path'];
+        $this->includedPath = $this->assertValidPatterns($data['included_path'], 'included_path');
+        $this->excludedPath = $this->assertValidPatterns($data['excluded_path'], 'excluded_path');
         $this->failureMessage = $data['failure_message'];
 
         $this->guard->setFailureCallable([$this, 'handleFailure']);
@@ -166,5 +166,30 @@ class CsrfMiddleware
         }
 
         return false;
+    }
+
+    /**
+     * Validates each pattern eagerly, at construction time, rather than
+     * letting a malformed regex silently degrade `preg_match()` to a "no
+     * match" result at request time — which, for `included_path`, would mean
+     * a typo in configuration silently disables CSRF protection instead of
+     * failing loudly.
+     *
+     * @param  string[] $patterns The regular expressions to validate.
+     * @param  string   $option   The option name, for the exception message.
+     * @throws InvalidArgumentException If a pattern is not a valid regular expression.
+     * @return string[] The validated patterns.
+     */
+    private function assertValidPatterns(array $patterns, string $option): array
+    {
+        foreach ($patterns as $pattern) {
+            if (@preg_match('#' . $pattern . '#', '') === false) {
+                throw new InvalidArgumentException(
+                    sprintf('CsrfMiddleware "%s" contains an invalid pattern: "%s".', $option, $pattern)
+                );
+            }
+        }
+
+        return $patterns;
     }
 }
