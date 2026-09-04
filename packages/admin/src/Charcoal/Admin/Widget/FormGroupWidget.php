@@ -3,6 +3,7 @@
 namespace Charcoal\Admin\Widget;
 
 use InvalidArgumentException;
+use Traversable;
 // From Pimple
 use Pimple\Container;
 // From 'charcoal-ui'
@@ -218,6 +219,9 @@ class FormGroupWidget extends AbstractUiItem implements
 
                 if ($formProperty instanceof FormInputInterface) {
                     $formProperty->setFormGroup($this);
+                    if (method_exists($formProperty, 'input')) {
+                        $formProperty->input();
+                    }
                 }
 
                 yield $propertyIdent => $formProperty;
@@ -361,6 +365,10 @@ class FormGroupWidget extends AbstractUiItem implements
         if ($this->parsedFormProperties === null) {
             $groupProperties = $this->groupProperties();
             $formProperties  = $this->form()->formProperties($groupProperties);
+
+            if ($formProperties instanceof Traversable) {
+                $formProperties = iterator_to_array($formProperties);
+            }
 
             $this->parsedFormProperties = $formProperties;
         }

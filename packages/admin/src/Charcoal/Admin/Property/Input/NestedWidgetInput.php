@@ -166,17 +166,20 @@ class NestedWidgetInput extends AbstractPropertyInput implements
             $widget->setIdent($this->propertyIdent());
         }
 
+        $formGroup = $this->formGroup();
+        $form      = $this->form();
+
         if ($this instanceof FormInputInterface) {
-            if ($widget instanceof FormGroupInterface) {
-                $widget->setForm($this->formGroup()->form());
+            if ($widget instanceof FormGroupInterface && $form !== null) {
+                $widget->setForm($form);
             }
 
-            if ($widget instanceof FormInputInterface) {
-                $widget->setFormGroup($this->formGroup());
+            if ($widget instanceof FormInputInterface && $formGroup !== null) {
+                $widget->setFormGroup($formGroup);
             }
         } elseif ($this instanceof FormGroupInterface) {
-            if ($widget instanceof FormGroupInterface) {
-                $widget->setForm($this->form());
+            if ($widget instanceof FormGroupInterface && $form !== null) {
+                $widget->setForm($form);
             }
 
             if ($widget instanceof FormInputInterface) {
@@ -214,10 +217,31 @@ class NestedWidgetInput extends AbstractPropertyInput implements
     /**
      * Retrieve the widget form.
      *
-     * @return FormInterface
+     * Mustache 3.2 may create this input after the parent form group has been
+     * cleared. Use the view controller (typically the object form widget) when
+     * no form group is attached.
+     *
+     * @return FormInterface|null
      */
     protected function form()
     {
-        return $this->formGroup()->form();
+        $formGroup = $this->formGroup();
+        if ($formGroup !== null) {
+            return $formGroup->form();
+        }
+
+        $controller = $this->viewController();
+        if ($controller instanceof FormInterface) {
+            return $controller;
+        }
+
+        if (is_object($controller) && method_exists($controller, 'form')) {
+            $form = $controller->form();
+            if ($form instanceof FormInterface) {
+                return $form;
+            }
+        }
+
+        return null;
     }
 }
