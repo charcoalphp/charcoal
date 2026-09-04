@@ -1,5 +1,12 @@
 # Changelog
 
+## [5.2.3](https://github.com/charcoalphp/charcoal/compare/v5.2.2...v5.2.3) (2026-09-04)
+
+
+### Bug Fixes
+
+* mustache url ([#116](https://github.com/charcoalphp/charcoal/issues/116)) ([2438e1b](https://github.com/charcoalphp/charcoal/commit/2438e1ba9e9623f1c5b05c0bf9a0d8145743678d))
+
 ## [5.2.2](https://github.com/charcoalphp/charcoal/compare/v5.2.1...v5.2.2) (2026-09-04)
 
 
