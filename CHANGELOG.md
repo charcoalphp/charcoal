@@ -1,5 +1,12 @@
 # Changelog
 
+## [5.3.0](https://github.com/charcoalphp/charcoal/compare/v5.2.4...v5.3.0) (2026-09-08)
+
+
+### Features
+
+* Release/batch ([#122](https://github.com/charcoalphp/charcoal/issues/122)) ([5096401](https://github.com/charcoalphp/charcoal/commit/5096401e6836e75a6a1a3fe121b4c906777d88e4))
+
 ## [5.2.4](https://github.com/charcoalphp/charcoal/compare/v5.2.3...v5.2.4) (2026-09-04)
 
 
