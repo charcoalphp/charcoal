@@ -113,10 +113,11 @@ class CreateTemplate extends AdminTemplate implements
                         ? $translator->translation($metadata['labels']['singular_name'])
                         : null);
 
-                    if (!empty($_GET['clone_id'])) {
+                    $cloneId = Sanitizer::sanitizeGetParam('clone_id');
+                    if (!empty($cloneId)) {
                         $title = sprintf(
                             $translator->translation('Create: {{ objType }} from ID ""%s""'),
-                            $_GET['clone_id']
+                            $cloneId
                         );
                     } else {
                         $title = $translator->translation('Create: {{ objType }}');
