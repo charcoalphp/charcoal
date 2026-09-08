@@ -35,6 +35,11 @@ class TwigEngine extends AbstractEngine
     private $debug;
 
     /**
+     * @var array
+     */
+    private $helpers = [];
+
+    /**
      * @return string
      */
     public function type(): string

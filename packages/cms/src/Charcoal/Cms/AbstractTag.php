@@ -56,7 +56,7 @@ abstract class AbstractTag extends Content implements TagInterface
 
     /**
      * @throws Exception If function is called.
-     * @return void
+     * @return \Charcoal\Object\CategorizableInterface[]|array
      */
     public function loadCategoryItems()
     {

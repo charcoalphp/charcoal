@@ -15,6 +15,11 @@ class UrlHelpers extends AbstractExtension implements
     HelpersInterface
 {
     /**
+     * @var \Psr\Http\Message\UriInterface|null
+     */
+    private $baseUrl;
+
+    /**
      * @param array $data Class Dependencies.
      */
     public function __construct(array $data = null)

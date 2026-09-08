@@ -810,7 +810,7 @@ class AdminTemplate extends AbstractTemplate implements
      * @param  mixed $options The secondary menu widget ID or config.
      * @return string|null
      */
-    private function mainMenuIdent($options = null)
+    protected function mainMenuIdent($options = null)
     {
         if ($this->mainMenuIdentLoaded === false) {
             $mainMenuIdent = null;

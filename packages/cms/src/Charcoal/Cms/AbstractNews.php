@@ -291,7 +291,7 @@ abstract class AbstractNews extends Content implements NewsInterface
      */
     public function canonicalUrl()
     {
-        return $this->slug();
+        return $this['slug'];
     }
 
     /**

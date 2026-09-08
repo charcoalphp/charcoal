@@ -32,6 +32,16 @@ class InfoTemplate extends AdminTemplate implements
     private $metadataFiles;
 
     /**
+     * @var MetadataLoader
+     */
+    private $metadataLoader;
+
+    /**
+     * @var CollectionLoader
+     */
+    private $collectionLoader;
+
+    /**
      * @return \Charcoal\Admin\Translation|\Charcoal\Translator\Translation|string|null
      */
     public function title()

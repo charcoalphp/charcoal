@@ -3,6 +3,7 @@
 namespace Charcoal\Admin\Docs\Template\Object;
 
 use Exception;
+use InvalidArgumentException;
 // From Pimple
 use Pimple\Container;
 // From 'charcoal-admin'
@@ -21,6 +22,11 @@ class DocTemplate extends AdminTemplate implements
 {
     use DashboardContainerTrait;
     use ObjectContainerTrait;
+
+    /**
+     * @var \Charcoal\Admin\Widget\SecondaryMenuWidgetInterface[]|null
+     */
+    private $headerMenu;
 
     /**
      * Retrieve the list of parameters to extract from the HTTP request.
@@ -52,6 +58,49 @@ class DocTemplate extends AdminTemplate implements
         }
 
         return $this->headerMenu;
+    }
+
+    /**
+     * Create the header menu from the given menu items, or fallback to the admin's secondary menu.
+     *
+     * @param  array|null $menuItems The menu items to build, keyed by ident.
+     * @throws InvalidArgumentException If the secondary menu widget is invalid.
+     * @return \Charcoal\Admin\Widget\SecondaryMenuWidgetInterface[]
+     */
+    protected function createHeaderMenu(array $menuItems = null)
+    {
+        if ($menuItems === null) {
+            return $this->createSecondaryMenu();
+        }
+
+        $mainMenuIdent = $this->mainMenuIdent();
+
+        $items = [];
+        foreach ($menuItems as $ident => $options) {
+            $options['ident'] = $ident;
+
+            if (isset($this['secondary_menu_item'])) {
+                $options['current_item'] = $this['secondary_menu_item'];
+            }
+
+            if (isset($this['main_menu_item'])) {
+                $mainMenuIdent = $this['main_menu_item'];
+            }
+
+            if (is_string($options['ident'])) {
+                $options['is_current'] = $options['ident'] === $mainMenuIdent;
+
+                $widget = $this->widgetFactory()
+                                ->create('charcoal/admin/widget/secondary-menu')
+                                ->setData($options);
+
+                $items[] = $widget;
+            }
+        }
+
+        usort($items, [ 'Charcoal\Admin\Support\Sorter', 'sortByPriority' ]);
+
+        return $items;
     }
 
     /**

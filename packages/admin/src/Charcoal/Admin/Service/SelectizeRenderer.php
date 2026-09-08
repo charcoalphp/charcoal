@@ -5,8 +5,6 @@ namespace Charcoal\Admin\Service;
 use Exception;
 // From PSR-3
 use Psr\Log\LoggerAwareTrait;
-// From 'charcoal-cms'
-use Charcoal\Cms\TemplateableTrait;
 // From 'charcoal-factory'
 use Charcoal\Factory\FactoryInterface;
 // From 'charcoal-core'
@@ -24,7 +22,6 @@ use Charcoal\View\ViewInterface;
 class SelectizeRenderer
 {
     use TranslatorAwareTrait;
-    use TemplateableTrait;
     use LoggerAwareTrait;
 
     /**

@@ -110,7 +110,7 @@ class MultiObjectProperty extends AbstractProperty
             created DATETIME
         )';
         $this->logger->debug($q);
-        $this->source()->db()->query($q);
+        $this->pdo->query($q);
     }
 
     /**
@@ -123,7 +123,7 @@ class MultiObjectProperty extends AbstractProperty
         $pattern = addcslashes($this->getJoinTable(), '%_\\');
         $q = 'SHOW TABLES LIKE ?';
         $this->logger->debug($q . ' [' . $pattern . ']');
-        $sth = $this->source()->db()->prepare($q);
+        $sth = $this->pdo->prepare($q);
         $sth->execute([ $pattern ]);
         $tableExists = $sth->fetchColumn(0);
 

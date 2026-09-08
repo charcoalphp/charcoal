@@ -39,7 +39,7 @@ class ProcessMinuteScript extends AbstractNotificationScript
      */
     protected function endDate()
     {
-        $d = new DateTime($this->starDate() . ' +1 minute');
+        $d = new DateTime($this->startDate()->format('Y-m-d H:i:s') . ' +1 minute');
         return $d;
     }
 

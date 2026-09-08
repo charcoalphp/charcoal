@@ -20,8 +20,6 @@ class HomeTemplate extends AdminTemplate implements DashboardContainerInterface
      */
     public function createDashboardConfig()
     {
-        unset($data);
-
         return $this->dashboardConfig();
     }
 }

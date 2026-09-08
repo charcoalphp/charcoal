@@ -14,6 +14,7 @@ use Charcoal\Factory\FactoryInterface;
 use Charcoal\Property\ObjectProperty;
 // From 'charcoal-admin'
 use Charcoal\Admin\Property\AbstractSelectableInput;
+use Charcoal\Admin\Property\Input\SelectizeInput;
 
 /**
  * Tags Input Selectize

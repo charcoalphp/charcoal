@@ -35,6 +35,11 @@ class SecondaryMenuWidget extends AdminWidget implements
     public const DEFAULT_ACTION_PRIORITY = 10;
 
     /**
+     * @var boolean
+     */
+    protected $isCurrent = false;
+
+    /**
      * Store the secondary menu actions.
      *
      * @var array|null
