@@ -19,6 +19,7 @@ use Charcoal\Ui\FormGroup\FormGroupTrait;
 use Charcoal\User\Acl\Manager as AclManager;
 // From 'charcoal-admin'
 use Charcoal\Admin\AdminWidget;
+use Charcoal\Admin\Support\Sanitizer;
 use Charcoal\Admin\User\Permission;
 use Charcoal\Admin\User\PermissionCategory;
 
@@ -73,7 +74,7 @@ class AclPermissions extends AdminWidget implements
      */
     public function objId()
     {
-        return filter_input(INPUT_GET, 'obj_id', FILTER_SANITIZE_STRING);
+        return Sanitizer::sanitizeGetParam('obj_id');
     }
 
     /**

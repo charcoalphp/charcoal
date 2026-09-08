@@ -24,6 +24,7 @@ use Charcoal\App\Template\AbstractTemplate;
 use Charcoal\Admin\Ui\DashboardContainerInterface;
 use Charcoal\Admin\Support\AdminTrait;
 use Charcoal\Admin\Support\BaseUrlTrait;
+use Charcoal\Admin\Support\Sanitizer;
 use Charcoal\Admin\Support\SecurityTrait;
 use Charcoal\Admin\Ui\FeedbackContainerTrait;
 
@@ -830,7 +831,7 @@ class AdminTemplate extends AbstractTemplate implements
             }
 
             // Get main menu from the obj_type
-            $objType = filter_input(INPUT_GET, 'obj_type', FILTER_SANITIZE_STRING);
+            $objType = Sanitizer::sanitizeGetParam('obj_type');
             if ($objType) {
                 $secondaryMenuItems = $this->adminConfig('secondary_menu');
                 foreach ($secondaryMenuItems as $main => $item) {
@@ -842,7 +843,7 @@ class AdminTemplate extends AbstractTemplate implements
             }
 
             // Choose main menu with a get parameter
-            $mainMenuFromRequest = filter_input(INPUT_GET, 'main_menu', FILTER_SANITIZE_STRING);
+            $mainMenuFromRequest = Sanitizer::sanitizeGetParam('main_menu');
             if ($mainMenuFromRequest) {
                 $mainMenuIdent = $mainMenuFromRequest;
             }
