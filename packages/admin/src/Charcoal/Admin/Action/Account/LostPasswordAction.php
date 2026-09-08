@@ -65,7 +65,7 @@ class LostPasswordAction extends AdminAction
     {
         $translator = $this->translator();
 
-        $ip = filter_var($_SERVER['REMOTE_ADDR'] ?? null, FILTER_VALIDATE_IP) ?: null;
+        $ip = filter_var(($_SERVER['REMOTE_ADDR'] ?? null), FILTER_VALIDATE_IP) ?: null;
 
         $email = $request->getParam('email');
         if (!$email) {
@@ -267,7 +267,7 @@ class LostPasswordAction extends AdminAction
                 'adminUrl'         => $this->adminUrl(),
                 'urlResetPassword' => $this->adminUrl() . 'account/reset-password/' . $publicToken,
                 'expiry'           => $token->expiry()->format('Y-m-d H:i:s'),
-                'ipAddress'        => filter_var($_SERVER['REMOTE_ADDR'] ?? null, FILTER_VALIDATE_IP) ?: '',
+                'ipAddress'        => filter_var(($_SERVER['REMOTE_ADDR'] ?? null), FILTER_VALIDATE_IP) ?: '',
             ],
         ]);
         $emailObj->send();

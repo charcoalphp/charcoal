@@ -347,7 +347,7 @@ abstract class AdminAction extends AbstractAction implements
             'response' => $token,
         ];
 
-        $remoteIp = filter_var($_SERVER['REMOTE_ADDR'] ?? null, FILTER_VALIDATE_IP);
+        $remoteIp = filter_var(($_SERVER['REMOTE_ADDR'] ?? null), FILTER_VALIDATE_IP);
         if ($remoteIp !== false) {
             $data['remoteip'] = $remoteIp;
         }
