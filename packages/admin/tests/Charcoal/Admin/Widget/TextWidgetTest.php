@@ -19,6 +19,11 @@ use Charcoal\Tests\Admin\ContainerProvider;
 class TextWidgetTest extends AbstractTestCase
 {
     /**
+     * @var TextWidget
+     */
+    protected $obj;
+
+    /**
      * @return void
      */
     public function setUp(): void

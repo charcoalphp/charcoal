@@ -2,7 +2,8 @@
 
 namespace Charcoal\Tests;
 
-use SebastianBergmann\RecursionContext\InvalidArgumentException;
+use ArrayAccess;
+use PHPUnit\Framework\InvalidArgumentException;
 
 /**
  * Utilities for advanced assertions.

@@ -62,7 +62,7 @@ trait ExpressionTestFieldTrait
                 'property' => 'col',
                 'table'    => 'tbl',
             ];
-            $obj->setData($mutation);
+            $obj->setData($expected);
         }
 
         $data = $obj->data();

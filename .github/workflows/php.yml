@@ -66,7 +66,7 @@ jobs:
         uses: ramsey/composer-install@v2
 
       - name: Run PHPStan
-        run: vendor/bin/phpstan analyse packages/*/src --memory-limit=1G
+        run: vendor/bin/phpstan analyse packages/*/src packages/*/tests --memory-limit=1G
 
   test:
     needs: provide_packages_json

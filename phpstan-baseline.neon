@@ -337,6 +337,48 @@ parameters:
 			path: packages/admin/src/Charcoal/Admin/Widget/TableWidget.php
 
 		-
+			message: '#^Access to an undefined property class@anonymous/admin/tests/Charcoal/Admin/Ui/CollectionContainerTraitTest\.php\:22\:\:\$logger\.$#'
+			identifier: property.notFound
+			count: 1
+			path: packages/admin/tests/Charcoal/Admin/Ui/CollectionContainerTraitTest.php
+
+		-
+			message: '#^Call to an undefined method class@anonymous/admin/tests/Charcoal/Admin/Ui/CollectionContainerTraitTest\.php\:22\:\:hasPermissions\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: packages/admin/tests/Charcoal/Admin/Ui/CollectionContainerTraitTest.php
+
+		-
+			message: '#^Call to an undefined method class@anonymous/admin/tests/Charcoal/Admin/Ui/CollectionContainerTraitTest\.php\:22\:\:translator\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: packages/admin/tests/Charcoal/Admin/Ui/CollectionContainerTraitTest.php
+
+		-
+			message: '#^Call to an undefined method Charcoal\\Tests\\App\\Script\\ArgScriptStub\:\:arguments\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: packages/app/tests/Charcoal/App/Script/ArgScriptTraitTest.php
+
+		-
+			message: '#^Call to an undefined method Charcoal\\Tests\\App\\Script\\ArgScriptStub\:\:climate\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: packages/app/tests/Charcoal/App/Script/ArgScriptTraitTest.php
+
+		-
+			message: '#^Call to an undefined method Charcoal\\Tests\\App\\Script\\ArgScriptStub\:\:input\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: packages/app/tests/Charcoal/App/Script/ArgScriptTraitTest.php
+
+		-
+			message: '#^Call to an undefined method Charcoal\\Tests\\App\\Script\\ArgScriptStub\:\:setter\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: packages/app/tests/Charcoal/App/Script/ArgScriptTraitTest.php
+
+		-
 			message: '#^Access to an undefined property Charcoal\\Admin\\Widget\\AttachmentWidget\:\:\$numPerPage\.$#'
 			identifier: property.notFound
 			count: 1
@@ -415,6 +457,12 @@ parameters:
 			path: packages/cms/src/Charcoal/Cms/AbstractTag.php
 
 		-
+			message: '#^Call to an undefined method Charcoal\\Tests\\Cms\\Mock\\TemplateableModel\:\:translator\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: packages/cms/tests/Charcoal/Cms/Mock/TemplateableModel.php
+
+		-
 			message: '#^Instantiated class Charcoal\\Model\\InvalidArgumentException not found\.$#'
 			identifier: class.notFound
 			count: 1
@@ -427,10 +475,28 @@ parameters:
 			path: packages/core/src/Charcoal/Source/Filter.php
 
 		-
+			message: '#^Unsafe usage of new static\(\)\.$#'
+			identifier: new.static
+			count: 1
+			path: packages/core/tests/Charcoal/Mock/OrderTree.php
+
+		-
 			message: '#^Call to sprintf contains an invalid placeholder\.$#'
 			identifier: argument.sprintf
 			count: 1
 			path: packages/image/src/Charcoal/Image/Imagemagick/Effect/ImagemagickCompressionEffect.php
+
+		-
+			message: '#^Access to an undefined property Charcoal\\Tests\\Object\\Mocks\\RoutableClass\:\:\$logger\.$#'
+			identifier: property.notFound
+			count: 1
+			path: packages/object/tests/Charcoal/Object/Mocks/RoutableClass.php
+
+		-
+			message: '#^Call to an undefined method \$this\(Charcoal\\Tests\\Object\\Mocks\\RoutableClass\)&Charcoal\\View\\ViewableInterface\:\:viewController\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: packages/object/tests/Charcoal/Object/Mocks/RoutableClass.php
 
 		-
 			message: '#^Regex pattern is invalid\: Compilation failed\: unmatched closing parenthesis at offset 50 in pattern\: /rgba\\s\*\\\(\\s\*\(\\d\+\)\\s\*,\\s\*\(\\d\+\)\\s\*,\\s\*\(\\d\+\)\\s\*\\\(\\d\+\)\\s\*\\\)/i$#'
@@ -449,6 +515,18 @@ parameters:
 			identifier: method.notFound
 			count: 2
 			path: packages/property/src/Charcoal/Property/MultiObjectProperty.php
+
+		-
+			message: '#^Class Charcoal\\Property\\PropertyField does not have a constructor and must be instantiated without any parameters\.$#'
+			identifier: new.noConstructor
+			count: 1
+			path: packages/property/tests/Charcoal/Property/PropertyFieldTest.php
+
+		-
+			message: '#^Cannot unset offset 0 on Charcoal\\Translator\\Translation\.$#'
+			identifier: unset.offset
+			count: 1
+			path: packages/translator/tests/Charcoal/Translator/TranslationTest.php
 
 		-
 			message: '#^Access to an undefined property Charcoal\\Ui\\AbstractUiItem\:\:\$permissions\.$#'

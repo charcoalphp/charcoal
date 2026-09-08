@@ -19,6 +19,11 @@ use Charcoal\Tests\Admin\ContainerProvider;
 class FormSidebarWidgetTest extends AbstractTestCase
 {
     /**
+     * @var FormSidebarWidget
+     */
+    protected $obj;
+
+    /**
      * @return void
      */
     public function setUp(): void

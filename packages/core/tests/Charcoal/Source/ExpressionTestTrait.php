@@ -131,7 +131,7 @@ trait ExpressionTestTrait
                 'active' => false,
                 'name'   => 'foo',
             ];
-            $obj->setData($mutation);
+            $obj->setData($expected);
         }
 
         $data = $obj->data();
