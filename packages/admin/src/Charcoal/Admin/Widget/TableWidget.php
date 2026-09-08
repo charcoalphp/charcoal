@@ -15,6 +15,7 @@ use Charcoal\Property\PropertyInterface;
 // From 'charcoal-admin'
 use Charcoal\Admin\AdminWidget;
 use Charcoal\Admin\Support\HttpAwareTrait;
+use Charcoal\Admin\Support\Sanitizer;
 use Charcoal\Admin\Ui\ActionContainerTrait;
 use Charcoal\Admin\Ui\CollectionContainerInterface;
 use Charcoal\Admin\Ui\CollectionContainerTrait;
@@ -1068,7 +1069,7 @@ class TableWidget extends AdminWidget implements CollectionContainerInterface
         $this->configureCollectionLoaderFromTrait($loader, $data);
 
         if (!isset($loader->hasMainMenuCallback)) {
-            $mainMenu = filter_input(INPUT_GET, 'main_menu', FILTER_SANITIZE_STRING);
+            $mainMenu = Sanitizer::sanitizeGetParam('main_menu');
             if ($mainMenu) {
                 $fn = function (&$obj) use ($mainMenu) {
                     if (!$obj['main_menu']) {

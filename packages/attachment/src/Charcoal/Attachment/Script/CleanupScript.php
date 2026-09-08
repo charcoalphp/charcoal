@@ -11,6 +11,8 @@ use Pimple\Container;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 // From 'charcoal-core'
+use Charcoal\Loader\CollectionLoader;
+use Charcoal\Model\ModelFactoryTrait;
 use Charcoal\Model\ModelInterface;
 // From 'charcoal-app'
 use Charcoal\App\Script\AbstractScript;
@@ -18,21 +20,18 @@ use Charcoal\App\Script\AbstractScript;
 use Charcoal\Attachment\Interfaces\AttachableInterface;
 use Charcoal\Attachment\Object\Attachment;
 use Charcoal\Attachment\Object\Join;
-// From 'charcoal/utils'
-use Utils\Support\Traits\ConfigAwareTrait;
-use Utils\Support\Traits\ModelAwareTrait;
-use Utils\Support\Interfaces\ConfigAwareInterface;
-use Utils\Support\Interfaces\ModelAwareInterface;
 
 /**
  * Remove unassociated attachments
  */
-class CleanupScript extends AbstractScript implements
-    ConfigAwareInterface,
-    ModelAwareInterface
+class CleanupScript extends AbstractScript
 {
-    use ConfigAwareTrait;
-    use ModelAwareTrait;
+    use ModelFactoryTrait;
+
+    /**
+     * @var CollectionLoader
+     */
+    private $collectionLoader;
 
     /**
      * Store the last action.
@@ -127,8 +126,22 @@ class CleanupScript extends AbstractScript implements
     {
         parent::setDependencies($container);
 
-        $this->setAppConfig($container['config']);
         $this->setModelFactory($container['model/factory']);
+        $this->collectionLoader = $container['model/collection/loader'];
+    }
+
+    /**
+     * Retrieve a collection loader configured for the given model class.
+     *
+     * @param  string $modelClass The model class to load a collection of.
+     * @return CollectionLoader
+     */
+    protected function collection($modelClass)
+    {
+        $loader = $this->collectionLoader;
+        $loader->setModel($this->modelFactory()->get($modelClass));
+
+        return $loader;
     }
 
     /**
@@ -225,7 +238,7 @@ class CleanupScript extends AbstractScript implements
         ];
 
         $sql = 'SELECT DISTINCT `%sourceType` FROM `%pivotTable`;';
-        $rows = $db->query(strtr($sql, $binds), PDO::FETCH_ASSOC);
+        $rows = $db->query(strtr($sql, $defaultBinds), PDO::FETCH_ASSOC);
         if ($rows->rowCount()) {
             error_log(get_called_class() . '::' . __FUNCTION__);
 
@@ -538,7 +551,7 @@ class CleanupScript extends AbstractScript implements
         if (!is_int($count)) {
             throw new InvalidArgumentException(
                 sprintf(
-                    'Must be an integer',
+                    'Must be an integer, received %s',
                     is_object($count) ? get_class($count) : gettype($count)
                 )
             );

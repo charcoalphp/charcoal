@@ -2,12 +2,15 @@
 
 namespace Charcoal\Admin;
 
+use Exception;
 use RuntimeException;
 // From PSR-7
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 // From Pimple
 use Pimple\Container;
+// From 'guzzlehttp/guzzle'
+use GuzzleHttp\Client as GuzzleClient;
 // From 'charcoal-factory'
 use Charcoal\Factory\FactoryInterface;
 // From 'charcoal-user'
@@ -347,8 +350,9 @@ abstract class AdminAction extends AbstractAction implements
             'response' => $token,
         ];
 
-        if (isset($_SERVER['REMOTE_ADDR'])) {
-            $data['remoteip'] = $_SERVER['REMOTE_ADDR'];
+        $remoteIp = filter_var(($_SERVER['REMOTE_ADDR'] ?? null), FILTER_VALIDATE_IP);
+        if ($remoteIp !== false) {
+            $data['remoteip'] = $remoteIp;
         }
 
         $query = http_build_query($data);
@@ -356,10 +360,21 @@ abstract class AdminAction extends AbstractAction implements
 
         $this->logger->debug(sprintf('Verifying reCAPTCHA user response: %s', $url));
 
-        /**
-         * @todo Use Guzzle
-         */
-        $result = file_get_contents($url);
+        $guzzleClient = new GuzzleClient();
+
+        try {
+            $response = $guzzleClient->request('GET', $url, [
+                'http_errors' => false,
+            ]);
+            $result = (string)$response->getBody();
+        } catch (Exception $e) {
+            $this->logger->error(sprintf(
+                'Google reCAPTCHA verification request failed: %s',
+                $e->getMessage()
+            ));
+            $result = null;
+        }
+
         $result = (array)json_decode($result, true);
 
         $this->recaptchaLastToken  = $token;

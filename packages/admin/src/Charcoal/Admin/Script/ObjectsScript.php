@@ -7,6 +7,9 @@ use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 // From 'charcoal-core'
 use Charcoal\Loader\CollectionLoader;
+// From 'charcoal-user'
+use Charcoal\User\AuthAwareInterface;
+use Charcoal\User\AuthAwareTrait;
 // From 'charcoal-admin'
 use Charcoal\Admin\AdminScript;
 use Charcoal\Admin\Ui\CollectionContainerInterface;
@@ -24,9 +27,12 @@ use Charcoal\Admin\Ui\CollectionContainerTrait;
  * - `page`
  * - `list-ident`
  */
-class ObjectsScript extends AdminScript implements CollectionContainerInterface
+class ObjectsScript extends AdminScript implements
+    CollectionContainerInterface,
+    AuthAwareInterface
 {
     use CollectionContainerTrait;
+    use AuthAwareTrait;
 
     /**
      * @return array

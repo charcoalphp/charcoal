@@ -13,6 +13,8 @@ use League\Csv\Writer;
 use Charcoal\Loader\LazyCollectionLoader;
 // From 'charcoal-factory'
 use Charcoal\Factory\FactoryInterface;
+// From PSR-3
+use Psr\Log\LoggerAwareTrait;
 // From 'charcoal-translator'
 use Charcoal\Translator\TranslatorAwareTrait;
 
@@ -26,6 +28,7 @@ use Charcoal\Translator\TranslatorAwareTrait;
  */
 class Exporter
 {
+    use LoggerAwareTrait;
     use TranslatorAwareTrait;
 
     /**

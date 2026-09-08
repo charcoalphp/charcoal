@@ -14,7 +14,10 @@ use Assetic\AssetManager;
 // From PSR-7
 use Psr\Http\Message\UriInterface;
 // From Slim
+use Slim\Csrf\Guard;
 use Slim\Http\Uri;
+// From 'charcoal-app'
+use Charcoal\App\Middleware\CsrfMiddleware;
 // From Mustache
 use Mustache\LambdaHelper;
 // From 'charcoal-config'
@@ -81,6 +84,7 @@ class AdminServiceProvider implements ServiceProviderInterface
         $this->registerSelectizeServices($container);
         $this->registerMetadataExtensions($container);
         $this->registerAuthExtensions($container);
+        $this->registerMiddlewareServices($container);
         $this->registerViewExtensions($container);
         $this->registerAssetsManager($container);
 
@@ -349,6 +353,88 @@ class AdminServiceProvider implements ServiceProviderInterface
         $container['authorizer'] = function (Container $container) {
             return $container['admin/authorizer'];
         };
+    }
+
+    /**
+     * Registers admin-scoped middlewares.
+     *
+     * @param  Container $container The Pimple DI container.
+     * @return void
+     */
+    public function registerMiddlewareServices(Container $container)
+    {
+        // Ensure a default configset exists (active, covering the auth
+        // templates) so every app gets this protection without having to
+        // configure it — while still fully overridable, since an app's own
+        // `charcoal/admin/middleware/csrf` config entry, if present, is left
+        // untouched.
+        $middlewares = ($container['config']['middlewares'] ?: []);
+        if (!isset($middlewares['charcoal/admin/middleware/csrf'])) {
+            $middlewares['charcoal/admin/middleware/csrf'] = $this->defaultCsrfMiddlewareConfig();
+            $container['config']['middlewares'] = $middlewares;
+        }
+
+        /**
+         * Slim-CSRF guard for the admin area, independent of `charcoal/app`'s
+         * own `csrf/guard` (used for the public-facing CSRF middleware, if
+         * any) — `Charcoal\App\Middleware\CsrfMiddleware` mutates its guard's
+         * failure callable on construction, so two differently-configured
+         * middleware instances must not share one guard.
+         *
+         * @param  Container $container The Pimple DI Container.
+         * @return Guard
+         */
+        $container['admin/csrf/guard'] = function (Container $container) {
+            return new Guard();
+        };
+
+        /**
+         * @param  Container $container The Pimple DI Container.
+         * @return CsrfMiddleware
+         */
+        $container['middlewares/charcoal/admin/middleware/csrf'] = function (Container $container) {
+            $wareConfig = $container['config']['middlewares']['charcoal/admin/middleware/csrf'];
+            $wareConfig['guard'] = $container['admin/csrf/guard'];
+            return new CsrfMiddleware($wareConfig);
+        };
+    }
+
+    /**
+     * The default configset for `charcoal/admin/middleware/csrf`, used
+     * whenever a consuming app hasn't defined its own — covers the admin
+     * area's plain-form auth pages (login, lost-password, reset-password),
+     * responding with the same `{success, next_url, feedbacks}` shape as any
+     * other admin action, since that's what the bundled admin JS expects.
+     *
+     * Assumes the default `admin` base path (`admin.config.default.json`'s
+     * `base_path`). This method is called unconditionally, for every
+     * request, before `admin/config` is necessarily registered (it's only
+     * registered for requests under the admin path — see
+     * {@see \Charcoal\Admin\AdminModule::setUp()}), so it can't reliably
+     * read a customized base path here. An app that renames its admin path
+     * should define this configset itself, same as it already must adjust
+     * other admin-path-dependent integrations.
+     *
+     * @return array
+     */
+    private function defaultCsrfMiddlewareConfig(): array
+    {
+        return [
+            'active'         => true,
+            'included_path'  => [
+                '^/admin/login$',
+                '^/admin/account/lost-password$',
+                '^/admin/account/reset-password(/.*)?$',
+            ],
+            'failure_message' => 'Your session has expired. Please try logging in again.',
+            'failure_body'    => [
+                'success'   => false,
+                'next_url'  => null,
+                'feedbacks' => [
+                    [ 'level' => 'error', 'message' => '{{message}}' ],
+                ],
+            ],
+        ];
     }
 
     /**

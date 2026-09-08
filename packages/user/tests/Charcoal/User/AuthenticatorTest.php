@@ -2,6 +2,7 @@
 
 namespace Charcoal\Tests\User;
 
+use ReflectionMethod;
 // From Pimple
 use Pimple\Container;
 
@@ -73,7 +74,7 @@ class AuthenticatorTest extends AbstractTestCase
      */
     public function createUser(Authenticator $authenticator)
     {
-        $factoryMethod = new ReflectionMethod(Authenticator, 'userFactory');
+        $factoryMethod = new ReflectionMethod(Authenticator::class, 'userFactory');
 
         return $factoryMethod->invoke($authenticator)->create(User::class);
     }

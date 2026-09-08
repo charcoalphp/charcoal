@@ -15,6 +15,11 @@ use Charcoal\Tests\AbstractTestCase;
 class SearchWidgetTest extends AbstractTestCase
 {
     /**
+     * @var SearchWidget
+     */
+    protected $obj;
+
+    /**
      * @return void
      */
     public function setUp(): void

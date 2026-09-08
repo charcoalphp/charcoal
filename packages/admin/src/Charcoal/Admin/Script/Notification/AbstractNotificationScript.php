@@ -37,6 +37,11 @@ abstract class AbstractNotificationScript extends AdminScript implements CronScr
     /**
      * @var FactoryInterface
      */
+    private $revisionFactory;
+
+    /**
+     * @var FactoryInterface
+     */
     private $emailFactory;
 
     /**

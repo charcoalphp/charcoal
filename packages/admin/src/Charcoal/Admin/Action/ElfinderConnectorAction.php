@@ -168,7 +168,7 @@ class ElfinderConnectorAction extends AdminAction
     {
         unset($request);
 
-        $this->connector = $this->setupElfinder();
+        $this->elfinderConnector = $this->setupElfinder();
 
         return $response;
     }

@@ -10,6 +10,7 @@ use Stash\Pool;
 
 // From 'charcoal-cache'
 use Charcoal\Tests\AbstractTestCase;
+use Charcoal\Tests\ReflectionsTrait;
 use Charcoal\Cache\CacheBuilder;
 
 /**
@@ -17,6 +18,8 @@ use Charcoal\Cache\CacheBuilder;
  */
 abstract class AbstractCacheBuilderTest extends AbstractTestCase
 {
+    use ReflectionsTrait;
+
     /**
      * Create a new CacheBuilder instance.
      *
@@ -121,10 +124,10 @@ abstract class AbstractCacheBuilderTest extends AbstractTestCase
     {
         $builderDefaults = $this->getDefaultBuilderAttributes();
 
-        $this->assertAttributeEquals($builderDefaults['pool_class'], 'poolClass', $builder);
-        $this->assertAttributeEquals($builderDefaults['item_class'], 'itemClass', $builder);
-        $this->assertAttributeEquals($builderDefaults['namespace'], 'namespace', $builder);
-        $this->assertAttributeEquals($builderDefaults['logger'], 'logger', $builder);
+        $this->assertEquals($builderDefaults['pool_class'], $this->getPropertyValue($builder, 'poolClass'));
+        $this->assertEquals($builderDefaults['item_class'], $this->getPropertyValue($builder, 'itemClass'));
+        $this->assertEquals($builderDefaults['namespace'], $this->getPropertyValue($builder, 'namespace'));
+        $this->assertEquals($builderDefaults['logger'], $this->getPropertyValue($builder, 'logger'));
     }
 
     /**

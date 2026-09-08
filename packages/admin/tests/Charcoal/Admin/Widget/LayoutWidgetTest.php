@@ -15,6 +15,11 @@ use Charcoal\Tests\AbstractTestCase;
 class LayoutWidgetTest extends AbstractTestCase
 {
     /**
+     * @var LayoutWidget
+     */
+    protected $obj;
+
+    /**
      * @return void
      */
     public function setUp(): void

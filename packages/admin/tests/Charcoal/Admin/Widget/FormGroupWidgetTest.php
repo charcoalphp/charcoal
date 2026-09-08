@@ -19,6 +19,11 @@ use Charcoal\Tests\Admin\ContainerProvider;
 class FormGroupWidgetTest extends AbstractTestCase
 {
     /**
+     * @var FormGroupWidget
+     */
+    protected $obj;
+
+    /**
      * @return void
      */
     public function setUp(): void

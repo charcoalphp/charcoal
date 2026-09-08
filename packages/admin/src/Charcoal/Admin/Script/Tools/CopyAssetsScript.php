@@ -21,6 +21,11 @@ class CopyAssetsScript extends AdminScript
     private $dir;
 
     /**
+     * @var string
+     */
+    private $basePath;
+
+    /**
      * @return array
      */
     public function defaultArguments()

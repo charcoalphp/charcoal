@@ -17,6 +17,7 @@ use Charcoal\Model\DescribableTrait;
 // From 'charcoal-view'
 use Charcoal\View\ViewableInterface;
 use Charcoal\View\ViewableTrait;
+use Charcoal\View\ViewInterface;
 // From 'charcoal-translator'
 use Charcoal\Translator\Translation;
 use Charcoal\Translator\TranslatorAwareTrait;
@@ -50,6 +51,11 @@ abstract class AbstractProperty implements
      * @var ModelPropertyInterface $property
      */
     private $property;
+
+    /**
+     * @var string|null $inputName
+     */
+    private $inputName;
 
     /**
      * @var array $propertyData

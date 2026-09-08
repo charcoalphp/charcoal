@@ -9,17 +9,12 @@ use Pimple\Container;
 use Charcoal\Loader\CollectionLoader;
 // From 'charcoal-cms'
 use Charcoal\Cms\AbstractSection;
-use Charcoal\Cms\Mixin\BlocksSectionInterface;
-use Charcoal\Cms\Mixin\Traits\BlocksSectionTrait;
 
 /**
  * Blocks-content section
  */
-class BlocksSection extends AbstractSection implements
-    BlocksSectionInterface
+class BlocksSection extends AbstractSection
 {
-    use BlocksSectionTrait;
-
     /**
      * @var Collection $blocks
      */

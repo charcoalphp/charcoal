@@ -288,7 +288,7 @@ class Attachment extends Content implements AttachableInterface
 
         if (!$obj->id()) {
             throw new InvalidArgumentException(sprintf(
-                'Container object must have an ID.',
+                'Container object must have an ID; received %s',
                 (is_object($obj) ? get_class($obj) : gettype($obj))
             ));
         }

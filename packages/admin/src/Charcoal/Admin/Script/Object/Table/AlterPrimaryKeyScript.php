@@ -917,7 +917,7 @@ class AlterPrimaryKeyScript extends AdminScript
             };
 
             $validateCallback = function ($response) {
-                return is_string($response) && (strpos($callable, '::') > 1 || function_exists($response));
+                return is_string($response) && (strpos($response, '::') > 1 || function_exists($response));
             };
 
             $validateModel = function ($response) {

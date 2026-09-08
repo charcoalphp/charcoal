@@ -22,6 +22,11 @@ abstract class AbstractFormGroup extends AbstractUiItem implements
     use LayoutAwareTrait;
 
     /**
+     * @var string
+     */
+    private $widgetId;
+
+    /**
      * Returns a new form group.
      *
      * @param array|\ArrayAccess $data The class depdendencies.
@@ -58,5 +63,17 @@ abstract class AbstractFormGroup extends AbstractUiItem implements
         parent::setData($data);
 
         return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function widgetId()
+    {
+        if (!$this->widgetId) {
+            $this->widgetId = 'widget_' . uniqid();
+        }
+
+        return $this->widgetId;
     }
 }

@@ -11,6 +11,7 @@ use Charcoal\View\ViewInterface;
 // From 'charcoal-user'
 use Charcoal\User\AuthAwareInterface;
 // From 'charcoal-admin'
+use Charcoal\Admin\Support\Sanitizer;
 use Charcoal\Admin\Ui\CollectionContainerInterface;
 use Charcoal\Admin\Ui\FormSidebarInterface;
 use Charcoal\Admin\Ui\ObjectContainerInterface;
@@ -424,13 +425,13 @@ trait ActionContainerTrait
 
         if ($renderer === null) {
             /** @todo Shame! Force `{{ id }}` to use "obj_id" GET parameter… */
-            $objId = filter_input(INPUT_GET, 'obj_id', FILTER_SANITIZE_STRING);
+            $objId = Sanitizer::sanitizeGetParam('obj_id');
             if ($objId) {
                 $url = preg_replace('~\{\{\s*(obj_)?id\s*\}\}~', $objId, $url);
             }
 
             /** @todo Shame! Force `{{ type }}` to use "obj_type" GET parameter… */
-            $objType = filter_input(INPUT_GET, 'obj_type', FILTER_SANITIZE_STRING);
+            $objType = Sanitizer::sanitizeGetParam('obj_type');
             if ($objType) {
                 $url = preg_replace('~\{\{\s*(obj_)?type\s*\}\}~', $objType, $url);
             }
@@ -535,11 +536,12 @@ trait ActionContainerTrait
      */
     protected function compareActions(array $a, array $b)
     {
+        $isSubmittable = isset($a['isSubmittable']) && $a['isSubmittable'];
+
         $a = isset($a['priority']) ? $a['priority'] : 0;
         $b = isset($b['priority']) ? $b['priority'] : 0;
-        $c = isset($action['isSubmittable']) && $action['isSubmittable'];
 
-        return ($c || ($a === 0) || ($a >= $b));
+        return ($isSubmittable || ($a === 0) || ($a >= $b));
     }
 
     /**

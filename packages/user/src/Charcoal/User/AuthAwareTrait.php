@@ -128,7 +128,7 @@ trait AuthAwareTrait
     protected function setRequiredAclPermissions($permissions)
     {
         if ($permissions === null || !$permissions) {
-            $this->permissions = null;
+            $this->requiredAclPermissions = null;
             return $this;
         }
         if (is_string($permissions)) {

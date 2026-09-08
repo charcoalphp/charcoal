@@ -19,6 +19,7 @@ use Charcoal\Translator\Translation;
 use Charcoal\Property\FileProperty;
 // From 'charcoal-admin'
 use Charcoal\Admin\AdminTemplate;
+use Charcoal\Admin\Support\Sanitizer;
 
 /**
  *
@@ -103,15 +104,15 @@ class ElfinderTemplate extends AdminTemplate
         $data = $request->getParams($keys);
 
         if (isset($data['obj_type'])) {
-            $this->objType = filter_var($data['obj_type'], FILTER_SANITIZE_STRING);
+            $this->objType = Sanitizer::sanitizeString($data['obj_type']);
         }
 
         if (isset($data['obj_id'])) {
-            $this->objId = filter_var($data['obj_id'], FILTER_SANITIZE_STRING);
+            $this->objId = Sanitizer::sanitizeString($data['obj_id']);
         }
 
         if (isset($data['property'])) {
-            $this->propertyIdent = filter_var($data['property'], FILTER_SANITIZE_STRING);
+            $this->propertyIdent = Sanitizer::sanitizeString($data['property']);
         }
 
         if (isset($data['assets'])) {
@@ -119,7 +120,7 @@ class ElfinderTemplate extends AdminTemplate
         }
 
         if (isset($data['callback'])) {
-            $this->callbackIdent = filter_var($data['callback'], FILTER_SANITIZE_STRING);
+            $this->callbackIdent = Sanitizer::sanitizeString($data['callback']);
         }
 
         if (isset($this->elfinderConfig['translations'])) {
@@ -487,7 +488,7 @@ class ElfinderTemplate extends AdminTemplate
 
         $property = $this->formProperty();
         if ($property) {
-            $mimeTypes = filter_input(INPUT_GET, 'filetype', FILTER_SANITIZE_STRING);
+            $mimeTypes = Sanitizer::sanitizeGetParam('filetype');
 
             if ($mimeTypes) {
                 if ($mimeTypes === 'file') {

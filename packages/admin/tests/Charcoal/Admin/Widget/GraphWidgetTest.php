@@ -15,6 +15,11 @@ use Charcoal\Tests\AbstractTestCase;
 class GraphWidgetTest extends AbstractTestCase
 {
     /**
+     * @var AbstractGraphWidget
+     */
+    protected $obj;
+
+    /**
      * @return void
      */
     public function setUp(): void
