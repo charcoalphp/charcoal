@@ -8,6 +8,7 @@ use InvalidArgumentException;
 use Pimple\Container;
 // From 'charcoal-admin'
 use Charcoal\Admin\AdminTemplate;
+use Charcoal\Admin\Support\Sanitizer;
 use Charcoal\Admin\Ui\DashboardContainerInterface;
 use Charcoal\Admin\Ui\DashboardContainerTrait;
 use Charcoal\Admin\Ui\ObjectContainerInterface;
@@ -133,7 +134,7 @@ class DocTemplate extends AdminTemplate implements
         if (!$objLabel && isset($metadata['admin']['forms'])) {
             $adminMetadata = $metadata['admin'];
 
-            $formIdent = filter_input(INPUT_GET, 'form_ident', FILTER_SANITIZE_STRING);
+            $formIdent = Sanitizer::sanitizeGetParam('form_ident');
             if (!$formIdent) {
                 if (isset($adminMetadata['defaultForm'])) {
                         $fomIdent = $adminMetadata['defaultForm'];
@@ -196,7 +197,7 @@ class DocTemplate extends AdminTemplate implements
         $dashboardIdent = $this->dashboardIdent();
 
         if (empty($dashboardIdent)) {
-            $dashboardIdent = filter_input(INPUT_GET, 'dashboard_ident', FILTER_SANITIZE_STRING);
+            $dashboardIdent = Sanitizer::sanitizeGetParam('dashboard_ident');
         }
 
         if (empty($dashboardIdent)) {

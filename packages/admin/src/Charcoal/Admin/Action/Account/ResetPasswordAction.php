@@ -55,7 +55,7 @@ class ResetPasswordAction extends AdminAction
     {
         $translator = $this->translator();
 
-        $ip = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : null;
+        $ip = filter_var(($_SERVER['REMOTE_ADDR'] ?? null), FILTER_VALIDATE_IP) ?: null;
 
         $token     = $request->getParam('token');
         $email     = $request->getParam('email');

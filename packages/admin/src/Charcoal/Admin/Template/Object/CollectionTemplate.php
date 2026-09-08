@@ -10,6 +10,7 @@ use Psr\Http\Message\RequestInterface;
 use Pimple\Container;
 // From 'charcoal-admin'
 use Charcoal\Admin\AdminTemplate;
+use Charcoal\Admin\Support\Sanitizer;
 use Charcoal\Admin\Ui\CollectionContainerInterface;
 use Charcoal\Admin\Ui\CollectionContainerTrait;
 use Charcoal\Admin\Ui\DashboardContainerInterface;
@@ -154,7 +155,7 @@ class CollectionTemplate extends AdminTemplate implements
         if (!$objLabel && isset($metadata['admin']['lists'])) {
             $adminMetadata = $metadata['admin'];
 
-            $listIdent = filter_input(INPUT_GET, 'collection_ident', FILTER_SANITIZE_STRING);
+            $listIdent = Sanitizer::sanitizeGetParam('collection_ident');
             if (!$listIdent) {
                 $listIdent = $this->collectionIdent();
             }
@@ -289,7 +290,7 @@ class CollectionTemplate extends AdminTemplate implements
      */
     private function metadataDashboardIdent()
     {
-        $dashboardIdent = filter_input(INPUT_GET, 'dashboard_ident', FILTER_SANITIZE_STRING);
+        $dashboardIdent = Sanitizer::sanitizeGetParam('dashboard_ident');
         if ($dashboardIdent) {
             return $dashboardIdent;
         }

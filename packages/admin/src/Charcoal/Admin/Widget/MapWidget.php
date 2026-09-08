@@ -11,6 +11,7 @@ use Charcoal\Ui\FormGroup\FormGroupTrait;
 use Charcoal\Ui\PrioritizableInterface;
 // From 'charcoal-admin'
 use Charcoal\Admin\AdminWidget;
+use Charcoal\Admin\Support\Sanitizer;
 
 /**
  * Map Widget displays a google map widget, with UI to add polygons, lines and points.
@@ -332,8 +333,8 @@ class MapWidget extends AdminWidget implements FormGroupInterface
     public function obj()
     {
         if ($this->obj === null) {
-            $objId   = filter_input(INPUT_GET, 'obj_id', FILTER_SANITIZE_STRING);
-            $objType = filter_input(INPUT_GET, 'obj_type', FILTER_SANITIZE_STRING);
+            $objId   = Sanitizer::sanitizeGetParam('obj_id');
+            $objType = Sanitizer::sanitizeGetParam('obj_type');
             if ($objId && $objType) {
                 $obj = $this->modelFactory()->create($objType);
                 $obj->load($objId);
