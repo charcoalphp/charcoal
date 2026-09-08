@@ -10,10 +10,11 @@ class AbstractImageTest extends \PHPUnit\Framework\TestCase
     public function testSetData()
     {
         $obj = $this->getMockForAbstractClass('\Charcoal\Image\AbstractImage');
+        $target = rtrim(sys_get_temp_dir(), '/\\') . DIRECTORY_SEPARATOR . 'phpunit.png';
         $ret = $obj->setData(
             [
             'source'=>__DIR__.'/test.png',
-            'target'=>'/tmp/phpunit.png',
+            'target'=>$target,
             'effects'=>[
 
             ]
@@ -22,7 +23,7 @@ class AbstractImageTest extends \PHPUnit\Framework\TestCase
         $this->assertSame($ret, $obj);
 
         $this->assertEquals(__DIR__.'/test.png', $obj->source());
-        $this->assertEquals('/tmp/phpunit.png', $obj->target());
+        $this->assertEquals($target, $obj->target());
     }
 
     public function testSetSource()
