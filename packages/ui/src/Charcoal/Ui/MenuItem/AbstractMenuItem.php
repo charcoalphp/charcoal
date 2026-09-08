@@ -22,6 +22,11 @@ abstract class AbstractMenuItem extends AbstractUiItem implements MenuItemInterf
     private ?\Charcoal\Ui\Menu\MenuInterface $menu = null;
 
     /**
+     * @var MenuItemBuilder $menuItemBuilder
+     */
+    private $menuItemBuilder;
+
+    /**
      * @var string $ident
      */
     protected $ident;
@@ -215,7 +220,7 @@ abstract class AbstractMenuItem extends AbstractUiItem implements MenuItemInterf
             if ($childCallback) {
                 $childCallback($child);
             }
-            $this->setDynamicTemplate('widget_template', $item->template());
+            $this->setDynamicTemplate('widget_template', $child->template());
             yield $child->ident() => $child;
         }
     }

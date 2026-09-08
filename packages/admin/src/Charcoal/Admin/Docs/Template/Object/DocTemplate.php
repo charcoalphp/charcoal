@@ -3,10 +3,12 @@
 namespace Charcoal\Admin\Docs\Template\Object;
 
 use Exception;
+use InvalidArgumentException;
 // From Pimple
 use Pimple\Container;
 // From 'charcoal-admin'
 use Charcoal\Admin\AdminTemplate;
+use Charcoal\Admin\Support\Sanitizer;
 use Charcoal\Admin\Ui\DashboardContainerInterface;
 use Charcoal\Admin\Ui\DashboardContainerTrait;
 use Charcoal\Admin\Ui\ObjectContainerInterface;
@@ -23,6 +25,11 @@ class DocTemplate extends AdminTemplate implements
     use ObjectContainerTrait;
 
     public $headerMenu;
+
+    /**
+     * @var \Charcoal\Admin\Widget\SecondaryMenuWidgetInterface[]|null
+     */
+    private $headerMenu;
 
     /**
      * Retrieve the list of parameters to extract from the HTTP request.
@@ -58,6 +65,49 @@ class DocTemplate extends AdminTemplate implements
     }
 
     /**
+     * Create the header menu from the given menu items, or fallback to the admin's secondary menu.
+     *
+     * @param  array|null $menuItems The menu items to build, keyed by ident.
+     * @throws InvalidArgumentException If the secondary menu widget is invalid.
+     * @return \Charcoal\Admin\Widget\SecondaryMenuWidgetInterface[]
+     */
+    protected function createHeaderMenu(array $menuItems = null)
+    {
+        if ($menuItems === null) {
+            return $this->createSecondaryMenu();
+        }
+
+        $mainMenuIdent = $this->mainMenuIdent();
+
+        $items = [];
+        foreach ($menuItems as $ident => $options) {
+            $options['ident'] = $ident;
+
+            if (isset($this['secondary_menu_item'])) {
+                $options['current_item'] = $this['secondary_menu_item'];
+            }
+
+            if (isset($this['main_menu_item'])) {
+                $mainMenuIdent = $this['main_menu_item'];
+            }
+
+            if (is_string($options['ident'])) {
+                $options['is_current'] = $options['ident'] === $mainMenuIdent;
+
+                $widget = $this->widgetFactory()
+                                ->create('charcoal/admin/widget/secondary-menu')
+                                ->setData($options);
+
+                $items[] = $widget;
+            }
+        }
+
+        usort($items, [ 'Charcoal\Admin\Support\Sorter', 'sortByPriority' ]);
+
+        return $items;
+    }
+
+    /**
      * Retrieve the title of the page.
      *
      * @return \Charcoal\Translator\Translation
@@ -88,7 +138,7 @@ class DocTemplate extends AdminTemplate implements
         if (isset($metadata['admin']['forms'])) {
             $adminMetadata = $metadata['admin'];
 
-            $formIdent = htmlspecialchars(trim(($_GET['form_ident'] ?? '')), ENT_QUOTES, 'UTF-8');
+            $formIdent = Sanitizer::sanitizeGetParam('form_ident');
             if (!$formIdent) {
                 if (isset($adminMetadata['defaultForm'])) {
                         $fomIdent = $adminMetadata['defaultForm'];
@@ -148,7 +198,7 @@ class DocTemplate extends AdminTemplate implements
         $dashboardIdent = $this->dashboardIdent();
 
         if (empty($dashboardIdent)) {
-            $dashboardIdent = htmlspecialchars(trim(($_GET['dashboard_ident'] ?? '')), ENT_QUOTES, 'UTF-8');
+            $dashboardIdent = Sanitizer::sanitizeGetParam('dashboard_ident');
         }
 
         if (empty($dashboardIdent) && isset($adminMetadata['default_doc_dashboard'])) {

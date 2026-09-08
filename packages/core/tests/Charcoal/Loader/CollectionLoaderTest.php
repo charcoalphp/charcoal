@@ -145,7 +145,7 @@ class CollectionLoaderTest extends AbstractTestCase
 
         $loader->setCollectionClass('array');
         $collection = $loader->createCollection();
-        $this->assertInternalType('array', $collection);
+        $this->assertIsArray($collection);
     }
 
     public function testAll(): void

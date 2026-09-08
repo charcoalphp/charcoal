@@ -10,6 +10,8 @@ use Charcoal\Model\AbstractModel;
 // From 'charcoal-cms'
 use Charcoal\Cms\TemplateableInterface;
 use Charcoal\Cms\TemplateableTrait;
+// From 'charcoal-translator'
+use Charcoal\Translator\TranslatorAwareTrait;
 
 /**
  *
@@ -18,6 +20,7 @@ class TemplateableModel extends AbstractModel implements
     TemplateableInterface
 {
     use TemplateableTrait;
+    use TranslatorAwareTrait;
 
     /**
      * Insert object in storage.

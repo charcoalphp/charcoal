@@ -16,6 +16,11 @@ class DebugHelpers extends AbstractExtension implements
 {
     public $debug;
     /**
+     * @var boolean
+     */
+    private $debug = false;
+
+    /**
      * @param array $data Class Dependencies.
      */
     public function __construct(?array $data = null)

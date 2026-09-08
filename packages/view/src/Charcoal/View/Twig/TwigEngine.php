@@ -8,16 +8,13 @@ use Charcoal\View\AbstractEngine;
 use Charcoal\View\ViewConfig;
 use InvalidArgumentException;
 use RuntimeException;
-use Symfony\Bridge\Twig\Extension\TranslationExtension;
 use Twig\Environment as TwigEnvironment;
-use Twig\Loader\FilesystemLoader as TwigFilesystemLoader;
 
 /**
  *
  */
 class TwigEngine extends AbstractEngine
 {
-    public $helpers;
     public const DEFAULT_CACHE_PATH = '../cache/twig';
 
     private ?\Twig\Environment $twig = null;
@@ -29,6 +26,14 @@ class TwigEngine extends AbstractEngine
      */
     private $debug;
 
+    /**
+     * @var array
+     */
+    private array $helpers = [];
+
+    /**
+     * @return string
+     */
     public function type(): string
     {
         return 'twig';

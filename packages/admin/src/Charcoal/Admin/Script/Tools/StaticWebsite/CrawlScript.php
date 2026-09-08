@@ -207,7 +207,7 @@ class CrawlScript extends AdminScript
                 'Directory must be a string'
             );
         }
-        if ($dir === '' || realdir($dir) === realdir($this->basePath)) {
+        if ($dir === '' || realpath($dir) === realpath($this->basePath)) {
             throw new InvalidArgumentException(
                 'Static'
             );

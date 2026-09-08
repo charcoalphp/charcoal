@@ -233,8 +233,9 @@ class UserData extends AbstractModel implements
 
         $this->setTs('now');
 
-        if (getenv('REMOTE_ADDR')) {
-            $this->setIp(getenv('REMOTE_ADDR'));
+        $remoteIp = filter_var(getenv('REMOTE_ADDR'), FILTER_VALIDATE_IP);
+        if ($remoteIp !== false) {
+            $this->setIp($remoteIp);
         }
 
         if ($this->origin === null) {

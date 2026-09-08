@@ -62,6 +62,11 @@ class DocWidget extends FormWidget implements
     private ?array $displayOptions = null;
 
     /**
+     * @var string|null
+     */
+    private $nextUrl;
+
+    /**
      * @param Container $container The DI container.
      */
     #[\Override]

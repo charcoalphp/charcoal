@@ -166,8 +166,8 @@ class MapWidgetInput extends AbstractPropertyInput
         /**
          * @todo Make this configurable
          */
-        if (isset($appConfig['alert.map.map'])) {
-            $this->setMapOptions($appConfig['alert.map']);
+        if (isset($container['config']['alert.map.map'])) {
+            $this->setMapOptions($container['config']['alert.map']);
         }
     }
 }

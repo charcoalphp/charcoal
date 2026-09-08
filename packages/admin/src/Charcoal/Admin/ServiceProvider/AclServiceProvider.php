@@ -74,6 +74,8 @@ class AclServiceProvider implements ServiceProviderInterface
          * @todo   Do this right!
          * @return Acl
          */
-        $container['authorizer/acl'] = (fn(): \Closure => $container['admin/acl']);
+        $container['authorizer/acl'] = function (Container $container) {
+            return $container['admin/acl'];
+        };
     }
 }

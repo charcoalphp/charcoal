@@ -40,6 +40,11 @@ class ObjectFormWidget extends FormWidget implements
     protected $formIdent;
 
     /**
+     * @var string|null
+     */
+    protected $nextUrl;
+
+    /**
      * @var array
      */
     protected $formData;

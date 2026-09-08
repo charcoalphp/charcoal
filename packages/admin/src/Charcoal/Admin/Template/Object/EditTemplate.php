@@ -8,6 +8,7 @@ use Pimple\Container;
 use Psr\Http\Message\RequestInterface;
 // From 'charcoal-admin'
 use Charcoal\Admin\AdminTemplate;
+use Charcoal\Admin\Support\Sanitizer;
 use Charcoal\Admin\Ui\DashboardContainerInterface;
 use Charcoal\Admin\Ui\DashboardContainerTrait;
 use Charcoal\Admin\Ui\ObjectContainerInterface;
@@ -85,7 +86,7 @@ class EditTemplate extends AdminTemplate implements
                 if (isset($metadata['admin']['forms'])) {
                     $adminMetadata = $metadata['admin'];
 
-                    $formIdent = htmlspecialchars(trim(($_GET['form_ident'] ?? '')), ENT_QUOTES, 'UTF-8');
+                    $formIdent = Sanitizer::sanitizeGetParam('form_ident');
                     if (!$formIdent) {
                         if (isset($adminMetadata['defaultForm'])) {
                             $fomIdent = $adminMetadata['defaultForm'];
@@ -176,7 +177,7 @@ class EditTemplate extends AdminTemplate implements
         $dashboardIdent = $this->dashboardIdent();
 
         if (empty($dashboardIdent)) {
-            $dashboardIdent = htmlspecialchars(trim(($_GET['dashboard_ident'] ?? '')), ENT_QUOTES, 'UTF-8');
+            $dashboardIdent = Sanitizer::sanitizeGetParam('dashboard_ident');
         }
 
         if (empty($dashboardIdent)) {

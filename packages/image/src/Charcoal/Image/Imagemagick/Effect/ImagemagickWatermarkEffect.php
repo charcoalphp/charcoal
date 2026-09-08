@@ -20,7 +20,7 @@ class ImagemagickWatermarkEffect extends AbstractWatermarkEffect
         }
 
         if ($this->watermark() instanceof ImageInterface) {
-            $out = '/tmp/_' . uniqid() . '.png';
+            $out = rtrim(sys_get_temp_dir(), '/\\') . DIRECTORY_SEPARATOR . '_' . uniqid() . '.png';
             $this->watermark()->save($out);
             $width = $this->watermark()->width();
             $height = $this->watermark()->height();

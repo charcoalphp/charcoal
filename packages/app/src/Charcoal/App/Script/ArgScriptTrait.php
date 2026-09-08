@@ -79,4 +79,19 @@ trait ArgScriptTrait
 
         return $this;
     }
+
+    /**
+     * Retrieve the setter method for the given property ident.
+     *
+     * Relies on {@see \Charcoal\Config\AbstractEntity::camelize()}, inherited
+     * by the host class (e.g. via {@see \Charcoal\App\Script\AbstractScript}).
+     *
+     * @param  string $key The property ident to get the setter from.
+     * @return string The setter method name.
+     */
+    protected function setter($key)
+    {
+        $setter = 'set_' . $key;
+        return $this->camelize($setter);
+    }
 }

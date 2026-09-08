@@ -79,7 +79,12 @@ trait AttachmentAwareTrait
         }
 
         $options = $this->parseAttachmentOptions($options);
-        extract($options);
+
+        $group    = $options['group'];
+        $type     = $options['type'];
+        $before   = $options['before'];
+        $after    = $options['after'];
+        $isActive = $options['isActive'];
 
         if ($group !== 0 && !is_string($group)) {
             throw new InvalidArgumentException(sprintf(

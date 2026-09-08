@@ -401,8 +401,8 @@ trait ObjectContainerTrait
     {
         $key = $obj::class;
 
-        if (isset(static::$labelCache[$key])) {
-            return static::$labelCache[$key];
+        if (isset(static::$objLabelCache[$key])) {
+            return static::$objLabelCache[$key];
         }
 
         $metadata = $obj->metadata();
@@ -417,9 +417,9 @@ trait ObjectContainerTrait
 
         $label = is_array($label) ? reset($label) : (new ReflectionClass($obj))->getShortName();
 
-        static::$labelCache[$key] = $label;
+        static::$objLabelCache[$key] = $label;
 
-        return static::$labelCache[$key];
+        return static::$objLabelCache[$key];
     }
 
     /**

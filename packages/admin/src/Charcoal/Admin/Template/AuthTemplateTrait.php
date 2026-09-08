@@ -2,11 +2,59 @@
 
 namespace Charcoal\Admin\Template;
 
+// From PSR-7
+use Psr\Http\Message\RequestInterface;
+
 /**
  *
  */
 trait AuthTemplateTrait
 {
+    /**
+     * @var string|null
+     */
+    private $csrfName;
+
+    /**
+     * @var string|null
+     */
+    private $csrfValue;
+
+    /**
+     * Reads the CSRF token pair attached to the request by the CSRF
+     * middleware (`Charcoal\App\Middleware\CsrfMiddleware`, wrapping
+     * {@see \Slim\Csrf\Guard}), for {@see self::csrfFields()} to render.
+     *
+     * Unlike a form whose action URL is arbitrary (a CMS page, say), an auth
+     * form's GET-rendered page and its POST target are the same fixed route,
+     * so the middleware itself both issues the token (on GET) and validates
+     * it (on POST) — no separate token-issuance call is needed here.
+     *
+     * @param  RequestInterface $request The PSR-7 HTTP request.
+     * @return void
+     */
+    protected function setCsrfAttributesFromRequest(RequestInterface $request): void
+    {
+        $this->csrfName  = $request->getAttribute('csrf_name');
+        $this->csrfValue = $request->getAttribute('csrf_value');
+    }
+
+    /**
+     * @return string The hidden `<input>` markup carrying the CSRF token pair.
+     */
+    public function csrfFields(): string
+    {
+        if (!$this->csrfName || !$this->csrfValue) {
+            return '';
+        }
+
+        return '<input type="hidden" name="csrf_name" value="' .
+                htmlspecialchars($this->csrfName, ENT_QUOTES) .
+                '"><input type="hidden" name="csrf_value" value="' .
+                htmlspecialchars($this->csrfValue, ENT_QUOTES) .
+                '">';
+    }
+
     /**
      * Retrieve the base URI of the application.
      *

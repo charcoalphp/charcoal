@@ -71,6 +71,20 @@ class AttachmentWidget extends AdminWidget implements
     protected $group;
 
     /**
+     * The number of attachments displayed per page.
+     *
+     * @var integer
+     */
+    protected $numPerPage;
+
+    /**
+     * The current page listing of attachments.
+     *
+     * @var integer
+     */
+    protected $page;
+
+    /**
      * The widget's available attachment types.
      *
      * @var array

@@ -14,7 +14,14 @@ use Charcoal\Tests\AbstractTestCase;
  */
 class GraphWidgetTest extends AbstractTestCase
 {
-    public $obj;
+    /**
+     * @var AbstractGraphWidget
+     */
+    protected $obj;
+
+    /**
+     * @return void
+     */
     public function setUp(): void
     {
         $logger = new NullLogger();

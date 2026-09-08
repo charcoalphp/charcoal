@@ -14,7 +14,14 @@ use Charcoal\Tests\AbstractTestCase;
  */
 class SearchWidgetTest extends AbstractTestCase
 {
-    public $obj;
+    /**
+     * @var SearchWidget
+     */
+    protected $obj;
+
+    /**
+     * @return void
+     */
     public function setUp(): void
     {
         $logger = new NullLogger();

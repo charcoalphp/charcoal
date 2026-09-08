@@ -5,6 +5,7 @@ namespace Charcoal\Model;
 use PDO;
 use PDOException;
 use DateTimeInterface;
+use InvalidArgumentException;
 use UnexpectedValueException;
 // From PSR-3
 use Psr\Log\LoggerAwareInterface;

@@ -34,6 +34,8 @@ class ResetPasswordTemplate extends AdminTemplate
     #[\Override]
     public function init(RequestInterface $request): bool
     {
+        $this->setCsrfAttributesFromRequest($request);
+
         // Undocumented Slim 3 feature: The route attributes are stored in routeInfo[2].
         $routeInfo = $request->getAttribute('routeInfo');
 

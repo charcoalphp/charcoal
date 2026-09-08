@@ -24,6 +24,7 @@ use Charcoal\App\Template\AbstractTemplate;
 use Charcoal\Admin\Ui\DashboardContainerInterface;
 use Charcoal\Admin\Support\AdminTrait;
 use Charcoal\Admin\Support\BaseUrlTrait;
+use Charcoal\Admin\Support\Sanitizer;
 use Charcoal\Admin\Support\SecurityTrait;
 use Charcoal\Admin\Ui\FeedbackContainerTrait;
 
@@ -770,7 +771,7 @@ class AdminTemplate extends AbstractTemplate implements
      * @param  mixed $options The secondary menu widget ID or config.
      * @return string|null
      */
-    private function mainMenuIdent($options = null)
+    protected function mainMenuIdent($options = null)
     {
         if ($this->mainMenuIdentLoaded === false) {
             $mainMenuIdent = null;
@@ -790,7 +791,7 @@ class AdminTemplate extends AbstractTemplate implements
             }
 
             // Get main menu from the obj_type
-            $objType = htmlspecialchars(trim(($_GET['obj_type'] ?? '')), ENT_QUOTES, 'UTF-8');
+            $objType = Sanitizer::sanitizeGetParam('obj_type');
             if ($objType) {
                 $secondaryMenuItems = $this->adminConfig('secondary_menu');
                 foreach ($secondaryMenuItems as $main => $item) {
@@ -802,7 +803,7 @@ class AdminTemplate extends AbstractTemplate implements
             }
 
             // Choose main menu with a get parameter
-            $mainMenuFromRequest = htmlspecialchars(trim(($_GET['main_menu'] ?? '')), ENT_QUOTES, 'UTF-8');
+            $mainMenuFromRequest = Sanitizer::sanitizeGetParam('main_menu');
             if ($mainMenuFromRequest) {
                 $mainMenuIdent = $mainMenuFromRequest;
             }

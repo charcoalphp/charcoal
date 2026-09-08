@@ -15,10 +15,12 @@ use Charcoal\Loader\CollectionLoader;
 // From 'charcoal-ui'
 use Charcoal\Ui\FormGroup\FormGroupInterface;
 use Charcoal\Ui\FormGroup\FormGroupTrait;
+use Charcoal\Ui\PrioritizableInterface;
 // From 'charcoal-user'
 use Charcoal\User\Acl\Manager as AclManager;
 // From 'charcoal-admin'
 use Charcoal\Admin\AdminWidget;
+use Charcoal\Admin\Support\Sanitizer;
 use Charcoal\Admin\User\Permission;
 use Charcoal\Admin\User\PermissionCategory;
 
@@ -64,7 +66,7 @@ class AclPermissions extends AdminWidget implements
      */
     public function objId(): string|false|null
     {
-        return htmlspecialchars(trim(($_GET['obj_id'] ?? '')), ENT_QUOTES, 'UTF-8');
+        return Sanitizer::sanitizeGetParam('obj_id');
     }
 
     public function permissionCategories(): array
@@ -241,5 +243,25 @@ class AclPermissions extends AdminWidget implements
         }
 
         return $ret;
+    }
+
+    /**
+     * Comparison function used by {@see uasort()}.
+     *
+     * @param  PrioritizableInterface $a Sortable entity A.
+     * @param  PrioritizableInterface $b Sortable entity B.
+     * @return integer Sorting value: -1 or 1.
+     */
+    protected function sortItemsByPriority(
+        PrioritizableInterface $a,
+        PrioritizableInterface $b
+    ) {
+        $priorityA = $a->priority();
+        $priorityB = $b->priority();
+
+        if ($priorityA === $priorityB) {
+            return 0;
+        }
+        return ($priorityA < $priorityB) ? (-1) : 1;
     }
 }

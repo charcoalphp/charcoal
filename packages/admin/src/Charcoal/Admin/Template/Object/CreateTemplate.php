@@ -9,6 +9,7 @@ use Psr\Http\Message\RequestInterface;
 use Pimple\Container;
 // From 'charcoal-admin'
 use Charcoal\Admin\AdminTemplate;
+use Charcoal\Admin\Support\Sanitizer;
 use Charcoal\Admin\Ui\DashboardContainerInterface;
 use Charcoal\Admin\Ui\DashboardContainerTrait;
 use Charcoal\Admin\Ui\ObjectContainerInterface;
@@ -85,7 +86,7 @@ class CreateTemplate extends AdminTemplate implements
                 if (isset($metadata['admin']['forms'])) {
                     $adminMetadata = $metadata['admin'];
 
-                    $formIdent = htmlspecialchars(trim(($_GET['form_ident'] ?? '')), ENT_QUOTES, 'UTF-8');
+                    $formIdent = Sanitizer::sanitizeGetParam('form_ident');
                     if (!$formIdent) {
                         if (isset($adminMetadata['defaultForm'])) {
                             $fomIdent = $adminMetadata['defaultForm'];
@@ -115,10 +116,11 @@ class CreateTemplate extends AdminTemplate implements
                         ? $translator->translation($metadata['labels']['singular_name'])
                         : null);
 
-                    if (!empty($_GET['clone_id'])) {
+                    $cloneId = Sanitizer::sanitizeGetParam('clone_id');
+                    if (!empty($cloneId)) {
                         $title = sprintf(
                             $translator->translation('Create: {{ objType }} from ID ""%s""'),
-                            $_GET['clone_id']
+                            $cloneId
                         );
                     } else {
                         $title = $translator->translation('Create: {{ objType }}');

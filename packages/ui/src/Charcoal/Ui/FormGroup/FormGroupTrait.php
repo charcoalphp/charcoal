@@ -216,8 +216,8 @@ trait FormGroupTrait
      */
     public function inputs(?callable $inputCallback = null)
     {
-        $groups = $this->groups;
-        uasort($groups, [ $this, 'sortItemsByPriority' ]);
+        $inputs = $this->inputs;
+        uasort($inputs, [ $this, 'sortItemsByPriority' ]);
 
         $inputCallback ??= $this->inputCallback;
         foreach ($inputs as $input) {

@@ -18,7 +18,7 @@ class ImagemagickCompressionEffect extends AbstractCompressionEffect
             $this->setData($data);
         }
 
-        $cmd = sprintf('-quality %s%', $this->quality());
+        $cmd = sprintf('-quality %s%%', $this->quality());
         $this->image()->applyCmd($cmd);
         return $this;
     }

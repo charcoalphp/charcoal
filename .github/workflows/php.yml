@@ -41,6 +41,29 @@ jobs:
     outputs:
       matrix: ${{ steps.output_data.outputs.matrix }}
 
+  phpstan:
+    # Runs once against the merged tree instead of per-package/per-PHP-version
+    # (unlike the `test` job's matrix), since a full analysis pass is too slow
+    # to duplicate across every package and PHP version combination.
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.5
+          coverage: none
+          tools: composer, phpstan
+
+      - name: Install Composer dependencies
+        uses: ramsey/composer-install@v2
+
+      - name: Run PHPStan
+        run: vendor/bin/phpstan analyse packages/*/src packages/*/tests --memory-limit=1G
+
   test:
     needs: provide_packages_json
 
@@ -66,7 +89,7 @@ jobs:
           php-version: ${{ matrix.php-versions }}
           extensions: json, mbstring, pdo, redis
           coverage: xdebug
-          tools: composer, phpcs, phpstan, phpunit
+          tools: composer, phpcs, phpunit
 
       - name: Validate composer.json and composer.lock
         run: composer validate --no-check-all

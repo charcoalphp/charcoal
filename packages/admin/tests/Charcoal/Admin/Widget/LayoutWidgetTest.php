@@ -14,7 +14,14 @@ use Charcoal\Tests\AbstractTestCase;
  */
 class LayoutWidgetTest extends AbstractTestCase
 {
-    public $obj;
+    /**
+     * @var LayoutWidget
+     */
+    protected $obj;
+
+    /**
+     * @return void
+     */
     public function setUp(): void
     {
         $logger = new NullLogger();

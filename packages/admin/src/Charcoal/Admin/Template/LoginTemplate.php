@@ -23,6 +23,8 @@ class LoginTemplate extends AdminTemplate
     #[\Override]
     public function init(RequestInterface $request): bool
     {
+        $this->setCsrfAttributesFromRequest($request);
+
         $translator = $this->translator();
 
         $notice = $request->getParam('notice');

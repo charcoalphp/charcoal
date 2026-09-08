@@ -18,7 +18,14 @@ use Charcoal\Tests\Admin\ContainerProvider;
  */
 class FormPropertyWidgetTest extends AbstractTestCase
 {
-    public $obj;
+    /**
+     * @var FormPropertyWidget
+     */
+    protected $obj;
+
+    /**
+     * @return void
+     */
     public function setUp(): void
     {
         $container = new Container();

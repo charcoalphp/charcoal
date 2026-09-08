@@ -166,6 +166,13 @@ class FilesystemServiceProvider implements ServiceProviderInterface
             ],
             'region'      => $config['region'],
             'version'     => $config['version'],
+            /**
+             * Silence the AWS SDK's PHP-version deprecation notice, which it emits
+             * as a PHP deprecation warning on every client construction under 8.1.
+             *
+             * @see https://aws.amazon.com/blogs/developer/announcing-the-end-of-support-for-php-runtimes-8-0-x-and-below-in-the-aws-sdk-for-php/
+             */
+            'suppress_php_deprecation_warning' => true,
         ]);
 
         $permissions = isset($config['public']) && !$config['public'] ? null : [

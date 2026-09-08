@@ -95,7 +95,13 @@ class StatusDisplay extends AbstractPropertyDisplay implements ViewableInterface
         $operator = null;
 
         if (is_array($condition)) {
-            extract($condition);
+            if (array_key_exists('value', $condition)) {
+                $value = $condition['value'];
+            }
+
+            if (array_key_exists('operator', $condition)) {
+                $operator = $condition['operator'];
+            }
         }
 
         if (is_string($operator) && !in_array($operator, static::SUPPORTED_OPERATOR)) {

@@ -23,7 +23,7 @@ class ValidatableClass implements ValidatableInterface
      */
     public function createValidator(?array $data = null): \Charcoal\Tests\Mock\ValidatorClass
     {
-        $v = new ValidatorClass();
+        $v = new ValidatorClass($this);
         if ($data !== null) {
             $v->setData($data);
         }

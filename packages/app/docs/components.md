@@ -516,10 +516,31 @@ For example
 
 There are 2 middlewares provided by default in the `app` module:
 
-* `\Charcoal\App\Middleware\CacheMiddleware`
-* `\Charcoal\App\Middleware\Cache\IpMiddleware`
+* `\Charcoal\App\Middleware\IpMiddleware`
+* `\Charcoal\App\Middleware\CsrfMiddleware`
 
-Other Charcoal modules may provide more middlewares (for example, language detection in [charcoal/translator]).
+`CsrfMiddleware` wraps [slim/csrf]'s `Guard` and validates a token pair on
+state-changing requests, scoped by an `included_path` / `excluded_path` list
+of regular expressions so it only touches the session (and cacheability) for
+matching routes. An empty `included_path` means every route is protected —
+the middleware fails closed by default rather than being silently inert
+until configured. Token issuance for the page that renders a protected form
+is a separate, pull-based concern: fetch the shared `csrf/guard` container
+service and call `validateStorage()` then `generateToken()`.
+
+```json
+{
+    "middlewares": {
+        "charcoal/app/middleware/csrf": {
+            "active": true,
+            "included_path": ["^/api/v1/form/"]
+        }
+    }
+}
+```
+
+Other Charcoal modules may provide more middlewares (for example, language
+detection in [charcoal/translator], or caching in [charcoal/cache]).
 
 ## Charcoal Binary
 
@@ -584,3 +605,4 @@ Available methods are:
 [climate]:               https://packagist.org/packages/league/climate
 [fastroute]:             https://packagist.org/packages/nikic/fast-route
 [slim]:                  https://packagist.org/packages/slim/slim
+[slim/csrf]:             https://packagist.org/packages/slim/csrf

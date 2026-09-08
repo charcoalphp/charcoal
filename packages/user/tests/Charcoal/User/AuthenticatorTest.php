@@ -2,6 +2,7 @@
 
 namespace Charcoal\Tests\User;
 
+use ReflectionMethod;
 // From Pimple
 use Pimple\Container;
 
@@ -63,7 +64,7 @@ class AuthenticatorTest extends AbstractTestCase
      */
     public function createUser(Authenticator $authenticator)
     {
-        $factoryMethod = new ReflectionMethod(\AUTHENTICATOR, 'userFactory');
+        $factoryMethod = new ReflectionMethod(Authenticator::class, 'userFactory');
 
         return $factoryMethod->invoke($authenticator)->create(User::class);
     }
@@ -109,7 +110,7 @@ class AuthenticatorTest extends AbstractTestCase
     public function testUpdateSession()
     {
         $obj = $this->obj;
-    
+
         $sessionKey = $obj::sessionKey();
         $this->obj['id'] = 'foo';
         $this->obj->saveToSession();
@@ -124,9 +125,9 @@ class AuthenticatorTest extends AbstractTestCase
     {
         $ret = $this->obj->resetPassword('foo');
         $this->assertSame($ret, $this->obj);
-    
+
         $this->obj['id'] = 'bar';
-    
+
         $this->expectException(InvalidArgumentException::class);
         $this->obj->resetPassword(false);
     }

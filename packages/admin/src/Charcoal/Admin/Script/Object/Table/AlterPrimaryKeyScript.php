@@ -882,7 +882,9 @@ class AlterPrimaryKeyScript extends AdminScript
         if ($arguments === null) {
             $validateFieldName = (fn($response): bool => is_string($response) && $response !== '');
 
-            $validateCallback = (fn($response): bool => is_string($response) && (strpos($callable, '::') > 1 || function_exists($response)));
+            $validateCallback = function ($response) {
+                return is_string($response) && (strpos($response, '::') > 1 || function_exists($response));
+            };
 
             $validateModel = function ($response): bool {
                 if ((string)$response === '') {

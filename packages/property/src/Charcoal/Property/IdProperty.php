@@ -249,6 +249,7 @@ class IdProperty extends AbstractProperty
      * - For "uuid" id, it is a 36-char string.
      *
      * @see StorablePropertyTrait::sqlType()
+     * @throws DomainException If the mode is invalid.
      * @return string The SQL type.
      */
     public function sqlType(): ?string
@@ -269,7 +270,17 @@ class IdProperty extends AbstractProperty
         } elseif ($mode === self::MODE_CUSTOM) {
             return 'VARCHAR(255)';
         }
-        return null;
+
+        throw new DomainException(sprintf(
+            'Invalid mode "%s"; must be one of "%s"',
+            $mode,
+            implode('", "', [
+                self::MODE_AUTO_INCREMENT,
+                self::MODE_CUSTOM,
+                self::MODE_UNIQID,
+                self::MODE_UUID,
+            ])
+        ));
     }
 
     /**

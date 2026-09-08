@@ -1,0 +1,13 @@
+includes:
+	- phpstan-baseline.neon
+
+parameters:
+	level: 0
+
+	# These fixtures are loaded via a closure bound to a Config object (`$this` refers
+	# to the config being populated), which static analysis has no way to know about —
+	# not conventional autoloaded PHP source. Includes intentionally invalid PHP used
+	# as a loader fixture, whose parse errors are non-ignorable.
+	excludePaths:
+		analyseAndScan:
+			- packages/config/tests/Charcoal/Config/Fixture

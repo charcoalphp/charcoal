@@ -255,7 +255,7 @@ class ColorProperty extends AbstractProperty
      */
     private function parseRgba(string $val): array
     {
-        $match = preg_match('/rgba\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\(\d+)\s*\)/i', $val, $m);
+        $match = preg_match('/rgba\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d*\.?\d+)\s*\)/i', $val, $m);
         if (!$match) {
             throw new InvalidArgumentException(
                 'String does not match rgba() format to be parsed by parseRgba()'

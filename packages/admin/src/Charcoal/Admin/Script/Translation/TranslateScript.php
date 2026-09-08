@@ -5,6 +5,8 @@ namespace Charcoal\Admin\Script\Translation;
 // From PSR-7
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
+// From 'charcoal-app'
+use Charcoal\App\App;
 // From 'charcoal-admin'
 use Charcoal\Admin\AdminScript;
 
@@ -169,7 +171,7 @@ class TranslateScript extends AdminScript
      */
     public function base(): string
     {
-        return realpath($this->app()->config()->get('base_path') . DIRECTORY_SEPARATOR . '../../../') . '/';
+        return realpath(App::instance()->config()->get('base_path') . DIRECTORY_SEPARATOR . '../../../') . '/';
     }
 
     /**
@@ -338,7 +340,7 @@ class TranslateScript extends AdminScript
      */
     public function oppositeLanguages(): array
     {
-        $this->app()->config();
+        $cfg = App::instance()->config();
         $locales = $this->locales();
         $languages = $locales['languages'];
 
@@ -365,7 +367,7 @@ class TranslateScript extends AdminScript
             return $this->locales;
         }
 
-        $cfg = $this->app()->config();
+        $cfg = App::instance()->config();
         $locales = ($cfg['locales'] ?? []);
         $languages = ($locales['languages'] ?? []);
         $file = ($locales['file'] ?? $this->argOrInput('output'));
