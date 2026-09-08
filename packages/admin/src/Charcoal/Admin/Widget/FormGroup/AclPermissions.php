@@ -15,6 +15,7 @@ use Charcoal\Loader\CollectionLoader;
 // From 'charcoal-ui'
 use Charcoal\Ui\FormGroup\FormGroupInterface;
 use Charcoal\Ui\FormGroup\FormGroupTrait;
+use Charcoal\Ui\PrioritizableInterface;
 // From 'charcoal-user'
 use Charcoal\User\Acl\Manager as AclManager;
 // From 'charcoal-admin'
@@ -256,5 +257,25 @@ class AclPermissions extends AdminWidget implements
         }
 
         return $ret;
+    }
+
+    /**
+     * Comparison function used by {@see uasort()}.
+     *
+     * @param  PrioritizableInterface $a Sortable entity A.
+     * @param  PrioritizableInterface $b Sortable entity B.
+     * @return integer Sorting value: -1 or 1.
+     */
+    protected function sortItemsByPriority(
+        PrioritizableInterface $a,
+        PrioritizableInterface $b
+    ) {
+        $priorityA = $a->priority();
+        $priorityB = $b->priority();
+
+        if ($priorityA === $priorityB) {
+            return 0;
+        }
+        return ($priorityA < $priorityB) ? (-1) : 1;
     }
 }

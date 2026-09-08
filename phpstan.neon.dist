@@ -1,4 +1,9 @@
+includes:
+	- phpstan-baseline.neon
+
 parameters:
+	level: 0
+
 	# Intentionally invalid PHP used as a loader fixture — parse errors are non-ignorable.
 	excludePaths:
 		analyseAndScan:

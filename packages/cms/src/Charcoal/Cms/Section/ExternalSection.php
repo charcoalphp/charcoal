@@ -15,7 +15,7 @@ class ExternalSection extends AbstractSection
     /**
      * @var Translation|string|null
      */
-    private $externalUrl;
+    protected $externalUrl;
 
     /**
      * @param  mixed $url The external URL (localized).

@@ -8,6 +8,7 @@ use Charcoal\Model\ModelInterface;
 // From 'charcoal-ui'
 use Charcoal\Ui\FormGroup\FormGroupInterface;
 use Charcoal\Ui\FormGroup\FormGroupTrait;
+use Charcoal\Ui\PrioritizableInterface;
 // From 'charcoal-admin'
 use Charcoal\Admin\AdminWidget;
 
@@ -344,5 +345,25 @@ class MapWidget extends AdminWidget implements FormGroupInterface
         }
 
         return $this->obj;
+    }
+
+    /**
+     * Comparison function used by {@see uasort()}.
+     *
+     * @param  PrioritizableInterface $a Sortable entity A.
+     * @param  PrioritizableInterface $b Sortable entity B.
+     * @return integer Sorting value: -1 or 1.
+     */
+    protected function sortItemsByPriority(
+        PrioritizableInterface $a,
+        PrioritizableInterface $b
+    ) {
+        $priorityA = $a->priority();
+        $priorityB = $b->priority();
+
+        if ($priorityA === $priorityB) {
+            return 0;
+        }
+        return ($priorityA < $priorityB) ? (-1) : 1;
     }
 }

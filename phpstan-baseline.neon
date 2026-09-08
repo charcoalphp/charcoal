@@ -1,0 +1,505 @@
+parameters:
+	ignoreErrors:
+		-
+			message: '#^Access to an undefined property Charcoal\\Admin\\Action\\ElfinderConnectorAction\:\:\$connector\.$#'
+			identifier: property.notFound
+			count: 1
+			path: packages/admin/src/Charcoal/Admin/Action/ElfinderConnectorAction.php
+
+		-
+			message: '#^Access to an undefined static property static\(Charcoal\\Admin\\Action\\Object\\AbstractSaveAction\)\:\:\$labelCache\.$#'
+			identifier: staticProperty.notFound
+			count: 2
+			path: packages/admin/src/Charcoal/Admin/Action/Object/AbstractSaveAction.php
+
+		-
+			message: '#^Access to an undefined static property static\(Charcoal\\Admin\\Action\\Object\\ReorderAction\)\:\:\$labelCache\.$#'
+			identifier: staticProperty.notFound
+			count: 2
+			path: packages/admin/src/Charcoal/Admin/Action/Object/ReorderAction.php
+
+		-
+			message: '#^Access to an undefined static property static\(Charcoal\\Admin\\Action\\Object\\RevertRevisionAction\)\:\:\$labelCache\.$#'
+			identifier: staticProperty.notFound
+			count: 2
+			path: packages/admin/src/Charcoal/Admin/Action/Object/RevertRevisionAction.php
+
+		-
+			message: '#^Access to an undefined property Charcoal\\Admin\\AdminAction\:\:\$permissions\.$#'
+			identifier: property.notFound
+			count: 1
+			path: packages/admin/src/Charcoal/Admin/AdminAction.php
+
+		-
+			message: '#^Access to an undefined property Charcoal\\Admin\\AdminTemplate\:\:\$permissions\.$#'
+			identifier: property.notFound
+			count: 1
+			path: packages/admin/src/Charcoal/Admin/AdminTemplate.php
+
+		-
+			message: '#^Access to an undefined property Charcoal\\Admin\\AdminWidget\:\:\$permissions\.$#'
+			identifier: property.notFound
+			count: 1
+			path: packages/admin/src/Charcoal/Admin/AdminWidget.php
+
+		-
+			message: '#^Access to an undefined property Charcoal\\Admin\\Docs\\Template\\Object\\DocTemplate\:\:\$headerMenu\.$#'
+			identifier: property.notFound
+			count: 1
+			path: packages/admin/src/Charcoal/Admin/Docs/Template/Object/DocTemplate.php
+
+		-
+			message: '#^Access to an undefined static property static\(Charcoal\\Admin\\Docs\\Template\\Object\\DocTemplate\)\:\:\$labelCache\.$#'
+			identifier: staticProperty.notFound
+			count: 2
+			path: packages/admin/src/Charcoal/Admin/Docs/Template/Object/DocTemplate.php
+
+		-
+			message: '#^Call to an undefined method Charcoal\\Admin\\Docs\\Template\\Object\\DocTemplate\:\:createHeaderMenu\(\)\.$#'
+			identifier: method.notFound
+			count: 2
+			path: packages/admin/src/Charcoal/Admin/Docs/Template/Object/DocTemplate.php
+
+		-
+			message: '#^Access to an undefined property Charcoal\\Admin\\Property\\AbstractProperty\:\:\$inputName\.$#'
+			identifier: property.notFound
+			count: 1
+			path: packages/admin/src/Charcoal/Admin/Property/AbstractProperty.php
+
+		-
+			message: '#^Class Charcoal\\Admin\\Property\\ViewInterface not found\.$#'
+			identifier: class.notFound
+			count: 1
+			path: packages/admin/src/Charcoal/Admin/Property/AbstractProperty.php
+
+		-
+			message: '#^Undefined variable\: \$appConfig$#'
+			identifier: variable.undefined
+			count: 1
+			path: packages/admin/src/Charcoal/Admin/Property/Input/MapWidgetInput.php
+
+		-
+			message: '#^Access to constant DEFAULT_FORM_WIDGET on an unknown class Charcoal\\Admin\\Property\\Input\\Selectize\\SelectizeInput\.$#'
+			identifier: class.notFound
+			count: 1
+			path: packages/admin/src/Charcoal/Admin/Property/Input/Selectize/TagsInput.php
+
+		-
+			message: '#^Access to an undefined property Charcoal\\Admin\\Script\\Notification\\AbstractNotificationScript\:\:\$revisionFactory\.$#'
+			identifier: property.notFound
+			count: 2
+			path: packages/admin/src/Charcoal/Admin/Script/Notification/AbstractNotificationScript.php
+
+		-
+			message: '#^Call to an undefined method Charcoal\\Admin\\Script\\Notification\\ProcessMinuteScript\:\:starDate\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: packages/admin/src/Charcoal/Admin/Script/Notification/ProcessMinuteScript.php
+
+		-
+			message: '#^Call to an undefined method Charcoal\\Admin\\Script\\Object\\Table\\AlterPrimaryKeyScript\:\:setter\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: packages/admin/src/Charcoal/Admin/Script/Object/Table/AlterPrimaryKeyScript.php
+
+		-
+			message: '#^Undefined variable\: \$callable$#'
+			identifier: variable.undefined
+			count: 1
+			path: packages/admin/src/Charcoal/Admin/Script/Object/Table/AlterPrimaryKeyScript.php
+
+		-
+			message: '#^Call to an undefined method Charcoal\\Admin\\Script\\ObjectsScript\:\:hasPermissions\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: packages/admin/src/Charcoal/Admin/Script/ObjectsScript.php
+
+		-
+			message: '#^Instantiated class Goutte\\Client not found\.$#'
+			identifier: class.notFound
+			count: 1
+			path: packages/admin/src/Charcoal/Admin/Script/Tools/CheckLinksScript.php
+
+		-
+			message: '#^Access to an undefined property Charcoal\\Admin\\Script\\Tools\\CopyAssetsScript\:\:\$basePath\.$#'
+			identifier: property.notFound
+			count: 2
+			path: packages/admin/src/Charcoal/Admin/Script/Tools/CopyAssetsScript.php
+
+		-
+			message: '#^Function realdir not found\.$#'
+			identifier: function.notFound
+			count: 2
+			path: packages/admin/src/Charcoal/Admin/Script/Tools/StaticWebsite/CrawlScript.php
+
+		-
+			message: '#^Instantiated class Goutte\\Client not found\.$#'
+			identifier: class.notFound
+			count: 1
+			path: packages/admin/src/Charcoal/Admin/Script/Tools/StaticWebsite/CrawlScript.php
+
+		-
+			message: '#^Call to an undefined method Charcoal\\Admin\\Script\\Translation\\TranslateScript\:\:app\(\)\.$#'
+			identifier: method.notFound
+			count: 3
+			path: packages/admin/src/Charcoal/Admin/Script/Translation/TranslateScript.php
+
+		-
+			message: '#^Access to an undefined property Charcoal\\Admin\\Script\\User\\CreateScript\:\:\$permissions\.$#'
+			identifier: property.notFound
+			count: 1
+			path: packages/admin/src/Charcoal/Admin/Script/User/CreateScript.php
+
+		-
+			message: '#^Access to an undefined property Charcoal\\Admin\\Script\\User\\ResetPasswordScript\:\:\$permissions\.$#'
+			identifier: property.notFound
+			count: 1
+			path: packages/admin/src/Charcoal/Admin/Script/User/ResetPasswordScript.php
+
+		-
+			message: '#^Access to an undefined property Charcoal\\Admin\\Service\\Exporter\:\:\$logger\.$#'
+			identifier: property.notFound
+			count: 1
+			path: packages/admin/src/Charcoal/Admin/Service/Exporter.php
+
+		-
+			message: '#^Call to an undefined method \$this\(Charcoal\\Admin\\Service\\SelectizeRenderer\)&Charcoal\\Cms\\TemplateableInterface\:\:property\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: packages/admin/src/Charcoal/Admin/Service/SelectizeRenderer.php
+
+		-
+			message: '#^Call to an undefined method Charcoal\\Admin\\Service\\SelectizeRenderer\:\:id\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: packages/admin/src/Charcoal/Admin/Service/SelectizeRenderer.php
+
+		-
+			message: '#^Call to an undefined method Charcoal\\Admin\\Service\\SelectizeRenderer\:\:metadataLoader\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: packages/admin/src/Charcoal/Admin/Service/SelectizeRenderer.php
+
+		-
+			message: '#^Call to an undefined method Charcoal\\Admin\\Service\\SelectizeRenderer\:\:objType\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: packages/admin/src/Charcoal/Admin/Service/SelectizeRenderer.php
+
+		-
+			message: '#^Call to an undefined method Charcoal\\Admin\\Service\\SelectizeRenderer\:\:property\(\)\.$#'
+			identifier: method.notFound
+			count: 4
+			path: packages/admin/src/Charcoal/Admin/Service/SelectizeRenderer.php
+
+		-
+			message: '#^Call to an undefined method Charcoal\\Admin\\Service\\SelectizeRenderer\:\:propertyValue\(\)\.$#'
+			identifier: method.notFound
+			count: 2
+			path: packages/admin/src/Charcoal/Admin/Service/SelectizeRenderer.php
+
+		-
+			message: '#^Undefined variable\: \$container$#'
+			identifier: variable.undefined
+			count: 1
+			path: packages/admin/src/Charcoal/Admin/ServiceProvider/AclServiceProvider.php
+
+		-
+			message: '#^Call to function unset\(\) contains undefined variable \$data\.$#'
+			identifier: unset.variable
+			count: 1
+			path: packages/admin/src/Charcoal/Admin/Template/HomeTemplate.php
+
+		-
+			message: '#^Access to an undefined static property static\(Charcoal\\Admin\\Template\\Object\\CreateTemplate\)\:\:\$labelCache\.$#'
+			identifier: staticProperty.notFound
+			count: 2
+			path: packages/admin/src/Charcoal/Admin/Template/Object/CreateTemplate.php
+
+		-
+			message: '#^Access to an undefined static property static\(Charcoal\\Admin\\Template\\Object\\EditTemplate\)\:\:\$labelCache\.$#'
+			identifier: staticProperty.notFound
+			count: 2
+			path: packages/admin/src/Charcoal/Admin/Template/Object/EditTemplate.php
+
+		-
+			message: '#^Access to an undefined property Charcoal\\Admin\\Template\\System\\Object\\InfoTemplate\:\:\$collectionLoader\.$#'
+			identifier: property.notFound
+			count: 3
+			path: packages/admin/src/Charcoal/Admin/Template/System/Object/InfoTemplate.php
+
+		-
+			message: '#^Access to an undefined property Charcoal\\Admin\\Template\\System\\Object\\InfoTemplate\:\:\$metadataLoader\.$#'
+			identifier: property.notFound
+			count: 4
+			path: packages/admin/src/Charcoal/Admin/Template/System/Object/InfoTemplate.php
+
+		-
+			message: '#^Access to an undefined static property static\(Charcoal\\Admin\\Template\\System\\Object\\InfoTemplate\)\:\:\$labelCache\.$#'
+			identifier: staticProperty.notFound
+			count: 2
+			path: packages/admin/src/Charcoal/Admin/Template/System/Object/InfoTemplate.php
+
+		-
+			message: '#^Access to an undefined property Charcoal\\Admin\\Widget\\DocWidget\:\:\$nextUrl\.$#'
+			identifier: property.notFound
+			count: 1
+			path: packages/admin/src/Charcoal/Admin/Widget/DocWidget.php
+
+		-
+			message: '#^Access to an undefined static property static\(Charcoal\\Admin\\Widget\\DocWidget\)\:\:\$labelCache\.$#'
+			identifier: staticProperty.notFound
+			count: 2
+			path: packages/admin/src/Charcoal/Admin/Widget/DocWidget.php
+
+		-
+			message: '#^Undefined variable\: \$obj$#'
+			identifier: variable.undefined
+			count: 1
+			path: packages/admin/src/Charcoal/Admin/Widget/DocWidget.php
+
+		-
+			message: '#^Access to an undefined property Charcoal\\Admin\\Widget\\FormGroup\\AclPermissions\:\:\$groups\.$#'
+			identifier: property.notFound
+			count: 1
+			path: packages/admin/src/Charcoal/Admin/Widget/FormGroup/AclPermissions.php
+
+		-
+			message: '#^Undefined variable\: \$inputs$#'
+			identifier: variable.undefined
+			count: 1
+			path: packages/admin/src/Charcoal/Admin/Widget/FormGroup/AclPermissions.php
+
+		-
+			message: '#^Access to an undefined property Charcoal\\Admin\\Widget\\FormGroupWidget\:\:\$groups\.$#'
+			identifier: property.notFound
+			count: 1
+			path: packages/admin/src/Charcoal/Admin/Widget/FormGroupWidget.php
+
+		-
+			message: '#^Undefined variable\: \$inputs$#'
+			identifier: variable.undefined
+			count: 1
+			path: packages/admin/src/Charcoal/Admin/Widget/FormGroupWidget.php
+
+		-
+			message: '#^Undefined variable\: \$action$#'
+			identifier: variable.undefined
+			count: 1
+			path: packages/admin/src/Charcoal/Admin/Widget/FormSidebarWidget.php
+
+		-
+			message: '#^Undefined variable\: \$action$#'
+			identifier: variable.undefined
+			count: 1
+			path: packages/admin/src/Charcoal/Admin/Widget/Graph/AbstractGraphWidget.php
+
+		-
+			message: '#^Access to an undefined property Charcoal\\Admin\\Widget\\MapWidget\:\:\$groups\.$#'
+			identifier: property.notFound
+			count: 1
+			path: packages/admin/src/Charcoal/Admin/Widget/MapWidget.php
+
+		-
+			message: '#^Undefined variable\: \$inputs$#'
+			identifier: variable.undefined
+			count: 1
+			path: packages/admin/src/Charcoal/Admin/Widget/MapWidget.php
+
+		-
+			message: '#^Access to an undefined property Charcoal\\Admin\\Widget\\ObjectFormWidget\:\:\$nextUrl\.$#'
+			identifier: property.notFound
+			count: 1
+			path: packages/admin/src/Charcoal/Admin/Widget/ObjectFormWidget.php
+
+		-
+			message: '#^Access to an undefined static property static\(Charcoal\\Admin\\Widget\\ObjectFormWidget\)\:\:\$labelCache\.$#'
+			identifier: staticProperty.notFound
+			count: 2
+			path: packages/admin/src/Charcoal/Admin/Widget/ObjectFormWidget.php
+
+		-
+			message: '#^Access to an undefined property Charcoal\\Admin\\Widget\\SecondaryMenuWidget\:\:\$isCurrent\.$#'
+			identifier: property.notFound
+			count: 2
+			path: packages/admin/src/Charcoal/Admin/Widget/SecondaryMenuWidget.php
+
+		-
+			message: '#^Undefined variable\: \$action$#'
+			identifier: variable.undefined
+			count: 1
+			path: packages/admin/src/Charcoal/Admin/Widget/SecondaryMenuWidget.php
+
+		-
+			message: '#^Undefined variable\: \$action$#'
+			identifier: variable.undefined
+			count: 1
+			path: packages/admin/src/Charcoal/Admin/Widget/TableWidget.php
+
+		-
+			message: '#^Access to an undefined property Charcoal\\Admin\\Widget\\AttachmentWidget\:\:\$numPerPage\.$#'
+			identifier: property.notFound
+			count: 1
+			path: packages/attachment/src/Charcoal/Admin/Widget/AttachmentWidget.php
+
+		-
+			message: '#^Access to an undefined property Charcoal\\Admin\\Widget\\AttachmentWidget\:\:\$page\.$#'
+			identifier: property.notFound
+			count: 1
+			path: packages/attachment/src/Charcoal/Admin/Widget/AttachmentWidget.php
+
+		-
+			message: '#^Access to an undefined static property static\(Charcoal\\Admin\\Widget\\AttachmentWidget\)\:\:\$labelCache\.$#'
+			identifier: staticProperty.notFound
+			count: 2
+			path: packages/attachment/src/Charcoal/Admin/Widget/AttachmentWidget.php
+
+		-
+			message: '#^Access to an undefined static property static\(Charcoal\\Admin\\Widget\\FormGroup\\AttachmentFormGroup\)\:\:\$labelCache\.$#'
+			identifier: staticProperty.notFound
+			count: 2
+			path: packages/attachment/src/Charcoal/Admin/Widget/FormGroup/AttachmentFormGroup.php
+
+		-
+			message: '#^Call to sprintf contains 0 placeholders, 1 value given\.$#'
+			identifier: argument.sprintf
+			count: 1
+			path: packages/attachment/src/Charcoal/Attachment/Object/Attachment.php
+
+		-
+			message: '#^Call to an undefined method Charcoal\\Attachment\\Script\\CleanupScript\:\:collection\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: packages/attachment/src/Charcoal/Attachment/Script/CleanupScript.php
+
+		-
+			message: '#^Call to sprintf contains 0 placeholders, 1 value given\.$#'
+			identifier: argument.sprintf
+			count: 1
+			path: packages/attachment/src/Charcoal/Attachment/Script/CleanupScript.php
+
+		-
+			message: '#^Undefined variable\: \$binds$#'
+			identifier: variable.undefined
+			count: 1
+			path: packages/attachment/src/Charcoal/Attachment/Script/CleanupScript.php
+
+		-
+			message: '#^Undefined variable\: \$inputs$#'
+			identifier: variable.undefined
+			count: 1
+			path: packages/cms/src/Charcoal/Admin/Widget/FormGroup/GroupAttachmentFormGroup.php
+
+		-
+			message: '#^Undefined variable\: \$inputs$#'
+			identifier: variable.undefined
+			count: 1
+			path: packages/cms/src/Charcoal/Admin/Widget/FormGroup/MultiGroupFormGroup.php
+
+		-
+			message: '#^Access to an undefined static property static\(Charcoal\\Admin\\Widget\\MultiGroupWidget\)\:\:\$labelCache\.$#'
+			identifier: staticProperty.notFound
+			count: 2
+			path: packages/cms/src/Charcoal/Admin/Widget/MultiGroupWidget.php
+
+		-
+			message: '#^Call to an undefined method Charcoal\\Cms\\AbstractNews\:\:slug\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: packages/cms/src/Charcoal/Cms/AbstractNews.php
+
+		-
+			message: '#^Result of method Charcoal\\Cms\\AbstractTag\:\:loadCategoryItems\(\) \(void\) is used\.$#'
+			identifier: method.void
+			count: 1
+			path: packages/cms/src/Charcoal/Cms/AbstractTag.php
+
+		-
+			message: '#^Instantiated class Charcoal\\Model\\InvalidArgumentException not found\.$#'
+			identifier: class.notFound
+			count: 1
+			path: packages/core/src/Charcoal/Model/AbstractModel.php
+
+		-
+			message: '#^Unsafe usage of new static\(\)\.$#'
+			identifier: new.static
+			count: 1
+			path: packages/core/src/Charcoal/Source/Filter.php
+
+		-
+			message: '#^Call to sprintf contains an invalid placeholder\.$#'
+			identifier: argument.sprintf
+			count: 1
+			path: packages/image/src/Charcoal/Image/Imagemagick/Effect/ImagemagickCompressionEffect.php
+
+		-
+			message: '#^Regex pattern is invalid\: Compilation failed\: unmatched closing parenthesis at offset 50 in pattern\: /rgba\\s\*\\\(\\s\*\(\\d\+\)\\s\*,\\s\*\(\\d\+\)\\s\*,\\s\*\(\\d\+\)\\s\*\\\(\\d\+\)\\s\*\\\)/i$#'
+			identifier: regexp.pattern
+			count: 1
+			path: packages/property/src/Charcoal/Property/ColorProperty.php
+
+		-
+			message: '#^Method Charcoal\\Property\\IdProperty\:\:sqlType\(\) should return string but return statement is missing\.$#'
+			identifier: return.missing
+			count: 1
+			path: packages/property/src/Charcoal/Property/IdProperty.php
+
+		-
+			message: '#^Call to an undefined method Charcoal\\Property\\MultiObjectProperty\:\:source\(\)\.$#'
+			identifier: method.notFound
+			count: 2
+			path: packages/property/src/Charcoal/Property/MultiObjectProperty.php
+
+		-
+			message: '#^Access to an undefined property Charcoal\\Ui\\AbstractUiItem\:\:\$permissions\.$#'
+			identifier: property.notFound
+			count: 1
+			path: packages/ui/src/Charcoal/Ui/AbstractUiItem.php
+
+		-
+			message: '#^Access to an undefined property Charcoal\\Ui\\FormGroup\\AbstractFormGroup\:\:\$groups\.$#'
+			identifier: property.notFound
+			count: 1
+			path: packages/ui/src/Charcoal/Ui/FormGroup/AbstractFormGroup.php
+
+		-
+			message: '#^Call to an undefined method Charcoal\\Ui\\FormGroup\\AbstractFormGroup\:\:widgetId\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: packages/ui/src/Charcoal/Ui/FormGroup/AbstractFormGroup.php
+
+		-
+			message: '#^Undefined variable\: \$inputs$#'
+			identifier: variable.undefined
+			count: 1
+			path: packages/ui/src/Charcoal/Ui/FormGroup/AbstractFormGroup.php
+
+		-
+			message: '#^Access to an undefined property Charcoal\\Ui\\MenuItem\\AbstractMenuItem\:\:\$menuItemBuilder\.$#'
+			identifier: property.notFound
+			count: 2
+			path: packages/ui/src/Charcoal/Ui/MenuItem/AbstractMenuItem.php
+
+		-
+			message: '#^Undefined variable\: \$item$#'
+			identifier: variable.undefined
+			count: 1
+			path: packages/ui/src/Charcoal/Ui/MenuItem/AbstractMenuItem.php
+
+		-
+			message: '#^Access to an undefined property Charcoal\\View\\Twig\\DebugHelpers\:\:\$debug\.$#'
+			identifier: property.notFound
+			count: 1
+			path: packages/view/src/Charcoal/View/Twig/DebugHelpers.php
+
+		-
+			message: '#^Access to an undefined property Charcoal\\View\\Twig\\TwigEngine\:\:\$helpers\.$#'
+			identifier: property.notFound
+			count: 3
+			path: packages/view/src/Charcoal/View/Twig/TwigEngine.php
+
+		-
+			message: '#^Access to an undefined property Charcoal\\View\\Twig\\UrlHelpers\:\:\$baseUrl\.$#'
+			identifier: property.notFound
+			count: 2
+			path: packages/view/src/Charcoal/View/Twig/UrlHelpers.php

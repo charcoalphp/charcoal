@@ -25,7 +25,6 @@ class PasswordProperty extends StringProperty
      *
      * If the hash is corruped or the algorithm is not recognized, the value will be rehashed.
      *
-     * @todo   Implement proper hashing/rehashing/validation.
      * @param  mixed $val The value, at time of saving.
      * @return string
      */
