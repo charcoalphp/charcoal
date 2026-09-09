@@ -25,5 +25,5 @@ interface EffectInterface
      * @param array $data The effect data, if available.
      * @return EffectInterface
      */
-    public function process(array $data = null);
+    public function process(?array $data = null);
 }

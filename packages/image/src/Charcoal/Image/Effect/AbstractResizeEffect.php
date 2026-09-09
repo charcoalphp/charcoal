@@ -369,7 +369,7 @@ abstract class AbstractResizeEffect extends AbstractEffect
      * @throws Exception If the effect data is invalid for its resize mode.
      * @return self
      */
-    public function process(array $data = null)
+    public function process(?array $data = null)
     {
         if ($data !== null) {
             $this->setData($data);

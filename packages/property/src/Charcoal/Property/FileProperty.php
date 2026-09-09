@@ -1407,7 +1407,7 @@ class FileProperty extends AbstractProperty
      * @return boolean Returns TRUE if the MIME type is acceptable.
      *     Otherwise, returns FALSE.
      */
-    protected function isAcceptedMimeType($type, array $accepted = null)
+    protected function isAcceptedMimeType($type, ?array $accepted = null)
     {
         if ($accepted === null) {
             $accepted = $this['acceptedMimetypes'];
@@ -1592,7 +1592,7 @@ class FileProperty extends AbstractProperty
      * @param  mixed    $searchKey      If specified, then only top-level keys containing these values are returned.
      * @return array A tree of normalized $_FILE entries.
      */
-    public static function parseUploadedFiles(array $uploadedFiles, callable $filterCallback = null, $searchKey = null)
+    public static function parseUploadedFiles(array $uploadedFiles, ?callable $filterCallback = null, $searchKey = null)
     {
         if ($searchKey !== null) {
             if (is_array($searchKey)) {

@@ -55,7 +55,7 @@ trait ExpressionTestFieldTrait
      * @param array|null               $expected The expected data subset.
      * @return void
      */
-    public function assertStructHasFieldData(ExpressionFieldInterface $obj, array $expected = null)
+    public function assertStructHasFieldData(ExpressionFieldInterface $obj, ?array $expected = null)
     {
         if (empty($expected)) {
             $expected = [

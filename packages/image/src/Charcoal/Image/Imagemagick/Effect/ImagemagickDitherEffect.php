@@ -15,7 +15,7 @@ class ImagemagickDitherEffect extends AbstractDitherEffect
      * @throws Exception This effect is not supported for Imagemagick driver.
      * @return void
      */
-    public function process(array $data = null)
+    public function process(?array $data = null)
     {
         if ($data !== null) {
             $this->setData($data);

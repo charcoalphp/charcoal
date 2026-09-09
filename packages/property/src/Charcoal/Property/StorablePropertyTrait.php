@@ -272,7 +272,7 @@ trait StorablePropertyTrait
      * @param  array $data Optional. Field data.
      * @return PropertyField
      */
-    protected function createPropertyField(array $data = null)
+    protected function createPropertyField(?array $data = null)
     {
         $field = new PropertyField();
 

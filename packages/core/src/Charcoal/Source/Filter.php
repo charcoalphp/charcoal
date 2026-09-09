@@ -426,7 +426,7 @@ class Filter extends Expression implements
      * @param  array $data Optional expression data.
      * @return self
      */
-    protected function createFilter(array $data = null)
+    protected function createFilter(?array $data = null)
     {
         $filter = new static();
         if ($data !== null) {

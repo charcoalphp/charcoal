@@ -139,7 +139,7 @@ class LoadAction extends AdminAction
      * @param  array|null $keys Subset of keys to retrieve.
      * @return array|null
      */
-    public function getParams(array $keys = null)
+    public function getParams(?array $keys = null)
     {
         $params = $this->params;
 

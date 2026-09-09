@@ -103,7 +103,7 @@ abstract class AbstractSection extends Content implements SectionInterface
      * Section constructor.
      * @param array $data Init data.
      */
-    public function __construct(array $data = null)
+    public function __construct(?array $data = null)
     {
         parent::__construct($data);
 
@@ -442,7 +442,7 @@ abstract class AbstractSection extends Content implements SectionInterface
      * @param  array|null $properties Properties.
      * @return boolean
      */
-    protected function postUpdate(array $properties = null)
+    protected function postUpdate(?array $properties = null)
     {
         if (!$this->locked()) {
             $this->generateObjectRoute($this['slug']);
@@ -471,7 +471,7 @@ abstract class AbstractSection extends Content implements SectionInterface
      * @param array $properties Optional properties to update.
      * @return boolean
      */
-    protected function preUpdate(array $properties = null)
+    protected function preUpdate(?array $properties = null)
     {
         if (!$this->locked()) {
             $this->setSlug($this->generateSlug());

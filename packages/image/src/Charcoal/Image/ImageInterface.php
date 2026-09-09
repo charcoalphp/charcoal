@@ -53,7 +53,7 @@ interface ImageInterface
      * @param array $effects Extra effects to process.
      * @return ImageInterface Chainable
      */
-    public function process(array $effects = null);
+    public function process(?array $effects = null);
 
     /**
      * @param array|EffectInterface $effect An effect to process.

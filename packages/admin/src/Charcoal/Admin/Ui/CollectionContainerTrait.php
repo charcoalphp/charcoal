@@ -276,7 +276,7 @@ trait CollectionContainerTrait
      * @param  array|null       $data   Optional collection data.
      * @return void
      */
-    protected function configureCollectionLoader(CollectionLoader $loader, array $data = null)
+    protected function configureCollectionLoader(CollectionLoader $loader, ?array $data = null)
     {
         $this->getObjTypeOrFail();
 
@@ -787,7 +787,7 @@ trait CollectionContainerTrait
      * @throws Exception If the object type of the colletion has not been set.
      * @return ModelInterface[]
      */
-    public function createCollection(array $data = null)
+    public function createCollection(?array $data = null)
     {
         $objType = $this->getObjTypeOrFail();
 

@@ -32,7 +32,7 @@ class GenericResolver
     /**
      * @param array $data Optional class dependencies. Will use default values if none are provided.
      */
-    public function __construct(array $data = null)
+    public function __construct(?array $data = null)
     {
         if (!isset($data['prefix'])) {
             $data['prefix'] = '';

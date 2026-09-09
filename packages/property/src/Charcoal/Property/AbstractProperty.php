@@ -169,7 +169,7 @@ abstract class AbstractProperty extends AbstractEntity implements
      *
      * @param array $data Optional. Class Dependencies.
      */
-    public function __construct(array $data = null)
+    public function __construct(?array $data = null)
     {
         $this->setLogger($data['logger']);
         $this->setPdo($data['database']);
@@ -1048,7 +1048,7 @@ abstract class AbstractProperty extends AbstractEntity implements
      * @see DescribableTrait::createMetadata()
      * @return PropertyMetadata
      */
-    protected function createMetadata(array $data = null)
+    protected function createMetadata(?array $data = null)
     {
         $class = $this->metadataClass();
         return new $class($data);

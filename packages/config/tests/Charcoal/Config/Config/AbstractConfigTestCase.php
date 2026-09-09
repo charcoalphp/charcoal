@@ -22,7 +22,7 @@ abstract class AbstractConfigTestCase extends AbstractTestCase
      * @param  array $delegates Delegates to pre-populate the object.
      * @return MacroConfig
      */
-    public function createConfig($data = null, array $delegates = null)
+    public function createConfig($data = null, ?array $delegates = null)
     {
         return new MacroConfig($data, $delegates);
     }

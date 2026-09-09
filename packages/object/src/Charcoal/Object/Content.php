@@ -193,7 +193,7 @@ class Content extends AbstractModel implements
      * @param array $properties The properties (ident) set for update.
      * @return boolean
      */
-    protected function preUpdate(array $properties = null)
+    protected function preUpdate(?array $properties = null)
     {
         parent::preUpdate($properties);
 
