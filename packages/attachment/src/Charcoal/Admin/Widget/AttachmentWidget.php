@@ -39,15 +39,6 @@ class AttachmentWidget extends AdminWidget implements
     }
 
     /**
-     * @var int
-     */
-    public $numPerPage;
-    /**
-     * @var int
-     */
-    public $page;
-
-    /**
      * The widget's title.
      *
      * @var Translation|string|null

@@ -97,9 +97,15 @@ class IpPropertyTest extends AbstractTestCase
     public function testHostname(): void
     {
         $this->assertEquals('0.0.0.0', $this->obj->hostname(0));
-        $this->assertThat($this->obj->hostname('8.8.8.8'), $this->logicalOr(
+
+        // gethostbyaddr() returns the IP unchanged when reverse DNS fails.
+        $host = $this->obj->hostname('8.8.8.8');
+        $this->assertIsString($host);
+        $this->assertThat($host, $this->logicalOr(
             $this->identicalTo('dns.google'),
-            $this->identicalTo('google.com')
+            $this->identicalTo('dns.google.com'),
+            $this->identicalTo('google.com'),
+            $this->identicalTo('8.8.8.8')
         ));
     }
 

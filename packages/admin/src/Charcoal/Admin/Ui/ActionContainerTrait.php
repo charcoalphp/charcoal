@@ -504,16 +504,10 @@ trait ActionContainerTrait
      */
     protected function compareActions(array $a, array $b): bool
     {
-<<<<<<< HEAD
-        $a = ($a['priority'] ?? 0);
-        $b = ($b['priority'] ?? 0);
-        $c = isset($action['isSubmittable']) && $action['isSubmittable'];
-=======
         $isSubmittable = isset($a['isSubmittable']) && $a['isSubmittable'];
 
-        $a = isset($a['priority']) ? $a['priority'] : 0;
-        $b = isset($b['priority']) ? $b['priority'] : 0;
->>>>>>> 5096401e6 (feat: Release/batch (#122))
+        $a = ($a['priority'] ?? 0);
+        $b = ($b['priority'] ?? 0);
 
         return ($isSubmittable || ($a === 0) || ($a >= $b));
     }

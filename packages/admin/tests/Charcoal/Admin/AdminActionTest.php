@@ -112,12 +112,11 @@ class AdminActionTest extends AbstractTestCase
     }
 
     /**
-     * @dataProvider provideSafeRedirectUrls
-     *
      * @param  string  $url      Candidate URL.
      * @param  boolean $expected Whether it should be accepted.
      * @return void
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('provideSafeRedirectUrls')]
     public function testIsSafeRedirectUrl($url, $expected)
     {
         $this->assertSame($expected, $this->obj->isSafeRedirectUrl($url));
@@ -126,7 +125,7 @@ class AdminActionTest extends AbstractTestCase
     /**
      * @return array
      */
-    public function provideSafeRedirectUrls()
+    public static function provideSafeRedirectUrls()
     {
         return [
             'path absolute'           => [ '/admin/object/edit', true ],

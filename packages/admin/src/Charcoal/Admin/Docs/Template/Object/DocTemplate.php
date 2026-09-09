@@ -24,8 +24,6 @@ class DocTemplate extends AdminTemplate implements
     use DashboardContainerTrait;
     use ObjectContainerTrait;
 
-    public $headerMenu;
-
     /**
      * @var \Charcoal\Admin\Widget\SecondaryMenuWidgetInterface[]|null
      */

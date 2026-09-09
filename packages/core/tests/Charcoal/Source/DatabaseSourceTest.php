@@ -159,11 +159,10 @@ class DatabaseSourceTest extends AbstractTestCase
     /**
      * Injection-shaped and otherwise unsafe table names must be rejected (LS03).
      *
-     * @dataProvider provideInvalidTableNames
-     *
      * @param  mixed $table Invalid table name.
      * @return void
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('provideInvalidTableNames')]
     public function testSetTableRejectsUnsafeNames($table)
     {
         $container = $this->getContainer();
@@ -180,7 +179,7 @@ class DatabaseSourceTest extends AbstractTestCase
     /**
      * @return array<string,array{0:mixed}>
      */
-    public function provideInvalidTableNames()
+    public static function provideInvalidTableNames()
     {
         return [
             'empty'              => [ '' ],

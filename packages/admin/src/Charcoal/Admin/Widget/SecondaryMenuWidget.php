@@ -27,8 +27,6 @@ class SecondaryMenuWidget extends AdminWidget implements
     use ActionContainerTrait;
     use HttpAwareTrait;
 
-    public $isCurrent;
-
     /**
      * Default sorting priority for an action.
      *

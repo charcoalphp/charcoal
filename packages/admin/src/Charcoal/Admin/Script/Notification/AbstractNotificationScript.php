@@ -29,8 +29,6 @@ abstract class AbstractNotificationScript extends AdminScript implements CronScr
 {
     use CronScriptTrait;
 
-    public $revisionFactory;
-
     private ?\Charcoal\Factory\FactoryInterface $notificationFactory = null;
 
     /**

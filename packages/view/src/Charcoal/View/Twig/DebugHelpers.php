@@ -14,7 +14,6 @@ use Twig\TwigFunction;
 class DebugHelpers extends AbstractExtension implements
     HelpersInterface
 {
-    public $debug;
     /**
      * @var boolean
      */

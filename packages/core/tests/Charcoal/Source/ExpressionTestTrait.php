@@ -66,8 +66,6 @@ trait  ExpressionTestTrait
     /**
      * Test default data values.
      *
-     * @dataProvider provideDefaultValues
-     *
      * @param mixed $key      The data key test.
      * @param mixed $expected The expected data value.
      */

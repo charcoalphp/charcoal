@@ -14,7 +14,6 @@ use Twig\TwigFunction;
 class UrlHelpers extends AbstractExtension implements
     HelpersInterface
 {
-    public $baseUrl;
     /**
      * @var \Psr\Http\Message\UriInterface|null
      */

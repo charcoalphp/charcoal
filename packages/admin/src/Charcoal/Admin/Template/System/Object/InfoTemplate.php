@@ -26,9 +26,6 @@ class InfoTemplate extends AdminTemplate implements
     use DashboardContainerTrait;
     use ObjectContainerTrait;
 
-    public $metadataLoader;
-    public $collectionLoader;
-
     private ?array $metadataFiles = null;
 
     /**

@@ -15,7 +15,6 @@ use Charcoal\Admin\AdminScript;
  */
 class CopyAssetsScript extends AdminScript
 {
-    public $basePath;
     /**
      * @var string
      */

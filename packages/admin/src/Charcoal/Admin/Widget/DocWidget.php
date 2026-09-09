@@ -25,11 +25,6 @@ class DocWidget extends FormWidget implements
     use ObjectContainerTrait;
 
     /**
-     * @var mixed
-     */
-    public $nextUrl;
-
-    /**
      * @var string
      */
     protected $formIdent;

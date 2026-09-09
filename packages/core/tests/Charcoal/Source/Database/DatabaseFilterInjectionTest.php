@@ -16,7 +16,7 @@ class DatabaseFilterInjectionTest extends AbstractTestCase
      *
      * @return array<string,array{0:string}>
      */
-    public function provideInjectionPayloads()
+    public static function provideInjectionPayloads()
     {
         return [
             'or_true'           => [ "' OR '1'='1" ],
@@ -31,55 +31,50 @@ class DatabaseFilterInjectionTest extends AbstractTestCase
     }
 
     /**
-     * @dataProvider provideInjectionPayloads
-     *
      * @param  string $payload Attacker-controlled filter value.
      * @return void
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('provideInjectionPayloads')]
     public function testEqualityPayloadIsBoundNotInterpolated($payload)
     {
         $this->assertPayloadBound('=', $payload);
     }
 
     /**
-     * @dataProvider provideInjectionPayloads
-     *
      * @param  string $payload Attacker-controlled filter value.
      * @return void
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('provideInjectionPayloads')]
     public function testLikePayloadIsBoundNotInterpolated($payload)
     {
         $this->assertPayloadBound('LIKE', $payload);
     }
 
     /**
-     * @dataProvider provideInjectionPayloads
-     *
      * @param  string $payload Attacker-controlled filter value.
      * @return void
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('provideInjectionPayloads')]
     public function testInPayloadIsBoundNotInterpolated($payload)
     {
         $this->assertPayloadBound('IN', $payload);
     }
 
     /**
-     * @dataProvider provideInjectionPayloads
-     *
      * @param  string $payload Attacker-controlled filter value.
      * @return void
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('provideInjectionPayloads')]
     public function testNotInPayloadIsBoundNotInterpolated($payload)
     {
         $this->assertPayloadBound('NOT IN', $payload);
     }
 
     /**
-     * @dataProvider provideInjectionPayloads
-     *
      * @param  string $payload Attacker-controlled filter value.
      * @return void
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('provideInjectionPayloads')]
     public function testFindInSetPayloadIsBoundNotInterpolated($payload)
     {
         $this->assertPayloadBound('FIND_IN_SET', $payload);

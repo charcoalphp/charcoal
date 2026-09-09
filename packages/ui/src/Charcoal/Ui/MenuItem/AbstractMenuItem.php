@@ -15,10 +15,9 @@ use Charcoal\Ui\MenuItem\MenuItemInterface;
  */
 abstract class AbstractMenuItem extends AbstractUiItem implements MenuItemInterface
 {
-    public $menuItemBuilder;
     /**
-     * Parent menu item
-     */
+    * Parent menu item
+    */
     private ?\Charcoal\Ui\Menu\MenuInterface $menu = null;
 
     /**

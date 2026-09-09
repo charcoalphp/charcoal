@@ -16,7 +16,7 @@ class DatabaseOrderInjectionTest extends AbstractTestCase
      *
      * @return array<string,array{0:string}>
      */
-    public function provideInjectionPayloads()
+    public static function provideInjectionPayloads()
     {
         return [
             'or_true'          => [ "' OR '1'='1" ],
@@ -31,11 +31,10 @@ class DatabaseOrderInjectionTest extends AbstractTestCase
     }
 
     /**
-     * @dataProvider provideInjectionPayloads
-     *
      * @param  string $payload Attacker-controlled FIELD() value.
      * @return void
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('provideInjectionPayloads')]
     public function testValuesPayloadIsBoundNotInterpolated($payload)
     {
         $obj = new DatabaseOrder();

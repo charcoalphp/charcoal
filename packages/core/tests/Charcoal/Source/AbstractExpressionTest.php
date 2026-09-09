@@ -222,12 +222,11 @@ class AbstractExpressionTest extends AbstractTestCase
     /**
      * Injection-shaped identifiers must be rejected (LS04).
      *
-     * @dataProvider provideUnsafeIdentifiers
-     *
      * @param  string      $fieldName Field / column name.
      * @param  string|null $tableName Optional table / alias.
      * @return void
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('provideUnsafeIdentifiers')]
     public function testQuoteIdentifierRejectsUnsafeNames($fieldName, $tableName)
     {
         $this->expectException(InvalidArgumentException::class);
@@ -238,7 +237,7 @@ class AbstractExpressionTest extends AbstractTestCase
     /**
      * @return array<string,array{0:string,1:?string}>
      */
-    public function provideUnsafeIdentifiers()
+    public static function provideUnsafeIdentifiers()
     {
         return [
             'field_backtick'     => [ 'id`=1 OR `x', null ],

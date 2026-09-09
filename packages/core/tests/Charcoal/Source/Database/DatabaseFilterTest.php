@@ -154,40 +154,9 @@ class DatabaseFilterTest extends AbstractTestCase
     }
 
     /**
-     * Test nested filters.
-     *
-     *
-     * @param  array  $conditions The expressions to define.
-     * @param  string $expected   The expected compiled SQL string.
+     * Test nested filters (one level).
      */
-    #[\PHPUnit\Framework\Attributes\DataProvider('providedNestedExpressions')]
-    public function testNestedSql(array $conditions, $expected): void
-    {
-        $obj = $this->createExpression();
-        $obj->addFilters($conditions);
-        $this->assertEquals($expected, $obj->sql());
-    }
-
-    /**
-     * Provide data for value parsing.
-     *
-     * @example [ [ <filters>, <SQL> ] ]
-     * @used-by self::testNestedSql()
-     */
-    public static function providedNestedExpressions(): array
-    {
-        return [
-            'One Level'  => self::nestedExpressionsDataset1(),
-            'Two Levels' => self::nestedExpressionsDataset2(),
-        ];
-    }
-
-    /**
-     * Dataset #1 for testing nested expressions.
-     *
-     * @used-by self::providedNestedExpressions()
-     */
-    protected static function nestedExpressionsDataset1(): array
+    public function testNestedSqlOneLevel(): void
     {
         $time = new DateTime('3 days ago');
         $timeStr = $time->format('Y-m-d H:i:s');
@@ -226,10 +195,8 @@ class DatabaseFilterTest extends AbstractTestCase
 
     /**
      * Test nested filters with two levels.
-     *
-     * @used-by self::providedNestedExpressions()
      */
-    protected static function nestedExpressionsDataset2(): array
+    public function testNestedSqlTwoLevels(): void
     {
         $time = date('Y-m-d');
 
@@ -459,13 +426,11 @@ class DatabaseFilterTest extends AbstractTestCase
     /**
      * Test list-based SQL operators.
      *
-     *
-     * @param  string $operator  A SQL operator.
-     * @param  string $delimiter The set's delimiter.
-     * @param  string $expected  The expected result.
+     * @param  string   $operator A SQL operator.
+     * @param  callable $asserter Assertion callback for the compiled SQL/binds.
      */
     #[\PHPUnit\Framework\Attributes\DataProvider('provideSetOperators')]
-    public function testSqlSetOperators(string $operator, string $delimiter, string $expected): void
+    public function testSqlSetOperators(string $operator, callable $asserter): void
     {
         $obj = $this->createExpression();
 
@@ -482,13 +447,11 @@ class DatabaseFilterTest extends AbstractTestCase
     /**
      * Test list-based SQL operator without a value.
      *
-     *
-     * @param  string $operator  A SQL operator.
-     * @param  string $delimiter The set's delimiter.
-     * @param  string $expected  Unused; The expected result.
+     * @param  string   $operator A SQL operator.
+     * @param  callable $asserter Unused; present for shared data provider shape.
      */
     #[\PHPUnit\Framework\Attributes\DataProvider('provideSetOperators')]
-    public function testSqlSetOperatorsWithoutValue(string $operator, string $delimiter, string $expected): void
+    public function testSqlSetOperatorsWithoutValue(string $operator, callable $asserter): void
     {
         unset($asserter);
 

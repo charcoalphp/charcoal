@@ -53,8 +53,6 @@ abstract class AbstractProperty implements
      */
     private $property;
 
-    protected $inputName;
-
     /**
      * @var string|null $inputName
      */
