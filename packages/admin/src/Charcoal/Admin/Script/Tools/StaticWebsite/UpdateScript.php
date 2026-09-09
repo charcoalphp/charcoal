@@ -142,7 +142,7 @@ class UpdateScript extends AdminScript
         }
 
         if (!file_exists($outputDir)) {
-            mkdir($outputDir, null, true);
+            mkdir($outputDir, 0777, true);
         }
 
         file_put_contents($outputFile, $prefix . $response->getBody());
