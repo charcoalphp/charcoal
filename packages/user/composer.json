@@ -11,7 +11,7 @@
     "type": "library",
     "require": {
         "php": "^8.3",
-        "psr/log": "^1.0",
+        "psr/log": "^1.0 || ^2.0 || ^3.0",
         "laminas/laminas-permissions-acl": "^2.8",
         "charcoal/object": "^5.1",
         "charcoal/config": "^5.1",

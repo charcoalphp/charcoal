@@ -28,7 +28,7 @@
         "tedivm/stash": "^1.1"
     },
     "require-dev": {
-        "psr/log": "^1.0",
+        "psr/log": "^1.0 || ^2.0 || ^3.0",
         "slim/slim": "^3.13",
         "phpunit/phpunit": "^12.5",
         "squizlabs/php_codesniffer": "^3.5",

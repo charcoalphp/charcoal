@@ -11,7 +11,7 @@
     "type": "library",
     "require": {
         "php": "^8.3",
-        "psr/log": "^1.0",
+        "psr/log": "^1.0 || ^2.0 || ^3.0",
         "charcoal/config": "^5.1",
         "charcoal/core": "^5.1",
         "charcoal/factory": "^5.1",
