@@ -30,7 +30,7 @@ trait DescribablePropertyTrait
      *     for retrieving a subset of property objects.
      * @return PropertyInterface[]|\Generator
      */
-    public function properties(array $propertyIdents = null)
+    public function properties(?array $propertyIdents = null)
     {
         // Hack: ensure metadata is loaded.
         $this->metadata();

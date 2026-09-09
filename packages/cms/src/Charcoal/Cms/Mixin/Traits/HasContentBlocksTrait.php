@@ -122,7 +122,7 @@ trait HasContentBlocksTrait
     abstract public function getAttachments(
         $group = null,
         $type = null,
-        callable $before = null,
-        callable $after = null
+        ?callable $before = null,
+        ?callable $after = null
     );
 }

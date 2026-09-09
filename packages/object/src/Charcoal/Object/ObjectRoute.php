@@ -159,7 +159,7 @@ class ObjectRoute extends AbstractModel implements
      * @param  array $properties Optional. The list of properties to update.
      * @return boolean
      */
-    protected function preUpdate(array $properties = null)
+    protected function preUpdate(?array $properties = null)
     {
         $this->setCreationDate('now');
         $this->setLastModificationDate('now');

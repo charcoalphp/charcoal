@@ -66,7 +66,7 @@ abstract class AbstractModel extends AbstractEntity implements
     /**
      * @param array $data Dependencies.
      */
-    public function __construct(array $data = null)
+    public function __construct(?array $data = null)
     {
         // LoggerAwareInterface dependencies
         $this->setLogger($data['logger']);
@@ -108,7 +108,7 @@ abstract class AbstractModel extends AbstractEntity implements
      *     for retrieving a subset of data.
      * @return array
      */
-    public function data(array $properties = null)
+    public function data(?array $properties = null)
     {
         $data = [];
         $properties = $this->properties($properties);
@@ -269,7 +269,7 @@ abstract class AbstractModel extends AbstractEntity implements
      *     for retrieving a subset of data.
      * @return array
      */
-    public function flatData(array $properties = null)
+    public function flatData(?array $properties = null)
     {
         $flatData   = [];
         $properties = $this->properties($properties);
@@ -300,7 +300,7 @@ abstract class AbstractModel extends AbstractEntity implements
      * @param array $properties Optional array of properties to save. If null, use all object's properties.
      * @return boolean
      */
-    public function saveProperties(array $properties = null)
+    public function saveProperties(?array $properties = null)
     {
         if ($properties === null) {
             $properties = array_keys($this->metadata()->properties());
@@ -447,7 +447,7 @@ abstract class AbstractModel extends AbstractEntity implements
      * @see StorableTrait::preUpdate()
      * @return boolean
      */
-    protected function preUpdate(array $properties = null)
+    protected function preUpdate(?array $properties = null)
     {
         return $this->saveProperties($properties);
     }

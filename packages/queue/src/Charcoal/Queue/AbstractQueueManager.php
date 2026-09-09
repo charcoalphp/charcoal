@@ -302,7 +302,7 @@ abstract class AbstractQueueManager implements
      *                            after all queue items are processed.
      * @return boolean  Success / Failure
      */
-    public function processQueue(callable $callback = null)
+    public function processQueue(?callable $callback = null)
     {
         if (!is_callable($callback)) {
             $callback = $this->processedCallback;

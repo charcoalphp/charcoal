@@ -400,7 +400,7 @@ class CollectionLoader implements
      * @param  array  $properties One or more of properties to search amongst.
      * @return self
      */
-    public function addKeyword($keyword, array $properties = null)
+    public function addKeyword($keyword, ?array $properties = null)
     {
         if ($properties === null) {
             $properties = [];
@@ -476,7 +476,7 @@ class CollectionLoader implements
      * @param  array $options Optional extra settings to apply on the filter.
      * @return self
      */
-    public function addFilter($param, $value = null, array $options = null)
+    public function addFilter($param, $value = null, ?array $options = null)
     {
         $this->source()->addFilter($param, $value, $options);
         return $this;
@@ -539,7 +539,7 @@ class CollectionLoader implements
      * @param  array  $options Optional extra settings to apply on the order.
      * @return self
      */
-    public function addOrder($param, $mode = 'asc', array $options = null)
+    public function addOrder($param, $mode = 'asc', ?array $options = null)
     {
         $this->source()->addOrder($param, $mode, $options);
         return $this;
@@ -647,7 +647,7 @@ class CollectionLoader implements
      * @throws Exception If the database connection fails.
      * @return ModelInterface[]|ArrayAccess
      */
-    public function load($ident = null, callable $callback = null, callable $before = null)
+    public function load($ident = null, ?callable $callback = null, ?callable $before = null)
     {
         // Unused.
         unset($ident);
@@ -707,7 +707,7 @@ class CollectionLoader implements
      * @throws InvalidArgumentException If the SQL string/set is invalid.
      * @return ModelInterface[]|ArrayAccess
      */
-    public function loadFromQuery($query, callable $callback = null, callable $before = null)
+    public function loadFromQuery($query, ?callable $callback = null, ?callable $before = null)
     {
         $db = $this->source()->db();
 
@@ -751,7 +751,7 @@ class CollectionLoader implements
      * @param  callable|null       $after   Process each entity after applying raw data.
      * @return ModelInterface[]|ArrayAccess
      */
-    protected function processCollection($results, callable $before = null, callable $after = null)
+    protected function processCollection($results, ?callable $before = null, ?callable $after = null)
     {
         $collection = $this->createCollection();
         foreach ($results as $objData) {
@@ -773,7 +773,7 @@ class CollectionLoader implements
      * @param  callable|null $after   Process each entity after applying raw data.
      * @return ModelInterface|ArrayAccess|null
      */
-    protected function processModel($objData, callable $before = null, callable $after = null)
+    protected function processModel($objData, ?callable $before = null, ?callable $after = null)
     {
         $obj = $this->createModelFromData($objData);
 

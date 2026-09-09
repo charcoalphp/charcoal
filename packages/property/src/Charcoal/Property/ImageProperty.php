@@ -229,7 +229,7 @@ class ImageProperty extends FileProperty
      * @return mixed Returns the given images. Depending on the effects applied,
      *     certain images might be renamed.
      */
-    public function processEffects($value, array $effects = null, ImageInterface $image = null)
+    public function processEffects($value, ?array $effects = null, ?ImageInterface $image = null)
     {
         $value = $this->parseVal($value);
         if ($value instanceof Translation) {
@@ -455,7 +455,7 @@ class ImageProperty extends FileProperty
      * @throws InvalidArgumentException If the $value is not a string.
      * @return mixed Returns the processed target or NULL.
      */
-    private function processEffectsOne($value, array $effects = null, ImageInterface $image = null)
+    private function processEffectsOne($value, ?array $effects = null, ?ImageInterface $image = null)
     {
         if ($value === null || $value === '') {
             return null;

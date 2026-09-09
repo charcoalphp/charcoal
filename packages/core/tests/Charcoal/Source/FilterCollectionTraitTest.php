@@ -42,7 +42,7 @@ class FilterCollectionTraitTest extends AbstractTestCase
      * @param  array $data Optional expression data.
      * @return Filter
      */
-    final protected function createExpression(array $data = null)
+    final protected function createExpression(?array $data = null)
     {
         $expr = new Filter();
         if ($data !== null) {

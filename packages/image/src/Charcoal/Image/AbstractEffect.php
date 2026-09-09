@@ -60,7 +60,7 @@ abstract class AbstractEffect implements EffectInterface
      * @param array $data Optional effect data. If null, use the currently set properties.
      * @return AbstractEffect Chainable
      */
-    abstract public function process(array $data = null);
+    abstract public function process(?array $data = null);
 
     /**
      * Allow an object to define how the key setter are called.

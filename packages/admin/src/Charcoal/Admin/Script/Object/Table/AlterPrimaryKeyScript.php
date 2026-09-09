@@ -379,7 +379,7 @@ class AlterPrimaryKeyScript extends AdminScript
      * @param  IdProperty $oldProp The previous ID property to analyse.
      * @return self
      */
-    protected function describeConversion(IdProperty $newProp, IdProperty $oldProp = null)
+    protected function describeConversion(IdProperty $newProp, ?IdProperty $oldProp = null)
     {
         if ($oldProp) {
             $new  = $this->labelFromProp($newProp);

@@ -58,7 +58,7 @@ class TranslatorHelpers implements HelpersInterface
     /**
      * @param array $data Class Dependencies.
      */
-    public function __construct(array $data = null)
+    public function __construct(?array $data = null)
     {
         if (isset($data['translator'])) {
             $this->setTranslator($data['translator']);
@@ -113,7 +113,7 @@ class TranslatorHelpers implements HelpersInterface
      * @param  LambdaHelper|null $helper For rendering strings in the current context.
      * @return string|RenderedString|self
      */
-    public function __invoke($text = null, LambdaHelper $helper = null)
+    public function __invoke($text = null, ?LambdaHelper $helper = null)
     {
         if (func_num_args() === 0) {
             return $this;

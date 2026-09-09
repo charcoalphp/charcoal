@@ -922,7 +922,7 @@ class TableWidget extends AdminWidget implements CollectionContainerInterface
      * @param  ModelInterface|null $object The object to test.
      * @return boolean
      */
-    public function isObjActive(ModelInterface $object = null)
+    public function isObjActive(?ModelInterface $object = null)
     {
         if ($object === null) {
             $object = $this->getCurrentObjOrProto();
@@ -949,7 +949,7 @@ class TableWidget extends AdminWidget implements CollectionContainerInterface
      * @param  ModelInterface|null $object The object to test.
      * @return boolean
      */
-    public function isObjCreatable(ModelInterface $object = null)
+    public function isObjCreatable(?ModelInterface $object = null)
     {
         if ($object === null) {
             $object = $this->proto();
@@ -972,7 +972,7 @@ class TableWidget extends AdminWidget implements CollectionContainerInterface
      * @param  ModelInterface|null $object The object to test.
      * @return boolean
      */
-    public function isObjEditable(ModelInterface $object = null)
+    public function isObjEditable(?ModelInterface $object = null)
     {
         if ($object === null) {
             $object = $this->getCurrentObjOrProto();
@@ -995,7 +995,7 @@ class TableWidget extends AdminWidget implements CollectionContainerInterface
      * @param  ModelInterface|null $object The object to test.
      * @return boolean
      */
-    public function isObjDeletable(ModelInterface $object = null)
+    public function isObjDeletable(?ModelInterface $object = null)
     {
         if ($object === null) {
             $object = $this->getCurrentObjOrProto();
@@ -1018,7 +1018,7 @@ class TableWidget extends AdminWidget implements CollectionContainerInterface
      * @param  ModelInterface|null $object The object to test.
      * @return boolean
      */
-    public function isObjViewable(ModelInterface $object = null)
+    public function isObjViewable(?ModelInterface $object = null)
     {
         if ($object === null) {
             $object = $this->getCurrentObjOrProto();
@@ -1064,7 +1064,7 @@ class TableWidget extends AdminWidget implements CollectionContainerInterface
      * @param  array|null       $data   Optional collection data.
      * @return void
      */
-    protected function configureCollectionLoader(CollectionLoader $loader, array $data = null)
+    protected function configureCollectionLoader(CollectionLoader $loader, ?array $data = null)
     {
         $this->configureCollectionLoaderFromTrait($loader, $data);
 
@@ -1372,7 +1372,7 @@ class TableWidget extends AdminWidget implements CollectionContainerInterface
      */
     protected function parsePropertyCellClasses(
         PropertyInterface $property,
-        ModelInterface $object = null
+        ?ModelInterface $object = null
     ) {
         unset($object);
 

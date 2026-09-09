@@ -166,7 +166,7 @@ abstract class AbstractBlurEffect extends AbstractEffect
      * @param array $data The effect data, if available.
      * @return AbstractBlurEffect Chainable
      */
-    public function process(array $data = null)
+    public function process(?array $data = null)
     {
         if ($data !== null) {
             $this->setData($data);
