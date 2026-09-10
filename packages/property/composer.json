@@ -23,12 +23,12 @@
         }
     },
     "require": {
-        "php": "^7.4 || ^8.0",
+        "php": "^8.1",
         "ext-fileinfo": "*",
         "ext-pdo": "*",
         "ext-simplexml": "*",
-        "psr/log": "^1.0",
-        "psr/cache": "^1.0",
+        "psr/log": "^1.0 || ^2.0 || ^3.0",
+        "psr/cache": "^2.0",
         "charcoal/config": "^5.3",
         "charcoal/core": "^5.3",
         "charcoal/factory": "^5.3",
@@ -41,7 +41,7 @@
         "php-coveralls/php-coveralls": "^2.7",
         "cache/void-adapter": "^1.0",
         "mustache/mustache": "^3.2",
-        "tedivm/stash": "~0.16",
+        "tedivm/stash": "^1.1",
         "pimple/pimple": "^3.0"
     },
     "autoload": {

@@ -2,6 +2,7 @@
     "type": "library",
     "name": "charcoal/charcoal",
     "description": "The Charcoal Framework monorepo",
+    "version": "5.3.99",
     "keywords": ["framework", "charcoal", "cms"],
     "homepage": "https://charcoal.locomotive.ca",
     "license": "MIT",
@@ -32,7 +33,7 @@
         }
     ],
     "require": {
-        "php": "^7.4 || ^8.0",
+        "php": "^8.1",
         "ext-fileinfo": "*",
         "ext-json": "*",
         "ext-mbstring": "*",
@@ -47,19 +48,19 @@
         "league/climate": "^3.2",
         "league/flysystem": "^1.0",
         "mcaskill/php-html-build-attributes": "^1.0",
-        "monolog/monolog": "^1.17",
+        "monolog/monolog": "^3.0",
         "phpmailer/phpmailer": "~6.0",
         "pimple/pimple": "^3.0",
-        "psr/cache": "^1.0",
+        "psr/cache": "^2.0",
         "psr/container": "^1.0",
         "psr/http-message": "^1.0",
-        "psr/log": "^1.0",
+        "psr/log": "^1.0 || ^2.0 || ^3.0",
         "seld/jsonlint": "^1.9",
         "slim/csrf": "^0.8.3",
         "slim/slim": "^3.7",
         "studio-42/elfinder": "^2.1.70",
         "symfony/translation": "^3.4",
-        "tedivm/stash": "~0.16",
+        "tedivm/stash": "^1.1",
         "vlucas/phpdotenv": "^5.4"
     },
     "require-dev": {
@@ -188,7 +189,7 @@
     "config": {
         "sort-packages": true,
         "platform": {
-            "php": "7.4.33"
+            "php": "8.1.0"
         },
         "audit": {
             "block-insecure": false

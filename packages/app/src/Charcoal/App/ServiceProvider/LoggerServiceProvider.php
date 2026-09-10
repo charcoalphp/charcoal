@@ -10,11 +10,12 @@ use Pimple\Container;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 // From Monolog
+use Monolog\Handler\BrowserConsoleHandler;
+use Monolog\Handler\StreamHandler;
+use Monolog\Level;
 use Monolog\Logger;
 use Monolog\Processor\MemoryUsageProcessor;
 use Monolog\Processor\UidProcessor;
-use Monolog\Handler\BrowserConsoleHandler;
-use Monolog\Handler\StreamHandler;
 // From 'charcoal-factory'
 use Charcoal\Factory\GenericFactory as Factory;
 use Charcoal\Factory\FactoryInterface;
@@ -83,7 +84,7 @@ class LoggerServiceProvider implements ServiceProviderInterface
                 }
             }
 
-            $level = $handlerConfig['level'] ?: $loggerConfig['level'];
+            $level = self::resolveLevel($handlerConfig['level'] ?: $loggerConfig['level']);
             return new StreamHandler($stream, $level);
         };
 
@@ -99,7 +100,7 @@ class LoggerServiceProvider implements ServiceProviderInterface
                 return null;
             }
 
-            $level = $handlerConfig['level'] ?: $loggerConfig['level'];
+            $level = self::resolveLevel($handlerConfig['level'] ?: $loggerConfig['level']);
             return new BrowserConsoleHandler($level);
         };
 
@@ -136,5 +137,26 @@ class LoggerServiceProvider implements ServiceProviderInterface
 
             return $logger;
         };
+    }
+
+    /**
+     * @param  string|int|Level|null $level
+     * @return Level
+     */
+    private static function resolveLevel(string|int|Level|null $level): Level
+    {
+        if ($level instanceof Level) {
+            return $level;
+        }
+
+        if (is_int($level)) {
+            return Level::fromValue($level);
+        }
+
+        if (is_string($level)) {
+            return Level::fromName(strtolower($level));
+        }
+
+        return Level::Debug;
     }
 }

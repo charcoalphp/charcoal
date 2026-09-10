@@ -15,8 +15,8 @@
         }
     },
     "require": {
-        "php": "^7.4 || ^8.0",
-        "psr/log": "^1.0",
+        "php": "^8.1",
+        "psr/log": "^1.0 || ^2.0 || ^3.0",
         "charcoal/config": "^5.3",
         "charcoal/core": "^5.3",
         "charcoal/factory": "^5.3",
@@ -28,7 +28,7 @@
         "pimple/pimple": "^3.0",
         "seld/jsonlint": "^1.9",
         "squizlabs/php_codesniffer": "^3.13 || ^4.0",
-        "tedivm/stash": "~0.16",
+        "tedivm/stash": "^1.1",
         "ext-json": "*"
     },
     "autoload": {
