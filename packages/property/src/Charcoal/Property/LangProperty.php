@@ -200,15 +200,17 @@ class LangProperty extends AbstractProperty implements SelectablePropertyInterfa
                 }
             }
 
-            $propertyValue = implode($separator, $propertyValue);
-        } elseif (is_string($propertyValue)) {
+            return implode($separator, $propertyValue);
+        }
+
+        if (is_string($propertyValue)) {
             $propertyValue = $this->choiceLabel($propertyValue);
             if (!is_string($propertyValue)) {
                 $propertyValue = $this->l10nVal($propertyValue, $options);
             }
         }
 
-        return $propertyValue;
+        return (string)$propertyValue;
     }
 
     /**
