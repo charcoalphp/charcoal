@@ -302,7 +302,7 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
             return json_encode($val);
         }
 
-        return $val;
+        return (string)$val;
     }
 
     /**
@@ -335,7 +335,7 @@ class ObjectProperty extends AbstractProperty implements SelectablePropertyInter
                 $propertyVal = $val->id();
             }
 
-            return $propertyVal;
+            return (string)$propertyVal;
         }
 
         /** Parse multilingual values */
