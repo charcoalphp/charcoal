@@ -1,0 +1,52 @@
+name: Admin Assets Build
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'packages/admin/assets/**'
+      - 'packages/admin/build/**'
+      - 'packages/admin/Gruntfile.js'
+      - 'packages/admin/package.json'
+      - 'packages/admin/package-lock.json'
+      - '.github/workflows/admin-assets.yml'
+  pull_request:
+    paths:
+      - 'packages/admin/assets/**'
+      - 'packages/admin/build/**'
+      - 'packages/admin/Gruntfile.js'
+      - 'packages/admin/package.json'
+      - 'packages/admin/package-lock.json'
+      - '.github/workflows/admin-assets.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: npm
+          cache-dependency-path: packages/admin/package-lock.json
+
+      # `node-sass` (still in use until it's replaced by Dart Sass) needs
+      # to compile from source on this runner, and its build tooling
+      # imports `distutils`, which Python dropped in 3.12. `setuptools`
+      # ships a compatibility shim that restores it.
+      - name: Install Python setuptools (distutils shim for node-sass)
+        run: python3 -m pip install --user setuptools
+
+      - name: Install npm dependencies
+        working-directory: packages/admin
+        run: npm ci
+
+      - name: Build admin assets (lint, sass, scripts)
+        working-directory: packages/admin
+        run: npx grunt build
