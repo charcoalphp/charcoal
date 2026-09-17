@@ -35,6 +35,20 @@ $data-ratio-crops: "top" "bottom" "both" !default;
     }
 }
 
+// Applies the `padding-top` for a given ratio from `$data-ratios`.
+//
+// Used to hardcode a `.u-ratio[data-ratio="…"]` match where the
+// `data-ratio` attribute isn't present in markup (@extend can't target
+// that compound selector directly since Dart Sass 2 removed support
+// for extending compound selectors).
+@mixin ratio($ratio) {
+    @each $r in $data-ratios {
+        @if nth($r, 1) == $ratio or nth($r, 2) == $ratio {
+            padding-top: nth($r, 3);
+        }
+    }
+}
+
 .u-ratio {
     position: relative;
     overflow: hidden;

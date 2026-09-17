@@ -1,0 +1,51 @@
+name: Admin Assets Build
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'packages/admin/assets/**'
+      - 'packages/admin/build/**'
+      - 'packages/admin/Gruntfile.js'
+      - 'packages/admin/eslint.config.js'
+      - 'packages/admin/package.json'
+      - 'packages/admin/package-lock.json'
+      - '.github/workflows/admin-assets.yml'
+  pull_request:
+    paths:
+      - 'packages/admin/assets/**'
+      - 'packages/admin/build/**'
+      - 'packages/admin/Gruntfile.js'
+      - 'packages/admin/eslint.config.js'
+      - 'packages/admin/package.json'
+      - 'packages/admin/package-lock.json'
+      - '.github/workflows/admin-assets.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Setup Node
+        uses: actions/setup-node@v7
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: packages/admin/package-lock.json
+
+      - name: Install npm dependencies
+        working-directory: packages/admin
+        run: npm ci
+
+      - name: Lint scripts
+        working-directory: packages/admin
+        run: npm run lint
+
+      - name: Build admin assets (sass, scripts)
+        working-directory: packages/admin
+        run: npx grunt build

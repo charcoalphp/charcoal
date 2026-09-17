@@ -47,7 +47,6 @@
 .c-calendar_day {
     @include o-layout_item;
     @extend .u-ratio;
-    @extend .u-ratio[data-ratio="0.6"];
     position: relative;
     display: inline-block;
     width: span(1/7);
@@ -57,6 +56,10 @@
     border-right: 1px solid $gray-light;
     border-bottom: 1px solid $gray-light;
     transition: background-color $speed $easing;
+
+    &::before {
+        @include ratio("0.6");
+    }
 
     &.is-inactive{
         pointer-events: none;
