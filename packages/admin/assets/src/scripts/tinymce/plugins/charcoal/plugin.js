@@ -1,4 +1,3 @@
-/* eslint-disable consistent-this */
 /**
  * Charcoal Enhancements for TinyMCE
  *
