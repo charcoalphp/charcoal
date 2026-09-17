@@ -1,5 +1,13 @@
 # Changelog
 
+## [5.3.1](https://github.com/charcoalphp/charcoal/compare/v5.3.0...v5.3.1) (2026-09-17)
+
+
+### Bug Fixes
+
+* **property:** Fix display return value on Lang Property ([f37f004](https://github.com/charcoalphp/charcoal/commit/f37f00499f7029eaf396054bb8ef46767087dcf2))
+* **property:** Fix input/display return value on Object Property ([686a55e](https://github.com/charcoalphp/charcoal/commit/686a55eec93ab64e71081235e5147538926cca32))
+
 ## [5.3.0](https://github.com/charcoalphp/charcoal/compare/v5.2.4...v5.3.0) (2026-09-08)
 
 
