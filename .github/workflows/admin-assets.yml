@@ -7,6 +7,7 @@ on:
       - 'packages/admin/assets/**'
       - 'packages/admin/build/**'
       - 'packages/admin/Gruntfile.js'
+      - 'packages/admin/eslint.config.js'
       - 'packages/admin/package.json'
       - 'packages/admin/package-lock.json'
       - '.github/workflows/admin-assets.yml'
@@ -15,6 +16,7 @@ on:
       - 'packages/admin/assets/**'
       - 'packages/admin/build/**'
       - 'packages/admin/Gruntfile.js'
+      - 'packages/admin/eslint.config.js'
       - 'packages/admin/package.json'
       - 'packages/admin/package-lock.json'
       - '.github/workflows/admin-assets.yml'
@@ -40,6 +42,10 @@ jobs:
         working-directory: packages/admin
         run: npm ci
 
-      - name: Build admin assets (lint, sass, scripts)
+      - name: Lint scripts
+        working-directory: packages/admin
+        run: npm run lint
+
+      - name: Build admin assets (sass, scripts)
         working-directory: packages/admin
         run: npx grunt build
