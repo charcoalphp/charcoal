@@ -32,16 +32,9 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: '22'
           cache: npm
           cache-dependency-path: packages/admin/package-lock.json
-
-      # `node-sass` (still in use until it's replaced by Dart Sass) needs
-      # to compile from source on this runner, and its build tooling
-      # imports `distutils`, which Python dropped in 3.12. `setuptools`
-      # ships a compatibility shim that restores it.
-      - name: Install Python setuptools (distutils shim for node-sass)
-        run: python3 -m pip install --user setuptools
 
       - name: Install npm dependencies
         working-directory: packages/admin
