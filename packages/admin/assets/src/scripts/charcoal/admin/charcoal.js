@@ -207,6 +207,8 @@ Charcoal.Admin = (function () {
      * Redirects the window to the URI.
      *
      * Off-site absolute URLs fall back to the admin base URL.
+     * Path-absolute URIs ("/…") are rooted at the site and must not be
+     * prefixed with admin_url() (avoids "/admin/" + "/admin/…" → "/admin//admin/…").
      *
      * @param  {string} uri
      * @return {void}
@@ -215,7 +217,11 @@ Charcoal.Admin = (function () {
         if (!Admin.is_safe_redirect_url(uri)) {
             uri = Charcoal.Admin.admin_url();
         }
-        window.location.href = Admin.is_absolute_url(uri) ? uri : Charcoal.Admin.admin_url() + uri;
+        if (Admin.is_absolute_url(uri) || (uri && uri.charAt(0) === '/')) {
+            window.location.href = uri;
+        } else {
+            window.location.href = Charcoal.Admin.admin_url() + uri;
+        }
     };
 
     /**
