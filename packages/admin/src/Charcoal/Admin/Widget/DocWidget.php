@@ -316,7 +316,7 @@ class DocWidget extends FormWidget implements
      * @throws UnexpectedValueException If a property data is invalid.
      * @return DocFormPropertyWidget[]|Generator
      */
-    public function formProperties(array $group = null)
+    public function formProperties(?array $group = null)
     {
         $obj   = $this->obj();
         $props = $obj->metadata()->properties();
@@ -632,7 +632,7 @@ class DocWidget extends FormWidget implements
      * @param  array|null $data Optional. The form group data to set.
      * @return FormGroupInterface
      */
-    protected function createFormGroup(array $data = null)
+    protected function createFormGroup(?array $data = null)
     {
         $type = $this->defaultGroupType();
 
@@ -674,7 +674,7 @@ class DocWidget extends FormWidget implements
      */
     protected function updateFormGroup(
         FormGroupInterface $group,
-        array $groupData = null,
+        ?array $groupData = null,
         $groupIdent = null
     ) {
         $group->setForm($this);

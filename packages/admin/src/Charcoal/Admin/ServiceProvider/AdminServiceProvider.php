@@ -476,7 +476,7 @@ class AdminServiceProvider implements ServiceProviderInterface
                  * @param  string $uri A URI path to wrap.
                  * @return string
                  */
-                'withAdminUrl' => function ($uri, LambdaHelper $helper = null) use ($adminUrl) {
+                'withAdminUrl' => function ($uri, ?LambdaHelper $helper = null) use ($adminUrl) {
                     if ($helper) {
                         $uri = $helper->render($uri);
                     }

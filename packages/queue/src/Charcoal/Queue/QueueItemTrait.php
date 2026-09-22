@@ -85,9 +85,9 @@ trait QueueItemTrait
      *     FALSE on failure or if an error occurs, NULL if this item is already processed.
      */
     abstract public function process(
-        callable $alwaysCallback = null,
-        callable $successCallback = null,
-        callable $failureCallback = null
+        ?callable $alwaysCallback = null,
+        ?callable $successCallback = null,
+        ?callable $failureCallback = null
     );
 
     /**

@@ -68,7 +68,7 @@ class DocTemplate extends AdminTemplate implements
      * @throws InvalidArgumentException If the secondary menu widget is invalid.
      * @return \Charcoal\Admin\Widget\SecondaryMenuWidgetInterface[]
      */
-    protected function createHeaderMenu(array $menuItems = null)
+    protected function createHeaderMenu(?array $menuItems = null)
     {
         if ($menuItems === null) {
             return $this->createSecondaryMenu();

@@ -124,7 +124,7 @@ trait ExpressionTestTrait
      * @param array|null          $expected The expected data subset.
      * @return void
      */
-    final public function assertStructHasBasicData(ExpressionInterface $obj, array $expected = null)
+    final public function assertStructHasBasicData(ExpressionInterface $obj, ?array $expected = null)
     {
         if (empty($expected)) {
             $expected = [

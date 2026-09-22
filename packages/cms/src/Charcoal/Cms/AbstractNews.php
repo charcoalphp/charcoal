@@ -70,7 +70,7 @@ abstract class AbstractNews extends Content implements NewsInterface
      * Section constructor.
      * @param array $data The data.
      */
-    public function __construct(array $data = null)
+    public function __construct(?array $data = null)
     {
         parent::__construct($data);
 
@@ -367,7 +367,7 @@ abstract class AbstractNews extends Content implements NewsInterface
      * @param array $properties Optional properties to update.
      * @return boolean
      */
-    protected function preUpdate(array $properties = null)
+    protected function preUpdate(?array $properties = null)
     {
         $this->verifyDates();
         $this->setSlug($this->generateSlug());
@@ -392,7 +392,7 @@ abstract class AbstractNews extends Content implements NewsInterface
      * @param array|null $properties Properties.
      * @return boolean
      */
-    protected function postUpdate(array $properties = null)
+    protected function postUpdate(?array $properties = null)
     {
         // RoutableTrait
         $this->generateObjectRoute($this['slug']);

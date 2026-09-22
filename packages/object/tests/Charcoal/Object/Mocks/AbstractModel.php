@@ -39,7 +39,7 @@ abstract class AbstractModel
     /**
      * @param array|null $data The model dependencies.
      */
-    public function __construct(array $data = null)
+    public function __construct(?array $data = null)
     {
         if (isset($data['factory'])) {
             $this->setModelFactory($data['factory']);
@@ -155,7 +155,7 @@ abstract class AbstractModel
      * @param  array|null $filters Retrieve a subset.
      * @return array
      */
-    public function data(array $filters = null)
+    public function data(?array $filters = null)
     {
         return null;
     }
@@ -190,7 +190,7 @@ abstract class AbstractModel
      *     for retrieving a subset of property objects.
      * @return null
      */
-    public function properties(array $propertyIdents = null)
+    public function properties(?array $propertyIdents = null)
     {
         return null;
     }

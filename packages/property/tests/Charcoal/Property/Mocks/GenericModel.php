@@ -34,7 +34,7 @@ class GenericModel extends AbstractModel
     /**
      * @param array $data Dependencies.
      */
-    public function __construct(array $data = null)
+    public function __construct(?array $data = null)
     {
         $data['metadata'] = [
             'default_data' => [
