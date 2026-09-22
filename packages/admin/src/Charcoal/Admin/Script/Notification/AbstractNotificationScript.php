@@ -155,7 +155,7 @@ abstract class AbstractNotificationScript extends AdminScript implements CronScr
         $loader->setModel(Notification::class);
         $loader->addFilter([
             'property'  => 'frequency',
-            'val'     => $frequency
+            'value'     => $frequency
         ]);
         $notifications = $loader->load();
         return $notifications;
@@ -251,16 +251,16 @@ abstract class AbstractNotificationScript extends AdminScript implements CronScr
         $loader->setModel(ObjectRevision::class);
         $loader->addFilter([
             'property'  => 'target_type',
-            'val'       => $objType
+            'value'       => $objType
         ]);
         $loader->addFilter([
             'property'  => 'rev_ts',
-            'val'       => $this->startDate()->format('Y-m-d H:i:s'),
+            'value'       => $this->startDate()->format('Y-m-d H:i:s'),
             'operator'  => '>'
         ]);
         $loader->addFilter([
             'property'  => 'rev_ts',
-            'val'       => $this->endDate()->format('Y-m-d H:i:s'),
+            'value'       => $this->endDate()->format('Y-m-d H:i:s'),
             'operator'  => '<'
         ]);
         $loader->addOrder([
