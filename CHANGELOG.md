@@ -1,5 +1,13 @@
 # Changelog
 
+## [5.3.2](https://github.com/charcoalphp/charcoal/compare/v5.3.1...v5.3.2) (2026-09-22)
+
+
+### Bug Fixes
+
+* Do not log deprecated errors from script ([9d9a1a9](https://github.com/charcoalphp/charcoal/commit/9d9a1a9c68aab86ac193a45fb176f43ebf65aff5))
+* explicit nullable types ([815056e](https://github.com/charcoalphp/charcoal/commit/815056ec1bd4334088b8334000d1604c7c7a0b9a))
+
 ## [5.3.1](https://github.com/charcoalphp/charcoal/compare/v5.3.0...v5.3.1) (2026-09-17)
 
 
