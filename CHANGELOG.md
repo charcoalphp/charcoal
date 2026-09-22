@@ -1,5 +1,12 @@
 # Changelog
 
+## [5.3.4](https://github.com/charcoalphp/charcoal/compare/v5.3.3...v5.3.4) (2026-09-22)
+
+
+### Bug Fixes
+
+* **admin:** Fix admin redirect (js). Fix deprecation warning from notification script ([ed718a1](https://github.com/charcoalphp/charcoal/commit/ed718a1b2ca545921d37ae78eae11f8649263420))
+
 ## [5.3.3](https://github.com/charcoalphp/charcoal/compare/v5.3.2...v5.3.3) (2026-09-22)
 
 
