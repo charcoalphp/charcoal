@@ -22,7 +22,7 @@ class DebugHelpers extends AbstractExtension implements
     /**
      * @param array $data Class Dependencies.
      */
-    public function __construct(array $data = null)
+    public function __construct(?array $data = null)
     {
         if (isset($data['debug'])) {
             $this->debug = $data['debug'];

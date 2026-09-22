@@ -13,7 +13,7 @@ class ImagemagickModulateEffect extends AbstractModulateEffect
      * @param array $data The effect data, if available.
      * @return self
      */
-    public function process(array $data = null)
+    public function process(?array $data = null)
     {
         if ($data !== null) {
             $this->setData($data);

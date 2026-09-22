@@ -235,7 +235,7 @@ class ObjectFormWidget extends FormWidget implements
      * @throws UnexpectedValueException If a property data is invalid.
      * @return FormPropertyWidget[]|\Generator
      */
-    public function formProperties(array $group = null)
+    public function formProperties(?array $group = null)
     {
         $obj   = $this->obj();
         $props = $obj->metadata()->properties();
@@ -385,7 +385,7 @@ class ObjectFormWidget extends FormWidget implements
      * @param array|null $groups Form groups to parse.
      * @return array
      */
-    protected function groupsConditionalLogic(array $groups = null)
+    protected function groupsConditionalLogic(?array $groups = null)
     {
         if (!$groups) {
             $groups = iterator_to_array($this->groups());
@@ -704,7 +704,7 @@ class ObjectFormWidget extends FormWidget implements
      * @param  array|null $data Optional. The form group data to set.
      * @return FormGroupInterface
      */
-    protected function createFormGroup(array $data = null)
+    protected function createFormGroup(?array $data = null)
     {
         if (isset($data['type'])) {
             $type = $data['type'];
@@ -743,7 +743,7 @@ class ObjectFormWidget extends FormWidget implements
      */
     protected function updateFormGroup(
         FormGroupInterface $group,
-        array $groupData = null,
+        ?array $groupData = null,
         $groupIdent = null
     ) {
         $group->setForm($this);

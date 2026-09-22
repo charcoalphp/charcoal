@@ -15,7 +15,7 @@ interface FactoryInterface
      * @param callable $cb   Object callback.
      * @return mixed The instance / object
      */
-    public function create($type, array $args = null, callable $cb = null);
+    public function create($type, ?array $args = null, ?callable $cb = null);
 
     /**
      * A base class name (or interface)

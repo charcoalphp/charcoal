@@ -73,7 +73,7 @@ class ConfigurableTest extends AbstractTestCase
      * @param  array $delegates Delegates to pre-populate the object.
      * @return GenericConfig
      */
-    public function createConfig($data = null, array $delegates = null)
+    public function createConfig($data = null, ?array $delegates = null)
     {
         return new GenericConfig($data, $delegates);
     }

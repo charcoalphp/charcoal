@@ -347,7 +347,7 @@ trait TemplateableTrait
      * @param  (PropertyInterface|string)[]|null $templateIdentProperties The template key properties to parse.
      * @return boolean
      */
-    protected function prepareTemplateOptions(array $templateIdentProperties = null)
+    protected function prepareTemplateOptions(?array $templateIdentProperties = null)
     {
         $this->assertValidTemplateStructureDependencies();
 
@@ -384,7 +384,7 @@ trait TemplateableTrait
      * @param  (PropertyInterface|string)[]|null $properties The template properties to parse.
      * @return void
      */
-    protected function saveTemplateOptions(array $properties = null)
+    protected function saveTemplateOptions(?array $properties = null)
     {
         if ($properties === null) {
             $properties = $this->defaultTemplateProperties();

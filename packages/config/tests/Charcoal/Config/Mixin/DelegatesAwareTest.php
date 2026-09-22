@@ -74,7 +74,7 @@ class DelegatesAwareTest extends AbstractTestCase
      * @param  array $data Data to pre-populate the object.
      * @return DelegateEntity
      */
-    public function createObject(array $data = null)
+    public function createObject(?array $data = null)
     {
         return new DelegateEntity($data);
     }

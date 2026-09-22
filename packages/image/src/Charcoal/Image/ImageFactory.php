@@ -13,7 +13,7 @@ class ImageFactory extends AbstractFactory
     /**
      * @param array $data Constructor dependencies.
      */
-    public function __construct(array $data = null)
+    public function __construct(?array $data = null)
     {
         if (isset($data['map'])) {
             $data['map'] = array_merge($this->defaultMap(), $data['map']);

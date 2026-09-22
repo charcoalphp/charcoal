@@ -46,7 +46,7 @@ abstract class AbstractUiItem extends AbstractEntity implements
      *
      * @param array $data The class depdendencies.
      */
-    public function __construct(array $data = null)
+    public function __construct(?array $data = null)
     {
         if (!isset($data['logger'])) {
             $data['logger'] = new NullLogger();

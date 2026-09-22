@@ -82,7 +82,7 @@ class OrderTree extends BaseOrder implements
      * @param  array $data Optional expression data.
      * @return self
      */
-    protected function createOrder(array $data = null)
+    protected function createOrder(?array $data = null)
     {
         $order = new static();
         if ($data !== null) {

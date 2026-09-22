@@ -325,9 +325,9 @@ class ObjectSchedule extends AbstractModel implements ObjectScheduleInterface
      * @return boolean|null  Success / Failure, or null in case of a skipped item.
      */
     public function process(
-        callable $callback = null,
-        callable $successCallback = null,
-        callable $failureCallback = null
+        ?callable $callback = null,
+        ?callable $successCallback = null,
+        ?callable $failureCallback = null
     ) {
 
         if ($this->getProcessed() === true) {

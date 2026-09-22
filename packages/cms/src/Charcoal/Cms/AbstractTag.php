@@ -47,7 +47,7 @@ abstract class AbstractTag extends Content implements TagInterface
     /**
      * @param array $data The object's data options.
      */
-    public function __construct(array $data = null)
+    public function __construct(?array $data = null)
     {
         parent::__construct($data);
 

@@ -260,7 +260,7 @@ trait FormGroupTrait
      * @param callable $inputCallback Optional. Input callback.
      * @return FormGroupInterface[]|Generator
      */
-    public function inputs(callable $inputCallback = null)
+    public function inputs(?callable $inputCallback = null)
     {
         $inputs = $this->inputs;
         uasort($inputs, [ $this, 'sortItemsByPriority' ]);

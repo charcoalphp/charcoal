@@ -468,7 +468,7 @@ abstract class AbstractUser extends Content implements
      * @param  ValidatorInterface $v Optional. A custom validator object to use for validation. If null, use object's.
      * @return boolean
      */
-    public function validate(ValidatorInterface &$v = null)
+    public function validate(?ValidatorInterface &$v = null)
     {
         $result = parent::validate($v);
 

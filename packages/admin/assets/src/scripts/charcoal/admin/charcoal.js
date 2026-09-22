@@ -190,7 +190,7 @@ Charcoal.Admin = (function () {
                 var resolved = new URL(uri, window.location.href);
                 var base     = new URL(Admin.base_url(), window.location.href);
                 return resolved.origin === base.origin;
-            } catch (err) {
+            } catch {
                 return false;
             }
         }

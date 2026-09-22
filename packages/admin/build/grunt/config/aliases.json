@@ -18,7 +18,6 @@
     ],
 
     "scripts": [
-        "eslint",
         "concat",
         "uglify"
     ],

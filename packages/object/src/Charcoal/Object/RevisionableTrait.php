@@ -176,7 +176,7 @@ trait RevisionableTrait
      * @param  callable $callback Optional object callback.
      * @return array
      */
-    public function allRevisions(callable $callback = null)
+    public function allRevisions(?callable $callback = null)
     {
         $loader = $this->createRevisionObjectCollectionLoader();
         $loader

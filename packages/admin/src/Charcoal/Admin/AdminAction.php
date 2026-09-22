@@ -392,7 +392,7 @@ abstract class AdminAction extends AbstractAction implements
      *     with a new Response object that represents a client error.
      * @return boolean Returns TRUE if the user response is valid, FALSE if it is invalid.
      */
-    protected function validateCaptchaFromRequest(RequestInterface $request, ResponseInterface &$response = null)
+    protected function validateCaptchaFromRequest(RequestInterface $request, ?ResponseInterface &$response = null)
     {
         $token = $request->getParam('g-recaptcha-response', false);
         if (empty($token)) {

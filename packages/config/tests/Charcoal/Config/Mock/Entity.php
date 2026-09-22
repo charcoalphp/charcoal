@@ -15,7 +15,7 @@ class Entity extends AbstractEntity
      *
      * @param array $data Data to pre-populate the entity.
      */
-    public function __construct(array $data = null)
+    public function __construct(?array $data = null)
     {
         if (!empty($data)) {
             $this->setData($data);

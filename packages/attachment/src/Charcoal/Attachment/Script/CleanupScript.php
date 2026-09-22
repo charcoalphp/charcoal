@@ -588,7 +588,7 @@ class CleanupScript extends AbstractScript
      * @param  array|null          $feedback Update the feedback.
      * @return boolean
      */
-    protected function deleteObject(AttachableInterface $obj, &$pruned = null, &$failed = null, array &$feedback = null)
+    protected function deleteObject(AttachableInterface $obj, &$pruned = null, &$failed = null, ?array &$feedback = null)
     {
         $verb = $this->verbose();
 

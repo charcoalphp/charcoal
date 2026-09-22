@@ -14,7 +14,7 @@ class ImagickFormatEffect extends AbstractFormatEffect
      * @param array $data The effect data, if available.
      * @return ImageFormatEffect Chainable
      */
-    public function process(array $data = null)
+    public function process(?array $data = null)
     {
         if ($this->format()) {
             $this->image()->imagick()->setimageFormat($this->format());
