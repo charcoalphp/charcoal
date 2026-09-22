@@ -90,7 +90,7 @@
                             mOpts.commandsOptions.edit.editors = mOpts.commandsOptions.edit.editors.concat(
                                 editors || []
                             );
-                        } catch (e) {
+                        } catch {
                             Object.assign(mOpts, optEditors);
                         }
 
