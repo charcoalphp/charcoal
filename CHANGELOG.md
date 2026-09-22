@@ -1,5 +1,14 @@
 # Changelog
 
+## [5.3.3](https://github.com/charcoalphp/charcoal/compare/v5.3.2...v5.3.3) (2026-09-22)
+
+
+### Bug Fixes
+
+* **admin:** replace deprecated node-sass by sass (dart). fix side effects. Bump node to v22. ([46a64d7](https://github.com/charcoalphp/charcoal/commit/46a64d75925c07ab9fd4f6af7bb5d064699bd971))
+* CI action to compile admin assets ([c56628c](https://github.com/charcoalphp/charcoal/commit/c56628cc30110e195665b050c8185ba8526936d6))
+* upgrade eslint ([4e0ae92](https://github.com/charcoalphp/charcoal/commit/4e0ae9213eb1ed40523d9d3bc18ce7d08f470fd0))
+
 ## [5.3.2](https://github.com/charcoalphp/charcoal/compare/v5.3.1...v5.3.2) (2026-09-22)
 
 
