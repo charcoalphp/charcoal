@@ -505,6 +505,17 @@ class ClearCacheTemplate extends AdminTemplate
     }
 
     /**
+     * Determine if the Cloudflare API is configured for this project.
+     *
+     * @see AdminAction::clearCloudflareCache() Consumes the same `apis.cloudflare.*` config.
+     * @return boolean
+     */
+    public function hasCloudflareCache(): bool
+    {
+        return !empty($this->apiConfig('cloudflare.zone_id')) && !empty($this->apiConfig('cloudflare.api_token'));
+    }
+
+    /**
      * Get the RegExp pattern to match a Stash / APC cache key.
      *
      * Breakdown:

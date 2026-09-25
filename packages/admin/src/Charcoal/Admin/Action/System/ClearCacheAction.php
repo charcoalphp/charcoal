@@ -2,6 +2,9 @@
 
 namespace Charcoal\Admin\Action\System;
 
+// From 'guzzlehttp/guzzle'
+use GuzzleHttp\Client as GuzzleClient;
+use GuzzleHttp\Exception\GuzzleException;
 // From PSR-7
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -72,6 +75,16 @@ class ClearCacheAction extends AbstractCacheAction
                 $message = $translator->translate('Mustache cache cleared successfully.');
             } else {
                 $message = $translator->translate('Failed to clear Mustache cache.');
+            }
+        } elseif ($cacheType === 'cloudflare') {
+            $result = $this->clearCloudflareCache($message);
+
+            if ($message === null) {
+                if ($result) {
+                    $message = $translator->translate('Cloudflare cache purged successfully.');
+                } else {
+                    $message = $translator->translate('Failed to purge Cloudflare cache.');
+                }
             }
         } elseif ($cacheType === 'item') {
             $message = $translator->translate('Deleting cache items is unsupported, for now.');
@@ -162,6 +175,64 @@ class ClearCacheAction extends AbstractCacheAction
         }
         $this->rrmdir($cachePath);
         return true;
+    }
+
+    /**
+     * Purge the Cloudflare edge cache for the configured zone.
+     *
+     * Expects `apis.cloudflare.zone_id` and `apis.cloudflare.api_token`
+     * to be defined in the application or admin configset, the same way
+     * `apis.google.recaptcha.*` is configured for reCAPTCHA validation.
+     *
+     * @param  string|null $message Reference; set to a translated feedback
+     *     message when a more specific one than the generic success/failure
+     *     text is available (e.g. "not configured" or Cloudflare's own error).
+     * @return boolean TRUE if the Cloudflare cache was purged, FALSE otherwise.
+     */
+    private function clearCloudflareCache(&$message = null): bool
+    {
+        $translator = $this->translator();
+
+        $zoneId   = $this->apiConfig('cloudflare.zone_id');
+        $apiToken = $this->apiConfig('cloudflare.api_token');
+
+        if (empty($zoneId) || empty($apiToken)) {
+            $message = $translator->translate('Cloudflare is not configured.');
+            return false;
+        }
+
+        $client = new GuzzleClient();
+
+        try {
+            $res = $client->request(
+                'POST',
+                sprintf('https://api.cloudflare.com/client/v4/zones/%s/purge_cache', $zoneId),
+                [
+                    'headers' => [
+                        'Authorization' => 'Bearer ' . $apiToken,
+                        'Content-Type'  => 'application/json',
+                    ],
+                    'json' => [
+                        'purge_everything' => true,
+                    ],
+                ]
+            );
+
+            $body = json_decode((string)$res->getBody(), true);
+
+            if (!empty($body['success'])) {
+                return true;
+            }
+
+            if (!empty($body['errors'][0]['message'])) {
+                $message = $body['errors'][0]['message'];
+            }
+
+            return false;
+        } catch (GuzzleException $e) {
+            $message = $translator->translate('Failed to reach Cloudflare: ') . $e->getMessage();
+            return false;
+        }
     }
 
     private function rrmdir(string $dir, bool $deleteCurrentFolder = false): void

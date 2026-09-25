@@ -41,6 +41,16 @@
             {{/ hasViewCache }}
             {{/ isMemory }}
 
+            {{# hasCloudflareCache }}
+            <div class="c-cache-types row mb-4">
+                <div class="col-12">
+                    <div class="card-grid">
+                        {{> charcoal/admin/widget/cache/type/cloudflare }}
+                    </div>
+                </div>
+            </div>
+            {{/ hasCloudflareCache }}
+
             {{^ isApc }}
             <div class="alert alert-warning" role="alert">
                 <p>{{# _t }}Cache statistics are only available for the APC cache type.{{/ _t }}</p>

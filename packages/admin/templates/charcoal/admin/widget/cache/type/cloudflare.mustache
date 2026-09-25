@@ -1,0 +1,15 @@
+<section class="card w-100">
+    <header class="card-header">
+        <h3 class="card-title mb-0">{{# _t }}Cloudflare Cache{{/ _t }}</h3>
+    </header>
+    <div class="card-body">
+        <p>{{# _t }}Purges the Cloudflare edge cache for this site. This removes *all* cached assets and pages from Cloudflare's network, forcing them to be re-fetched from the origin on next request.{{/ _t }}</p>
+        <p><small>{{# _t }}This is separate from the caches above: it clears content cached at Cloudflare's edge, not this application's own internal cache.{{/ _t }}</small></p>
+    </div>
+    <footer class="card-footer bg-transparent">
+        <button class="btn btn-lg btn-primary" data-clear="cache" data-cache-type="cloudflare">
+            <i class="fa fa-trash" aria-hidden="true">&nbsp;</i>
+            <span class="btn-label">{{# _t }}Purge Cloudflare Cache{{/ _t }}</span>
+        </button>
+    </footer>
+</section>
