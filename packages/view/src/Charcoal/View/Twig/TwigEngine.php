@@ -167,7 +167,7 @@ class TwigEngine extends AbstractEngine
      */
     public function render(string $templateIdent, $context): string
     {
-        $arrayContext = json_decode(json_encode($context), true);
+        $arrayContext = json_decode(json_encode($context, JSON_INVALID_UTF8_SUBSTITUTE) ?: '{}', true) ?? [];
         return $this->twig()->render($templateIdent, $arrayContext);
     }
 
@@ -179,7 +179,7 @@ class TwigEngine extends AbstractEngine
     public function renderTemplate(string $templateString, $context): string
     {
         $template = $this->twig()->createTemplate($templateString);
-        $arrayContext = json_decode(json_encode($context), true);
+        $arrayContext = json_decode(json_encode($context, JSON_INVALID_UTF8_SUBSTITUTE) ?: '{}', true) ?? [];
         return $template->render($arrayContext);
     }
 

@@ -10,12 +10,37 @@ use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 // From 'charcoal-admin'
 use Charcoal\Admin\Action\System\AbstractCacheAction;
+use Charcoal\View\AbstractEngine;
 
 /**
- * Empty the entire cache pool of items.
+ * Clear one or more caches.
+ *
+ * Supported cache types:
+ *
+ * - `app`: The application cache pool (pages, objects, metadata, etc.).
+ * - `pages`: The pages subset of the application cache.
+ * - `objects`: The objects and metadata subset of the application cache.
+ * - `templates`: The compiled Twig and Mustache templates.
+ * - `twig`, `mustache`: The compiled templates of a single view engine.
+ * - `cloudflare`: The Cloudflare edge cache (if configured).
+ * - `global` (or `all`): All of the above.
  */
 class ClearCacheAction extends AbstractCacheAction
 {
+    /**
+     * Human-readable list of what was cleared.
+     *
+     * @var string[]
+     */
+    private $cleared = [];
+
+    /**
+     * Human-readable list of what could not be cleared.
+     *
+     * @var string[]
+     */
+    private $errors = [];
+
     /**
      * @todo   Implement support for deleting a specific cache item.
      * @param  RequestInterface  $request  A PSR-7 compatible Request instance.
@@ -33,88 +58,187 @@ class ClearCacheAction extends AbstractCacheAction
             return $response->withStatus(400);
         }
 
-        $result  = false;
-        $message = null;
-
-        if ($cacheType === 'global') {
-            $result = $this->clearGlobalCache();
-
-            if ($result) {
-                $message = $translator->translate('Cache cleared successfully.');
-            } else {
-                $message = $translator->translate('Failed to clear cache.');
-            }
-        } elseif ($cacheType === 'pages') {
-            $result = $this->clearPagesCache();
-
-            if ($result) {
-                $message = $translator->translate('Pages cache cleared successfully.');
-            } else {
-                $message = $translator->translate('Failed to clear pages cache.');
-            }
-        } elseif ($cacheType === 'objects') {
-            $result = $this->clearObjectsCache();
-
-            if ($result) {
-                $message = $translator->translate('Objects cache cleared successfully.');
-            } else {
-                $message = $translator->translate('Failed to clear objects cache.');
-            }
-        } elseif ($cacheType === 'twig') {
-            $result = $this->clearTwigCache();
-
-            if ($result) {
-                $message = $translator->translate('Twig cache cleared successfully.');
-            } else {
-                $message = $translator->translate('Failed to clear Twig cache.');
-            }
-        } elseif ($cacheType === 'mustache') {
-            $result = $this->clearMustacheCache();
-
-            if ($result) {
-                $message = $translator->translate('Mustache cache cleared successfully.');
-            } else {
-                $message = $translator->translate('Failed to clear Mustache cache.');
-            }
-        } elseif ($cacheType === 'cloudflare') {
-            $result = $this->clearCloudflareCache($message);
-
-            if ($message === null) {
-                if ($result) {
-                    $message = $translator->translate('Cloudflare cache purged successfully.');
-                } else {
-                    $message = $translator->translate('Failed to purge Cloudflare cache.');
+        switch ($cacheType) {
+            case 'global':
+            case 'all':
+                $this->clearAppCache();
+                $this->clearTemplatesCache();
+                if ($this->isCloudflareConfigured()) {
+                    $this->clearCloudflareCache();
                 }
-            }
-        } elseif ($cacheType === 'item') {
-            $message = $translator->translate('Deleting cache items is unsupported, for now.');
-        } else {
-            $this->addFeedback('error', $translator->translate(sprintf('Invalid cache type "%s"', $cacheType)));
-            $this->setSuccess(false);
-            return $response->withStatus(400);
+                $successMessage = $translator->translate('All caches cleared successfully.');
+                $errorMessage   = $translator->translate('Some caches could not be cleared.');
+                break;
+
+            case 'app':
+                $this->clearAppCache();
+                $successMessage = $translator->translate('Application cache cleared successfully.');
+                $errorMessage   = $translator->translate('Failed to clear application cache.');
+                break;
+
+            case 'pages':
+                $this->clearPagesCache();
+                $successMessage = $translator->translate('Pages cache cleared successfully.');
+                $errorMessage   = $translator->translate('Failed to clear pages cache.');
+                break;
+
+            case 'objects':
+                $this->clearObjectsCache();
+                $successMessage = $translator->translate('Objects cache cleared successfully.');
+                $errorMessage   = $translator->translate('Failed to clear objects cache.');
+                break;
+
+            case 'templates':
+                $this->clearTemplatesCache();
+                $successMessage = $translator->translate('Templates cache cleared successfully.');
+                $errorMessage   = $translator->translate('Failed to clear templates cache.');
+                break;
+
+            case 'twig':
+                $this->clearTwigCache();
+                $successMessage = $translator->translate('Twig cache cleared successfully.');
+                $errorMessage   = $translator->translate('Failed to clear Twig cache.');
+                break;
+
+            case 'mustache':
+                $this->clearMustacheCache();
+                $successMessage = $translator->translate('Mustache cache cleared successfully.');
+                $errorMessage   = $translator->translate('Failed to clear Mustache cache.');
+                break;
+
+            case 'cloudflare':
+                $this->clearCloudflareCache();
+                $successMessage = $translator->translate('Cloudflare cache purged successfully.');
+                $errorMessage   = $translator->translate('Failed to purge Cloudflare cache.');
+                break;
+
+            case 'item':
+                $this->addFeedback('error', $translator->translate('Deleting cache items is unsupported, for now.'));
+                $this->setSuccess(false);
+                return $response->withStatus(500);
+
+            default:
+                $this->addFeedback('error', sprintf($translator->translate('Invalid cache type "%s"'), $cacheType));
+                $this->setSuccess(false);
+                return $response->withStatus(400);
         }
+
+        $result  = empty($this->errors);
+        $message = $result ? $successMessage : $errorMessage;
+
+        $this->logCacheEvent($cacheType, $result);
 
         $this->setSuccess($result);
+        $this->addFeedback(($result ? 'success' : 'error'), $this->formatFeedback($message));
 
-        if ($result) {
-            $this->addFeedback('success', $message);
-            return $response;
-        } else {
-            $this->addFeedback('error', $message);
-            return $response->withStatus(500);
-        }
+        return $result ? $response : $response->withStatus(500);
     }
 
     /**
-     * Clear the global cache.
+     * Build the feedback message with the list of what was (and wasn't) cleared.
+     *
+     * @param  string $message The summary message.
+     * @return string
+     */
+    private function formatFeedback(string $message): string
+    {
+        $translator = $this->translator();
+
+        $html = '<p>' . $this->escape($message) . '</p>';
+
+        if (!empty($this->cleared)) {
+            $html .= '<p>' . $this->escape($translator->translate('The following caches were cleared:')) . '</p>';
+            $html .= $this->formatList($this->cleared);
+        }
+
+        if (!empty($this->errors)) {
+            $html .= '<p>' . $this->escape($translator->translate('The following caches could not be cleared:')) . '</p>';
+            $html .= $this->formatList($this->errors);
+        }
+
+        return $html;
+    }
+
+    /**
+     * @param  string[] $items The list items.
+     * @return string
+     */
+    private function formatList(array $items): string
+    {
+        return '<ul>' . implode('', array_map(function ($item) {
+            return '<li>' . $this->escape($item) . '</li>';
+        }, $items)) . '</ul>';
+    }
+
+    /**
+     * @param  string $str The string to escape.
+     * @return string
+     */
+    private function escape(string $str): string
+    {
+        return htmlspecialchars($str, ENT_QUOTES);
+    }
+
+    /**
+     * Log the cache clearing event as a warning, since it affects the whole site.
+     *
+     * @param  string  $cacheType The requested cache type.
+     * @param  boolean $result    Whether all caches were cleared.
+     * @return void
+     */
+    private function logCacheEvent(string $cacheType, bool $result): void
+    {
+        $user = $this->getAuthenticatedUser();
+
+        $this->logger->warning(
+            sprintf(
+                '[Admin] Cache clear "%s" %s by %s. Cleared: %s. Errors: %s.',
+                $cacheType,
+                ($result ? 'succeeded' : 'failed'),
+                ($user ? sprintf('%s (%s)', $user->getEmail(), $user->id()) : 'unknown user'),
+                ($this->cleared ? implode('; ', $this->cleared) : 'none'),
+                ($this->errors ? implode('; ', $this->errors) : 'none')
+            ),
+            [
+                'cache_type' => $cacheType,
+                'success'    => $result,
+                'cleared'    => $this->cleared,
+                'errors'     => $this->errors,
+                'user'       => ($user ? $user->id() : null),
+            ]
+        );
+    }
+
+    /**
+     * Record the outcome of clearing a cache.
+     *
+     * @param  boolean     $result Whether the cache was cleared.
+     * @param  string      $label  Human-readable description of the cache.
+     * @param  string|null $error  Optional error detail.
+     * @return boolean
+     */
+    private function report(bool $result, string $label, ?string $error = null): bool
+    {
+        if ($result) {
+            $this->cleared[] = $label;
+        } else {
+            $this->errors[] = ($error ? sprintf('%s: %s', $label, $error) : $label);
+        }
+
+        return $result;
+    }
+
+    /**
+     * Clear the entire application cache pool.
      *
      * @return boolean TRUE if cache type cleared, FALSE otherwise.
      */
-    private function clearGlobalCache()
+    private function clearAppCache(): bool
     {
-        $cache  = $this->cachePool();
-        $result = $cache->clear();
-        return $result;
+        return $this->report(
+            $this->cachePool()->clear(),
+            $this->translator()->translate('Application cache (pages, objects, metadata and all other items)')
+        );
     }
 
     /**
@@ -122,11 +246,12 @@ class ClearCacheAction extends AbstractCacheAction
      *
      * @return boolean TRUE if cache type cleared, FALSE otherwise.
      */
-    private function clearPagesCache()
+    private function clearPagesCache(): bool
     {
-        $cache  = $this->cachePool();
-        $result = $cache->deleteItems([ 'request', 'template' ]);
-        return $result;
+        return $this->report(
+            $this->cachePool()->deleteItems([ 'request', 'template' ]),
+            $this->translator()->translate('Pages cache (request and template items)')
+        );
     }
 
     /**
@@ -134,34 +259,55 @@ class ClearCacheAction extends AbstractCacheAction
      *
      * @return boolean TRUE if cache type cleared, FALSE otherwise.
      */
-    private function clearObjectsCache()
+    private function clearObjectsCache(): bool
     {
-        $cache  = $this->cachePool();
-        $result = $cache->deleteItems([ 'object', 'metadata' ]);
-        return $result;
+        return $this->report(
+            $this->cachePool()->deleteItems([ 'object', 'metadata' ]),
+            $this->translator()->translate('Objects cache (object and metadata items)')
+        );
+    }
+
+    /**
+     * Clear the compiled templates of all available view engines.
+     *
+     * @return boolean TRUE if all template caches were cleared, FALSE otherwise.
+     */
+    private function clearTemplatesCache(): bool
+    {
+        $twig     = $this->clearTwigCache();
+        $mustache = $this->clearMustacheCache();
+
+        return ($twig && $mustache);
     }
 
     private function clearTwigCache(): bool
     {
-        $engine = $this->getTwigEngine();
-        if (!$engine) {
-            return true;
-        }
-
-        $defaultCachePath = realpath($engine->cache());
-        $cachePath = $defaultCachePath
-            ? $defaultCachePath
-            : realpath($this->appConfig['publicPath'] . DIRECTORY_SEPARATOR . $engine->cache());
-        if (!is_dir($cachePath)) {
-            return false;
-        }
-        $this->rrmdir($cachePath);
-        return true;
+        return $this->clearViewCache(
+            $this->getTwigEngine(),
+            $this->translator()->translate('Twig compiled templates')
+        );
     }
 
     private function clearMustacheCache(): bool
     {
-        $engine = $this->getMustacheEngine();
+        return $this->clearViewCache(
+            $this->getMustacheEngine(),
+            $this->translator()->translate('Mustache compiled templates')
+        );
+    }
+
+    /**
+     * Delete the compiled templates of a view engine.
+     *
+     * Skipped silently if the engine is unavailable. A missing cache folder
+     * is not an error: there is simply nothing to clear.
+     *
+     * @param  AbstractEngine|null  $engine The view engine.
+     * @param  string               $label  Human-readable description of the cache.
+     * @return boolean TRUE if cache cleared (or nothing to clear), FALSE otherwise.
+     */
+    private function clearViewCache(?AbstractEngine $engine, string $label): bool
+    {
         if (!$engine) {
             return true;
         }
@@ -170,11 +316,25 @@ class ClearCacheAction extends AbstractCacheAction
         $cachePath = $defaultCachePath
             ? $defaultCachePath
             : realpath($this->appConfig['publicPath'] . DIRECTORY_SEPARATOR . $engine->cache());
-        if (!is_dir($cachePath)) {
-            return false;
+        if (!$cachePath || !is_dir($cachePath)) {
+            return $this->report(true, sprintf(
+                $this->translator()->translate('%s (nothing to clear)'),
+                $label
+            ));
         }
+
         $this->rrmdir($cachePath);
-        return true;
+        return $this->report(true, $label);
+    }
+
+    /**
+     * Determine if the Cloudflare API is configured for this project.
+     *
+     * @return boolean
+     */
+    private function isCloudflareConfigured(): bool
+    {
+        return !empty($this->apiConfig('cloudflare.zone_id')) && !empty($this->apiConfig('cloudflare.api_token'));
     }
 
     /**
@@ -184,22 +344,20 @@ class ClearCacheAction extends AbstractCacheAction
      * to be defined in the application or admin configset, the same way
      * `apis.google.recaptcha.*` is configured for reCAPTCHA validation.
      *
-     * @param  string|null $message Reference; set to a translated feedback
-     *     message when a more specific one than the generic success/failure
-     *     text is available (e.g. "not configured" or Cloudflare's own error).
      * @return boolean TRUE if the Cloudflare cache was purged, FALSE otherwise.
      */
-    private function clearCloudflareCache(&$message = null): bool
+    private function clearCloudflareCache(): bool
     {
         $translator = $this->translator();
 
+        $label = $translator->translate('Cloudflare edge cache');
+
+        if (!$this->isCloudflareConfigured()) {
+            return $this->report(false, $label, $translator->translate('Cloudflare is not configured.'));
+        }
+
         $zoneId   = $this->apiConfig('cloudflare.zone_id');
         $apiToken = $this->apiConfig('cloudflare.api_token');
-
-        if (empty($zoneId) || empty($apiToken)) {
-            $message = $translator->translate('Cloudflare is not configured.');
-            return false;
-        }
 
         $client = new GuzzleClient();
 
@@ -221,17 +379,21 @@ class ClearCacheAction extends AbstractCacheAction
             $body = json_decode((string)$res->getBody(), true);
 
             if (!empty($body['success'])) {
-                return true;
+                $label = sprintf(
+                    $translator->translate('Cloudflare edge cache for zone %s (purge ID: %s): all HTML pages, static assets and other cached files'),
+                    $zoneId,
+                    ($body['result']['id'] ?? '?')
+                );
+                return $this->report(true, $label);
             }
 
-            if (!empty($body['errors'][0]['message'])) {
-                $message = $body['errors'][0]['message'];
-            }
-
-            return false;
+            return $this->report(false, $label, ($body['errors'][0]['message'] ?? null));
         } catch (GuzzleException $e) {
-            $message = $translator->translate('Failed to reach Cloudflare: ') . $e->getMessage();
-            return false;
+            return $this->report(
+                false,
+                $label,
+                $translator->translate('Failed to reach Cloudflare: ') . $e->getMessage()
+            );
         }
     }
 

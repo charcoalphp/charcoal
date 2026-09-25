@@ -20,36 +20,20 @@
                 {{> charcoal/admin/widget/cache/info }}
             </header>
             {{/ cacheInfo }}
+            <div class="c-cache-types row mb-4">
+                <div class="col-12">
+                    <div class="card-grid">
+                        {{> charcoal/admin/widget/cache/type/global }}
+                    </div>
+                </div>
+            </div>
+
             {{# isMemory }}
             <div class="alert alert-info" role="alert">
                 <p>{{# _t }}The Ephemeral driver is a special backend that only stores data for the lifetime of the script, whether it be a longer running process or a web request.{{/ _t }}</p>
                 <p>{{# _t }}Items pushed to this driver are stored in the script's running memory.{{/ _t }}</p>
             </div>
-            {{# hasViewCache }}
-            <div class="c-cache-types row mb-4">
-                <div class="col-12">
-                    <div class="card-grid">
-                        {{# hasTwigCache }}
-                        {{> charcoal/admin/widget/cache/type/twig }}
-                        {{/ hasTwigCache }}
-                        {{# hasMustacheCache }}
-                        {{> charcoal/admin/widget/cache/type/mustache }}
-                        {{/ hasMustacheCache }}
-                    </div>
-                </div>
-            </div>
-            {{/ hasViewCache }}
             {{/ isMemory }}
-
-            {{# hasCloudflareCache }}
-            <div class="c-cache-types row mb-4">
-                <div class="col-12">
-                    <div class="card-grid">
-                        {{> charcoal/admin/widget/cache/type/cloudflare }}
-                    </div>
-                </div>
-            </div>
-            {{/ hasCloudflareCache }}
 
             {{^ isApc }}
             <div class="alert alert-warning" role="alert">
@@ -62,16 +46,25 @@
                 <div class="col-12">
                     <div class="card-grid">
                         {{> charcoal/admin/widget/cache/types }}
-                        {{# hasTwigCache }}
-                        {{> charcoal/admin/widget/cache/type/twig }}
-                        {{/ hasTwigCache }}
-                        {{# hasMustacheCache }}
-                        {{> charcoal/admin/widget/cache/type/mustache }}
-                        {{/ hasMustacheCache }}
+                    </div>
+                </div>
+            </div>
+            {{/ isMemory }}
+
+            <div class="c-cache-types row mb-4">
+                <div class="col-12">
+                    <div class="card-grid">
+                        {{# hasViewCache }}
+                        {{> charcoal/admin/widget/cache/type/templates }}
+                        {{/ hasViewCache }}
+                        {{# hasCloudflareCache }}
+                        {{> charcoal/admin/widget/cache/type/cloudflare }}
+                        {{/ hasCloudflareCache }}
                     </div>
                 </div>
             </div>
 
+            {{^ isMemory }}
             <div class="c-cache-items row">
                 <div class="col-12">
                     {{> charcoal/admin/widget/cache/items }}
