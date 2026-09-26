@@ -359,7 +359,9 @@ class ClearCacheAction extends AbstractCacheAction
         $zoneId   = $this->apiConfig('cloudflare.zone_id');
         $apiToken = $this->apiConfig('cloudflare.api_token');
 
-        $client = new GuzzleClient();
+        $client = new GuzzleClient([
+            'timeout' => 5,
+        ]);
 
         try {
             $res = $client->request(
