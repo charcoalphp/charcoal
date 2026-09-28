@@ -318,6 +318,21 @@ class DatabaseFilterTest extends AbstractTestCase
     }
 
     /**
+     * Test "condition" property with binds.
+     *
+     * @return void
+     */
+    public function testCustomSqlWithBinds()
+    {
+        $obj = $this->createExpression();
+
+        $obj->setCondition('objTable.foo = objTable.baz');
+        $obj->mergeBinds([ 'filter_10' => true ]);
+        $this->assertEquals('objTable.foo = objTable.baz', $obj->sql());
+        $this->assertSame([ 'filter_10' => true ], $obj->binds());
+    }
+
+    /**
      * Test the negation of the "condition" property with the "operator" property.
      *
      * @return void

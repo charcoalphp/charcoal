@@ -45,16 +45,48 @@ class DatabaseFilter extends Filter implements
     private static $bindSequence = 0;
 
     /**
+     * Set the filter clause data.
+     *
+     * @param  array<string,mixed> $data The expression data;
+     *     as an associative array.
+     * @return self
+     */
+    public function setData(array $data)
+    {
+        parent::setData($data);
+
+        if (isset($data['binds'])) {
+            $this->mergeBinds($data['binds']);
+        }
+
+        return $this;
+    }
+
+    /**
      * Retrieve the default values for filtering.
      *
-     * @return array
+     * @return array<string,mixed>
      */
     public function defaultData()
     {
         $defaults = parent::defaultData();
         $defaults['table'] = DatabaseSource::DEFAULT_TABLE_ALIAS;
+        $defaults['binds'] = [];
 
         return $defaults;
+    }
+
+    /**
+     * Retrieve the filter clause structure.
+     *
+     * @return array<string,mixed> An associative array.
+     */
+    public function data()
+    {
+        $data = parent::data();
+        $data['binds'] = $this->binds();
+
+        return $data;
     }
 
     /**
@@ -82,16 +114,15 @@ class DatabaseFilter extends Filter implements
     /**
      * Converts the filter into a SQL expression for the WHERE clause.
      *
-     * Resets and rebuilds {@see binds()} for this compilation.
+     * Unless a condition, resets and rebuilds {@see binds()} for this compilation.
      *
      * @return string A SQL string fragment.
      */
     public function sql()
     {
-        $this->binds = [];
-
         if ($this->active()) {
             if ($this->hasFilters()) {
+                $this->binds = [];
                 $sql = $this->byFilters();
                 if ($this->isNegating()) {
                     return $this->operator() . ' ' . $sql;
@@ -108,6 +139,7 @@ class DatabaseFilter extends Filter implements
             }
 
             if ($this->hasFields()) {
+                $this->binds = [];
                 return $this->byPredicate();
             }
         }
