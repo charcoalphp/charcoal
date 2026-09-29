@@ -246,13 +246,18 @@ class LostPasswordAction extends AdminAction
             $subject = $translator->translate('Charcoal — Password Reset');
         }
 
-        $from = [
-            'name'  => 'Charcoal',
-            'email' => 'charcoal@locomotive.ca'
-        ];
-
         // Create email
         $emailObj = $this->emailFactory->create('email');
+
+        // Use the configured default sender (`email.default_from`), if any.
+        $from = $emailObj->config('default_from');
+        if (!$from) {
+            $from = [
+                'name'  => 'Charcoal',
+                'email' => 'charcoal@locomotive.ca'
+            ];
+        }
+
         $emailObj->setData([
             'campaign'          => 'admin.lost-password',
             'to'                => $userEmail,
