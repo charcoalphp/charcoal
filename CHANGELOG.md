@@ -1,5 +1,12 @@
 # Changelog
 
+## [5.3.5](https://github.com/charcoalphp/charcoal/compare/v5.3.4...v5.3.5) (2026-09-30)
+
+
+### Bug Fixes
+
+* **admin:** Use configured default email for reset password ([#130](https://github.com/charcoalphp/charcoal/issues/130)) ([3f65c06](https://github.com/charcoalphp/charcoal/commit/3f65c06caee9b43d4989c5a87884aabf8980970f))
+
 ## [5.3.4](https://github.com/charcoalphp/charcoal/compare/v5.3.3...v5.3.4) (2026-09-22)
 
 
