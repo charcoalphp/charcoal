@@ -1,0 +1,41 @@
+<section class="card">
+    <header class="card-header">
+        <h3 class="card-title mb-0">{{# _t }}Templates Cache{{/ _t }}</h3>
+    </header>
+    <div class="card-body">
+        <p>{{# _t }}The compiled templates of the view engines. Clearing this cache will make sure templates are recompiled at next request.{{/ _t }}</p>
+        {{# hasTwigCache }}
+        <h4 class="h6">{{# _t }}Twig{{/ _t }}</h4>
+        {{# cacheInfo.twig.no_cache_folder }}
+        <p>{{# _t }}There is no Cache folder created for Twig.{{/ _t }}</p>
+        {{/ cacheInfo.twig.no_cache_folder }}
+        {{^ cacheInfo.twig.no_cache_folder }}
+        <dl>
+            <dt>{{# _t }}Num Entries{{/ _t }}</dt>
+            <dd>{{ cacheInfo.twig.num_entries }}</dd>
+            <dt>{{# _t }}Total Size{{/ _t }}</dt>
+            <dd>{{ cacheInfo.twig.total_size }}</dd>
+        </dl>
+        {{/ cacheInfo.twig.no_cache_folder }}
+        {{/ hasTwigCache }}
+        {{# hasMustacheCache }}
+        <h4 class="h6">{{# _t }}Mustache{{/ _t }}</h4>
+        {{# cacheInfo.mustache.no_cache_folder }}
+        <p>{{# _t }}There is no Cache folder created for Mustache.{{/ _t }}</p>
+        {{/ cacheInfo.mustache.no_cache_folder }}
+        {{^ cacheInfo.mustache.no_cache_folder }}
+        <dl>
+            <dt>{{# _t }}Num Entries{{/ _t }}</dt>
+            <dd>{{ cacheInfo.mustache.num_entries }}</dd>
+            <dt>{{# _t }}Total Size{{/ _t }}</dt>
+            <dd>{{ cacheInfo.mustache.total_size }}</dd>
+        </dl>
+        {{/ cacheInfo.mustache.no_cache_folder }}
+        {{/ hasMustacheCache }}
+    </div>
+    <footer class="card-footer bg-transparent">
+        <button class="btn btn-primary" data-clear="cache" data-cache-type="templates">
+            <span class="btn-label">{{# _t }}Clear Templates Cache{{/ _t }}</span>
+        </button>
+    </footer>
+</section>

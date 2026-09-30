@@ -118,11 +118,13 @@ class ClearCacheTemplate extends AdminTemplate
             $cacheType = isset($flip['\\' . $driver]) ? $flip['\\' . $driver] : $driver;
 
             $globalItems = $this->globalCacheItems();
+            $appInfo     = $this->globalCacheInfo();
             $this->cacheInfo = [
                 'type'              => $cacheType,
                 'active'            => $this->cacheConfig['active'],
                 'namespace'         => $this->getCacheNamespace(),
-                'global'            => $this->globalCacheInfo(),
+                'app'               => $appInfo,
+                'global'            => $appInfo,
                 'pages'             => $this->pagesCacheInfo(),
                 'objects'           => $this->objectsCacheInfo(),
                 'twig'              => $this->twigCacheInfo(),
@@ -502,6 +504,17 @@ class ClearCacheTemplate extends AdminTemplate
     public function hasViewCache(): bool
     {
         return ($this->hasTwigCache() || $this->hasMustacheCache());
+    }
+
+    /**
+     * Determine if the Cloudflare API is configured for this project.
+     *
+     * @see ClearCacheAction::clearCloudflareCache() Consumes the same `apis.cloudflare.*` config.
+     * @return boolean
+     */
+    public function hasCloudflareCache(): bool
+    {
+        return !empty($this->apiConfig('cloudflare.zone_id')) && !empty($this->apiConfig('cloudflare.api_token'));
     }
 
     /**
