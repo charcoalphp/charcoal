@@ -503,7 +503,11 @@ class ElfinderTemplate extends AdminTemplate
                 $settings['onlyMimes'] = $property['acceptedMimetypes'];
             }
 
-            $settings['rememberLastDir'] = !($property instanceof FileProperty);
+            // By default, file properties always start in their upload path.
+            // Can be overridden with `admin.elfinder.client.rememberLastDir`.
+            if (!isset($settings['rememberLastDir'])) {
+                $settings['rememberLastDir'] = !($property instanceof FileProperty);
+            }
         }
 
         return $settings;
