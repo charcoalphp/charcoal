@@ -117,6 +117,10 @@ class ObjectRevisionTest extends AbstractTestCase
         $this->obj->setRevUser(null);
         $this->assertNull($this->obj['revUser']);
 
+        $ret = $this->obj->setRevUser(42);
+        $this->assertSame($ret, $this->obj);
+        $this->assertSame('42', $this->obj['revUser']);
+
         $this->expectException(\InvalidArgumentException::class);
         $this->obj->setRevUser(false);
     }
