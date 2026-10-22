@@ -7,6 +7,13 @@
 
 * **object:** accept integer revision user identifiers ([f6f6b85](https://github.com/charcoalphp/charcoal/commit/f6f6b850d55bc47343531dd216177e080dcd0422))
 
+## [5.3.6](https://github.com/charcoalphp/charcoal/compare/v5.3.5...v5.3.6) (2026-10-22)
+
+
+### Bug Fixes
+
+* **object:** accept integer revision user identifiers ([f6f6b85](https://github.com/charcoalphp/charcoal/commit/f6f6b850d55bc47343531dd216177e080dcd0422))
+
 ## [5.3.5](https://github.com/charcoalphp/charcoal/compare/v5.3.4...v5.3.5) (2026-09-30)
 
 
