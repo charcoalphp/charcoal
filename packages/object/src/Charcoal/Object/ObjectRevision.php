@@ -185,8 +185,8 @@ class ObjectRevision extends AbstractModel implements ObjectRevisionInterface
     }
 
     /**
-     * @param  string $revUser The revision user ident.
-     * @throws InvalidArgumentException If the revision user parameter is not a string.
+     * @param  string|integer $revUser The revision user ident.
+     * @throws InvalidArgumentException If the revision user parameter is not a string or integer.
      * @return ObjectRevision Chainable
      */
     public function setRevUser($revUser)
@@ -195,6 +195,12 @@ class ObjectRevision extends AbstractModel implements ObjectRevisionInterface
             $this->revUser = null;
             return $this;
         }
+
+        // User identifiers are often stored as integers in legacy schemas.
+        if (is_int($revUser)) {
+            $revUser = (string)$revUser;
+        }
+
         if (!is_string($revUser)) {
             throw new InvalidArgumentException(
                 'Revision user must be a string.'

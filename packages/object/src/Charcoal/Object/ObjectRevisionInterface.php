@@ -54,7 +54,7 @@ interface ObjectRevisionInterface
     public function getRevTs();
 
     /**
-     * @param string $revUser The revision user ident.
+     * @param string|integer $revUser The revision user ident.
      * @return \Charcoal\Object\ObjectRevisionInterface Chainable
      */
     public function setRevUser($revUser);
