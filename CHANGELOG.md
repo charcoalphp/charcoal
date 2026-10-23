@@ -1,5 +1,12 @@
 # Changelog
 
+## [5.3.7](https://github.com/charcoalphp/charcoal/compare/v5.3.6...v5.3.7) (2026-10-23)
+
+
+### Bug Fixes
+
+* **admin:** restore tab panes for tabbed multi-groups ([2892b26](https://github.com/charcoalphp/charcoal/commit/2892b269b309a358c16dbee418a62f1c84cc436e))
+
 ## [5.3.6](https://github.com/charcoalphp/charcoal/compare/v5.3.5...v5.3.6) (2026-10-22)
 
 
