@@ -11,13 +11,13 @@
             {{# formLayout }}
                 {{> charcoal/admin/widget/layout.start }}
             {{/ formLayout }}
-            <div class="c-form-widget_group{{# ident }} form-group-{{ . }}{{/ ident }}{{# formLayout.cellSpanBy12 }} col-md-{{ . }}{{/ formLayout.cellSpanBy12 }} js-group-tab{{^ isDisplayModeLang }}{{# isTabbable }} tab-pane{{^ isHidden }} active{{/ isHidden }}{{/ isTabbable }}{{/ isDisplayModeLang }}{{^ isTabbable }}{{# isHidden }} hidden{{/ isHidden }}{{/ isTabbable }}"
+            <div class="c-form-widget_group{{# ident }} form-group-{{ . }}{{/ ident }}{{# formLayout.cellSpanBy12 }} col-md-{{ . }}{{/ formLayout.cellSpanBy12 }} js-group-tab{{^ isDisplayModeLang }}{{# isTabPane }} tab-pane{{^ isHidden }} active{{/ isHidden }}{{/ isTabPane }}{{/ isDisplayModeLang }}{{^ isTabPane }}{{# isHidden }} hidden{{/ isHidden }}{{/ isTabPane }}"
                 id="{{ widgetId }}"
                 style="{{# conditionalLogicUnmet }}display:none;{{/ conditionalLogicUnmet }}"
-                {{^ isDisplayModeLang }}{{# isTabbable }}
+                {{^ isDisplayModeLang }}{{# isTabPane }}
                 role="tabpanel"
                 aria-labelledby="{{ widgetId }}_tab_{{ident}}"
-                {{/ isTabbable }}{{/ isDisplayModeLang }}>
+                {{/ isTabPane }}{{/ isDisplayModeLang }}>
 
                 {{> *template }}
             </div>
