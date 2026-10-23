@@ -161,6 +161,24 @@ trait FormGroupTrait
     }
 
     /**
+     * Whether this group is rendered as a tab pane by its parent form.
+     *
+     * This must always reflect the parent form's tab mode. Unlike
+     * {@see self::isTabbable()}, it must not be overridden to describe the
+     * group's own nested groups: implementations such as MultiGroupFormGroup
+     * customize isTabbable() so their children are not tabbed, but the group
+     * itself is still a pane in its parent form.
+     *
+     * @return boolean
+     */
+    public function isTabPane()
+    {
+        $form = $this->form();
+
+        return $form !== null && method_exists($form, 'isTabbable') && $form->isTabbable();
+    }
+
+    /**
      * Whether the parent form displays groups as language panes.
      *
      * @return boolean

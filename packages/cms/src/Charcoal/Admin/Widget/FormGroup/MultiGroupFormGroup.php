@@ -180,4 +180,19 @@ class MultiGroupFormGroup extends MultiGroupWidget implements
 
         return $this;
     }
+
+    /**
+     * Whether the multi-group's nested groups are displayed as tabs.
+     *
+     * The multi-group itself is rendered as a pane of its parent form; that
+     * is handled by {@see FormGroupTrait::isTabPane()}. This method only
+     * controls how the multi-group displays its own children (stacked by
+     * default, tabbed only when "group_display_mode" is "tab").
+     *
+     * @return boolean
+     */
+    public function isTabbable()
+    {
+        return parent::isTabbable();
+    }
 }

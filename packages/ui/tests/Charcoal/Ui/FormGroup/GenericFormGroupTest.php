@@ -22,6 +22,11 @@ class GenericFormGroupTest extends AbstractTestCase
     public $obj;
 
     /**
+     * @var GenericForm
+     */
+    public $form;
+
+    /**
      * @return void
      */
     protected function setUp(): void
@@ -30,7 +35,7 @@ class GenericFormGroupTest extends AbstractTestCase
         $container->register(new FormServiceProvider());
         $container->register(new LayoutServiceProvider());
 
-        $form = new GenericForm([
+        $this->form = new GenericForm([
             'logger'             => $container['logger'],
             'view'               => $container['view'],
             'layout_builder'     => $container['layout/builder'],
@@ -38,7 +43,7 @@ class GenericFormGroupTest extends AbstractTestCase
         ]);
 
         $this->obj = new GenericFormGroup([
-            'form'               => $form,
+            'form'               => $this->form,
             'logger'             => $container['logger'],
             'view'               => $container['view'],
             'layout_builder'     => $container['layout/builder'],
@@ -52,5 +57,17 @@ class GenericFormGroupTest extends AbstractTestCase
     public function testConstructor()
     {
         $this->assertInstanceOf(GenericFormGroup::class, $this->obj);
+    }
+
+    /**
+     * @return void
+     */
+    public function testIsTabPaneFollowsParentFormDisplayMode()
+    {
+        $this->assertFalse($this->obj->isTabPane());
+
+        $this->form->setGroupDisplayMode('tab');
+
+        $this->assertTrue($this->obj->isTabPane());
     }
 }
