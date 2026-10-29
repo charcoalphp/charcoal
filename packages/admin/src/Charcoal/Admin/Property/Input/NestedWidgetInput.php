@@ -231,6 +231,13 @@ class NestedWidgetInput extends AbstractPropertyInput implements
         }
 
         $controller = $this->viewController();
+
+        // `ViewableTrait::viewController()` falls back to this input. Calling
+        // `$controller->form()` in that case would recurse into this method.
+        if ($controller === null || $controller === $this) {
+            return null;
+        }
+
         if ($controller instanceof FormInterface) {
             return $controller;
         }
