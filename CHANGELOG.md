@@ -1,5 +1,12 @@
 # Changelog
 
+## [5.3.8](https://github.com/charcoalphp/charcoal/compare/v5.3.7...v5.3.8) (2026-10-29)
+
+
+### Bug Fixes
+
+* **admin:** prevent recursion in NestedWidgetInput::form() ([e81a230](https://github.com/charcoalphp/charcoal/commit/e81a2300633ad1e636f1e2e126cbd4f347a3471c))
+
 ## [5.3.7](https://github.com/charcoalphp/charcoal/compare/v5.3.6...v5.3.7) (2026-10-23)
 
 
