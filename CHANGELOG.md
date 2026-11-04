@@ -1,5 +1,12 @@
 # Changelog
 
+## [5.3.9](https://github.com/charcoalphp/charcoal/compare/v5.3.8...v5.3.9) (2026-11-04)
+
+
+### Bug Fixes
+
+* **property:** escape sprite label in aria-label ([d70fb41](https://github.com/charcoalphp/charcoal/commit/d70fb41e0d60a26b854e4494352c2353a7cfb7d8))
+
 ## [5.3.8](https://github.com/charcoalphp/charcoal/compare/v5.3.7...v5.3.8) (2026-10-29)
 
 
