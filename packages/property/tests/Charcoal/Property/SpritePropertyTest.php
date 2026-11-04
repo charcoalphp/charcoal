@@ -70,6 +70,25 @@ class SpritePropertyTest extends AbstractTestCase
         $this->assertEquals([], $ret);
     }
 
+    public function testDisplayValEscapesLabel()
+    {
+        $container = $this->getContainer();
+        $this->getContainerProvider()->registerView($container);
+
+        $obj = new SpriteProperty([
+            'database'   => $container['database'],
+            'logger'     => $container['logger'],
+            'translator' => $container['translator'],
+            'container'  => $container
+        ]);
+        $obj->setSprite('foo.svg');
+
+        $html = $obj->displayVal('bar');
+
+        $this->assertStringContainsString('aria-label="Selected sprite icon &quot;bar&quot;"', $html);
+        $this->assertStringNotContainsString('aria-label="Selected sprite icon "bar""', $html);
+    }
+
     public function testSqlExtra()
     {
         $this->assertEquals('', $this->obj->sqlExtra());
