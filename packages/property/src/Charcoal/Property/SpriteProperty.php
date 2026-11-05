@@ -208,6 +208,7 @@ class SpriteProperty extends AbstractProperty implements SelectablePropertyInter
             $label = $this->translator()->trans('Selected sprite icon "%icon%"', [
                 '%icon%' => $val,
             ]);
+            $label = htmlspecialchars($label, ENT_QUOTES, 'UTF-8');
 
             $val = $this->view->renderTemplate(
                 '<svg fill="currentColor" viewBox="0 0 25 25" height="40px" role="img" aria-label="' . $label . '">' .
