@@ -1,5 +1,13 @@
 # Changelog
 
+## [5.3.10](https://github.com/charcoalphp/charcoal/compare/v5.3.9...v5.3.10) (2026-11-05)
+
+
+### Bug Fixes
+
+* **admin:** prevent password managers from autofilling selectize inputs ([2ad966f](https://github.com/charcoalphp/charcoal/commit/2ad966f3d49708d2990c688da149da4474419783))
+* **property:** escape sprite icon label in aria-label ([8f771c4](https://github.com/charcoalphp/charcoal/commit/8f771c43a739ca42007f7330baee9ea313ead18f))
+
 ## [5.3.9](https://github.com/charcoalphp/charcoal/compare/v5.3.8...v5.3.9) (2026-11-04)
 
 
