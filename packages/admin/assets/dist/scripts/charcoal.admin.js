@@ -11357,6 +11357,16 @@ Charcoal.Admin.Property_Input_SelectPicker.prototype.create_select = function ()
         var $select = this.$input.selectize(this.selectize_options);
 
         this.selectize = $select[0].selectize;
+
+        // Selectize creates its search input with autocomplete="new-password",
+        // which password managers interpret as a password field.
+        this.selectize.$control_input.attr({
+            autocomplete: 'off',
+            'data-bwignore': 'true',
+            'data-1p-ignore': 'true',
+            'data-lpignore': 'true',
+            'data-protonpass-ignore': 'true'
+        });
     };
 
     Selectize.prototype.init_allow_create = function () {
