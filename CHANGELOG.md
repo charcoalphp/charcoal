@@ -1,5 +1,12 @@
 # Changelog
 
+## [5.3.11](https://github.com/charcoalphp/charcoal/compare/v5.3.10...v5.3.11) (2026-11-10)
+
+
+### Bug Fixes
+
+* **admin:** Fix escaping Message display ([2cc6fc0](https://github.com/charcoalphp/charcoal/commit/2cc6fc09533010f37be659d08aa9e33acba0a984))
+
 ## [5.3.10](https://github.com/charcoalphp/charcoal/compare/v5.3.9...v5.3.10) (2026-11-05)
 
 

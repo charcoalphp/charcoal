@@ -18,11 +18,11 @@
         "php": "^7.4 || ^8.0",
         "psr/log": "^1.0",
         "laminas/laminas-permissions-acl": "^2.8",
-        "charcoal/object": "^5.3.10",
-        "charcoal/config": "^5.3.10",
-        "charcoal/factory": "^5.3.10",
-        "charcoal/core": "^5.3.10",
-        "charcoal/translator": "^5.3.10"
+        "charcoal/object": "^5.3.11",
+        "charcoal/config": "^5.3.11",
+        "charcoal/factory": "^5.3.11",
+        "charcoal/core": "^5.3.11",
+        "charcoal/translator": "^5.3.11"
     },
     "require-dev": {
         "phpunit/phpunit": "^9.6",
