@@ -65,7 +65,7 @@ class MessageDisplay extends AbstractPropertyDisplay implements
     }
 
     /**
-     * @return Translation|null
+     * @return Translation|string|null
      */
     public function getMessage()
     {
@@ -77,16 +77,24 @@ class MessageDisplay extends AbstractPropertyDisplay implements
      */
     public function displayMessage()
     {
-        if ($this->message instanceof Translation) {
-            if (isset($this->message->isRendered) && $this->message->isRendered === false) {
-                $this->message = $this->renderTranslatableTemplate($this->message);
+        $message = $this->message;
+
+        if ($message instanceof Translation) {
+            if (isset($message->isRendered) && $message->isRendered === false) {
+                $message = $this->renderTranslatableTemplate($message);
             }
 
-            if ($this->lang()) {
-                return $this->message[$this->lang()];
+            if ($this->lang() && isset($message[$this->lang()])) {
+                $message = $message[$this->lang()];
+            } else {
+                $message = (string)$message;
             }
         }
 
-        return $this->escapeVal($this->message);
+        if (is_string($message)) {
+            return $this->escapeVal($message);
+        }
+
+        return $message;
     }
 }
