@@ -158,6 +158,26 @@ class ObjectRouteTest extends AbstractTestCase
     }
 
     /**
+     * Route / object IDs may be int or string depending on hydration.
+     * Strict comparison would treat the object's own route as a collision.
+     *
+     * @return void
+     */
+    public function testIdentitiesMatchIgnoresScalarType()
+    {
+        $this->assertTrue($this->obj->identitiesMatch(42, '42'));
+        $this->assertTrue($this->obj->identitiesMatch('42', 42));
+        $this->assertTrue($this->obj->identitiesMatch(42, 42));
+        $this->assertTrue($this->obj->identitiesMatch(null, null));
+        $this->assertFalse($this->obj->identitiesMatch(42, '43'));
+        $this->assertFalse($this->obj->identitiesMatch(null, 42));
+
+        // Demonstrates the previous strict-check failure mode.
+        $this->assertFalse(42 === '42');
+        $this->assertTrue(42 == '42');
+    }
+
+    /**
      * Set up the service container.
      *
      * @return Container
