@@ -170,6 +170,12 @@ class ObjectRoute extends AbstractModel implements
     /**
      * Determine if the current slug is unique.
      *
+     * Identity checks intentionally cast values to string: PDO / model hydration
+     * often disagree on int vs string for the same ID (`42` vs `"42"`). A strict
+     * `===` comparison falsely treats an object's own route as a collision, and
+     * {@see self::generateUniqueSlug()} then appends `-1` to the *current* slug
+     * on every regeneration (e.g. `/jobs/foo` → `/jobs/foo-1` → `/jobs/foo-1-1`).
+     *
      * @return boolean
      */
     public function isSlugUnique()
@@ -194,13 +200,13 @@ class ObjectRoute extends AbstractModel implements
         if (!$obj->id()) {
             return true;
         }
-        if ($obj->id() === $this->id()) {
+        if ($this->identitiesMatch($obj->id(), $this->id())) {
             return true;
         }
         if (
-            $obj->getRouteObjId() === $this->getRouteObjId() &&
-            $obj->getRouteObjType() === $this->getRouteObjType() &&
-            $obj->getLang() === $this->getLang()
+            $this->identitiesMatch($obj->getRouteObjId(), $this->getRouteObjId()) &&
+            $this->identitiesMatch($obj->getRouteObjType(), $this->getRouteObjType()) &&
+            $this->identitiesMatch($obj->getLang(), $this->getLang())
         ) {
             $this->setId($obj->id());
 
@@ -208,6 +214,22 @@ class ObjectRoute extends AbstractModel implements
         }
 
         return false;
+    }
+
+    /**
+     * Compare two identifiers without strict PHP type checking.
+     *
+     * @param  mixed $left  Left identity value.
+     * @param  mixed $right Right identity value.
+     * @return boolean
+     */
+    public function identitiesMatch($left, $right)
+    {
+        if ($left === null || $right === null) {
+            return $left === $right;
+        }
+
+        return ((string)$left === (string)$right);
     }
 
     /**
