@@ -1023,10 +1023,14 @@ class Email extends AbstractEntity implements
             $this->bcc()
         );
 
+        $recipientIndex = 0;
+
         foreach ($recipients as $to) {
             $log = $this->logFactory()->create(EmailLog::class);
 
-            $log->setId($logId);
+            // The first recipient keeps the ID used for open/link tracking.
+            // Subsequent recipients need a distinct primary key.
+            $log->setId(($recipientIndex === 0) ? $logId : $logId . '-' . $recipientIndex);
             $log->setQueueId($this->queueId());
             $log->setMessageId($mailer->getLastMessageId());
             $log->setCampaign($this->campaign());
@@ -1040,6 +1044,8 @@ class Email extends AbstractEntity implements
             }
 
             $log->save();
+
+            $recipientIndex++;
         }
     }
 
