@@ -1,5 +1,12 @@
 # Changelog
 
+## [5.3.12](https://github.com/charcoalphp/charcoal/compare/v5.3.11...v5.3.12) (2026-11-19)
+
+
+### Bug Fixes
+
+* **email:** ensure unique log ID for each recipient ([b54ecba](https://github.com/charcoalphp/charcoal/commit/b54ecbaa48b39d05134e7d116fd3c0640557fc69))
+
 ## [5.3.11](https://github.com/charcoalphp/charcoal/compare/v5.3.10...v5.3.11) (2026-11-10)
 
 
