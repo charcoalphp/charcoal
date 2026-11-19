@@ -17,10 +17,10 @@
     "require": {
         "php": "^7.4 || ^8.0",
         "psr/log": "^1.0",
-        "charcoal/config": "^5.3.12",
-        "charcoal/core": "^5.3.12",
-        "charcoal/factory": "^5.3.12",
-        "charcoal/translator": "^5.3.12"
+        "charcoal/config": "^5.3.13",
+        "charcoal/core": "^5.3.13",
+        "charcoal/factory": "^5.3.13",
+        "charcoal/translator": "^5.3.13"
     },
     "require-dev": {
         "php-coveralls/php-coveralls": "^2.7",

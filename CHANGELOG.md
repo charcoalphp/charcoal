@@ -1,5 +1,12 @@
 # Changelog
 
+## [5.3.13](https://github.com/charcoalphp/charcoal/compare/v5.3.12...v5.3.13) (2026-11-19)
+
+
+### Bug Fixes
+
+* **object:** Fix broken isSlugUnique method to avoid faulty slug generation. ([aa3706a](https://github.com/charcoalphp/charcoal/commit/aa3706a9995d60b257849a6f57f64286a99ff69f))
+
 ## [5.3.12](https://github.com/charcoalphp/charcoal/compare/v5.3.11...v5.3.12) (2026-11-19)
 
 
