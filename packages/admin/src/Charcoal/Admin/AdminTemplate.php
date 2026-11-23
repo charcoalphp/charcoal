@@ -19,6 +19,7 @@ use Charcoal\Translator\TranslatorAwareTrait;
 use Charcoal\Ui\PrioritizableInterface;
 // From 'charcoal-app'
 use Charcoal\App\DebugAwareTrait;
+use Charcoal\App\Exception\HttpException;
 use Charcoal\App\Template\AbstractTemplate;
 // From 'charcoal-admin'
 use Charcoal\Admin\Ui\DashboardContainerInterface;
@@ -176,6 +177,7 @@ class AdminTemplate extends AbstractTemplate implements
      * @todo   Move auth-check and redirection to a middleware or dedicated admin route.
      * @param  RequestInterface $request The request to initialize.
      * @return void
+     * @throws HttpException If the user is not authorized.
      */
     protected function authRedirect(RequestInterface $request)
     {
@@ -199,9 +201,9 @@ class AdminTemplate extends AbstractTemplate implements
             $loginPath .= '?redirect_to=' . rawurlencode($redirectTo);
         }
 
-        header('HTTP/1.0 403 Forbidden');
-        header('Location: ' . $this->adminUrl($loginPath));
-        exit;
+        throw new HttpException(403, [
+            'Location' => $this->adminUrl($loginPath)
+        ]);
     }
 
     /**

@@ -22,6 +22,7 @@ use Charcoal\Translator\TranslatorAwareTrait;
 // From 'charcoal-app'
 use Charcoal\App\Action\AbstractAction;
 use Charcoal\App\DebugAwareTrait;
+use Charcoal\App\Exception\HttpException;
 // From 'charcoal-admin'
 use Charcoal\Admin\Ui\FeedbackContainerTrait;
 use Charcoal\Admin\Support\AdminTrait;
@@ -104,6 +105,7 @@ abstract class AdminAction extends AbstractAction implements
      * @todo   Move auth-check and redirection to a middleware or dedicated admin route.
      * @param  RequestInterface $request The request to initialize.
      * @return void
+     * @throws HttpException If the user is not authorized.
      */
     protected function authRedirect(RequestInterface $request)
     {
@@ -118,8 +120,7 @@ abstract class AdminAction extends AbstractAction implements
             return;
         }
 
-        header('HTTP/1.0 403 Forbidden');
-        exit;
+        throw new HttpException(403);
     }
 
     /**

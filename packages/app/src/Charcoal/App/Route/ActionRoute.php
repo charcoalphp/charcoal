@@ -13,6 +13,7 @@ use Charcoal\Config\ConfigurableInterface;
 use Charcoal\Config\ConfigurableTrait;
 // From 'charcoal-app'
 use Charcoal\App\Action\ActionInterface;
+use Charcoal\App\Exception\HttpException;
 use Charcoal\App\Route\RouteInterface;
 use Charcoal\App\Route\ActionRouteConfig;
 
@@ -69,7 +70,12 @@ class ActionRoute implements
         $actionController = $config['controller'];
 
         $action = $container['action/factory']->create($actionController);
-        $action->init($request);
+
+        try {
+            $action->init($request);
+        } catch (HttpException $e) {
+            return $e->toResponse($response);
+        }
 
         // Set custom data from config.
         $action->setData($config['action_data']);
@@ -82,6 +88,10 @@ class ActionRoute implements
         }
 
         // Run (invoke) action.
-        return $action($request, $response);
+        try {
+            return $action($request, $response);
+        } catch (HttpException $e) {
+            return $e->toResponse($response);
+        }
     }
 }

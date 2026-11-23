@@ -13,6 +13,7 @@ use Slim\Http\Uri;
 use Charcoal\Config\ConfigurableInterface;
 use Charcoal\Config\ConfigurableTrait;
 // From 'charcoal-app'
+use Charcoal\App\Exception\HttpException;
 use Charcoal\App\Route\RouteInterface;
 use Charcoal\App\Route\TemplateRouteConfig;
 
@@ -92,7 +93,11 @@ class TemplateRoute implements
             }
         }
 
-        $templateContent = $this->templateContent($container, $request);
+        try {
+            $templateContent = $this->templateContent($container, $request);
+        } catch (HttpException $e) {
+            return $e->toResponse($response);
+        }
 
         $response->getBody()->write($templateContent);
 
