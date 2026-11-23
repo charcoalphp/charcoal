@@ -14,6 +14,7 @@ use Symfony\Component\Translation\TranslatorInterface;
  *
  * Available locales is provided with a locales manager.
  */
+#[\AllowDynamicProperties]
 class Translation implements
     TranslatableInterface,
     ArrayAccess,

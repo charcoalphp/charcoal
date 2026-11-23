@@ -33,6 +33,7 @@ use Charcoal\Admin\Property\PropertyInterface as AdminPropertyInterface;
 /**
  * Base Admin model property decorator
  */
+#[\AllowDynamicProperties]
 abstract class AbstractProperty implements
     AdminPropertyInterface,
     DescribableInterface,
