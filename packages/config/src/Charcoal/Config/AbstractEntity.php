@@ -8,7 +8,7 @@ use InvalidArgumentException;
 /**
  * Default data model.
  *
- * ### Notes on {@see \ArrayAccess}:
+ * ### Notes on {@see ArrayAccess}:
  *
  * - Keys SHOULD be formatted as "snake_case" (e.g., "first_name") or "camelCase" (e.g., "firstName").
  *   and WILL be converted to the latter {@see PSR-1} to access or assign values.
@@ -145,7 +145,7 @@ abstract class AbstractEntity implements EntityInterface
      * - If the entity has a property (e.g., `$fooBar`), its value is checked;
      * - If the entity has neither, FALSE is returned.
      *
-     * @see    \ArrayAccess
+     * @see    ArrayAccess
      * @param  string $key The data key to check.
      * @throws InvalidArgumentException If the $key is not a string or is a numeric value.
      * @return boolean TRUE if $key exists and has a value other than NULL, FALSE otherwise.
@@ -200,7 +200,7 @@ abstract class AbstractEntity implements EntityInterface
      * - If the entity has a property (e.g., `$fooBar`), its value is returned;
      * - If the entity has neither, NULL is returned.
      *
-     * @see    \ArrayAccess
+     * @see    ArrayAccess
      * @param  string $key The data key to retrieve.
      * @throws InvalidArgumentException If the $key is not a string or is a numeric value.
      * @return mixed Value of the requested $key on success, NULL if the $key is not set.
@@ -255,7 +255,7 @@ abstract class AbstractEntity implements EntityInterface
      *   its called and passed the value;
      * - If the entity has NO setter method, the value is assigned to a property (e.g., `$fooBar`).
      *
-     * @see    \ArrayAccess
+     * @see    ArrayAccess
      * @param  string $key   The data key to assign $value to.
      * @param  mixed  $value The data value to assign to $key.
      * @throws InvalidArgumentException If the $key is not a string or is a numeric value.
@@ -297,7 +297,7 @@ abstract class AbstractEntity implements EntityInterface
      * - The data key is removed from the {@see self::$keys entity's key pool}.
      * - NULL is {@see self::offsetSet() assigned} to the entity.
      *
-     * @see    \ArrayAccess
+     * @see    ArrayAccess
      * @uses   self::offsetSet()
      * @param  string $key The data key to remove.
      * @throws InvalidArgumentException If the $key is not a string or is a numeric value.
