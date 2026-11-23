@@ -24,6 +24,8 @@ use Charcoal\Property\PropertyInterface;
 // From 'charcoal-app'
 use Charcoal\App\CallableResolverAwareTrait;
 // From 'charcoal-admin'
+use Charcoal\Admin\Action\Elfinder\BufferedConnector;
+use Charcoal\Admin\Action\Elfinder\OutputException;
 use Charcoal\Admin\AdminAction;
 use Charcoal\Admin\Template\ElfinderTemplate;
 
@@ -168,7 +170,11 @@ class ElfinderConnectorAction extends AdminAction
     {
         unset($request);
 
-        $this->elfinderConnector = $this->setupElfinder();
+        try {
+            $this->elfinderConnector = $this->setupElfinder();
+        } catch (OutputException $e) {
+            return $e->toResponse($response);
+        }
 
         return $response;
     }
@@ -189,7 +195,8 @@ class ElfinderConnectorAction extends AdminAction
         $options = $this->buildConnectorOptions($extraOptions);
 
         // Run elFinder
-        $connector = new elFinderConnector(new elFinder($options));
+        $connector = new BufferedConnector(new elFinder($options));
+        $this->elfinderConnector = $connector;
         $connector->run();
 
         return $connector;
