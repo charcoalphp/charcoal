@@ -389,6 +389,25 @@ Finally, the _template view_ must also be created. The route config above specif
 {{> foo/bar/template/inc.footer }}
 ```
 
+### HTTP Exceptions
+
+Action and template controllers can abort the request with a PSR-7 response by
+throwing `Charcoal\App\Exception\HttpException`:
+
+```php
+use Charcoal\App\Exception\HttpException;
+
+throw new HttpException(302, [
+    'Location' => '/admin/login'
+]);
+```
+
+`ActionRoute` and `TemplateRoute` catch the exception, apply its status code and
+headers to the response, and return it. This keeps the response inside the
+middleware stack, unlike `header()` + `exit`. Use it for redirects and expected
+HTTP errors; any other exception is still handled by the application's error
+handler.
+
 ### Route Options
 
 > 👉 Slim's routing is actually provided by [FastRoute][fastroute]
