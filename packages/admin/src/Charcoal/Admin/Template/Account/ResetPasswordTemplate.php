@@ -52,7 +52,7 @@ class ResetPasswordTemplate extends AdminTemplate
             return true;
         }
 
-        throw new HttpException(400, [
+        throw new HttpException(302, [
             'Location' => $this->adminUrl('account/lost-password?notice=invalidtoken')
         ]);
     }

@@ -201,7 +201,7 @@ class AdminTemplate extends AbstractTemplate implements
             $loginPath .= '?redirect_to=' . rawurlencode($redirectTo);
         }
 
-        throw new HttpException(403, [
+        throw new HttpException(302, [
             'Location' => $this->adminUrl($loginPath)
         ]);
     }
