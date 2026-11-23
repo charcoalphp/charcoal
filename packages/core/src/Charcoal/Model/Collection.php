@@ -236,6 +236,7 @@ class Collection implements CollectionInterface
      * @param  mixed $offset The object primary key or array offset.
      * @return boolean
      */
+    #[\ReturnTypeWillChange]
     public function offsetExists($offset)
     {
         if (is_int($offset)) {
@@ -255,6 +256,7 @@ class Collection implements CollectionInterface
      * @param  mixed $offset The object primary key or array offset.
      * @return mixed Returns the requested object or NULL if not in the collection.
      */
+    #[\ReturnTypeWillChange]
     public function offsetGet($offset)
     {
         if (is_int($offset)) {
@@ -277,6 +279,7 @@ class Collection implements CollectionInterface
      * @throws LogicException Attempts to assign an offset.
      * @return void
      */
+    #[\ReturnTypeWillChange]
     public function offsetSet($offset, $value)
     {
         if ($offset === null) {
@@ -295,6 +298,7 @@ class Collection implements CollectionInterface
      * @param  mixed $offset The object primary key or array offset.
      * @return void
      */
+    #[\ReturnTypeWillChange]
     public function offsetUnset($offset)
     {
         if (is_int($offset)) {
@@ -337,6 +341,7 @@ class Collection implements CollectionInterface
      * @see    \Countable
      * @return integer
      */
+    #[\ReturnTypeWillChange]
     public function count()
     {
         return count($this->objects);
@@ -351,6 +356,7 @@ class Collection implements CollectionInterface
      * @see    \IteratorAggregate
      * @return \ArrayIterator
      */
+    #[\ReturnTypeWillChange]
     public function getIterator()
     {
         return new ArrayIterator($this->objects);

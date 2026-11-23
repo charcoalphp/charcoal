@@ -150,6 +150,7 @@ abstract class AbstractEntity implements EntityInterface
      * @throws InvalidArgumentException If the $key is not a string or is a numeric value.
      * @return boolean TRUE if $key exists and has a value other than NULL, FALSE otherwise.
      */
+    #[\ReturnTypeWillChange]
     public function offsetExists($key)
     {
         if (is_numeric($key)) {
@@ -205,6 +206,7 @@ abstract class AbstractEntity implements EntityInterface
      * @throws InvalidArgumentException If the $key is not a string or is a numeric value.
      * @return mixed Value of the requested $key on success, NULL if the $key is not set.
      */
+    #[\ReturnTypeWillChange]
     public function offsetGet($key)
     {
         if (is_numeric($key)) {
@@ -261,6 +263,7 @@ abstract class AbstractEntity implements EntityInterface
      * @throws InvalidArgumentException If the $key is not a string or is a numeric value.
      * @return void
      */
+    #[\ReturnTypeWillChange]
     public function offsetSet($key, $value)
     {
         if (is_numeric($key)) {
@@ -303,6 +306,7 @@ abstract class AbstractEntity implements EntityInterface
      * @throws InvalidArgumentException If the $key is not a string or is a numeric value.
      * @return void
      */
+    #[\ReturnTypeWillChange]
     public function offsetUnset($key)
     {
         if (is_numeric($key)) {
@@ -328,6 +332,7 @@ abstract class AbstractEntity implements EntityInterface
      * @see    \JsonSerializable
      * @return array Key-value array of data.
      */
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         return $this->data();

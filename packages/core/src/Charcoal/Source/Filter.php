@@ -62,6 +62,7 @@ class Filter extends Expression implements
      * @see    Countable
      * @return integer
      */
+    #[\ReturnTypeWillChange]
     public function count()
     {
         return count($this->filters);
