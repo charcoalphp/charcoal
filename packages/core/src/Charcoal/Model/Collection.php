@@ -371,20 +371,6 @@ class Collection implements CollectionInterface
     // =============================================================================================
 
     /**
-     * Retrieve the array offset from the given key.
-     *
-     * @deprecated
-     * @param  mixed $key The primary key to retrieve the offset from.
-     * @return integer Returns an array offset.
-     */
-    public function pos($key)
-    {
-        trigger_error('Collection::pos() is deprecated', E_USER_DEPRECATED);
-
-        return array_search($key, array_keys($this->objects));
-    }
-
-    /**
      * Alias of {@see self::values()}
      *
      * @deprecated
