@@ -598,20 +598,8 @@ class AdminTemplate extends AbstractTemplate implements
     }
 
     /**
-     * Alias of {@see self::recaptchaSiteKey()}.
-     *
-     * @deprecated
-     * @return string|null
-     */
-    public function recaptchaKey()
-    {
-        return $this->recaptchaSiteKey();
-    }
-
-    /**
      * Retrieve the Google reCAPTCHA public (site) key.
      *
-     * @throws RuntimeException If Google reCAPTCHA is required but not configured.
      * @return string|null
      */
     public function recaptchaSiteKey()
