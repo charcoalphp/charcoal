@@ -2,7 +2,6 @@
 
 namespace Charcoal\App\Route;
 
-use InvalidArgumentException;
 // From PSR-7
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -65,14 +64,7 @@ class ActionRoute implements
     public function __invoke(Container $container, RequestInterface $request, ResponseInterface $response)
     {
         $config = $this->config();
-
-        $actionController = $config['controller'];
-
-        $action = $container['action/factory']->create($actionController);
-        $action->init($request);
-
-        // Set custom data from config.
-        $action->setData($config['action_data']);
+        $action = $this->createAction($container, $request);
 
         // Set headers if necessary.
         if (!empty($config['headers'])) {
@@ -81,7 +73,24 @@ class ActionRoute implements
             }
         }
 
-        // Run (invoke) action.
         return $action($request, $response);
+    }
+
+    /**
+     * @param Container         $container A container instance.
+     * @param RequestInterface  $request   A PSR-7 compatible Request instance.
+     * @return ActionInterface
+     */
+    protected function createAction(Container $container, RequestInterface $request)
+    {
+        $config = $this->config();
+
+        $action = $container['action/factory']->create($config['controller']);
+        $action->init($request);
+
+        // Set custom data from config.
+        $action->setData($config['action_data']);
+
+        return $action;
     }
 }

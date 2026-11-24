@@ -2,7 +2,6 @@
 
 namespace Charcoal\App\Route;
 
-use InvalidArgumentException;
 // From PSR-7
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -14,6 +13,7 @@ use Charcoal\Config\ConfigurableTrait;
 // From 'charcoal-app'
 use Charcoal\App\Route\RouteInterface;
 use Charcoal\App\Route\ScriptRouteConfig;
+use Charcoal\App\Script\ScriptInterface;
 
 /**
  * Script Route Handler.
@@ -52,8 +52,20 @@ class ScriptRoute implements
      */
     public function __invoke(Container $container, RequestInterface $request, ResponseInterface $response)
     {
-        $config = $this->config();
-        $script = $container['script/factory']->create($config['controller']);
+        $script = $this->createScript($container, $request);
+
         return $script($request, $response);
+    }
+
+    /**
+     * @param Container         $container A container instance.
+     * @param RequestInterface  $request   A PSR-7 compatible Request instance.
+     * @return ScriptInterface
+     */
+    protected function createScript(Container $container, RequestInterface $request)
+    {
+        $config = $this->config();
+
+        return $container['script/factory']->create($config['controller']);
     }
 }
