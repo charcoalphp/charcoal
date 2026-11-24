@@ -30,13 +30,6 @@ class MapWidget extends AdminWidget implements FormGroupInterface
     protected $obj;
 
     /**
-     * The styles for the marker.
-     *
-     * @var array|null
-     */
-    private $styles;
-
-    /**
      * Latitude
      *
      * @var float|null
