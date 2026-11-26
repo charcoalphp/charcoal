@@ -42,6 +42,33 @@ abstract class AbstractEntity implements EntityInterface
     protected static $camelCache = [];
 
     /**
+     * Gets the data that can be serialized with {@see serialize()}.
+     *
+     * Introduced in PHP 7.4 and supersedes the {@see \Serializable} interface,
+     * which is deprecated since PHP 8.1.
+     *
+     * @return array Key-value array of data.
+     */
+    public function __serialize(): array
+    {
+        return $this->data();
+    }
+
+    /**
+     * Applies the data to this entity from {@see unserialize()}.
+     *
+     * Introduced in PHP 7.4 and supersedes the {@see \Serializable} interface,
+     * which is deprecated since PHP 8.1.
+     *
+     * @param  array $data Key-value array of data.
+     * @return void
+     */
+    public function __unserialize(array $data): void
+    {
+        $this->setData($data);
+    }
+
+    /**
      * Gets the data keys on this entity.
      *
      * @return array
@@ -347,7 +374,7 @@ abstract class AbstractEntity implements EntityInterface
      */
     public function serialize()
     {
-        return serialize($this->data());
+        return serialize($this->__serialize());
     }
 
     /**
@@ -359,8 +386,7 @@ abstract class AbstractEntity implements EntityInterface
      */
     public function unserialize($data)
     {
-        $data = unserialize($data);
-        $this->setData($data);
+        $this->__unserialize(unserialize($data));
     }
 
     /**

@@ -44,6 +44,33 @@ abstract class AbstractExpression implements
     abstract public function defaultData();
 
     /**
+     * Gets the data that can be serialized with {@see serialize()}.
+     *
+     * Introduced in PHP 7.4 and supersedes the {@see \Serializable} interface,
+     * which is deprecated since PHP 8.1.
+     *
+     * @return array<string, mixed> Key-value array of data.
+     */
+    public function __serialize(): array
+    {
+        return $this->getFilteredData();
+    }
+
+    /**
+     * Applies the data to this expression object from {@see unserialize()}.
+     *
+     * Introduced in PHP 7.4 and supersedes the {@see \Serializable} interface,
+     * which is deprecated since PHP 8.1.
+     *
+     * @param  array<string, mixed> $data Key-value array of data.
+     * @return void
+     */
+    public function __unserialize(array $data): void
+    {
+        $this->setData($data);
+    }
+
+    /**
      * Retrieve the filtered expression data.
      *
      * Default data is excluded from the result.
@@ -324,24 +351,23 @@ abstract class AbstractExpression implements
     /**
      * Generate a storable representation of the expression object.
      *
-     * @see    Serializable
+     * @see    \Serializable
      * @return string Returns a string containing a byte-stream representation of the object.
      */
     public function serialize()
     {
-        return serialize($this->getFilteredData());
+        return serialize($this->__serialize());
     }
 
     /**
-     * Convert the serialized data into an expression object.
+     * Applies the serialized data to this expression object.
      *
-     * @see    Serializable
+     * @see    \Serializable
      * @param  string $data The serialized data.
      * @return void
      */
     public function unserialize($data)
     {
-        $data = unserialize($data);
-        $this->setData($data);
+        $this->__unserialize(unserialize($data));
     }
 }
