@@ -145,6 +145,7 @@ final class ModelLoader implements ArrayAccess
      * @param  string $ident The object identifier to lookup.
      * @return boolean
      */
+    #[\ReturnTypeWillChange]
     public function offsetExists($ident)
     {
         return true;
@@ -157,6 +158,7 @@ final class ModelLoader implements ArrayAccess
      * @param  string|integer $ident The object identifier to load.
      * @return ModelInterface
      */
+    #[\ReturnTypeWillChange]
     public function offsetGet($ident)
     {
         return $this->load($ident);
@@ -171,6 +173,7 @@ final class ModelLoader implements ArrayAccess
      * @throws LogicException This method should never be called.
      * @return void
      */
+    #[\ReturnTypeWillChange]
     public function offsetSet($ident, $obj)
     {
         throw new LogicException(
@@ -186,6 +189,7 @@ final class ModelLoader implements ArrayAccess
      * @throws LogicException This method should never be called.
      * @return void
      */
+    #[\ReturnTypeWillChange]
     public function offsetUnset($ident)
     {
         throw new LogicException(

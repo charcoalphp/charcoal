@@ -8,7 +8,7 @@ use InvalidArgumentException;
 /**
  * Default data model.
  *
- * ### Notes on {@see \ArrayAccess}:
+ * ### Notes on {@see ArrayAccess}:
  *
  * - Keys SHOULD be formatted as "snake_case" (e.g., "first_name") or "camelCase" (e.g., "firstName").
  *   and WILL be converted to the latter {@see PSR-1} to access or assign values.
@@ -17,6 +17,7 @@ use InvalidArgumentException;
  * - A key-value pair is internally passed to a (non-private / non-static) setter method (if present)
  *   or assigned to a (non-private / non-static) property (declared or not) and tracks affected keys.
  */
+#[\AllowDynamicProperties]
 abstract class AbstractEntity implements EntityInterface
 {
     /**
@@ -39,6 +40,33 @@ abstract class AbstractEntity implements EntityInterface
      * @var string[]
      */
     protected static $camelCache = [];
+
+    /**
+     * Gets the data that can be serialized with {@see serialize()}.
+     *
+     * Introduced in PHP 7.4 and supersedes the {@see \Serializable} interface,
+     * which is deprecated since PHP 8.1.
+     *
+     * @return array Key-value array of data.
+     */
+    public function __serialize(): array
+    {
+        return $this->data();
+    }
+
+    /**
+     * Applies the data to this entity from {@see unserialize()}.
+     *
+     * Introduced in PHP 7.4 and supersedes the {@see \Serializable} interface,
+     * which is deprecated since PHP 8.1.
+     *
+     * @param  array $data Key-value array of data.
+     * @return void
+     */
+    public function __unserialize(array $data): void
+    {
+        $this->setData($data);
+    }
 
     /**
      * Gets the data keys on this entity.
@@ -145,11 +173,12 @@ abstract class AbstractEntity implements EntityInterface
      * - If the entity has a property (e.g., `$fooBar`), its value is checked;
      * - If the entity has neither, FALSE is returned.
      *
-     * @see    \ArrayAccess
+     * @see    ArrayAccess
      * @param  string $key The data key to check.
      * @throws InvalidArgumentException If the $key is not a string or is a numeric value.
      * @return boolean TRUE if $key exists and has a value other than NULL, FALSE otherwise.
      */
+    #[\ReturnTypeWillChange]
     public function offsetExists($key)
     {
         if (is_numeric($key)) {
@@ -200,11 +229,12 @@ abstract class AbstractEntity implements EntityInterface
      * - If the entity has a property (e.g., `$fooBar`), its value is returned;
      * - If the entity has neither, NULL is returned.
      *
-     * @see    \ArrayAccess
+     * @see    ArrayAccess
      * @param  string $key The data key to retrieve.
      * @throws InvalidArgumentException If the $key is not a string or is a numeric value.
      * @return mixed Value of the requested $key on success, NULL if the $key is not set.
      */
+    #[\ReturnTypeWillChange]
     public function offsetGet($key)
     {
         if (is_numeric($key)) {
@@ -255,12 +285,13 @@ abstract class AbstractEntity implements EntityInterface
      *   its called and passed the value;
      * - If the entity has NO setter method, the value is assigned to a property (e.g., `$fooBar`).
      *
-     * @see    \ArrayAccess
+     * @see    ArrayAccess
      * @param  string $key   The data key to assign $value to.
      * @param  mixed  $value The data value to assign to $key.
      * @throws InvalidArgumentException If the $key is not a string or is a numeric value.
      * @return void
      */
+    #[\ReturnTypeWillChange]
     public function offsetSet($key, $value)
     {
         if (is_numeric($key)) {
@@ -297,12 +328,13 @@ abstract class AbstractEntity implements EntityInterface
      * - The data key is removed from the {@see self::$keys entity's key pool}.
      * - NULL is {@see self::offsetSet() assigned} to the entity.
      *
-     * @see    \ArrayAccess
+     * @see    ArrayAccess
      * @uses   self::offsetSet()
      * @param  string $key The data key to remove.
      * @throws InvalidArgumentException If the $key is not a string or is a numeric value.
      * @return void
      */
+    #[\ReturnTypeWillChange]
     public function offsetUnset($key)
     {
         if (is_numeric($key)) {
@@ -328,6 +360,7 @@ abstract class AbstractEntity implements EntityInterface
      * @see    \JsonSerializable
      * @return array Key-value array of data.
      */
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         return $this->data();
@@ -341,7 +374,7 @@ abstract class AbstractEntity implements EntityInterface
      */
     public function serialize()
     {
-        return serialize($this->data());
+        return serialize($this->__serialize());
     }
 
     /**
@@ -353,8 +386,7 @@ abstract class AbstractEntity implements EntityInterface
      */
     public function unserialize($data)
     {
-        $data = unserialize($data);
-        $this->setData($data);
+        $this->__unserialize(unserialize($data));
     }
 
     /**

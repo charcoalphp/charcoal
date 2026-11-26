@@ -75,6 +75,7 @@ class StorableMock implements
      * @param  mixed $offset The offset to check for.
      * @return boolean Returns TRUE on success or FALSE on failure.
      */
+    #[\ReturnTypeWillChange]
     public function offsetExists($offset)
     {
         return isset($this->data[$offset]);
@@ -86,6 +87,7 @@ class StorableMock implements
      * @param  mixed $offset The offset to retrieve.
      * @return mixed The offset's value.
      */
+    #[\ReturnTypeWillChange]
     public function offsetGet($offset)
     {
         return isset($this->data[$offset]) ? $this->data[$offset] : null;
@@ -98,6 +100,7 @@ class StorableMock implements
      * @param  mixed $value  The value to set.
      * @return void
      */
+    #[\ReturnTypeWillChange]
     public function offsetSet($offset, $value)
     {
         if ($offset === null) {
@@ -113,6 +116,7 @@ class StorableMock implements
      * @param  mixed $offset The offset to unset.
      * @return void
      */
+    #[\ReturnTypeWillChange]
     public function offsetUnset($offset)
     {
         unset($this->data[$offset]);

@@ -185,6 +185,7 @@ class TranslatableValue implements
      * @throws InvalidArgumentException If array key isn't a string.
      * @see    ArrayAccess::offsetExists()
      */
+    #[\ReturnTypeWillChange]
     public function offsetExists($offset): bool
     {
         if (!is_string($offset)) {
@@ -204,6 +205,7 @@ class TranslatableValue implements
      * @throws DomainException If the array key is not found.
      * @see    ArrayAccess::offsetGet()
      */
+    #[\ReturnTypeWillChange]
     public function offsetGet($offset)
     {
         if (!is_string($offset)) {
@@ -230,6 +232,7 @@ class TranslatableValue implements
      * @throws InvalidArgumentException If array key isn't a string.
      * @see    ArrayAccess::offsetSet()
      */
+    #[\ReturnTypeWillChange]
     public function offsetSet($offset, $value)
     {
         if (!is_string($offset)) {
@@ -254,6 +257,7 @@ class TranslatableValue implements
      * @return void
      * @throws InvalidArgumentException If array key isn't a string.
      */
+    #[\ReturnTypeWillChange]
     public function offsetUnset($offset)
     {
         if (!is_string($offset)) {

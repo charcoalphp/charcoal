@@ -14,6 +14,7 @@ use Symfony\Component\Translation\TranslatorInterface;
  *
  * Available locales is provided with a locales manager.
  */
+#[\AllowDynamicProperties]
 class Translation implements
     TranslatableInterface,
     ArrayAccess,
@@ -73,6 +74,7 @@ class Translation implements
      * @see    ArrayAccess::offsetExists()
      * @throws InvalidArgumentException If array key isn't a string.
      */
+    #[\ReturnTypeWillChange]
     public function offsetExists($lang)
     {
         if (!is_string($lang)) {
@@ -92,6 +94,7 @@ class Translation implements
      * @throws InvalidArgumentException If array key isn't a string.
      * @throws DomainException If the array key is not found.
      */
+    #[\ReturnTypeWillChange]
     public function offsetGet($lang)
     {
         if (!is_string($lang)) {
@@ -118,6 +121,7 @@ class Translation implements
      * @see    ArrayAccess::offsetSet()
      * @throws InvalidArgumentException If array key isn't a string.
      */
+    #[\ReturnTypeWillChange]
     public function offsetSet($lang, $val)
     {
         if (!is_string($lang)) {
@@ -143,6 +147,7 @@ class Translation implements
      * @see    ArrayAccess::offsetUnset()
      * @throws InvalidArgumentException If array key isn't a string.
      */
+    #[\ReturnTypeWillChange]
     public function offsetUnset($lang)
     {
         if (!is_string($lang)) {
@@ -161,6 +166,7 @@ class Translation implements
      * @return string[]
      * @see    JsonSerializable::jsonSerialize()
      */
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         return $this->data();

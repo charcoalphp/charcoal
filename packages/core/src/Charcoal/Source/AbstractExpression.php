@@ -30,9 +30,66 @@ abstract class AbstractExpression implements
     protected $active = true;
 
     /**
+     * Retrieve the expression data structure.
+     *
+     * @return array<string, mixed> An associative array.
+     */
+    abstract public function data();
+
+    /**
+     * Retrieve the default values.
+     *
+     * @return array<string, mixed> An associative array.
+     */
+    abstract public function defaultData();
+
+    /**
+     * Gets the data that can be serialized with {@see serialize()}.
+     *
+     * Introduced in PHP 7.4 and supersedes the {@see \Serializable} interface,
+     * which is deprecated since PHP 8.1.
+     *
+     * @return array<string, mixed> Key-value array of data.
+     */
+    public function __serialize(): array
+    {
+        return $this->getFilteredData();
+    }
+
+    /**
+     * Applies the data to this expression object from {@see unserialize()}.
+     *
+     * Introduced in PHP 7.4 and supersedes the {@see \Serializable} interface,
+     * which is deprecated since PHP 8.1.
+     *
+     * @param  array<string, mixed> $data Key-value array of data.
+     * @return void
+     */
+    public function __unserialize(array $data): void
+    {
+        $this->setData($data);
+    }
+
+    /**
+     * Retrieve the filtered expression data.
+     *
+     * Default data is excluded from the result.
+     *
+     * @return array<string, mixed> An associative array containing only mutated values.
+     */
+    public function getFilteredData(): array
+    {
+        return array_udiff_assoc(
+            $this->data(),
+            $this->defaultData(),
+            [ $this, 'diffValues' ]
+        );
+    }
+
+    /**
      * Set the expression data.
      *
-     * @param  array<string,mixed> $data The expression data;
+     * @param  array<string, mixed> $data The expression data;
      *     as an associative array.
      * @return self
      */
@@ -48,20 +105,6 @@ abstract class AbstractExpression implements
 
         return $this;
     }
-
-    /**
-     * Retrieve the default values.
-     *
-     * @return array<string,mixed> An associative array.
-     */
-    abstract public function defaultData();
-
-    /**
-     * Retrieve the expression data structure.
-     *
-     * @return array<string,mixed> An associative array.
-     */
-    abstract public function data();
 
     /**
      * Set whether the expression is active or not.
@@ -274,11 +317,7 @@ abstract class AbstractExpression implements
      */
     public static function diffValues($a, $b)
     {
-        if ($a === $b) {
-            return 0;
-        }
-
-        return 1;
+        return $a <=> $b;
     }
 
     /**
@@ -299,36 +338,36 @@ abstract class AbstractExpression implements
      * Convert the expression into something JSON serializable.
      * Returns an array of parameters to serialize when this is serialized with json_encode().
      *
-     * @see    JsonSerializable
+     * @see    \JsonSerializable
      * @uses   self::diffValues()
-     * @return array<string,mixed> An associative array containing only mutated values.
+     * @return array<string, mixed> An associative array containing only mutated values.
      */
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
-        return array_udiff_assoc($this->data(), $this->defaultData(), [ $this, 'diffValues' ]);
+        return $this->getFilteredData();
     }
 
     /**
      * Generate a storable representation of the expression object.
      *
-     * @see    Serializable
+     * @see    \Serializable
      * @return string Returns a string containing a byte-stream representation of the object.
      */
     public function serialize()
     {
-        return serialize($this->jsonSerialize());
+        return serialize($this->__serialize());
     }
 
     /**
-     * Convert the serialized data into an expression object.
+     * Applies the serialized data to this expression object.
      *
-     * @see    Serializable
+     * @see    \Serializable
      * @param  string $data The serialized data.
      * @return void
      */
     public function unserialize($data)
     {
-        $data = unserialize($data);
-        $this->setData($data);
+        $this->__unserialize(unserialize($data));
     }
 }

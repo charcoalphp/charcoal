@@ -30,6 +30,7 @@ use Charcoal\Source\DatabaseSource;
 /**
  * Data Storage Source Handler.
  */
+#[\AllowDynamicProperties]
 abstract class AbstractSource implements
     SourceInterface,
     ConfigurableInterface,
