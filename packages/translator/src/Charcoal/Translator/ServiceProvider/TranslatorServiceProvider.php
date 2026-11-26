@@ -7,7 +7,6 @@ use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 // From 'symfony/translation'
 use Symfony\Component\Translation\Loader\ArrayLoader;
-use Symfony\Component\Translation\Loader\CsvFileLoader;
 use Symfony\Component\Translation\Loader\IcuDatFileLoader;
 use Symfony\Component\Translation\Loader\IcuResFileLoader;
 use Symfony\Component\Translation\Loader\IniFileLoader;
@@ -23,6 +22,7 @@ use Symfony\Component\Translation\MessageSelector;
 // From 'charcoal-translator'
 use Charcoal\Translator\LocalesConfig;
 use Charcoal\Translator\LocalesManager;
+use Charcoal\Translator\Loader\CsvFileLoader;
 use Charcoal\Translator\Translator;
 use Charcoal\Translator\TranslatorConfig;
 use Charcoal\Translator\Middleware\LanguageMiddleware;
