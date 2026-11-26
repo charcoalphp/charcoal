@@ -11,6 +11,7 @@ use Charcoal\Attachment\Interfaces\AttachmentAwareInterface;
 use Charcoal\Attachment\Interfaces\AttachmentContainerInterface;
 use Charcoal\Attachment\Object\Join;
 use Charcoal\Attachment\Object\Attachment;
+use Charcoal\Model\Collection;
 
 /**
  * Provides support for attachments to objects.
@@ -30,54 +31,25 @@ use Charcoal\Attachment\Object\Attachment;
 trait AttachmentAwareTrait
 {
     /**
-     * A store of cached attachments, by ID.
+     * Store collections of Attachments grouped by type and grouping.
      *
-     * @var Attachment[] $attachmentCache
-     */
-    protected static $attachmentCache = [];
-
-    /**
-     * Store a collection of node objects.
-     *
-     * @var Collection|Attachment[]
+     * @var array<string, array<string, Collection<Attachment>|Attachment[]>>
      */
     protected $attachments = [];
 
     /**
      * Retrieve the objects associated to the current object.
      *
-     * @param  array|string|null $group  Filter the attachments by a group identifier.
-     *                                   When an array, filter the attachments by a options list.
-     * @param  string|null       $type   Filter the attachments by type.
-     * @param  callable|null     $before Process each attachment before applying data.
-     * @param  callable|null     $after  Process each attachment after applying data.
+     * @param array{
+     *     group:  int|string|null,
+     *     type:   int|string|null,
+     *     before: ?callable,
+     *     after:  ?callable,
+     * } $options Filter and parsing options for the attachments.
      * @throws InvalidArgumentException If the $group or $type is invalid.
-     * @return Collection|Attachment[]
+     * @return Collection<Attachment>|Attachment[]
      */
-    public function getAttachments(
-        $group = null,
-        $type = null,
-        ?callable $before = null,
-        ?callable $after = null
-    ) {
-        if (is_array($group)) {
-            $options = $group;
-        } else {
-            if ($group !== null) {
-                $this->logger->warning(
-                    'AttachmentAwareTrait::getAttachments() parameters are deprecated. ' .
-                    'An array of parameters should be used.',
-                    [ 'package' => 'charcoal/attachment' ]
-                );
-            }
-            $options = [
-                'group'  => $group,
-                'type'   => $type,
-                'before' => $before,
-                'after'  => $after,
-            ];
-        }
-
+    public function getAttachments(array $options = []) {
         $options = $this->parseAttachmentOptions($options);
 
         $group    = $options['group'];
@@ -248,23 +220,6 @@ trait AttachmentAwareTrait
     /**
      * Remove all joins linked to a specific attachment.
      *
-     * @deprecated in favour of AttachmentAwareTrait::removeAttachmentJoins()
-     * @return boolean
-     */
-    public function removeJoins()
-    {
-        $this->logger->warning(
-            'AttachmentAwareTrait::removeJoins() is deprecated. ' .
-            'Use AttachmentAwareTrait::removeAttachmentJoins() instead.',
-            [ 'package' => 'charcoal/attachment' ]
-        );
-
-        return $this->removeAttachmentJoins();
-    }
-
-    /**
-     * Remove all joins linked to a specific attachment.
-     *
      * @return boolean
      */
     public function removeAttachmentJoins()
@@ -366,10 +321,17 @@ trait AttachmentAwareTrait
     /**
      * Parse a given options for loading a collection of attachments.
      *
-     * @param  array $options A list of options.
+     * @param  array<string, mixed> $options A list of options.
      *    Option keys not present in {@see self::getDefaultAttachmentOptions() default options}
      *    are rejected.
-     * @return array
+     * @return array{
+     *     group:    int|string,
+     *     type:     int|string,
+     *     before:   ?callable,
+     *     after:    ?callable,
+     *     isActive: bool,
+     *     ...
+     * }
      */
     protected function parseAttachmentOptions(array $options)
     {
@@ -410,7 +372,7 @@ trait AttachmentAwareTrait
     /**
      * Retrieve the default options for loading a collection of attachments.
      *
-     * @return array
+     * @return array<string, mixed>
      */
     protected function getDefaultAttachmentOptions()
     {

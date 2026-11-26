@@ -140,28 +140,6 @@ class AudioWidgetInput extends AudioInput
     }
 
     /**
-     * @deprecated In favour of {@see self::setCaptureEnabled()}
-     *
-     * @param  boolean $recordingEnabled If recording is enabled or not for this widget.
-     * @return self
-     */
-    public function setRecordingEnabled($recordingEnabled)
-    {
-        $this->captureEnabled = !!$recordingEnabled;
-        return $this;
-    }
-
-    /**
-     * @deprecated In favour of {@see self::captureEnabled()}
-     *
-     * @return boolean
-     */
-    public function recordingEnabled()
-    {
-        return $this->captureEnabled;
-    }
-
-    /**
      * @param  boolean $uploadEnabled If file upload is enabled or not for this widget.
      * @return self
      */
@@ -175,28 +153,6 @@ class AudioWidgetInput extends AudioInput
      * @return boolean
      */
     public function uploadEnabled()
-    {
-        return $this->uploadEnabled;
-    }
-
-    /**
-     * @deprecated In favour of {@see self::setUploadEnabled()}
-     *
-     * @param  boolean $fileEnabled If file upload is enabled or not for this widget.
-     * @return self
-     */
-    public function setFileEnabled($fileEnabled)
-    {
-        $this->uploadEnabled = !!$fileEnabled;
-        return $this;
-    }
-
-    /**
-     * @deprecated In favour of {@see self::uploadEnabled()}
-     *
-     * @return boolean
-     */
-    public function fileEnabled()
     {
         return $this->uploadEnabled;
     }

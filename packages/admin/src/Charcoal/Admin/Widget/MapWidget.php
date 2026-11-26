@@ -145,23 +145,6 @@ class MapWidget extends AdminWidget implements FormGroupInterface
     }
 
     /**
-     * Set the $obj property key for the longitude.
-     *
-     * @deprecated In favour of {@see self::setLngProperty()}.
-     * @param  string $key The longitude property key.
-     * @return self
-     */
-    public function setLonProperty($key)
-    {
-        $this->logger->warning(
-            'MapWidget "lon_property" is deprecated. Use "lng_property".',
-            [ 'package' => 'charcoal/admin' ]
-        );
-        $this->setLngProperty($key);
-        return $this;
-    }
-
-    /**
      * Retrieve the $obj property key for the longitude.
      *
      * @return string|null
@@ -255,21 +238,6 @@ class MapWidget extends AdminWidget implements FormGroupInterface
         }
 
         return $this->obj()[$this->lngProperty()];
-    }
-
-    /**
-     * Set the $obj property key for the longitude.
-     *
-     * @deprecated In favour of {@see self::lng()}.
-     * @return self
-     */
-    public function lon()
-    {
-        $this->logger->warning(
-            'MapWidget "lon" is deprecated. Use "lng".',
-            [ 'package' => 'charcoal/admin' ]
-        );
-        return $this->lng();
     }
 
     /**
