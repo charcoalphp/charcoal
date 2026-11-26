@@ -15,6 +15,7 @@ use Charcoal\Config\ConfigurableTrait;
 // From 'charcoal-app'
 use Charcoal\App\Route\RouteInterface;
 use Charcoal\App\Route\TemplateRouteConfig;
+use Charcoal\App\Template\TemplateInterface;
 
 /**
  * Template Route Handler.
@@ -150,7 +151,7 @@ class TemplateRoute implements
     /**
      * @param  Container        $container A DI (Pimple) container.
      * @param  RequestInterface $request   The request to intialize the template with.
-     * @return string
+     * @return TemplateInterface
      */
     protected function createTemplate(Container $container, RequestInterface $request)
     {
