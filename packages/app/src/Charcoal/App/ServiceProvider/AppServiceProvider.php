@@ -27,6 +27,7 @@ use Charcoal\App\Handler\NotFound;
 use Charcoal\App\Handler\PhpError;
 use Charcoal\App\Middleware\CsrfMiddleware;
 use Charcoal\App\Middleware\IpMiddleware;
+use Charcoal\App\Middleware\SecurityHeadersMiddleware;
 use Charcoal\App\Module\ModuleInterface;
 use Charcoal\App\Route\ActionRoute;
 use Charcoal\App\Route\RouteInterface;
@@ -303,6 +304,15 @@ class AppServiceProvider implements ServiceProviderInterface
         $container['middlewares/charcoal/app/middleware/ip'] = function (container $container) {
             $wareConfig = $container['config']['middlewares']['charcoal/app/middleware/ip'];
             return new IpMiddleware($wareConfig);
+        };
+
+        /**
+         * @param  Container $container A service container.
+         * @return SecurityHeadersMiddleware
+         */
+        $container['middlewares/charcoal/app/middleware/security-headers'] = function (Container $container) {
+            $wareConfig = ($container['config']['middlewares']['charcoal/app/middleware/security-headers'] ?? []);
+            return new SecurityHeadersMiddleware($wareConfig);
         };
 
         /**

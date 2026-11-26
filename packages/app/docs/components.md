@@ -514,10 +514,11 @@ To be enabled, middlewares must be "active" and they must be accessible from the
 
 For example
 
-There are 2 middlewares provided by default in the `app` module:
+There are 3 middlewares provided by default in the `app` module:
 
 * `\Charcoal\App\Middleware\IpMiddleware`
 * `\Charcoal\App\Middleware\CsrfMiddleware`
+* `\Charcoal\App\Middleware\SecurityHeadersMiddleware`
 
 `CsrfMiddleware` wraps [slim/csrf]'s `Guard` and validates a token pair on
 state-changing requests, scoped by an `included_path` / `excluded_path` list
@@ -541,6 +542,108 @@ service and call `validateStorage()` then `generateToken()`.
 
 Other Charcoal modules may provide more middlewares (for example, language
 detection in [charcoal/translator], or caching in [charcoal/cache]).
+
+### Security Headers
+
+`SecurityHeadersMiddleware` applies configurable HTTP response headers that
+enable client-side protections: Content Security Policy (CSP), HTTP Strict
+Transport Security (HSTS), frame options, referrer policy, permissions policy,
+cross-origin policies, and so on.
+
+Enable it **last** in the `middlewares` configuration so it is the outermost
+middleware and sees every response:
+
+```json
+{
+    "middlewares": {
+        "charcoal/app/middleware/security-headers": {
+            "active": true,
+            "headers": {
+                "Permissions-Policy": "camera=(), microphone=(), geolocation=()",
+                "Cross-Origin-Opener-Policy": "same-origin",
+                "Cross-Origin-Resource-Policy": "same-origin"
+            },
+            "hsts": {
+                "enabled": true,
+                "max_age": 15552000,
+                "include_subdomains": false,
+                "preload": false
+            },
+            "csp": {
+                "enabled": "report-only",
+                "directives": {
+                    "default-src": [ "'self'" ],
+                    "base-uri": [ "'self'" ],
+                    "object-src": [ "'none'" ],
+                    "frame-ancestors": [ "'self'" ],
+                    "script-src": [ "'self'", "https://www.googletagmanager.com" ]
+                }
+            },
+            "clear_site_data": {
+                "paths": [ "^/logout$" ]
+            }
+        }
+    }
+}
+```
+
+#### Defaults
+
+The following headers are enabled by default and are safe for most
+applications:
+
+| Header | Default value |
+| ------ | ------------- |
+| `X-Content-Type-Options` | `nosniff` |
+| `X-Frame-Options` | `SAMEORIGIN` |
+| `Referrer-Policy` | `strict-origin-when-cross-origin` |
+| `X-Permitted-Cross-Domain-Policies` | `none` |
+
+Stricter headers (`Permissions-Policy`, COOP, CORP, CSP) are opt-in because
+they can break third-party embeds, maps, captchas, or authenticated popups.
+
+#### Options
+
+| Option | Description |
+| ------ | ----------- |
+| `headers` | Map of header name to value(s). A `null`, `false`, or empty value removes the header. |
+| `hsts.enabled` | Enable `Strict-Transport-Security`. |
+| `hsts.max_age` | HSTS max-age in seconds. |
+| `hsts.include_subdomains` | Add `includeSubDomains`. Only enable once every subdomain is HTTPS-only. |
+| `hsts.preload` | Add `preload` (also requires submitting the domain to the preload list). |
+| `hsts.only_secure` | Send HSTS only for HTTPS requests (default `true`, also checks `X-Forwarded-Proto`). |
+| `csp.enabled` | `false`, `"report-only"`, or `true` to enforce. |
+| `csp.directives` | Map of directive name to source list. Use `true` for valueless directives such as `upgrade-insecure-requests`. |
+| `csp.report_uri` | Optional `report-uri` value. |
+| `excluded_path` | List of path regexes (without delimiters) for which no headers are added. |
+| `profiles` | Map of path regex to a partial configuration. The first matching profile wins and is merged over the global configuration. |
+| `clear_site_data.paths` | List of path regexes where `Clear-Site-Data` should be sent. |
+| `clear_site_data.value` | Header value; defaults to `"cache", "cookies", "storage", "executionContexts"`. |
+| `use_native_headers` | Send headers through PHP's native header list before the middleware stack (default `true`). This covers legacy `header()` + `exit` responses. Set to `false` for pure PSR-7 behaviour. |
+
+`Clear-Site-Data` should be scoped to explicit logout routes. Sending it on
+every response would continuously clear cookies, storage, and the HTTP cache.
+
+Per-path profiles are useful for relaxing the policy in an admin area or
+tightening it for an API:
+
+```json
+{
+    "profiles": {
+        "^/admin": {
+            "headers": {
+                "X-Frame-Options": "DENY"
+            },
+            "csp": {
+                "enabled": false
+            }
+        }
+    }
+}
+```
+
+> **CSP rollout:** start with `"enabled": "report-only"`, collect violations,
+> then enforce the policy and move inline scripts/styles to nonces or hashes.
 
 ## Charcoal Binary
 
