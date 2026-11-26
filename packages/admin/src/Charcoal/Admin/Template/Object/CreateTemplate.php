@@ -7,6 +7,8 @@ use Exception;
 use Psr\Http\Message\RequestInterface;
 // From Pimple
 use Pimple\Container;
+// From 'charcoal-app'
+use Charcoal\App\Exception\HttpException;
 // From 'charcoal-admin'
 use Charcoal\Admin\AdminTemplate;
 use Charcoal\Admin\Support\Sanitizer;
@@ -28,6 +30,7 @@ class CreateTemplate extends AdminTemplate implements
     /**
      * @param RequestInterface $request PSR-7 HTTP Server Request.
      * @return boolean
+     * @throws HttpException If the object already exists.
      */
     public function init(RequestInterface $request)
     {
@@ -35,8 +38,9 @@ class CreateTemplate extends AdminTemplate implements
 
         if ($this->obj()->id()) {
             $path = str_replace('object/create', 'object/edit', $request->getUri()->getPath());
-            header('Location: ' . (string)$request->getUri()->withPath($path));
-            die();
+            throw new HttpException(302, [
+                'Location' => (string)$request->getUri()->withPath($path)
+            ]);
         }
         return $ret;
     }

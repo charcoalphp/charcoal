@@ -4,6 +4,8 @@ namespace Charcoal\Admin\Template\Account;
 
 // From PSR-7
 use Psr\Http\Message\RequestInterface;
+// From 'charcoal-app'
+use Charcoal\App\Exception\HttpException;
 // From 'charcoal-admin'
 use Charcoal\Admin\AdminTemplate;
 use Charcoal\Admin\Template\AuthTemplateTrait;
@@ -31,6 +33,7 @@ class ResetPasswordTemplate extends AdminTemplate
      *
      * @param  RequestInterface $request The PSR-7 HTTP request.
      * @return boolean
+     * @throws HttpException If the reset token is invalid.
      */
     public function init(RequestInterface $request)
     {
@@ -49,9 +52,9 @@ class ResetPasswordTemplate extends AdminTemplate
             return true;
         }
 
-        header('HTTP/1.0 400 Bad Request');
-        header('Location: ' . $this->adminUrl('account/lost-password?notice=invalidtoken'));
-        exit;
+        throw new HttpException(302, [
+            'Location' => $this->adminUrl('account/lost-password?notice=invalidtoken')
+        ]);
     }
 
     /**
