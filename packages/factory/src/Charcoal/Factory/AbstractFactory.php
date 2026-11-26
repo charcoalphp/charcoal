@@ -24,18 +24,17 @@ use ReflectionClass;
 abstract class AbstractFactory implements FactoryInterface
 {
     /**
-     * @var array $resolved
+     * @var array<class-string<static>, array<string, class-string>> $resolved
      */
     protected $resolved = [];
 
     /**
-     * If a base class is set, then it must be ensured that the
-     * @var string $baseClass
+     * @var class-string $baseClass
      */
     private $baseClass = '';
+
     /**
-     *
-     * @var string $defaultClass
+     * @var class-string $defaultClass
      */
     private $defaultClass = '';
 
@@ -52,7 +51,7 @@ abstract class AbstractFactory implements FactoryInterface
     /**
      * Keeps loaded instances in memory, in `[$type => $instance]` format.
      * Used with the `get()` method only.
-     * @var array $instances
+     * @var array<string, object> $instances
      */
     private $instances = [];
 
@@ -63,7 +62,7 @@ abstract class AbstractFactory implements FactoryInterface
 
     /**
      * The class map array holds available types, in `[$type => $className]` format.
-     * @var string[] $map
+     * @var array<string, class-string> $map
      */
     private $map = [];
 
@@ -116,7 +115,7 @@ abstract class AbstractFactory implements FactoryInterface
      *     Will run in addition to the default callback, if any.
      * @throws Exception If the base class is set and  the resulting instance is not of the base class.
      * @throws InvalidArgumentException If type argument is not a string or is not an available type.
-     * @return mixed The instance / object
+     * @return object The instance / object
      */
     final public function create($type, ?array $args = null, ?callable $cb = null)
     {
@@ -190,7 +189,7 @@ abstract class AbstractFactory implements FactoryInterface
      * @param string $type The type (class ident).
      * @param array  $args The constructor arguments (optional).
      * @throws InvalidArgumentException If type argument is not a string.
-     * @return mixed The instance / object
+     * @return object The instance / object
      */
     final public function get($type, ?array $args = null)
     {
@@ -210,7 +209,7 @@ abstract class AbstractFactory implements FactoryInterface
      * If a base class is set, then it must be ensured that the created objects
      * are `instanceof` this base class.
      *
-     * @param string $type The FQN of the class, or "type" of object, to set as base class.
+     * @param class-string $type The FQN of the class, or "type" of object, to set as base class.
      * @throws InvalidArgumentException If the class is not a string or is not an existing class / interface.
      * @return self
      */
@@ -242,7 +241,7 @@ abstract class AbstractFactory implements FactoryInterface
     }
 
     /**
-     * @return string The FQN of the base class
+     * @return class-string The FQN of the base class
      */
     public function baseClass()
     {
@@ -253,7 +252,7 @@ abstract class AbstractFactory implements FactoryInterface
      * If a default class is set, then calling `get()` or `create()` an invalid type
      * should return an object of this class instead of throwing an error.
      *
-     * @param string $type The FQN of the class, or "type" of object, to set as default class.
+     * @param class-string $type The FQN of the class, or "type" of object, to set as default class.
      * @throws InvalidArgumentException If the class name is not a string or not a valid class.
      * @return self
      */
@@ -283,7 +282,7 @@ abstract class AbstractFactory implements FactoryInterface
     }
 
     /**
-     * @return string The FQN of the default class
+     * @return class-string The FQN of the default class
      */
     public function defaultClass()
     {
@@ -388,7 +387,6 @@ abstract class AbstractFactory implements FactoryInterface
         return false;
     }
 
-
     /**
      * Create a class instance with given arguments.
      *
@@ -399,28 +397,30 @@ abstract class AbstractFactory implements FactoryInterface
      * - if it's an associative array, it's passed as a sing argument.
      * - if it's a sequential (numeric keys) array, it's
      *
-     * @param string $className The FQN of the class to instanciate.
-     * @param mixed  $args      The constructor arguments.
-     * @return mixed The created object.
+     * @param class-string $className The FQN of the class to instanciate.
+     * @param mixed        $args      The constructor arguments.
+     * @return object The created object.
      */
     protected function createClass($className, $args)
     {
         if ($args === null) {
             return new $className();
         }
+
         if (!is_array($args)) {
             return new $className($args);
         }
+
         if (count(array_filter(array_keys($args), 'is_string')) > 0) {
             return new $className($args);
-        } else {
-            /**
-             * @todo Use argument unpacking (`return new $className(...$args);`)
-             *     when minimum PHP requirement is bumped to 5.6.
-             */
-            $reflection = new ReflectionClass($className);
-            return $reflection->newInstanceArgs($args);
         }
+
+        /**
+         * @todo Use argument unpacking (`return new $className(...$args);`)
+         *     when minimum PHP requirement is bumped to 5.6.
+         */
+        $reflection = new ReflectionClass($className);
+        return $reflection->newInstanceArgs($args);
     }
 
     /**
@@ -434,7 +434,7 @@ abstract class AbstractFactory implements FactoryInterface
     /**
      * Get the map of all types in `[$type => $class]` format.
      *
-     * @return string[]
+     * @return array<string, class-string>
      */
     protected function map()
     {
@@ -444,8 +444,8 @@ abstract class AbstractFactory implements FactoryInterface
     /**
      * Add a class name to the available types _map_.
      *
-     * @param string $type      The type (class ident).
-     * @param string $className The FQN of the class.
+     * @param string       $type      The type (class ident).
+     * @param class-string $className The FQN of the class.
      * @throws InvalidArgumentException If the $type parameter is not a striing or the $className class does not exist.
      * @return self
      */
@@ -474,7 +474,7 @@ abstract class AbstractFactory implements FactoryInterface
     /**
      * Add multiple types, in a an array of `type` => `className`.
      *
-     * @param string[] $map The map (key=>classname) to use.
+     * @param array<string, class-string> $map The map (key=>classname) to use.
      * @return self
      */
     private function setMap(array $map)

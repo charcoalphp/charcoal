@@ -20,12 +20,12 @@ class GenericResolver
     private $suffix = '';
 
     /**
-     * @var array $capitals
+     * @var array<string, string> $capitals
      */
     private $capitals;
 
     /**
-     * @var array $replacements
+     * @var array<string, string> $replacements
      */
     private $replacements;
 
@@ -66,7 +66,7 @@ class GenericResolver
      * Resolver needs to be callable
      *
      * @param string $type The "type" of object to resolve (the object ident).
-     * @return string The resolved class name (FQN).
+     * @return class-string The resolved class name (FQN).
      */
     public function __invoke($type)
     {
@@ -78,7 +78,7 @@ class GenericResolver
      *
      * @param string $type The "type" of object to resolve (the object ident).
      * @throws InvalidArgumentException If the type parameter is not a string.
-     * @return string The resolved class name (FQN).
+     * @return class-string The resolved class name (FQN).
      */
     public function resolve($type)
     {

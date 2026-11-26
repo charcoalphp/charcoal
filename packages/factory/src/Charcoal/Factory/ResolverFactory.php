@@ -22,12 +22,12 @@ class ResolverFactory extends AbstractFactory
     private $resolverSuffix = '';
 
     /**
-     * @var array $resolverCapitals
+     * @var array<string, string> $resolverCapitals
      */
     private $resolverCapitals;
 
     /**
-     * @var array $resolverReplacements
+     * @var array<string, string> $resolverReplacements
      */
     private $resolverReplacements;
 
@@ -115,7 +115,7 @@ class ResolverFactory extends AbstractFactory
     }
 
     /**
-     * @param array $capitals The array of letter to "calitalize-next" (uppercase next letter in the string).
+     * @param array<string, string> $capitals The array of letter to "calitalize-next" (uppercase next letter in the string).
      * @return ResolverFactory Chainable
      */
     public function setResolverCapitals(array $capitals)
@@ -125,7 +125,7 @@ class ResolverFactory extends AbstractFactory
     }
 
     /**
-     * @return array
+     * @return array<string, string>
      */
     public function resolverCapitals()
     {
@@ -133,7 +133,7 @@ class ResolverFactory extends AbstractFactory
     }
 
     /**
-     * @param array $replacements The array (key=>value) of replacements.
+     * @param array<string, string> $replacements The array (key=>value) of replacements.
      * @return ResolverFactory Chainable
      */
     public function setResolverReplacements(array $replacements)
@@ -143,7 +143,7 @@ class ResolverFactory extends AbstractFactory
     }
 
     /**
-     * @return array
+     * @return array<string, string>
      */
     public function resolverReplacements()
     {
@@ -155,7 +155,7 @@ class ResolverFactory extends AbstractFactory
      *
      * @param string $type The "type" of object to resolve (the object ident).
      * @throws InvalidArgumentException If the type parameter is not a string.
-     * @return string The resolved class name (FQN).
+     * @return class-string The resolved class name (FQN).
      */
     public function resolve($type)
     {
