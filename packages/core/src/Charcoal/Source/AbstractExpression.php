@@ -30,6 +30,20 @@ abstract class AbstractExpression implements
     protected $active = true;
 
     /**
+     * Retrieve the expression data structure.
+     *
+     * @return array<string,mixed> An associative array.
+     */
+    abstract public function data();
+
+    /**
+     * Retrieve the default values.
+     *
+     * @return array<string,mixed> An associative array.
+     */
+    abstract public function defaultData();
+
+    /**
      * Set the expression data.
      *
      * @param  array<string,mixed> $data The expression data;
@@ -48,20 +62,6 @@ abstract class AbstractExpression implements
 
         return $this;
     }
-
-    /**
-     * Retrieve the default values.
-     *
-     * @return array<string,mixed> An associative array.
-     */
-    abstract public function defaultData();
-
-    /**
-     * Retrieve the expression data structure.
-     *
-     * @return array<string,mixed> An associative array.
-     */
-    abstract public function data();
 
     /**
      * Set whether the expression is active or not.
